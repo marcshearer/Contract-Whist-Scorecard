@@ -403,7 +403,7 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
     // MARK: - Sync routines including the delegate methods ======================================== -
     
     func selectCloudPlayers() {
-        self.cloudAlertController = UIAlertController(title: title, message: "Downloading players from Cloud\n\n\n\n", preferredStyle: .alert)
+        self.cloudAlertController = UIAlertController(title: title, message: "Searching Cloud for Available Players\n\n\n\n", preferredStyle: .alert)
         
         self.scorecard.sync.delegate = self
         if self.scorecard.sync.connect() {

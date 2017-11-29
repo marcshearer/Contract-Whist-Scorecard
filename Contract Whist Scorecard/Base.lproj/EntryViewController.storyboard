@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Entry-->
+        <scene sceneID="IEG-Cv-abN">
+            <objects>
+                <viewController storyboardIdentifier="EntryViewController" title="Entry" modalPresentationStyle="formSheet" useStoryboardIdentifierAsRestorationIdentifier="YES" id="mEi-hH-CUE" customClass="EntryViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="xuy-nO-Nis"/>
+                        <viewControllerLayoutGuide type="bottom" id="5Ek-fs-opP"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="pS0-jq-6eE" userLabel="Scores View">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="jGM-gE-2rv" userLabel="Players Table View">
+                                <rect key="frame" x="0.0" y="20" width="375" height="603"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="separatorColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Entry Player Table Cell" id="UqW-3T-hCt" customClass="EntryPlayerTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="UqW-3T-hCt" id="aDd-6D-WWB">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="3Qu-CO-n5M">
+                                                    <rect key="frame" x="10" y="0.0" width="355" height="44"/>
+                                                    <subviews>
+                                                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" minimumZoomScale="0.0" maximumZoomScale="0.0" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="yMb-N8-2Mg">
+                                                            <rect key="frame" x="0.0" y="0.0" width="355" height="43"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                            <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="R4P-aL-2ou">
+                                                                <size key="itemSize" width="50" height="46"/>
+                                                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                                                <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                            </collectionViewFlowLayout>
+                                                            <cells>
+                                                                <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" reuseIdentifier="Entry Player Cell" id="vqm-n4-fFy" customClass="EntryPlayerCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                                    <rect key="frame" x="0.0" y="-1.5" width="50" height="46"/>
+                                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                                    <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="46"/>
+                                                                        <autoresizingMask key="autoresizingMask"/>
+                                                                        <subviews>
+                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" preservesSuperviewLayoutMargins="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="B32-2e-xlh">
+                                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="46"/>
+                                                                                <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="1"/>
+                                                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                                                <nil key="textColor"/>
+                                                                                <nil key="highlightedColor"/>
+                                                                            </label>
+                                                                        </subviews>
+                                                                    </view>
+                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="trailing" secondItem="B32-2e-xlh" secondAttribute="trailing" id="dBi-Ga-wa5"/>
+                                                                        <constraint firstItem="B32-2e-xlh" firstAttribute="leading" secondItem="vqm-n4-fFy" secondAttribute="leading" id="hdj-B0-g0G"/>
+                                                                        <constraint firstItem="B32-2e-xlh" firstAttribute="top" secondItem="vqm-n4-fFy" secondAttribute="top" id="ndX-jc-LIx"/>
+                                                                        <constraint firstAttribute="bottom" secondItem="B32-2e-xlh" secondAttribute="bottom" id="twp-4t-IGw"/>
+                                                                    </constraints>
+                                                                    <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
+                                                                    <connections>
+                                                                        <outlet property="entryPlayerLabel" destination="B32-2e-xlh" id="Jw3-wQ-9Jt"/>
+                                                                    </connections>
+                                                                </collectionViewCell>
+                                                            </cells>
+                                                        </collectionView>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1aW-fW-YCB" userLabel="Separator">
+                                                            <rect key="frame" x="0.0" y="43" width="355" height="1"/>
+                                                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="1" id="obs-gK-NFk"/>
+                                                            </constraints>
+                                                        </view>
+                                                    </subviews>
+                                                </stackView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="3Qu-CO-n5M" firstAttribute="top" secondItem="aDd-6D-WWB" secondAttribute="top" id="SKc-jL-liy"/>
+                                                <constraint firstAttribute="bottom" secondItem="3Qu-CO-n5M" secondAttribute="bottom" id="akP-Zs-Uwb"/>
+                                                <constraint firstAttribute="trailing" secondItem="3Qu-CO-n5M" secondAttribute="trailing" constant="10" id="yPK-Cd-mJN"/>
+                                                <constraint firstItem="3Qu-CO-n5M" firstAttribute="leading" secondItem="aDd-6D-WWB" secondAttribute="leading" constant="10" id="z0T-PI-YDk"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="player"/>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <outlet property="entryPlayerSeparator" destination="1aW-fW-YCB" id="FSP-9d-sdY"/>
+                                            <outlet property="playerCollection" destination="yMb-N8-2Mg" id="3Tt-PS-TIs"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Entry Instruction Cell" id="PZ6-8V-SYp" userLabel="Entry Instructions Cell" customClass="EntryInstructionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="72" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PZ6-8V-SYp" id="Iaa-eg-cfF">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="xSd-Dr-cxO">
+                                                    <rect key="frame" x="10" y="10" width="355" height="24"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="xSd-Dr-cxO" firstAttribute="leading" secondItem="Iaa-eg-cfF" secondAttribute="leading" constant="10" id="MSa-WJ-gdt"/>
+                                                <constraint firstAttribute="trailing" secondItem="xSd-Dr-cxO" secondAttribute="trailing" constant="10" id="VrZ-SQ-CEI"/>
+                                                <constraint firstItem="xSd-Dr-cxO" firstAttribute="top" secondItem="Iaa-eg-cfF" secondAttribute="top" constant="10" id="lhr-yR-8Pl"/>
+                                                <constraint firstAttribute="bottom" secondItem="xSd-Dr-cxO" secondAttribute="bottom" constant="10" id="x9w-rh-JVt"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="instructionTextView" destination="xSd-Dr-cxO" id="XaZ-EG-793"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Entry Score Table Cell" rowHeight="200" id="FXk-Wr-WgU" customClass="EntryScoreTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="116" width="375" height="200"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FXk-Wr-WgU" id="fzL-PO-qld">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <collectionView clipsSubviews="YES" tag="2" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="9ud-n1-2lo" userLabel="Entry Score Collection View">
+                                                    <rect key="frame" x="10" y="0.0" width="355" height="190"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="soT-B8-nFk">
+                                                        <size key="itemSize" width="50" height="50"/>
+                                                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    </collectionViewFlowLayout>
+                                                    <cells>
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Entry Score Cell" id="q4V-lM-zuy" customClass="EntryScoreCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                                <autoresizingMask key="autoresizingMask"/>
+                                                                <subviews>
+                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ERg-Uc-zuI" customClass="LightRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                                        <color key="backgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
+                                                                        <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                                                        <state key="normal" title="Button"/>
+                                                                    </button>
+                                                                </subviews>
+                                                            </view>
+                                                            <constraints>
+                                                                <constraint firstItem="ERg-Uc-zuI" firstAttribute="top" secondItem="q4V-lM-zuy" secondAttribute="top" id="FVl-vi-bI2"/>
+                                                                <constraint firstItem="ERg-Uc-zuI" firstAttribute="leading" secondItem="q4V-lM-zuy" secondAttribute="leading" id="XNW-0T-9yM"/>
+                                                                <constraint firstAttribute="trailing" secondItem="ERg-Uc-zuI" secondAttribute="trailing" id="cRP-Xo-WDL"/>
+                                                                <constraint firstAttribute="bottom" secondItem="ERg-Uc-zuI" secondAttribute="bottom" id="owQ-eg-UM2"/>
+                                                            </constraints>
+                                                            <connections>
+                                                                <outlet property="scoreButton" destination="ERg-Uc-zuI" id="eFt-su-ZZg"/>
+                                                            </connections>
+                                                        </collectionViewCell>
+                                                    </cells>
+                                                    <connections>
+                                                        <outlet property="dataSource" destination="mEi-hH-CUE" id="pEB-Pc-aAb"/>
+                                                        <outlet property="delegate" destination="mEi-hH-CUE" id="8ny-wc-4ty"/>
+                                                    </connections>
+                                                </collectionView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="9ud-n1-2lo" secondAttribute="trailing" constant="10" id="3eJ-vU-HKg"/>
+                                                <constraint firstItem="9ud-n1-2lo" firstAttribute="top" secondItem="fzL-PO-qld" secondAttribute="top" id="J91-J1-b3Y"/>
+                                                <constraint firstItem="9ud-n1-2lo" firstAttribute="leading" secondItem="fzL-PO-qld" secondAttribute="leading" constant="10" id="JaF-8Y-9D9"/>
+                                                <constraint firstAttribute="bottom" secondItem="9ud-n1-2lo" secondAttribute="bottom" constant="10" id="MJi-c6-745"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="score"/>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <outlet property="scoreCollection" destination="9ud-n1-2lo" id="EoV-tO-f8r"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="mEi-hH-CUE" id="doI-8H-ES5"/>
+                                    <outlet property="delegate" destination="mEi-hH-CUE" id="TAG-8t-BzE"/>
+                                </connections>
+                            </tableView>
+                            <toolbar opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y1H-0M-Egj">
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="OOG-Hv-y1d"/>
+                                </constraints>
+                                <items>
+                                    <barButtonItem style="plain" id="kfj-Nd-7CF">
+                                        <view key="customView" contentMode="scaleToFill" id="od1-py-F4T">
+                                            <rect key="frame" x="16" y="22" width="0.0" height="0.0"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <subviews>
+                                                <stackView autoresizesSubviews="NO" opaque="NO" contentMode="left" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="5A9-ob-sf7">
+                                                    <rect key="frame" x="0.0" y="0.0" width="90" height="34"/>
+                                                    <subviews>
+                                                        <button autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IVB-I0-IfC" customClass="ErrorRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="6" width="30" height="22"/>
+                                                            <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="30" id="cMn-l6-S1R"/>
+                                                                <constraint firstAttribute="height" constant="30" id="d3C-6B-EXa"/>
+                                                            </constraints>
+                                                            <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
+                                                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <connections>
+                                                                <action selector="saveScorePressed:" destination="mEi-hH-CUE" eventType="touchUpInside" id="5ki-0u-eNT"/>
+                                                            </connections>
+                                                        </button>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8rw-oz-v5h" customClass="DarkRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                            <rect key="frame" x="30" y="0.0" width="60" height="34"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="Kuj-6V-wtF"/>
+                                                            </constraints>
+                                                            <state key="normal" title="Done"/>
+                                                            <connections>
+                                                                <action selector="saveScorePressed:" destination="mEi-hH-CUE" eventType="touchUpInside" id="gKc-8X-Agj"/>
+                                                            </connections>
+                                                        </button>
+                                                    </subviews>
+                                                    <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="1"/>
+                                                </stackView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstItem="5A9-ob-sf7" firstAttribute="top" secondItem="od1-py-F4T" secondAttribute="top" id="MtE-us-5Oz"/>
+                                                <constraint firstItem="5A9-ob-sf7" firstAttribute="leading" secondItem="od1-py-F4T" secondAttribute="leading" id="cGY-FO-Gpf"/>
+                                                <constraint firstAttribute="bottom" secondItem="5A9-ob-sf7" secondAttribute="bottom" id="q0i-Qz-l7P"/>
+                                                <constraint firstAttribute="trailing" secondItem="5A9-ob-sf7" secondAttribute="trailing" id="w9N-ZI-GHd"/>
+                                            </constraints>
+                                        </view>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="lrb-ys-grN"/>
+                                    <barButtonItem style="plain" id="CER-H3-Fj3">
+                                        <view key="customView" contentMode="scaleToFill" id="4lv-P9-tyv">
+                                            <rect key="frame" x="187.5" y="22" width="0.0" height="0.0"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <subviews>
+                                                <label opaque="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Round" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="mYF-x3-kAl">
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="bottom" secondItem="mYF-x3-kAl" secondAttribute="bottom" id="2JT-4W-zAG"/>
+                                                <constraint firstItem="mYF-x3-kAl" firstAttribute="leading" secondItem="4lv-P9-tyv" secondAttribute="leading" id="72s-mZ-Jc2"/>
+                                                <constraint firstItem="mYF-x3-kAl" firstAttribute="top" secondItem="4lv-P9-tyv" secondAttribute="top" id="K0N-as-YC5"/>
+                                                <constraint firstAttribute="trailing" secondItem="mYF-x3-kAl" secondAttribute="trailing" id="pKG-DF-d3D"/>
+                                            </constraints>
+                                        </view>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="zJZ-51-3Rw"/>
+                                    <barButtonItem style="plain" id="b5P-5H-sde">
+                                        <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Sy8-YT-Lhn" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <rect key="frame" x="238" y="5" width="30" height="34"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="summary"/>
+                                            </userDefinedRuntimeAttributes>
+                                            <connections>
+                                                <action selector="summaryClicked:" destination="mEi-hH-CUE" eventType="touchUpInside" id="A8y-aY-Kij"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="8ud-XJ-6aK"/>
+                                    <barButtonItem style="plain" id="uPa-2p-7w1" userLabel="Undo Button Item">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="cxI-wh-pjW" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <rect key="frame" x="278" y="11" width="21" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="30" id="XR2-4m-eiq"/>
+                                            </constraints>
+                                            <state key="normal" image="undo"/>
+                                            <connections>
+                                                <action selector="undoButtonClicked:" destination="mEi-hH-CUE" eventType="touchUpInside" id="iyc-ZL-3Yt"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" id="vR4-cM-rW0" userLabel="Back Button Item">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="zm0-r6-Hms" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <rect key="frame" x="299" y="9.5" width="25" height="25"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="30" id="q9c-aN-1IW"/>
+                                            </constraints>
+                                            <state key="normal" image="leftarrow"/>
+                                            <connections>
+                                                <action selector="backButtonClicked:" destination="mEi-hH-CUE" eventType="touchUpInside" id="nfT-pF-ja9"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="LIh-KQ-1vR"/>
+                                    <barButtonItem style="plain" id="Fas-Od-Jh7" userLabel="Forward Button Item">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="mZp-Xc-kKD" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <rect key="frame" x="334" y="9.5" width="25" height="25"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="30" id="tpf-Ru-0Py"/>
+                                            </constraints>
+                                            <state key="normal" image="rightarrow"/>
+                                            <connections>
+                                                <action selector="forwardButtonClicked:" destination="mEi-hH-CUE" eventType="touchUpInside" id="rAS-nq-7Zu"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="jGM-gE-2rv" secondAttribute="trailing" id="2eM-PN-oJy"/>
+                            <constraint firstItem="jGM-gE-2rv" firstAttribute="top" secondItem="xuy-nO-Nis" secondAttribute="bottom" id="5bZ-fb-Xpl"/>
+                            <constraint firstItem="Y1H-0M-Egj" firstAttribute="bottom" secondItem="5Ek-fs-opP" secondAttribute="top" id="FHY-mp-m6p"/>
+                            <constraint firstItem="Y1H-0M-Egj" firstAttribute="top" secondItem="jGM-gE-2rv" secondAttribute="bottom" id="FPh-7C-x80"/>
+                            <constraint firstAttribute="trailing" secondItem="Y1H-0M-Egj" secondAttribute="trailing" id="GRK-5X-OIg"/>
+                            <constraint firstItem="Y1H-0M-Egj" firstAttribute="leading" secondItem="pS0-jq-6eE" secondAttribute="leading" id="XMS-Hj-0M4"/>
+                            <constraint firstItem="jGM-gE-2rv" firstAttribute="leading" secondItem="pS0-jq-6eE" secondAttribute="leading" id="y0p-uO-hR1"/>
+                        </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="5oH-3E-qHk" appends="YES" id="ExL-K4-wHm"/>
+                        </connections>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <toolbarItems>
+                        <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="92v-Uz-aFB"/>
+                    </toolbarItems>
+                    <value key="contentSizeForViewInPopover" type="size" width="320" height="568"/>
+                    <connections>
+                        <outlet property="backButton" destination="zm0-r6-Hms" id="wmB-Gb-VSu"/>
+                        <outlet property="barTitle" destination="mYF-x3-kAl" id="eBm-0k-S1q"/>
+                        <outlet property="entryTableView" destination="jGM-gE-2rv" id="Gak-Rp-AWB"/>
+                        <outlet property="entryView" destination="pS0-jq-6eE" id="n4n-SH-4Cj"/>
+                        <outlet property="errorsButton" destination="IVB-I0-IfC" id="VW1-kd-v6X"/>
+                        <outlet property="finishButton" destination="8rw-oz-v5h" id="fQN-3j-bQO"/>
+                        <outlet property="forwardButton" destination="mZp-Xc-kKD" id="oy5-fT-Da5"/>
+                        <outlet property="summaryButton" destination="Sy8-YT-Lhn" id="V1f-gf-7L3"/>
+                        <outlet property="undoButton" destination="cxI-wh-pjW" id="5Yc-00-xdO"/>
+                        <segue destination="Rwb-y8-jvq" kind="unwind" identifier="hideEntry" unwindAction="hideEntryWithSegue:" id="XKG-1q-g76"/>
+                        <segue destination="Rwb-y8-jvq" kind="unwind" identifier="linkGameSummary" customClass="UIStoryboardSegueWithCompletion" customModule="Contract_Whist_Scorecard" customModuleProvider="target" animates="NO" unwindAction="linkGameSummaryWithSegue:" id="EuF-SC-abc"/>
+                        <segue destination="nMs-gZ-i6r" kind="popoverPresentation" identifier="showRoundSummary" popoverAnchorView="pS0-jq-6eE" id="ZUj-17-gZD">
+                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                        </segue>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qoh-28-xeD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="right" id="5oH-3E-qHk" userLabel="Right Swipe Gesture Recognizer">
+                    <connections>
+                        <action selector="rightSwipeWithRecognizer:" destination="mEi-hH-CUE" id="Eu0-Yn-aTR"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <exit id="Rwb-y8-jvq" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="8874" y="-544"/>
+        </scene>
+        <!--Round Summary-->
+        <scene sceneID="D7o-5q-QQz">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="RoundSummary" storyboardName="RoundSummaryViewController" referencedIdentifier="RoundSummaryViewController" id="nMs-gZ-i6r" userLabel="Round Summary" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Z9c-Fq-WIz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="9453" y="-545"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="leftarrow" width="25" height="25"/>
+        <image name="rightarrow" width="25" height="25"/>
+        <image name="undo" width="21" height="22"/>
+    </resources>
+</document>

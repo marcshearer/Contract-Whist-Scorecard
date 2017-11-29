@@ -1,0 +1,1153 @@
+//
+//  Scorecard Class.swift
+//  Contract Whist Scorecard
+//
+//  Created by Marc Shearer on 02/12/2016.
+//  Copyright © 2016 Marc Shearer. All rights reserved.
+//
+
+import UIKit
+import CoreData
+import CloudKit
+
+enum DealerHighlightMode {
+    case none
+    case highlight
+    case small
+    case large
+}
+
+enum CommsHandlerMode {
+    case none
+    case scorepad
+    case roundSummary
+    case gameSummary
+    case playHand
+    case dismiss
+    case viewTrick
+}
+
+class Scorecard {
+    
+    // Main state class for the application
+    
+    public var suits: [Suit]!
+    
+    private var player: [Player]? = nil // Keep this private as should access it dependent on index incremented by dealer etc
+    
+    public var numberPlayers = 0
+    public var currentPlayers = 0
+    public var maxEnteredRound = 1
+    public var selectedRound = 1
+    public var dealerIs = 1
+    public var readyToPlay = false
+    private var roundError: [Bool] = []
+    public var gameInProgress: Bool = false
+    public var inScorepad: Bool = false
+    public var recoveryMode: Bool = false
+    public var recoveryOnlinePurpose: CommsConnectionPurpose!
+    public var recoveryOnlineType: CommsConnectionType!
+    public var recoveryOnlineMode: CommsConnectionMode!
+    public var recoveryConnectionUUID: String!
+    public var recoveryConnectionEmail: String!
+    public var recoveryConnectionDevice: String!
+    public let numberSuits = 4
+    public var gameLocation: GameLocation!
+    public var gameDatePlayed: Date!
+    public var gameUUID: String!
+    public var defaultPlayerOnDevice: String!
+    public var latestVersion = "0.0"
+    public var latestBuild = 0
+    
+    // Variables for online games
+    public var deal: Deal!
+    public var handViewController: HandViewController!
+    public var handState: HandState!
+    public var commsHandlerMode: CommsHandlerMode = .none
+    public var sendScores = false
+    public var notificationSimulator: NotificationSimulator!
+    
+    // Remote logging
+    public var logService: RabbitMQService!
+    public var logQueue: RabbitMQQueue!
+    
+    // Variables for test extensions
+    public var autoPlay: Int = 0
+    
+    // Variable to store scorepad header height to re-center popups correctly
+    public var scorepadHeaderHeight: CGFloat = 0
+    
+    // Class to pass state to watch
+    public var watchManager: WatchManager!
+    
+    // Settings
+    public var settingDealerHighlightMode = DealerHighlightMode.highlight
+    public var settingDealerHighlightAbove = true
+    public var settingBonus2 = true
+    public var rounds = 25
+    public var settingCards = [13, 1]
+    public var settingBounceNumberCards: Bool = false
+    public var settingTrumpSequence = ["♣︎", "♦︎", "♥︎", "♠︎", "NT"]
+    public var settingSyncEnabled = false
+    public var settingSaveHistory = true
+    public var settingSaveLocation = true
+    public var settingReceiveNotifications = false
+    public var settingAllowBroadcast = true
+    public var settingAlertVibrate = true
+    public var settingAlertFlash = true
+    public var settingVersion = "0.0"
+    public var settingBuild = 0
+    public var settingLastVersion = "0.0"
+    public var settingLastBuild = 0
+    public var settingVersionBlockSync = false
+    public var settingVersionBlockAccess = false
+    public var settingVersionMessage = ""
+    public var settingDatabase = ""
+    public static var settingRabbitMQUri = ""
+    public var settingNearbyPlaying = false
+    public var settingOnlinePlayerEmail: String!
+    
+    // Link to recover class
+    public var recovery = Recovery()
+    
+    // Instantiate synchronise class
+    public let sync = Sync()
+
+    // Core data variables
+    public var playerList:[PlayerMO] = []
+    public var gameMO: GameMO!
+    
+    // Network state
+    public var isLoggedIn = false
+    public var isNetworkAvailable = false
+    public var iCloudUserIsMe = false
+    
+    // Comms services
+    public var sharingService: MultipeerService!
+    public var commsDelegate: CommsHandlerDelegate?
+    
+    // Admin mode
+    static var adminMode = false
+    
+    // Core data context - set up in initialise
+    static var context: NSManagedObjectContext!
+    
+    public func initialise(players: Int, rounds: Int, recovery: Recovery) {
+        
+        recovery.initialise(scorecard: self)
+        self.recovery = recovery
+        
+        self.player = []
+        if players > 0 {
+            for playerNumber in 1...players {
+                self.player!.append(Player(rounds: rounds, scorecard: self, playerNumber: playerNumber, recovery: recovery))
+            }
+        }
+
+        if rounds > 0 {
+            for _ in 1...rounds {
+                self.roundError.append(false)
+            }
+        }
+        self.numberPlayers = players
+        self.currentPlayers = players
+        
+        loadSettings()
+        loadDefaults()
+        
+        self.rounds = (self.rounds == 0 ? rounds : self.rounds)
+        
+        getPlayerList()
+        
+        // Setup suit sequence & rounds
+        self.setupRounds()
+        self.setupSuits()
+                
+        // Initialise the sync object
+        sync.initialise(scorecard: self)
+        
+        // Set up game location class
+        self.gameLocation = GameLocation(location: nil, description: "")
+        
+        // Setup sharing object and take broadcast delegates
+        self.setupSharing()
+        
+        // Set icloud user flag
+        Scorecard.iCloudUserIsMe(scorecard: self)
+        
+        // Remove any temporary online game notification subscription
+        Notifications.removeTemporaryOnlineGameSubscription()
+        
+        // Set up Watch Manager
+        self.watchManager = WatchManager(self)
+        
+   }
+    
+    public func getPlayerList() {
+        // Fetch list of potential players from data store
+        self.playerList = CoreData.fetch(from: "Player", sort: ("name", .ascending))
+    }
+
+    public func playerDetailList() -> [PlayerDetail] {
+        // Return a list of player detail records corresponding to player MO list
+        var playerDetailList: [PlayerDetail] = []
+        for playerMO in self.playerList {
+            let playerDetail = PlayerDetail(self)
+            playerDetail.fromManagedObject(playerMO: playerMO)
+            playerDetailList.append(playerDetail)
+        }
+        return playerDetailList
+    }
+    
+    public enum GetPlayerMode {
+        case getExisting
+        case getNew
+        case getAll
+        case getSyncInProgress
+    }
+    
+    public func playerEmailList(getPlayerMode: GetPlayerMode = .getAll, cutoffDate: Date! = nil, specificEmail: [String] = []) -> [String] {
+        var playerEmailList: [String] = []
+        var include = false
+        
+        for playerMO in self.playerList {
+            
+            if playerMO.email != nil && playerMO.email! != "" {
+                
+                include = true
+                if specificEmail.count != 0 {
+                    if specificEmail.index(where: {($0 == playerMO.email)}) == nil {
+                        include = false
+                    }
+                }
+                
+                if include {
+                    switch getPlayerMode {
+                    case .getExisting:
+                        include = (cutoffDate! >= playerMO.localDateCreated! as Date)
+                    case .getNew:
+                        include = (playerMO.localDateCreated! as Date > cutoffDate!)
+                    case .getSyncInProgress:
+                        include = (playerMO.syncInProgress)
+                    default:
+                        include = true
+                    }
+                    
+                    if include {
+                        playerEmailList.append(playerMO.email!)
+                    }
+                }
+            }
+        }
+        return playerEmailList
+    }
+    
+    public func refreshPlayerDetailList(_ playerDetailList: [PlayerDetail]){
+        // Refresh a list of player detail records from the associated managed objects
+        for playerDetail in playerDetailList {
+            playerDetail.fromManagedObject(playerMO: playerDetail.playerMO)
+        }
+    }
+    
+    func isDuplicateName(_ playerDetail: PlayerDetail) -> Bool {
+        let index = self.playerList.index(where: {$0.name?.uppercased() == playerDetail.name.uppercased() && $0.objectID != playerDetail.objectID} )
+        return (index != nil)
+    }
+    
+    func isDuplicateEmail(_ playerDetail: PlayerDetail) -> Bool {
+        let index = self.playerList.index(where: {$0.email!.uppercased() == playerDetail.email.uppercased() && $0.objectID != playerDetail.objectID} )
+        return (index != nil)
+    }
+    
+    func playerName(_ playerEmail: String) -> String {
+        let index = self.playerList.index(where: {$0.email!.uppercased() == playerEmail.uppercased()} )
+        if index != nil {
+            return playerList[index!].name!
+        } else {
+            return ""
+        }
+    }
+    
+    public func getVersion() {
+        // Get current software versions
+        let dictionary = Bundle.main.infoDictionary!
+        self.settingVersion = dictionary["CFBundleShortVersionString"] as! String!
+        self.settingBuild = Int(dictionary["CFBundleVersion"] as! String)!
+        
+        // Check if upgrade necessary
+        if self.settingVersion != self.settingLastVersion {
+            if !upgradeToVersion(from: Utility.getActiveViewController()!) {
+                Utility.getActiveViewController()?.alertMessage("Error upgrading to latest version")
+                exit(0)
+            }
+        }
+    }
+    
+    public func upgradeToVersion(from: UIViewController) -> Bool {
+        /*
+        if Utility.compareVersions(version1: self.settingLastVersion, version2: "1.1") == .lessThan {
+            if !Upgrade.upgradeTo11(from: from, scorecard: self) {
+                return false
+            }
+        }
+        */
+        
+        // Store in defaults
+        UserDefaults.standard.set(self.settingVersion, forKey: "version")
+        UserDefaults.standard.set(self.settingBuild, forKey: "build")
+        
+        return true
+        
+    }
+    
+    private func loadSettings() {
+        
+        // Load dealer highlight mode
+        if let dealerHighlightMode = UserDefaults.standard.string(forKey: "dealerHighlightMode") {
+            switch dealerHighlightMode{
+            case "none":
+                self.settingDealerHighlightMode = DealerHighlightMode.none
+            case "small":
+                self.settingDealerHighlightMode = DealerHighlightMode.small
+            case "large":
+                self.settingDealerHighlightMode = DealerHighlightMode.large
+            default:
+                self.settingDealerHighlightMode = DealerHighlightMode.highlight
+            }
+        } else {
+            self.settingDealerHighlightMode = DealerHighlightMode.highlight
+        }
+        
+        // Load dealer highlight position
+        self.settingDealerHighlightAbove = UserDefaults.standard.bool(forKey: "dealerHighlightAbove")
+        
+        // Load bonus for making a trick with a 2
+        self.settingBonus2 = UserDefaults.standard.bool(forKey: "bonus2")
+                
+        // Load number of cards & bounce number of cards
+        self.settingCards = UserDefaults.standard.array(forKey: "cards") as! [Int]
+        self.settingBounceNumberCards = UserDefaults.standard.bool(forKey: "bounceNumberCards")
+        
+        // Load trump sequence
+        self.settingTrumpSequence = UserDefaults.standard.array(forKey: "trumpSequence") as! [String]
+        
+        // Load sync enabled flag
+        self.settingSyncEnabled = UserDefaults.standard.bool(forKey: "syncEnabled")
+        
+        // Load save history settings
+        self.settingSaveHistory = UserDefaults.standard.bool(forKey: "saveHistory")
+        self.settingSaveLocation = UserDefaults.standard.bool(forKey: "saveLocation")
+        
+        // Load notification setting
+        self.settingReceiveNotifications = UserDefaults.standard.bool(forKey: "allowNotifications")
+        
+        // Load alert settings
+        self.settingAlertVibrate = UserDefaults.standard.bool(forKey: "alertVibrate")
+        self.settingAlertFlash = UserDefaults.standard.bool(forKey: "alertFlash")
+        
+        // Load broadcast setting
+        self.settingAllowBroadcast = UserDefaults.standard.bool(forKey: "allowBroadcast")
+        
+        // Load nearby playing setting
+        self.settingNearbyPlaying = UserDefaults.standard.bool(forKey: "nearbyPlaying")
+        
+        // Load Online Game settings
+        self.settingOnlinePlayerEmail = Scorecard.onlineEmail()
+        
+        // Get previous version and build
+        self.settingLastVersion = UserDefaults.standard.string(forKey: "version")!
+        self.settingLastBuild = UserDefaults.standard.integer(forKey: "build")
+        
+        // Get saved access / sync / version message / database and flags
+        self.settingVersionBlockAccess = UserDefaults.standard.bool(forKey: "versionBlockAccess")
+        self.settingVersionBlockSync = UserDefaults.standard.bool(forKey: "versionBlockSync")
+        self.settingVersionMessage = UserDefaults.standard.string(forKey: "versionMessage")!
+        self.settingDatabase = UserDefaults.standard.string(forKey: "database")!
+        
+        // Get saved rabbitMQ URI
+        Scorecard.settingRabbitMQUri = UserDefaults.standard.string(forKey: "rabbitMQUri")!
+    }
+    
+    public func loadGameDefaults() {
+        // Load saved values from last session
+        var playerListNumber = 0
+        
+        // Number of players
+        var currentPlayers = UserDefaults.standard.integer(forKey: "numberPlayers")
+        if currentPlayers != 3 && currentPlayers != 4 {
+            currentPlayers = 4
+        }
+        self.currentPlayers = currentPlayers
+        
+        // Player names
+        for player in 1...currentPlayers {
+            if let defaultPlayerURI = UserDefaults.standard.string(forKey: "player\(player)") {
+                // Got a URI - search managed objects for a match
+                playerListNumber = 1
+                
+                while playerListNumber <= self.playerList.count {
+                    
+                    if defaultPlayerURI == playerURI(self.playerList[playerListNumber-1]) {
+                        self.player![player-1].playerMO = self.playerList[playerListNumber-1]
+                        self.player![player-1].playerNumber = player
+                        break
+                    }
+                    
+                    playerListNumber += 1
+                    
+                }
+            }
+        }
+        
+        // Dealer is
+        self.dealerIs = max(1, UserDefaults.standard.integer(forKey: "dealerIs"))
+    }
+    
+    private func loadDefaults() {
+        // Defaut player on device
+        self.defaultPlayerOnDevice = UserDefaults.standard.string(forKey: "defaultPlayerOnDevice")
+    }
+        
+    public func reset() {
+        // Reset class for a new game
+        for playerNumber in 1...numberPlayers {
+            self.player![playerNumber-1].reset()
+        }
+        self.maxEnteredRound = 1
+        self.selectedRound = 1
+        self.gameInProgress = false
+        self.gameDatePlayed = nil
+        self.gameUUID = ""
+        
+        // Reset game managed object
+        self.gameMO = nil
+    }
+    
+    
+    public func formatRound(_ round: Int) {
+    // Loop around all players (not just this one) highlighting errors etc
+        for playerLoop in 1...self.currentPlayers {
+            
+            formatCell(round: round, playerNumber: playerLoop, mode: Mode.bid)
+            formatCell(round: round, playerNumber: playerLoop, mode: Mode.made)
+        }
+    }
+    
+    public func playerURI(_ playerMO: PlayerMO?) -> String {
+        // Returns the Object ID URI for an entry in the player list
+        if playerMO == nil {
+            return ""
+        } else {
+            return playerMO!.objectID.uriRepresentation().absoluteString
+        }
+    }
+    
+    public func formatCell(round: Int, playerNumber: Int, mode: Mode) {
+        let player = self.scorecardPlayer(playerNumber)
+        
+        switch mode {
+        case Mode.bid:
+            if player.bidCell[round-1] != nil {
+                if self.roundError[round-1] {
+                    ScorecardUI.errorStyle(player.bidCell[round-1]!.scorepadCellLabel, errorCondtion: true, inverse: true)
+                } else {
+                    ScorecardUI.normalStyle(player.bidCell[round-1]!.scorepadCellLabel, setFont: false)
+                }
+            }
+        case Mode.made:
+            if player.scoreCell[round-1] != nil {
+                if self.roundError[round-1] {
+                    ScorecardUI.errorStyle(player.scoreCell[round-1]!.scorepadCellLabel, errorCondtion: true, inverse: true)
+                } else {
+                    if player.bid(round) != nil && player.bid(round) == player.made(round) {
+                        ScorecardUI.madeContractStyle(player.scoreCell[round-1]!.scorepadCellLabel, setFont: false)
+                    } else {
+                        if player.bidCell[round-1] == nil{
+                            // No bid label so don't need to differentiate
+                            ScorecardUI.normalStyle(player.scoreCell[round-1]!.scorepadCellLabel, setFont: false)
+                        } else {
+                            ScorecardUI.darkHighlightStyle(player.scoreCell[round-1]!.scorepadCellLabel)
+                        }
+                    }
+                    let imageView = player.scoreCell[round-1].scorepadImage!
+                    if player.twos(round) != nil && player.twos(round) != 0 {
+                        if player.twos(round) == 1 {
+                            imageView.image = UIImage(named: "two")!
+                        } else {
+                            imageView.image = UIImage(named: "twos")!
+                        }
+                    } else {
+                        imageView.image = nil
+                    }
+                    imageView.superview!.bringSubview(toFront: imageView)
+                }
+            }
+        default:
+            break
+        }
+    }
+    
+    public func enteredPlayer(email: String) -> Player? {
+        if let index = self.player?.index(where: {$0.playerMO != nil && $0.playerMO!.email == email}) {
+            return self.player?[index]
+        } else {
+            return nil
+        }
+    }
+
+    public func enteredPlayer(_ playerNumber: Int) -> Player {
+        // Returns the players in the sequence they were entered in the Player View - for use in the Player View
+        return self.player![(playerNumber - 1)  % self.currentPlayers]
+    }
+    
+    public func scorecardPlayer(_ playerNumber: Int) -> Player {
+        // Returns the players with the first dealer first - for use in the Scorepad View
+        return self.player![((playerNumber - 1) + (self.dealerIs - 1)) % self.currentPlayers]
+    }
+    
+    public func entryPlayer(_ playerNumber: Int) -> Player {
+        // Returns the players with the dealer for the selected round first - for use in the Entry View
+        return self.roundPlayer(playerNumber: playerNumber, round: self.selectedRound)
+    }
+    
+    public func roundPlayer(playerNumber: Int, round: Int) -> Player {
+        // Returns the players with the dealer for a specific round first
+        return self.player![((playerNumber - 1) + (self.dealerIs - 1) + (round - 1)) % self.currentPlayers]
+    }
+    
+    public func enteredIndex(_ objectID: NSManagedObjectID) -> Int? {
+        // Find the index of the given object ID in the player array
+        for playerNumber in 1...self.currentPlayers {
+            if self.player![playerNumber-1].playerMO!.objectID == objectID {
+                return playerNumber - 1
+            }
+        }
+        return nil
+    }
+    
+    public func scorecardIndex(_ objectID: NSManagedObjectID) -> Int? {
+        // Find the index of the given object ID in the player array and offset it by the dealer
+        let enteredIndex = self.enteredIndex(objectID)
+        if enteredIndex == nil {
+            return nil
+        } else {
+            return (enteredIndex! + (self.dealerIs - 1)) % self.currentPlayers
+        }
+    }
+    
+    public func findPlayerByEmail(_ email: String) -> PlayerMO? {
+        let index = self.playerList.index(where: {($0.email == email)})
+        if index == nil {
+            return nil
+        } else {
+            return self.playerList[index!]
+        }
+    }
+
+    public static func nameFromEmail(_ email: String) -> String? {
+        let playerList: [PlayerMO] = CoreData.fetch(from: "Player", filter: NSPredicate(format: "email = %@", email), sort: ("name", .ascending))
+        if playerList.count > 0 {
+            return playerList[0].name
+        } else {
+            return nil
+        }
+    }
+    
+    public func setGameInProgress(_ gameInProgress: Bool, suppressWatch: Bool = false) {
+        self.gameInProgress = gameInProgress
+        recovery.saveGameInProgress()
+        if !suppressWatch || gameInProgress {
+            self.watchManager.updateScores()
+        }
+    }
+    
+    public func gameComplete(rounds: Int) -> Bool {
+        // Check last score on last round filled in
+        return self.roundPlayer(playerNumber: self.currentPlayers,
+                                round: rounds).score(rounds) != nil
+    }
+    
+    public func movePlayer(fromPlayerNumber: Int, toPlayerNumber: Int) {
+        let playerToMove = self.player![fromPlayerNumber-1]
+        self.player!.remove(at: fromPlayerNumber - 1)
+        self.player!.insert(playerToMove, at: toPlayerNumber-1)
+        
+        // Need to sort out any stored sequence dependent values at this point - calling routine should sort out UI
+        for playerNumber in 1...self.currentPlayers {
+            self.player![playerNumber-1].playerNumber = playerNumber
+        }
+    }
+    
+    public func setupSuits() {
+        self.suits = []
+        for suit in self.settingTrumpSequence {
+            self.suits.append(Suit(fromString: suit))
+        }
+    }
+    
+    public func setupRounds() {
+        let range = abs(self.settingCards[0] - self.settingCards[1]) + 1
+        if self.settingBounceNumberCards {
+            self.rounds = (2 * range) - 1
+        } else {
+            self.rounds = range
+        }
+    }
+    
+    public func roundTitle(_ round: Int, rankColor: UIColor = UIColor.black, rounds: Int, cards: [Int]! = nil, bounce: Bool! = nil, suits: [Suit]! = nil) -> NSMutableAttributedString {
+        
+        let rankColor = [NSAttributedStringKey.foregroundColor: rankColor]
+        let rank = NSMutableAttributedString(string: "\(self.roundCards(round, rounds: rounds, cards: cards, bounce: bounce))", attributes: rankColor)
+        let suit = self.roundSuit(round, suits: suits)
+        let roundTitle = NSMutableAttributedString()
+        roundTitle.append(rank)
+        roundTitle.append(suit.toAttributedString())
+        
+        return roundTitle
+    }
+
+    public func roundSuit(_ round: Int, suits: [Suit]!) -> Suit {
+        var suits = suits
+        if suits == nil {
+            suits = self.suits
+        }
+        return suits![(round-1) % suits!.count]
+    }
+    
+    public func roundCards(_ round: Int, rounds: Int! = nil, cards: [Int]! = nil, bounce: Bool! = nil) -> Int {
+        var numberCards: Int
+        
+        var rounds = rounds
+        if rounds == nil {
+            rounds = self.rounds
+        }
+        
+        var cards = cards
+        if cards == nil {
+            cards = self.settingCards
+        }
+        
+        var bounce = bounce
+        if bounce == nil {
+            bounce = self.settingBounceNumberCards
+        }
+        
+        if bounce! {
+            numberCards = abs(((rounds!+1) / 2) - round) + 1
+        } else {
+            numberCards = rounds! - round + 1
+        }
+        if cards![0] < cards![1] {
+            return cards![1] - numberCards + 1
+        } else {
+            return numberCards
+        }
+    }
+
+    public func remaining(playerNumber: Int, round: Int, mode: Mode, rounds: Int, cards: [Int], bounce: Bool) -> Int {
+        // Returns the number of tricks remaining (excluding a particular player (or 0)
+        // i.e. subtracts total bid / made / twos from the number of tricks in the round
+        // For twos it caps the number of tricks at 4
+        
+        // Note that the playernumber is compared with the entered player number
+        
+        var remaining: Int
+        if mode == Mode.twos {
+            remaining = min(self.numberSuits, rounds+1 - round)
+        } else {
+            remaining = self.roundCards(round, rounds: rounds, cards: cards, bounce: bounce)
+        }
+        
+        for playerLoop in 1...self.currentPlayers {
+            if playerLoop != playerNumber && self.entryPlayer(playerLoop).value(round: round, mode: mode) != nil {
+                remaining = remaining-self.entryPlayer(playerLoop).value(round: round, mode: mode)!
+            }
+        }
+        
+        return remaining
+    }
+    
+    public func updateSelectedPlayers(_ selectedPlayers: [PlayerMO]) {
+        // Update the currently selected players on return from the player selection view
+        
+        if selectedPlayers.count > 1 {
+            self.setCurrentPlayers(players: selectedPlayers.count)
+            UserDefaults.standard.set(self.currentPlayers, forKey: "numberPlayers")
+            
+            for playerNumber in 1...self.currentPlayers {
+                let playerMO = selectedPlayers[playerNumber-1]
+                self.enteredPlayer(playerNumber).playerMO = playerMO
+                UserDefaults.standard.set(self.playerURI(playerMO), forKey: "player\(playerNumber)")
+            }
+        }
+    }
+    
+    public func checkReady() {
+        var playerLoop = 1
+        self.readyToPlay = true
+        
+        while playerLoop <= self.currentPlayers {
+            if self.player![playerLoop-1].playerMO == nil
+            {
+                self.readyToPlay = false
+                break
+                
+            } else {
+                if playerLoop > 1 {
+                    // Check for duplicates
+                    for subPlayerLoop in 1...playerLoop - 1 {
+                        if self.player![playerLoop-1].playerMO!.name! == self.player![subPlayerLoop-1].playerMO!.name! {
+                            self.readyToPlay = false
+                            break
+                        }
+                    }
+                }
+            }
+            playerLoop += 1
+        }
+    }
+    
+    public func setCurrentPlayers(players: Int) {
+        if players != self.currentPlayers {
+            // Changing number of players
+            
+            self.currentPlayers = players
+            if self.dealerIs > self.currentPlayers {
+                self.dealerIs = 1
+            }
+        }
+    }
+    
+    public func roundError(_ round: Int) -> Bool {
+        return self.roundError[round-1]
+    }
+    
+    public func setRoundError(_ round: Int, _ errors: Bool) {
+        self.roundError[round-1] = errors
+        self.formatRound(round)
+        recovery.saveRoundError(round: round)
+    }
+    
+    public func nextDealer() {
+        self.dealerIs = (self.dealerIs % self.currentPlayers) + 1
+    }
+    
+    public func previousDealer() {
+        self.dealerIs = ((self.dealerIs + self.currentPlayers - 2) % self.currentPlayers) + 1
+    }
+    
+    public func randomDealer() {
+        self.dealerIs = Int(arc4random_uniform(UInt32(self.currentPlayers))) + 1
+    }
+    
+    public func isScorecardDealer() -> Int {
+        // Returns the player number of the dealer - for use in the Scorecard view
+        return (((self.maxEnteredRound - 1)) % self.currentPlayers) + 1
+    }
+    
+    public func dealerName() -> String {
+        return self.player![self.dealerIs-1].playerMO!.name!
+    }
+    
+    public func advanceMaximumRound(rounds: Int) {
+        if self.roundComplete(maxEnteredRound) {
+            // Have now completed the entire row
+            self.maxEnteredRound = min(rounds, maxEnteredRound + 1)
+        }
+        self.selectedRound = self.maxEnteredRound
+    }
+    
+    public func roundStarted(_ round: Int) -> Bool {
+        return self.roundPlayer(playerNumber: 1, round: round).bid(round) != nil
+    }
+    
+    public func roundBiddingComplete(_ round: Int) -> Bool {
+        return self.roundPlayer(playerNumber: self.currentPlayers, round: round).bid(round) != nil
+    }
+    
+    public func roundMadeStarted(_ round: Int) -> Bool {
+        return self.roundPlayer(playerNumber: 1, round: round).made(round) != nil
+    }
+    
+    public func roundComplete(_ round: Int) -> Bool {
+        return self.roundPlayer(playerNumber: self.currentPlayers, round: round).score(round) != nil
+    }
+    
+    public func saveMaxScores() {
+        
+        for player in 1...self.currentPlayers {
+            self.enteredPlayer(player).saveMaxScore()
+        }
+    }
+
+    public func finishGame(from: UIViewController, toSegue: String, advanceDealer: Bool = false, rounds: Int, completion: (()->())? = nil) {
+        if !self.gameInProgress {
+            exitScorecard(from: from, toSegue: toSegue, rounds: rounds, completion: completion)
+        } else {
+            var message: String
+            if self.gameComplete(rounds: rounds) {
+                // Game is complete
+                message = "Your game has been saved. However if you continue you will not be able to return to it."
+            } else {
+                // Game is still in progress
+                message = "Warning: This will clear the existing score card and start a new game."
+            }
+            let alertController = UIAlertController(title: "Finish Game", message: message + "\n\n Are you sure you want to do this?", preferredStyle: UIAlertControllerStyle.alert)
+            alertController.addAction(UIAlertAction(title: "Confirm", style: UIAlertActionStyle.default,
+                                                    handler: { (action:UIAlertAction!) -> Void in
+                                                        self.exitScorecard(from: from, toSegue: toSegue, advanceDealer: advanceDealer, rounds: rounds, completion: completion)
+                }))
+            alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel,
+                                                    handler:nil))
+            from.present(alertController, animated: true, completion: nil)
+            
+        }
+    }
+    
+    public func exitScorecard(from: UIViewController, toSegue: String, advanceDealer: Bool = false, rounds: Int, completion: (()->())? = nil) {
+        // Save current game (if complete)
+        if self.savePlayers(rounds: rounds) {
+            // Reset current game
+            self.reset()
+            if advanceDealer {
+                // If necessary advance the dealer
+                self.nextDealer()
+            }
+            // Store max scores ready for next game in case we don't go right back to home
+            self.saveMaxScores()
+            // Clear game date
+            // Execute completion code
+            if completion != nil {
+                completion!()
+            }
+            // Link to destination
+            from.performSegue(withIdentifier: toSegue, sender: from)
+        } else {
+            from.alertMessage("Error saving game")
+        }
+    }
+    
+    public func savePlayers(rounds: Int) -> Bool {
+        var result = true
+        // Only save if last round complete
+        if self.gameComplete(rounds: rounds) {
+            // Save the game
+            result = self.saveGame()
+            for player in 1...self.currentPlayers {
+                if result {
+                    result = self.enteredPlayer(player).save()
+                }
+            }
+            if result {
+                // Can't recover once we've saved
+                self.setGameInProgress(false, suppressWatch: true)
+            }
+        }
+        return result
+    }
+    
+    public func saveGame() -> Bool {
+    // Save the game - participants will be saved with players
+        
+        if self.settingSaveHistory {
+            if !CoreData.update(updateLogic: {
+                if self.gameMO == nil {
+                    // Create the managed object
+                    
+                    self.gameMO = CoreData.create(from: "Game") as! GameMO
+                }
+                if self.gameDatePlayed == nil || self.gameUUID == "" {
+                    self.gameDatePlayed = Date()
+                    self.gameUUID = UUID().uuidString
+                }
+                self.gameMO.localDateCreated = Date()
+                self.gameMO.gameUUID = self.gameUUID
+                self.gameMO.datePlayed = self.gameDatePlayed
+                self.gameMO.deviceUUID = UIDevice.current.identifierForVendor?.uuidString
+                self.gameMO.deviceName = Scorecard.deviceName
+                if !self.settingSaveLocation || self.gameLocation.location == nil {
+                    self.gameMO.latitude = 0
+                    self.gameMO.longitude = 0
+                } else {
+                    self.gameMO.latitude = self.gameLocation.location.coordinate.latitude
+                    self.gameMO.longitude = self.gameLocation.location.coordinate.longitude
+                }
+                if self.settingSaveLocation {
+                    self.gameMO.location = self.gameLocation.description
+                }
+            }) {
+                // Failed
+                return false
+            }
+        }
+        return true
+    }
+    
+    public func checkNetworkConnection(button: RoundedButton!, label: UILabel!, disable: Bool = false) {
+        // First check network
+        if Reachability.isConnectedToNetwork()
+        {
+            self.isNetworkAvailable = true
+            
+            // First look at stored values and act immediately
+            self.reflectNetworkConnection(button: button, label: label, disable: disable)
+            
+            // Now check icloud asynchronously
+            CKContainer.default().accountStatus(completionHandler: { (accountStatus, errorMessage) -> Void in
+                self.isLoggedIn = (accountStatus == .available)
+                self.reflectNetworkConnection(button: button, label: label, disable: disable)
+            })
+        } else {
+            self.isNetworkAvailable = false
+            self.reflectNetworkConnection(button: button, label: label, disable: disable)
+        }
+    }
+    
+    private func reflectNetworkConnection(button: RoundedButton!, label: UILabel!, disable: Bool = false) {
+        var buttonHidden = true
+        var labelText = ""
+        var labelHidden = true
+        
+        if label != nil || button != nil {
+            Utility.mainThread {
+                if !self.settingSyncEnabled {
+                    buttonHidden = true
+                    labelText = ""
+                    labelHidden = true
+                } else if self.isNetworkAvailable && self.isLoggedIn {
+                    buttonHidden = false
+                    labelText = ""
+                    labelHidden = true
+                } else {
+                    // Note that the button should already be disabled initially
+                    buttonHidden = true
+                    labelHidden = false
+                    if self.isNetworkAvailable {
+                        labelText = "Login to iCloud to enable sync"
+                    } else {
+                        labelText = "Join network to enable sync"
+                    }
+                }
+                
+                if button != nil {
+                    if disable {
+                        button.isEnabled(!buttonHidden)
+                    } else {
+                        button.isHidden = buttonHidden
+                    }
+                }
+                if label != nil {
+                    label.text = labelText
+                    label.isHidden = labelHidden
+                }
+            }
+        }
+    }
+    
+    public var onlineEnabled: Bool {
+        get {
+            return ((Utility.isDevelopment || (self.isNetworkAvailable && self.isLoggedIn)) &&
+                    Scorecard.settingRabbitMQUri != "" &&
+                    self.settingOnlinePlayerEmail != "")
+        }
+    }
+    
+    func warnShare(from: UIViewController, enabled: Bool, handler: @escaping (Bool) -> ()) {
+        
+        func internalHandler(_ enabled: Bool) {
+            // Update sync group
+            self.settingSyncEnabled = enabled
+            // Save it
+            UserDefaults.standard.set(self.settingSyncEnabled , forKey: "syncEnabled")
+            // Call source handler to update controls etc
+            handler(enabled)
+        }
+        
+        func oKHandler() {
+            internalHandler(true)
+        }
+        
+        func cancelHandler() {
+            internalHandler(false)
+        }
+        
+        if enabled {
+            // Sync set to enabled - need to warn about privacy
+            from.alertDecision("If you enable iCloud sharing any other users of this app on other devices will have access to a player's scores and history entered on this device if they enter the player's unique identifier on their device.\n\nIf you enable iCloud sharing please make sure that the unique identifiers used for players are not in any way private. You should NOT use private data such as ID numbers\n\nAre you sure you want to do this?",
+                               title: "Warning", okHandler: oKHandler, cancelHandler: cancelHandler)
+        } else {
+            // Sync disabled - just do it
+            internalHandler(false)
+        }
+    }
+    
+        
+    func saveHeaderHeight(_ height: CGFloat) {
+        if UIScreen.main.bounds.size.height > 600 && UIScreen.main.bounds.size.height < 800 {
+            self.scorepadHeaderHeight = height
+        }
+    }
+    
+    func reCenterPopup(_ viewController: UIViewController) {
+        // Either recenters in parent or if top provided makes that the vertical top
+        var verticalCenter: CGFloat
+        
+        if self.scorepadHeaderHeight != 0 && UIScreen.main.bounds.size.height > 600 && UIScreen.main.bounds.size.height < 800 {
+            // Positioning just below top
+            let formHeight = viewController.preferredContentSize.height
+            verticalCenter = self.scorepadHeaderHeight + CGFloat(formHeight / 2) + CGFloat(8.0)
+        } else {
+            verticalCenter = UIScreen.main.bounds.size.height/2
+        }
+        
+        viewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.size.width/2, y: verticalCenter, width: 0 ,height: 0)
+    }
+    
+    func showSummaryImage(_ summaryButton: UIButton) {
+        switch ((self.selectedRound - 1) % 5 ) + 1 {
+        case 1:
+            summaryButton.setImage(UIImage(named: "round summary clubs"), for: .normal)
+        case 2:
+            summaryButton.setImage(UIImage(named: "round summary diamonds"), for: .normal)
+        case 3:
+            summaryButton.setImage(UIImage(named: "round summary hearts"), for: .normal)
+        case 4:
+            summaryButton.setImage(UIImage(named: "round summary spades"), for: .normal)
+        default:
+            summaryButton.setImage(UIImage(named: "round summary nt"), for: .normal)
+        }
+    }
+
+    // MARK: - Functions to return useful iCloud information ================================= -
+    
+    class func iCloudUserIsMe(scorecard: Scorecard) {
+        
+        scorecard.iCloudUserIsMe = false
+        let container = CKContainer.default()
+        container.fetchUserRecordID() {
+            recordID, error in
+            if error == nil {
+                // Check for Marc, Jack, Test1 and Test2 devices
+                if recordID?.recordName == "_f0efee7d46bfdafad4e403bd23ab48e6" ||
+                    recordID?.recordName == "_6a4c8d69b48141215f9570049dc70f69" ||
+                    recordID?.recordName == "_c4c157aa21caf6572e9a9b6fa1349f46" ||
+                    recordID?.recordName == "_a3eb2a77f1e670699112be1835571ae0" {
+                    scorecard.iCloudUserIsMe = true
+                }
+            }
+        }
+    }
+    
+    // MARK: - Functions to get view controllers, use main thread and wrapper system level stuff ==============
+    
+    class func getWelcomeViewController() -> WelcomeViewController? {
+        if let rootViewController = UIApplication.shared.keyWindow?.rootViewController {
+            let childViewControllers = rootViewController.childViewControllers
+            if childViewControllers.count > 0 {
+                let welcomeViewController = childViewControllers[0]
+                if welcomeViewController is WelcomeViewController {
+                    return welcomeViewController as? WelcomeViewController
+                }
+            }
+        }
+        return nil
+    }
+    
+    class func getScorecard() -> Scorecard? {
+        if let welcomeViewController = Scorecard.getWelcomeViewController() {
+            return welcomeViewController.scorecard
+        } else {
+            return nil
+        }
+    }
+    
+    class func dismissChildren(parent: UIViewController, completion: @escaping ()->()) {
+        if let navigation = Scorecard.getWelcomeViewController()!.navigationController {
+            Scorecard.dismissLastChild(parent: parent, navigation: navigation, child: nil, completion: completion)
+        }
+    }
+    
+    class func dismissLastChild(parent: UIViewController, navigation: UINavigationController, child: UIViewController?, completion: @escaping ()->()) {
+        var nextChild: UIViewController?
+        if child == nil {
+            nextChild = navigation.viewControllers.last
+        } else {
+            nextChild = child
+        }
+        if let nextChild = nextChild {
+            if let presenting = nextChild.presentedViewController {
+                presenting.dismiss(animated: true, completion: {
+                    dismissLastChild(parent: parent, navigation: navigation, child: nextChild, completion: completion)
+                })
+            } else {
+                if let lastChild = nextChild.childViewControllers.last {
+                    lastChild.dismiss(animated: true, completion: {
+                        dismissLastChild(parent: parent, navigation: navigation, child: nextChild, completion: completion)
+                    })
+                } else {
+                    navigation.popToViewController(parent, animated: true)
+                    completion()
+                }
+            }
+        }
+    }
+    
+    // MARK: - Get device name ======================================================================= -
+    
+    public static var deviceName: String {
+        get {
+            var result = "Unknown Device"
+            if Utility.isSimulator {
+                if let email = Scorecard.onlineEmail() {
+                    if let name = Scorecard.nameFromEmail(email) {
+                        result = "\(name)'s iPhone"
+                    }
+                }
+            } else {
+                result = UIDevice.current.name
+            }
+            return result
+        }
+    }
+    
+    public class func descriptiveUUID(_ type: String) -> String {
+        var result: String!
+        if Config.rabbitMQ_DescriptiveIDs {
+            if let email = Scorecard.onlineEmail() {
+                if let name = Scorecard.nameFromEmail(email) {
+                    let dateString = Utility.dateString(Date(), format: "yyyy-MM-dd-hh-mm-ss", localized: false)
+                    result = name + "-" + type + "-" + dateString
+                }
+            }
+        }
+        if result == nil {
+            result = UUID().uuidString
+        }
+        return result
+    }
+    
+    public static func onlineEmail() -> String? {
+        let onlinePlayerEmail = UserDefaults.standard.string(forKey: "onlinePlayerEmail")
+        return (onlinePlayerEmail == nil || onlinePlayerEmail == "" ? nil : onlinePlayerEmail)
+    }
+}
+
+// MARK: - Scorecard component classes ============================================================================ -
+
+class GameLocation {
+    var location: CLLocation!
+    var description: String!
+    
+    init() {
+    }
+    
+    init(location: CLLocation!, description: String) {
+        self.location = location
+        self.description = description
+    }
+    
+    func copy(to gameLocation: GameLocation!) {
+        gameLocation.location = self.location
+        gameLocation.description = self.description
+    }
+}

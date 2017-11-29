@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Graph View Controller-->
+        <scene sceneID="kQ9-Dy-feW">
+            <objects>
+                <viewController storyboardIdentifier="GraphViewController" autoresizesArchivedViewToFullSize="NO" modalTransitionStyle="crossDissolve" modalPresentationStyle="overFullScreen" id="7b0-A7-L4e" customClass="GraphViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="XVe-pZ-WaG"/>
+                        <viewControllerLayoutGuide type="bottom" id="8mI-IT-Weg"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="LkB-Ed-8F9" customClass="GraphView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="top" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aph-ga-WxR" userLabel="Finish Button" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="8" y="28" width="30" height="30"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="X06-Qk-sdl"/>
+                                    <constraint firstAttribute="width" constant="30" id="iTg-rj-ePX"/>
+                                </constraints>
+                                <state key="normal" image="cross white">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="finishPressed:" destination="7b0-A7-L4e" eventType="touchUpInside" id="LYO-fs-2i6"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="aph-ga-WxR" firstAttribute="leading" secondItem="LkB-Ed-8F9" secondAttribute="leading" constant="8" id="DPF-4S-mMd"/>
+                            <constraint firstItem="aph-ga-WxR" firstAttribute="top" secondItem="XVe-pZ-WaG" secondAttribute="bottom" constant="8" id="UKi-ll-8JO"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="graphView" destination="LkB-Ed-8F9" id="tsQ-VE-J4H"/>
+                        <segue destination="FxS-fb-6HK" kind="unwind" identifier="hideComparisonGraph" unwindAction="hideComparisonGraphWithSegue:" id="1nm-Cf-ab4"/>
+                        <segue destination="OxF-eN-OAj" kind="presentation" identifier="showGraphHistoryDetail" id="7gO-bP-BPs"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="d2v-N0-OB3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="FxS-fb-6HK" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="6353" y="1783"/>
+        </scene>
+        <!--History Detail-->
+        <scene sceneID="Sta-Wk-RgW">
+            <objects>
+                <viewControllerPlaceholder storyboardName="HistoryDetailViewController" referencedIdentifier="HistoryDetailViewController" id="OxF-eN-OAj" userLabel="History Detail" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HRT-pN-B4S" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="7002" y="1782"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="cross white" width="20" height="20"/>
+    </resources>
+</document>

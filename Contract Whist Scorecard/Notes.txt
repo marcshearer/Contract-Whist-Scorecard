@@ -1,0 +1,62 @@
+List of outstanding things to do
+
+Changes since last version
+--------------------------
+Reorder players in lobby
+Notifications now working
+Fix problem when bid more than 7 - didn't show other bids
+Fixed titles in settings
+Changed sorting of high scores to subsort by other criteria
+Moved Sync Class.swift down into directory
+
+Bugs fix now
+------------
+Intermittent crash in search
+Rebuild of players doesn't then sync them back up
+Player creating doesn't seem intuitive
+    Change text to 'Find existing player in Cloud' and 'Create new player'?
+    Allow create from Stats?
+    Allow create from Home and Get Started?
+
+Long-term bugs
+--------------
+
+Short-term
+----------
+Update Walkthrough - esp online game
+
+Medium-term
+-----------
+Allow number of tricks to be reduced temporarily (1 game) and excluded from stats
+
+Long-term
+---------
+Sort out constraints when in landscape mode
+Would be better if host screen wasn't full screen on iPad
+
+Swift Gotchas / hints
+---------------------
+For good resizing on rotation call view.setNeedsLayout() from viewWillTransition and then override viewDidLayoutSubviews (see HandViewController) - NOTE - NOT viewWillLayoutSubviews
+Uncaught exception crashes are normally caused by
+    Invalid reuse identifiers on list views / collection views
+    Invalid names on segues
+    Outlets not being set up correctly
+When collection has spaces in it re-set the inter-item space and set scroll to horizontal
+When button bar (or navigation bar) doesn't appear set the title in the parent view
+If you get a duplicate navigation bar you can hide the default one with self.navigationController?.isNavigationBarHidden = false
+Popovers on iPhone - need to set up the view to have a size of freedom and a status bar of none plus the stuff in prepare for segue
+You can force a label to resize to fill its space by setting a height constraint and then setting this progammatically to a very large number
+Get a crash with NS Fetch Controller if don't get rid of any pointers to cells before try to remove from collection view. Also it calls numberOfItemsIn Section internally and if you are adding or deleting cells you need to return +/- 1 or see the change below about deletePlayer()
+Need to login to iCloud on each simulator
+Default UserDefault settings are in AppDelegate
+You can make a controller a delegate for a child view and hence receive information on things changing back in the parent
+The parent or the child view can detect popover closure by adopting UIPopoverPresentationControllerDelegate and declaring popoverPresentationControllerShouldDismissPopover etc
+Swipes are associated with a specific control - look at the swipes right click - gesture recognizer in referencing outlet connections
+There is a problem in collection views when you delete or insert items. You have to do this in a batch update with the change to the counter - see deletePlayer() in StatsViewController
+Note that frame sizes are not correct yet until you get to viewDidAppear - you might have to avoid returning non-zero table view row count until you get to this point - see HandViewController
+Table views don't always scroll in Swift 4 - set   tableView.delaysContentTouches = TRUE (Best through User-Defined Runtime Attributes in Storyboard editor)
+To make an image transparent background use Preview. Click the toolbox and a toolbar appears. Select the wand. Drag a rectangle anywhere in background. Turns red. Press delete. File/Save.
+To remove menus from test scripts
+    1,$s/[/][*][@]START_MENU_TOKEN[@][*][/]//g
+    1,$s/[/][*].*[@]END_MENU_TOKEN[@][*][/]//g
+Error message '/Users/Home/Library/Developer/Xcode/DerivedData' - Go to Product / Clean

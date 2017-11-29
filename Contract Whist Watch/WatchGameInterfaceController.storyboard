@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="13529" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="watch38" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="watchOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="13507"/>
+    </dependencies>
+    <scenes>
+        <!--Watch Game-->
+        <scene sceneID="ABt-bc-ArA">
+            <objects>
+                <controller identifier="Watch Game" title="Whist" id="ZRf-JR-Xdb" userLabel="Watch Game" customClass="WatchGameInterfaceController" customModule="Contract_Whist_Watch_Extension">
+                    <items>
+                        <group width="1" alignment="left" id="hTq-Pz-y7y">
+                            <items>
+                                <label width="1" alignment="center" textAlignment="center" numberOfLines="0" id="o9w-fD-aGT">
+                                    <fontDescription key="font" type="system" pointSize="28"/>
+                                </label>
+                                <imageView width="1" height="30" alignment="center" image="crown" contentMode="scaleAspectFit" id="247-eO-lwp"/>
+                            </items>
+                        </group>
+                        <table alignment="left" id="kK2-GD-EKg" userLabel="Winners">
+                            <items>
+                                <tableRow identifier="Winner Row" id="x1k-MA-K79" customClass="WatchGameRowController" customModule="Contract_Whist_Watch_Extension">
+                                    <group key="rootItem" width="1" height="0.0" alignment="left" id="MnQ-qY-Ukz">
+                                        <items>
+                                            <label alignment="left" textAlignment="left" minimumScaleFactor="0.80000000000000004" id="hMk-10-poX">
+                                                <fontDescription key="font" type="system" pointSize="19"/>
+                                            </label>
+                                            <label alignment="right" textAlignment="right" minimumScaleFactor="0.80000000000000004" id="xls-qZ-8E8">
+                                                <fontDescription key="font" type="system" pointSize="19"/>
+                                            </label>
+                                        </items>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    </group>
+                                    <connections>
+                                        <outlet property="playerNameLabel" destination="hMk-10-poX" id="4os-d7-Ump"/>
+                                        <outlet property="playerScoreLabel" destination="xls-qZ-8E8" id="lm3-55-eAY"/>
+                                    </connections>
+                                </tableRow>
+                            </items>
+                        </table>
+                        <table alignment="left" id="rP5-7Q-SVZ" userLabel="Others">
+                            <items>
+                                <tableRow identifier="Other Row" id="tf6-jQ-6Mj" customClass="WatchGameRowController" customModule="Contract_Whist_Watch_Extension">
+                                    <group key="rootItem" width="1" height="0.0" alignment="left" id="R2V-H9-zdc">
+                                        <items>
+                                            <label alignment="left" textAlignment="left" id="bps-QI-OjZ"/>
+                                            <label alignment="right" textAlignment="right" id="ApH-mR-UNi"/>
+                                        </items>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    </group>
+                                    <connections>
+                                        <outlet property="playerNameLabel" destination="bps-QI-OjZ" id="72f-oM-TyO"/>
+                                        <outlet property="playerScoreLabel" destination="ApH-mR-UNi" id="nLg-NR-w8s"/>
+                                    </connections>
+                                </tableRow>
+                            </items>
+                        </table>
+                    </items>
+                    <connections>
+                        <outlet property="otherTable" destination="rP5-7Q-SVZ" id="tE7-tS-8mq"/>
+                        <outlet property="titleImage" destination="247-eO-lwp" id="c0C-MX-8mw"/>
+                        <outlet property="titleLabel" destination="o9w-fD-aGT" id="Xp1-YC-Yd8"/>
+                        <outlet property="winnerTable" destination="kK2-GD-EKg" id="fvm-3Y-uSm"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="406" y="338"/>
+        </scene>
+    </scenes>
+    <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+</document>

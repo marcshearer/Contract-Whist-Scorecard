@@ -1,0 +1,6 @@
+framework module Pods_Contract_Whist_Scorecard {
+  umbrella header "Pods-Contract Whist Scorecard-umbrella.h"
+
+  export *
+  module * { export * }
+}

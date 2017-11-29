@@ -1,0 +1,667 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Settings-->
+        <scene sceneID="eQn-LP-I8A">
+            <objects>
+                <viewController storyboardIdentifier="SettingsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="btt-Xo-OBG" userLabel="Settings" customClass="SettingsViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="KTT-9R-Ao2"/>
+                        <viewControllerLayoutGuide type="bottom" id="4Ow-cn-1nT"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ktL-fo-SvR">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x1U-ho-wrZ">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="X35-Va-dkQ"/>
+                                </constraints>
+                                <textAttributes key="titleTextAttributes">
+                                    <color key="textColor" name="alternateSelectedControlTextColor" catalog="System" colorSpace="catalog"/>
+                                </textAttributes>
+                                <items>
+                                    <navigationItem title="Settings" id="mDq-fM-SbS">
+                                        <barButtonItem key="leftBarButtonItem" id="Cb7-w4-w9e">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="YIA-42-pgE" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <rect key="frame" x="16" y="11" width="22" height="22"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" image="home"/>
+                                                <connections>
+                                                    <action selector="finishPressed:" destination="btt-Xo-OBG" eventType="touchUpInside" id="i9n-NY-Obl"/>
+                                                </connections>
+                                            </button>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="KFM-qF-ry7">
+                                <rect key="frame" x="0.0" y="44" width="375" height="623"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Sync Enabled Cell" rowHeight="76" id="bWc-AX-ojx" userLabel="iCloud Sync Cell" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="76"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bWc-AX-ojx" id="oIU-hz-d0W">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="LRx-u3-J9d">
+                                                    <rect key="frame" x="75" y="24" width="225" height="29"/>
+                                                    <segments>
+                                                        <segment title="Don't Sync"/>
+                                                        <segment title="Sync with Cloud"/>
+                                                    </segments>
+                                                </segmentedControl>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="LRx-u3-J9d" firstAttribute="centerY" secondItem="oIU-hz-d0W" secondAttribute="centerY" id="FDX-t2-56A"/>
+                                                <constraint firstItem="LRx-u3-J9d" firstAttribute="centerX" secondItem="oIU-hz-d0W" secondAttribute="centerX" id="GvT-pr-HQe"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="syncEnabledSelection" destination="LRx-u3-J9d" id="6cc-Jt-TFc"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Save History Cell" rowHeight="76" id="zPt-X2-uTR" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="104" width="375" height="76"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="zPt-X2-uTR" id="gt4-cA-tZA">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="64h-Ey-hR2">
+                                                    <rect key="frame" x="58" y="24" width="259" height="29"/>
+                                                    <segments>
+                                                        <segment title="Don't Save History"/>
+                                                        <segment title="Save Game History"/>
+                                                    </segments>
+                                                </segmentedControl>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="64h-Ey-hR2" firstAttribute="centerX" secondItem="gt4-cA-tZA" secondAttribute="centerX" id="6cK-Uf-0Ao"/>
+                                                <constraint firstItem="64h-Ey-hR2" firstAttribute="centerY" secondItem="gt4-cA-tZA" secondAttribute="centerY" id="pqY-ec-uQt"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="saveHistorySelection" destination="64h-Ey-hR2" id="qos-hg-K2n"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Save Location Cell" rowHeight="76" id="qqg-cC-wYo" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="180" width="375" height="76"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qqg-cC-wYo" id="xif-IG-mRW">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="6ab-J7-sRR">
+                                                    <rect key="frame" x="49" y="24" width="277" height="29"/>
+                                                    <segments>
+                                                        <segment title="Don't Save Location"/>
+                                                        <segment title="Save Game Location"/>
+                                                    </segments>
+                                                </segmentedControl>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="6ab-J7-sRR" firstAttribute="centerY" secondItem="xif-IG-mRW" secondAttribute="centerY" id="Gny-HM-4FY"/>
+                                                <constraint firstItem="6ab-J7-sRR" firstAttribute="centerX" secondItem="xif-IG-mRW" secondAttribute="centerX" id="aTa-Ed-6Dr"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="saveLocationSelection" destination="6ab-J7-sRR" id="92R-Tx-GgP"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Allow Broadcast Cell" rowHeight="76" id="oc1-Hf-I0x" userLabel="Share Scorecard Cell" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="256" width="375" height="76"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oc1-Hf-I0x" id="e9M-5K-3eG">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="QQV-uX-MBi">
+                                                    <rect key="frame" x="90" y="24" width="195" height="29"/>
+                                                    <segments>
+                                                        <segment title="No Sharing"/>
+                                                        <segment title="Allow Sharing"/>
+                                                    </segments>
+                                                </segmentedControl>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="QQV-uX-MBi" firstAttribute="centerY" secondItem="e9M-5K-3eG" secondAttribute="centerY" id="TSJ-0w-K4Y"/>
+                                                <constraint firstItem="QQV-uX-MBi" firstAttribute="centerX" secondItem="e9M-5K-3eG" secondAttribute="centerX" id="jOX-0E-kfQ"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="allowBroadcastSelection" destination="QQV-uX-MBi" id="774-Ci-0yU"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Nearby Playing Cell" rowHeight="76" id="qkG-Rd-IzF" userLabel="Nearby Playing Cell" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="332" width="375" height="76"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qkG-Rd-IzF" id="JSf-La-1Y7">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="1ji-nt-pgj">
+                                                    <rect key="frame" x="29" y="24" width="317" height="29"/>
+                                                    <segments>
+                                                        <segment title="No Nearby Playing"/>
+                                                        <segment title="Nearby Playing Enabled"/>
+                                                    </segments>
+                                                </segmentedControl>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="1ji-nt-pgj" firstAttribute="centerX" secondItem="JSf-La-1Y7" secondAttribute="centerX" id="e04-QN-aNI"/>
+                                                <constraint firstItem="1ji-nt-pgj" firstAttribute="centerY" secondItem="JSf-La-1Y7" secondAttribute="centerY" id="hee-yZ-4UV"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="nearbyPlayingSelection" destination="1ji-nt-pgj" id="1zb-4C-jaw"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Online Player Cell" id="iFA-fR-3YH" userLabel="Online Player Cell" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="408" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="iFA-fR-3YH" id="wgo-oz-xzv">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dgt-SC-xmW">
+                                                    <rect key="frame" x="45" y="11" width="42" height="22"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="43o-FR-TsE">
+                                                    <rect key="frame" x="99" y="7" width="249" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="VVg-eF-ctz"/>
+                                                        <constraint firstAttribute="height" constant="30" id="Yii-IK-Zbv"/>
+                                                    </constraints>
+                                                    <state key="normal" title="Enable">
+                                                        <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    </state>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="dgt-SC-xmW" firstAttribute="leading" secondItem="wgo-oz-xzv" secondAttribute="leadingMargin" constant="30" id="3rF-pP-AKY"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="dgt-SC-xmW" secondAttribute="bottom" id="gW3-R3-BrJ"/>
+                                                <constraint firstItem="43o-FR-TsE" firstAttribute="centerY" secondItem="wgo-oz-xzv" secondAttribute="centerY" id="lzK-mN-a74"/>
+                                                <constraint firstItem="43o-FR-TsE" firstAttribute="leading" secondItem="dgt-SC-xmW" secondAttribute="trailing" constant="12" id="qxq-Ze-wvr"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="43o-FR-TsE" secondAttribute="trailing" constant="12" id="vZT-c3-Nc6"/>
+                                                <constraint firstItem="dgt-SC-xmW" firstAttribute="top" secondItem="wgo-oz-xzv" secondAttribute="topMargin" id="xLa-G6-Cbe"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="onlinePlayerChangeButton" destination="43o-FR-TsE" id="V06-A4-BTJ"/>
+                                            <outlet property="onlinePlayerLabel" destination="dgt-SC-xmW" id="BZr-7R-h75"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Alert Vibrate Cell" rowHeight="76" id="eLM-1D-R2C" userLabel="Alert Vibrate Cell" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="452" width="375" height="76"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eLM-1D-R2C" id="d1P-QR-Qfs">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="gf8-zG-2X2">
+                                                    <rect key="frame" x="93" y="24" width="189" height="29"/>
+                                                    <segments>
+                                                        <segment title="Don't Vibrate"/>
+                                                        <segment title="Vibrate"/>
+                                                    </segments>
+                                                </segmentedControl>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="gf8-zG-2X2" firstAttribute="centerY" secondItem="d1P-QR-Qfs" secondAttribute="centerY" id="U4h-jS-asT"/>
+                                                <constraint firstItem="gf8-zG-2X2" firstAttribute="centerX" secondItem="d1P-QR-Qfs" secondAttribute="centerX" id="eHz-YV-2Mu"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="alertVibrateSelection" destination="gf8-zG-2X2" id="SFF-gO-heQ"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Alert Flash Cell" rowHeight="76" id="Vy9-d9-aIs" userLabel="Alert Flash Cell" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="528" width="375" height="76"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Vy9-d9-aIs" id="arQ-ZQ-fYb">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="CsI-De-U2T">
+                                                    <rect key="frame" x="105" y="24" width="165" height="29"/>
+                                                    <segments>
+                                                        <segment title="Don't Flash"/>
+                                                        <segment title="Flash"/>
+                                                    </segments>
+                                                </segmentedControl>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="CsI-De-U2T" firstAttribute="centerX" secondItem="arQ-ZQ-fYb" secondAttribute="centerX" id="UEe-MG-d7K"/>
+                                                <constraint firstItem="CsI-De-U2T" firstAttribute="centerY" secondItem="arQ-ZQ-fYb" secondAttribute="centerY" id="ch4-TI-T8J"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="alertFlashSelection" destination="CsI-De-U2T" id="zV2-B8-b8S"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Receive Notifications Cell" rowHeight="76" id="T8q-p2-LJv" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="604" width="375" height="76"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="T8q-p2-LJv" id="CX3-wd-2Dz">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="qkU-PV-yl0">
+                                                    <rect key="frame" x="45" y="24" width="285" height="29"/>
+                                                    <segments>
+                                                        <segment title="No Notifications"/>
+                                                        <segment title="Receive Notifications"/>
+                                                    </segments>
+                                                </segmentedControl>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="qkU-PV-yl0" firstAttribute="centerY" secondItem="CX3-wd-2Dz" secondAttribute="centerY" id="QFW-M9-10b"/>
+                                                <constraint firstItem="qkU-PV-yl0" firstAttribute="centerX" secondItem="CX3-wd-2Dz" secondAttribute="centerX" id="yxt-Bp-WtE"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="receiveNotificationsSelection" destination="qkU-PV-yl0" id="u4U-jF-1Du"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Dealer Mode Cell" id="X5L-KI-JbX" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="680" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="X5L-KI-JbX" id="8MG-GI-Vpg">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="jcX-du-vTh">
+                                                    <rect key="frame" x="50" y="8" width="275" height="29"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="275" id="I8T-cm-fVM"/>
+                                                    </constraints>
+                                                    <segments>
+                                                        <segment title="None"/>
+                                                        <segment title="Highlight"/>
+                                                        <segment title="Small Row"/>
+                                                        <segment title="Large Row"/>
+                                                    </segments>
+                                                </segmentedControl>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="jcX-du-vTh" firstAttribute="centerX" secondItem="8MG-GI-Vpg" secondAttribute="centerX" id="GFX-tg-Fky"/>
+                                                <constraint firstItem="jcX-du-vTh" firstAttribute="centerY" secondItem="8MG-GI-Vpg" secondAttribute="centerY" id="uV0-e5-MP9"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="modeSelection" destination="jcX-du-vTh" id="a02-FC-wPk"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Dealer Position Cell" id="X27-mI-IQx" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="724" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="X27-mI-IQx" id="P1k-8n-qLf">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Q7r-RV-7kq">
+                                                    <rect key="frame" x="87" y="8" width="201" height="29"/>
+                                                    <segments>
+                                                        <segment title="Above Players"/>
+                                                        <segment title="Below Players"/>
+                                                    </segments>
+                                                </segmentedControl>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Q7r-RV-7kq" firstAttribute="centerY" secondItem="P1k-8n-qLf" secondAttribute="centerY" id="OYs-zs-8Hh"/>
+                                                <constraint firstItem="Q7r-RV-7kq" firstAttribute="centerX" secondItem="P1k-8n-qLf" secondAttribute="centerX" id="hby-XB-dEX"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="positionSelection" destination="Q7r-RV-7kq" id="bO1-4k-FV7"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Bonus2 Cell" id="rjj-gR-6eM" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="768" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rjj-gR-6eM" id="Qzl-mR-ZTt">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="JtH-Za-Sh9">
+                                                    <rect key="frame" x="83" y="8" width="209" height="29"/>
+                                                    <segments>
+                                                        <segment title="No Bonus"/>
+                                                        <segment title="10 Point Bonus"/>
+                                                    </segments>
+                                                </segmentedControl>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DtJ-bt-g0O">
+                                                    <rect key="frame" x="337" y="7" width="30" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="30" id="nUG-yK-Tng"/>
+                                                        <constraint firstAttribute="width" constant="30" id="zUa-VW-L5a"/>
+                                                    </constraints>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="DtJ-bt-g0O" firstAttribute="centerY" secondItem="Qzl-mR-ZTt" secondAttribute="centerY" id="0z4-Zf-YK3"/>
+                                                <constraint firstItem="JtH-Za-Sh9" firstAttribute="centerY" secondItem="Qzl-mR-ZTt" secondAttribute="centerY" id="1l9-TM-iVm"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="DtJ-bt-g0O" secondAttribute="trailing" id="imb-X0-OVf"/>
+                                                <constraint firstItem="JtH-Za-Sh9" firstAttribute="centerX" secondItem="Qzl-mR-ZTt" secondAttribute="centerX" id="tl9-nv-cjh"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="bonus2Info" destination="DtJ-bt-g0O" id="sxQ-Vu-aKx"/>
+                                            <outlet property="bonus2Selection" destination="JtH-Za-Sh9" id="Pv0-qN-M5K"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Number Cards Cell" rowHeight="76" id="9V3-KD-sfn" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="812" width="375" height="76"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9V3-KD-sfn" id="SgN-a9-5xB">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="IkJ-LK-A9Q">
+                                                    <rect key="frame" x="20" y="21" width="330" height="34"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Start:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="fli-ri-oXD">
+                                                            <rect key="frame" x="0.0" y="0.0" width="60" height="34"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="R1f-2W-3nY"/>
+                                                            </constraints>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="7" minValue="1" maxValue="13" translatesAutoresizingMaskIntoConstraints="NO" id="10J-XL-MN3">
+                                                            <rect key="frame" x="78" y="0.0" width="178" height="35"/>
+                                                            <userDefinedRuntimeAttributes>
+                                                                <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="roundsSlider"/>
+                                                            </userDefinedRuntimeAttributes>
+                                                        </slider>
+                                                        <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="6" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ESr-WG-SZf">
+                                                            <rect key="frame" x="274" y="0.0" width="56" height="34"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="56" id="KFS-Qb-m6i"/>
+                                                            </constraints>
+                                                            <nil key="textColor"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                            <textInputTraits key="textInputTraits" returnKeyType="go"/>
+                                                        </textField>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="ESr-WG-SZf" firstAttribute="top" secondItem="IkJ-LK-A9Q" secondAttribute="top" id="Yp5-Z0-4kH"/>
+                                                        <constraint firstAttribute="bottom" secondItem="fli-ri-oXD" secondAttribute="bottom" id="ZNW-3N-OID"/>
+                                                        <constraint firstAttribute="bottom" secondItem="ESr-WG-SZf" secondAttribute="bottom" id="mEC-pB-ROy"/>
+                                                        <constraint firstItem="10J-XL-MN3" firstAttribute="leading" secondItem="fli-ri-oXD" secondAttribute="trailing" constant="6" id="p2O-OS-I0Q"/>
+                                                        <constraint firstItem="fli-ri-oXD" firstAttribute="leading" secondItem="IkJ-LK-A9Q" secondAttribute="leading" id="pcU-Qn-f8w"/>
+                                                        <constraint firstItem="fli-ri-oXD" firstAttribute="top" secondItem="IkJ-LK-A9Q" secondAttribute="top" id="yHf-Op-TjN"/>
+                                                    </constraints>
+                                                </stackView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottomMargin" secondItem="IkJ-LK-A9Q" secondAttribute="bottom" constant="10" id="UxZ-7z-mwT"/>
+                                                <constraint firstItem="IkJ-LK-A9Q" firstAttribute="leading" secondItem="SgN-a9-5xB" secondAttribute="leadingMargin" constant="12" id="Vrt-et-vF1"/>
+                                                <constraint firstItem="IkJ-LK-A9Q" firstAttribute="top" secondItem="SgN-a9-5xB" secondAttribute="topMargin" constant="10" id="lXx-G2-X6u"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="IkJ-LK-A9Q" secondAttribute="trailing" constant="17" id="m5H-IV-Jyy"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="cardsLabel" destination="fli-ri-oXD" id="zSi-c2-ciV"/>
+                                            <outlet property="cardsSlider" destination="10J-XL-MN3" id="MV8-sT-9zK"/>
+                                            <outlet property="cardsValue" destination="ESr-WG-SZf" id="9CZ-xJ-kpT"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Bounce Cell" id="bZG-fh-Pw8" userLabel="Bounce Cell" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="888" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bZG-fh-Pw8" id="VuV-aa-Qw7">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="6Uz-4f-yzv">
+                                                    <rect key="frame" x="63" y="8" width="249" height="29"/>
+                                                    <segments>
+                                                        <segment title="Go down to 1 card"/>
+                                                        <segment title="Return to original"/>
+                                                    </segments>
+                                                </segmentedControl>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="6Uz-4f-yzv" firstAttribute="centerY" secondItem="VuV-aa-Qw7" secondAttribute="centerY" id="a7f-J4-EaE"/>
+                                                <constraint firstItem="6Uz-4f-yzv" firstAttribute="centerX" secondItem="VuV-aa-Qw7" secondAttribute="centerX" id="cHm-7f-v4E"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="bounceSelection" destination="6Uz-4f-yzv" id="Lo2-md-4zS"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Trump Include No Trump Cell" id="7wr-kK-JS7" userLabel="Include No Trumps" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="932" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7wr-kK-JS7" id="MUf-zJ-kKQ">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Icr-UO-AnD">
+                                                    <rect key="frame" x="59" y="8" width="257" height="29"/>
+                                                    <segments>
+                                                        <segment title="Don't Include NT"/>
+                                                        <segment title="Include No Trumps"/>
+                                                    </segments>
+                                                </segmentedControl>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Icr-UO-AnD" firstAttribute="centerY" secondItem="MUf-zJ-kKQ" secondAttribute="centerY" id="ME7-6b-lt5"/>
+                                                <constraint firstItem="Icr-UO-AnD" firstAttribute="centerX" secondItem="MUf-zJ-kKQ" secondAttribute="centerX" id="sUc-lR-xIW"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="trumpIncludeNoTrumpSelection" destination="Icr-UO-AnD" id="dTG-Cn-7fK"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Trump Sequence Cell" id="rZe-D3-hWE" userLabel="Trump Sequence Cell" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="976" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rZe-D3-hWE" id="jf0-CM-StV">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="qLu-Us-XZ9">
+                                                    <rect key="frame" x="4" y="0.0" width="317" height="44"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="bfI-vp-qYg">
+                                                        <size key="itemSize" width="50" height="50"/>
+                                                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    </collectionViewFlowLayout>
+                                                    <cells>
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Trump Collection Cell" id="gxw-HB-pNZ" customClass="TrumpCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="-3" width="50" height="50"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                                <autoresizingMask key="autoresizingMask"/>
+                                                                <subviews>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="♣︎" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="6Xw-eW-CFA">
+                                                                        <rect key="frame" x="4" y="4" width="42" height="42"/>
+                                                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                                                        <nil key="textColor"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                </subviews>
+                                                            </view>
+                                                            <constraints>
+                                                                <constraint firstAttribute="trailing" secondItem="6Xw-eW-CFA" secondAttribute="trailing" constant="4" id="AKh-Kz-flc"/>
+                                                                <constraint firstItem="6Xw-eW-CFA" firstAttribute="top" secondItem="gxw-HB-pNZ" secondAttribute="top" constant="4" id="DSU-op-Y9I"/>
+                                                                <constraint firstAttribute="bottom" secondItem="6Xw-eW-CFA" secondAttribute="bottom" constant="4" id="bzy-Sg-rTe"/>
+                                                                <constraint firstItem="6Xw-eW-CFA" firstAttribute="leading" secondItem="gxw-HB-pNZ" secondAttribute="leading" constant="4" id="lab-lD-izM"/>
+                                                            </constraints>
+                                                            <connections>
+                                                                <outlet property="trumpSuitLabel" destination="6Xw-eW-CFA" id="Z7n-gN-W3S"/>
+                                                            </connections>
+                                                        </collectionViewCell>
+                                                    </cells>
+                                                </collectionView>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y7u-o6-sat">
+                                                    <rect key="frame" x="333" y="7" width="22" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="30" id="Sug-Vw-rsH"/>
+                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="20" id="Xgo-Tm-gCc"/>
+                                                    </constraints>
+                                                    <state key="normal">
+                                                        <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    </state>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="qLu-Us-XZ9" firstAttribute="leading" secondItem="jf0-CM-StV" secondAttribute="leading" constant="4" id="5ph-Qm-EIW"/>
+                                                <constraint firstItem="Y7u-o6-sat" firstAttribute="leading" secondItem="qLu-Us-XZ9" secondAttribute="trailing" constant="12" id="6dc-7P-tdc"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="Y7u-o6-sat" secondAttribute="trailing" constant="12" id="ABB-Sn-MBz"/>
+                                                <constraint firstItem="Y7u-o6-sat" firstAttribute="centerY" secondItem="jf0-CM-StV" secondAttribute="centerY" id="K79-2a-DKZ"/>
+                                                <constraint firstItem="qLu-Us-XZ9" firstAttribute="top" secondItem="jf0-CM-StV" secondAttribute="top" id="Tcj-Gb-3Ok"/>
+                                                <constraint firstAttribute="bottom" secondItem="qLu-Us-XZ9" secondAttribute="bottom" id="edH-nI-V6J"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="trumpSequenceCollectionView" destination="qLu-Us-XZ9" id="qji-uQ-A4V"/>
+                                            <outlet property="trumpSequenceInfo" destination="Y7u-o6-sat" id="Mze-rh-J7T"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="About Cell 1 Value" rowHeight="76" id="pne-r4-ZDe" userLabel="About Cell 1-value" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="1020" width="375" height="76"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="pne-r4-ZDe" id="bco-1e-Ksl">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j06-o1-FRc">
+                                                    <rect key="frame" x="24" y="11" width="150" height="54"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GmI-dD-phW">
+                                                    <rect key="frame" x="182" y="11" width="185" height="54"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="GmI-dD-phW" firstAttribute="top" secondItem="bco-1e-Ksl" secondAttribute="topMargin" id="Po8-qY-E8o"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="GmI-dD-phW" secondAttribute="bottom" id="Qgd-6V-Z5B"/>
+                                                <constraint firstItem="j06-o1-FRc" firstAttribute="top" secondItem="bco-1e-Ksl" secondAttribute="topMargin" id="VO7-TN-AFY"/>
+                                                <constraint firstItem="GmI-dD-phW" firstAttribute="leading" secondItem="j06-o1-FRc" secondAttribute="trailing" constant="8" id="WPf-mb-OxU"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="j06-o1-FRc" secondAttribute="bottom" id="eTU-R4-FhA"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="GmI-dD-phW" secondAttribute="trailing" id="lcL-PK-N3M"/>
+                                                <constraint firstItem="j06-o1-FRc" firstAttribute="leading" secondItem="bco-1e-Ksl" secondAttribute="leadingMargin" constant="16" id="wZa-3L-pe9"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <constraints>
+                                            <constraint firstItem="j06-o1-FRc" firstAttribute="width" secondItem="pne-r4-ZDe" secondAttribute="width" multiplier="0.4" id="CKv-ag-GzY"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="aboutLabel" destination="j06-o1-FRc" id="CHi-uq-6lg"/>
+                                            <outlet property="aboutValue1" destination="GmI-dD-phW" id="bCO-OY-37f"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="About Cell 2 Value" rowHeight="76" id="GZt-KB-Ze1" userLabel="About Cell 2-value " customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="1096" width="375" height="76"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="GZt-KB-Ze1" id="HFg-05-UrA">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v6f-h4-nOS">
+                                                    <rect key="frame" x="24" y="11" width="150" height="54"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X5E-2a-Irh">
+                                                    <rect key="frame" x="182" y="11" width="80.5" height="54"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ppx-xc-6vi">
+                                                    <rect key="frame" x="270.5" y="11" width="80.5" height="54"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="X5E-2a-Irh" firstAttribute="leading" secondItem="v6f-h4-nOS" secondAttribute="trailing" constant="8" id="22u-fF-vmz"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="ppx-xc-6vi" secondAttribute="bottom" id="58t-Ag-at0"/>
+                                                <constraint firstItem="ppx-xc-6vi" firstAttribute="top" secondItem="HFg-05-UrA" secondAttribute="topMargin" id="9r6-Kf-ywe"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="X5E-2a-Irh" secondAttribute="bottom" id="KoC-Mf-K6D"/>
+                                                <constraint firstItem="v6f-h4-nOS" firstAttribute="leading" secondItem="HFg-05-UrA" secondAttribute="leadingMargin" constant="16" id="NoD-le-dS5"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="v6f-h4-nOS" secondAttribute="bottom" id="T2m-h6-UBp"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="ppx-xc-6vi" secondAttribute="trailing" constant="16" id="YLx-NB-qMs"/>
+                                                <constraint firstItem="v6f-h4-nOS" firstAttribute="top" secondItem="HFg-05-UrA" secondAttribute="topMargin" id="aoY-2d-sao"/>
+                                                <constraint firstItem="ppx-xc-6vi" firstAttribute="leading" secondItem="X5E-2a-Irh" secondAttribute="trailing" constant="8" id="v6y-bF-Xve"/>
+                                                <constraint firstItem="X5E-2a-Irh" firstAttribute="top" secondItem="HFg-05-UrA" secondAttribute="topMargin" id="x4i-PB-QcY"/>
+                                                <constraint firstItem="X5E-2a-Irh" firstAttribute="width" secondItem="ppx-xc-6vi" secondAttribute="width" id="ykW-J0-KQF"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <constraints>
+                                            <constraint firstItem="v6f-h4-nOS" firstAttribute="width" secondItem="GZt-KB-Ze1" secondAttribute="width" multiplier="0.4" id="vQA-Hf-912"/>
+                                        </constraints>
+                                        <connections>
+                                            <outlet property="aboutLabel" destination="v6f-h4-nOS" id="AfR-N5-sG3"/>
+                                            <outlet property="aboutValue1" destination="X5E-2a-Irh" id="cfu-5E-Smz"/>
+                                            <outlet property="aboutValue2" destination="ppx-xc-6vi" id="2aD-Ne-e1B"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="btt-Xo-OBG" id="ffE-cu-Geh"/>
+                                    <outlet property="delegate" destination="btt-Xo-OBG" id="IP1-PF-JMF"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="KFM-qF-ry7" firstAttribute="top" secondItem="x1U-ho-wrZ" secondAttribute="bottom" id="Ald-CT-cze"/>
+                            <constraint firstItem="x1U-ho-wrZ" firstAttribute="top" secondItem="ktL-fo-SvR" secondAttribute="top" id="BGK-7M-VWx"/>
+                            <constraint firstItem="4Ow-cn-1nT" firstAttribute="top" secondItem="KFM-qF-ry7" secondAttribute="bottom" id="EkF-hY-Gmp"/>
+                            <constraint firstItem="x1U-ho-wrZ" firstAttribute="leading" secondItem="ktL-fo-SvR" secondAttribute="leading" id="HIW-ny-Emc"/>
+                            <constraint firstItem="KFM-qF-ry7" firstAttribute="leading" secondItem="ktL-fo-SvR" secondAttribute="leading" id="Xsk-5b-nuR"/>
+                            <constraint firstAttribute="trailing" secondItem="KFM-qF-ry7" secondAttribute="trailing" id="pBQ-ER-Jq0"/>
+                            <constraint firstAttribute="trailing" secondItem="x1U-ho-wrZ" secondAttribute="trailing" id="rHj-uP-DYJ"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="finishButton" destination="YIA-42-pgE" id="JVl-kA-qOT"/>
+                        <outlet property="settingsTableView" destination="KFM-qF-ry7" id="i5B-i5-33b"/>
+                        <segue destination="9Op-FG-zvu" kind="unwind" identifier="hideSettings" unwindAction="hideSettingsWithSegue:" id="dwL-Lp-HT2"/>
+                        <segue destination="9Op-FG-zvu" kind="unwind" identifier="hideGetStartedSettings" unwindAction="hideGetStartedSettingsWithSegue:" id="XGB-10-rTf"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IwJ-UW-Pu3" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="9Op-FG-zvu" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="7157" y="-543"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="home" width="22" height="22"/>
+    </resources>
+</document>

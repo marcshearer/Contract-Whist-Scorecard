@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Get Started-->
+        <scene sceneID="bxj-G7-EJ4">
+            <objects>
+                <viewController storyboardIdentifier="GetStartedViewController" title="Get Started" useStoryboardIdentifierAsRestorationIdentifier="YES" id="1IM-Ht-gqg" customClass="GetStartedViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="4Uq-wu-NXS"/>
+                        <viewControllerLayoutGuide type="bottom" id="pHh-Rn-p2w"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="gBX-K1-URm">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background portrait" translatesAutoresizingMaskIntoConstraints="NO" id="usQ-QH-4BG">
+                                <rect key="frame" x="16" y="44" width="343" height="623"/>
+                            </imageView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="tSH-2T-gen">
+                                <rect key="frame" x="0.0" y="44" width="375" height="623"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Get Started Cell" rowHeight="80" id="MuW-0x-O8Q" customClass="GetStartedCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="80"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="MuW-0x-O8Q" id="GhH-T1-uHz">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Get Started" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aHn-q4-DSR">
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="79.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="51"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="aHn-q4-DSR" firstAttribute="leading" secondItem="GhH-T1-uHz" secondAttribute="leading" id="0RI-Ms-kKh"/>
+                                                <constraint firstAttribute="bottom" secondItem="aHn-q4-DSR" secondAttribute="bottom" id="2k4-hO-pvp"/>
+                                                <constraint firstAttribute="trailing" secondItem="aHn-q4-DSR" secondAttribute="trailing" id="Ciq-me-IdM"/>
+                                                <constraint firstItem="aHn-q4-DSR" firstAttribute="centerY" secondItem="GhH-T1-uHz" secondAttribute="centerY" id="KiR-S4-cXA"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Sync Enabled Cell" rowHeight="220" id="ZK6-b6-zYn" customClass="GetStartedCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="108" width="375" height="220"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZK6-b6-zYn" id="7ge-Lc-4j1">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="220"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="JLe-pr-2Cf">
+                                                    <rect key="frame" x="37" y="21" width="271" height="29"/>
+                                                    <segments>
+                                                        <segment title="Don't Sync"/>
+                                                        <segment title="Sync with Cloud"/>
+                                                    </segments>
+                                                </segmentedControl>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UKX-zP-rkK" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                    <rect key="frame" x="313" y="21" width="30" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="30" id="Es1-MS-SaO"/>
+                                                        <constraint firstAttribute="height" constant="30" id="I70-8o-kiL"/>
+                                                    </constraints>
+                                                    <state key="normal">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                </button>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="GYD-1T-tOX">
+                                                    <rect key="frame" x="30" y="61" width="315" height="114"/>
+                                                    <string key="text">This app uses iCloud to sync data across devices. Click the info button to find out more. If you have used the app on another device enter your unique ID and press download to download your, and your co-players details and history. Otherwise press start playing and add players manually</string>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter your Unique ID to find players" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cWs-b2-QzK">
+                                                    <rect key="frame" x="30" y="177" width="315" height="39"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="39" id="roA-N9-G7g"/>
+                                                    </constraints>
+                                                    <nil key="textColor"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="cWs-b2-QzK" firstAttribute="top" secondItem="GYD-1T-tOX" secondAttribute="bottom" constant="2" id="B99-ey-69W"/>
+                                                <constraint firstItem="GYD-1T-tOX" firstAttribute="leading" secondItem="7ge-Lc-4j1" secondAttribute="leading" constant="30" id="Hc4-he-LRP"/>
+                                                <constraint firstItem="JLe-pr-2Cf" firstAttribute="top" secondItem="7ge-Lc-4j1" secondAttribute="topMargin" constant="10" id="Iwt-ic-9aR"/>
+                                                <constraint firstItem="UKX-zP-rkK" firstAttribute="leading" secondItem="JLe-pr-2Cf" secondAttribute="trailing" constant="5" id="OAZ-fK-RoD"/>
+                                                <constraint firstItem="cWs-b2-QzK" firstAttribute="leading" relation="lessThanOrEqual" secondItem="7ge-Lc-4j1" secondAttribute="leading" constant="30" id="SRh-q6-MVq"/>
+                                                <constraint firstItem="GYD-1T-tOX" firstAttribute="top" secondItem="UKX-zP-rkK" secondAttribute="bottom" constant="10" id="Tdc-xS-bY3"/>
+                                                <constraint firstItem="JLe-pr-2Cf" firstAttribute="leading" secondItem="7ge-Lc-4j1" secondAttribute="leadingMargin" constant="22" id="eMy-NC-neo"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="UKX-zP-rkK" secondAttribute="trailing" constant="17" id="hv0-LF-ZZY"/>
+                                                <constraint firstAttribute="trailing" secondItem="GYD-1T-tOX" secondAttribute="trailing" constant="30" id="jXp-gD-er9"/>
+                                                <constraint firstItem="UKX-zP-rkK" firstAttribute="top" secondItem="7ge-Lc-4j1" secondAttribute="topMargin" constant="10" id="uLJ-rg-chS"/>
+                                                <constraint firstAttribute="trailing" relation="lessThanOrEqual" secondItem="cWs-b2-QzK" secondAttribute="trailing" constant="30" id="wST-xi-Pq8"/>
+                                                <constraint firstAttribute="bottom" secondItem="cWs-b2-QzK" secondAttribute="bottom" constant="4" id="ymf-M9-afo"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <outlet property="syncEmail" destination="cWs-b2-QzK" id="GjQ-hu-Sqj"/>
+                                            <outlet property="syncEnabledSelection" destination="JLe-pr-2Cf" id="JyJ-Di-daY"/>
+                                            <outlet property="syncInfo" destination="UKX-zP-rkK" id="Ndi-jO-amX"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Action Button Cell" rowHeight="64" id="Ycd-3z-zMS" customClass="GetStartedCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="328" width="375" height="64"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ycd-3z-zMS" id="McG-gH-bOh">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mgY-ZD-9ME" userLabel="Action Button" customClass="DarkRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                    <rect key="frame" x="30" y="10" width="315" height="43.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <state key="normal" title="Download Players from Cloud"/>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="mgY-ZD-9ME" firstAttribute="leading" relation="lessThanOrEqual" secondItem="McG-gH-bOh" secondAttribute="leading" constant="30" id="Eav-ox-8M3"/>
+                                                <constraint firstItem="mgY-ZD-9ME" firstAttribute="top" secondItem="McG-gH-bOh" secondAttribute="top" constant="10" id="a7W-OI-pdK"/>
+                                                <constraint firstAttribute="bottom" secondItem="mgY-ZD-9ME" secondAttribute="bottom" constant="10" id="j1f-XD-Qzo"/>
+                                                <constraint firstAttribute="trailing" relation="lessThanOrEqual" secondItem="mgY-ZD-9ME" secondAttribute="trailing" constant="30" id="q1J-kb-kjR"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <outlet property="actionButton" destination="mgY-ZD-9ME" id="388-gi-ezP"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="delaysContentTouches" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="dataSource" destination="1IM-Ht-gqg" id="EeH-4A-e6A"/>
+                                    <outlet property="delegate" destination="1IM-Ht-gqg" id="e5X-j7-iM7"/>
+                                </connections>
+                            </tableView>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7RK-iL-r6k">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="89u-E5-5iI"/>
+                                </constraints>
+                                <items>
+                                    <navigationItem title="Contract Whist Scorecard" id="zZJ-Oi-gqN">
+                                        <barButtonItem key="leftBarButtonItem" id="akp-SF-Iji">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="mlL-xC-AG1" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <rect key="frame" x="16" y="11" width="22" height="22"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" image="home"/>
+                                                <connections>
+                                                    <action selector="finishPressed:" destination="1IM-Ht-gqg" eventType="touchUpInside" id="u61-By-zI7"/>
+                                                </connections>
+                                            </button>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="7RK-iL-r6k" firstAttribute="leading" secondItem="gBX-K1-URm" secondAttribute="leading" id="5xy-yF-g7F"/>
+                            <constraint firstAttribute="trailing" secondItem="tSH-2T-gen" secondAttribute="trailing" id="A9h-pG-GMf"/>
+                            <constraint firstItem="usQ-QH-4BG" firstAttribute="top" secondItem="7RK-iL-r6k" secondAttribute="bottom" id="Gad-gX-FC8"/>
+                            <constraint firstItem="7RK-iL-r6k" firstAttribute="top" secondItem="gBX-K1-URm" secondAttribute="top" id="OeE-DY-7Ot"/>
+                            <constraint firstItem="usQ-QH-4BG" firstAttribute="leading" secondItem="gBX-K1-URm" secondAttribute="leadingMargin" id="QC8-Cc-biz"/>
+                            <constraint firstItem="pHh-Rn-p2w" firstAttribute="top" secondItem="tSH-2T-gen" secondAttribute="bottom" id="QTO-Hs-PLt"/>
+                            <constraint firstItem="tSH-2T-gen" firstAttribute="top" secondItem="7RK-iL-r6k" secondAttribute="bottom" id="Tlo-Ry-M8T"/>
+                            <constraint firstAttribute="trailing" secondItem="7RK-iL-r6k" secondAttribute="trailing" id="Xcq-Pi-8S0"/>
+                            <constraint firstItem="usQ-QH-4BG" firstAttribute="trailing" secondItem="gBX-K1-URm" secondAttribute="trailingMargin" id="aCy-OA-lAY"/>
+                            <constraint firstItem="tSH-2T-gen" firstAttribute="leading" secondItem="gBX-K1-URm" secondAttribute="leading" id="bQg-8a-glF"/>
+                            <constraint firstItem="pHh-Rn-p2w" firstAttribute="top" secondItem="usQ-QH-4BG" secondAttribute="bottom" id="uLR-3I-5f8"/>
+                        </constraints>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
+                    <connections>
+                        <outlet property="backgroundImage" destination="usQ-QH-4BG" id="al5-S6-vAk"/>
+                        <outlet property="finishButton" destination="mlL-xC-AG1" id="UAo-99-zHE"/>
+                        <segue destination="mUh-dg-q1z" kind="unwind" identifier="hideGetStarted" unwindAction="hideGetStartedWithSegue:" id="IRM-kh-2LK"/>
+                        <segue destination="qYQ-cc-0sq" kind="presentation" identifier="showGetStartedSettings" id="VgC-Jo-Lqa"/>
+                        <segue destination="YJh-1A-cUe" kind="show" identifier="showGetStartedDownloadPlayers" id="hos-9P-EFj"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="e9Q-MP-3gh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="mUh-dg-q1z" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="6352.5" y="-544.0140845070423"/>
+        </scene>
+        <!--Settings-->
+        <scene sceneID="Vb3-z3-JKn">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="UIViewController-btt-Xo-OBG" storyboardName="SettingsViewController" referencedIdentifier="SettingsViewController" id="qYQ-cc-0sq" userLabel="Settings" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="z4c-iM-vvG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6982" y="-585"/>
+        </scene>
+        <!--Player Stats-->
+        <scene sceneID="yeZ-NN-hHJ">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="UIViewController-aCF-cU-Oeh" storyboardName="StatsViewController" referencedIdentifier="StatsViewController" id="YJh-1A-cUe" userLabel="Player Stats" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DaE-D6-tSm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6999" y="-500"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="background portrait" width="250" height="445"/>
+        <image name="home" width="22" height="22"/>
+    </resources>
+</document>

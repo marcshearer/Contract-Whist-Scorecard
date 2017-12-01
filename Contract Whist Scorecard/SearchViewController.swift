@@ -73,7 +73,7 @@ class SearchViewController: UIViewController, UITableViewDataSource, UITableView
         super.viewDidLoad()
         getSearchList()
         if self.results.count < self.minPlayers {
-            self.alertMessage(self.insufficientMessage, okHandler: {
+            self.alertMessage(if: self.insufficientMessage != nil, self.insufficientMessage, completion: {
                 self.returnPlayers(complete: false)
             })
         }

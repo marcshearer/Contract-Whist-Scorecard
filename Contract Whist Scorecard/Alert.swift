@@ -25,6 +25,15 @@ extension UIViewController {
             self.present(alertController, animated: true, completion: nil)
         }
     }
+    
+    public func alertMessage(if condition: Bool, _ message: String!, title: String! = "Warning", buttonText: String! = "OK", completion: @escaping () -> ()) {
+        // Pop up alert message if condition is true and execute handler on exit - else execute handler without alert
+        if condition {
+            self.alertMessage(message, title: title, buttonText: buttonText, okHandler: completion)
+        } else {
+            completion()
+        }
+    }
 
     public func alertDecision(_ message: String, title: String = "Warning", okButtonText: String = "OK", okHandler: (() -> ())? = nil, cancelButtonText: String = "Cancel", cancelHandler: (() -> ())? = nil) {
         
@@ -53,7 +62,7 @@ extension UIViewController {
             AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
     }
     
-    public func alertWait(_ message: String, completion: (()->())? = nil) -> UIAlertController {
+    public func alertWait(_ message: String, title: String = "", completion: (()->())? = nil) -> UIAlertController {
         let alertController = UIAlertController(title: title, message: message + "\n\n\n\n", preferredStyle: .alert)
     
         // Add the activity indicator as a subview of the alert controller's view

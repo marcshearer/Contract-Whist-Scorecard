@@ -12,7 +12,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
     
    func testSync() {
         
-        // Swipe up in case landscape and select Player Stats
+        // Select Player Stats
         self.selectOption("Player Stats")
         
         // Select sync

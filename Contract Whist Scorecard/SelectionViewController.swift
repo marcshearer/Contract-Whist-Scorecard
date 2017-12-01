@@ -15,6 +15,7 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
 
     // Main state properties
     var scorecard: Scorecard!
+    private let sync = Sync()
     
     // Properties to pass state to / from segues
     public var cloudPlayerList: [PlayerDetail]!
@@ -111,6 +112,8 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        sync.initialise(scorecard: scorecard)
+        
          for _ in 1...scorecard.playerList.count+1 {
             availableCell.append(nil)
         }
@@ -210,7 +213,8 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
                                      initials: "",
                                      label: cell.disc)
                 
-                cell.name.text = "Add"
+                cell.name.text = "New"
+                cell.name.textColor = UIColor.blue
                 cell.thumbnailView.alpha = 1.0
                 cell.disc.backgroundColor = ScorecardUI.totalColor
                 cell.name.alpha = 1.0
@@ -405,8 +409,8 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
     func selectCloudPlayers() {
         self.cloudAlertController = UIAlertController(title: title, message: "Searching Cloud for Available Players\n\n\n\n", preferredStyle: .alert)
         
-        self.scorecard.sync.delegate = self
-        if self.scorecard.sync.connect() {
+        self.sync.delegate = self
+        if self.sync.connect() {
             
             //add the activity indicator as a subview of the alert controller's view
             self.cloudIndicatorView =
@@ -423,14 +427,14 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
             self.present(self.cloudAlertController, animated: true, completion: nil)
             
             // Sync
-            self.scorecard.sync.synchronise(syncMode: .syncGetPlayers)
+            self.sync.synchronise(syncMode: .syncGetPlayers)
         } else {
             self.alertMessage("Error getting players from iCloud")
         }
     }
     
     func getImages(_ imageFromCloud: [PlayerMO]) {
-        self.scorecard.sync.fetchPlayerImagesFromCloud(imageFromCloud)
+        self.sync.fetchPlayerImagesFromCloud(imageFromCloud)
     }
     
     func syncMessage(_ message: String) {
@@ -695,8 +699,8 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
         if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
             // Either enter a new player or choose from cloud
             let actionSheet = ActionSheet("Add Player", dark: true, view: availableCollectionView, direction: .left, x: width, y: width / 2)
-            actionSheet.add("Download from Cloud", handler: self.selectCloudPlayers)
-            actionSheet.add("Create new player", handler: {
+            actionSheet.add("Find existing player", handler: self.selectCloudPlayers)
+            actionSheet.add("Create player manually", handler: {
                 self.performSegue(withIdentifier: "selectionNewPlayer", sender: self)
             })
             actionSheet.add("Cancel", style: .cancel)

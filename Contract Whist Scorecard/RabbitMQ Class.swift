@@ -205,16 +205,11 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
     }
     
     internal func debugMessage(_ message: String, device: String? = nil, force: Bool = false) {
-        
-        if Utility.isDevelopment || force || Scorecard.adminMode {
-            Utility.mainThread {
-                var outputMessage = message
-                if let device = device {
-                    outputMessage = outputMessage + " Device: \(device)"
-                }
-                Utility.debug("rabbitMQ", message)
-            }
+        var outputMessage = message
+        if let device = device {
+            outputMessage = outputMessage + " Device: \(device)"
         }
+        Utility.debugMessage("rabbitMQ", outputMessage, force: force)
     }
     
     // MARK: - Start/Stop Routines ================================================================= -

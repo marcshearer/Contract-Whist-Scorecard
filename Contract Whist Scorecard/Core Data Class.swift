@@ -1,4 +1,4 @@
- //
+//
 //  Persist Class.swift
 //  Contract Whist Scorecard
 //
@@ -30,9 +30,11 @@ class CoreData {
         var read:[MO] = []
         let readSize = 100
         var finished = false
+        var requestOffset: Int!
         
         if let context = Scorecard.context {
             // Create fetch request
+            
             let request = NSFetchRequest<MO>(entityName: entityName)
             
             // Add any predicates
@@ -57,21 +59,29 @@ class CoreData {
             if limit != 0 {
                 request.fetchLimit = limit
             } else {
-                request.fetchLimit = readSize
+                request.fetchBatchSize = readSize
             }
             
             while !finished {
+                
+                if let requestOffset = requestOffset {
+                    request.fetchOffset = requestOffset
+                }
+                
+                read = []
+                
                 // Execute the query
                 do {
                     read = try context.fetch(request)
-                    results = results + read
-                    if limit != 0 || read.count < readSize {
-                        finished = true
-                    } else {
-                        request.fetchOffset = results.count
-                    }
                 } catch {
                     fatalError("Unexpected error")
+                }
+                
+                results += read
+                if limit != 0 || read.count < readSize {
+                    finished = true
+                } else {
+                    requestOffset = results.count
                 }
             }
         } else {

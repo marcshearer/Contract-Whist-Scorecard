@@ -146,6 +146,7 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
         if mode != .none {
             selectMode = false
         }
+        selectAll(false)
         formatButtons()
     }
 
@@ -395,7 +396,7 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
         if selectMode {
             if selected == 0 {
                 selectButton.setTitle("All", for: .normal)
-                cancelButton.isHidden = true
+                cancelButton.isHidden = false
             } else {
                 selectButton.setTitle(actionText, for: .normal)
                 cancelButton.isHidden = false

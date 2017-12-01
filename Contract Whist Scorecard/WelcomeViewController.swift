@@ -17,6 +17,7 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
     // Main state properties
     public var scorecard = Scorecard()
     private let recovery = Recovery()
+    private let sync = Sync()
     
     // Properties to pass state to / from segues
     public var broadcastTitle: String!
@@ -74,18 +75,18 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
     
     @IBAction func hideSettings(segue:UIStoryboardSegue) {
         scorecard.checkNetworkConnection(button: nil, label: syncMessage)
-        getCloudVersion()
+        getCloudVersion(async: true)
         setupButtons()
     }
     
     @IBAction func hideBroadcast(segue:UIStoryboardSegue) {
-        getCloudVersion()
+        getCloudVersion(async: true)
         setupButtons()
         actionsTableView.reloadData()
     }
     
     @IBAction func hideHost(segue:UIStoryboardSegue) {
-        getCloudVersion()
+        getCloudVersion(async: true)
         setupButtons()
         actionsTableView.reloadData()
     }
@@ -93,31 +94,31 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBAction func hideGetStarted(segue:UIStoryboardSegue) {
         scorecard.checkNetworkConnection(button: nil, label: syncMessage)
         scorecard.recoveryMode = false
-        getCloudVersion()
+        getCloudVersion(async: true)
         setupButtons()
     }
     
     @IBAction func hidePlayerStats(segue:UIStoryboardSegue) {
         scorecard.checkNetworkConnection(button: nil, label: syncMessage)
-        getCloudVersion()
+        getCloudVersion(async: true)
         enableButtons() // In case removed all players
     }
     
     @IBAction func hideHighScores(segue:UIStoryboardSegue) {
         scorecard.checkNetworkConnection(button: nil, label: syncMessage)
-        getCloudVersion()
+        getCloudVersion(async: true)
     }
     
     @IBAction func hideHistory(segue:UIStoryboardSegue) {
         scorecard.checkNetworkConnection(button: nil, label: syncMessage)
-        getCloudVersion()
+        getCloudVersion(async: true)
     }
     
     @IBAction func returnSelection(segue:UIStoryboardSegue) {
         // Clear recovery flag
         scorecard.checkNetworkConnection(button: nil, label: syncMessage)
         scorecard.recoveryMode = false
-        getCloudVersion()
+        getCloudVersion(async: true)
         enableButtons()
     }
     
@@ -125,7 +126,7 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
         self.navigationController?.isNavigationBarHidden = false
         scorecard.checkNetworkConnection(button: nil, label: syncMessage)
         scorecard.recoveryMode = false
-        getCloudVersion()
+        getCloudVersion(async: true)
         enableButtons()
     }
     
@@ -183,6 +184,7 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         
         scorecard.initialise(players: 4, rounds: 25, recovery: recovery)
+        sync.initialise(scorecard: scorecard)
         
         if !recovery.checkRecovery() {
             scorecard.reset()
@@ -202,13 +204,6 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
             scorecard.getVersion()
             getCloudVersion()
             
-            // Continue to Get Started if necessary pending version lookup - a risk but probably OK
-            if scorecard.playerList.count == 0 && getStarted {
-                // No players setup - go to Get Started
-                getStarted = false
-                self.performSegue(withIdentifier: "showGetStarted", sender: self)
-            }
-            
             // Note flow continues in completion handler
         }
         
@@ -222,11 +217,16 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
     
     // MARK: - Sync class delegate methods ===================================================================== -
     
-    func getCloudVersion() {
+    func getCloudVersion(async: Bool = false) {
         if scorecard.isNetworkAvailable {
-            if scorecard.sync.connect() {
-                scorecard.sync.delegate = self
-                scorecard.sync.synchronise(syncMode: .syncGetVersion, timeout: nil)
+            if self.sync.connect() {
+                if async {
+                    self.sync.delegate = nil
+                    self.sync.synchronise(syncMode: .syncGetVersionAsync, timeout: nil, waitFinish: false)
+                } else {
+                    self.sync.delegate = self
+                    self.sync.synchronise(syncMode: .syncGetVersion, timeout: nil)  
+                }
             } else {
                 self.syncCompletion(0)
             }
@@ -236,6 +236,13 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func syncCompletion(_ errors: Int) {
+        
+        // Continue to Get Started if necessary pending version lookup - a risk but probably OK
+        if scorecard.playerList.count == 0 && getStarted {
+            // No players setup - go to Get Started
+            getStarted = false
+            self.performSegue(withIdentifier: "showGetStarted", sender: self)
+        }
         
         if self.firstTime {
             

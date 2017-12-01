@@ -2,21 +2,10 @@ List of outstanding things to do
 
 Changes since last version
 --------------------------
-Reorder players in lobby
-Notifications now working
-Fix problem when bid more than 7 - didn't show other bids
-Fixed titles in settings
-Changed sorting of high scores to subsort by other criteria
-Moved Sync Class.swift down into directory
 
 Bugs fix now
 ------------
-Intermittent crash in search
-Rebuild of players doesn't then sync them back up
-Player creating doesn't seem intuitive
-    Change text to 'Find existing player in Cloud' and 'Create new player'?
-    Allow create from Stats?
-    Allow create from Home and Get Started?
+Rebuild of players doesn't then sync them back up - Have coded but not tested
 
 Long-term bugs
 --------------

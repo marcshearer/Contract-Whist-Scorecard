@@ -23,7 +23,7 @@ class Config {
     public static let pushNotifications_rabbitMQ = false
     
     // Queue for log messages - blank to disable
-    public static let rabbitMQLogQueue = ""
+    public static let rabbitMQLogQueue = "WhistLogger"
     
     // MARK: - Utility code - should not need to be changed ============================================== -
     

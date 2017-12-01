@@ -69,7 +69,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         // Select download from cloud
         self.tap(app.sheets["Add Player"].buttons["Download from Cloud"])
         // Select Emma
-        self.tap(app.collectionViews.staticTexts["Emma"])
+        self.tap(app.collectionViews.staticTexts["Emma"], timeout: 30)
         self.tap(app.navigationBars["Select Players"].buttons["Download"])
     }
     
@@ -132,9 +132,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
             self.tap(app.tables.buttons["None"])
             self.tap(app.tables.buttons["Highlight"])
             
-            // Swipe up to get to next options
-            self.swipeUp(app.tables.buttons["Above Players"])
-            
             // Set starting number of cards to 8 and then back to 13
             let cardsValue0 = app.tables.textFields["cardsValue0"]
             self.typeText(cardsValue0, "8\n")
@@ -145,10 +142,12 @@ extension Contract_Whist_Scorecard_UI_Tests {
             self.typeText(cardsValue1, "8\n")
             self.typeText(cardsValue1, "1\n")
             
-            
             // Set bounce and then unset
             self.tap(app.tables.buttons["Return to 13 cards"])
             self.tap(app.tables.buttons["Go down to 1 card"])
+            
+            // Swipe up to get to next options
+            self.swipeUp(app.tables.buttons["Above Players"])
             
             // Clear and set Bonus for 2
             self.tap(app.tables.buttons["No Bonus"])

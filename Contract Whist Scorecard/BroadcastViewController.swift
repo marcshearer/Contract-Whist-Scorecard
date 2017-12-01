@@ -893,17 +893,11 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
     
     private func alertCompletion(alert: Bool, message: String, completion: (()->())?) {
         Utility.mainThread {
-            if alert {
-                self.alertMessage(message, title: "Connected Devices", okHandler: {
-                    if completion != nil {
-                        completion!()
-                    }
-                })
-            } else {
+            self.alertMessage(if: alert, message, title: "Connected Devices", completion: {
                 if completion != nil {
                     completion!()
                 }
-            }
+            })
         }
     }
     

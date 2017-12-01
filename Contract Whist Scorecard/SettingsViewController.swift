@@ -89,7 +89,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         case 8:
             return 3
         case 11:
-            return (Scorecard.adminMode ? 5 : (self.scorecard.settingDatabase == "production" ? 1 : 2))
+            return (Scorecard.adminMode || scorecard.iCloudUserIsMe ? 6 : (self.scorecard.settingDatabase == "production" ? 1 : 2))
         default:
             return 1
         }
@@ -371,21 +371,42 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 cell.aboutLabel.text = "Database:"
                 cell.aboutValue1.text = self.scorecard.settingDatabase
             case 2:
+                // Sub-heading
+                cell = tableView.dequeueReusableCell(withIdentifier: "About Cell Heading", for: indexPath) as! SettingsTableCell
+                ScorecardUI.sectionHeaderStyleView(cell)
+            case 3:
                 // Players
-                cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 2 Value", for: indexPath) as! SettingsTableCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 3 Value", for: indexPath) as! SettingsTableCell
                 let totalScore = self.scorecard.playerList.reduce(0) { $0 + $1.totalScore }
                 cell.aboutLabel.text = "Players:"
                 cell.aboutValue1.text = "\(self.scorecard.playerList.count)"
-                cell.aboutValue2.text = "\(totalScore)"
-            case 3:
+                cell.aboutValue2.text = ""
+                Utility.getCloudRecordCount("Players", completion: { (players) in
+                    Utility.mainThread {
+                        if cell.aboutValue2 != nil && players != nil {
+                            cell.aboutValue2.text = "\(players!)"
+                        }
+                    }
+                })
+                cell.aboutValue3.text = "\(totalScore)"
+            case 4:
                 // Games
-                cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 1 Value", for: indexPath) as! SettingsTableCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 3 Value", for: indexPath) as! SettingsTableCell
                 let historyGames: [GameMO] = CoreData.fetch(from: "Game")
                 cell.aboutLabel.text = "Games:"
                 cell.aboutValue1.text = "\(historyGames.count)"
-            case 4:
+                cell.aboutValue2.text = ""
+                Utility.getCloudRecordCount("Games", completion: { (games) in
+                    Utility.mainThread {
+                        if cell.aboutValue2 != nil && games != nil {
+                            cell.aboutValue2.text = "\(games!)"
+                        }
+                    }
+                })
+                cell.aboutValue3.text = ""
+            case 5:
                 // Participants
-                cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 2 Value", for: indexPath) as! SettingsTableCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 3 Value", for: indexPath) as! SettingsTableCell
                 let historyParticipants: [ParticipantMO] = CoreData.fetch(from: "Participant")
                 var totalScore:Int64 = 0
                 for participantMO in historyParticipants {
@@ -393,7 +414,15 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 }
                 cell.aboutLabel.text = "Participants:"
                 cell.aboutValue1.text = "\(historyParticipants.count)"
-                cell.aboutValue2.text = "\(totalScore)"
+                cell.aboutValue2.text = ""
+                Utility.getCloudRecordCount("Participants", completion: { (participants) in
+                    Utility.mainThread {
+                        if cell.aboutValue2 != nil && participants != nil {
+                            cell.aboutValue2.text = "\(participants!)"
+                        }
+                    }
+                })
+                cell.aboutValue3.text = "\(totalScore)"
             default:
                 break
             }
@@ -960,7 +989,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     private func identifyOnlinePlayer(disableOption: String! = nil) {
-        self.scorecard.identifyPlayers(from: self, title: "Link Player", disableOption: disableOption, instructions: "You need to link a player to this device to receive invitations for online games")
+        self.scorecard.identifyPlayers(from: self, title: "Link Player", disableOption: disableOption, instructions: "You need to link a player to this device to receive invitations for online games", minPlayers: 1, maxPlayers: 1, insufficientMessage: "No players on this device yet")
     }
     
     private func saveOnlineEmailLocally(playerEmail: String!) {
@@ -1033,6 +1062,7 @@ class SettingsTableCell: UITableViewCell {
     @IBOutlet weak var aboutLabel: UILabel!
     @IBOutlet weak var aboutValue1: UILabel!
     @IBOutlet weak var aboutValue2: UILabel!
+    @IBOutlet weak var aboutValue3: UILabel!
 }
 
 class TrumpCollectionCell : UICollectionViewCell {

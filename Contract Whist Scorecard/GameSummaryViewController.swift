@@ -13,6 +13,7 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
 
     // Main state properties
     public var scorecard: Scorecard!
+    private let sync = Sync()
     
     // Properties to pass state to / from segues
     public var firstGameSummary = false
@@ -98,6 +99,8 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
     // MARK: - View Overrides ========================================================================== -
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        sync.initialise(scorecard: scorecard)
         
         if gameSummaryMode != .amend {
             leftSwipeGesture.isEnabled = false
@@ -491,10 +494,10 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
         if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
             view.isUserInteractionEnabled = false
             activityIndicator.startAnimating()
-            self.scorecard.sync.delegate = self
-            if self.scorecard.sync.connect() {
+            self.sync.delegate = self
+            if self.sync.connect() {
                 self.syncMessage("Started...")
-                self.scorecard.sync.synchronise()
+                self.sync.synchronise()
             } else {
                 self.alertMessage("Error syncing scores. Try later.")
             }

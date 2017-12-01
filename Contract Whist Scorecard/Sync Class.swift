@@ -33,10 +33,12 @@ enum SyncMode {
     case syncAll
     case syncGetPlayers
     case syncGetVersion
+    case syncGetVersionAsync
 }
 
 enum SyncPhase {
     case phaseGetVersion
+    case phaseGetVersionAsync
     case phaseGetLastSyncDate
     case phaseUpdateLastSyncDate
     case phaseGetExistingParticipants
@@ -89,7 +91,10 @@ class Sync {
     private var adminMode: Bool!
     
     // Variables to hold updates
-    public var syncInProgress = false
+    public static var syncInProgress = false
+    public static var syncBackgroundCompletionInProgress = false
+    private var setSyncBackgroundCompletionInProgress = false
+    private var observer: NSObjectProtocol?
     
     // Player sync state
     var cloudPlayerRecordList: [PlayerDetail] = []
@@ -116,20 +121,25 @@ class Sync {
     }
     
     func connect() -> Bool {
-        if self.syncInProgress {
+        if Sync.syncInProgress {
             return false
         } else {
             return true
         }
     }
     
-    func synchronise(syncMode: SyncMode = .syncAll, specificEmail: [String] = [], specificExternalId: String! = nil, timeout: Double! = 30.0) {
+    func synchronise(syncMode: SyncMode = .syncAll, specificEmail: [String] = [], specificExternalId: String! = nil, timeout: Double! = 30.0, waitFinish: Bool = true) {
         // Reset state
         errors = 0
         cloudObjectList = []
         
-        if !self.syncInProgress {
-            self.syncInProgress = true
+        if Sync.syncBackgroundCompletionInProgress && !waitFinish {
+            self.syncCompletion()
+            return
+        }
+        
+        if !Sync.syncInProgress {
+            Sync.syncInProgress = true
             self.errors = 0
             self.syncMode = syncMode
             self.specificEmail = specificEmail
@@ -139,6 +149,8 @@ class Sync {
             switch syncMode {
             case .syncGetVersion:
                 syncPhases = [.phaseGetVersion]
+            case .syncGetVersionAsync:
+                syncPhases = [.phaseGetVersionAsync]
             case .syncAll:
                 syncPhases = [.phaseGetVersion,
                               .phaseGetLastSyncDate,
@@ -156,7 +168,7 @@ class Sync {
                     syncPhases = [.phaseGetVersion,
                                   .phaseGetPlayerList]
                 } else if self.specificEmail.count == 0 {
-                    // General request to get any players linked to currently loaded players - partial sync to update local participants and the deduce list
+                    // General request to get any players linked to currently loaded players - partial sync to update local participants and then deduce list
                     syncPhases = [.phaseGetVersion,
                                   .phaseGetLastSyncDate,
                                   .phaseGetExistingParticipants, .phaseUpdateParticipants,
@@ -184,6 +196,14 @@ class Sync {
         // Each element should either return true to signify complete (and hence should continue with next phase immediately)
         // or return true and then recall the controller from a completion block
         var nextPhase = true
+        observer = nil
+        
+        if Sync.syncBackgroundCompletionInProgress {
+            // Background task completing - wait for notification
+            self.syncMessage("Waiting for previous operation to finish")
+            observer = setSyncBackgroundCompletionNotification()
+            return
+        }
         
         while true {
             
@@ -191,7 +211,7 @@ class Sync {
             syncPhaseCount += 1
         
             // Quit if errors or finished
-            if errors != 0 || !self.syncInProgress || syncPhaseCount >= syncPhases.count {
+            if errors != 0 || !Sync.syncInProgress || syncPhaseCount >= syncPhases.count {
                 break
             }
             
@@ -203,6 +223,8 @@ class Sync {
             switch syncPhases[syncPhaseCount] {
             case .phaseGetVersion:
                 nextPhase = getCloudVersion()
+            case .phaseGetVersionAsync:
+                nextPhase = getCloudVersion(async: true)
             case .phaseGetLastSyncDate:
                 nextPhase = getLastSyncDate()
             case .phaseUpdateLastSyncDate:
@@ -251,7 +273,6 @@ class Sync {
             
         }
         if errors != 0 || syncPhaseCount >= syncPhases.count {
-            
             self.syncCompletion()
         }
     }
@@ -261,7 +282,7 @@ class Sync {
     // Note this is always called first to check for compatibility
     // Other modes are called on successful completion
     
-    func getCloudVersion() -> Bool {
+    func getCloudVersion(async: Bool = false) -> Bool {
         // Fetch data from cloud
         var version = "0.0"
         var build: Int = 0
@@ -374,11 +395,22 @@ class Sync {
                 // There is a message - either advisory in get version mode or an error
                 self.syncAlert(self.scorecard.settingVersionMessage)
             }
-            self.syncController()
+            
+            if async {
+                self.completeInBackgroundFinish()
+            } else {
+                self.syncController()
+            }
         }
         
         // Execute the query
         publicDatabase.add(queryOperation)
+        
+        if async {
+            self.completeInBackgroundStart()
+            return true
+        }
+    
         return false
     }
     
@@ -411,6 +443,7 @@ class Sync {
     func getParticipantsFromCloud(_ getParticipantMode: GetParticipantMode) -> Bool {
         // Note this routine returns immediately once cloud fetch is initiated
         // Sync continues from completion handler
+        Utility.debugMessage("getParticipants","Start")
         var gameUUIDList: [String]?
         self.cloudObjectList = []
         
@@ -441,6 +474,7 @@ class Sync {
         
         if cursor == nil {
             // First time in - setup the query
+            Utility.debugMessage("getParticipantsCloud","Start")
             switch getParticipantMode {
             case .getExisting:
                 // Get participants based on players who were on this device before the cutoff date and only look at games since the cutoff since previous games should already be here
@@ -475,6 +509,7 @@ class Sync {
             }
             if predicateList.count == 0 {
                 // Nothing in list - continue with next step
+                self.syncMessage("No local participants to update")
                 return true
             }
             let query = CKQuery(recordType: "Participants", predicate: predicate)
@@ -484,6 +519,7 @@ class Sync {
             }
             queryOperation = CKQueryOperation(query: query, qos: .userInteractive)
         } else {
+            Utility.debugMessage("getParticipantsCloud","Cursor recursion")
             queryOperation = CKQueryOperation(cursor: cursor, qos: .userInteractive)
         }
         queryOperation.queuePriority = .veryHigh
@@ -494,6 +530,7 @@ class Sync {
         
         queryOperation.queryCompletionBlock = { (cursor, error) -> Void in
             if error != nil {
+                Utility.debugMessage("getParticipantsCloud","Error completion")
                 var message = "Unable to fetch participants from cloud!"
                 if self.adminMode {
                     message = message + " " + error.debugDescription
@@ -503,7 +540,6 @@ class Sync {
                 self.syncController()
                 return
             }
-            
             if self.adminMode {
                 self.syncMessage("\(self.cloudObjectList.count) participant history records downloaded")
             }
@@ -513,15 +549,15 @@ class Sync {
                 _ = self.getParticipantsFromCloudQuery(getParticipantMode, gameUUIDList: nil, remainder: remainder, cursor: cursor)
             } else if remainder != nil {
                 // More records to get - recurse
+                Utility.debugMessage("getParticipantsCloud","Start remainder recursion")
                 _ = self.getParticipantsFromCloudQuery(getParticipantMode, gameUUIDList: remainder)
             } else {
-                
+                Utility.debugMessage("getParticipantsCloud","Successful completion")
                 if !self.adminMode {
                     self.syncMessage("Participant history records downloaded")
                 }
                 
                 self.syncController()
-                
             }
         }
         
@@ -535,38 +571,44 @@ class Sync {
         var created = 0
         var updated = 0
         
+        if self.cloudObjectList.count == 0 {
+            return true
+        }
         
-        if !CoreData.update(updateLogic: {
-        
-            for cloudObject in self.cloudObjectList {
-                
-                let gameUUID  = Utility.objectString(cloudObject: cloudObject, forKey: "gameUUID")
-                let playerNumber  = Int16(Utility.objectInt(cloudObject: cloudObject, forKey: "playerNumber"))
-                let historyParticipants = History.loadParticipants(gameUUID: gameUUID!,
-                                                                   playerNumber: Int(playerNumber))
-                if historyParticipants.count > 0 {
-                    // Found - update it
-                    let historyParticipant = historyParticipants[0]
-                    if historyParticipant.participantMO.syncRecordID == nil ||
-                        Utility.objectDate(cloudObject: cloudObject, forKey: "syncDate") > historyParticipant.participantMO.syncDate! as Date {
+        for cloudObject in self.cloudObjectList {
+            
+            let gameUUID  = Utility.objectString(cloudObject: cloudObject, forKey: "gameUUID")
+            let playerNumber  = Int16(Utility.objectInt(cloudObject: cloudObject, forKey: "playerNumber"))
+            let historyParticipants = History.loadParticipants(gameUUID: gameUUID!,
+                                                               playerNumber: Int(playerNumber))
+            if historyParticipants.count > 0 {
+                // Found - update it
+                let historyParticipant = historyParticipants[0]
+                let localRecordName = historyParticipant.participantMO.syncRecordID
+                let localSyncDate = historyParticipant.participantMO.syncDate! as Date
+                let cloudSyncDate = Utility.objectDate(cloudObject: cloudObject, forKey: "syncDate")
+                if localRecordName == nil || (CKRecordID(recordName: localRecordName!) == cloudObject.recordID &&
+                    cloudSyncDate! > localSyncDate) {
+                    // Only update if never synced before or cloud newer and not a duplicate
+                    _ = CoreData.update(updateLogic: {
+                    
                         History.cloudParticipantToMO(cloudObject: cloudObject, participantMO: historyParticipant.participantMO)
                         updated += 1
-                    }
-                } else {
-                    // Not found - create it locally
+                    
+                    })
+                }
+            } else {
+                // Not found - create it locally
+                _ = CoreData.update(updateLogic: {
                     let participantMO = CoreData.create(from: "Participant") as! ParticipantMO
                     // Copy in data values from cloud
                     History.cloudParticipantToMO(cloudObject: cloudObject, participantMO: participantMO)
                     created += 1
-                }
+                    
+                })
             }
-            
-        }) {
-            self.syncMessage("Error updating local participant data")
-            self.errors += 1
-            return false
         }
-
+ 
         if self.adminMode {
             self.syncMessage("\(updated) participants updated - \(created) participants created locally")
         } else {
@@ -695,35 +737,44 @@ class Sync {
         var updated = 0
         var created = 0
         
-        if !CoreData.update(updateLogic: {
+        if self.cloudObjectList.count == 0 {
+            return true
+        }
         
-            for cloudObject in self.cloudObjectList {
-                
-                let gameUUID = Utility.objectString(cloudObject: cloudObject, forKey: "gameUUID")
-                let history = History(gameUUID: gameUUID, getParticipants: false)
-                if history.games.count != 0 {
-                    // Found - confirm and update it
+        for cloudObject in self.cloudObjectList {
+            
+            let gameUUID = Utility.objectString(cloudObject: cloudObject, forKey: "gameUUID")
+            let history = History(gameUUID: gameUUID, getParticipants: false)
+            if history.games.count != 0 {
+                // Found - confirm and update it
+                if !CoreData.update(updateLogic: {
+                    
                     let historyGame = history.games[0]
                     if historyGame.gameMO.syncRecordID == nil ||
                         Utility.objectDate(cloudObject: cloudObject, forKey: "syncDate") > historyGame.gameMO.syncDate! as Date {
                         History.cloudGameToMO(cloudObject: cloudObject, gameMO: historyGame.gameMO)
                         updated += 1
                     }
-                } else {
-                    // Not found - create it locally
+                }) {
+                    self.syncMessage("Error updating local game data")
+                    self.errors += 1
+                    return false
+                }
+            } else {
+                // Not found - create it locally
+                 if !CoreData.update(updateLogic: {
                     let gameMO = CoreData.create(from: "Game") as! GameMO
                     // Copy in data values from cloud
                     History.cloudGameToMO(cloudObject: cloudObject, gameMO: gameMO)
                     created += 1
+                 }) {
+                    self.syncMessage("Error creating local game data")
+                    self.errors += 1
+                    return false
                 }
             }
-            
-        }) {
-            self.syncMessage("Error updating local game data")
-            self.errors += 1
-            return false
         }
-
+        
         if self.adminMode {
             self.syncMessage("\(updated) games updated - \(created) games created locally")
         } else {
@@ -793,7 +844,6 @@ class Sync {
     
     func sendRecordsToCloud(records: [CKRecord], remainder: [CKRecord]? = nil, completion: ((Bool)->())? = nil) {
         // Copes with limit being exceeed which splits the load in two and tries again
-        
         let cloudContainer = CKContainer.default()
         let publicDatabase = cloudContainer.publicCloudDatabase
         
@@ -815,8 +865,14 @@ class Sync {
                     if error.code == .limitExceeded {
                         // Limit exceeded - split in two and try again
                         let split = Int(records.count / 2)
-                        let firstBlock = Array(records.prefix(upTo: split))
-                        let secondBlock = Array(records.suffix(from: split))
+                        // Join records and remainder back together again
+                        var allRecords = records
+                        if remainder != nil {
+                            allRecords += remainder!
+                        }
+                        // Now split at new break point
+                        let firstBlock = Array(allRecords.prefix(upTo: split))
+                        let secondBlock = Array(allRecords.suffix(from: split))
                         self.sendRecordsToCloud(records: firstBlock, remainder: secondBlock, completion: completion)
                     }
                 } else {
@@ -1284,24 +1340,31 @@ class Sync {
             
             fetchOperation.perRecordCompletionBlock = { (cloudObject: CKRecord?, syncRecordID: CKRecordID?, error: Error?) -> Void in
                 if error == nil && cloudObject != nil {
-                    let playerMO = self.scorecard.findPlayerByEmail(Utility.objectString(cloudObject: cloudObject!, forKey: "email"))
-                    if playerMO != nil {
-                        if !CoreData.update(updateLogic: {
-                            var thumbnail: Data?
-                            thumbnail = Utility.objectImage(cloudObject: cloudObject!, forKey: "thumbnail") as Data?
-                            playerMO!.thumbnail = thumbnail
-                            playerMO!.thumbnailDate = Utility.objectDate(cloudObject: cloudObject!, forKey: "thumbnailDate")
-                        }) {
-                            // Just ignore as only images
-                        } else {
-                            // Send a notification to any objects that might be interested with the object ID of the playerMO object ID
-                            NotificationCenter.default.post(name: .playerImageDownloaded, object: self, userInfo: ["playerObjectID": playerMO!.objectID])
-                        }
-                    }
+                    self.cloudObjectList.append(cloudObject!)
                 }
             }
             fetchOperation.fetchRecordsCompletionBlock = { (records, error) in
+                var playerObjectId: [NSManagedObjectID] = []
+                for cloudObject in self.cloudObjectList {
+                    let playerMO = self.scorecard.findPlayerByEmail(Utility.objectString(cloudObject: cloudObject, forKey: "email"))
+                    if playerMO != nil {
+                        if CoreData.update(updateLogic: {
+                            var thumbnail: Data?
+                            thumbnail = Utility.objectImage(cloudObject: cloudObject, forKey: "thumbnail") as Data?
+                            playerMO!.thumbnail = thumbnail
+                            playerMO!.thumbnailDate = Utility.objectDate(cloudObject: cloudObject, forKey: "thumbnailDate")
+                        }) {
+                            playerObjectId.append(playerMO!.objectID)
+                        }
+                    }
+                }
+                // Send a notification to any objects that might be interested with the object ID of the playerMO object ID
+                for objectId in playerObjectId {
+                    NotificationCenter.default.post(name: .playerImageDownloaded, object: self, userInfo: ["playerObjectID": objectId])
+                }
+                self.completeInBackgroundFinish()
             }
+            self.completeInBackgroundStart()
             publicDatabase.add(fetchOperation)
         }
     }
@@ -1426,6 +1489,7 @@ class Sync {
     // MARK: - Utility Routines ======================================================================== -
 
     func syncMessage(_ message: String) {
+        Utility.debugMessage("sync", message)
         if self.delegate != nil {
             self.delegate?.syncMessage(message)
         }
@@ -1441,13 +1505,14 @@ class Sync {
     func syncCompletion() {
         let delegate = self.delegate
         // All done
-        if self.syncInProgress {
+        if Sync.syncInProgress {
             // Stop timer
             if self.timer != nil {
                 self.timer.invalidate()
             }
             // Disconnect
-            self.syncInProgress = false
+            Sync.syncInProgress = false
+            self.completeInBackgroundSet()
             self.delegate = nil
             // Call the delegate completion handler if there is one
             if delegate != nil {
@@ -1458,7 +1523,8 @@ class Sync {
     
     func syncReturnPlayers(_ playerList: [PlayerDetail]!) {
         // All done
-        self.syncInProgress = false
+        Sync.syncInProgress = false
+        self.completeInBackgroundSet()
         // Call the delegate handler if there is one
         delegate?.syncReturnPlayers(playerList)
         self.syncController()
@@ -1474,12 +1540,42 @@ class Sync {
     @objc internal func timerTimeout() {
         self.syncAlert("Sync timed out")
     }
+    
+    func completeInBackgroundFinish() {
+        Sync.syncBackgroundCompletionInProgress = false
+        self.setSyncBackgroundCompletionInProgress = false
+        NotificationCenter.default.post(name: .syncBackgroundCompletion, object: self, userInfo: nil)
+    }
+    
+    func completeInBackgroundStart() {
+        if !Sync.syncInProgress {
+            Sync.syncBackgroundCompletionInProgress = true
+        } else {
+            self.setSyncBackgroundCompletionInProgress = true
+        }
+    }
+    
+    func completeInBackgroundSet() {
+        if self.setSyncBackgroundCompletionInProgress {
+            Sync.syncBackgroundCompletionInProgress = true
+            self.setSyncBackgroundCompletionInProgress = false
+        }
+    }
+    
+    func setSyncBackgroundCompletionNotification() -> NSObjectProtocol? {
+        // Set a notification for background completion
+        let observer = NotificationCenter.default.addObserver(forName: .syncBackgroundCompletion, object: nil, queue: nil) { (notification) in
+            self.syncController()
+        }
+        return observer
+    }
 }
 
 // MARK: - Utility Classes ========================================================================= -
 
 extension Notification.Name {
     static let playerImageDownloaded = Notification.Name("playerImageDownloaded")
+    static let syncBackgroundCompletion = Notification.Name("syncBackgroundCompletion")
 }
 
 extension CKQueryOperation {
@@ -1494,4 +1590,5 @@ extension CKQueryOperation {
         self.qualityOfService = qos
     }
 }
+
 

@@ -16,6 +16,8 @@ class DataAdmin {
         
         viewController.alertDecision("This will delete all player, game and participant records in the iCloud database permanently. Are you really sure you want to do this?", title: "WARNING - DATA WILL BE ERASED PERMANENTLY", okButtonText: "Delete", okHandler: {
         
+            let alertWaitController = viewController.alertWait("Deleting iCloud database")
+            
             DataAdmin.deleteAllCloudRecords(viewController: viewController, recordType: "Participants", completion: {
                 
                 DataAdmin.deleteAllCloudRecords(viewController: viewController, recordType: "Games", completion: {
@@ -24,6 +26,7 @@ class DataAdmin {
                     
                         DataAdmin.deleteAllCloudRecords(viewController: viewController, recordType: "Players", completion: {
                             
+                            alertWaitController.dismiss(animated: true, completion: nil)
                             viewController.alertMessage("All records deleted successfully", title: "Complete")
                         })
                     }

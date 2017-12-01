@@ -14,6 +14,7 @@ class GetStartedViewController: UIViewController, UITableViewDelegate, UITableVi
     
     // Main state properties
     public var scorecard: Scorecard!
+    private let sync = Sync()
     
     // Properties to pass state to / from segues
     public var cloudPlayerList: [PlayerDetail]!
@@ -72,6 +73,7 @@ class GetStartedViewController: UIViewController, UITableViewDelegate, UITableVi
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        sync.initialise(scorecard: scorecard)
         ScorecardUI.selectBackground(size: view.frame.size, backgroundImage: backgroundImage)
         scorecard.checkNetworkConnection(button: self.downloadPlayersButton, label: nil, disable: true)
         enableButtons()
@@ -287,8 +289,8 @@ class GetStartedViewController: UIViewController, UITableViewDelegate, UITableVi
     func selectCloudPlayers() -> (){
         self.cloudAlertController = UIAlertController(title: title, message: "Searching Cloud for Available Players\n\n\n\n", preferredStyle: .alert)
         
-        self.scorecard.sync.delegate = self
-        if self.scorecard.sync.connect() {
+        self.sync.delegate = self
+        if self.sync.connect() {
             
             //add the activity indicator as a subview of the alert controller's view
             self.cloudIndicatorView =
@@ -305,14 +307,14 @@ class GetStartedViewController: UIViewController, UITableViewDelegate, UITableVi
             self.present(self.cloudAlertController, animated: true, completion: nil)
             
             self.syncEmailTextField.text! = self.syncEmailTextField.text!.trim()
-            self.scorecard.sync.synchronise(syncMode: .syncGetPlayers, specificEmail: [self.syncEmailTextField.text!])
+            self.sync.synchronise(syncMode: .syncGetPlayers, specificEmail: [self.syncEmailTextField.text!])
         } else {
             self.alertMessage("Error getting players from iCloud")
         }
     }
     
     func getImages(_ imageFromCloud: [PlayerMO]) {
-        self.scorecard.sync.fetchPlayerImagesFromCloud(imageFromCloud)
+        self.sync.fetchPlayerImagesFromCloud(imageFromCloud)
     }
     
     func syncMessage(_ message: String) {

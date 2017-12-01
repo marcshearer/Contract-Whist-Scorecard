@@ -725,7 +725,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
         // Swipe up to get to next options
         self.swipeUp(app.tables.buttons["Don't Vibrate"])
-        self.swipeUp(app.tables.buttons["Above Players"])
         
         // Set sliders to 7 -> 1
         let roundsValue0 = app.tables.textFields["cardsValue0"]
@@ -802,7 +801,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
         // Swipe up to get to next options
         self.swipeUp(app.tables.buttons["Don't Vibrate"])
-        self.swipeUp(app.tables.buttons["Above Players"])
         
         // Set sliders to 7 -> 1
         self.typeText(roundsValue0,  "7\n")
@@ -875,7 +873,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
         // Swipe up to get to next options
         self.swipeUp(app.tables.buttons["Don't Vibrate"])
-        self.swipeUp(app.tables.buttons["Above Players"])
         
         // Set sliders to 1 -> 13
         self.typeText(roundsValue0,  "1\n")
@@ -949,7 +946,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
         // Swipe up to get to next options
         self.swipeUp(app.tables.buttons["Don't Vibrate"])
-        self.swipeUp(app.tables.buttons["Above Players"])
         
         // Set sliders to 13 -> 1
         self.typeText(roundsValue0,  "13\n")
@@ -1034,7 +1030,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
         // Swipe up to get to next options
         self.swipeUp(app.tables.buttons["Don't Vibrate"])
-        self.swipeUp(app.tables.buttons["Above Players"])
         
         self.tap(app.tables.buttons["Don't Include NT"])
         

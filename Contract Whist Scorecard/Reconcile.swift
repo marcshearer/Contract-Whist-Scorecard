@@ -35,6 +35,7 @@ class Reconcile: SyncDelegate {
     
     // Main state properties
     private var scorecard: Scorecard!
+    private let sync = Sync()
     
     // Local state properties
     var playerMOList: [PlayerMO]!
@@ -43,6 +44,7 @@ class Reconcile: SyncDelegate {
     
     func initialise(scorecard: Scorecard) {
         self.scorecard = scorecard
+        sync.initialise(scorecard: scorecard)
     }
     
     public func reconcilePlayers(playerMOList: [PlayerMO]) {
@@ -50,11 +52,11 @@ class Reconcile: SyncDelegate {
         
         // First synchronise
         if scorecard.settingSyncEnabled {
-            if scorecard.sync.connect() {
-                scorecard.sync.delegate = self
+            if self.sync.connect() {
+                self.sync.delegate = self
                 self.reconcileMessage("Sync in progress")
                 // Note this starts synchronisation - reconciliation is then initiated from the completion handler
-                scorecard.sync.synchronise()
+                self.sync.synchronise()
             } else {
                 self.reconcileMessage("Unable to synchronise with iCloud", finish: true)
             }
@@ -90,7 +92,6 @@ class Reconcile: SyncDelegate {
         
         return CoreData.update(updateLogic: {
             
-       
             // Zero values
             playerMO.gamesPlayed = 0
             playerMO.gamesWon = 0
@@ -99,14 +100,6 @@ class Reconcile: SyncDelegate {
             playerMO.twosMade = 0
             playerMO.totalScore = 0
             playerMO.datePlayed = nil
-            
-            // zero synced values
-            playerMO.syncGamesPlayed = 0
-            playerMO.syncGamesWon = 0
-            playerMO.syncHandsPlayed = 0
-            playerMO.syncHandsMade = 0
-            playerMO.syncTwosMade = 0
-            playerMO.syncTotalScore = 0
 
             for participantMO in participantList {
                 
@@ -117,16 +110,6 @@ class Reconcile: SyncDelegate {
                 playerMO.handsMade += Int64(participantMO.handsMade)
                 playerMO.twosMade += Int64(participantMO.twosMade)
                 playerMO.totalScore += Int64(participantMO.totalScore)
-                
-                if playerMO.syncRecordID != nil {
-                    // Already synced so add to synced totals
-                    playerMO.syncGamesPlayed += Int64(participantMO.gamesPlayed)
-                    playerMO.syncGamesWon += Int64(participantMO.gamesWon)
-                    playerMO.syncHandsPlayed += Int64(participantMO.handsPlayed)
-                    playerMO.syncHandsMade += Int64(participantMO.handsMade)
-                    playerMO.syncTwosMade += Int64(participantMO.twosMade)
-                    playerMO.syncTotalScore += Int64(participantMO.totalScore)
-                }
                 
                 // Update max scores
                 if Int64(participantMO.totalScore) > playerMO.maxScore && participantMO.gamesPlayed == 1 {

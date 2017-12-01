@@ -339,33 +339,74 @@ class Utility {
         return activeViewController
     }
     
-    class func debug(_ from: String, _ message: String, showDevice: Bool = false) {
-        Utility.mainThread {
-            var outputMessage: String
-            let timestamp = Utility.dateString(Date(), format: "hh:mm:ss.SS", localized: false)
-            outputMessage = "DEBUG(\(from)): \(timestamp)"
-            if showDevice {
+    class func debugMessage(_ from: String, _ message: String, showDevice: Bool = false, force: Bool = false) {
+        if Utility.isDevelopment || force || Scorecard.adminMode {
+            Utility.mainThread {
+                var outputMessage: String
+                let timestamp = Utility.dateString(Date(), format: "hh:mm:ss.SS", localized: false)
+                outputMessage = "DEBUG(\(from)): \(timestamp)"
+                if showDevice {
+                    #if ContractWhist
+                    outputMessage = outputMessage + " - Device:\(Scorecard.deviceName)"
+                    #else
+                    outputMessage = outputMessage + UIDevice.current.name
+                    #endif
+                }
+                outputMessage = outputMessage + " - \(message)"
+                print(outputMessage)
                 #if ContractWhist
-                outputMessage = outputMessage + " - Device:\(Scorecard.deviceName)"
-                #else
-                outputMessage = outputMessage + UIDevice.current.name
+                    if Config.rabbitMQLogQueue != "" && Config.rabbitMQUri != "" {
+                        let scorecard = Scorecard.getScorecard()!
+                        if scorecard.logService == nil {
+                            scorecard.logService = RabbitMQService(purpose: .other, type: .queue, serviceID: Config.rabbitMQUri)
+                            scorecard.logQueue = scorecard.logService.startQueue(delegate: scorecard.logService, queueUUID: Config.rabbitMQLogQueue)
+                        }
+                        scorecard.logQueue.sendBroadcast(data: ["message" : outputMessage,
+                                                                "timestamp" : timestamp])
+                    }
                 #endif
             }
-            outputMessage = outputMessage + " - \(message)"
-            
-            print(outputMessage)
-            #if ContractWhist
-                if Config.rabbitMQLogQueue != "" && Config.rabbitMQUri != "" {
-                    let scorecard = Scorecard.getScorecard()!
-                    if scorecard.logService == nil {
-                        scorecard.logService = RabbitMQService(purpose: .other, type: .queue, serviceID: Config.rabbitMQUri)
-                        scorecard.logQueue = scorecard.logService.startQueue(delegate: scorecard.logService, queueUUID: Config.rabbitMQLogQueue)
-                    }
-                    scorecard.logQueue.sendBroadcast(data: ["message" : message,
-                                                            "timestamp" : timestamp])
-                }
-            #endif
         }
+    }
+    
+    public static func getCloudRecordCount(_ table: String, predicate: NSPredicate? = nil, cursor: CKQueryCursor? = nil, runningTotal: Int! = nil, completion: ((Int?)->())? = nil) {
+        // Fetch data from cloud
+        var queryOperation: CKQueryOperation
+        let cloudContainer = CKContainer.default()
+        let publicDatabase = cloudContainer.publicCloudDatabase
+        var result: Int = (runningTotal == nil ? 0 : runningTotal)
+        
+        if let cursor = cursor {
+            queryOperation = CKQueryOperation(cursor: cursor, qos: .userInteractive)
+        } else {
+            var predicate = predicate
+            if predicate == nil {
+                predicate = NSPredicate(format: "TRUEPREDICATE")
+            }
+            let query = CKQuery(recordType: table, predicate: predicate!)
+            queryOperation = CKQueryOperation(query: query, qos: .userInteractive)
+        }
+        queryOperation.queuePriority = .veryHigh
+        queryOperation.recordFetchedBlock = { (record) -> Void in
+            result += 1
+        }
+        
+        queryOperation.queryCompletionBlock = { (cursor, error) -> Void in
+            if error != nil {
+                completion?(nil)
+                return
+            }
+            
+            if cursor != nil {
+                // More records to come - recurse
+                Utility.getCloudRecordCount(table, cursor: cursor, runningTotal: result, completion: completion)
+            } else {
+                completion?(result)
+            }
+        }
+        
+        // Execute the query
+        publicDatabase.add(queryOperation)
     }
 }
 

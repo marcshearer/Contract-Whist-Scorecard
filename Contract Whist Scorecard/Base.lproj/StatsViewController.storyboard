@@ -39,9 +39,9 @@
                                                 </connections>
                                             </button>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" width="70" id="4DW-e7-DWe">
+                                        <barButtonItem key="rightBarButtonItem" width="80" id="4DW-e7-DWe">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="ahW-El-tKK" customClass="LightRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="289" y="5" width="70" height="34"/>
+                                                <rect key="frame" x="279" y="5" width="80" height="34"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                 <state key="normal" title="Select"/>
@@ -333,8 +333,9 @@
                                 <items>
                                     <barButtonItem width="48" style="plain" id="qIh-qi-Xh1">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="ohY-Mq-YSP" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                            <rect key="frame" x="16" y="7" width="48" height="30"/>
+                                            <rect key="frame" x="16" y="5" width="56" height="34"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                             <state key="normal" title="Cancel"/>
                                             <connections>
                                                 <action selector="cancelPressedWithSender:" destination="aCF-cU-Oeh" eventType="touchUpInside" id="bhe-8V-Jby"/>

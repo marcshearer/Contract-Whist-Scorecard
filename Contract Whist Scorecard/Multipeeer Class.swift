@@ -247,16 +247,11 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCNearbyServiceBrowserDe
     }
     
     internal func debugMessage(_ message: String, device: String? = nil, force: Bool = false) {
-        
-        if Utility.isDevelopment || force || Scorecard.adminMode {
-            Utility.mainThread {
-                var outputMessage = message
-                if let device = device {
-                    outputMessage = outputMessage + " Device: \(device)"
-                }
-                Utility.debug("broadcast", message)
-            }
+        var outputMessage = message
+        if let device = device {
+            outputMessage = outputMessage + " Device: \(device)"
         }
+        Utility.debugMessage("Multipeer", message, force: force)
     }
     
     private func commsConnectionState(_ state: MCSessionState) -> CommsConnectionState {

@@ -62,19 +62,18 @@ class WatchManager: NSObject, WCSessionDelegate {
         do {
             try self.watchSession?.updateApplicationContext(dict)
         } catch {
-            print("Error sending dictionary \(dict) to Apple Watch!")
         }
     }
     
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        Utility.debug("Session","Session activation did complete")
+        Utility.debugMessage("Session","Session activation did complete")
     }
     
     public func sessionDidBecomeInactive(_ session: WCSession) {
-        Utility.debug("Session","Session did become inactive")
+        Utility.debugMessage("Session","Session did become inactive")
     }
     
     public func sessionDidDeactivate(_ session: WCSession) {
-        Utility.debug("Session","Session did deactivate")
+        Utility.debugMessage("Session","Session did deactivate")
     }
 }

@@ -15,6 +15,7 @@ class SyncViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     // Main state properties
     var scorecard: Scorecard!
+    private let sync = Sync()
     
     // Local class variables
     private var count = 0
@@ -40,6 +41,7 @@ class SyncViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        sync.initialise(scorecard: scorecard)
         actionLabel.text = "Syncing with iCloud"
        
    }
@@ -50,9 +52,9 @@ class SyncViewController: UIViewController, UITableViewDelegate, UITableViewData
         finishButton.isHidden = true
         
         // Invoke the sync
-        if scorecard.sync.connect() {
-            scorecard.sync.delegate = self
-            scorecard.sync.synchronise()
+        if self.sync.connect() {
+            self.sync.delegate = self
+            self.sync.synchronise()
         } else {
             self.alertMessage("Error connecting to iCloud", okHandler: {
                 self.returnToCaller()

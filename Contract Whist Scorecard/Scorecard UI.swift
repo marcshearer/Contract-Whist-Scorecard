@@ -74,6 +74,10 @@ class ScorecardUI {
             label.font = UIFont.systemFont(ofSize: 15.0)
         }
     }
+    
+    class func sectionHeaderStyleView(_ view: UIView) {
+        view.backgroundColor = ScorecardUI.sectionHeaderBackgroundColor
+    }
 
     class func highlightStyleView(_ view: UIView) {
         view.backgroundColor = ScorecardUI.highlightColor

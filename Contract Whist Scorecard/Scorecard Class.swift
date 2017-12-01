@@ -110,9 +110,6 @@ class Scorecard {
     // Link to recover class
     public var recovery = Recovery()
     
-    // Instantiate synchronise class
-    public let sync = Sync()
-
     // Core data variables
     public var playerList:[PlayerMO] = []
     public var gameMO: GameMO!
@@ -163,9 +160,6 @@ class Scorecard {
         self.setupRounds()
         self.setupSuits()
                 
-        // Initialise the sync object
-        sync.initialise(scorecard: self)
-        
         // Set up game location class
         self.gameLocation = GameLocation(location: nil, description: "")
         

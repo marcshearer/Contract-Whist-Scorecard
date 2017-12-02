@@ -54,7 +54,6 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
         self.tap(app.tables.buttons["scorecard right"])
         
         // Enter location
-        self.tapIfExists(app.alerts["Allow \"Whist\" to access your location while you are using the app?"].buttons["Allow"])
         let searchText = app.searchFields["Enter description of current location"]
         self.tap(searchText, timeout: 60)
         self.tapIfExists(searchText.buttons["Clear text"])

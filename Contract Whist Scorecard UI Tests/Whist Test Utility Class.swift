@@ -53,7 +53,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
     func createNewPlayer(name: String, email: String) {
         // Assumes you are in the player selection screen
         self.tap(app.collectionViews.staticTexts["New"])
-        self.tap(app.sheets["Add Player"].buttons["Create new player"])
+        self.tap(app.sheets["Add Player"].buttons["Create player manually"])
         // Enter new player details
         let nameTextField = app.tables.textFields["Player name - Must not be blank"]
         self.typeText(nameTextField, name)

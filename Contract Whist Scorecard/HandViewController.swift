@@ -496,11 +496,11 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     Utility.executeAfter(delay: (self.scorecard.autoPlay != 0 ? 0.1 : 2.0), completion: {
                         // Return to scorepad after 2 seconds
                         if self.scorecard.isHosting {
-                            // Record scores
+                            // Record scores (in the order they happened)
                             for playerNumber in 1...self.scorecard.currentPlayers {
-                                let player = self.scorecard.enteredPlayer(playerNumber)
-                                player.setMade(self.round, self.state.made[playerNumber - 1])
-                                player.setTwos(self.round, self.state.twos[playerNumber - 1], bonus2: self.state.bonus2)
+                                let player = self.scorecard.roundPlayer(playerNumber: playerNumber, round: self.round)
+                                player.setMade(self.round, self.state.made[player.playerNumber - 1])
+                                player.setTwos(self.round, self.state.twos[player.playerNumber - 1], bonus2: self.state.bonus2)
                             }
                         }
                         self.state.finished = true

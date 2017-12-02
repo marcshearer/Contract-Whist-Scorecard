@@ -104,7 +104,7 @@ extension ScorepadViewController {
     
     func autoDeal() {
         if self.scorecard.autoPlay != 0 && self.scorecard.isHosting {
-            Utility.executeAfter(delay: 0.1, completion: {
+            Utility.executeAfter(delay: 10 * Config.autoPlayTimeUnit, completion: {
                 self.scorePressed(self)
             })
         }
@@ -190,42 +190,53 @@ extension HandViewController {
     
     func autoBid() {
         if self.scorecard.autoPlay != 0 {
-            let cards = self.scorecard.roundCards(round, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
-            var range = ((Double(cards) / Double(self.scorecard.currentPlayers)) * 2) + 1
-            range.round()
-            var bid = Utility.random(max(2,Int(range))) - 1
-            bid = min(bid, cards)
-            if self.entryPlayerNumber(self.round) == self.scorecard.currentPlayers {
-                // Last to bid - need to avoid remaining
-                let remaining = scorecard.remaining(playerNumber: entryPlayerNumber(self.enteredPlayerNumber), round: self.round, mode: .bid, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
-                if bid == remaining {
-                    if remaining == 0 {
-                        bid += 1
-                    } else {
-                        bid -= 1
-                    }
+            var bids: [Int] = []
+            for playerNumber in 1...self.scorecard.currentPlayers {
+                let bid = scorecard.entryPlayer(playerNumber).bid(round)
+                if bid != nil {
+                    bids.append(bid!)
                 }
             }
-            if self.checkBidAvailable() {
-                Utility.executeAfter(delay: 0.1, completion: {
-                    self.makeBid(bid)
-                })
+            if self.entryPlayerNumber(self.enteredPlayerNumber) == bids.count + 1 {
+                let cards = self.scorecard.roundCards(round, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
+                var range = ((Double(cards) / Double(self.scorecard.currentPlayers)) * 2) + 1
+                range.round()
+                var bid = Utility.random(max(2,Int(range))) - 1
+                bid = min(bid, cards)
+                if self.entryPlayerNumber(self.round) == self.scorecard.currentPlayers {
+                    // Last to bid - need to avoid remaining
+                    let remaining = scorecard.remaining(playerNumber: entryPlayerNumber(self.enteredPlayerNumber), round: self.round, mode: .bid, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
+                    if bid == remaining {
+                        if remaining == 0 {
+                            bid += 1
+                        } else {
+                            bid -= 1
+                        }
+                    }
+                }
+                if self.checkBidAvailable() {
+                    Utility.executeAfter(delay: 1 * Config.autoPlayTimeUnit, completion: {
+                        self.makeBid(bid)
+                    })
+                }
             }
         }
     }
     
     func autoPlay() {
         if self.scorecard.autoPlay != 0 {
-            for suitNumber in 1...self.state.handSuits.count {
-                if suitEnabled[suitNumber-1] {
-                    if let card = self.state.handSuits[suitNumber-1].cards.last {
-                        if self.checkCardAvailable(suitNumber, self.state.handSuits[suitNumber-1].cards.count) {
-                            Utility.executeAfter(delay: 0.1, completion: {
-                                self.scorecard.sendCardPlayed(round: self.round, trick: self.state.trick, playerNumber: self.enteredPlayerNumber, card: card)
-                                self.playCard(card: card)
-                            })
+            if self.state.toPlay == self.state.enteredPlayerNumber {
+                for suitNumber in 1...self.state.handSuits.count {
+                    if suitEnabled[suitNumber-1] {
+                        if let card = self.state.handSuits[suitNumber-1].cards.last {
+                            if self.checkCardAvailable(suitNumber, self.state.handSuits[suitNumber-1].cards.count) {
+                                Utility.executeAfter(delay: 1 * Config.autoPlayTimeUnit, completion: {
+                                    self.scorecard.sendCardPlayed(round: self.round, trick: self.state.trick, playerNumber: self.enteredPlayerNumber, card: card)
+                                    self.playCard(card: card)
+                                })
+                            }
+                            return
                         }
-                        return
                     }
                 }
             }
@@ -278,7 +289,7 @@ extension GameSummaryViewController {
             self.scorecard.sendAutoPlay()
             if self.scorecard.autoPlay != 0 {
                 // Play another one
-                Utility.executeAfter(delay: 5.0, completion: {
+                Utility.executeAfter(delay: 20 * Config.autoPlayTimeUnit, completion: {
                     self.finishGame(from: self, toSegue: "newGame", advanceDealer: true, resetOverrides: false, confirm: false)
                 })
             }

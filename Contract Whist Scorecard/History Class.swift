@@ -361,7 +361,7 @@ class History {
         }
     }
     
-    static func cloudParticipantFromMo(cloudObject: CKRecord, participantMO: ParticipantMO, syncDate: Date) {
+    static func cloudParticipantFromMO(cloudObject: CKRecord, participantMO: ParticipantMO, syncDate: Date) {
         cloudObject.setValue(participantMO.gameUUID, forKey: "gameUUID")
         cloudObject.setValue(participantMO.deviceUUID, forKey: "deviceUUID")
         cloudObject.setValue(participantMO.datePlayed, forKey: "datePlayed")

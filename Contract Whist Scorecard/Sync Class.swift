@@ -744,8 +744,12 @@ class Sync {
                 if !CoreData.update(updateLogic: {
                     
                     let historyGame = history.games[0]
-                    if historyGame.gameMO.syncRecordID == nil ||
-                        Utility.objectDate(cloudObject: cloudObject, forKey: "syncDate") > historyGame.gameMO.syncDate! as Date {
+                    let localRecordName = historyGame.gameMO.syncRecordID
+                    let localSyncDate = (historyGame.gameMO.syncDate ?? Date(timeIntervalSinceReferenceDate: -1)) as Date
+                    let cloudSyncDate = Utility.objectDate(cloudObject: cloudObject, forKey: "syncDate")
+                    if localRecordName == nil || (CKRecordID(recordName: localRecordName!) == cloudObject.recordID &&
+                        cloudSyncDate! > localSyncDate) {
+                        // Only update if never synced before or cloud newer and not a duplicate
                         History.cloudGameToMO(cloudObject: cloudObject, gameMO: historyGame.gameMO)
                         updated += 1
                     }

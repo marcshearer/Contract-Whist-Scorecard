@@ -193,10 +193,10 @@ class History {
         
         // Setup query filter predicate
         if specificEmail.count != 0 {
-            predicate1 = NSPredicate(format: "syncDate >= %@", cutoffDate as NSDate)
+            predicate1 = NSPredicate(format: "syncDate >= %@ OR syncDate = null", cutoffDate as NSDate)
             predicate2 = NSPredicate(format: "email IN %@", argumentArray: specificEmail)
         } else {
-            predicate1 = NSPredicate(format: "syncDate >= %@", cutoffDate as NSDate)
+            predicate1 = NSPredicate(format: "syncDate >= %@ OR syncDate = null", cutoffDate as NSDate)
             predicate2 = nil
         }
         

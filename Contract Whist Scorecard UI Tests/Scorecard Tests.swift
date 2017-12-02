@@ -256,7 +256,7 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
         
     }
     
-    func testInterruptedGame() {
+    func test3PlayerInterruptedGame() {
         
         // Select new game and override resume warning if necessary
         self.selectOption("New Game")

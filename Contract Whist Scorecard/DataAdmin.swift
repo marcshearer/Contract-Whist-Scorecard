@@ -26,6 +26,7 @@ class DataAdmin {
                     
                         DataAdmin.deleteAllCloudRecords(viewController: viewController, recordType: "Players", completion: {
                             
+                            UserDefaults.standard.removeObject(forKey: "confirmedSyncDate")
                             alertWaitController.dismiss(animated: true, completion: nil)
                             viewController.alertMessage("All records deleted successfully", title: "Complete")
                         })
@@ -99,10 +100,15 @@ class DataAdmin {
     }
     
     class func resetGameRecordIds(viewController: UIViewController) -> Bool {
-        let history = History(getParticipants: false, includeBF: true)
+        let history = History(getParticipants: true, includeBF: true)
         if !CoreData.update(updateLogic: {
             for historyGame in history.games {
                 historyGame.gameMO.syncRecordID = nil
+                historyGame.gameMO.syncDate = nil
+                for historyParticipant in historyGame.participant {
+                    historyParticipant.participantMO.syncRecordID = nil
+                    historyParticipant.participantMO.syncDate = nil
+                }
             }
         }) {
             viewController.alertMessage("Error resetting local game cloud record IDs")

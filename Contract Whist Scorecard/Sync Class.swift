@@ -443,7 +443,6 @@ class Sync {
     func getParticipantsFromCloud(_ getParticipantMode: GetParticipantMode) -> Bool {
         // Note this routine returns immediately once cloud fetch is initiated
         // Sync continues from completion handler
-        Utility.debugMessage("getParticipants","Start")
         var gameUUIDList: [String]?
         self.cloudObjectList = []
         
@@ -474,7 +473,6 @@ class Sync {
         
         if cursor == nil {
             // First time in - setup the query
-            Utility.debugMessage("getParticipantsCloud","Start")
             switch getParticipantMode {
             case .getExisting:
                 // Get participants based on players who were on this device before the cutoff date and only look at games since the cutoff since previous games should already be here
@@ -519,7 +517,6 @@ class Sync {
             }
             queryOperation = CKQueryOperation(query: query, qos: .userInteractive)
         } else {
-            Utility.debugMessage("getParticipantsCloud","Cursor recursion")
             queryOperation = CKQueryOperation(cursor: cursor, qos: .userInteractive)
         }
         queryOperation.queuePriority = .veryHigh
@@ -530,7 +527,6 @@ class Sync {
         
         queryOperation.queryCompletionBlock = { (cursor, error) -> Void in
             if error != nil {
-                Utility.debugMessage("getParticipantsCloud","Error completion")
                 var message = "Unable to fetch participants from cloud!"
                 if self.adminMode {
                     message = message + " " + error.debugDescription
@@ -549,10 +545,8 @@ class Sync {
                 _ = self.getParticipantsFromCloudQuery(getParticipantMode, gameUUIDList: nil, remainder: remainder, cursor: cursor)
             } else if remainder != nil {
                 // More records to get - recurse
-                Utility.debugMessage("getParticipantsCloud","Start remainder recursion")
                 _ = self.getParticipantsFromCloudQuery(getParticipantMode, gameUUIDList: remainder)
             } else {
-                Utility.debugMessage("getParticipantsCloud","Successful completion")
                 if !self.adminMode {
                     self.syncMessage("Participant history records downloaded")
                 }
@@ -750,8 +744,12 @@ class Sync {
                 if !CoreData.update(updateLogic: {
                     
                     let historyGame = history.games[0]
-                    if historyGame.gameMO.syncRecordID == nil ||
-                        Utility.objectDate(cloudObject: cloudObject, forKey: "syncDate") > historyGame.gameMO.syncDate! as Date {
+                    let localRecordName = historyGame.gameMO.syncRecordID
+                    let localSyncDate = (historyGame.gameMO.syncDate ?? Date(timeIntervalSinceReferenceDate: -1)) as Date
+                    let cloudSyncDate = Utility.objectDate(cloudObject: cloudObject, forKey: "syncDate")
+                    if localRecordName == nil || (CKRecordID(recordName: localRecordName!) == cloudObject.recordID &&
+                        cloudSyncDate! > localSyncDate) {
+                        // Only update if never synced before or cloud newer and not a duplicate
                         History.cloudGameToMO(cloudObject: cloudObject, gameMO: historyGame.gameMO)
                         updated += 1
                     }
@@ -807,7 +805,7 @@ class Sync {
                         if historyGame.gameMO.syncRecordID == nil {
                             // Not confirmed yet - send it
                             let cloudObject = CKRecord(recordType:"Participants")
-                            History.cloudParticipantFromMo(cloudObject: cloudObject, participantMO: historyParticipant.participantMO, syncDate: self.nextSyncDate)
+                            History.cloudParticipantFromMO(cloudObject: cloudObject, participantMO: historyParticipant.participantMO, syncDate: self.nextSyncDate)
                             self.cloudObjectList.append(cloudObject)
                             participantsQueued += 1
                         }

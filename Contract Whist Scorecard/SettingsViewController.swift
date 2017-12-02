@@ -26,6 +26,38 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     private var onlineRow: Int!
     private var testMode = false
     
+    // Sections
+    private let syncSection = 0
+    private let saveSection = 1
+    private let     saveHistoryRow = 0
+    private let     saveLocationRow = 1
+    private let broadcastSection = 2
+    private let nearbySection = 3
+    private let onlineSection = 4
+    private let alertSection = 5
+    private let     alertVibrateRow = 0
+    private let     alertFlashRow = 1
+    private let notificationSection = 6
+    private let dealerSection = 7
+    private let     dealerModeRow = 0
+    private let     dealerPositionRow = 1
+    private let cardsSection = 8
+    private let     cardsStartRow = 0
+    private let     cardsEndRow = 1
+    private let     cardsBounceRow = 2
+    private let bonus2Section = 9
+    private let trumpSequenceSection = 10
+    private let     trumpSequenceNoTrumpRow = 0
+    private let     trumpSequenceSuitRow = 1
+    private let aboutSection = 11
+    private let     aboutVersionRow = 0
+    private let     aboutDatabaseRow = 1
+    private let     aboutSubheadingRow = 2
+    private let     aboutPlayersRow = 3
+    private let     aboutGamesRow = 4
+    private let     aboutParticipantsRow = 5
+    
+    
     // UI component pointers
     private var syncEnabledSelection: UISegmentedControl!
     private var saveHistorySelection: UISegmentedControl!
@@ -84,11 +116,11 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         switch section {
-        case 1, 5, 7, 10:
+        case saveSection, alertSection, dealerSection, trumpSequenceSection:
             return 2
-        case 8:
+        case cardsSection:
             return 3
-        case 11:
+        case aboutSection:
             return (Scorecard.adminMode || scorecard.iCloudUserIsMe ? 6 : (self.scorecard.settingDatabase == "production" ? 1 : 2))
         default:
             return 1
@@ -97,7 +129,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
-        case 11:
+        case aboutSection:
             return 40
         default:
             return 60
@@ -107,7 +139,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: SettingsTableCell!
         switch indexPath.section {
-        case 0:
+        case syncSection:
             // Sync Group
             cell = tableView.dequeueReusableCell(withIdentifier: "Sync Enabled Cell", for: indexPath) as! SettingsTableCell
             syncEnabledSelection = cell.syncEnabledSelection
@@ -119,9 +151,9 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             default:
                 syncEnabledSelection.selectedSegmentIndex = 0
             }
-        case 1:
+        case saveSection:
             switch indexPath.row {
-            case 0:
+            case saveHistoryRow:
                 // Save History
                 cell = tableView.dequeueReusableCell(withIdentifier: "Save History Cell", for: indexPath) as! SettingsTableCell
                 saveHistorySelection = cell.saveHistorySelection
@@ -134,7 +166,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 default:
                     saveHistorySelection.selectedSegmentIndex = 0
                 }
-            case 1:
+            case saveLocationRow:
                 // Save Location
                 cell = tableView.dequeueReusableCell(withIdentifier: "Save Location Cell", for: indexPath) as! SettingsTableCell
                 saveLocationSelection = cell.saveLocationSelection
@@ -151,7 +183,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             default:
                 break
             }
-        case 2:
+        case broadcastSection:
             // Allow broadcast
             cell = tableView.dequeueReusableCell(withIdentifier: "Allow Broadcast Cell", for: indexPath) as! SettingsTableCell
             allowBroadcastSelection = cell.allowBroadcastSelection
@@ -166,7 +198,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 allowBroadcastSelection.selectedSegmentIndex = 0
             }
             allowBroadcastSelection.isEnabled = scorecard.settingSyncEnabled
-        case 3:
+        case nearbySection:
             // Nearby playing
             cell = tableView.dequeueReusableCell(withIdentifier: "Nearby Playing Cell", for: indexPath) as! SettingsTableCell
             nearbyPlayingSelection = cell.nearbyPlayingSelection
@@ -181,7 +213,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             }
             nearbyPlayingSelection.isEnabled = scorecard.settingSyncEnabled
             
-        case 4:
+        case onlineSection:
             // Online remote player
             onlineRow = indexPath.row
             cell = tableView.dequeueReusableCell(withIdentifier: "Online Player Cell", for: indexPath) as! SettingsTableCell
@@ -190,10 +222,10 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             onlinePlayerChangeButton.addTarget(self, action: #selector(SettingsViewController.onlinePlayerChangeAction(_:)), for: UIControlEvents.touchUpInside)
             self.displayOnlineCell()
             
-        case 5:
+        case alertSection:
             // Alerts
             switch indexPath.row {
-            case 0:
+            case alertVibrateRow:
                 // Alert vibrate
                 cell = tableView.dequeueReusableCell(withIdentifier: "Alert Vibrate Cell", for: indexPath) as! SettingsTableCell
                 alertVibrateSelection = cell.alertVibrateSelection
@@ -207,7 +239,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                     alertVibrateSelection.selectedSegmentIndex = 0
                 }
                 alertVibrateSelection.isEnabled = scorecard.settingSyncEnabled && ( scorecard.settingNearbyPlaying || scorecard.settingOnlinePlayerEmail != nil)
-            case 1:
+            case alertFlashRow:
                 // Alert flash
                 cell = tableView.dequeueReusableCell(withIdentifier: "Alert Flash Cell", for: indexPath) as! SettingsTableCell
                 alertFlashSelection = cell.alertFlashSelection
@@ -226,7 +258,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 break
             }
             self.enableAlerts()
-        case 6:
+        case notificationSection:
             // Receive notifications
             cell = tableView.dequeueReusableCell(withIdentifier: "Receive Notifications Cell", for: indexPath) as! SettingsTableCell
             receiveNotificationsSelection = cell.receiveNotificationsSelection
@@ -241,10 +273,10 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 receiveNotificationsSelection.selectedSegmentIndex = 0
             }
             receiveNotificationsSelection.isEnabled = scorecard.settingSyncEnabled
-        case 7:
+        case dealerSection:
             // Dealer mode & position
             switch indexPath.row {
-            case 0:
+            case dealerModeRow:
                 // Dealer mode
                 cell = tableView.dequeueReusableCell(withIdentifier: "Dealer Mode Cell", for: indexPath) as! SettingsTableCell
                 modeSelection = cell.modeSelection
@@ -261,7 +293,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 case DealerHighlightMode.large:
                     modeSelection.selectedSegmentIndex = 3
                 }
-            case 1:
+            case dealerPositionRow:
                 //Dealer position
                 cell = tableView.dequeueReusableCell(withIdentifier: "Dealer Position Cell", for: indexPath) as! SettingsTableCell
                 positionSelection = cell.positionSelection
@@ -279,10 +311,10 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 break
             }
 
-        case 8:
+        case cardsSection:
             // Number of cards
             switch indexPath.row {
-            case 0, 1:
+            case cardsStartRow, cardsEndRow:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Number Cards Cell", for: indexPath) as! SettingsTableCell
                 let cardsSlider = cell.cardsSlider!
                 let cardsValue = cell.cardsValue!
@@ -305,7 +337,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 self.cardsSlider[indexPath.row] = cardsSlider
                 self.cardsValue[indexPath.row] = cardsValue
                 
-            case 2:
+            case cardsBounceRow:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Bounce Cell", for: indexPath) as! SettingsTableCell
                 bounceSelection = cell.bounceSelection
                 bounceSelection.addTarget(self, action: #selector(SettingsViewController.bounceAction(_:)), for: UIControlEvents.valueChanged)
@@ -322,7 +354,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 break
             }
             
-        case 9:
+        case bonus2Section:
             // Bonus for winning with a 2
             cell = tableView.dequeueReusableCell(withIdentifier: "Bonus2 Cell", for: indexPath) as! SettingsTableCell
             bonus2Selection = cell.bonus2Selection
@@ -337,10 +369,10 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 bonus2Selection.selectedSegmentIndex = 0
             }
         
-        case 10:
+        case trumpSequenceSection:
             // Trump suit sequence
             switch indexPath.row {
-            case 0:
+            case trumpSequenceNoTrumpRow:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Trump Include No Trump Cell", for: indexPath) as! SettingsTableCell
                 trumpIncludeNoTrumpSelection = cell.trumpIncludeNoTrumpSelection
                 trumpIncludeNoTrumpSelection.addTarget(self, action: #selector(SettingsViewController.trumpIncludeNoTrumpAction(_:)), for: .valueChanged)
@@ -352,7 +384,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                     trumpIncludeNoTrumpSelection.selectedSegmentIndex = 0
                 }
                 
-            case 1:
+            case trumpSequenceSuitRow:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Trump Sequence Cell", for: indexPath) as! SettingsTableCell
                 cell.trumpSequenceInfo.addTarget(self, action: #selector(SettingsViewController.trumpSequenceInfoPressed(_:)), for: .touchUpInside)
                 
@@ -360,23 +392,23 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 break
             }
 
-        case 11:
+        case aboutSection:
             switch indexPath.row {
-            case 0:
+            case aboutVersionRow:
                 // Version number
                 cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 1 Value", for: indexPath) as! SettingsTableCell
                 cell.aboutLabel.text = "Version:"
                 cell.aboutValue1.text = "\(self.scorecard.settingVersion) (\(self.scorecard.settingBuild))"
-            case 1:
+            case aboutDatabaseRow:
                 // Database
                 cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 1 Value", for: indexPath) as! SettingsTableCell
                 cell.aboutLabel.text = "Database:"
                 cell.aboutValue1.text = self.scorecard.settingDatabase
-            case 2:
+            case aboutSubheadingRow:
                 // Sub-heading
                 cell = tableView.dequeueReusableCell(withIdentifier: "About Cell Heading", for: indexPath) as! SettingsTableCell
                 ScorecardUI.sectionHeaderStyleView(cell)
-            case 3:
+            case aboutPlayersRow:
                 // Players
                 cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 3 Value", for: indexPath) as! SettingsTableCell
                 let totalScore = self.scorecard.playerList.reduce(0) { $0 + $1.totalScore }
@@ -391,7 +423,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                     }
                 })
                 cell.aboutValue3.text = "\(totalScore)"
-            case 4:
+            case aboutGamesRow:
                 // Games
                 cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 3 Value", for: indexPath) as! SettingsTableCell
                 let historyGames: [GameMO] = CoreData.fetch(from: "Game")
@@ -406,7 +438,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                     }
                 })
                 cell.aboutValue3.text = ""
-            case 5:
+            case aboutParticipantsRow:
                 // Participants
                 cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 3 Value", for: indexPath) as! SettingsTableCell
                 let historyParticipants: [ParticipantMO] = CoreData.fetch(from: "Participant")
@@ -437,29 +469,29 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView,
                    titleForHeaderInSection section: Int) -> String? {
         switch section {
-        case 0:
+        case syncSection:
             return "iCloud Sync"
-        case 1:
+        case saveSection:
             return "Save Options"
-        case 2:
+        case broadcastSection:
             return "Share Scorecard with Other Devices"
-        case 3:
+        case nearbySection:
             return "Play Games with Nearby Devices"
-        case 4:
+        case onlineSection:
             return "Play Games with Remote Devices"
-        case 5:
+        case alertSection:
             return "Alert on Turn to Play"
-        case 6:
+        case notificationSection:
             return "Receive Notifications"
-        case 7:
+        case dealerSection:
             return "Dealer highlight options"
-        case 8:
+        case cardsSection:
             return "Number of cards in hands"
-        case 9:
+        case bonus2Section:
             return "Bonus for winning a trick with a 2"
-        case 10:
+        case trumpSequenceSection:
             return "Trump suit sequence"
-        case 11:
+        case aboutSection:
             return "Contract Whist Scorecard"
         default:
             return ""
@@ -476,9 +508,9 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     internal func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         switch indexPath.section {
-        case 10:
+        case trumpSequenceSection:
             switch indexPath.row {
-            case 1:
+            case trumpSequenceSuitRow:
                 // Trump suit sequence
                 guard let tableViewCell = cell as? SettingsTableCell else { return }
                 tableViewCell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row)

@@ -193,10 +193,10 @@ class History {
         
         // Setup query filter predicate
         if specificEmail.count != 0 {
-            predicate1 = NSPredicate(format: "syncDate >= %@", cutoffDate as NSDate)
+            predicate1 = NSPredicate(format: "syncDate >= %@ OR syncDate = null", cutoffDate as NSDate)
             predicate2 = NSPredicate(format: "email IN %@", argumentArray: specificEmail)
         } else {
-            predicate1 = NSPredicate(format: "syncDate >= %@", cutoffDate as NSDate)
+            predicate1 = NSPredicate(format: "syncDate >= %@ OR syncDate = null", cutoffDate as NSDate)
             predicate2 = nil
         }
         
@@ -361,7 +361,7 @@ class History {
         }
     }
     
-    static func cloudParticipantFromMo(cloudObject: CKRecord, participantMO: ParticipantMO, syncDate: Date) {
+    static func cloudParticipantFromMO(cloudObject: CKRecord, participantMO: ParticipantMO, syncDate: Date) {
         cloudObject.setValue(participantMO.gameUUID, forKey: "gameUUID")
         cloudObject.setValue(participantMO.deviceUUID, forKey: "deviceUUID")
         cloudObject.setValue(participantMO.datePlayed, forKey: "datePlayed")

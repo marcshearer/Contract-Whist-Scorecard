@@ -5,21 +5,16 @@ Changes since last version
 
 Bugs fix now
 ------------
-Last person's scores not include in totals on non-hosts in Game Summary
 
 Long-term bugs
 --------------
 
 Short-term
 ----------
-Use constants instead of literals for sections/rows in settings
 Update Walkthrough - esp online game
 
 Medium-term
 -----------
-Allow number of tricks to be reduced temporarily (1 game) and excluded from stats
-    Add excludeStats to cloud data for games and participants
-    Need to pass modified values across - not settings
 
 Long-term
 ---------

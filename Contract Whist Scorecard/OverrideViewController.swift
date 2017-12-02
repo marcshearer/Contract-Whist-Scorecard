@@ -1,0 +1,256 @@
+//
+//  OverrideViewController.swift
+//  Contract Whist Scorecard
+//
+//  Created by Marc Shearer on 12/11/2017.
+//  Copyright © 2017 Marc Shearer. All rights reserved.
+//
+
+import UIKit
+
+class OverrideViewController : UIViewController, UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate {
+    
+    private var scorecard: Scorecard!
+    
+    var message: String!
+    var formTitle: String!
+    var value = 1
+    var backColor = ScorecardUI.totalColor
+    var completion: (()->())!
+    
+    let instructionSection = 0
+    let cardsSection = 1
+    let excludeSection = 2
+    
+    let startSliderRow = 0
+    let endSliderRow = 1
+    let bounceRow = 2
+    
+    // UI elements
+    private var cardsSlider: [Int : UISlider] = [:]
+    private var cardsValue: [Int : UITextField] = [:]
+    private var bounceSelection: UISegmentedControl!
+    private var excludeSelection: UISegmentedControl!
+    
+    // MARK: - IB Outlets ============================================================================== -
+    @IBOutlet private weak var confirmButton: RoundedButton!
+    
+    // MARK: - IB Actions ============================================================================== -
+    @IBAction func confirmPressed(_ sender: UIButton) {
+        self.completion()
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func cancelPressed(_ sender: UIButton) {
+        // Disable override
+        self.scorecard.resetOverrideSettings()
+        self.completion()
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = self.backColor
+        ScorecardUI.roundCorners(view)
+        
+        if !self.scorecard.overrideSelected {
+            self.scorecard.overrideCards = self.scorecard.settingCards
+            self.scorecard.overrideBounceNumberCards = self.scorecard.settingBounceNumberCards
+            self.scorecard.overrideExcludeStats = true
+            self.scorecard.overrideSelected = true
+        }
+        self.enableButtons()
+    }
+    
+    // MARK: - TableView Overrides ===================================================================== -
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return (self.scorecard.settingSaveHistory ? 3 : 2)
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return (section == cardsSection ? 3 : 1)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch indexPath.section {
+        case instructionSection:
+            return 120
+        case cardsSection:
+            return 50
+        case excludeSection:
+            return 70
+        default:
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var cell: OverrideTableCell!
+        
+        switch indexPath.section {
+        case instructionSection:
+            cell = tableView.dequeueReusableCell(withIdentifier: "Instructions Cell", for: indexPath) as! OverrideTableCell
+            cell.instructionLabel.text = "You can override the number of cards/deals for the next few games only. The games will still appear in history (if you save it), but you can exclude them from player summary statistics since they might distort average values."
+        case cardsSection:
+            switch indexPath.row {
+            case startSliderRow, endSliderRow:
+                cell = tableView.dequeueReusableCell(withIdentifier: "Number Cards Cell", for: indexPath) as! OverrideTableCell
+                let cardsSlider = cell.cardsSlider!
+                let cardsValue = cell.cardsValue!
+                cardsSlider.tag = indexPath.row
+                cardsSlider.addTarget(self, action: #selector(OverrideViewController.cardsSliderAction(_:)), for: UIControlEvents.valueChanged)
+                
+                // Set number of rounds value and slider
+                cell.cardsLabel.text = (indexPath.row == startSliderRow ? "Start:" : "End:")
+                cardsValue.text = "\(scorecard.overrideCards[indexPath.row])"
+                cardsSlider.value = Float(scorecard.overrideCards[indexPath.row])
+                
+                // Store controls
+                self.cardsSlider[indexPath.row] = cardsSlider
+                self.cardsValue[indexPath.row] = cardsValue
+            case bounceRow:
+                cell = tableView.dequeueReusableCell(withIdentifier: "Bounce Cell", for: indexPath) as! OverrideTableCell
+                bounceSelection = cell.bounceSelection
+                bounceSelection.addTarget(self, action: #selector(OverrideViewController.bounceAction(_:)), for: UIControlEvents.valueChanged)
+                cardsChanged()
+                
+                // Set bounce number of cards selection
+                switch scorecard.overrideBounceNumberCards! {
+                case true:
+                    bounceSelection.selectedSegmentIndex = 1
+                default:
+                    bounceSelection.selectedSegmentIndex = 0
+                }
+            default:
+                break
+            }
+        case excludeSection:
+            cell = tableView.dequeueReusableCell(withIdentifier: "Exclude Cell", for: indexPath) as! OverrideTableCell
+            excludeSelection = cell.excludeSelection
+            excludeSelection.addTarget(self, action: #selector(OverrideViewController.excludeAction(_:)), for: UIControlEvents.valueChanged)
+            cardsChanged()
+            
+            // Set exclude selection
+            switch scorecard.overrideExcludeStats! {
+            case true:
+                excludeSelection.selectedSegmentIndex = 0
+            default:
+                excludeSelection.selectedSegmentIndex = 1
+            }
+        default:
+            break
+        }
+        
+        return cell as UITableViewCell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == instructionSection {
+            return 0
+        } else {
+            return 30
+        }
+    }
+    
+    func tableView(_ tableView: UITableView,
+                   titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case instructionSection:
+            return nil
+        case cardsSection:
+            return "Number of cards in hands"
+        case excludeSection:
+            return "Exclude hand from statistics"
+        default:
+            return nil
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = UITableViewHeaderFooterView()
+        ScorecardUI.sectionHeaderStyleView(view)
+        return view
+    }
+
+    // MARK: - Action Handlers ========================================================================= -
+    
+    @objc internal func cardsSliderAction(_ sender: UISlider) {
+        let index = sender.tag
+        scorecard.overrideCards[index] = Int(cardsSlider[index]!.value)
+        cardsValue[index]!.text = "\(scorecard.overrideCards[index])"
+        cardsChanged()
+        self.enableButtons()
+    }
+    
+    @objc func bounceAction(_ sender: Any) {
+        switch bounceSelection.selectedSegmentIndex {
+        case 0:
+            scorecard.overrideBounceNumberCards = false
+        default:
+            scorecard.overrideBounceNumberCards = true
+        }
+        cardsChanged()
+        self.enableButtons()
+    }
+    
+    @objc func excludeAction(_ sender: Any) {
+        switch excludeSelection.selectedSegmentIndex {
+        case 0:
+            scorecard.overrideExcludeStats = true
+        default:
+            scorecard.overrideExcludeStats = false
+        }
+        cardsChanged()
+        self.enableButtons()
+    }
+    
+    // MARK: - Form Presentation / Handling Routines =================================================== -
+    
+    func cardsChanged() {
+        let cards = scorecard.overrideCards!
+        let direction = (cards[1] < cards[0] ? "down" : "up")
+        var cardString = (cards[1] == 1 ? "card" : "cards")
+        bounceSelection.setTitle("Go \(direction) to \(cards[1]) \(cardString)", forSegmentAt: 0)
+        cardString = (cards[0] == 1 ? "card" : "cards")
+        bounceSelection.setTitle("Return to \(cards[0]) \(cardString)", forSegmentAt: 1)
+    }
+    
+    func enableButtons() {
+        let enabled = self.scorecard.checkOverride()
+        self.confirmButton.isEnabled(enabled)
+    }
+    
+    // Mark: - Main instatiation routine =============================================================== -
+    
+    func show(scorecard: Scorecard, backColor: UIColor = UIColor.white, completion: (()->())? = nil) {
+        let storyboard = UIStoryboard(name: "OverrideViewController", bundle: nil)
+        let viewController = storyboard.instantiateViewController(withIdentifier: "OverrideViewController") as! OverrideViewController
+        let parentViewController = Utility.getActiveViewController()!
+        viewController.scorecard = scorecard
+        viewController.completion = completion
+        viewController.formTitle = title
+        viewController.message = message
+        viewController.backColor = backColor
+        viewController.modalPresentationStyle = UIModalPresentationStyle.popover
+        viewController.popoverPresentationController?.delegate = self
+        viewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        viewController.popoverPresentationController?.sourceView = parentViewController.view
+        viewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.size.width/2, y: UIScreen.main.bounds.size.height/2, width: 0 ,height: 0)
+        viewController.preferredContentSize = CGSize(width: 400, height: 500)
+        parentViewController.present(viewController, animated: true, completion: nil)
+    }
+}
+
+// MARK: - Other UI Classes - e.g. Cells =========================================================== -
+
+class OverrideTableCell: UITableViewCell {
+    @IBOutlet weak var instructionLabel: UILabel!
+    @IBOutlet weak var cardsLabel: UILabel!
+    @IBOutlet weak var cardsSlider: UISlider!
+    @IBOutlet weak var cardsValue: UITextField!
+    @IBOutlet weak var bounceSelection: UISegmentedControl!
+    @IBOutlet weak var excludeSelection: UISegmentedControl!
+}
+
+

@@ -107,6 +107,12 @@ class Scorecard {
     public var settingNearbyPlaying = false
     public var settingOnlinePlayerEmail: String!
     
+    // Override Settings
+    public var overrideCards: [Int]! = nil
+    public var overrideBounceNumberCards: Bool! = nil
+    public var overrideExcludeStats: Bool! = nil
+    public var overrideSelected: Bool = false
+    
     // Link to recover class
     public var recovery = Recovery()
     
@@ -580,11 +586,23 @@ class Scorecard {
     }
     
     public func setupRounds() {
-        let range = abs(self.settingCards[0] - self.settingCards[1]) + 1
-        if self.settingBounceNumberCards {
-            self.rounds = (2 * range) - 1
+            self.rounds = self.calculateRounds()
+    }
+    
+    public func calculateRounds(cards: [Int]! = nil, bounce: Bool! = nil) -> Int {
+        var cards = cards
+        if cards == nil {
+            cards = self.settingCards
+        }
+        var bounce = bounce
+        if bounce == nil {
+            bounce = self.settingBounceNumberCards
+        }
+        let range = abs(cards![0] - cards![1]) + 1
+        if bounce! {
+            return (2 * range) - 1
         } else {
-            self.rounds = range
+            return range
         }
     }
     
@@ -645,11 +663,9 @@ class Scorecard {
         
         // Note that the playernumber is compared with the entered player number
         
-        var remaining: Int
+        var remaining = roundCards(round, rounds: rounds, cards: cards, bounce: bounce)
         if mode == Mode.twos {
-            remaining = min(self.numberSuits, rounds+1 - round)
-        } else {
-            remaining = self.roundCards(round, rounds: rounds, cards: cards, bounce: bounce)
+            remaining = min(remaining, self.numberSuits)
         }
         
         for playerLoop in 1...self.currentPlayers {
@@ -774,9 +790,9 @@ class Scorecard {
         }
     }
 
-    public func finishGame(from: UIViewController, toSegue: String, advanceDealer: Bool = false, rounds: Int, completion: (()->())? = nil) {
+    public func finishGame(from: UIViewController, toSegue: String, advanceDealer: Bool = false, rounds: Int, resetOverrides: Bool, completion: (()->())? = nil) {
         if !self.gameInProgress {
-            exitScorecard(from: from, toSegue: toSegue, rounds: rounds, completion: completion)
+            exitScorecard(from: from, toSegue: toSegue, rounds: rounds, resetOverrides: resetOverrides, completion: completion)
         } else {
             var message: String
             if self.gameComplete(rounds: rounds) {
@@ -789,7 +805,8 @@ class Scorecard {
             let alertController = UIAlertController(title: "Finish Game", message: message + "\n\n Are you sure you want to do this?", preferredStyle: UIAlertControllerStyle.alert)
             alertController.addAction(UIAlertAction(title: "Confirm", style: UIAlertActionStyle.default,
                                                     handler: { (action:UIAlertAction!) -> Void in
-                                                        self.exitScorecard(from: from, toSegue: toSegue, advanceDealer: advanceDealer, rounds: rounds, completion: completion)
+                                                        self.exitScorecard(from: from, toSegue: toSegue, advanceDealer: advanceDealer, rounds: rounds,
+                                                                           resetOverrides: resetOverrides , completion: completion)
                 }))
             alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel,
                                                     handler:nil))
@@ -798,7 +815,7 @@ class Scorecard {
         }
     }
     
-    public func exitScorecard(from: UIViewController, toSegue: String, advanceDealer: Bool = false, rounds: Int, completion: (()->())? = nil) {
+    public func exitScorecard(from: UIViewController, toSegue: String, advanceDealer: Bool = false, rounds: Int, resetOverrides: Bool, completion: (()->())? = nil) {
         // Save current game (if complete)
         if self.savePlayers(rounds: rounds) {
             // Reset current game
@@ -814,6 +831,10 @@ class Scorecard {
             if completion != nil {
                 completion!()
             }
+            if resetOverrides {
+                // Reset override setting
+                self.resetOverrideSettings()
+            }
             // Link to destination
             from.performSegue(withIdentifier: toSegue, sender: from)
         } else {
@@ -825,11 +846,13 @@ class Scorecard {
         var result = true
         // Only save if last round complete
         if self.gameComplete(rounds: rounds) {
+            // Check if need to exclude from stats
+            let excludeStats = (self.overrideSelected && self.overrideExcludeStats != nil && self.overrideExcludeStats!)
             // Save the game
-            result = self.saveGame()
+            result = self.saveGame(excludeStats: excludeStats)
             for player in 1...self.currentPlayers {
                 if result {
-                    result = self.enteredPlayer(player).save()
+                    result = self.enteredPlayer(player).save(excludeStats: excludeStats)
                 }
             }
             if result {
@@ -840,7 +863,7 @@ class Scorecard {
         return result
     }
     
-    public func saveGame() -> Bool {
+    public func saveGame(excludeStats: Bool) -> Bool {
     // Save the game - participants will be saved with players
         
         if self.settingSaveHistory {
@@ -869,6 +892,7 @@ class Scorecard {
                 if self.settingSaveLocation {
                     self.gameMO.location = self.gameLocation.description
                 }
+                self.gameMO.excludeStats = excludeStats
             }) {
                 // Failed
                 return false
@@ -975,6 +999,30 @@ class Scorecard {
         }
     }
     
+    func resetOverrideSettings() {
+        self.overrideCards = nil
+        self.overrideBounceNumberCards = nil
+        self.overrideExcludeStats = nil
+        self.overrideSelected = false
+    }
+    
+    func checkOverride() -> Bool {
+        if self.overrideCards == nil || self.overrideBounceNumberCards == nil || self.overrideExcludeStats == nil {
+            self.resetOverrideSettings()
+        } else {
+            var cardsDifferent = false
+            for index in 0..<self.settingCards.count {
+                if self.overrideCards[index] != self.settingCards[index] {
+                    cardsDifferent = true
+                }
+            }
+            self.overrideSelected = (cardsDifferent ||
+                                     self.overrideBounceNumberCards != self.settingBounceNumberCards ||
+                                     self.overrideExcludeStats == true)
+        }
+        
+        return self.overrideSelected
+    }
         
     func saveHeaderHeight(_ height: CGFloat) {
         if UIScreen.main.bounds.size.height > 600 && UIScreen.main.bounds.size.height < 800 {

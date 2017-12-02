@@ -47,6 +47,11 @@ class RoundedButton: UIButton {
         self.layer.masksToBounds = true
     }
     
+    func toUnrounded() {
+        self.layer.cornerRadius = 0
+        self.layer.masksToBounds = true
+    }
+    
     func setTitle(_ title: String) {
         // Set title
         super.setTitle(title, for: .normal)
@@ -78,6 +83,16 @@ class DarkRoundedButton: RoundedButton {
         self.disabledBackgroundColor = ScorecardUI.darkHighlightColor
         self.disabledAlpha = 1.0
         super.isEnabled(true)
+    }
+}
+
+class DarkUnroundedButton: DarkRoundedButton {
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.toUnrounded()
+        self.disabledBackgroundColor = self.normalBackgroundColor
+        self.disabledTextColor = UIColor.lightGray
+        self.disabledAlpha = 0.8
     }
 }
 

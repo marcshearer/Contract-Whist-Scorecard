@@ -34,6 +34,7 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
     private let defaultTrailerHeight: CGFloat = 100
     private var completionToSegue: String = ""
     private var completionAdvanceDealer: Bool = false
+    private var completionResetOverrides: Bool = false
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     
@@ -72,7 +73,7 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
                     // Sync and link straight to home screen
                     toSegue = "finishGame"
                 }
-                finishGame(from: self, toSegue: toSegue)
+                finishGame(from: self, toSegue: toSegue, resetOverrides: true)
             }
         }
     }
@@ -80,7 +81,7 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
     @IBAction func newGamePressed(_ sender: Any) {
         // Unwind to scorepad clearing current game and advancing dealer
         if gameSummaryMode == .amend {
-            finishGame(from: self, toSegue: "newGame", advanceDealer: true)
+            finishGame(from: self, toSegue: "newGame", advanceDealer: true, resetOverrides: false)
         }
     }
     
@@ -212,7 +213,9 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
             // Setup the thumbnail picture
             var thumbnail: Data?
             if let playerDetail = scorecard.enteredPlayer(playerNumber).playerMO {
-                thumbnail = playerDetail.thumbnail! as Data
+                if playerDetail.thumbnail != nil {
+                    thumbnail = playerDetail.thumbnail! as Data
+                }
             }
             
             Utility.setThumbnail(data: thumbnail,
@@ -340,38 +343,41 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
         // Clear cross reference array
         xref.removeAll()
         
-        if self.scorecard.settingSaveHistory {
-            // Load high scores - get 10 to allow for lots of ties
-            // Note - this assumes this game's participants have been placed in the database already
-            highScoreParticipantMO = History.getHighScores(type: .totalScore, limit: 10, playerEmailList: self.scorecard.playerEmailList(getPlayerMode: .getAll))
-            for participant in highScoreParticipantMO {
-                highScoreEntry.append(HighScoreEntry(gameUUID: participant.gameUUID!, email: participant.email!, totalScore: participant.totalScore))
+        let excludeStats = (self.scorecard.overrideSelected && self.scorecard.overrideExcludeStats != nil && self.scorecard.overrideExcludeStats)
+        if !excludeStats {
+            if self.scorecard.settingSaveHistory {
+                // Load high scores - get 10 to allow for lots of ties
+                // Note - this assumes this game's participants have been placed in the database already
+                highScoreParticipantMO = History.getHighScores(type: .totalScore, limit: 10, playerEmailList: self.scorecard.playerEmailList(getPlayerMode: .getAll))
+                for participant in highScoreParticipantMO {
+                    highScoreEntry.append(HighScoreEntry(gameUUID: participant.gameUUID!, email: participant.email!, totalScore: participant.totalScore))
+                }
             }
-        }
-        
-        if gameSummaryMode != .amend || !self.scorecard.settingSaveHistory {
-            // Need to add current game since not written on this device
-            for playerNumber in 1...scorecard.currentPlayers {
-                highScoreEntry.append(HighScoreEntry(gameUUID: (scorecard.gameUUID==nil ? "" : scorecard.gameUUID),
-                                                     email: scorecard.enteredPlayer(playerNumber).playerMO!.email!,
-                                                     totalScore: Int16(scorecard.enteredPlayer(playerNumber).totalScore())))
+            
+            if gameSummaryMode != .amend || !self.scorecard.settingSaveHistory {
+                // Need to add current game since not written on this device
+                for playerNumber in 1...scorecard.currentPlayers {
+                    highScoreEntry.append(HighScoreEntry(gameUUID: (scorecard.gameUUID==nil ? "" : scorecard.gameUUID),
+                                                         email: scorecard.enteredPlayer(playerNumber).playerMO!.email!,
+                                                         totalScore: Int16(scorecard.enteredPlayer(playerNumber).totalScore())))
+                }
             }
-        }
-        
-        // Sort high score entries
-        highScoreEntry.sort(by: { $0.totalScore > $1.totalScore })
-        
-        // Now resolve ties
-        var lastRanking = 0
-        for loopCount in 1...highScoreEntry.count {
-            if loopCount == 1 || highScoreEntry[loopCount - 1].totalScore != highScoreEntry[loopCount - 2].totalScore {
-                // New score
-                lastRanking = loopCount
+            
+            // Sort high score entries
+            highScoreEntry.sort(by: { $0.totalScore > $1.totalScore })
+            
+            // Now resolve ties
+            var lastRanking = 0
+            for loopCount in 1...highScoreEntry.count {
+                if loopCount == 1 || highScoreEntry[loopCount - 1].totalScore != highScoreEntry[loopCount - 2].totalScore {
+                    // New score
+                    lastRanking = loopCount
+                }
+                if lastRanking > 3 {
+                    break
+                }
+                highScoreRanking.append(lastRanking)
             }
-            if lastRanking > 3 {
-                break
-            }
-            highScoreRanking.append(lastRanking)
         }
         
         // Check for high scores and PBs and create cross-reference
@@ -380,24 +386,26 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
             let score = Int64(scorecard.enteredPlayer(playerNumber).totalScore())
             var ranking = 0
             
-            for loopCount in 1...highScoreRanking.count {
-                // No need to check if already got a high place
-                if self.scorecard.settingSaveHistory && ranking == 0 {
-                    // Check if it is a score for this player
-                    if highScoreEntry[loopCount-1].email == scorecard.enteredPlayer(playerNumber).playerMO?.email {
-                        // Check that it is this score that has done it - not an old one
-                        if highScoreEntry[loopCount-1].gameUUID == (scorecard.gameUUID==nil ? "" : scorecard.gameUUID) {
-                            ranking = highScoreRanking[loopCount - 1]
-                            if ranking == 1 {
-                                newHighScore = true
+            if !excludeStats {
+                for loopCount in 1...highScoreRanking.count {
+                    // No need to check if already got a high place
+                    if self.scorecard.settingSaveHistory && ranking == 0 {
+                        // Check if it is a score for this player
+                        if highScoreEntry[loopCount-1].email == scorecard.enteredPlayer(playerNumber).playerMO?.email {
+                            // Check that it is this score that has done it - not an old one
+                            if highScoreEntry[loopCount-1].gameUUID == (scorecard.gameUUID==nil ? "" : scorecard.gameUUID) {
+                                ranking = highScoreRanking[loopCount - 1]
+                                if ranking == 1 {
+                                    newHighScore = true
+                                }
                             }
                         }
                     }
-                }
-            
-                if ranking == 0 {
-                    let previousPersonalBest = scorecard.enteredPlayer(playerNumber).previousMaxScore
-                    personalBest = (score > previousPersonalBest)
+                
+                    if ranking == 0 {
+                        let previousPersonalBest = scorecard.enteredPlayer(playerNumber).previousMaxScore
+                        personalBest = (score > previousPersonalBest)
+                    }
                 }
             }
 
@@ -466,10 +474,10 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
         }
     }
     
-    func finishGame(from: UIViewController, toSegue: String, advanceDealer: Bool = false, confirm: Bool = true) {
+    func finishGame(from: UIViewController, toSegue: String, advanceDealer: Bool = false, resetOverrides: Bool = true, confirm: Bool = true) {
         
         func finish() {
-            self.synchroniseAndSegueTo(toSegue: toSegue, advanceDealer: advanceDealer)
+            self.synchroniseAndSegueTo(toSegue: toSegue, advanceDealer: advanceDealer, resetOverrides: resetOverrides)
         }
         
         if confirm {
@@ -488,9 +496,10 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
 
     // MARK: - Sync routines including the delegate methods ======================================== -
     
-    func synchroniseAndSegueTo(toSegue: String, advanceDealer: Bool = false) {
+    func synchroniseAndSegueTo(toSegue: String, advanceDealer: Bool = false, resetOverrides: Bool) {
         completionToSegue = toSegue
         completionAdvanceDealer = advanceDealer
+        completionResetOverrides = resetOverrides
         if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
             view.isUserInteractionEnabled = false
             activityIndicator.startAnimating()
@@ -521,7 +530,7 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
     func syncCompletion(_ errors: Int) {
         Utility.mainThread {
             self.activityIndicator.stopAnimating()
-            self.scorecard.exitScorecard(from: self, toSegue: self.completionToSegue, advanceDealer: self.completionAdvanceDealer, rounds: self.rounds)
+            self.scorecard.exitScorecard(from: self, toSegue: self.completionToSegue, advanceDealer: self.completionAdvanceDealer, rounds: self.rounds,                resetOverrides: self.completionResetOverrides)
         }
     }
     

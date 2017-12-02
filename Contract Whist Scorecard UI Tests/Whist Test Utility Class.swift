@@ -52,7 +52,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
     
     func createNewPlayer(name: String, email: String) {
         // Assumes you are in the player selection screen
-        self.tap(app.collectionViews.staticTexts["Add"])
+        self.tap(app.collectionViews.staticTexts["New"])
         self.tap(app.sheets["Add Player"].buttons["Create new player"])
         // Enter new player details
         let nameTextField = app.tables.textFields["Player name - Must not be blank"]
@@ -65,11 +65,11 @@ extension Contract_Whist_Scorecard_UI_Tests {
     
     func downloadPlayer(_ name: String) {
         // Assumes you are in the player selection screen
-        self.tap(app.collectionViews.staticTexts["Add"])
+        self.tap(app.collectionViews.staticTexts["New"])
         // Select download from cloud
-        self.tap(app.sheets["Add Player"].buttons["Download from Cloud"])
+        self.tap(app.sheets["Add Player"].buttons["Find existing player"])
         // Select Emma
-        self.tap(app.collectionViews.staticTexts["Emma"], timeout: 30)
+        self.tap(app.collectionViews.staticTexts[name], timeout: 30)
         self.tap(app.navigationBars["Select Players"].buttons["Download"])
     }
     
@@ -77,6 +77,29 @@ extension Contract_Whist_Scorecard_UI_Tests {
         // Assumes you are in the Player Stats screen and player cell exists
         let playerLabel = app.collectionViews.staticTexts[name]
         self.tap(playerLabel)
+    }
+    
+    func selectPlayers(_ playerNames: String...) {
+        // Assumes you are in the player selection screen
+        
+        // Clear selection (if there is any)
+        self.tapIfExists(app.toolbars.buttons["Clear Selection"])
+        
+        // Try to get the players
+        let collectionViewsQuery = app.collectionViews
+        for playerName in playerNames {
+            let playerButton = collectionViewsQuery.staticTexts[playerName]
+            if playerButton.exists {
+                // Player exists - use them
+                self.tap(playerButton)
+            } else {
+                // Player not there - try to add them in
+                self.downloadPlayer(playerName)
+            }
+        }
+        
+        // Start the game
+        self.tap(app.toolbars.buttons["Continue"])
     }
     
     func resetSettings(force: Bool = false) {

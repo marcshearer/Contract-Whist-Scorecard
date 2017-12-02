@@ -51,7 +51,7 @@ class Reconcile: SyncDelegate {
         self.playerMOList = playerMOList
         
         // First synchronise
-        if scorecard.settingSyncEnabled {
+        if scorecard.settingSyncEnabled { 
             if self.sync.connect() {
                 self.sync.delegate = self
                 self.reconcileMessage("Sync in progress")
@@ -102,32 +102,33 @@ class Reconcile: SyncDelegate {
             playerMO.datePlayed = nil
 
             for participantMO in participantList {
-                
-                // Add to scores
-                playerMO.gamesPlayed += Int64(participantMO.gamesPlayed)
-                playerMO.gamesWon += Int64(participantMO.gamesWon)
-                playerMO.handsPlayed += Int64(participantMO.handsPlayed)
-                playerMO.handsMade += Int64(participantMO.handsMade)
-                playerMO.twosMade += Int64(participantMO.twosMade)
-                playerMO.totalScore += Int64(participantMO.totalScore)
-                
-                // Update max scores
-                if Int64(participantMO.totalScore) > playerMO.maxScore && participantMO.gamesPlayed == 1 {
-                    playerMO.maxScore = Int64(participantMO.totalScore)
-                    playerMO.maxScoreDate = participantMO.datePlayed
-                }
-                if Int64(participantMO.handsMade) > playerMO.maxMade && participantMO.gamesPlayed == 1 {
-                    playerMO.maxMade = Int64(participantMO.handsMade)
-                    playerMO.maxMadeDate = participantMO.datePlayed
-                }
-                if Int64(participantMO.twosMade) > playerMO.maxTwos && participantMO.gamesPlayed == 1 {
-                    playerMO.maxTwos = Int64(participantMO.twosMade)
-                    playerMO.maxTwosDate = participantMO.datePlayed
-                }
-                
-                // Update date last played
-                if playerMO.datePlayed == nil || participantMO.datePlayed! as Date > playerMO.datePlayed! as Date {
-                    playerMO.datePlayed = participantMO.datePlayed
+                if !participantMO.excludeStats {
+                    // Add to scores
+                    playerMO.gamesPlayed += Int64(participantMO.gamesPlayed)
+                    playerMO.gamesWon += Int64(participantMO.gamesWon)
+                    playerMO.handsPlayed += Int64(participantMO.handsPlayed)
+                    playerMO.handsMade += Int64(participantMO.handsMade)
+                    playerMO.twosMade += Int64(participantMO.twosMade)
+                    playerMO.totalScore += Int64(participantMO.totalScore)
+                    
+                    // Update max scores
+                    if Int64(participantMO.totalScore) > playerMO.maxScore && participantMO.gamesPlayed == 1 {
+                        playerMO.maxScore = Int64(participantMO.totalScore)
+                        playerMO.maxScoreDate = participantMO.datePlayed
+                    }
+                    if Int64(participantMO.handsMade) > playerMO.maxMade && participantMO.gamesPlayed == 1 {
+                        playerMO.maxMade = Int64(participantMO.handsMade)
+                        playerMO.maxMadeDate = participantMO.datePlayed
+                    }
+                    if Int64(participantMO.twosMade) > playerMO.maxTwos && participantMO.gamesPlayed == 1 {
+                        playerMO.maxTwos = Int64(participantMO.twosMade)
+                        playerMO.maxTwosDate = participantMO.datePlayed
+                    }
+                    
+                    // Update date last played
+                    if playerMO.datePlayed == nil || participantMO.datePlayed! as Date > playerMO.datePlayed! as Date {
+                        playerMO.datePlayed = participantMO.datePlayed
+                    }
                 }
             }
         })

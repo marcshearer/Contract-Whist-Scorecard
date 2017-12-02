@@ -211,6 +211,15 @@ class Utility {
         }
     }
     
+    class func objectBool(cloudObject: CKRecord, forKey: String) -> Bool {
+        let bool = cloudObject.object(forKey: forKey)
+        if bool == nil {
+            return false
+        } else {
+            return bool as! Bool
+        }
+    }
+    
     class func objectImage(cloudObject: CKRecord, forKey: String) -> NSData?{
         var result: NSData? = nil
         

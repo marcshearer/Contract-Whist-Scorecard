@@ -533,7 +533,7 @@ class PlayerDetailViewController: UIViewController, UITableViewDataSource, UITab
 
     func checkDeletePlayer() {
         var alertController: UIAlertController
-        alertController = UIAlertController(title: "Warning", message: "This will remove the player \n'\(playerDetail.name)'\npermanently.\n\nAre you sure you want to do this?", preferredStyle: UIAlertControllerStyle.alert)
+        alertController = UIAlertController(title: "Warning", message: "This will remove the player \n'\(playerDetail.name)'\nfrom this device.\n\nIf you are synchronising with iCloud the player will still be available to download in future.\n Otherwise this will remove their details permanently.\n\n Are you sure you want to do this?", preferredStyle: UIAlertControllerStyle.alert)
         alertController.addAction(UIAlertAction(title: "Confirm", style: UIAlertActionStyle.default,
                                                 handler: { (action:UIAlertAction!) -> Void in
             

@@ -43,6 +43,19 @@
                                                 </connections>
                                             </button>
                                         </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" width="80" id="fgj-MW-RhM">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="wbi-Gg-AL4" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <rect key="frame" x="334" y="9.5" width="25" height="25"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" image="settings">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="overridePressed:" destination="M5N-Yi-C04" eventType="touchUpInside" id="dSn-Gb-Jiq"/>
+                                                </connections>
+                                            </button>
+                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -291,6 +304,7 @@
                     <connections>
                         <outlet property="backgroundImage" destination="E7h-Ll-Qym" id="r8v-7c-12p"/>
                         <outlet property="gameSetupView" destination="iUU-8s-ns4" id="4uN-Fo-2Y7"/>
+                        <outlet property="overrideButton" destination="wbi-Gg-AL4" id="NFN-KO-aFL"/>
                         <outlet property="playerTableView" destination="c5K-bm-x10" id="EVS-Gn-Umf"/>
                         <segue destination="6Hq-Pm-vP6" kind="show" identifier="showScorepad" id="OMl-3l-9zT"/>
                         <segue destination="Zg2-0A-XQQ" kind="unwind" identifier="hideGameSetup" unwindAction="hideGameSetupWithSegue:" id="ENU-76-LlQ"/>
@@ -332,5 +346,6 @@
         <image name="cut pack" width="100" height="100"/>
         <image name="next dealer" width="100" height="100"/>
         <image name="scorecard right" width="100" height="100"/>
+        <image name="settings" width="25" height="25"/>
     </resources>
 </document>

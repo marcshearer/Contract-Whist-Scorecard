@@ -35,24 +35,27 @@ extension UIViewController {
         }
     }
 
-    public func alertDecision(_ message: String, title: String = "Warning", okButtonText: String = "OK", okHandler: (() -> ())? = nil, cancelButtonText: String = "Cancel", cancelHandler: (() -> ())? = nil) {
+    public func alertDecision(_ message: String, title: String = "Warning", okButtonText: String = "OK", okHandler: (() -> ())? = nil, otherButtonText: String? = nil, otherHandler: (() -> ())? = nil, cancelButtonText: String = "Cancel", cancelHandler: (() -> ())? = nil) {
         
         func alertDecisionOkCompletion(alertAction: UIAlertAction) {
-            if okHandler != nil {
-                okHandler!()
-            }
+            okHandler?()
+        }
+        
+        func alertDecisionOtherCompletion(alertAction: UIAlertAction) {
+            otherHandler?()
         }
         
         func alertDecisionCancelCompletion(alertAction: UIAlertAction) {
-            if cancelHandler != nil {
-                cancelHandler!()
-            }
+            cancelHandler?()
         }
         
         Utility.mainThread {
             let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
             alertController.addAction(UIAlertAction(title: okButtonText, style: UIAlertActionStyle.default, handler: alertDecisionOkCompletion))
-            alertController.addAction(UIAlertAction(title: cancelButtonText, style: UIAlertActionStyle.default, handler: alertDecisionCancelCompletion))
+            if otherButtonText != nil {
+                 alertController.addAction(UIAlertAction(title: otherButtonText, style: UIAlertActionStyle.default, handler: alertDecisionOtherCompletion))
+            }
+            alertController.addAction(UIAlertAction(title: cancelButtonText, style: UIAlertActionStyle.cancel, handler: alertDecisionCancelCompletion))
             self.present(alertController, animated: true, completion: nil)
         }
     }

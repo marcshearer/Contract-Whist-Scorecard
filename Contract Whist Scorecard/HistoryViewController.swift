@@ -396,6 +396,10 @@ extension HistoryViewController: UICollectionViewDelegate, UICollectionViewDataS
                             } else {
                                 cell.historyLabel.text = name
                             }
+                            // Change colour if excluded from stats
+                            if history.games[row].participant[playerNumber-1].participantMO.excludeStats {
+                                cell.historyLabel.textColor = UIColor.blue
+                            }
                         } else {
                             cell.historyLabel.text = ""
                         }

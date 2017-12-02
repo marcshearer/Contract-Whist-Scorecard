@@ -197,7 +197,7 @@ class Player {
         }
     }
         
-    public func save() -> Bool {
+    public func save(excludeStats: Bool) -> Bool {
         // Save the player to the persistent store
         
         return CoreData.update(updateLogic: {
@@ -205,12 +205,6 @@ class Player {
             var roundsMade: Int64
             var twosMade: Int64
             
-            // Updates hands / games played
-            self.playerMO!.handsPlayed += (Int64(self.rounds) - self.savedHandsPlayed)
-            self.savedHandsPlayed = Int64(self.rounds)
-            self.playerMO!.gamesPlayed += (1 - savedGamesPlayed)
-            self.savedGamesPlayed = 1
-        
             // Check if they won this game
             let myScore = self.totalScore()
             place = 1
@@ -221,13 +215,8 @@ class Player {
                     }
                 }
             }
-            self.playerMO!.gamesWon += ((place == 1 ? 1 : 0) - self.savedGamesWon)
-            self.savedGamesWon = (place == 1 ? 1 : 0)
             
-            self.playerMO!.totalScore += (Int64(myScore) - self.savedTotalScore)
-            self.savedTotalScore = Int64(myScore)
-        
-            // Update rounds made and twos made
+            // Calculate rounds made and twos made
             roundsMade = 0
             twosMade = 0
             for round in 1...self.rounds {
@@ -238,27 +227,44 @@ class Player {
                     twosMade += Int64(self.twos(round)!)
                 }
             }
-            self.playerMO!.handsMade += (roundsMade - self.savedHandsMade)
-            self.savedHandsMade = roundsMade
-            self.playerMO!.twosMade += (twosMade - self.savedTwosMade)
-            self.savedTwosMade = twosMade
+            if !excludeStats {
+                
+                // Updates hands / games played
+                self.playerMO!.handsPlayed += (Int64(self.rounds) - self.savedHandsPlayed)
+                self.savedHandsPlayed = Int64(self.rounds)
+                self.playerMO!.gamesPlayed += (1 - savedGamesPlayed)
+                self.savedGamesPlayed = 1
             
-            // Update high scores
-            if Int64(myScore) > self.playerMO!.maxScore {
-                self.playerMO!.maxScore = Int64(myScore)
-                self.playerMO!.maxScoreDate = Date()
-            }
-            if Int64(roundsMade) > self.playerMO!.maxMade {
-                self.playerMO!.maxMade = roundsMade
-                self.playerMO!.maxMadeDate = Date()
-            }
-            if Int64(twosMade) > self.playerMO!.maxTwos {
-                self.playerMO!.maxTwos = twosMade
-                self.playerMO!.maxTwosDate = Date()
-            }
+                // Update games won and totals
+                self.playerMO!.gamesWon += ((place == 1 ? 1 : 0) - self.savedGamesWon)
+                self.savedGamesWon = (place == 1 ? 1 : 0)
+                
+                self.playerMO!.totalScore += (Int64(myScore) - self.savedTotalScore)
+                self.savedTotalScore = Int64(myScore)
             
-            // Upate date last played and assign UUID
-            self.playerMO!.datePlayed = Date()
+                // Update hands made and twos made
+                self.playerMO!.handsMade += (roundsMade - self.savedHandsMade)
+                self.savedHandsMade = roundsMade
+                self.playerMO!.twosMade += (twosMade - self.savedTwosMade)
+                self.savedTwosMade = twosMade
+                
+                // Update high scores
+                if Int64(myScore) > self.playerMO!.maxScore {
+                    self.playerMO!.maxScore = Int64(myScore)
+                    self.playerMO!.maxScoreDate = Date()
+                }
+                if Int64(roundsMade) > self.playerMO!.maxMade {
+                    self.playerMO!.maxMade = roundsMade
+                    self.playerMO!.maxMadeDate = Date()
+                }
+                if Int64(twosMade) > self.playerMO!.maxTwos {
+                    self.playerMO!.maxTwos = twosMade
+                    self.playerMO!.maxTwosDate = Date()
+                }
+                
+                // Upate date last played
+                self.playerMO!.datePlayed = Date()
+            }
             
             // Update game participant for history
             if self.scorecard.settingSaveHistory {
@@ -280,6 +286,7 @@ class Player {
                 self.participantMO!.totalScore = Int16(myScore)
                 self.participantMO!.handsMade = Int16(roundsMade)
                 self.participantMO!.twosMade = Int16(twosMade)
+                self.participantMO!.excludeStats = excludeStats
             }
             
         })

@@ -342,7 +342,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             switch indexPath.row {
             case 0:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Trump Include No Trump Cell", for: indexPath) as! SettingsTableCell
-                 trumpIncludeNoTrumpSelection = cell.trumpIncludeNoTrumpSelection
+                trumpIncludeNoTrumpSelection = cell.trumpIncludeNoTrumpSelection
                 trumpIncludeNoTrumpSelection.addTarget(self, action: #selector(SettingsViewController.trumpIncludeNoTrumpAction(_:)), for: .valueChanged)
                 
                 // Set Include No trump selection
@@ -354,6 +354,8 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 
             case 1:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Trump Sequence Cell", for: indexPath) as! SettingsTableCell
+                cell.trumpSequenceInfo.addTarget(self, action: #selector(SettingsViewController.trumpSequenceInfoPressed(_:)), for: .touchUpInside)
+                
             default:
                 break
             }

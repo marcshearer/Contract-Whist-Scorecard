@@ -17,6 +17,8 @@
 		B202A0081FCC814B0070D5DC /* WatchGameInterfaceController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B202A0071FCC814B0070D5DC /* WatchGameInterfaceController.storyboard */; };
 		B202A00A1FCC87540070D5DC /* WatchGameInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B202A0091FCC87540070D5DC /* WatchGameInterfaceController.swift */; };
 		B202A00D1FCC90E40070D5DC /* Watch State Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B202A00C1FCC90E40070D5DC /* Watch State Class.swift */; };
+		B202A06A1FD119BF0070D5DC /* OverrideViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B202A0691FD119BF0070D5DC /* OverrideViewController.storyboard */; };
+		B202A06B1FD122F30070D5DC /* OverrideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B202A0671FD118940070D5DC /* OverrideViewController.swift */; };
 		B206A1361E50522B00E26E96 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B206A1351E50522B00E26E96 /* MapKit.framework */; };
 		B206A1381E50526100E26E96 /* LocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B206A1371E50526100E26E96 /* LocationViewController.swift */; };
 		B206A13A1E50FBAE00E26E96 /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B206A1391E50FBAE00E26E96 /* HistoryViewController.swift */; };
@@ -181,6 +183,8 @@
 		B202A0071FCC814B0070D5DC /* WatchGameInterfaceController.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = WatchGameInterfaceController.storyboard; sourceTree = "<group>"; };
 		B202A0091FCC87540070D5DC /* WatchGameInterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchGameInterfaceController.swift; sourceTree = "<group>"; };
 		B202A00C1FCC90E40070D5DC /* Watch State Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Watch State Class.swift"; sourceTree = "<group>"; };
+		B202A0671FD118940070D5DC /* OverrideViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverrideViewController.swift; sourceTree = "<group>"; };
+		B202A0691FD119BF0070D5DC /* OverrideViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = OverrideViewController.storyboard; sourceTree = "<group>"; };
 		B206A1351E50522B00E26E96 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		B206A1371E50526100E26E96 /* LocationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationViewController.swift; sourceTree = "<group>"; };
 		B206A1391E50FBAE00E26E96 /* HistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
@@ -455,6 +459,7 @@
 				B227893D1FB893C9009BABCA /* SettingsViewController.storyboard */,
 				B227893A1FB8932A009BABCA /* SyncViewController.storyboard */,
 				B22789281FB885AC009BABCA /* ConfirmCountViewController.storyboard */,
+				B202A0691FD119BF0070D5DC /* OverrideViewController.storyboard */,
 				B22789051FB83AC4009BABCA /* WalkthroughPageViewController.storyboard */,
 				B22789031FB83AC4009BABCA /* WalkthroughViewController.storyboard */,
 			);
@@ -523,6 +528,7 @@
 				493D3CD51DFC58730075D658 /* SettingsViewController.swift */,
 				B2D2AAAF1E1FF8A600E211A9 /* SyncViewController.swift */,
 				B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */,
+				B202A0671FD118940070D5DC /* OverrideViewController.swift */,
 				B2EA98E41E28609A000B7E54 /* WalkthroughPageViewController.swift */,
 				B2EA98E21E285F19000B7E54 /* WalkthroughViewController.swift */,
 			);
@@ -895,6 +901,7 @@
 				B22789391FB8924C009BABCA /* HighScoresViewController.storyboard in Resources */,
 				B22789181FB84A75009BABCA /* RoundSummaryViewController.storyboard in Resources */,
 				CC4CC0FE1DEADC32007FB24F /* Main.storyboard in Resources */,
+				B202A06A1FD119BF0070D5DC /* OverrideViewController.storyboard in Resources */,
 				B22789121FB844CD009BABCA /* ScorepadViewController.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -995,6 +1002,7 @@
 				B2F41B231FB6BBA70043F974 /* Other Extensions.swift in Sources */,
 				CC5E64C51E0AA69300A39341 /* Recovery.swift in Sources */,
 				B24AABE41EC4DC5F000D34B0 /* Core Data Class.swift in Sources */,
+				B202A06B1FD122F30070D5DC /* OverrideViewController.swift in Sources */,
 				B20A66FC1E23921E00E75190 /* Buttons.swift in Sources */,
 				CC395F511E0905BE00165D1C /* Utility Library.swift in Sources */,
 				CC395F4D1E064EC500165D1C /* Card Class.swift in Sources */,

@@ -5,18 +5,21 @@ Changes since last version
 
 Bugs fix now
 ------------
-Rebuild of players doesn't then sync them back up - Have coded but not tested
+Last person's scores not include in totals on non-hosts in Game Summary
 
 Long-term bugs
 --------------
 
 Short-term
 ----------
+Use constants instead of literals for sections/rows in settings
 Update Walkthrough - esp online game
 
 Medium-term
 -----------
 Allow number of tricks to be reduced temporarily (1 game) and excluded from stats
+    Add excludeStats to cloud data for games and participants
+    Need to pass modified values across - not settings
 
 Long-term
 ---------
@@ -49,3 +52,4 @@ To remove menus from test scripts
     1,$s/[/][*][@]START_MENU_TOKEN[@][*][/]//g
     1,$s/[/][*].*[@]END_MENU_TOKEN[@][*][/]//g
 Error message '/Users/Home/Library/Developer/Xcode/DerivedData' - Go to Product / Clean
+When Table View wasn't scrolling it was because "Delay Touch Down" wasn't checked

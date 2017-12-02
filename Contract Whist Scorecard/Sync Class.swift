@@ -585,7 +585,7 @@ class Sync {
                 // Found - update it
                 let historyParticipant = historyParticipants[0]
                 let localRecordName = historyParticipant.participantMO.syncRecordID
-                let localSyncDate = historyParticipant.participantMO.syncDate! as Date
+                let localSyncDate = (historyParticipant.participantMO.syncDate ?? Date(timeIntervalSinceReferenceDate: -1)) as Date
                 let cloudSyncDate = Utility.objectDate(cloudObject: cloudObject, forKey: "syncDate")
                 if localRecordName == nil || (CKRecordID(recordName: localRecordName!) == cloudObject.recordID &&
                     cloudSyncDate! > localSyncDate) {
@@ -969,7 +969,7 @@ class Sync {
                                           "totalScore", "handsPlayed", "handsMade", "twosMade",
                                           "maxScore", "maxMade", "maxTwos",
                                           "maxScoreDate", "maxMadeDate", "maxTwosDate",
-                                          "externalId"]
+                                          "externalId", "visibleLocally"]
         }
         queryOperation.queuePriority = .veryHigh
         queryOperation.recordFetchedBlock = { (record) -> Void in
@@ -1045,6 +1045,11 @@ class Sync {
             
             // Update thumbnail to latest version
             // Need to queue updates for later
+            
+            if localRecord.thumbnail == nil {
+                // If no thumbnail ignore local date
+                localRecord.thumbnailDate = nil
+            }
             
             if cloudRecord.thumbnailDate != nil && (localRecord.thumbnailDate == nil || localRecord.thumbnailDate < cloudRecord.thumbnailDate) {
                 // thumbnail updated on cloud - queue overwrite of local copy
@@ -1542,6 +1547,7 @@ class Sync {
     }
     
     func completeInBackgroundFinish() {
+        Utility.debugMessage("Sync", "Sync in background complete")
         Sync.syncBackgroundCompletionInProgress = false
         self.setSyncBackgroundCompletionInProgress = false
         NotificationCenter.default.post(name: .syncBackgroundCompletion, object: self, userInfo: nil)

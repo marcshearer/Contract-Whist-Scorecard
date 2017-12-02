@@ -355,11 +355,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc and continue to Game Preview
-        let collectionViewsQuery = app.collectionViews
-        self.tap(collectionViewsQuery.staticTexts["Emma"])
-        self.tap(collectionViewsQuery.staticTexts["Jack"])
-        self.tap(collectionViewsQuery.staticTexts["Marc"])
-        self.tap(app.toolbars.buttons["Continue"])
+        self.selectPlayers("Emma", "Jack", "Marc")
         
         // Start game
         self.tap(app.tables.buttons["scorecard right"])
@@ -399,10 +395,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc and continue to Game Preview
-        self.tap(collectionViewsQuery.staticTexts["Emma"])
-        self.tap(collectionViewsQuery.staticTexts["Jack"])
-        self.tap(collectionViewsQuery.staticTexts["Marc"])
-        self.tap(app.toolbars.buttons["Continue"])
+        self.selectPlayers("Emma", "Jack", "Marc")
         
         // Start game
         self.tap(app.tables.buttons["scorecard right"])
@@ -441,10 +434,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc and continue to Game Preview
-        self.tap(collectionViewsQuery.staticTexts["Emma"])
-        self.tap(collectionViewsQuery.staticTexts["Jack"])
-        self.tap(collectionViewsQuery.staticTexts["Marc"])
-        self.tap(app.toolbars.buttons["Continue"])
+        self.selectPlayers("Emma", "Jack", "Marc")
         
         // Start game
         self.tap(app.tables.buttons["scorecard right"])
@@ -482,10 +472,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc and continue to Game Preview
-        self.tap(collectionViewsQuery.staticTexts["Emma"])
-        self.tap(collectionViewsQuery.staticTexts["Jack"])
-        self.tap(collectionViewsQuery.staticTexts["Marc"])
-        self.tap(app.toolbars.buttons["Continue"])
+        self.selectPlayers("Emma", "Jack", "Marc")
         
         // Start game
         self.tap(app.tables.buttons["scorecard right"])
@@ -581,11 +568,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc and continue to Game Preview
-        let collectionViewsQuery = app.collectionViews
-        self.tap(collectionViewsQuery.staticTexts["Emma"])
-        self.tap(collectionViewsQuery.staticTexts["Jack"])
-        self.tap(collectionViewsQuery.staticTexts["Marc"])
-        self.tap(app.toolbars.buttons["Continue"])
+        self.selectPlayers("Emma", "Jack", "Marc")
         
         // Start game
         self.tap(app.tables.buttons["scorecard right"])
@@ -668,10 +651,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc and continue to Game Preview
-        self.tap(collectionViewsQuery.staticTexts["Emma"])
-        self.tap(collectionViewsQuery.staticTexts["Jack"])
-        self.tap(collectionViewsQuery.staticTexts["Marc"])
-        self.tap(app.toolbars.buttons["Continue"])
+        self.selectPlayers("Emma", "Jack", "Marc")
         
         // Start game
         self.tap(app.tables.buttons["scorecard right"])
@@ -746,11 +726,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc and continue to Game Preview
-        let collectionViewsQuery = app.collectionViews
-        self.tap(collectionViewsQuery.staticTexts["Emma"])
-        self.tap(collectionViewsQuery.staticTexts["Jack"])
-        self.tap(collectionViewsQuery.staticTexts["Marc"])
-        self.tap(app.toolbars.buttons["Continue"])
+        self.selectPlayers("Emma", "Jack", "Marc")
         
         // Start game
         self.tap(app.tables.buttons["scorecard right"])
@@ -819,10 +795,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc and continue to Game Preview
-        self.tap(collectionViewsQuery.staticTexts["Emma"])
-        self.tap(collectionViewsQuery.staticTexts["Jack"])
-        self.tap(collectionViewsQuery.staticTexts["Marc"])
-        self.tap(app.toolbars.buttons["Continue"])
+        self.selectPlayers("Emma", "Jack", "Marc")
         
         // Start game
         self.tap(app.tables.buttons["scorecard right"])
@@ -892,10 +865,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc and continue to Game Preview
-        self.tap(collectionViewsQuery.staticTexts["Emma"])
-        self.tap(collectionViewsQuery.staticTexts["Jack"])
-        self.tap(collectionViewsQuery.staticTexts["Marc"])
-        self.tap(app.toolbars.buttons["Continue"])
+        self.selectPlayers("Emma", "Jack", "Marc")
         
         // Start game
         self.tap(app.tables.buttons["scorecard right"])
@@ -965,10 +935,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc and continue to Game Preview
-        self.tap(collectionViewsQuery.staticTexts["Emma"])
-        self.tap(collectionViewsQuery.staticTexts["Jack"])
-        self.tap(collectionViewsQuery.staticTexts["Marc"])
-        self.tap(app.toolbars.buttons["Continue"])
+        self.selectPlayers("Emma", "Jack", "Marc")
         
         // Start game
         self.tap(app.tables.buttons["scorecard right"])
@@ -1030,6 +997,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
         // Swipe up to get to next options
         self.swipeUp(app.tables.buttons["Don't Vibrate"])
+        self.swipeUp(app.tables.buttons["Above Players"])
         
         self.tap(app.tables.buttons["Don't Include NT"])
         
@@ -1043,11 +1011,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc and continue to Game Preview
-        let collectionViewsQuery = app.collectionViews
-        self.tap(collectionViewsQuery.staticTexts["Emma"])
-        self.tap(collectionViewsQuery.staticTexts["Jack"])
-        self.tap(collectionViewsQuery.staticTexts["Marc"])
-        self.tap(app.toolbars.buttons["Continue"])
+        self.selectPlayers("Emma", "Jack", "Marc")
         
         // Start game
         self.tap(app.tables.buttons["scorecard right"])
@@ -1147,10 +1111,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc and continue to Game Preview
-        self.tap(collectionViewsQuery.staticTexts["Emma"])
-        self.tap(collectionViewsQuery.staticTexts["Jack"])
-        self.tap(collectionViewsQuery.staticTexts["Marc"])
-        self.tap(app.toolbars.buttons["Continue"])
+        self.selectPlayers("Emma", "Jack", "Marc")
         
         // Start game
         self.tap(app.tables.buttons["scorecard right"])

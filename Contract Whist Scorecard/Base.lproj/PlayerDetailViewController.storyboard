@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -27,12 +26,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VJ5-Dd-dx2">
-                                <rect key="frame" x="0.0" y="262" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3Pf-sG-Che">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" bounces="NO" showsHorizontalScrollIndicator="NO" canCancelContentTouches="NO" bouncesZoom="NO" keyboardDismissMode="interactive" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3Pf-sG-Che">
                                 <rect key="frame" x="0.0" y="44" width="320" height="356"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -168,30 +162,30 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="3k8-bC-rCg">
-                                                    <rect key="frame" x="23" y="0.0" width="289" height="20"/>
+                                                    <rect key="frame" x="16" y="0.0" width="286" height="20"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="Cnt-By-Ge6" userLabel="Header Label 1">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="Cnt-By-Ge6" userLabel="Header Label 1">
                                                             <rect key="frame" x="0.0" y="0.0" width="90" height="20"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" relation="lessThanOrEqual" constant="90" id="OPL-bT-oOT"/>
+                                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="90" id="OPL-bT-oOT"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
                                                             <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="HE2-Dh-xUJ" userLabel="Header Label 2">
-                                                            <rect key="frame" x="98" y="0.0" width="29.5" height="20"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="HE2-Dh-xUJ" userLabel="Header Label 2">
+                                                            <rect key="frame" x="98" y="0.0" width="90" height="20"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" relation="lessThanOrEqual" constant="90" id="j63-6N-178"/>
+                                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="90" id="j63-6N-178"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
                                                             <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="GF5-ZI-Jhg" userLabel="Header Label 3">
-                                                            <rect key="frame" x="135.5" y="0.0" width="153.5" height="20"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="GF5-ZI-Jhg" userLabel="Header Label 3">
+                                                            <rect key="frame" x="196" y="0.0" width="90" height="20"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" relation="lessThanOrEqual" constant="90" id="DCp-lg-ShQ"/>
+                                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="90" id="DCp-lg-ShQ"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
                                                             <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -200,7 +194,6 @@
                                                     </subviews>
                                                     <constraints>
                                                         <constraint firstAttribute="bottom" secondItem="HE2-Dh-xUJ" secondAttribute="bottom" id="1vr-E6-Nkh"/>
-                                                        <constraint firstItem="Cnt-By-Ge6" firstAttribute="leading" secondItem="3k8-bC-rCg" secondAttribute="leading" id="F09-46-Tya"/>
                                                         <constraint firstAttribute="bottom" secondItem="GF5-ZI-Jhg" secondAttribute="bottom" id="HEU-Bo-ncd"/>
                                                         <constraint firstItem="Cnt-By-Ge6" firstAttribute="leading" secondItem="3k8-bC-rCg" secondAttribute="leading" id="iq1-V1-h4g"/>
                                                         <constraint firstItem="GF5-ZI-Jhg" firstAttribute="top" secondItem="3k8-bC-rCg" secondAttribute="top" id="pGb-tH-yaA"/>
@@ -212,9 +205,8 @@
                                                 </stackView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="3k8-bC-rCg" secondAttribute="trailing" constant="8" id="1x2-nQ-hie"/>
-                                                <constraint firstItem="3k8-bC-rCg" firstAttribute="leading" secondItem="9lw-ur-31L" secondAttribute="leadingMargin" constant="8" id="3cU-G4-Zhm"/>
                                                 <constraint firstAttribute="bottom" secondItem="3k8-bC-rCg" secondAttribute="bottom" id="Cqv-bM-zNY"/>
+                                                <constraint firstItem="3k8-bC-rCg" firstAttribute="leading" secondItem="9lw-ur-31L" secondAttribute="leading" constant="16" id="Jg0-gf-ehP"/>
                                                 <constraint firstItem="3k8-bC-rCg" firstAttribute="top" secondItem="9lw-ur-31L" secondAttribute="top" id="Sws-ka-aMq"/>
                                             </constraints>
                                         </tableViewCellContentView>

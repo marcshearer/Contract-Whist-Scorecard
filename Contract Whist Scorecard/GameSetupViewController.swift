@@ -38,11 +38,13 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
     @IBOutlet weak var gameSetupView: UIView!
     @IBOutlet weak var playerTableView: UITableView!
     @IBOutlet weak var backgroundImage: UIImageView!
+    @IBOutlet weak var overrideButton: UIButton!
 
     // MARK: - IB Unwind Segue Handlers ================================================================ -
 
     @IBAction func hideScorepad(segue:UIStoryboardSegue) {
         self.scorecard.setGameInProgress(false)
+        self.formatOverrideButton()
     }
 
     // MARK: - IB Actions ============================================================================== -
@@ -51,7 +53,16 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
         // Link back to selection
         self.navigationController?.isNavigationBarHidden = false
         NotificationCenter.default.removeObserver(observer!)
+        self.scorecard.resetOverrideSettings()
         self.performSegue(withIdentifier: returnSegue, sender: self)
+    }
+    
+    @IBAction func overridePressed(_ sender: Any) {
+        // Link to override selection
+        let overrideViewController = OverrideViewController()
+        overrideViewController.show(scorecard: scorecard, completion: {
+            self.formatOverrideButton()
+        })
     }
 
     @IBAction func leftSwipe(recognizer:UISwipeGestureRecognizer) {
@@ -233,7 +244,23 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
             UserDefaults.standard.set(scorecard.dealerIs, forKey: "dealerIs")
        default:
             // Go to scorepad
-            showScorepad()
+            if self.scorecard.overrideSelected {
+                self.alertDecision("Overrides for the number of cards/rounds have been selected. Are you sure you want to continue",
+                                   title: "Warning",
+                                   okButtonText: "Use Overrides",
+                                   okHandler: {
+                                        self.showScorepad()
+                                   },
+                                   otherButtonText: "Use Settings",
+                                   otherHandler: {
+                                        self.scorecard.resetOverrideSettings()
+                                        self.showScorepad()
+                                    },
+                                   cancelButtonText: "Cancel")
+            } else {
+                self.showScorepad()
+            }
+            
         }
     }
     
@@ -303,6 +330,10 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
             (playerNumber == scorecard.dealerIs && !playerTableView.isEditing && !forceHide ? false : true)
     }
     
+    private func formatOverrideButton() {
+        // No longer required
+    }
+    
     // MARK: - Utility Routines ================================================================ -
 
     func updateSelectedPlayers(_ selectedPlayers: [PlayerMO]) {
@@ -320,9 +351,16 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
             let destination = segue.destination as! ScorepadViewController
             destination.scorecard = self.scorecard
             destination.scorepadMode = (self.scorecard.isHosting || self.scorecard.hasJoined ? .display : .amend)
-            destination.rounds = scorecard.rounds
-            destination.cards = scorecard.settingCards
-            destination.bounce = scorecard.settingBounceNumberCards
+            if self.scorecard.checkOverride() {
+                destination.cards = scorecard.overrideCards
+                destination.bounce = scorecard.overrideBounceNumberCards
+                destination.rounds = scorecard.calculateRounds(cards: destination.cards,
+                                                               bounce: destination.bounce)
+            } else {
+                destination.cards = scorecard.settingCards
+                destination.bounce = scorecard.settingBounceNumberCards
+                destination.rounds = scorecard.rounds
+            }
             destination.bonus2 = scorecard.settingBonus2
             destination.suits = scorecard.suits
             destination.returnSegue = "hideScorepad"

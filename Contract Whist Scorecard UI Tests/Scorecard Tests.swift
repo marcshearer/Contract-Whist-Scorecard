@@ -42,11 +42,7 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
         self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc
-        let collectionViewsQuery = app.collectionViews
-        self.tap(collectionViewsQuery.staticTexts["Emma"])
-        self.tap(collectionViewsQuery.staticTexts["Jack"])
-        self.tap(collectionViewsQuery.staticTexts["Marc"])
-        self.tap(app.toolbars.buttons["Continue"])
+        self.selectPlayers("Emma", "Jack", "Marc")
         
         // Cut for dealer
         self.tap(app.tables.buttons["Cut for Dealer"])
@@ -269,11 +265,7 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
         self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc
-        let collectionViewsQuery = app.collectionViews
-        self.tap(collectionViewsQuery.staticTexts["Emma"])
-        self.tap(collectionViewsQuery.staticTexts["Jack"])
-        self.tap(collectionViewsQuery.staticTexts["Marc"])
-        self.tap(app.toolbars.buttons["Continue"])
+        self.selectPlayers("Emma", "Jack", "Marc")
         
         // Cut for dealer
         self.tap(app.tables.buttons["Cut for Dealer"])
@@ -509,12 +501,7 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
         self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc
-        let collectionViewsQuery = app.collectionViews
-        self.tap(collectionViewsQuery.staticTexts["Emma"])
-        self.tap(collectionViewsQuery.staticTexts["Jack"])
-        self.tap(collectionViewsQuery.staticTexts["Marc"])
-        self.tap(collectionViewsQuery.staticTexts["Rachel"])
-        self.tap(app.toolbars.buttons["Continue"])
+        self.selectPlayers("Emma", "Jack", "Marc", "Rachel")
         
         // Cut for dealer
         self.tap(app.tables.buttons["Cut for Dealer"])

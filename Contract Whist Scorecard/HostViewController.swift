@@ -352,8 +352,8 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                                 // Game not started yet - wait
                                 self.scorecard.sendInstruction("wait", to: peer)
                             } else {
-                                // Game in progress - need to resend state
-                                self.scorecard.sendPlayers(to: peer)
+                                // Game in progress - need to resend state - luckily have what we need in handState
+                                self.scorecard.sendPlayers(rounds: self.scorecard.handState.rounds, cards: self.scorecard.handState.cards, bounce: self.scorecard.handState.bounce, bonus2: self.scorecard.handState.bonus2, suits: self.scorecard.handState.suits, to: peer)
                                 self.scorecard.sendScores(to: peer)
                                 self.scorecard.sendHandState(to: peer)
                             }
@@ -952,6 +952,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         self.scorecard.commsDelegate = nil
         self.scorecard.resetSharing()
         self.clearHandlerCompleteNotification(observer: self.observer)
+        self.scorecard.resetOverrideSettings()
     }
     
     private func exitHost() {

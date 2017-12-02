@@ -99,7 +99,11 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             // New connection - resend state
             Utility.mainThread { [unowned self] in
                 if self.gameInProgress {
-                    self.sendPlayers(to: peer)
+                    // Only here when sharing
+                    if self.isHosting || self.hasJoined {
+                        fatalError("Assert violation: Should never happen")
+                    }
+                    self.sendPlayersOverrideSettings(to: peer)
                     self.sendScores(to: peer)
                 } else {
                     self.sendInstruction("wait", to: peer)
@@ -157,23 +161,34 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 NotificationCenter.default.post(name: .broadcastHandlerCompleted, object: self, userInfo: nil)
             }
         } else if self.isSharing {
-            self.sendPlayers()
+            self.sendPlayersOverrideSettings()
             self.sendScores = true
         }
     }
     
-    public func sendPlayers(to commsPeer: CommsPeer! = nil) {
+    private func sendPlayersOverrideSettings(to peer: CommsPeer! = nil) {
+        if self.checkOverride() {
+            // Use override values
+            let rounds = self.calculateRounds(cards: self.overrideCards, bounce: self.overrideBounceNumberCards)
+            self.sendPlayers(rounds: rounds, cards: self.overrideCards, bounce: self.overrideBounceNumberCards, bonus2: self.settingBonus2, suits: self.suits, to: peer)
+        } else {
+            // Use settings values
+            self.sendPlayers(rounds: self.rounds, cards: self.settingCards, bounce: self.settingBounceNumberCards, bonus2: self.settingBonus2, suits: self.suits, to: peer)
+        }
+    }
+    
+    public func sendPlayers(rounds: Int, cards: [Int], bounce: Bool, bonus2: Bool, suits: [Suit], to commsPeer: CommsPeer! = nil) {
         var playerList: [String : Any] = [:]
         
         if self.isSharing || self.isHosting {
             // Send general settings
             var settings: [String: Any] = [:]
-            settings["rounds"] = self.rounds
-            settings["cards"] = self.settingCards
-            settings["bounce"] = self.settingBounceNumberCards
-            settings["bonus2"] = self.settingBonus2
+            settings["rounds"] = rounds
+            settings["cards"] = cards
+            settings["bounce"] = bounce
+            settings["bonus2"] = bonus2
             var suitStrings: [String] = []
-            for suit in self.suits {
+            for suit in suits {
                 suitStrings.append(suit.toString())
             }
             settings["suits"] = suitStrings

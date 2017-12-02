@@ -126,7 +126,7 @@ class History {
     static func getHighScores(type: HighScoreType, limit: Int = 3, playerEmailList: [String]) -> [ParticipantMO] {
         // Setup query filters
         var sort: [(key: String, direction: SortDirection)]
-        let predicate1 = NSPredicate(format: "gameUUID != 'B/F'")
+        let predicate1 = NSPredicate(format: "gameUUID != 'B/F' AND excludeStats = false")
         let predicate2 = NSPredicate(format: "email IN %@", argumentArray: [playerEmailList])
         
         // Setup second sort
@@ -319,6 +319,7 @@ class History {
         gameMO.location = Utility.objectString(cloudObject: cloudObject, forKey: "location")
         gameMO.latitude = Utility.objectDouble(cloudObject: cloudObject, forKey: "latitude")
         gameMO.longitude = Utility.objectDouble(cloudObject: cloudObject, forKey: "longitude")
+        gameMO.excludeStats = Utility.objectBool(cloudObject: cloudObject, forKey: "excludeStats")
         gameMO.syncRecordID = cloudObject.recordID.recordName
         gameMO.syncDate = Utility.objectDate(cloudObject: cloudObject, forKey: "syncDate")
         if gameMO.localDateCreated == nil {
@@ -334,6 +335,7 @@ class History {
         cloudObject.setValue(gameMO.location, forKey: "location")
         cloudObject.setValue(gameMO.latitude, forKey: "latitude")
         cloudObject.setValue(gameMO.longitude, forKey: "longitude")
+        cloudObject.setValue(gameMO.excludeStats, forKey: "excludeStats")
         cloudObject.setValue(syncDate, forKey: "syncDate")
     }
     
@@ -351,6 +353,7 @@ class History {
         participantMO.handsMade = Int16(Utility.objectInt(cloudObject: cloudObject, forKey: "handsMade"))
         participantMO.twosMade = Int16(Utility.objectInt(cloudObject: cloudObject, forKey: "twosMade"))
         participantMO.place = Int16(Utility.objectInt(cloudObject: cloudObject, forKey: "place"))
+        participantMO.excludeStats = Utility.objectBool(cloudObject: cloudObject, forKey: "excludeStats")
         participantMO.syncRecordID = cloudObject.recordID.recordName
         participantMO.syncDate = Utility.objectDate(cloudObject: cloudObject, forKey: "syncDate")
         if participantMO.localDateCreated == nil {
@@ -372,6 +375,7 @@ class History {
         cloudObject.setValue(participantMO.handsMade, forKey: "handsMade")
         cloudObject.setValue(participantMO.twosMade, forKey: "twosMade")
         cloudObject.setValue(participantMO.place, forKey: "place")
+        cloudObject.setValue(participantMO.excludeStats, forKey: "excludeStats")
         cloudObject.setValue(syncDate, forKey: "syncDate")
     }
     

@@ -39,6 +39,8 @@ class HistoryDetailViewController: UIViewController, UITableViewDataSource, UITa
     @IBOutlet weak var finishButton: RoundedButton!
     @IBOutlet weak var actionButton: UIBarButtonItem!
     @IBOutlet weak var bodyView: UIView!
+    @IBOutlet weak var excludeStatsView: UIView!
+    @IBOutlet weak var excludeStatsHeightConstraint: NSLayoutConstraint!
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     
@@ -102,6 +104,11 @@ class HistoryDetailViewController: UIViewController, UITableViewDataSource, UITa
         if scorecard.settingSaveLocation {
             locationText.text = gameDetail.gameLocation.description
             dropPin()
+        }
+        if self.gameDetail.gameMO.excludeStats {
+            ScorecardUI.sectionHeadingStyleView(self.excludeStatsView)
+        } else {
+            self.excludeStatsHeightConstraint.constant = 0
         }
     }
 

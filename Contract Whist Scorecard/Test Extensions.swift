@@ -279,7 +279,7 @@ extension GameSummaryViewController {
             if self.scorecard.autoPlay != 0 {
                 // Play another one
                 Utility.executeAfter(delay: 5.0, completion: {
-                    self.finishGame(from: self, toSegue: "newGame", advanceDealer: true, confirm: false)
+                    self.finishGame(from: self, toSegue: "newGame", advanceDealer: true, resetOverrides: false, confirm: false)
                 })
             }
         }

@@ -62,7 +62,11 @@ class ScorecardUI {
         cell.backgroundColor = ScorecardUI.sectionHeadingBackgroundColor
     }
     
-    class func sectionHeaderStyleView(_ view: UITableViewHeaderFooterView) {
+    class func sectionHeadingStyleView(_ view: UIView) {
+        view.backgroundColor = ScorecardUI.sectionHeadingBackgroundColor
+    }
+    
+   class func sectionHeaderStyleView(_ view: UITableViewHeaderFooterView) {
         view.contentView.backgroundColor = ScorecardUI.sectionHeaderBackgroundColor
         view.detailTextLabel?.textColor = UIColor.white
     }

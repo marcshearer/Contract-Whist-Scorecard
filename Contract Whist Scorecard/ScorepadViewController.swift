@@ -148,7 +148,7 @@ class ScorepadViewController: UIViewController,
             self.playHand(true)
         } else {
             // Re-send players to sharing device to trigger new game
-            self.scorecard.sendPlayers()
+            self.scorecard.sendPlayers(rounds: self.rounds, cards: self.cards, bounce: self.bounce, bonus2: self.bonus2, suits: self.suits)
         }
     }
     
@@ -182,7 +182,7 @@ class ScorepadViewController: UIViewController,
     @IBAction private func finishGamePressed(_ sender: Any) {
         NotificationCenter.default.removeObserver(self.observer!)
         if scorepadMode == .amend || self.scorecard.isHosting {
-            scorecard.finishGame(from: self, toSegue: returnSegue, rounds: self.rounds, completion: tidyUp)
+            scorecard.finishGame(from: self, toSegue: returnSegue, rounds: self.rounds, resetOverrides: true, completion: tidyUp)
         } else if self.scorecard.hasJoined {
             self.alertDecision("Warning: This will mean you exit from the game. You can rejoin by selecting the 'Join a Game' option from 'Online Game' in the Home menu", okButtonText: "Exit",
                 okHandler: {
@@ -660,7 +660,7 @@ class ScorepadViewController: UIViewController,
                     // Hand has been recovered
                     self.scorecard.handState.hand = self.scorecard.deal.hands[0]
                 }
-                self.scorecard.sendPlayers()
+                self.scorecard.sendPlayers(rounds: self.rounds, cards: self.cards, bounce: self.bounce, bonus2: self.bonus2, suits: self.suits)
             } else if scorecard.handState.finished {
                 // Clear last hand
                 scorecard.handState.hand = nil

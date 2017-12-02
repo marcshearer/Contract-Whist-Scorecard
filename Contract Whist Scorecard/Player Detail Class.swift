@@ -158,7 +158,6 @@ class PlayerDetail {
         playerMO.twosMade = self.twosMade
         playerMO.totalScore = self.totalScore
         playerMO.thumbnail = self.thumbnail
-        playerMO.thumbnailDate = self.thumbnailDate
         playerMO.maxScore = self.maxScore
         playerMO.maxScoreDate = self.maxScoreDate
         playerMO.maxMade = self.maxMade

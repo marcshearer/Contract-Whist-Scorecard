@@ -49,7 +49,15 @@ class WatchGameInterfaceController: WKInterfaceController, WatchStateDelegate {
                 titleLabel.setHidden(true)
                 titleImage.setHidden(false)
             } else {
-                titleLabel.setText("Totals")
+                let suitColor = (context.trumpSuit == "♥︎" || context.trumpSuit == "♦︎" ? UIColor.red : UIColor.white)
+                let suitString = NSAttributedString(string: Suit(fromString: context.trumpSuit).toString(), attributes: [NSAttributedStringKey.foregroundColor: suitColor])
+                
+                let roundTitle = NSMutableAttributedString()
+                roundTitle.append(NSAttributedString(string: "\(context.cards!)", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]))
+                roundTitle.append(suitString)
+                roundTitle.append(NSAttributedString(string: " Totals", attributes: [NSAttributedStringKey.foregroundColor: UIColor.white]))
+                
+                titleLabel.setAttributedText(roundTitle)
                 titleLabel.setHidden(false)
                 titleImage.setHidden(true)
             }

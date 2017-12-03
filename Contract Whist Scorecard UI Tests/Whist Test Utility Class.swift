@@ -131,7 +131,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
             
             // If Online Game Invitations not enabled - enable it
             let enable = app.tables.buttons["Enable"]
-            if enable.exists {
+            if enable.isEnabled {
                 self.tap(enable)
                 self.tap(app.tables.staticTexts["Marc"])
             }

@@ -23,7 +23,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
     }
     
-    func testGetStarted() {
+    func test0GetStarted() {
         
         // Restart app in reset mode - all core data and user defaults will be deleted
         app.launchEnvironment = ["TEST_MODE" : "TRUE",

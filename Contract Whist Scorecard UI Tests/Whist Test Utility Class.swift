@@ -102,9 +102,28 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tap(app.toolbars.buttons["Continue"])
     }
     
+    func enterLocation(_ location: String, _ confirm: Bool = true) {
+        // Assumes you are in the location screen
+        let searchText = app.otherElements["searchBar"]
+        self.tap(searchText, timeout: 60)
+        self.tapIfExists(searchText.buttons["Clear text"])
+        self.typeText(searchText, location, timeout: 30)
+        
+        // Confirm location
+        self.tap(app.tables.cells.containing(.staticText, identifier:"New description for current location").staticTexts[location], timeout: 30)
+        
+        if confirm {
+            // Continue
+            self.tap(app.navigationBars["Location"].buttons["continueButton"], timeout: 60)
+        } else {
+            // Cancel
+            self.tap(app.navigationBars["Location"].buttons["Cancel"], timeout: 30)
+        }
+    }
+    
     func resetSettings(force: Bool = false) {
         
-        if !Contract_Whist_Scorecard_UI_Tests.settingsReset || force {
+        if !Contract_Whist_Scorecard_UI_Tests.settingsAreReset || force {
         
             self.tap(app.navigationBars["Contract Whist"].buttons["settings"])
             
@@ -183,7 +202,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
             // Return to home page
             self.returnHome()
             
-            // Contract_Whist_Scorecard_UI_Tests.settingsReset = true
+            // Contract_Whist_Scorecard_UI_Tests.settingsAreReset = true
             
         }
     }

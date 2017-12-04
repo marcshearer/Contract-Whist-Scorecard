@@ -117,13 +117,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tap(app.buttons["Update"])
         
         // Amend location
-        let searchText = app.searchFields["Revised location for game"]
-        self.tap(searchText, timeout: 60)
-        self.tapIfExists(searchText.buttons["Clear text"])
-        self.typeText(searchText, "Abingdon", timeout: 30)
-        
-        // Cancel back to detail
-        self.tap(app.navigationBars["Location"].buttons["Cancel"], timeout: 30)
+        self.enterLocation("Abingdon", false)
         
         // Exit from detail
         self.tap(app.navigationBars.buttons["Item"])
@@ -132,7 +126,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tap(app.tables.staticTexts["Location"])
         
         // Go back to home page
-        self.returnHome()
+        self.returnHome(timeout: 60)
     }
     
     func testHighScores() {

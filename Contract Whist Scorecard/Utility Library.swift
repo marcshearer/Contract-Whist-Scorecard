@@ -349,7 +349,7 @@ class Utility {
     }
     
     class func debugMessage(_ from: String, _ message: String, showDevice: Bool = false, force: Bool = false) {
-        if Utility.isDevelopment || force || Scorecard.adminMode {
+        if Utility.isDevelopment || Scorecard.adminMode || force {
             Utility.mainThread {
                 var outputMessage: String
                 let timestamp = Utility.dateString(Date(), format: "hh:mm:ss.SS", localized: false)

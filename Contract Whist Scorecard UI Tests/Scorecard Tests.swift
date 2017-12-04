@@ -19,7 +19,7 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
     let hittablePredicate = NSPredicate(format: "hittable == 1", argumentArray: nil)
     let selectedPredicate = NSPredicate(format: "selected == 1", argumentArray: nil)
     
-    static var settingsReset = false
+    static var settingsAreReset = false
     
     override func setUp() {
         super.setUp()
@@ -38,9 +38,6 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
         // Select new game and override resume warning if necessary
         self.selectOption("New Game")
         
-        // Clear selection (if there is any)
-        self.tapIfExists(app.toolbars.buttons["Clear Selection"])
-        
         // Select Emma, Jack and Marc
         self.selectPlayers("Emma", "Jack", "Marc")
         
@@ -54,16 +51,7 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
         self.tap(app.tables.buttons["scorecard right"])
         
         // Enter location
-        let searchText = app.searchFields["Enter description of current location"]
-        self.tap(searchText, timeout: 60)
-        self.tapIfExists(searchText.buttons["Clear text"])
-        self.typeText(searchText, "Abingdon", timeout: 30)
-        
-        // Confirm location
-        self.tap(app.tables.cells.containing(.staticText, identifier:"New description for current location").staticTexts["Abingdon"], timeout: 30)
-        
-        // Continue to scorecard
-        self.tap(app.navigationBars["Location"].buttons["ContinueButton"], timeout: 30)
+        self.enterLocation("Abingdon")
         
         // Set up score buttons etc
         let scoreButton = app.navigationBars["Scorecard"].buttons["Score"]
@@ -261,9 +249,6 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
         // Select new game and override resume warning if necessary
         self.selectOption("New Game")
         
-        // Clear selection (if there is any)
-        self.tapIfExists(app.toolbars.buttons["Clear Selection"])
-        
         // Select Emma, Jack and Marc
         self.selectPlayers("Emma", "Jack", "Marc")
         
@@ -277,16 +262,7 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
         self.tap(app.tables.buttons["scorecard right"])
         
         // Enter location
-        let searchText = app.searchFields["Enter description of current location"]
-        self.tap(searchText, timeout: 60)
-        self.tapIfExists(searchText.buttons["Clear text"])
-        self.typeText(searchText, "Abingdon", timeout: 30)
-        
-        // Confirm location
-        self.tap(app.tables.cells.containing(.staticText, identifier:"New description for current location").staticTexts["Abingdon"], timeout: 30)
-        
-        // Continue to scorecard
-        self.tap(app.navigationBars["Location"].buttons["ContinueButton"], timeout: 30)
+        self.enterLocation("Abingdon")
         
         // Set up score buttons etc
         let scoreButton = app.navigationBars["Scorecard"].buttons["Score"]
@@ -513,16 +489,7 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
         self.tap(app.tables.buttons["scorecard right"])
         
         // Enter location
-        let searchText = app.searchFields["Enter description of current location"]
-        self.tap(searchText, timeout: 60)
-        self.tapIfExists(searchText.buttons["Clear text"])
-        self.typeText(searchText, "Abingdon", timeout: 30)
-        
-        // Confirm location
-        self.tap(app.tables.cells.containing(.staticText, identifier:"New description for current location").staticTexts["Abingdon"], timeout: 30)
-        
-        // Continue to scorecard
-        self.tap(app.navigationBars["Location"].buttons["ContinueButton"], timeout: 30)
+       self.enterLocation("Abingdon")
         
         // Set up score buttons etc
         let scoreButton = app.navigationBars["Scorecard"].buttons["Score"]

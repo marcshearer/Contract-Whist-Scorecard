@@ -56,7 +56,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.assertNotExists(app.toolbars.buttons["sync"])
         
         // Go back to Home Screen
-        self.returnHome()
+        self.returnHome(timeout: 60)
         
         // Go back into Settings
         self.selectSettings()
@@ -107,7 +107,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.assertEnabled(app.toolbars.buttons["sync"])
         
         // Go back to Home Screen
-        self.returnHome()
+        self.returnHome(timeout: 60)
     }
     
     func testSettingHistory() {
@@ -175,7 +175,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tap(app.navigationBars.buttons["Item"])
         
         // Return to main menu
-        self.returnHome()
+        self.returnHome(timeout: 60)
         
         // Go back into Settings
         self.selectSettings()
@@ -206,7 +206,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tap(app.navigationBars.buttons["Item"])
         
         // Return to home page
-        self.returnHome()
+        self.returnHome(timeout: 60)
         
     }
     
@@ -351,9 +351,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         // Select new game
         self.selectOption("New Game")
         
-        // Clear selection (if there is any)
-        self.tapIfExists(app.toolbars.buttons["Clear Selection"])
-        
         // Select Emma, Jack and Marc and continue to Game Preview
         self.selectPlayers("Emma", "Jack", "Marc")
         
@@ -391,9 +388,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         // Select new game
         self.selectOption("New Game")
         
-        // Clear selection (if there is any)
-        self.tapIfExists(app.toolbars.buttons["Clear Selection"])
-        
         // Select Emma, Jack and Marc and continue to Game Preview
         self.selectPlayers("Emma", "Jack", "Marc")
         
@@ -430,9 +424,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         // Select new game
         self.selectOption("New Game")
         
-        // Clear selection (if there is any)
-        self.tapIfExists(app.toolbars.buttons["Clear Selection"])
-        
         // Select Emma, Jack and Marc and continue to Game Preview
         self.selectPlayers("Emma", "Jack", "Marc")
         
@@ -467,9 +458,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
         // Select new game
         self.selectOption("New Game")
-        
-        // Clear selection (if there is any)
-        self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc and continue to Game Preview
         self.selectPlayers("Emma", "Jack", "Marc")
@@ -545,7 +533,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tap(app.navigationBars.buttons["Item"])
         
         // Return to main menu
-        self.returnHome()
+        self.returnHome(timeout: 60)
         
         // Go into Player Stats and check no Twos shown
         self.selectOption("Player Stats")
@@ -563,9 +551,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
         // Select new game
         self.selectOption("New Game")
-        
-        // Clear selection (if there is any)
-        self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc and continue to Game Preview
         self.selectPlayers("Emma", "Jack", "Marc")
@@ -628,7 +613,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tap(app.navigationBars.buttons["Item"])
         
         // Return to main menu
-        self.returnHome()
+        self.returnHome(timeout: 60)
         
         // Go into Player Stats and check no Twos shown
         self.selectOption("Player Stats")
@@ -646,9 +631,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
         // Select new game
         self.selectOption("New Game")
-        
-        // Clear selection (if there is any)
-        self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc and continue to Game Preview
         self.selectPlayers("Emma", "Jack", "Marc")
@@ -722,9 +704,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         // Select new game
         self.selectOption("New Game")
         
-        // Clear selection (if there is any)
-        self.tapIfExists(app.toolbars.buttons["Clear Selection"])
-        
         // Select Emma, Jack and Marc and continue to Game Preview
         self.selectPlayers("Emma", "Jack", "Marc")
         
@@ -790,9 +769,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
         // Select new game
         self.selectOption("New Game")
-        
-        // Clear selection (if there is any)
-        self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc and continue to Game Preview
         self.selectPlayers("Emma", "Jack", "Marc")
@@ -861,9 +837,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         // Select new game
         self.selectOption("New Game")
         
-        // Clear selection (if there is any)
-        self.tapIfExists(app.toolbars.buttons["Clear Selection"])
-        
         // Select Emma, Jack and Marc and continue to Game Preview
         self.selectPlayers("Emma", "Jack", "Marc")
         
@@ -930,9 +903,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
         // Select new game
         self.selectOption("New Game")
-        
-        // Clear selection (if there is any)
-        self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc and continue to Game Preview
         self.selectPlayers("Emma", "Jack", "Marc")
@@ -1006,9 +976,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
         // Select new game
         self.selectOption("New Game")
-        
-        // Clear selection (if there is any)
-        self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc and continue to Game Preview
         self.selectPlayers("Emma", "Jack", "Marc")
@@ -1106,9 +1073,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
         // Select new game
         self.selectOption("New Game")
-        
-        // Clear selection (if there is any)
-        self.tapIfExists(app.toolbars.buttons["Clear Selection"])
         
         // Select Emma, Jack and Marc and continue to Game Preview
         self.selectPlayers("Emma", "Jack", "Marc")

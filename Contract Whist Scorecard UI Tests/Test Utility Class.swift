@@ -93,7 +93,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         })
     }
     
-    func assertNotExists(_ element: XCUIElement, timeout: TimeInterval = 3, message: String? = nil) {
+    func assertNotExists(_ element: XCUIElement, timeout: TimeInterval = 10, message: String? = nil) {
         self.expectation(for: notExistsPredicate, evaluatedWith: element, handler: nil)
         self.waitForExpectations(timeout: timeout, handler: { (error) in
             if error != nil {
@@ -103,7 +103,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         })
     }
     
-    func tapIfExists(_ element: XCUIElement, timeout: TimeInterval = 3) {
+    func tapIfExists(_ element: XCUIElement, timeout: TimeInterval = 10) {
         if element.exists {
             element.tap()
         }

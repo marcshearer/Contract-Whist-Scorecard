@@ -711,11 +711,13 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                 exitBroadcast()
             }
         } else {
-            if playerMO![0].email! == self.scorecard.settingOnlinePlayerEmail {
-                // Back to normal user - can remove temporary override
-                Notifications.removeTemporaryOnlineGameSubscription()
-            } else {
-                Notifications.addTemporaryOnlineGameSubscription(email: playerMO![0].email!)
+            if let onlineEmail = self.scorecard.settingOnlinePlayerEmail {
+                if playerMO![0].email! == onlineEmail {
+                    // Back to normal user - can remove temporary override
+                    Notifications.removeTemporaryOnlineGameSubscription()
+                } else {
+                    Notifications.addTemporaryOnlineGameSubscription(email: playerMO![0].email!)
+                }
             }
             self.thisPlayer = playerMO![0].email!
             self.scorecard.defaultPlayerOnDevice = self.thisPlayer

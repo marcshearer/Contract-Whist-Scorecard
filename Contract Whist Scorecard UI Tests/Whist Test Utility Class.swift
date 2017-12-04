@@ -114,10 +114,10 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
         if confirm {
             // Continue
-            self.tap(app.navigationBars["Location"].buttons["continueButton"], timeout: 60)
+            self.tap(app.navigationBars.buttons["continueButton"], timeout: 60)
         } else {
             // Cancel
-            self.tap(app.navigationBars["Location"].buttons["Cancel"], timeout: 30)
+            self.tap(app.navigationBars.buttons["Cancel"], timeout: 30)
         }
     }
     

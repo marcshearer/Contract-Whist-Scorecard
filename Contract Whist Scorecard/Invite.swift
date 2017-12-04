@@ -250,7 +250,7 @@ class Invite {
         }
         
         queryOperation.queryCompletionBlock = { (cursor, error) -> Void in
-            Utility.mainThread { [unowned self] in
+            Utility.mainThread {
                 if error != nil || cursor != nil {
                     var message = "Unable to connect to iCloud"
                     if Scorecard.adminMode {
@@ -269,7 +269,7 @@ class Invite {
     }
     
     func completion(_ success: Bool, _ message: String? = nil, _ invited: [InviteReceived]? = nil) {
-        Utility.mainThread { [unowned self] in
+        Utility.mainThread {
             self.completionHandler?(success, message, invited)
         }
     }

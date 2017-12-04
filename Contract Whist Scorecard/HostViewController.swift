@@ -415,9 +415,11 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     }
     
     func handlerStateChange(to state: CommsHandlerState) {
-        if state != currentState {
+        if state != self.currentState {
             if state == .notStarted {
-                self.alertMessage("Invitation failed")
+                if self.currentState == .invited || self.currentState == .inviting {
+                    self.alertMessage("Invitation failed")
+                }
                 if defaultConnectionMode == .unknown {
                     self.setConnectionMode(.unknown)
                 } else {

@@ -11,6 +11,8 @@ Long-term bugs
 
 Short-term
 ----------
+Auto-sync when download players in Get Started
+Host view controller doesn't scroll when rotate
 Update Walkthrough - esp online game
 
 Medium-term

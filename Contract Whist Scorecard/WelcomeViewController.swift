@@ -175,13 +175,8 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let reset = ProcessInfo.processInfo.environment["RESET_WHIST_APP"] {
-            if reset.lowercased() == "true" {
-                // Called in reset mode (from a test script) - reset user defaults and core data
-                DataAdmin.resetUserDefaults()
-                DataAdmin.resetCoreData()
-            }
-        }
+        // Possible clear all data in test mode
+        TestMode.resetApp()
         
         scorecard.initialise(players: 4, rounds: 25, recovery: recovery)
         sync.initialise(scorecard: scorecard)

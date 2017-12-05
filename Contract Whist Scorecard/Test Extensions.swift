@@ -9,6 +9,40 @@
 import Foundation
 import UIKit
 
+class TestMode {
+    
+    class func resetApp() {
+        if let testMode = ProcessInfo.processInfo.environment["TEST_MODE"] {
+            if testMode.lowercased() == "true" {
+                if let reset = ProcessInfo.processInfo.environment["RESET_WHIST_APP"] {
+                    if reset.lowercased() == "true" {
+                        // Called in reset mode (from a test script) - reset user defaults and core data
+                        DataAdmin.resetUserDefaults()
+                        DataAdmin.resetCoreData()
+                    }
+                }
+            }
+        }
+    }
+    
+    class func resetSettings(_ scorecard: Scorecard) {
+        if let testMode = ProcessInfo.processInfo.environment["TEST_MODE"] {
+            if testMode.lowercased() == "true" {
+                var testResetSettings = true
+                if let resetSettings = ProcessInfo.processInfo.environment["TEST_RESET_SETTINGS"] {
+                    if resetSettings.lowercased() == "false" {
+                        testResetSettings = false
+                    }
+                }
+                if testResetSettings {
+                    // In test mode - reset settings
+                    scorecard.testResetSettings()
+                }
+            }
+        }
+    }
+}
+
 extension ScorepadViewController {
     
     @IBAction private func rotationGesture(recognizer:UIRotationGestureRecognizer) {
@@ -313,6 +347,25 @@ extension Scorecard {
     public func sendAutoPlay() {
         // Tell other players to enter Autoplay mode (for testing)
         self.commsDelegate?.send("autoPlay", ["value" : self.autoPlay])
+    }
+    
+    func testResetSettings() {
+        // Reset all settings to default values - called on entry to app in test mode
+        self.settingDealerHighlightMode = DealerHighlightMode.highlight
+        self.settingDealerHighlightAbove = true
+        self.settingBonus2 = true
+        self.settingCards = [13, 1]
+        self.settingBounceNumberCards = false
+        self.settingTrumpSequence = ["♣︎", "♦︎", "♥︎", "♠︎", "NT"]
+        self.settingSyncEnabled = true
+        self.settingSaveHistory = true
+        self.settingSaveLocation = true
+        self.settingReceiveNotifications = false
+        self.settingAllowBroadcast = true
+        self.settingAlertVibrate = true
+        self.settingAlertFlash = true
+        self.settingNearbyPlaying = true
+        self.settingOnlinePlayerEmail = "mshearer@waitrose.com"
     }
 }
 

@@ -18,15 +18,12 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
     let notEnabledPredicate = NSPredicate(format: "enabled == 0", argumentArray: nil)
     let hittablePredicate = NSPredicate(format: "hittable == 1", argumentArray: nil)
     let selectedPredicate = NSPredicate(format: "selected == 1", argumentArray: nil)
-    
-    static var settingsAreReset = false
-    
+        
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
         app.launchEnvironment = ["TEST_MODE" : "TRUE"]
         app.launch()
-        self.resetSettings()
     }
     
     override func tearDown() {

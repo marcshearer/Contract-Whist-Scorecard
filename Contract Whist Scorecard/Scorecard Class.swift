@@ -155,7 +155,13 @@ class Scorecard {
         self.numberPlayers = players
         self.currentPlayers = players
         
+        // Load settings
         loadSettings()
+        
+        // Reset settings in test mode (unless requested not to)
+        TestMode.resetSettings(self)
+        
+        // Load defaults
         loadDefaults()
         
         self.rounds = (self.rounds == 0 ? rounds : self.rounds)

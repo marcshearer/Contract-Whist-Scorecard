@@ -526,7 +526,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
             .children(matching: .other).element
             .children(matching: .table).element(boundBy: 1)
             .children(matching: .cell).element(boundBy: 0)
-            .buttons["More Info"])
+            .buttons["More Info"], timeout: 60)
         self.assertNotExists(app.tables.staticTexts["Twos"])
  
         // Exit from detail

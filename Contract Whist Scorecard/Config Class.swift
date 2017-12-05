@@ -14,7 +14,7 @@ class Config {
     public static let _debugNoICloudOnline = false
     
     // Choose which rabbitMQ server to use in development mode
-    private static let rabbitMQUri_DevMode: RabbitMQUriDevMode = .amqpServer
+    public static let rabbitMQUri_DevMode: RabbitMQUriDevMode = .amqpServer
     
     // Use descriptive rabbitMQ session/connection IDs
     public static let rabbitMQ_DescriptiveIDs = false
@@ -51,7 +51,7 @@ class Config {
     
     // MARK: - rabbitMQ URI string ======================================================================= -
     
-    private enum RabbitMQUriDevMode {
+    public enum RabbitMQUriDevMode {
         case localhost
         case myServer
         case amqpServer

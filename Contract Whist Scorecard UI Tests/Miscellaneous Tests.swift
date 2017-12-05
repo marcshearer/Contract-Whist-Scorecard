@@ -27,7 +27,8 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
         // Restart app in reset mode - all core data and user defaults will be deleted
         app.launchEnvironment = ["TEST_MODE" : "TRUE",
-                                 "RESET_WHIST_APP" : "TRUE"]
+                                 "RESET_WHIST_APP" : "TRUE",
+                                 "RESET_SETTINGS" : "FALSE"]
         app.launch()
         
         // Enable sync

@@ -349,7 +349,7 @@ class Utility {
     }
     
     class func debugMessage(_ from: String, _ message: String, showDevice: Bool = false, force: Bool = false) {
-        if Config.rabbitMQUri_DevMode != .amqpServer || Scorecard.adminMode || force {
+        if Utility.isDevelopment || Scorecard.adminMode || force {
             Utility.mainThread {
                 var outputMessage: String
                 let timestamp = Utility.dateString(Date(), format: "hh:mm:ss.SS", localized: false)
@@ -364,7 +364,7 @@ class Utility {
                 outputMessage = outputMessage + " - \(message)"
                 print(outputMessage)
                 #if ContractWhist
-                    if Config.rabbitMQLogQueue != "" && Config.rabbitMQUri != "" {
+                    if (Config.rabbitMQUri_DevMode != .amqpServer || Scorecard.adminMode || force) && Config.rabbitMQLogQueue != "" && Config.rabbitMQUri != "" {
                         let scorecard = Scorecard.getScorecard()!
                         if scorecard.logService == nil {
                             scorecard.logService = RabbitMQService(purpose: .other, type: .queue, serviceID: Config.rabbitMQUri)

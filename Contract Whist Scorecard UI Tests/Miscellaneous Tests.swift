@@ -32,6 +32,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         app.launch()
         
         // Enable sync
+        self.tap(app.tables.buttons["Don't Sync"])
         self.tap(app.tables.buttons["Sync with Cloud"])
         self.tap(app.alerts["Warning"].buttons["OK"])
         

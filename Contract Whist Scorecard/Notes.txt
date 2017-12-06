@@ -2,7 +2,6 @@ List of outstanding things to do
 
 Changes since last version
 --------------------------
-Fixed crash if change player in broadcast and no online email set
 
 Bugs fix now
 ------------

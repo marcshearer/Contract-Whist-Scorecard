@@ -31,12 +31,12 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tap(app.navigationBars["Contract Whist"].buttons["settings"])
     }
     
-    func returnHome(timeout: TimeInterval = 10) {
+    func returnHome(timeout: TimeInterval = 30) {
         self.tap(app.navigationBars.buttons["home"], timeout: timeout)
-        waitForHome()
+        waitForHome(timeout: timeout)
     }
     
-    func waitForHome(timeout: TimeInterval = 10) {
+    func waitForHome(timeout: TimeInterval = 30) {
         self.waitFor(app.tables.buttons["New Game"], timeout: timeout)
     }
     

@@ -106,7 +106,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         // Assumes you are in the location screen
         let searchText = app.otherElements["searchBar"]
         self.tap(searchText, timeout: 60)
-        self.tapIfExists(searchText.buttons["Clear text"])
+        self.tap(searchText.buttons["Clear text"], timeout: 30)
         self.typeText(searchText, location, timeout: 30)
         
         // Confirm location

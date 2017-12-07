@@ -2,6 +2,7 @@ List of outstanding things to do
 
 Changes since last version
 --------------------------
+Fixed crash during sync (especially initial sync)
 
 Bugs fix now
 ------------

@@ -237,7 +237,7 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
         self.tap(app.alerts["Finish Game"].buttons["Confirm"])
         
         // Finish when home screen displayed
-        self.waitForHome(timeout: 60)
+        self.waitForHome(timeout: 180)
         
     }
     
@@ -457,7 +457,7 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
         self.tap(app.alerts["Finish Game"].buttons["Confirm"])
         
         // Finish when home screen displayed
-        self.waitForHome(timeout: 60)
+        self.waitForHome(timeout: 180)
         
     }
     
@@ -718,7 +718,7 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
         self.tap(app.alerts["Finish Game"].buttons["Confirm"])
         
         // Finish when home screen displayed
-        self.waitForHome(timeout: 60)
+        self.waitForHome(timeout: 180)
         
     }
 

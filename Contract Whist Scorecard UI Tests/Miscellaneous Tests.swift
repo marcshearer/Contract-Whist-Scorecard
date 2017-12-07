@@ -19,7 +19,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tap(app.toolbars.buttons["sync"])
         
         // Go to home screen
-        self.returnHome(timeout: 60)
+        self.returnHome(timeout: 180)
         
     }
     
@@ -58,8 +58,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tap(app.toolbars.buttons["sync"])
         
         // Back to home screen
-        self.returnHome(timeout: 60)
-        
+        self.returnHome(timeout: 180)
     }
     
     func testPlayerCreateDelete() {

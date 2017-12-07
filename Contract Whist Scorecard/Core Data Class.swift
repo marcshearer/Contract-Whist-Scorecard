@@ -96,16 +96,18 @@ class CoreData {
         if let context = Scorecard.context {
 
             updateLogic()
-        
-            if context.hasChanges {
-                do {
-                    try context.save()
-                } catch {
-                    let nserror = error as NSError
-                    if errorHandler != nil {
-                        errorHandler()
-                    } else {
-                        fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+            
+            context.performAndWait {
+                if context.hasChanges {
+                    do {
+                        try context.save()
+                    } catch {
+                        let nserror = error as NSError
+                        if errorHandler != nil {
+                            errorHandler()
+                        } else {
+                            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+                        }
                     }
                 }
             }

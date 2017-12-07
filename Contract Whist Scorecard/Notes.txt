@@ -50,4 +50,10 @@ To remove menus from test scripts
     1,$s/[/][*].*[@]END_MENU_TOKEN[@][*][/]//g
 Error message '/Users/Home/Library/Developer/Xcode/DerivedData' - Go to Product / Clean
 When Table View wasn't scrolling it was because "Delay Touch Down" wasn't checked
-Bot testing needs to have simulator bootstrapped without settings reset
+Bot testing needs to have simulator set up sensibly - go into Xcode Server user to do this
+Commands to sort out firewall prompt
+    sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate off
+    /usr/libexec/ApplicationFirewall/socketfilterfw --add /Applications/Xcode.app/Contents/MacOS/Xcode
+    /usr/libexec/ApplicationFirewall/socketfilterfw --add /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/Contents/MacOS/Simulator
+    sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
+

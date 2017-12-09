@@ -211,6 +211,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 playerList["\(playerNumber)"] = player
             }
             self.commsDelegate?.send("players", playerList, to: commsPeer)
+            self.sendScores = true
         }
     }
     

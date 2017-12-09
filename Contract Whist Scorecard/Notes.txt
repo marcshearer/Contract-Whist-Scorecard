@@ -3,6 +3,7 @@ List of outstanding things to do
 Changes since last version
 --------------------------
 Fixed crash during sync (especially initial sync)
+Fixed problem if tried to view after game had started - did not receive scores
 
 Bugs fix now
 ------------

@@ -106,6 +106,8 @@ extension Contract_Whist_Scorecard_UI_Tests {
         // Assumes you are in the location screen
         let searchText = app.otherElements["searchBar"]
         self.tap(searchText, timeout: 60)
+        // Type something to make sure clear text button appears
+        self.typeText(searchText,"x",timeout:30)
         self.tap(searchText.buttons["Clear text"], timeout: 60)
         self.typeText(searchText, location, timeout: 30)
         

@@ -407,9 +407,9 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
         }
         historyMode = (self.searchBar.text == "")
         self.hideLocationList()
-        self.showFinishButtons()
         searchBar.resignFirstResponder()
         dropPin()
+        self.showFinishButtons()
     }
     
     private func dropPin() {

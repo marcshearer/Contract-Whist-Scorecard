@@ -174,7 +174,7 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: - SearchBar delegate Overrides ============================================================= -
     
     internal func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if self.searchBar.text!.count > 4 {
+        if self.searchBar.text!.count > 4 && !testMode {
             historyMode = false
             getGeocoderList()
         } else {
@@ -265,44 +265,50 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
     private func getCurrentLocation() -> Bool {
         var result = false
         
-        searchBar.placeholder = "Please wait - getting location"
-        let authorizationStatus = CLLocationManager.authorizationStatus()
-        if authorizationStatus == .restricted || authorizationStatus == .denied {
-            // Not allowed to use location - go straight to input
+        if testMode {
             result = false
         } else {
-            
-            locationManager = CLLocationManager()
-            locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            if authorizationStatus == .notDetermined {
-                // Ask for permission and continue in authorization changed delegate
-                locationManager.requestWhenInUseAuthorization()
+            searchBar.placeholder = "Please wait - getting location"
+            let authorizationStatus = CLLocationManager.authorizationStatus()
+            if authorizationStatus == .restricted || authorizationStatus == .denied {
+                // Not allowed to use location - go straight to input
+                result = false
             } else {
-                // Ask for location and continue in did update locations delegate or did fail with error delegate
-                self.activityIndicator.startAnimating()
-                self.activityIndicator.isHidden = false
-                self.activityIndicator.superview!.bringSubview(toFront: self.activityIndicator)
-                self.searchBar.isUserInteractionEnabled = false
-                self.locationManager.requestLocation()
+                
+                locationManager = CLLocationManager()
+                locationManager.delegate = self
+                locationManager.desiredAccuracy = kCLLocationAccuracyBest
+                if authorizationStatus == .notDetermined {
+                    // Ask for permission and continue in authorization changed delegate
+                    locationManager.requestWhenInUseAuthorization()
+                } else {
+                    // Ask for location and continue in did update locations delegate or did fail with error delegate
+                    self.activityIndicator.startAnimating()
+                    self.activityIndicator.isHidden = false
+                    self.activityIndicator.superview!.bringSubview(toFront: self.activityIndicator)
+                    self.searchBar.isUserInteractionEnabled = false
+                    self.locationManager.requestLocation()
+                }
+                result = true
             }
-            result = true
         }
         
         return result
     }
     
     private func getGeocoderList() {
-        let geocoder = CLGeocoder()
-        geocoder.geocodeAddressString(searchBar.text!, completionHandler: { placemarks, error in
-            if error == nil && placemarks != nil {
-                self.geocoderLocations = placemarks
-            } else {
-                self.geocoderLocations = nil
-            }
-            self.locationTableView.reloadData()
-            self.showLocationList()
-        })
+        if !testMode {
+            let geocoder = CLGeocoder()
+            geocoder.geocodeAddressString(searchBar.text!, completionHandler: { placemarks, error in
+                if error == nil && placemarks != nil {
+                    self.geocoderLocations = placemarks
+                } else {
+                    self.geocoderLocations = nil
+                }
+                self.locationTableView.reloadData()
+                self.showLocationList()
+            })
+        }
     }
     
     private func getHistoryList() {
@@ -343,26 +349,28 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
         var topRow = ""
         var bottomRow = ""
         
-        if placemark.subLocality != nil {
-            topRow = placemark.subLocality!
-            if placemark.locality != nil {
-                if placemark.country != nil {
-                    bottomRow = "\(placemark.locality!), \(placemark.country!)"
-                } else {
-                    bottomRow = placemark.locality!
+        if !testMode {
+            if placemark.subLocality != nil {
+                topRow = placemark.subLocality!
+                if placemark.locality != nil {
+                    if placemark.country != nil {
+                        bottomRow = "\(placemark.locality!), \(placemark.country!)"
+                    } else {
+                        bottomRow = placemark.locality!
+                    }
                 }
+            } else if placemark.locality != nil{
+                topRow = placemark.locality!
+            } else if placemark.name != nil {
+                topRow = placemark.name!
             }
-        } else if placemark.locality != nil{
-            topRow = placemark.locality!
-        } else if placemark.name != nil {
-            topRow = placemark.name!
-        }
-        
-        if placemark.country != nil {
-            if topRow == "" {
-                topRow = placemark.country!
-            } else if bottomRow == "" {
-                bottomRow = placemark.country!
+            
+            if placemark.country != nil {
+                if topRow == "" {
+                    topRow = placemark.country!
+                } else if bottomRow == "" {
+                    bottomRow = placemark.country!
+                }
             }
         }
         

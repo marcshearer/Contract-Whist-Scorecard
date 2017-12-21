@@ -11,8 +11,13 @@ import XCTest
 extension Contract_Whist_Scorecard_UI_Tests {
     
     func tap(_ element: XCUIElement, timeout: TimeInterval = 10) {
-        self.waitFor(element, timeout: timeout)
-        element.tap()
+        self.waitFor(element, timeout: timeout, predicate: existsPredicate)
+        if element.isHittable {
+            element.tap()
+        } else {
+            let coordinate: XCUICoordinate = element.coordinate(withNormalizedOffset: CGVector(dx: 0.0, dy: 0.0))
+            coordinate.tap()
+        }
     }
     
     func typeText(_ element: XCUIElement, _ text: String, timeout: TimeInterval = 10) {

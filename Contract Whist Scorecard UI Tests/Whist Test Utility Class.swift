@@ -115,7 +115,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tap(app.tables.cells.containing(.staticText, identifier:"New description for current location").staticTexts[location], timeout: 30)
         
         // Let things stabilise a while
-        sleep(10)
         if confirm {
             // Continue
             self.tap(app.navigationBars.buttons["Continue"], timeout: 60)

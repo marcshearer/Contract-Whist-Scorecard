@@ -32,6 +32,7 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
     private var newLocation = GameLocation()
     private var lastLocation: GameLocation!
     private var historyMode = false
+    private var testMode = false
     
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet weak private var locationMapView: MKMapView!
@@ -55,6 +56,15 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
     }
 
      // MARK: - View Overrides ========================================================================== -
+
+    override internal func viewDidLoad() {
+        super.viewDidLoad()
+        if let testModeValue = ProcessInfo.processInfo.environment["TEST_MODE"] {
+            if testModeValue.lowercased() == "true" {
+                self.testMode = true
+            }
+        }
+    }
     
     override internal func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -238,7 +248,9 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     private func hideFinishButtons() {
-        self.continueButton.isHidden = true
+        if !testMode {
+            self.continueButton.isHidden = true
+        }
     }
     
     private func hideLocationList() {

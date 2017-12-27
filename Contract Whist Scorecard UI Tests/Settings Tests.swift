@@ -615,9 +615,10 @@ extension Contract_Whist_Scorecard_UI_Tests {
         // Return to main menu
         self.returnHome(timeout: 60)
         
-        // Go into Player Stats and check no Twos shown
+        // Go into Player Stats
         self.selectOption("Player Stats")
-        self.assertExists(app.collectionViews.staticTexts["Twos made %"])
+        // No longer visible on iPhone
+        // self.assertExists(app.collectionViews.staticTexts["Twos made %"])
         
         // Select Becky and check Twos not shown
         self.selectPlayer("Becky")

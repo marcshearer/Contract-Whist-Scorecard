@@ -38,6 +38,7 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
     private var highScoresButton = -1
     private var historyButton = -1
     private var deleteCloudButton = -1
+    private var patchButton = -1
     private var removeDuplicatesButton = -1
     private var rebuildAllButton = -1
     private var backupButton = -1
@@ -56,6 +57,7 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
     private var highScoresCell: WelcomeActionCell!
     private var historyCell: WelcomeActionCell!
     private var deleteCloudCell: WelcomeActionCell!
+    private var patchCell: WelcomeActionCell!
     private var removeDuplicatesCell: WelcomeActionCell!
     private var rebuildAllCell: WelcomeActionCell!
     private var backupCell: WelcomeActionCell!
@@ -178,7 +180,7 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
         // Possible clear all data in test mode
         TestMode.resetApp()
         
-        scorecard.initialise(players: 4, rounds: 25, recovery: recovery)
+        scorecard.initialise(players: 4, maxRounds: 25, recovery: recovery)
         sync.initialise(scorecard: scorecard)
         
         if !recovery.checkRecovery() {
@@ -318,6 +320,9 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
         case deleteCloudButton:
             welcomeActionCell.actionButton.setTitle("Delete iCloud Database", for: .normal)
             deleteCloudCell = welcomeActionCell
+        case patchButton:
+            welcomeActionCell.actionButton.setTitle("Patch Local Database", for: .normal)
+            patchCell = welcomeActionCell
         case removeDuplicatesButton:
             welcomeActionCell.actionButton.setTitle("Remove Duplicate Games", for: .normal)
             removeDuplicatesCell = welcomeActionCell
@@ -367,6 +372,9 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
         case deleteCloudButton:
             // Delete iCloud database
             DataAdmin.deleteCloudDatabase(from: self)
+        case patchButton:
+            // Delete iCloud database
+            DataAdmin.patchLocalDatabase(from: self)
         case removeDuplicatesButton:
             // Remove duplicate games locally
             DataAdmin.removeDuplicates(from: self)
@@ -423,6 +431,8 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
             buttons += 1
             deleteCloudButton = buttons
             buttons += 1
+            patchButton = buttons
+            buttons += 1
             removeDuplicatesButton = buttons
             buttons += 1
             rebuildAllButton = buttons
@@ -431,10 +441,12 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
             titleLabel.text = "Admin Mode"
         } else {
             deleteCloudButton = -1
+            patchButton = -1
             removeDuplicatesButton = -1
             rebuildAllButton = -1
             backupButton = -1
             deleteCloudCell = nil
+            patchCell = nil
             removeDuplicatesCell = nil
             rebuildAllCell = nil
             backupCell = nil

@@ -134,7 +134,7 @@ class Recovery {
         // Load in the saved values from UserDefaults
         
         self.recoveryInProgress = true
-        scorecard.setGameInProgress(true)
+        scorecard.setGameInProgress(true, save: false)
         scorecard.maxEnteredRound = 1
         
         for round in 1...scorecard.rounds {

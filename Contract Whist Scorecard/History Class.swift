@@ -33,7 +33,7 @@ class History {
         self.loadGames(getParticipants: getParticipants, unconfirmed: unconfirmed)
     }
     
-    private func loadGames(getParticipants: Bool = false, unconfirmed: Bool = false, gameUUID: String! = nil, includeBF: Bool = false, cutoffDate: Date! = nil) {
+    private func loadGames(getParticipants: Bool = false, unconfirmed: Bool = false, gameUUID: String! = nil, includeBF: Bool = false) {
         // Fetch list of games from data store
         var predicate: NSPredicate!
         var lastGameUUID: String!

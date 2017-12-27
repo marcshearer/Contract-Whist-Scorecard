@@ -117,6 +117,39 @@ class DataAdmin {
         return true
     }
     
+    class func patchLocalDatabase(from viewController: UIViewController) {
+        var participantsUpdated = 0
+        let history = History(getParticipants: true, includeBF: false)
+        _ = CoreData.update(updateLogic: {
+            for historyGame in history.games {
+                let datePlayed = historyGame.datePlayed
+                if datePlayed >= Utility.dateFromString("01/12/2017")! && datePlayed <= Utility.dateFromString("27/12/2017")! {
+                    var nonBonusScore:Int16 = 0
+                    for historyParticipant in historyGame.participant {
+                        nonBonusScore += historyParticipant.totalScore - (historyParticipant.handsMade * 10)
+                    }
+                    let totalTwos = Int16((nonBonusScore - 91) / 10)
+                    var twosAllocated:Int16 = 0
+                    for participantNumber in 1...historyGame.participant.count {
+                        let historyParticipant = historyGame.participant[participantNumber - 1]
+                        let myNonBonusScore:Int16 = historyParticipant.totalScore - (historyParticipant.handsMade * 10)
+                        var twosMade:Int16
+                        if participantNumber == historyGame.participant.count {
+                            twosMade = totalTwos - twosAllocated
+                        } else {
+                            twosMade = Utility.roundQuotient(myNonBonusScore * totalTwos, nonBonusScore)
+                        }
+                        twosAllocated += twosMade
+                        historyParticipant.participantMO.handsPlayed = 13
+                        historyParticipant.participantMO.twosMade = twosMade
+                        participantsUpdated += 1
+                    }
+                }
+            }
+        })
+        viewController.alertMessage("Hands played and twos made patched locally - \(participantsUpdated) participants updated", title: "Complete")
+    }
+    
     class func removeDuplicates(from viewController: UIViewController) {
         var gamesDeleted = 0
         var participantsDeleted = 0

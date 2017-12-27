@@ -161,10 +161,16 @@ class Utility {
         return CGFloat(denominator == 0 ? 0 : (CGFloat(numerator) / CGFloat(denominator)))
     }
     
-    class func roundQuotient(_ numerator: Int64, _ denominator: Int64) -> Int {
+    class func roundQuotient(_ numerator: Int64, _ denominator: Int64) -> Int64 {
         var quotient = self.quotient(CGFloat(numerator), CGFloat(denominator))
         quotient.round()
-        return Int(quotient)
+        return Int64(quotient)
+    }
+    
+    class func roundQuotient(_ numerator: Int16, _ denominator: Int16) -> Int16 {
+        var quotient = self.quotient(CGFloat(numerator), CGFloat(denominator))
+        quotient.round()
+        return Int16(quotient)
     }
     
     class func roundQuotient(_ numerator: Int, _ denominator: Int) -> Int {

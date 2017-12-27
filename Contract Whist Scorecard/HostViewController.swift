@@ -137,6 +137,8 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         }
         if online && self.scorecard.recoveryMode && scorecard.recoveryOnlineMode == .invite {
             self.setConnectionMode(.online, chooseInvitees: false)
+        } else if nearby && scorecard.recoveryMode && scorecard.recoveryOnlineMode == .broadcast {
+            self.setConnectionMode(.nearby)
         } else {
             self.setConnectionMode(defaultConnectionMode)
         }

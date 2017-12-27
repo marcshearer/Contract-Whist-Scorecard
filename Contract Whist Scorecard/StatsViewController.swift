@@ -239,7 +239,7 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        return CGSize(width: width, height: width+30)
+        return CGSize(width: width, height: width + (ScorecardUI.phoneSize() ? 30 : 60))
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -265,6 +265,7 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
         */
         cell.playerPlayed.text = "\(self.playerList[playerNumber-1].gamesPlayed)"
         cell.playerWon.text = "\(Utility.roundPercent(self.playerList[playerNumber-1].gamesWon, self.playerList[playerNumber-1].gamesPlayed)) %"
+        cell.playerAverageScore.text = "\(Utility.roundQuotient(self.playerList[playerNumber-1].totalScore, self.playerList[playerNumber-1].gamesPlayed))"
         cell.playerMade.text = "\(Utility.roundPercent(self.playerList[playerNumber-1].handsMade, self.playerList[playerNumber-1].handsPlayed)) %"
         cell.playerTwos.text = "\(Utility.roundPercent(self.playerList[playerNumber-1].twosMade, self.playerList[playerNumber-1].handsPlayed)) %"
         if self.playerList[playerNumber-1].datePlayed != nil {
@@ -276,14 +277,14 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
         }
         cell.playerLastPlayed.text = "\(dateLastPlayed)"
         
-        setFont(size: self.labelFontSize, label: cell.playerPlayedLabel, cell.playerPlayed, cell.playerWonLabel, cell.playerWon, cell.playerMadeLabel, cell.playerMade, cell.playerTwosLabel, cell.playerTwos, cell.playerLastPlayedLabel, cell.playerLastPlayed)
-        setContraints(constant: self.labelWidth, constraint: cell.playerPlayedLabelWidth, cell.playerWonLabelWidth, cell.playerMadeLabelWidth, cell.playerTwosLabelWidth, cell.playerLastPlayedLabelWidth)
-        setContraints(constant: self.labelHeight, constraint: cell.playerPlayedLabelHeight, cell.playerWonLabelHeight, cell.playerMadeLabelHeight, cell.playerTwosLabelHeight, cell.playerLastPlayedLabelHeight)
+        setFont(size: self.labelFontSize, label: cell.playerPlayedLabel, cell.playerPlayed, cell.playerWonLabel, cell.playerWon, cell.playerAverageScoreLabel, cell.playerAverageScore, cell.playerMadeLabel, cell.playerMade, cell.playerTwosLabel, cell.playerTwos, cell.playerLastPlayedLabel, cell.playerLastPlayed)
+        setContraints(constant: self.labelWidth, constraint: cell.playerPlayedLabelWidth, cell.playerWonLabelWidth, cell.playerAverageScoreLabelWidth, cell.playerMadeLabelWidth, cell.playerTwosLabelWidth, cell.playerLastPlayedLabelWidth)
+        setContraints(constant: self.labelHeight, constraint: cell.playerPlayedLabelHeight, cell.playerWonLabelHeight,cell.playerAverageScoreLabelHeight, cell.playerMadeLabelHeight, cell.playerTwosLabelHeight, cell.playerLastPlayedLabelHeight)
         if !self.scorecard.settingBonus2 {
             // Hide twos if not switched on
             cell.playerTwosLabelHeight.constant = 0
         }
-        setHidden(available: cell.playerValuesView.frame.height - 6, label: cell.playerPlayedLabel, cell.playerPlayed, cell.playerWonLabel, cell.playerWon, cell.playerMadeLabel, cell.playerMade, cell.playerTwosLabel, cell.playerTwos, cell.playerLastPlayedLabel, cell.playerLastPlayed)
+        setHidden(available: cell.playerValuesView.frame.height - 6, label: cell.playerPlayedLabel, cell.playerPlayed, cell.playerWonLabel, cell.playerWon, cell.playerAverageScoreLabel,cell.playerAverageScore, cell.playerMadeLabel, cell.playerMade, cell.playerTwosLabel, cell.playerTwos, cell.playerLastPlayedLabel, cell.playerLastPlayed)
         ScorecardUI.veryRoundCorners(cell.playerThumbnail)
         ScorecardUI.roundCorners(cell.playerDetailsView)
         
@@ -508,21 +509,25 @@ class StatsCell: UICollectionViewCell {
     @IBOutlet weak var playerName: UILabel!
     @IBOutlet weak var playerPlayed: UILabel!
     @IBOutlet weak var playerWon: UILabel!
+    @IBOutlet weak var playerAverageScore: UILabel!
     @IBOutlet weak var playerMade: UILabel!
     @IBOutlet weak var playerTwos: UILabel!
     @IBOutlet weak var playerLastPlayed: UILabel!
     @IBOutlet weak var playerPlayedLabel: UILabel!
     @IBOutlet weak var playerWonLabel: UILabel!
+    @IBOutlet weak var playerAverageScoreLabel: UILabel!
     @IBOutlet weak var playerMadeLabel: UILabel!
     @IBOutlet weak var playerTwosLabel: UILabel!
     @IBOutlet weak var playerLastPlayedLabel: UILabel!
     @IBOutlet weak var playerPlayedLabelWidth: NSLayoutConstraint!
     @IBOutlet weak var playerWonLabelWidth: NSLayoutConstraint!
+    @IBOutlet weak var playerAverageScoreLabelWidth: NSLayoutConstraint!
     @IBOutlet weak var playerMadeLabelWidth: NSLayoutConstraint!
     @IBOutlet weak var playerTwosLabelWidth: NSLayoutConstraint!
     @IBOutlet weak var playerLastPlayedLabelWidth: NSLayoutConstraint!
     @IBOutlet weak var playerPlayedLabelHeight: NSLayoutConstraint!
     @IBOutlet weak var playerWonLabelHeight: NSLayoutConstraint!
+    @IBOutlet weak var playerAverageScoreLabelHeight: NSLayoutConstraint!
     @IBOutlet weak var playerMadeLabelHeight: NSLayoutConstraint!
     @IBOutlet weak var playerTwosLabelHeight: NSLayoutConstraint!
     @IBOutlet weak var playerLastPlayedLabelHeight: NSLayoutConstraint!

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -139,8 +139,28 @@
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bids made %" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="yje-JT-5I1" userLabel="Bids made label">
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Average score" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="x9u-VU-u0J" userLabel="Average score label">
                                                                     <rect key="frame" x="10" y="40" width="120" height="17"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="height" constant="17" id="N6n-g4-A5e"/>
+                                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="XfP-wA-Dsi"/>
+                                                                    </constraints>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                    <color key="textColor" red="0.0" green="0.0" blue="0.83529411760000005" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="Zl4-0o-dKa" userLabel="Average score">
+                                                                    <rect key="frame" x="140" y="40" width="40" height="17"/>
+                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="40" id="QUJ-yG-nXf"/>
+                                                                    </constraints>
+                                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                    <nil key="textColor"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bids made %" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="yje-JT-5I1" userLabel="Bids made label">
+                                                                    <rect key="frame" x="10" y="57" width="120" height="17"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="C7c-Hq-CWQ"/>
                                                                         <constraint firstAttribute="height" constant="17" id="I65-9J-mJl"/>
@@ -150,7 +170,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 %" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="vgw-wZ-Xvl" userLabel="Bids made">
-                                                                    <rect key="frame" x="140" y="40" width="40" height="17"/>
+                                                                    <rect key="frame" x="140" y="57" width="40" height="17"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="40" id="Io0-Wx-MdN"/>
@@ -160,7 +180,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Twos made %" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="uzV-47-otO" userLabel="Twos made label">
-                                                                    <rect key="frame" x="10" y="57" width="120" height="17"/>
+                                                                    <rect key="frame" x="10" y="74" width="120" height="17"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="GFd-Zk-NvU"/>
                                                                         <constraint firstAttribute="height" constant="17" id="z4I-n2-g88"/>
@@ -170,7 +190,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 %" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="DmO-RU-tNH" userLabel="Twos made">
-                                                                    <rect key="frame" x="140" y="57" width="40" height="17"/>
+                                                                    <rect key="frame" x="140" y="74" width="40" height="17"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="40" id="IsQ-Sg-vqA"/>
@@ -180,7 +200,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last played" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="xmI-eS-IZU" userLabel="Last played label">
-                                                                    <rect key="frame" x="10" y="74" width="120" height="17"/>
+                                                                    <rect key="frame" x="10" y="91" width="120" height="17"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="17" id="djU-7V-gxE"/>
                                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="kna-fB-pgM"/>
@@ -190,7 +210,7 @@
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="--/--/--" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="TLq-W4-lVs" userLabel="Last played">
-                                                                    <rect key="frame" x="140" y="74" width="48" height="17"/>
+                                                                    <rect key="frame" x="140" y="91" width="48" height="17"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="40" id="yfv-Gj-kF9"/>
@@ -206,14 +226,16 @@
                                                                 <constraint firstItem="mhO-n6-9gs" firstAttribute="leading" secondItem="oX8-Wh-dps" secondAttribute="leading" constant="10" id="1cj-1X-5li"/>
                                                                 <constraint firstItem="kGe-uu-8RM" firstAttribute="top" secondItem="mhO-n6-9gs" secondAttribute="bottom" id="1oI-NZ-d7H"/>
                                                                 <constraint firstItem="uzV-47-otO" firstAttribute="leading" secondItem="oX8-Wh-dps" secondAttribute="leading" constant="10" id="5q1-d3-x6c"/>
-                                                                <constraint firstItem="yje-JT-5I1" firstAttribute="top" secondItem="kGe-uu-8RM" secondAttribute="bottom" id="69Y-VH-S6c"/>
                                                                 <constraint firstItem="Jsd-u4-RI3" firstAttribute="leading" secondItem="kGe-uu-8RM" secondAttribute="trailing" constant="10" id="6OC-9M-75h"/>
                                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="DmO-RU-tNH" secondAttribute="trailing" id="7gU-c6-Ddr"/>
-                                                                <constraint firstItem="vgw-wZ-Xvl" firstAttribute="top" secondItem="Jsd-u4-RI3" secondAttribute="bottom" id="7p9-nj-nZO"/>
                                                                 <constraint firstItem="yje-JT-5I1" firstAttribute="leading" secondItem="oX8-Wh-dps" secondAttribute="leading" constant="10" id="9AA-AZ-GZ4"/>
                                                                 <constraint firstItem="mhO-n6-9gs" firstAttribute="top" secondItem="oX8-Wh-dps" secondAttribute="top" constant="6" id="9aj-45-wr0"/>
+                                                                <constraint firstItem="Zl4-0o-dKa" firstAttribute="height" secondItem="x9u-VU-u0J" secondAttribute="height" id="BaZ-gt-GZz"/>
                                                                 <constraint firstItem="kGe-uu-8RM" firstAttribute="top" secondItem="mhO-n6-9gs" secondAttribute="bottom" id="C0b-jO-HGw"/>
                                                                 <constraint firstItem="TLq-W4-lVs" firstAttribute="leading" secondItem="xmI-eS-IZU" secondAttribute="trailing" constant="10" id="CS5-Yg-asR"/>
+                                                                <constraint firstItem="yje-JT-5I1" firstAttribute="top" secondItem="x9u-VU-u0J" secondAttribute="bottom" id="Dfk-Cc-2Sv"/>
+                                                                <constraint firstItem="x9u-VU-u0J" firstAttribute="top" secondItem="kGe-uu-8RM" secondAttribute="bottom" id="FSP-3O-aq4"/>
+                                                                <constraint firstItem="x9u-VU-u0J" firstAttribute="leading" secondItem="oX8-Wh-dps" secondAttribute="leading" constant="10" id="Kbx-3W-hLL"/>
                                                                 <constraint firstItem="uzV-47-otO" firstAttribute="top" secondItem="yje-JT-5I1" secondAttribute="bottom" id="Mbs-bh-mJB"/>
                                                                 <constraint firstItem="kGe-uu-8RM" firstAttribute="leading" secondItem="oX8-Wh-dps" secondAttribute="leading" constant="10" id="Pp1-CP-uGD"/>
                                                                 <constraint firstItem="DmO-RU-tNH" firstAttribute="top" secondItem="vgw-wZ-Xvl" secondAttribute="bottom" id="RE7-SL-9Di"/>
@@ -224,9 +246,12 @@
                                                                 <constraint firstItem="TLq-W4-lVs" firstAttribute="top" secondItem="DmO-RU-tNH" secondAttribute="bottom" id="ZVx-cQ-ikw"/>
                                                                 <constraint firstItem="gW4-JU-Ory" firstAttribute="height" secondItem="mhO-n6-9gs" secondAttribute="height" id="fh7-KP-scc"/>
                                                                 <constraint firstItem="vgw-wZ-Xvl" firstAttribute="leading" secondItem="yje-JT-5I1" secondAttribute="trailing" constant="10" id="h5a-IE-wvK"/>
+                                                                <constraint firstItem="Zl4-0o-dKa" firstAttribute="leading" secondItem="x9u-VU-u0J" secondAttribute="trailing" constant="10" id="i7j-yh-9rp"/>
                                                                 <constraint firstItem="DmO-RU-tNH" firstAttribute="height" secondItem="uzV-47-otO" secondAttribute="height" id="lbp-yU-qcz"/>
                                                                 <constraint firstItem="gW4-JU-Ory" firstAttribute="leading" secondItem="mhO-n6-9gs" secondAttribute="trailing" constant="10" id="nYr-Rv-mgK"/>
                                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Jsd-u4-RI3" secondAttribute="trailing" id="qtD-G5-mHw"/>
+                                                                <constraint firstItem="vgw-wZ-Xvl" firstAttribute="top" secondItem="Zl4-0o-dKa" secondAttribute="bottom" id="rw2-N3-oOp"/>
+                                                                <constraint firstItem="Zl4-0o-dKa" firstAttribute="top" secondItem="Jsd-u4-RI3" secondAttribute="bottom" id="sCk-29-xUF"/>
                                                                 <constraint firstItem="Jsd-u4-RI3" firstAttribute="height" secondItem="kGe-uu-8RM" secondAttribute="height" id="sPq-Ml-Cqj"/>
                                                                 <constraint firstItem="DmO-RU-tNH" firstAttribute="leading" secondItem="uzV-47-otO" secondAttribute="trailing" constant="10" id="sUv-xl-g1c"/>
                                                                 <constraint firstItem="xmI-eS-IZU" firstAttribute="leading" secondItem="oX8-Wh-dps" secondAttribute="leading" constant="10" id="tPf-ar-ub3"/>
@@ -291,6 +316,10 @@
                                         </constraints>
                                         <size key="customSize" width="256" height="286"/>
                                         <connections>
+                                            <outlet property="playerAverageScore" destination="Zl4-0o-dKa" id="Dli-YN-rkP"/>
+                                            <outlet property="playerAverageScoreLabel" destination="x9u-VU-u0J" id="ULI-3v-uJ7"/>
+                                            <outlet property="playerAverageScoreLabelHeight" destination="N6n-g4-A5e" id="KS0-6G-aEG"/>
+                                            <outlet property="playerAverageScoreLabelWidth" destination="XfP-wA-Dsi" id="6Md-xc-dra"/>
                                             <outlet property="playerDetailsView" destination="Tih-jI-qw2" id="aeN-n8-NMx"/>
                                             <outlet property="playerDisc" destination="MJX-in-yWy" id="Yco-0a-I6M"/>
                                             <outlet property="playerLastPlayed" destination="TLq-W4-lVs" id="pty-Oc-rxb"/>

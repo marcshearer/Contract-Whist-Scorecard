@@ -37,6 +37,8 @@ class Scorecard {
     
     public var numberPlayers = 0
     public var currentPlayers = 0
+    public var maxRounds = 25
+    public var rounds = 0
     public var maxEnteredRound = 1
     public var selectedRound = 1
     public var dealerIs = 1
@@ -84,7 +86,6 @@ class Scorecard {
     public var settingDealerHighlightMode = DealerHighlightMode.highlight
     public var settingDealerHighlightAbove = true
     public var settingBonus2 = true
-    public var rounds = 25
     public var settingCards = [13, 1]
     public var settingBounceNumberCards: Bool = false
     public var settingTrumpSequence = ["♣︎", "♦︎", "♥︎", "♠︎", "NT"]
@@ -135,7 +136,7 @@ class Scorecard {
     // Core data context - set up in initialise
     static var context: NSManagedObjectContext!
     
-    public func initialise(players: Int, rounds: Int, recovery: Recovery) {
+    public func initialise(players: Int, maxRounds: Int, recovery: Recovery) {
         
         recovery.initialise(scorecard: self)
         self.recovery = recovery
@@ -143,12 +144,12 @@ class Scorecard {
         self.player = []
         if players > 0 {
             for playerNumber in 1...players {
-                self.player!.append(Player(rounds: rounds, scorecard: self, playerNumber: playerNumber, recovery: recovery))
+                self.player!.append(Player(scorecard: self, playerNumber: playerNumber, recovery: recovery))
             }
         }
 
-        if rounds > 0 {
-            for _ in 1...rounds {
+        if maxRounds > 0 {
+            for _ in 1...maxRounds {
                 self.roundError.append(false)
             }
         }
@@ -164,7 +165,7 @@ class Scorecard {
         // Load defaults
         loadDefaults()
         
-        self.rounds = (self.rounds == 0 ? rounds : self.rounds)
+        self.maxRounds = (self.maxRounds == 0 ? maxRounds : self.maxRounds)
         
         getPlayerList()
         
@@ -559,11 +560,13 @@ class Scorecard {
         }
     }
     
-    public func setGameInProgress(_ gameInProgress: Bool, suppressWatch: Bool = false) {
+    public func setGameInProgress(_ gameInProgress: Bool, suppressWatch: Bool = false, save: Bool = true) {
         self.gameInProgress = gameInProgress
-        recovery.saveGameInProgress()
-        if !suppressWatch || gameInProgress {
-            self.watchManager.updateScores()
+        if save {
+            recovery.saveGameInProgress()
+            if !suppressWatch || gameInProgress {
+                self.watchManager.updateScores()
+            }
         }
     }
     

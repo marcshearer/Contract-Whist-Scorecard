@@ -17,7 +17,7 @@ class Player {
     private var made = [Int?]()
     private var twos = [Int?]()
     public var playerNumber = 0
-    public var rounds = 0
+    public let maxRounds = 25
     private var scorecard: Scorecard
     private var recovery: Recovery? = nil
     public var bidCell = [ScorepadCollectionViewCell!]()
@@ -34,14 +34,14 @@ class Player {
     public var previousMaxScore: Int64 = 0
     public var previousMaxScoreDate = Date()
     
-    public init(rounds: Int, scorecard: Scorecard, playerNumber: Int, recovery: Recovery) {
+    public init(scorecard: Scorecard, playerNumber: Int, recovery: Recovery) {
         
         self.scorecard = scorecard
         self.recovery = recovery
                 
-        if rounds > 0 {
+        if maxRounds > 0 {
             
-            for _ in 1...rounds {
+            for _ in 1...maxRounds {
                 
                 self.bid.append(nil)
                 self.made.append(nil)
@@ -50,7 +50,6 @@ class Player {
                 self.scoreCell.append(nil)
                 
             }
-            self.rounds = rounds
         }
         self.playerNumber = playerNumber
         self.totalLabel = nil
@@ -60,7 +59,7 @@ class Player {
     
     public func reset() {
         // Reset game values
-        for loop in 1...rounds {
+        for loop in 1...maxRounds {
             self.bid[loop-1] = nil
             self.made[loop-1] = nil
             self.twos[loop-1] = nil
@@ -178,7 +177,7 @@ class Player {
         var total = 0
         var roundScore: Int?
         
-        for round in 1...self.rounds {
+        for round in 1...self.scorecard.rounds {
             roundScore = score(round, bonus2: bonus2)
             if roundScore != nil {
                 total += roundScore!
@@ -219,19 +218,19 @@ class Player {
             // Calculate rounds made and twos made
             roundsMade = 0
             twosMade = 0
-            for round in 1...self.rounds {
+            for round in 1...self.scorecard.rounds {
                 if self.bid(round) != nil && self.made(round) != nil && self.bid(round) == self.made(round) {
                     roundsMade += 1
                 }
-                if self.twos(rounds) != nil {
+                if self.twos(round) != nil {
                     twosMade += Int64(self.twos(round)!)
                 }
             }
             if !excludeStats {
                 
                 // Updates hands / games played
-                self.playerMO!.handsPlayed += (Int64(self.rounds) - self.savedHandsPlayed)
-                self.savedHandsPlayed = Int64(self.rounds)
+                self.playerMO!.handsPlayed += (Int64(self.scorecard.rounds) - self.savedHandsPlayed)
+                self.savedHandsPlayed = Int64(self.scorecard.rounds)
                 self.playerMO!.gamesPlayed += (1 - savedGamesPlayed)
                 self.savedGamesPlayed = 1
             
@@ -279,7 +278,7 @@ class Player {
                     self.participantMO?.email = self.playerMO?.email
                     self.participantMO?.playerNumber = Int16(self.scorecardPlayerNumber())
                 }
-                self.participantMO!.handsPlayed = Int16(self.rounds)
+                self.participantMO!.handsPlayed = Int16(self.scorecard.rounds)
                 self.participantMO!.gamesPlayed = 1
                 self.participantMO!.place = place
                 self.participantMO!.gamesWon = (place == 1 ? 1 : 0)

@@ -131,7 +131,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
         
         // Get this player
         if self.commsPurpose == .playing {
-            if self.recoveryMode {
+            if self.recoveryMode && self.scorecard.recoveryOnlineMode == .invite {
                 // Recovering - use same player
                 self.thisPlayer = self.scorecard.recoveryConnectionEmail
                 self.matchDeviceName = self.scorecard.recoveryConnectionDevice
@@ -168,14 +168,16 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         
         // Create nearby comms service, take delegates and start listening
-        self.multipeerClient = MultipeerService(purpose: self.commsPurpose, type: .client, serviceID: self.scorecard.serviceID(self.commsPurpose))
-        self.multipeerClient?.stateDelegate = self
-        self.multipeerClient?.dataDelegate = self
-        self.multipeerClient?.browserDelegate = self
-        self.multipeerClient?.start()
+        if !self.recoveryMode || self.scorecard.recoveryOnlineMode == .broadcast {
+            self.multipeerClient = MultipeerService(purpose: self.commsPurpose, type: .client, serviceID: self.scorecard.serviceID(self.commsPurpose))
+            self.multipeerClient?.stateDelegate = self
+            self.multipeerClient?.dataDelegate = self
+            self.multipeerClient?.browserDelegate = self
+            self.multipeerClient?.start()
+        }
         
         // Create online comms service, take delegates and start listening
-        if self.commsPurpose == .playing && self.scorecard.onlineEnabled {
+        if self.commsPurpose == .playing && self.scorecard.onlineEnabled && (!self.recoveryMode || self.scorecard.recoveryOnlineMode == .invite) {
             self.rabbitMQClient = RabbitMQService(purpose: self.commsPurpose, type: .client, serviceID: nil)
             self.rabbitMQClient?.stateDelegate = self
             self.rabbitMQClient?.dataDelegate = self

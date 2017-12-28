@@ -11,12 +11,15 @@ Show more info on iPad in stats
 
 Bugs fix now
 ------------
+Can't select players reliably (is this just on simulator?)
+Navigation bar disappears when return to home from game summary
 
 Long-term bugs
 --------------
 
 Short-term
 ----------
+Leave selected invitees selected (and visible) when filtering
 Get location/notification/online game notification permission in settings (and disable options if permissions not granted)
 Auto-sync when download players in Get Started
 Host view controller doesn't scroll when rotate

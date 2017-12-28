@@ -208,7 +208,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             })
         }
         
-        /* Add in dummy players for testing
+        /* Add in dummy players for testing - TODO make this more elegant - move to test extension
         var playerMO = self.scorecard.findPlayerByEmail("jackshearer@tesco.net")
         _ = self.addPlayer(name: playerMO!.name!, email: playerMO!.email!, playerMO: playerMO, peer: CommsPeer(deviceName: "Jack's iPhone", playerEmail: playerMO!.email!, playerName: playerMO!.name!))
         playerMO = self.scorecard.findPlayerByEmail("emmasarahshearer@gmail.com")
@@ -911,6 +911,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             playerNumber += 1
             selectedPlayers.append(playerMO!)
         }
+        self.scorecard.updateSelectedPlayers(selectedPlayers)
     }
     
     private func resetResumedPlayers() {

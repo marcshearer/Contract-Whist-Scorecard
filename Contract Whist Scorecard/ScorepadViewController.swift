@@ -657,8 +657,18 @@ class ScorepadViewController: UIViewController,
                 // Need to set hand state
                 self.scorecard.handState = HandState(enteredPlayerNumber: 1, round: self.scorecard.maxEnteredRound, dealerIs: self.scorecard.dealerIs, players: self.scorecard.currentPlayers, rounds: self.rounds, cards: self.cards, bounce: self.bounce, bonus2: self.bonus2, suits: self.suits)
                 if recoveryMode && self.scorecard.deal != nil {
-                    // Hand has been recovered
-                    self.scorecard.handState.hand = self.scorecard.deal.hands[0]
+                    // Hand has been recovered - Check if finished
+                    var finished = true
+                    for hand in self.scorecard.deal.hands {
+                        if hand.cards.count != 0 {
+                            finished = false
+                        }
+                    }
+                    if finished {
+                        self.scorecard.handState.hand = nil
+                    } else {
+                        self.scorecard.handState.hand = self.scorecard.deal.hands[0]
+                    }
                 }
                 self.scorecard.sendPlayers(rounds: self.rounds, cards: self.cards, bounce: self.bounce, bonus2: self.bonus2, suits: self.suits)
             } else if scorecard.handState.finished {

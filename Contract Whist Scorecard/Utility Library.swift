@@ -281,8 +281,8 @@ class Utility {
         var version1Exhausted = false
         var version2Exhausted = false
         var element = 0
-        var value1 = ""
-        var value2 = ""
+        var value1 = 0
+        var value2 = 0
         
         version1Elements = version1.components(separatedBy: ".")
         version1Elements.append("\(build1)")
@@ -294,17 +294,17 @@ class Utility {
             
             // Set up next value in first version string
             if element < version1Elements.count {
-                value1 = version1Elements[element]
+                value1 = Int(version1Elements[element]) ?? 0
             } else {
-                value1 = "0"
+                value1 = 0
                 version1Exhausted = true
             }
             
             // Set up next value in second version string
             if element < version2Elements.count {
-                value2 = version2Elements[element]
+                value2 = Int(version2Elements[element]) ?? 0
             } else {
-                value2 = "0"
+                value2 = 0
                 version2Exhausted = true
             }
             
@@ -315,7 +315,7 @@ class Utility {
                 break
             }
             
-            if value1 < value2 {
+           if value1 < value2 {
                 // This value less than - exit
                 result = .lessThan
                 break

@@ -47,11 +47,11 @@ class Reconcile: SyncDelegate {
         sync.initialise(scorecard: scorecard)
     }
     
-    public func reconcilePlayers(playerMOList: [PlayerMO]) {
+    public func reconcilePlayers(playerMOList: [PlayerMO], syncFirst: Bool = true) {
         self.playerMOList = playerMOList
         
         // First synchronise
-        if scorecard.settingSyncEnabled { 
+        if scorecard.settingSyncEnabled && syncFirst {
             if self.sync.connect() {
                 self.sync.delegate = self
                 self.reconcileMessage("Sync in progress")
@@ -171,13 +171,14 @@ class Reconcile: SyncDelegate {
         
     private func reconcileCompletion(_ errors: Bool) {
         // Call the delegate completion handler if there is one
-        let delegate = self.delegate!
+        let delegate = self.delegate
         
         // Disconnect
         self.delegate = nil
         
         // Call completion delegate
-        delegate.reconcileCompletion(errors)
-        
+        if delegate != nil {
+            delegate!.reconcileCompletion(errors)
+        }
     }
 }

@@ -70,6 +70,7 @@
 		B24AABE01EC07274000D34B0 /* Backup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABDF1EC07274000D34B0 /* Backup.swift */; };
 		B24AABE21EC0BC08000D34B0 /* Upgrade.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABE11EC0BC08000D34B0 /* Upgrade.swift */; };
 		B24AABE41EC4DC5F000D34B0 /* Core Data Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABE31EC4DC5F000D34B0 /* Core Data Class.swift */; };
+		B250610020CD7F480030EE8F /* Recovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25060FF20CD7F470030EE8F /* Recovery.swift */; };
 		B26104271EFA585B005AA63C /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26104261EFA585B005AA63C /* SearchViewController.swift */; };
 		B2666A1F1FADAC0700A34CB0 /* Test Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2666A1E1FADAC0700A34CB0 /* Test Extensions.swift */; };
 		B27B1FEA1F9B55ED00ED6FFF /* Scorecard Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27B1FE91F9B55ED00ED6FFF /* Scorecard Tests.swift */; };
@@ -114,7 +115,6 @@
 		CC4CC1011DEADC32007FB24F /* Contract_Whist_Scorecard.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CC4CC0FF1DEADC32007FB24F /* Contract_Whist_Scorecard.xcdatamodeld */; };
 		CC4CC1061DEADC32007FB24F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC4CC1041DEADC32007FB24F /* LaunchScreen.storyboard */; };
 		CC4CC1161DEAF0F9007FB24F /* GameSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4CC1151DEAF0F9007FB24F /* GameSetupViewController.swift */; };
-		CC5E64C51E0AA69300A39341 /* Recovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC5E64C41E0AA69300A39341 /* Recovery.swift */; };
 		CC7A49081DF28BEB00703D38 /* Scorecard UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC7A49071DF28BEB00703D38 /* Scorecard UI.swift */; };
 		CC8655861E036432000AF391 /* Player Detail Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8655851E036432000AF391 /* Player Detail Class.swift */; };
 		CC9EF3F21DFEE54A006E8930 /* ComparisonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9EF3F11DFEE54A006E8930 /* ComparisonViewController.swift */; };
@@ -238,6 +238,7 @@
 		B24AABDF1EC07274000D34B0 /* Backup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Backup.swift; sourceTree = "<group>"; };
 		B24AABE11EC0BC08000D34B0 /* Upgrade.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Upgrade.swift; sourceTree = "<group>"; };
 		B24AABE31EC4DC5F000D34B0 /* Core Data Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Core Data Class.swift"; sourceTree = "<group>"; };
+		B25060FF20CD7F470030EE8F /* Recovery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Recovery.swift; sourceTree = "<group>"; };
 		B26104261EFA585B005AA63C /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		B2666A1E1FADAC0700A34CB0 /* Test Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Test Extensions.swift"; sourceTree = "<group>"; };
 		B27B1FE71F9B55ED00ED6FFF /* Contract Whist Scorecard UI Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Contract Whist Scorecard UI Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -287,7 +288,6 @@
 		CC4CC1051DEADC32007FB24F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CC4CC1071DEADC32007FB24F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CC4CC1151DEAF0F9007FB24F /* GameSetupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GameSetupViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		CC5E64C41E0AA69300A39341 /* Recovery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Recovery.swift; sourceTree = "<group>"; };
 		CC7A49071DF28BEB00703D38 /* Scorecard UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Scorecard UI.swift"; sourceTree = "<group>"; };
 		CC8655851E036432000AF391 /* Player Detail Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Player Detail Class.swift"; sourceTree = "<group>"; };
 		CC9EF3F11DFEE54A006E8930 /* ComparisonViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ComparisonViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -598,8 +598,8 @@
 			isa = PBXGroup;
 			children = (
 				B2B7550A1E5DEA6A00B1313B /* Reconcile.swift */,
+				B25060FF20CD7F470030EE8F /* Recovery.swift */,
 				B2B7550C1E619A3F00B1313B /* DataAdmin.swift */,
-				CC5E64C41E0AA69300A39341 /* Recovery.swift */,
 				B24AABDF1EC07274000D34B0 /* Backup.swift */,
 				B24AABE11EC0BC08000D34B0 /* Upgrade.swift */,
 			);
@@ -1008,7 +1008,6 @@
 				49AFA50D1E0C42A100DCB1F4 /* RoundSummaryViewController.swift in Sources */,
 				B206A13A1E50FBAE00E26E96 /* HistoryViewController.swift in Sources */,
 				B2F41B231FB6BBA70043F974 /* Other Extensions.swift in Sources */,
-				CC5E64C51E0AA69300A39341 /* Recovery.swift in Sources */,
 				B24AABE41EC4DC5F000D34B0 /* Core Data Class.swift in Sources */,
 				B202A06B1FD122F30070D5DC /* OverrideViewController.swift in Sources */,
 				B20A66FC1E23921E00E75190 /* Buttons.swift in Sources */,
@@ -1029,6 +1028,7 @@
 				CC4CC0FB1DEADC32007FB24F /* ScorepadViewController.swift in Sources */,
 				49075FFC1E0E578E008E06FA /* StatsViewController.swift in Sources */,
 				CC395F4B1E063D9600165D1C /* CutViewController.swift in Sources */,
+				B250610020CD7F480030EE8F /* Recovery.swift in Sources */,
 				B2C051041EDF194C009DE37F /* Multipeeer Class.swift in Sources */,
 				B2666A1F1FADAC0700A34CB0 /* Test Extensions.swift in Sources */,
 				B20DA0441E142D1E0040221D /* SelectionViewController.swift in Sources */,

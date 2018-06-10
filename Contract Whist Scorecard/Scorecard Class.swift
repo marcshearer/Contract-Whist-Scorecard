@@ -291,13 +291,11 @@ class Scorecard {
     }
     
     public func upgradeToVersion(from: UIViewController) -> Bool {
-        /*
-        if Utility.compareVersions(version1: self.settingLastVersion, version2: "1.1") == .lessThan {
-            if !Upgrade.upgradeTo11(from: from, scorecard: self) {
+        if Utility.compareVersions(version1: self.settingLastVersion, version2: "4.1") == .lessThan  {
+            if !Upgrade.upgradeTo41(from: from, scorecard: self) {
                 return false
             }
         }
-        */
         
         // Store in defaults
         UserDefaults.standard.set(self.settingVersion, forKey: "version")
@@ -1079,7 +1077,8 @@ class Scorecard {
             recordID, error in
             if error == nil {
                 // Check for Marc, Jack, Test1 and Test2 devices
-                if recordID?.recordName == "_f0efee7d46bfdafad4e403bd23ab48e6" ||
+                if recordID?.recordName == "_3221381655df644e1b5a67afaa21d97d" ||
+                    recordID?.recordName == "_f0efee7d46bfdafad4e403bd23ab48e6" ||
                     recordID?.recordName == "_6a4c8d69b48141215f9570049dc70f69" ||
                     recordID?.recordName == "_c4c157aa21caf6572e9a9b6fa1349f46" ||
                     recordID?.recordName == "_a3eb2a77f1e670699112be1835571ae0" {

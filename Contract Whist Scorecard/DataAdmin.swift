@@ -117,13 +117,12 @@ class DataAdmin {
         return true
     }
     
-    class func patchLocalDatabase(from viewController: UIViewController) {
+    class func patchLocalDatabase(from viewController: UIViewController, silent: Bool = false) {
         var participantsUpdated = 0
         let history = History(getParticipants: true, includeBF: false)
         _ = CoreData.update(updateLogic: {
             for historyGame in history.games {
-                let datePlayed = historyGame.datePlayed
-                if datePlayed >= Utility.dateFromString("01/12/2017")! && datePlayed <= Utility.dateFromString("27/12/2017")! {
+                if historyGame.participant[0].handsPlayed == 25 {
                     var nonBonusScore:Int16 = 0
                     for historyParticipant in historyGame.participant {
                         nonBonusScore += historyParticipant.totalScore - (historyParticipant.handsMade * 10)
@@ -147,7 +146,9 @@ class DataAdmin {
                 }
             }
         })
-        viewController.alertMessage("Hands played and twos made patched locally - \(participantsUpdated) participants updated", title: "Complete")
+        if !silent {
+            viewController.alertMessage("Hands played and twos made patched locally - \(participantsUpdated) participants updated", title: "Complete")
+        }
     }
     
     class func removeDuplicates(from viewController: UIViewController) {

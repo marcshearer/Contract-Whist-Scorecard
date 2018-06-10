@@ -1,4 +1,4 @@
-//
+  //
 //  Upgrade.swift
 //  Contract Whist Scorecard
 //
@@ -13,105 +13,21 @@ import CoreData
 
 class Upgrade {
     
-    class func upgradeTo11(from: UIViewController, scorecard: Scorecard) -> Bool {
-        // Note this should only be run once on a device that contains all data locally and then synced
-        // Other devices should be initialised and re-installed
-        var updated = false
+    class func upgradeTo41(from viewController: UIViewController, scorecard: Scorecard) -> Bool {
+        // Sort out corruption in number of hands that happened back in December 2017 / January 2018
         
-        if !scorecard.iCloudUserIsMe {
-            from.alertMessage("This version upgrade is not allowed. Delete the app and re-install it.")
-        }
+        let alertWaitController = viewController.alertWait("Upgrading to version 4.1")
+             
+        // Reset all games with 25 hands to 13
+        DataAdmin.patchLocalDatabase(from: viewController, silent: true)
         
-        guard let context = Scorecard.context else { return false }
+        // Rebuild all players
+        let reconcile = Reconcile()
+        reconcile.initialise(scorecard: scorecard)
+        reconcile.reconcilePlayers(playerMOList: scorecard.playerList, syncFirst: false)
         
-        let historyGames: [GameMO] = CoreData.fetch(from: "Game")
-        
-        for gameMO in historyGames {
+        alertWaitController.dismiss(animated: true)
             
-            let gameUUID = (gameMO.deviceUUID == "" ? "B/F" : UUID().uuidString)
-            
-            let historyParticipants: [ParticipantMO] = CoreData.fetch(from: "Participant",
-                                                                      filter: NSPredicate(format: "deviceUUID = %@ and datePlayed = %@",
-                                                                                          gameMO.deviceUUID!, gameMO.datePlayed! as NSDate))
-            
-            // Set game UUID and local date created
-            gameMO.gameUUID = gameUUID
-            gameMO.localDateCreated = gameMO.datePlayed
-            
-            // Reset sync record ID & date
-            gameMO.syncDate = nil
-            gameMO.syncRecordID = nil
-            
-            if historyParticipants.count > 0 {
-            
-                for participantMO in historyParticipants {
-                    
-                    // Set participant game UUID and local date created
-                    participantMO.gameUUID = gameUUID
-                    participantMO.localDateCreated = gameMO.datePlayed
-                    
-                    // Reset sync record ID & date
-                    participantMO.syncDate = nil
-                    participantMO.syncRecordID = nil
-                    
-                }
-            }
-            
-            // Save to persistent store
-            do {
-                try context.save()
-            } catch {
-                return false
-            }
-            updated = true
-        }
-        
-        if scorecard.playerList.count > 0 {
-            
-            for playerMO in scorecard.playerList {
-                // Set date created locally
-                playerMO.localDateCreated = playerMO.dateCreated
-                
-                // Reset synced values
-                playerMO.syncGamesPlayed = 0
-                playerMO.syncGamesPlayed = 0
-                playerMO.syncGamesWon = 0
-                playerMO.syncTotalScore = 0
-                playerMO.syncHandsPlayed = 0
-                playerMO.syncHandsMade = 0
-                playerMO.syncTwosMade = 0
-                
-                // Reset sync record ID & date
-                playerMO.syncDate = nil
-                playerMO.syncRecordID = nil
-            }
-            
-            // Save to persistent store
-            do {
-                try context.save()
-            } catch {
-                return false
-            }
-            updated = true
-        }
-        
-        if updated {
-            from.alertMessage("Now clear the iCloud database and sync this device")
-        }
-        
-        // Reset last successful sync date so everything syncs
-        UserDefaults.standard.set(Date(timeIntervalSinceReferenceDate: -1), forKey: "confirmedSyncDate")
-        
-        // Migrate syncGroup to new syncEnabled
-        let syncGroup = UserDefaults.standard.string(forKey: "syncGroup")
-        if syncGroup != nil {
-            if syncGroup != "" {
-                scorecard.settingSyncEnabled = true
-                UserDefaults.standard.set(true, forKey: "syncEnabled")
-            }
-            UserDefaults.standard.removeObject(forKey: "syncGroup")
-        }
-        
         return true
     }
 }

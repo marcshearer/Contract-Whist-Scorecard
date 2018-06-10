@@ -426,10 +426,10 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
             if place == 1 {
                 winners += 1
                 if winners == 1 {
-                    winnerEmail = self.scorecard.enteredPlayer(playerNumber).playerMO!.email!
-                    winnerNames = self.scorecard.enteredPlayer(playerNumber).playerMO!.name!
+                    winnerEmail = self.scorecard.enteredPlayer(xref[playerNumber-1].playerNumber).playerMO!.email!
+                    winnerNames = self.scorecard.enteredPlayer(xref[playerNumber-1].playerNumber).playerMO!.name!
                 } else {
-                    winnerNames = winnerNames + " and " + self.scorecard.enteredPlayer(playerNumber).playerMO!.name!
+                    winnerNames = winnerNames + " and " + self.scorecard.enteredPlayer(xref[playerNumber-1].playerNumber).playerMO!.name!
                 }
             }
         }

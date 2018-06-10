@@ -19,7 +19,7 @@ class Backup {
             let mail = MFMailComposeViewController()
             mail.mailComposeDelegate = from as? MFMailComposeViewControllerDelegate
             mail.setSubject("Whist Backup")
-            mail.setToRecipients(["mshearer@waitrose.com"])
+            mail.setToRecipients(["marc@sheareronline.com"])
             
             bodyText = "Players\n\n"
             

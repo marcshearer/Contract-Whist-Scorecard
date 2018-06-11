@@ -198,10 +198,12 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
         
         if firstTime {
             // Get local and cloud version
-            scorecard.getVersion()
-            getCloudVersion()
+            scorecard.getVersion(completion: {
+                // Don't call this until any upgrade has taken place
+                self.getCloudVersion()
+            })
             
-            // Note flow continues in completion handler
+            // Note flow continues in completion handler of getCloudVersion
         }
         
         setupButtons()

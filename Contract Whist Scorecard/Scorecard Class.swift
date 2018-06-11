@@ -275,31 +275,41 @@ class Scorecard {
         }
     }
     
-    public func getVersion() {
+    public func getVersion(completion: (()->())? = nil) {
         // Get current software versions
         let dictionary = Bundle.main.infoDictionary!
-        self.settingVersion = dictionary["CFBundleShortVersionString"] as! String!
-        self.settingBuild = Int(dictionary["CFBundleVersion"] as! String)!
+        self.settingVersion = dictionary["CFBundleShortVersionString"] as! String? ?? "0.0"
+        self.settingBuild = Int(dictionary["CFBundleVersion"] as! String) ?? 0
         
         // Check if upgrade necessary
         if self.settingVersion != self.settingLastVersion {
-            if !upgradeToVersion(from: Utility.getActiveViewController()!) {
+            if !upgradeToVersion(from: Utility.getActiveViewController()!, completion: completion) {
                 Utility.getActiveViewController()?.alertMessage("Error upgrading to latest version")
                 exit(0)
             }
+        } else {
+            completion?()
         }
     }
     
-    public func upgradeToVersion(from: UIViewController) -> Bool {
-        if Utility.compareVersions(version1: self.settingLastVersion, version2: "4.1") == .lessThan  {
-            if !Upgrade.upgradeTo41(from: from, scorecard: self) {
-                return false
-            }
+    public func upgradeToVersion(from: UIViewController, completion: (()->())? = nil) -> Bool {
+        
+        func successfulCompletion() {
+            // Store version in defaults
+            UserDefaults.standard.set(self.settingVersion, forKey: "version")
+            UserDefaults.standard.set(self.settingBuild, forKey: "build")
+            
+            // Execute any other completion
+            completion?()
         }
         
-        // Store in defaults
-        UserDefaults.standard.set(self.settingVersion, forKey: "version")
-        UserDefaults.standard.set(self.settingBuild, forKey: "build")
+        if Utility.compareVersions(version1: self.settingLastVersion, version2: "4.1") == .lessThan  {
+            if !Upgrade.upgradeTo41(from: from, scorecard: self, completion:  successfulCompletion) {
+                return false
+            }
+        } else {
+            successfulCompletion()
+        }
         
         return true
         

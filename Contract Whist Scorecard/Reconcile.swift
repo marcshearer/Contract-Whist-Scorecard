@@ -61,19 +61,19 @@ class Reconcile: SyncDelegate {
                 self.reconcileMessage("Unable to synchronise with iCloud", finish: true)
             }
         } else {
-            reconcileRebuildPlayers()
+            reconcileRebuildPlayers(resetSyncValues: !scorecard.settingSyncEnabled)
         }
     }
     
     // MARK: - Functions to reconcile a player with participant records  ====================================== -
     
-    private func reconcileRebuildPlayers() {
+    private func reconcileRebuildPlayers(resetSyncValues: Bool = false) {
         var errors = false
         self.reconcileMessage((self.playerMOList.count == 1 ? "Rebuilding \(playerMOList[0].name!)" : "Rebuilding players"))
         
         for playerMO in playerMOList {
             
-            if !Reconcile.rebuildLocalPlayer(playerMO: playerMO) {
+            if !Reconcile.rebuildLocalPlayer(playerMO: playerMO, resetSyncValues: resetSyncValues) {
                 errors = true
             }
         }
@@ -86,7 +86,7 @@ class Reconcile: SyncDelegate {
         self.reconcileCompletion(errors)
     }
     
-    class func rebuildLocalPlayer(playerMO: PlayerMO) -> Bool {
+    class func rebuildLocalPlayer(playerMO: PlayerMO, resetSyncValues: Bool = false) -> Bool {
         // Load participant records
         let participantList = History.getParticipantRecordsForPlayer(playerEmail: playerMO.email!)
         
@@ -130,6 +130,17 @@ class Reconcile: SyncDelegate {
                         playerMO.datePlayed = participantMO.datePlayed
                     }
                 }
+                
+                if resetSyncValues {
+                    // Avoid sending any differences back up
+                    playerMO.syncGamesPlayed = playerMO.gamesPlayed
+                    playerMO.syncGamesWon = playerMO.gamesWon
+                    playerMO.syncHandsPlayed = playerMO.handsPlayed
+                    playerMO.syncHandsMade = playerMO.handsMade
+                    playerMO.syncTwosMade = playerMO.twosMade
+                    playerMO.syncTotalScore = playerMO.totalScore
+                }
+                playerMO.syncInProgress = false
             }
         })
     }

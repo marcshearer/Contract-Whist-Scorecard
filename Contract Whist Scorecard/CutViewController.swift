@@ -44,9 +44,9 @@ class CutViewController: UIViewController {
     private var minDimension:CGFloat = 0.0
     
     // UI component pointers
-    private var playerCardView = [UIView!]()
-    private var playerCardLabel = [UILabel!]()
-    private var playerNameLabel = [UILabel!]()
+    private var playerCardView = [UIView?]()
+    private var playerCardLabel = [UILabel?]()
+    private var playerNameLabel = [UILabel?]()
 
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet weak private var cutToDealView: UIView!
@@ -72,10 +72,10 @@ class CutViewController: UIViewController {
                 
         setupArrays()
         for playerNumber in 1...playerName.count {
-            ScorecardUI.moreRoundCorners(playerCardView[playerNumber-1])
-            playerNameLabel[playerNumber-1].text = playerName[playerNumber - 1]
+            ScorecardUI.moreRoundCorners(playerCardView[playerNumber-1]!)
+            playerNameLabel[playerNumber-1]?.text = playerName[playerNumber - 1]
             if self.playerName.count == 4  && (playerNumber == 2 || playerNumber == 4) {
-                playerNameLabel[playerNumber-1].transform =
+                playerNameLabel[playerNumber-1]?.transform =
                     CGAffineTransform(rotationAngle: CGFloat.pi * (CGFloat(playerNumber) - 1.0) / 2.0)
             }
         }
@@ -116,11 +116,11 @@ class CutViewController: UIViewController {
             cardBackView.append(UIView())
             cardBackView[playerNumber-1].backgroundColor = UIColor(red: CGFloat(0.0), green: CGFloat(0.0),
                                                  blue: CGFloat(0.4), alpha: CGFloat(1.0))
-            cardBackView[playerNumber-1].frame = CGRect(x: playerCardView[playerNumber-1].frame.minX + 8,
-                                    y: playerCardView[playerNumber-1].frame.minY + 8,
-                                    width: playerCardView[playerNumber-1].frame.width - 16,
-                                    height: playerCardView[playerNumber-1].frame.height - 16)
-            playerCardView[0].superview!.addSubview(cardBackView[playerNumber-1])
+            cardBackView[playerNumber-1].frame = CGRect(x: playerCardView[playerNumber-1]!.frame.minX + 8,
+                                    y: playerCardView[playerNumber-1]!.frame.minY + 8,
+                                    width: playerCardView[playerNumber-1]!.frame.width - 16,
+                                    height: playerCardView[playerNumber-1]!.frame.height - 16)
+            playerCardView[0]!.superview!.addSubview(cardBackView[playerNumber-1])
         }
         
         // Animate card 1
@@ -172,22 +172,22 @@ class CutViewController: UIViewController {
         let animation = UIViewPropertyAnimator(duration: self.outcomeDuration, curve: .easeIn) {
             for playerNumber in 1...self.playerName.count {
                 if playerNumber != self.scorecard.dealerIs {
-                    self.playerCardView[playerNumber-1].alpha = 0.0
-                    self.playerNameLabel[playerNumber-1].alpha = 0.0
+                    self.playerCardView[playerNumber-1]!.alpha = 0.0
+                    self.playerNameLabel[playerNumber-1]!.alpha = 0.0
                 }
             }
             if self.playerName.count == 4  && (self.scorecard.dealerIs == 2 || self.scorecard.dealerIs == 4) {
                 // Rotate back to horizontal
-                self.playerNameLabel[self.scorecard.dealerIs-1].transform =
+                self.playerNameLabel[self.scorecard.dealerIs-1]!.transform =
                     CGAffineTransform(rotationAngle: CGFloat.pi * 2)
             }
-            self.playerCardView[self.scorecard.dealerIs-1].frame = CGRect(x: self.horizontalCenter - (self.cardWidth/2),
+            self.playerCardView[self.scorecard.dealerIs-1]!.frame = CGRect(x: self.horizontalCenter - (self.cardWidth/2),
                                                                           y: self.verticalCenter - (self.cardHeight/2),
                                                                           width: self.cardWidth,
                                                                           height: self.cardHeight)
             
-            let currentWidth = self.playerNameLabel[self.scorecard.dealerIs-1].frame.width
-            self.playerNameLabel[self.scorecard.dealerIs-1].frame =
+            let currentWidth = self.playerNameLabel[self.scorecard.dealerIs-1]!.frame.width
+            self.playerNameLabel[self.scorecard.dealerIs-1]!.frame =
                     CGRect(x: (self.minDimension - currentWidth)/2,
                            y: self.verticalCenter + (self.scorecard.dealerIs == 1 ?
                                     (self.cardHeight/2) + self.nameSpace :
@@ -334,16 +334,16 @@ class CutViewController: UIViewController {
         for playerNumber in 1...self.playerName.count {
             
             // Name label fonts
-            playerNameLabel[playerNumber - 1].font = UIFont.systemFont(ofSize: nameFontSize)
+            playerNameLabel[playerNumber - 1]!.font = UIFont.systemFont(ofSize: nameFontSize)
             
             // Card labels
-            playerCardLabel[playerNumber - 1].frame = CGRect(x: cardLabelSpace,
+            playerCardLabel[playerNumber - 1]!.frame = CGRect(x: cardLabelSpace,
                                               y: cardLabelSpace,
                                               width: cardWidth - (2*cardLabelSpace),
                                               height: cardHeight - (2*cardLabelSpace))
         
             // Card label font
-            playerCardLabel[playerNumber - 1].font = UIFont.systemFont(ofSize: cardFontSize)
+            playerCardLabel[playerNumber - 1]!.font = UIFont.systemFont(ofSize: cardFontSize)
         }
         
         

@@ -73,9 +73,9 @@ class ScorepadViewController: UIViewController,
     private var firstGameSummary = true
     
     // UI component pointers
-    private var entryThumbnail = [UIImageView!]()
-    private var entryDisc = [UILabel!]()
-    private var headerCell = [[ScorepadCollectionViewCell!]]()
+    private var entryThumbnail = [UIImageView?]()
+    private var entryDisc = [UILabel?]()
+    private var headerCell = [[ScorepadCollectionViewCell?]]()
     private var imageCollectionView: UICollectionView!
     public var roundSummaryViewController: RoundSummaryViewController!
     public var gameSummaryViewController: GameSummaryViewController!

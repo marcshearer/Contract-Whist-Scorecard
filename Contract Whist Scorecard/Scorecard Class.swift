@@ -484,7 +484,7 @@ class Scorecard {
                             ScorecardUI.darkHighlightStyle(player.scoreCell[round-1]!.scorepadCellLabel)
                         }
                     }
-                    let imageView = player.scoreCell[round-1].scorepadImage!
+                    let imageView = player.scoreCell[round-1]!.scorepadImage!
                     if player.twos(round) != nil && player.twos(round) != 0 {
                         if player.twos(round) == 1 {
                             imageView.image = UIImage(named: "two")!
@@ -694,7 +694,7 @@ class Scorecard {
         return remaining
     }
     
-    public func updateSelectedPlayers(_ selectedPlayers: [PlayerMO]) {
+    public func updateSelectedPlayers(_ selectedPlayers: [PlayerMO?]) {
         // Update the currently selected players on return from the player selection view
         
         if selectedPlayers.count > 1 {
@@ -702,7 +702,7 @@ class Scorecard {
             UserDefaults.standard.set(self.currentPlayers, forKey: "numberPlayers")
             
             for playerNumber in 1...self.currentPlayers {
-                let playerMO = selectedPlayers[playerNumber-1]
+                let playerMO = selectedPlayers[playerNumber-1]!
                 self.enteredPlayer(playerNumber).playerMO = playerMO
                 UserDefaults.standard.set(self.playerURI(playerMO), forKey: "player\(playerNumber)")
             }

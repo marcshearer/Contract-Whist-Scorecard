@@ -55,15 +55,15 @@ class WatchState:NSObject, WCSessionDelegate {
     internal func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {
         var context = WatchStateContext(
             inProgress:applicationContext["inProgress"] as! Bool,
-            complete: applicationContext["complete"] as! Bool!,
-            round: applicationContext["round"] as! Int!,
-            cards: applicationContext["cards"] as! Int!,
-            trumpSuit: applicationContext["trumpSuit"] as! String!,
-            playerNames: applicationContext["playerNames"] as! [String]!,
-            playerBids: applicationContext["playerBids"] as! [Int]!,
-            playerMade: applicationContext["playerMade"] as! [Int]!,
-            playerScores: applicationContext["playerScores"] as! [Int]!,
-            playerTotals: applicationContext["playerTotals"] as! [Int]!,
+            complete: applicationContext["complete"] as! Bool?,
+            round: applicationContext["round"] as! Int?,
+            cards: applicationContext["cards"] as! Int?,
+            trumpSuit: applicationContext["trumpSuit"] as! String?,
+            playerNames: applicationContext["playerNames"] as! [String]?,
+            playerBids: applicationContext["playerBids"] as! [Int]?,
+            playerMade: applicationContext["playerMade"] as! [Int]?,
+            playerScores: applicationContext["playerScores"] as! [Int]?,
+            playerTotals: applicationContext["playerTotals"] as! [Int]?,
             switchGame: false
         )
         // Switch to game summary?

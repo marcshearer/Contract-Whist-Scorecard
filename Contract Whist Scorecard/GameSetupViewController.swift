@@ -18,7 +18,7 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
     private var recovery: Recovery!
 
     // Properties to pass state to / from segues
-    public var selectedPlayers = [PlayerMO]()          // Selected players passed in from player selection
+    public var selectedPlayers = [PlayerMO?]()          // Selected players passed in from player selection
     public var returnSegue: String!                    // View to return to
     public var startButtonImage = "scorecard right"
     public var rabbitMQService: RabbitMQService!
@@ -30,7 +30,7 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
     private var observer: NSObjectProtocol?
     
     // UI component pointers
-    private var gameSetupNameCell = [GameSetupNameCell!]()
+    private var gameSetupNameCell = [GameSetupNameCell?]()
     private var actionCell: GameSetupActionCell!
     
     // MARK: - IB Outlets ================================================================ -
@@ -181,13 +181,13 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
             // Player names
                 let playerNumber = indexPath.row+1
                 
-                gameSetupNameCell[playerNumber-1] = tableView.dequeueReusableCell(withIdentifier: "Game Setup Name Cell", for: indexPath) as! GameSetupNameCell
+                gameSetupNameCell[playerNumber-1] = tableView.dequeueReusableCell(withIdentifier: "Game Setup Name Cell", for: indexPath) as? GameSetupNameCell
              
                 // Setup the text input field
-                gameSetupNameCell[playerNumber-1].playerName.text = "\(scorecard.enteredPlayer(playerNumber).playerMO!.name!)"
+                gameSetupNameCell[playerNumber-1]!.playerName.text = "\(scorecard.enteredPlayer(playerNumber).playerMO!.name!)"
                 
                 // Setup the dealer button
-                gameSetupNameCell[playerNumber-1].playerButton.setTitle("Dealer", for: .normal)
+                gameSetupNameCell[playerNumber-1]!.playerButton.setTitle("Dealer", for: .normal)
                 showDealer(playerNumber: playerNumber)
                 
                 // Setup the thumbnail picture
@@ -196,9 +196,9 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
                     thumbnail = playerDetail.thumbnail
                 }
                 Utility.setThumbnail(data: thumbnail,
-                                     imageView: gameSetupNameCell[playerNumber-1].playerImage,
+                                     imageView: gameSetupNameCell[playerNumber-1]!.playerImage,
                                      initials: scorecard.enteredPlayer(playerNumber).playerMO!.name!,
-                                     label: gameSetupNameCell[playerNumber-1].playerDisc,
+                                     label: gameSetupNameCell[playerNumber-1]!.playerDisc,
                                      size: playerRowHeight-4)
                 // Setup return value
                 cell = gameSetupNameCell[playerNumber-1]
@@ -326,7 +326,7 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
     }
     
     func showDealer(playerNumber: Int, forceHide: Bool = false) {
-        gameSetupNameCell[playerNumber-1].playerButton.isHidden =
+        gameSetupNameCell[playerNumber-1]!.playerButton.isHidden =
             (playerNumber == scorecard.dealerIs && !playerTableView.isEditing && !forceHide ? false : true)
     }
     
@@ -336,7 +336,7 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
     
     // MARK: - Utility Routines ================================================================ -
 
-    func updateSelectedPlayers(_ selectedPlayers: [PlayerMO]) {
+    func updateSelectedPlayers(_ selectedPlayers: [PlayerMO?]) {
         scorecard.updateSelectedPlayers(selectedPlayers)
         scorecard.checkReady()
 

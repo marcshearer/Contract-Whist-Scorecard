@@ -91,18 +91,18 @@ class RoundSummaryViewController: UIViewController {
         self.overUnder.textColor = (totalRemaining == 0 ? UIColor.black : (totalRemaining > 0 ? UIColor.green : UIColor.red))
     }
     
-    func setupBidText(bids: UILabel!...) {
+    func setupBidText(bids: UILabel?...) {
         
         for playerNumber in 1...scorecard.numberPlayers {
             if playerNumber <= scorecard.currentPlayers {
                 let bid = scorecard.entryPlayer(playerNumber).bid(scorecard.selectedRound)
                 if bid != nil {
-                    bids[playerNumber-1].text = "\(scorecard.entryPlayer(playerNumber).playerMO!.name!) bid \(bid!)"
+                    bids[playerNumber-1]?.text = "\(scorecard.entryPlayer(playerNumber).playerMO!.name!) bid \(bid!)"
                 } else {
-                    bids[playerNumber-1].text = ""
+                    bids[playerNumber-1]?.text = ""
                 }
             } else {
-                bids[playerNumber-1].text = ""
+                bids[playerNumber-1]?.text = ""
             }
         }
     }

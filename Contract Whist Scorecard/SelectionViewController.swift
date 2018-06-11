@@ -27,12 +27,12 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
     private var selectedAlpha: CGFloat = 0.5
     
     // Main local state handlers
-    private var selectedList = [PlayerMO!]()
+    private var selectedList = [PlayerMO?]()
     private var observer: NSObjectProtocol?
     
     // UI component pointers
-    private var availableCell = [SelectionCell!]()
-    private var selectedCell = [SelectionCell!]()
+    private var availableCell = [SelectionCell?]()
+    private var selectedCell = [SelectionCell?]()
     
     // Alert controller while waiting for cloud download
     var cloudAlertController: UIAlertController!
@@ -257,11 +257,11 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
                 cell.name.text = ""
                 cell.disc.backgroundColor = UIColor.clear
             } else {
-                Utility.setThumbnail(data: selectedList[playerNumber-1].thumbnail,
+                Utility.setThumbnail(data: selectedList[playerNumber-1]!.thumbnail,
                                      imageView: cell.thumbnail,
-                                     initials: selectedList[playerNumber-1].name!,
+                                     initials: selectedList[playerNumber-1]!.name!,
                                      label: cell.disc)
-                cell.name.text = selectedList[playerNumber-1].name!
+                cell.name.text = selectedList[playerNumber-1]!.name!
                 cell.disc.textColor = UIColor.black
             }
 
@@ -342,7 +342,7 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
                 // Found it - reload the cell
                 self.availableCollectionView.reloadItems(at: [IndexPath(row: availableIndex! + 1, section: 0)])
             }
-            let selectedIndex = self.selectedList.index(where: {($0.objectID == objectID)})
+            let selectedIndex = self.selectedList.index(where: {($0!.objectID == objectID)})
             if selectedIndex != nil {
                 // Found it - reload the cell
                 self.selectedCollectionView.reloadItems(at: [IndexPath(row: selectedIndex!, section: 0)])
@@ -524,16 +524,16 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
         for playerNumberLoop in 1...scorecard.playerList.count {
             if scorecard.playerList[playerNumberLoop-1] == selectedList[playerNumber-1] &&
                     availableCell[playerNumberLoop] != nil {
-                availableCell[playerNumberLoop].thumbnailView.alpha = 1.0
-                availableCell[playerNumberLoop].name.alpha = 1.0
-                availableCell[playerNumberLoop].tick.isHidden = true
+                availableCell[playerNumberLoop]?.thumbnailView.alpha = 1.0
+                availableCell[playerNumberLoop]?.name.alpha = 1.0
+                availableCell[playerNumberLoop]?.tick.isHidden = true
             }
         }
 
         // Remove from collection view, list of cells and selected list
         selectedList.remove(at: playerNumber-1)
-        selectedCell[playerNumber-1].thumbnailView.isHidden = true
-        selectedCell[playerNumber-1].name.isHidden = true
+        selectedCell[playerNumber-1]?.thumbnailView.isHidden = true
+        selectedCell[playerNumber-1]?.name.isHidden = true
         selectedCell.remove(at: playerNumber-1)
         selectedCell.append(nil)
         
@@ -566,14 +566,14 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
                 // Animation
                 
                 // Calculate available label offsets / width / height
-                let availableLabel = self.availableCell[addPlayerNumber].name!
-                let labelWidth = availableLabel.bounds.width
-                let labelHeight = availableLabel.bounds.height
+                let availableLabel = self.availableCell[addPlayerNumber]?.name!
+                let labelWidth = availableLabel!.bounds.width
+                let labelHeight = availableLabel!.bounds.height
                 
                 // Calculate offsets for available collection view cell
                 let availableCell = self.availableCell[addPlayerNumber]!
                 let availablePoint = availableCell.convert(CGPoint(x: 0, y: 0), to: self.selectionView)
-                let availableLabelPoint = availableLabel.convert(CGPoint(x:0, y: 0), to: self.selectionView)
+                let availableLabelPoint = availableLabel!.convert(CGPoint(x:0, y: 0), to: self.selectionView)
                 
                 // Mark available player as selected
                 availableCell.thumbnailView.alpha = self.selectedAlpha
@@ -640,11 +640,11 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
                     }
                     animation.addCompletion( {_ in
                         // Cell will have been filled when we inserted it - just need to make it visible
-                        Utility.setThumbnail(data: self.selectedList[numberSelected-1].thumbnail,
+                        Utility.setThumbnail(data: self.selectedList[numberSelected-1]!.thumbnail,
                                              imageView: emptyCell.thumbnail,
-                                             initials: self.selectedList[numberSelected-1].name!,
+                                             initials: self.selectedList[numberSelected-1]!.name!,
                                              label: emptyCell.disc)
-                        emptyCell.name.text = self.selectedList[numberSelected-1].name!
+                        emptyCell.name.text = self.selectedList[numberSelected-1]!.name!
                         
                         // Now hide thumbnail and tick available player
                         self.animationThumbnailView.isHidden = true

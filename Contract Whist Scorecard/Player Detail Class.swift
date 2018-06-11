@@ -170,13 +170,13 @@ class PlayerDetail {
     
     public func fromManagedObject(playerMO: PlayerMO) {
         self.name = (playerMO.name == nil ? "" : playerMO.name!)
-        self.nameDate = playerMO.nameDate as Date!
+        self.nameDate = playerMO.nameDate as Date?
         self.email = (playerMO.email == nil ? "" : playerMO.email!)
-        self.emailDate = playerMO.emailDate as Date!
+        self.emailDate = playerMO.emailDate as Date?
         self.visibleLocally = playerMO.visibleLocally
         self.dateCreated = (playerMO.dateCreated == nil ? Date() : playerMO.dateCreated! as Date)
         self.localDateCreated = (playerMO.localDateCreated == nil ? Date() : playerMO.localDateCreated! as Date)
-        self.datePlayed = playerMO.datePlayed as Date!
+        self.datePlayed = playerMO.datePlayed as Date?
         self.externalId = playerMO.externalId
         self.gamesPlayed = playerMO.gamesPlayed
         self.gamesWon = playerMO.gamesWon
@@ -185,14 +185,14 @@ class PlayerDetail {
         self.twosMade = playerMO.twosMade
         self.totalScore = playerMO.totalScore
         self.thumbnail = playerMO.thumbnail
-        self.thumbnailDate = playerMO.thumbnailDate as Date!
+        self.thumbnailDate = playerMO.thumbnailDate as Date?
         self.maxScore = playerMO.maxScore
-        self.maxScoreDate = playerMO.maxScoreDate as Date!
+        self.maxScoreDate = playerMO.maxScoreDate as Date?
         self.maxMade = playerMO.maxMade
-        self.maxMadeDate = playerMO.maxMadeDate as Date!
+        self.maxMadeDate = playerMO.maxMadeDate as Date?
         self.maxTwos = playerMO.maxTwos
-        self.maxTwosDate = playerMO.maxTwosDate as Date!
-        self.syncDate = playerMO.syncDate as Date!
+        self.maxTwosDate = playerMO.maxTwosDate as Date?
+        self.syncDate = playerMO.syncDate as Date?
         self.syncRecordID = playerMO.syncRecordID
         self.objectID = playerMO.objectID
     }

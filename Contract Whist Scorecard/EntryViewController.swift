@@ -25,11 +25,11 @@ class EntryViewController: UIViewController, UITableViewDataSource, UITableViewD
     var selection = Selection(player: 0, mode: Mode.bid)
 
     // UI component pointers
-    var playerBidCell = [EntryPlayerCell!]()
-    var playerMadeCell = [EntryPlayerCell!]()
-    var playerTwosCell = [EntryPlayerCell!]()
-    var playerScoreCell = [EntryPlayerCell!]()
-    var scoreCell = [EntryScoreCell!]()
+    var playerBidCell = [EntryPlayerCell?]()
+    var playerMadeCell = [EntryPlayerCell?]()
+    var playerTwosCell = [EntryPlayerCell?]()
+    var playerScoreCell = [EntryPlayerCell?]()
+    var scoreCell = [EntryScoreCell?]()
     var instructionTextView: UITextView!
     var scoreCollection: UICollectionView?
     var playerCollection: UICollectionView?
@@ -340,17 +340,17 @@ class EntryViewController: UIViewController, UITableViewDataSource, UITableViewD
     func errorHighlight(_ mode: Mode, _ highlight: Bool) -> Bool{
         var label: UILabel!
         
-        for playerCell: EntryPlayerCell in self.playerBidCell {
+        for playerCell: EntryPlayerCell? in self.playerBidCell {
             
-            let player = playerCell.tag
+            let player = playerCell!.tag
             
             switch mode {
             case Mode.bid:
-                label = playerBidCell[player - 1].entryPlayerLabel
+                label = playerBidCell[player - 1]?.entryPlayerLabel
             case Mode.made:
-                label = playerMadeCell[player - 1].entryPlayerLabel
+                label = playerMadeCell[player - 1]?.entryPlayerLabel
             case Mode.twos:
-                label = playerTwosCell[player - 1].entryPlayerLabel
+                label = playerTwosCell[player - 1]?.entryPlayerLabel
             }
             
             ScorecardUI.errorStyle(label!, errorCondtion: highlight)
@@ -433,11 +433,11 @@ class EntryViewController: UIViewController, UITableViewDataSource, UITableViewD
         if selection.player != 0 {
             switch selection.mode {
             case Mode.bid:
-                label = playerBidCell[selection.player-1].entryPlayerLabel
+                label = playerBidCell[selection.player-1]?.entryPlayerLabel
             case Mode.made:
-                label = playerMadeCell[selection.player-1].entryPlayerLabel
+                label = playerMadeCell[selection.player-1]?.entryPlayerLabel
             case Mode.twos:
-                label = playerTwosCell[selection.player-1].entryPlayerLabel
+                label = playerTwosCell[selection.player-1]?.entryPlayerLabel
             }
             
             if highlight {
@@ -498,18 +498,18 @@ class EntryViewController: UIViewController, UITableViewDataSource, UITableViewD
         switch selection.mode {
         case Mode.bid:
             scorecard.entryPlayer(selection.player).setBid(scorecard.selectedRound, value)
-            playerBidCell[selection.player-1].entryPlayerLabel.text = (value == nil  ? "" : "\(value!)")
+            playerBidCell[selection.player-1]?.entryPlayerLabel.text = (value == nil  ? "" : "\(value!)")
         case Mode.made:
             scorecard.entryPlayer(selection.player).setMade(scorecard.selectedRound, value)
-            playerMadeCell[selection.player-1].entryPlayerLabel.text = (value == nil  ? "" : "\(value!)")
+            playerMadeCell[selection.player-1]?.entryPlayerLabel.text = (value == nil  ? "" : "\(value!)")
         case Mode.twos:
             scorecard.entryPlayer(selection.player).setTwos(scorecard.selectedRound, value, bonus2: self.bonus2)
-            playerTwosCell[selection.player-1].entryPlayerLabel.text = (value == nil  ? "" : "\(value!)")
+            playerTwosCell[selection.player-1]?.entryPlayerLabel.text = (value == nil  ? "" : "\(value!)")
         }
         
         if !self.bidOnlyMode {
             let score = scorecard.entryPlayer(selection.player).score(scorecard.selectedRound)
-            playerScoreCell[selection.player-1].entryPlayerLabel.text = (score == nil ? "" : "\(score!)")
+            playerScoreCell[selection.player-1]?.entryPlayerLabel.text = (score == nil ? "" : "\(score!)")
         }
     }
     
@@ -753,16 +753,16 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
         
         } else {
         
-            scoreCell[indexPath.row] = collectionView.dequeueReusableCell(withReuseIdentifier: "Entry Score Cell",for: indexPath) as! EntryScoreCell
-            ScorecardUI.roundCorners(scoreCell[indexPath.row].scoreButton)
-            scoreCell[indexPath.row].scoreButton.setTitle("\(indexPath.row)", for: .normal)
-            scoreCell[indexPath.row].scoreButton.addTarget(self, action: #selector(EntryViewController.scoreActionButtonPressed(_:)), for: UIControlEvents.touchUpInside)
-            scoreCell[indexPath.row].scoreButton.tag = indexPath.row
-            scoreCell[indexPath.row].scoreButton.accessibilityIdentifier = "score\(indexPath.row)"
+            scoreCell[indexPath.row] = collectionView.dequeueReusableCell(withReuseIdentifier: "Entry Score Cell",for: indexPath) as? EntryScoreCell
+            ScorecardUI.roundCorners(scoreCell[indexPath.row]!.scoreButton)
+            scoreCell[indexPath.row]!.scoreButton.setTitle("\(indexPath.row)", for: .normal)
+            scoreCell[indexPath.row]!.scoreButton.addTarget(self, action: #selector(EntryViewController.scoreActionButtonPressed(_:)), for: UIControlEvents.touchUpInside)
+            scoreCell[indexPath.row]!.scoreButton.tag = indexPath.row
+            scoreCell[indexPath.row]!.scoreButton.accessibilityIdentifier = "score\(indexPath.row)"
 
-            formatScore(scoreCell[indexPath.row])
+            formatScore(scoreCell[indexPath.row]!)
             
-            return scoreCell[indexPath.row]
+            return scoreCell[indexPath.row]!
         }
     }
     

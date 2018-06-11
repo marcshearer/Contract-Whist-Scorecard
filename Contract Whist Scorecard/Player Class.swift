@@ -20,8 +20,8 @@ class Player {
     public let maxRounds = 25
     private var scorecard: Scorecard
     private var recovery: Recovery? = nil
-    public var bidCell = [ScorepadCollectionViewCell!]()
-    public var scoreCell = [ScorepadCollectionViewCell!]()
+    public var bidCell = [ScorepadCollectionViewCell?]()
+    public var scoreCell = [ScorepadCollectionViewCell?]()
     public var totalLabel: UILabel?
     public var playerMO: PlayerMO?
     public var participantMO: ParticipantMO?
@@ -110,7 +110,7 @@ class Player {
             self.bid[round-1] = bid
             self.scorecard.sendScores(playerNumber: self.playerNumber, round: round, mode: .bid)
             if bidCell[round-1] != nil {
-                bidCell[round-1].scorepadCellLabel.text = (bid == nil ? "" : "\(bid!)")
+                bidCell[round-1]!.scorepadCellLabel.text = (bid == nil ? "" : "\(bid!)")
             }
             self.updateScore(round, bonus2: bonus2)
             recovery!.saveBid(round: round, playerNumber: self.playerNumber)

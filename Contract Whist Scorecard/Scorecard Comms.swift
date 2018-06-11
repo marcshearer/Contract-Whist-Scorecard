@@ -357,7 +357,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                         if roundData["bid"] is NSNull {
                             bid = nil
                         } else {
-                            bid = roundData["bid"] as! Int!
+                            bid = roundData["bid"] as! Int?
                         }
                         self.enteredPlayer(playerNumber).setBid(roundNumber, bid, bonus2: bonus2)
                         if self.handViewController != nil {
@@ -370,7 +370,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                     if roundData["made"] is NSNull {
                         made = nil
                     } else {
-                        made = roundData["made"] as! Int!
+                        made = roundData["made"] as! Int?
                     }
                     self.enteredPlayer(playerNumber).setMade(roundNumber, made, bonus2: bonus2)
                 }
@@ -379,7 +379,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                     if roundData["twos"] is NSNull {
                         twos = nil
                     } else {
-                        twos = roundData["twos"] as! Int!
+                        twos = roundData["twos"] as! Int?
                     }
                     self.enteredPlayer(playerNumber).setTwos(roundNumber, twos, bonus2: bonus2)
                 }

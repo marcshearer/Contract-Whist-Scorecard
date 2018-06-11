@@ -44,7 +44,7 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
     private var observer: NSObjectProtocol?
 
     // UI component pointers
-    var collectionCell = [StatsCell!]()
+    var collectionCell = [StatsCell?]()
     
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet weak var statsView: UIView!
@@ -414,7 +414,7 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
     func setSelection(_ playerNumber: Int, _ to: Bool) {
         selection[playerNumber-1] = to
         if collectionCell[playerNumber-1] != nil {
-            formatCell(collectionCell[playerNumber-1], to: to)
+            formatCell(collectionCell[playerNumber-1]!, to: to)
         }
     }
     

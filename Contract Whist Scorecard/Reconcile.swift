@@ -61,7 +61,7 @@ class Reconcile: SyncDelegate {
                 self.reconcileMessage("Unable to synchronise with iCloud", finish: true)
             }
         } else {
-            reconcileRebuildPlayers(resetSyncValues: !scorecard.settingSyncEnabled)
+            reconcileRebuildPlayers(resetSyncValues: !syncFirst)
         }
     }
     

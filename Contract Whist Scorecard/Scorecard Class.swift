@@ -295,9 +295,11 @@ class Scorecard {
     public func upgradeToVersion(from: UIViewController, completion: (()->())? = nil) -> Bool {
         
         func successfulCompletion() {
-            // Store version in defaults
+            // Store version in defaults and update last version
             UserDefaults.standard.set(self.settingVersion, forKey: "version")
             UserDefaults.standard.set(self.settingBuild, forKey: "build")
+            self.settingLastVersion = self.settingVersion
+            self.settingLastBuild = self.settingBuild
             
             // Execute any other completion
             completion?()

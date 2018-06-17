@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -164,46 +164,49 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="290"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" tag="1" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="69E-OW-LQ5" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="19" y="11" width="130" height="130"/>
+                                                <button opaque="NO" tag="1" contentMode="scaleAspectFit" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="69E-OW-LQ5" customClass="SideImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                    <rect key="frame" x="17" y="11" width="341" height="80"/>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="130" id="Fg2-EV-nmR"/>
-                                                        <constraint firstAttribute="height" constant="130" id="u7R-nD-n99"/>
+                                                        <constraint firstAttribute="width" constant="341" id="Fg2-EV-nmR"/>
+                                                        <constraint firstAttribute="height" constant="80" id="u7R-nD-n99"/>
                                                     </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                                     <state key="normal" image="cut pack">
                                                         <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                 </button>
-                                                <button opaque="NO" tag="2" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f7a-6R-rUp" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="226" y="11" width="130" height="130"/>
+                                                <button opaque="NO" tag="3" contentMode="scaleAspectFit" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5QR-vA-soU" customClass="SideImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                    <rect key="frame" x="17.5" y="199" width="340" height="80"/>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="130" id="Pi4-kP-CNc"/>
-                                                        <constraint firstAttribute="height" constant="130" id="mKF-4s-V9C"/>
+                                                        <constraint firstAttribute="height" constant="80" id="VLv-ea-Eiy"/>
+                                                        <constraint firstAttribute="width" constant="340" id="WhU-rF-Rhf"/>
                                                     </constraints>
-                                                    <state key="normal" image="next dealer">
+                                                    <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                                    <state key="normal" image="scorecard right">
                                                         <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </state>
                                                 </button>
-                                                <button opaque="NO" tag="3" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5QR-vA-soU" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="122.5" y="149" width="130" height="130"/>
+                                                <button opaque="NO" tag="2" contentMode="scaleAspectFit" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f7a-6R-rUp" customClass="SideImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                    <rect key="frame" x="17.5" y="105" width="340" height="80"/>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="130" id="VLv-ea-Eiy"/>
-                                                        <constraint firstAttribute="width" constant="130" id="WhU-rF-Rhf"/>
+                                                        <constraint firstAttribute="width" constant="340" id="Pi4-kP-CNc"/>
+                                                        <constraint firstAttribute="height" constant="80" id="mKF-4s-V9C"/>
                                                     </constraints>
-                                                    <state key="normal" image="scorecard right">
+                                                    <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                                    <state key="normal" image="next dealer">
                                                         <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </state>
                                                 </button>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="f7a-6R-rUp" firstAttribute="top" secondItem="aov-Ia-Wcc" secondAttribute="topMargin" id="9KO-Nw-AYp"/>
+                                                <constraint firstItem="69E-OW-LQ5" firstAttribute="centerX" secondItem="aov-Ia-Wcc" secondAttribute="centerX" id="8im-48-taD"/>
+                                                <constraint firstItem="f7a-6R-rUp" firstAttribute="centerX" secondItem="aov-Ia-Wcc" secondAttribute="centerX" id="DNu-61-aEC"/>
                                                 <constraint firstItem="5QR-vA-soU" firstAttribute="centerX" secondItem="aov-Ia-Wcc" secondAttribute="centerX" id="DTp-o6-tcc"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="f7a-6R-rUp" secondAttribute="trailing" constant="4" id="RnY-Lz-0Lo"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="5QR-vA-soU" secondAttribute="bottom" id="UoF-mO-oVJ"/>
-                                                <constraint firstItem="69E-OW-LQ5" firstAttribute="leading" secondItem="aov-Ia-Wcc" secondAttribute="leadingMargin" constant="4" id="kAX-3E-Edx"/>
+                                                <constraint firstItem="f7a-6R-rUp" firstAttribute="centerY" secondItem="aov-Ia-Wcc" secondAttribute="centerY" id="Val-Ay-dEJ"/>
                                                 <constraint firstItem="69E-OW-LQ5" firstAttribute="top" secondItem="aov-Ia-Wcc" secondAttribute="topMargin" id="nXg-xG-gcc"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -329,7 +332,7 @@
                     </connections>
                 </rotationGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="7987.5" y="203.87323943661971"/>
+            <point key="canvasLocation" x="7986.3999999999996" y="203.74812593703149"/>
         </scene>
         <!--Scorepad-->
         <scene sceneID="avc-fZ-TSL">

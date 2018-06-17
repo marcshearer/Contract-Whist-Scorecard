@@ -213,6 +213,7 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
             actionCell.nextDealerButton.setTitle("Next Dealer")
             actionCell.nextDealerButton.addTarget(self, action: #selector(GameSetupViewController.actionButtonPressed(_:)), for: UIControlEvents.touchUpInside)
           
+            actionCell.gameScorecardButton.setTitle("Start Playing")
             actionCell.gameScorecardButton.setImage(startButtonImage)
             actionCell.gameScorecardButton.addTarget(self, action: #selector(GameSetupViewController.actionButtonPressed(_:)), for: UIControlEvents.touchUpInside)
             

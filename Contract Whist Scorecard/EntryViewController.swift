@@ -30,7 +30,7 @@ class EntryViewController: UIViewController, UITableViewDataSource, UITableViewD
     var playerTwosCell = [EntryPlayerCell?]()
     var playerScoreCell = [EntryPlayerCell?]()
     var scoreCell = [EntryScoreCell?]()
-    var instructionTextView: UITextView!
+    var instructionTextView: UILabel!
     var scoreCollection: UICollectionView?
     var playerCollection: UICollectionView?
     var flow: Flow!
@@ -886,7 +886,7 @@ class EntryPlayerCell: UICollectionViewCell {
 }
 
 class EntryInstructionCell: UITableViewCell {
-    @IBOutlet weak var instructionTextView: UITextView!
+    @IBOutlet weak var instructionTextView: UILabel!
 }
 
 class EntryScoreTableCell: UITableViewCell {

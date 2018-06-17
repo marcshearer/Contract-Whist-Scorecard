@@ -176,4 +176,27 @@ class ImageButton: RoundedButton {
     }
 }
 
+class SideImageButton: RoundedButton {
+   
+    let spacing: CGFloat = 10.0
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        super.isEnabled(true)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if imageView != nil {
+            imageEdgeInsets = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: bounds.width - bounds.height - spacing)
+            titleEdgeInsets = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: spacing)
+        }
+    }
+    
+    func setImage(_ imageName: String) {
+        super.setImage(UIImage(named: imageName), for: .normal)
+    }
+    
+}
+
 

@@ -202,11 +202,14 @@
                                                 </button>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="69E-OW-LQ5" firstAttribute="centerX" secondItem="aov-Ia-Wcc" secondAttribute="centerX" id="8im-48-taD"/>
-                                                <constraint firstItem="f7a-6R-rUp" firstAttribute="centerX" secondItem="aov-Ia-Wcc" secondAttribute="centerX" id="DNu-61-aEC"/>
-                                                <constraint firstItem="5QR-vA-soU" firstAttribute="centerX" secondItem="aov-Ia-Wcc" secondAttribute="centerX" id="DTp-o6-tcc"/>
+                                                <constraint firstItem="69E-OW-LQ5" firstAttribute="leading" secondItem="aov-Ia-Wcc" secondAttribute="leadingMargin" constant="2.5" id="AxD-w3-MTV"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="5QR-vA-soU" secondAttribute="trailing" constant="2.5" id="Ke5-9b-1qF"/>
+                                                <constraint firstItem="5QR-vA-soU" firstAttribute="leading" secondItem="aov-Ia-Wcc" secondAttribute="leadingMargin" constant="2.5" id="LHF-Da-hnc"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="f7a-6R-rUp" secondAttribute="trailing" constant="2.5" id="Syd-Or-5Qd"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="5QR-vA-soU" secondAttribute="bottom" id="UoF-mO-oVJ"/>
                                                 <constraint firstItem="f7a-6R-rUp" firstAttribute="centerY" secondItem="aov-Ia-Wcc" secondAttribute="centerY" id="Val-Ay-dEJ"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="69E-OW-LQ5" secondAttribute="trailing" constant="2.5" id="hhR-9X-mBm"/>
+                                                <constraint firstItem="f7a-6R-rUp" firstAttribute="leading" secondItem="aov-Ia-Wcc" secondAttribute="leadingMargin" constant="2.5" id="m4q-JK-FCo"/>
                                                 <constraint firstItem="69E-OW-LQ5" firstAttribute="top" secondItem="aov-Ia-Wcc" secondAttribute="topMargin" id="nXg-xG-gcc"/>
                                             </constraints>
                                         </tableViewCellContentView>

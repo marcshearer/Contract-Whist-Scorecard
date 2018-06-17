@@ -111,22 +111,24 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lmN-gZ-hVU">
-                                                    <rect key="frame" x="15" y="11" width="345" height="22"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lmN-gZ-hVU">
+                                                    <rect key="frame" x="10" y="11" width="355" height="22"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="bottomMargin" secondItem="lmN-gZ-hVU" secondAttribute="bottom" id="Rrw-Pz-b6k"/>
-                                                <constraint firstItem="lmN-gZ-hVU" firstAttribute="top" secondItem="Iaa-eg-cfF" secondAttribute="topMargin" id="RwW-Ku-RAz"/>
-                                                <constraint firstItem="lmN-gZ-hVU" firstAttribute="leading" secondItem="Iaa-eg-cfF" secondAttribute="leadingMargin" id="aQQ-CG-j8K"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="lmN-gZ-hVU" secondAttribute="trailing" id="wbe-pU-Mea"/>
+                                                <constraint firstItem="lmN-gZ-hVU" firstAttribute="top" secondItem="Iaa-eg-cfF" secondAttribute="topMargin" id="94Y-5N-G2v"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="lmN-gZ-hVU" secondAttribute="bottom" id="cUb-hf-0WK"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="lmN-gZ-hVU" secondAttribute="trailing" constant="10" id="PhU-Cy-H59"/>
+                                            <constraint firstItem="lmN-gZ-hVU" firstAttribute="leading" secondItem="PZ6-8V-SYp" secondAttribute="leading" constant="10" id="dwt-OS-9Ms"/>
+                                        </constraints>
                                         <connections>
-                                            <outlet property="instructionTextView" destination="lmN-gZ-hVU" id="jhn-g5-1Lj"/>
+                                            <outlet property="instructionLabel" destination="lmN-gZ-hVU" id="ZCu-fY-bfS"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Entry Score Table Cell" rowHeight="200" id="FXk-Wr-WgU" customClass="EntryScoreTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
@@ -274,7 +276,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="zJZ-51-3Rw"/>
                                     <barButtonItem style="plain" id="b5P-5H-sde">
                                         <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Sy8-YT-Lhn" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                            <rect key="frame" x="238" y="5" width="30" height="34"/>
+                                            <rect key="frame" x="298" y="5" width="30" height="34"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                             <userDefinedRuntimeAttributes>
@@ -288,7 +290,7 @@
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="8ud-XJ-6aK"/>
                                     <barButtonItem style="plain" id="uPa-2p-7w1" userLabel="Undo Button Item">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="cxI-wh-pjW" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                            <rect key="frame" x="278" y="11" width="21" height="22"/>
+                                            <rect key="frame" x="338" y="11" width="21" height="22"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="30" id="XR2-4m-eiq"/>
@@ -296,35 +298,6 @@
                                             <state key="normal" image="undo"/>
                                             <connections>
                                                 <action selector="undoButtonClicked:" destination="mEi-hH-CUE" eventType="touchUpInside" id="iyc-ZL-3Yt"/>
-                                            </connections>
-                                        </button>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" id="vR4-cM-rW0" userLabel="Back Button Item">
-                                        <button key="customView" opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="zm0-r6-Hms" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                            <rect key="frame" x="299" y="9.5" width="25" height="25"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="30" id="q9c-aN-1IW"/>
-                                            </constraints>
-                                            <state key="normal" image="leftarrow"/>
-                                            <connections>
-                                                <action selector="backButtonClicked:" destination="mEi-hH-CUE" eventType="touchUpInside" id="nfT-pF-ja9"/>
-                                            </connections>
-                                        </button>
-                                    </barButtonItem>
-                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="LIh-KQ-1vR"/>
-                                    <barButtonItem style="plain" id="Fas-Od-Jh7" userLabel="Forward Button Item">
-                                        <button key="customView" opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="mZp-Xc-kKD" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                            <rect key="frame" x="334" y="9.5" width="25" height="25"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="30" id="tpf-Ru-0Py"/>
-                                            </constraints>
-                                            <state key="normal" image="rightarrow"/>
-                                            <connections>
-                                                <action selector="forwardButtonClicked:" destination="mEi-hH-CUE" eventType="touchUpInside" id="rAS-nq-7Zu"/>
                                             </connections>
                                         </button>
                                     </barButtonItem>
@@ -352,13 +325,11 @@
                     </toolbarItems>
                     <value key="contentSizeForViewInPopover" type="size" width="320" height="568"/>
                     <connections>
-                        <outlet property="backButton" destination="zm0-r6-Hms" id="wmB-Gb-VSu"/>
                         <outlet property="barTitle" destination="mYF-x3-kAl" id="eBm-0k-S1q"/>
                         <outlet property="entryTableView" destination="jGM-gE-2rv" id="Gak-Rp-AWB"/>
                         <outlet property="entryView" destination="pS0-jq-6eE" id="n4n-SH-4Cj"/>
                         <outlet property="errorsButton" destination="IVB-I0-IfC" id="VW1-kd-v6X"/>
                         <outlet property="finishButton" destination="8rw-oz-v5h" id="fQN-3j-bQO"/>
-                        <outlet property="forwardButton" destination="mZp-Xc-kKD" id="oy5-fT-Da5"/>
                         <outlet property="summaryButton" destination="Sy8-YT-Lhn" id="V1f-gf-7L3"/>
                         <outlet property="undoButton" destination="cxI-wh-pjW" id="5Yc-00-xdO"/>
                         <segue destination="Rwb-y8-jvq" kind="unwind" identifier="hideEntry" unwindAction="hideEntryWithSegue:" id="XKG-1q-g76"/>
@@ -388,8 +359,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="leftarrow" width="25" height="25"/>
-        <image name="rightarrow" width="25" height="25"/>
         <image name="undo" width="21" height="22"/>
     </resources>
 </document>

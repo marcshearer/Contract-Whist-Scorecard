@@ -30,7 +30,7 @@ class EntryViewController: UIViewController, UITableViewDataSource, UITableViewD
     var playerTwosCell = [EntryPlayerCell?]()
     var playerScoreCell = [EntryPlayerCell?]()
     var scoreCell = [EntryScoreCell?]()
-    var instructionTextView: UILabel!
+    var instructionLabel: UILabel!
     var scoreCollection: UICollectionView?
     var playerCollection: UICollectionView?
     var flow: Flow!
@@ -57,8 +57,6 @@ class EntryViewController: UIViewController, UITableViewDataSource, UITableViewD
     @IBOutlet var entryView: UIView!
     @IBOutlet weak var entryTableView: UITableView!
     @IBOutlet weak var barTitle: UILabel!
-    @IBOutlet weak var backButton: RoundedButton!
-    @IBOutlet weak var forwardButton: RoundedButton!
     @IBOutlet weak var undoButton: RoundedButton!
     @IBOutlet weak var finishButton: RoundedButton!
     @IBOutlet weak var errorsButton: RoundedButton!
@@ -81,22 +79,6 @@ class EntryViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     // MARK: - IB Actions ============================================================================== -
     
-    @IBAction func backButtonClicked(_ sender: Any) {
-        // Back key
-        highlightCursor(false)
-        _ = moveToPrevious()
-        highlightCursor(true)
-        setForm(true)
-    }
-    
-    @IBAction func forwardButtonClicked(_ sender: Any) {
-        // Forward key
-        highlightCursor(false)
-        _ = moveToNext()
-        highlightCursor(true)
-        setForm(true)
-    }
-
     @IBAction func undoButtonClicked(_ sender: Any) {
         // Undo key
         highlightCursor(false)
@@ -224,8 +206,8 @@ class EntryViewController: UIViewController, UITableViewDataSource, UITableViewD
         case 1:
             // Instructions
             let instructionCell = tableView.dequeueReusableCell(withIdentifier: "Entry Instruction Cell", for: indexPath) as! EntryInstructionCell
-            instructionTextView = instructionCell.instructionTextView
-            formatinstructionTextView()
+            instructionLabel = instructionCell.instructionLabel
+            formatinstructionLabel()
             issueInstruction()
             
             cell = instructionCell as UITableViewCell
@@ -268,10 +250,10 @@ class EntryViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
     }
     
-    func formatinstructionTextView() {
-        ScorecardUI.largeBoldStyle(instructionTextView)
-        ScorecardUI.roundCorners(instructionTextView)
-        ScorecardUI.emphasisStyle(instructionTextView)
+    func formatinstructionLabel() {
+        ScorecardUI.largeBoldStyle(instructionLabel)
+        ScorecardUI.roundCorners(instructionLabel)
+        ScorecardUI.emphasisStyle(instructionLabel)
     }
     
     func setupScreen() {
@@ -286,30 +268,24 @@ class EntryViewController: UIViewController, UITableViewDataSource, UITableViewD
     
     func issueInstruction() {
         if self.selection.player == 0 {
-            instructionTextView.text = "Tap a player to edit their score"
+            instructionLabel.text = "Tap a player to edit their score"
         } else {
             switch selection.mode {
             case Mode.bid:
-                instructionTextView.text = "Enter the bid for \(scorecard.entryPlayer(selection.player).playerMO!.name!)"
+                instructionLabel.text = "Enter the bid for \(scorecard.entryPlayer(selection.player).playerMO!.name!)"
             case Mode.made:
-                instructionTextView.text = "Enter the tricks made for \(scorecard.entryPlayer(selection.player).playerMO!.name!)"
+                instructionLabel.text = "Enter the tricks made for \(scorecard.entryPlayer(selection.player).playerMO!.name!)"
             case Mode.twos:
-                instructionTextView.text = "Enter the number of 2s for \(scorecard.entryPlayer(selection.player).playerMO!.name!)"
+                instructionLabel.text = "Enter the number of 2s for \(scorecard.entryPlayer(selection.player).playerMO!.name!)"
             }
         }
     }
     
     func enableMovementButtons() {
         if undo.first == nil {
-            backButton.isHidden = false
-            backButton.isEnabled(selection.previous != nil)
-            forwardButton.isHidden = false
-            forwardButton.isEnabled(selection.next != nil && currentSelectionValue() != nil)
             undoButton.isHidden = true
         } else {
             undoButton.isHidden = false
-            backButton.isHidden = true
-            forwardButton.isHidden = true
         }
         summaryButton.isEnabled(!bidOnlyMode)
     }
@@ -886,7 +862,7 @@ class EntryPlayerCell: UICollectionViewCell {
 }
 
 class EntryInstructionCell: UITableViewCell {
-    @IBOutlet weak var instructionTextView: UILabel!
+    @IBOutlet weak var instructionLabel: UILabel!
 }
 
 class EntryScoreTableCell: UITableViewCell {

@@ -332,6 +332,21 @@ class Utility {
         return result
     }
     
+    // MARK: - Animate ============================================================================== -
+    
+    public class func animate(view: UIView? = nil, duration: TimeInterval = 0.5, curve: UIViewAnimationCurve = .linear, afterDelay: TimeInterval = 0.0, animations: @escaping ()->()) {
+        var view = view
+        if view == nil {
+            view = Utility.getActiveViewController()!.view!
+        }
+        view!.layoutIfNeeded()
+        let animation = UIViewPropertyAnimator(duration: duration, curve: curve) {
+            animations()
+            view!.layoutIfNeeded()
+        }
+        animation.startAnimation(afterDelay: afterDelay)
+    }
+    
     // MARK: - Functions to get view controllers, use main thread and wrapper system level stuff ==============
     
     class func getActiveViewController() -> UIViewController? {

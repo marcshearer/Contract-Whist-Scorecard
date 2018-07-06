@@ -43,10 +43,10 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tap(app.tables.buttons["Download Players from Cloud"])
         
         // Select all
-        self.tap(app.navigationBars["Select Players"].buttons["All"], timeout: 30)
+        self.tap(app.navigationBars["Players"].buttons["All"], timeout: 30)
         
         // Download
-        self.tap(app.navigationBars["Select Players"].buttons["Download"])
+        self.tap(app.navigationBars["Players"].buttons["Download"])
         
         // Go to home screen
         self.tap(app.tables.buttons["Home Screen"], timeout: 30)

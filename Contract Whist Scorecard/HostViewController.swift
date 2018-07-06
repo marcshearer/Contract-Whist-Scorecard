@@ -86,6 +86,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     @IBOutlet weak var hostPlayerTableViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var instructionLabel: UILabel!
     @IBOutlet weak var scorecardButton: RoundedButton!
+    @IBOutlet weak var continueButton: RoundedButton!
     @IBOutlet weak var imageView: UIImageView!
 
     // MARK: - IB Unwind Segue Handlers ================================================================ -
@@ -107,7 +108,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     @IBAction func finishPressed(_ sender: RoundedButton) {
         exitHost()
     }
-  
+    
     @IBAction func continuePressed(_ sender: RoundedButton) {
         self.setupPlayers()
         gameInProgress = true
@@ -374,6 +375,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             }
             let ready = (self.connectedPlayers >= 3)
             self.scorecardButton.isHidden = !ready
+            self.continueButton.isHidden = !ready
             self.setInstructions()
             if self.scorecard.recoveryMode && self.connectedPlayers == self.scorecard.currentPlayers {
                 // Recovering  - go straight to game setup
@@ -979,7 +981,6 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             destination.selectedPlayers = selectedPlayers
             destination.scorecard = self.scorecard
             destination.returnSegue = "hideHostGameSetup"
-            destination.startButtonImage = "deal"
             destination.rabbitMQService = self.rabbitMQHost
             
         default:

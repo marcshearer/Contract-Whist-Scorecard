@@ -35,6 +35,7 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
     private var getStartedButton = -1
     private var resumeGameButton = -1
     private var playerStatsButton = -1
+    private var comparisonButton = -1
     private var highScoresButton = -1
     private var historyButton = -1
     private var deleteCloudButton = -1
@@ -54,6 +55,7 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
     private var getStartedCell: WelcomeActionCell!
     private var resumeGameCell: WelcomeActionCell!
     private var statsCell: WelcomeActionCell!
+    private var comparisonCell: WelcomeActionCell!
     private var highScoresCell: WelcomeActionCell!
     private var historyCell: WelcomeActionCell!
     private var deleteCloudCell: WelcomeActionCell!
@@ -104,6 +106,11 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
         scorecard.checkNetworkConnection(button: nil, label: syncMessage)
         getCloudVersion(async: true)
         enableButtons() // In case removed all players
+    }
+    
+    @IBAction func hideComparison(segue:UIStoryboardSegue) {
+        scorecard.checkNetworkConnection(button: nil, label: syncMessage)
+        getCloudVersion(async: true)
     }
     
     @IBAction func hideHighScores(segue:UIStoryboardSegue) {
@@ -311,8 +318,11 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
             welcomeActionCell.actionButton.setTitle("Resume Game", for: .normal)
             resumeGameCell = welcomeActionCell
         case playerStatsButton:
-            welcomeActionCell.actionButton.setTitle("Player Stats", for: .normal)
+            welcomeActionCell.actionButton.setTitle("Players", for: .normal)
             statsCell = welcomeActionCell
+        case comparisonButton:
+            welcomeActionCell.actionButton.setTitle("Statistics", for: .normal)
+            comparisonCell = welcomeActionCell
         case highScoresButton:
             welcomeActionCell.actionButton.setTitle("High Scores", for: .normal)
             highScoresCell = welcomeActionCell
@@ -365,6 +375,9 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
         case playerStatsButton:
             // Player Stats
             self.performSegue(withIdentifier: "showStats", sender: self )
+        case comparisonButton:
+            // Player Stats
+            self.performSegue(withIdentifier: "showComparison", sender: self )
         case highScoresButton:
             // High Scores
             self.performSegue(withIdentifier: "showHighScores", sender: self )
@@ -416,6 +429,9 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
         
         buttons += 1
         playerStatsButton = buttons
+        
+        buttons += 1
+        comparisonButton = buttons
         
         if scorecard.settingSaveHistory {
             buttons += 1
@@ -505,6 +521,12 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
         if button == 0 || button == playerStatsButton {
             if statsCell != nil {
                 statsCell.actionButton.isEnabled(scorecard.playerList.count > 0)
+            }
+        }
+        
+        if button == 0 || button == comparisonButton {
+            if comparisonCell != nil {
+                comparisonCell.actionButton.isEnabled(scorecard.playerList.count > 0)
             }
         }
         
@@ -663,7 +685,17 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
             let destination = segue.destination as! StatsViewController
             destination.scorecard = self.scorecard
             destination.playerList = scorecard.playerDetailList()
+            destination.multiSelectMode = false
+            destination.detailMode = .amend
             destination.returnSegue = "hidePlayerStats"
+            destination.backImage = "home"
+            destination.backText = ""
+            
+        case "showComparison":
+            let destination = segue.destination as! ComparisonViewController
+            destination.scorecard = self.scorecard
+            destination.selectedList = scorecard.playerDetailList()
+            destination.returnSegue = "hideComparison"
             destination.backImage = "home"
             destination.backText = ""
             

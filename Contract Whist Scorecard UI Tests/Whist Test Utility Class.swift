@@ -70,7 +70,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tap(app.sheets["Add Player"].buttons["Find existing player"])
         // Select Emma
         self.tap(app.collectionViews.staticTexts[name], timeout: 30)
-        self.tap(app.navigationBars["Select Players"].buttons["Download"])
+        self.tap(app.navigationBars["Players"].buttons["Download"])
     }
     
     func selectPlayer(_ name: String) {

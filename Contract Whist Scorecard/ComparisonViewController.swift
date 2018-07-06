@@ -62,6 +62,9 @@ class ComparisonViewController: UIViewController, UITableViewDataSource, UITable
     var selectedPlayer: Int = 0
     var selectedList: [PlayerDetail]!
     weak var delegate: ComparisonDelegate?
+    var returnSegue = ""
+    var backText = "Back"
+    var backImage = "back"
     
     // UI component pointers
     var headerCellImageView: [UIImageView?] = []
@@ -140,7 +143,8 @@ class ComparisonViewController: UIViewController, UITableViewDataSource, UITable
     // MARK: - IB Actions ============================================================================== -
 
     @IBAction func finishPressed(_ sender: UIButton) {
-        self.performSegue(withIdentifier: "hideComparison", sender: self )
+        self.navigationController?.isNavigationBarHidden = false
+        self.performSegue(withIdentifier: returnSegue, sender: self )
         NotificationCenter.default.removeObserver(observer!)
     }
     
@@ -171,6 +175,10 @@ class ComparisonViewController: UIViewController, UITableViewDataSource, UITable
         
         // Set nofification for image download
         observer = setImageDownloadNotification()
+        
+        // Format finish button
+        finishButton.setImage(UIImage(named: self.backImage), for: .normal)
+        finishButton.setTitle(self.backText, for: .normal)
         
     }
     

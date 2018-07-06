@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class StatsViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ComparisonDelegate {
+class StatsViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     // MARK: - Class Properties ======================================================================== -
     
@@ -20,13 +20,13 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
     var selection = [Bool]()
     
     // Properties to pass state to detail segue
-    var selectMode = false
+    var multiSelectMode = false
     var selectedPlayer = 0
     var playerDetail: PlayerDetail!
     
     // Properties to get state from calling segue
     var playerList: [PlayerDetail]!
-    var mode: DetailMode = .amend // Also passed on to detail segue
+    var detailMode: DetailMode = .amend // Also passed on to detail segue
     var returnSegue = ""
     var backText = "Back"
     var backImage = "back"
@@ -52,14 +52,14 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
     @IBOutlet weak var selectButton: RoundedButton!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var finishButton: RoundedButton!
-    @IBOutlet weak var syncButton: RoundedButton!
-    @IBOutlet weak var syncMessage: UILabel!
     @IBOutlet weak var navigationBar: UINavigationBar!
+    @IBOutlet weak var toolbarViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var toolbarTopConstraint: NSLayoutConstraint!
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     @IBAction func statsHidePlayer(segue:UIStoryboardSegue) {
         
-        if mode != .display {
+        if detailMode != .display {
             let source = segue.source as! PlayerDetailViewController
             playerDetail = source.playerDetail
             
@@ -101,14 +101,6 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
         }
     }
     
-    @IBAction func hideComparison(segue:UIStoryboardSegue) {
-        if allowSync {
-            // Check for network / iCloud login
-            scorecard.checkNetworkConnection(button: syncButton, label: syncMessage)
-        }
-        refreshView()
-    }
-    
     @IBAction func hideStatsSync(segue:UIStoryboardSegue) {
         // Refresh screen
         refreshView()
@@ -117,7 +109,7 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
     // MARK: - IB Actions ============================================================================== -
     @IBAction func selectPressed(sender: UIButton) {
         
-        if selectMode {
+        if multiSelectMode {
             if selected > 0 {
                 // Go compare
                 if actionSegue != "showComparison" {
@@ -130,9 +122,8 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
                 selectAll(true)
             }
         } else {
-            // Enter select mode
-            selectMode = true
-            selectAll(false)
+            // Select button is overloaded and is sync in this case
+            self.performSegue(withIdentifier: "showStatsSync", sender: self)
         }
         
         formatButtons()
@@ -143,9 +134,6 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
             setSelection(playerNumber, false)
         }
         selected = 0
-        if mode != .none {
-            selectMode = false
-        }
         selectAll(false)
         formatButtons()
     }
@@ -161,17 +149,6 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
         selected = 0
         NotificationCenter.default.removeObserver(observer!)
         self.performSegue(withIdentifier: returnSegue, sender: self)
-    }
-    
-    @IBAction func syncPressed(sender: UIButton) {
-        self.performSegue(withIdentifier: "showStatsSync", sender: self)
-    }
-    
-    @IBAction func leftSwipe(recognizer:UISwipeGestureRecognizer) {
-        if recognizer.state == .ended {
-            selectAll(true)
-            self.performSegue(withIdentifier: actionSegue, sender: self)
-        }
     }
     
     @IBAction func rightSwipe(recognizer:UISwipeGestureRecognizer) {
@@ -191,12 +168,17 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
         
         formatButtons()
         
-        if allowSync {
-            // Check for network / iCloud login
-            scorecard.checkNetworkConnection(button: syncButton, label: syncMessage)
-        } else {
-            syncButton.isHidden = true
-            syncMessage.isHidden = true
+        if !multiSelectMode {
+            if allowSync {
+                // Check for network / iCloud login
+                scorecard.checkNetworkConnection(button: selectButton, label: nil)
+                selectButton.backgroundColor = .clear
+                selectButton.setTitle("Sync...")
+                selectButton.setTitleColor(UIColor.white, for: .normal)
+                selectButton.contentHorizontalAlignment = .right
+            } else {
+                selectButton.isHidden = true
+            }
         }
         
         // Set nofification for image download
@@ -204,7 +186,6 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
         
         // Hide navigation bar - using custom one
         self.navigationController?.isNavigationBarHidden = true
-        
         
     }
     
@@ -294,7 +275,7 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let playerNumber = indexPath.row+1
-        if selectMode {
+        if multiSelectMode {
             let newValue = !selection[playerNumber-1]
             setSelection(playerNumber, newValue)
             if newValue {
@@ -306,28 +287,6 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
         } else {
             selectedPlayer = playerNumber
             self.performSegue(withIdentifier: "showPlayerDetail", sender: self)
-        }
-    }
-    
-    // MARK: - Comparison delegate methods ============================================================= -
-    
-    func deletePlayer(_ playerDetail: PlayerDetail) {
-        // Player has been deleted in comparison - need to remove them here
-        let index = self.playerList.index(where: {($0.objectID == playerDetail.objectID)})
-        if index != nil {
-            // Have to do this as a batch update to avoid the "The number of items contained in an existing section..." crash
-            statsCollectionView.performBatchUpdates({
-                self.statsCollectionView.deleteItems(at: [IndexPath(row: index!, section: 0)])
-                self.playerList.remove(at: index!)
-            })
-        }
-    }
-    
-    func updatePlayer(_ playerDetail: PlayerDetail) {
-        // Player has been updated in comparison - need to update them here
-        let index = self.playerList.index(where: {($0.objectID == playerDetail.objectID)})
-        if index != nil {
-            statsCollectionView.reloadItems(at: [IndexPath(row: index!, section: 0)])
         }
     }
     
@@ -391,24 +350,33 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
     }
 
     func formatButtons() {
-        if mode == .none {
-            selectMode = true
-        }
-        if selectMode {
+        var toolbarHeight:CGFloat
+        
+        if multiSelectMode {
+            // In multi-select mode
             if selected == 0 {
                 selectButton.setTitle("All", for: .normal)
-                cancelButton.isHidden = false
+                toolbarHeight = 0
             } else {
                 selectButton.setTitle(actionText, for: .normal)
-                cancelButton.isHidden = false
+                toolbarHeight = 44
             }
         } else {
-            selectButton.setTitle("Select", for: .normal)
-            cancelButton.isHidden=true
+            if !allowSync {
+                selectButton.isHidden = true
+            }
+            toolbarHeight = 0
         }
         
         finishButton.setImage(UIImage(named: self.backImage), for: .normal)
         finishButton.setTitle(self.backText)
+        
+        if toolbarHeight != self.toolbarTopConstraint.constant {
+            self.toolbarViewHeightConstraint.constant = toolbarHeight
+            Utility.animate() {
+                self.toolbarTopConstraint.constant = toolbarHeight
+            }
+        }
     }
     
     func setSelection(_ playerNumber: Int, _ to: Bool) {
@@ -421,7 +389,7 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
     func formatCell(_ cell: StatsCell, to: Bool) {
         cell.playerTick.isHidden = !to
         cell.playerTick.superview!.bringSubview(toFront: cell.playerTick)
-        let alpha: CGFloat = (to || !selectMode ? 1.0 : 0.5)
+        let alpha: CGFloat = (to || !multiSelectMode ? 1.0 : 0.5)
         cell.playerDetailsView.alpha = alpha
         cell.playerValuesView.alpha = alpha
         cell.playerDisc.alpha = alpha
@@ -436,7 +404,6 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
         selection.removeAll()
         collectionCell.removeAll()
         selected = 0
-        selectMode = false
         for _ in 1...self.playerList.count {
             selection.append(false)
             collectionCell.append(nil)
@@ -466,21 +433,9 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
             destination.playerDetail = self.playerList[selectedPlayer - 1]
             destination.returnSegue = "statsHidePlayer"
             destination.selectedPlayer = selectedPlayer
-            destination.mode = mode
+            destination.mode = detailMode
             destination.scorecard = self.scorecard
             destination.sourceView = view
-            
-        case "showComparison":
-            var selectedList:[PlayerDetail] = []
-            for playerNumber in 1...self.playerList.count {
-                if selection[playerNumber-1] {
-                    selectedList.append(self.playerList[playerNumber-1])
-                }
-            }
-            let destination = segue.destination as! ComparisonViewController
-            destination.selectedList = selectedList
-            destination.scorecard = self.scorecard
-            destination.delegate = self
             
         case "showStatsSync":
             let destination = segue.destination as! SyncViewController

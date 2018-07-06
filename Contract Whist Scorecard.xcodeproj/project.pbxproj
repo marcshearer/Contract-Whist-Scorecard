@@ -74,7 +74,6 @@
 		B26104271EFA585B005AA63C /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26104261EFA585B005AA63C /* SearchViewController.swift */; };
 		B2666A1F1FADAC0700A34CB0 /* Test Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2666A1E1FADAC0700A34CB0 /* Test Extensions.swift */; };
 		B27B1FEA1F9B55ED00ED6FFF /* Scorecard Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27B1FE91F9B55ED00ED6FFF /* Scorecard Tests.swift */; };
-		B27B891C1E22ADD700CA2B0E /* Contract Whist Scorecard.pages in Resources */ = {isa = PBXBuildFile; fileRef = B27B891B1E22ADD700CA2B0E /* Contract Whist Scorecard.pages */; };
 		B28033341F7E046B00CF4696 /* Sync Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28033331F7E046B00CF4696 /* Sync Class.swift */; };
 		B288FAC01FB804D000633FD7 /* Other Main Function Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B288FABF1FB804D000633FD7 /* Other Main Function Tests.swift */; };
 		B288FAC21FB80A0900633FD7 /* Test Utility Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B288FAC11FB80A0900633FD7 /* Test Utility Class.swift */; };
@@ -244,7 +243,6 @@
 		B27B1FE71F9B55ED00ED6FFF /* Contract Whist Scorecard UI Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Contract Whist Scorecard UI Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B27B1FE91F9B55ED00ED6FFF /* Scorecard Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scorecard Tests.swift"; sourceTree = "<group>"; };
 		B27B1FEB1F9B55ED00ED6FFF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B27B891B1E22ADD700CA2B0E /* Contract Whist Scorecard.pages */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Contract Whist Scorecard.pages"; sourceTree = "<group>"; };
 		B28033331F7E046B00CF4696 /* Sync Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Sync Class.swift"; sourceTree = "<group>"; };
 		B288FABF1FB804D000633FD7 /* Other Main Function Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Other Main Function Tests.swift"; sourceTree = "<group>"; };
 		B288FAC11FB80A0900633FD7 /* Test Utility Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Test Utility Class.swift"; sourceTree = "<group>"; };
@@ -642,7 +640,6 @@
 			isa = PBXGroup;
 			children = (
 				CCEA53E21DF3D19F0045292C /* Notes.txt */,
-				B27B891B1E22ADD700CA2B0E /* Contract Whist Scorecard.pages */,
 				CC4CC0F61DEADC32007FB24F /* Products */,
 				B20DA04F1E1FEC5F0040221D /* Contract Whist Scorecard.entitlements */,
 				B20DA0491E164EE60040221D /* Section headings */,
@@ -893,7 +890,6 @@
 				B227892D1FB88BDD009BABCA /* HistoryDetailViewController.storyboard in Resources */,
 				B22789151FB8490F009BABCA /* EntryViewController.storyboard in Resources */,
 				B22789301FB88D33009BABCA /* HistoryViewController.storyboard in Resources */,
-				B27B891C1E22ADD700CA2B0E /* Contract Whist Scorecard.pages in Resources */,
 				B227892A1FB885AC009BABCA /* ConfirmCountViewController.storyboard in Resources */,
 				CC4CC1061DEADC32007FB24F /* LaunchScreen.storyboard in Resources */,
 				B22789071FB83AC4009BABCA /* WalkthroughViewController.storyboard in Resources */,

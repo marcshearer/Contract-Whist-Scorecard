@@ -50,7 +50,7 @@
                                                             </collectionViewFlowLayout>
                                                             <cells>
                                                                 <collectionViewCell opaque="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" reuseIdentifier="Entry Player Cell" id="vqm-n4-fFy" customClass="EntryPlayerCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                                    <rect key="frame" x="0.0" y="-1" width="50" height="46"/>
+                                                                    <rect key="frame" x="0.0" y="-1.5" width="50" height="46"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                                         <rect key="frame" x="0.0" y="0.0" width="50" height="46"/>

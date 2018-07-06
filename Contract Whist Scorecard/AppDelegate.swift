@@ -15,14 +15,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
+    
     // Contract Whist state
     var notificationSimulator: NotificationSimulator!
   
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        UINavigationBar.appearance().barTintColor = UIColor.darkGray
+        UINavigationBar.appearance().barTintColor = ScorecardUI.emphasisColor
         UINavigationBar.appearance().tintColor = UIColor.white
+        UINavigationBar.appearance().isOpaque = true
         
         registerDefaults()
         

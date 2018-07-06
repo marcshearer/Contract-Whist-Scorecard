@@ -21,7 +21,7 @@ class ScorecardUI {
     static let brightColor = UIColor(red: CGFloat(0.0), green: CGFloat(0.5), blue: CGFloat(0.5), alpha: CGFloat(1.0))
     static let sectionHeaderBackgroundColor = UIColor(red: CGFloat(0.85), green: CGFloat(0.85),
                                                blue: CGFloat(0.85), alpha: CGFloat(1.0))
-    static let sectionHeadingBackgroundColor = boldColor
+    static let sectionHeadingBackgroundColor = brightColor
     static let madeContractBackgroundColor = UIColor(red: CGFloat(1.0), green: CGFloat(0.7),
                                                 blue: CGFloat(0.7), alpha: CGFloat(1.0))
     static let blueColor = UIColor(red: CGFloat(69/255), green: CGFloat(134/255),

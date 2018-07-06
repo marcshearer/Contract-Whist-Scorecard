@@ -42,13 +42,13 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.assertNotExists(app.toolbars.buttons["sync"])
         
         // Go into Comparison and check Sync not available
-        self.tap(app.navigationBars["Select Players"].buttons["Select"], timeout: 20)
-        self.tap(app.navigationBars["Select Players"].buttons["All"])
-        self.tap(app.navigationBars["Select Players"].buttons["Compare"])
+        self.tap(app.navigationBars["Players"].buttons["Select"], timeout: 20)
+        self.tap(app.navigationBars["Players"].buttons["All"])
+        self.tap(app.navigationBars["Players"].buttons["Compare"])
         self.assertNotExists(app.toolbars.buttons["sync"])
         
         // Go back to Home Screen
-        self.tap(app.navigationBars["Player Comparison"].buttons["Back"])
+        self.tap(app.navigationBars["Statistics"].buttons["Back"])
         self.returnHome()
         
         // Go into History and check Sync not available
@@ -93,13 +93,13 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.assertEnabled(app.toolbars.buttons["sync"])
         
         // Go into Comparison and check Sync available
-        self.tap(app.navigationBars["Select Players"].buttons["Select"])
-        self.tap(app.navigationBars["Select Players"].buttons["All"])
-        self.tap(app.navigationBars["Select Players"].buttons["Compare"])
+        self.tap(app.navigationBars["Players"].buttons["Select"])
+        self.tap(app.navigationBars["Players"].buttons["All"])
+        self.tap(app.navigationBars["Players"].buttons["Compare"])
         self.assertEnabled(app.toolbars.buttons["sync"])
         
         // Go back to Home Screen
-        self.tap(app.navigationBars["Player Comparison"].buttons["Back"])
+        self.tap(app.navigationBars["Statistics"].buttons["Back"])
         self.returnHome()
         
         // Go into History and check Sync available

@@ -39,17 +39,17 @@ class ScorepadViewController: UIViewController,
     public var recoveryMode = false
     
     // Cell dimensions
-    private let minCellHeight:CGFloat = 30.0
-    private var cellHeight:CGFloat = 0.0
+    private let minCellHeight = 30
+    private var cellHeight = 0
     private var roundWidth: CGFloat = 0.0
-    private var cellWidth: CGFloat = 0.0
+    private var cellWidth = 0
     private var singleColumn = false
     private var narrow = false
     private var dealerShown = false
-    private var dealerRowHeight: CGFloat = 0.0
+    private var dealerRowHeight = 0
     private var imageRowHeight: CGFloat = 0.0
     private var headerHeight: CGFloat = 0.0
-    private let combinedTriggerWidth: CGFloat = 80.0
+    private let combinedTriggerWidth = 80
     
     // Header description variables
     private let showThumbnail = true
@@ -324,15 +324,15 @@ class ScorepadViewController: UIViewController,
             // Header
             switch indexPath.row {
             case dealerRow:
-                height = dealerRowHeight
+                height = CGFloat(dealerRowHeight)
             case imageRow:
                 height = imageRowHeight
             default:
-                height = cellHeight
+                height = headerHeight - CGFloat(dealerRowHeight) - imageRowHeight
             }
         default:
             // Body and footer
-            height = cellHeight
+            height = CGFloat(cellHeight)
         }
         return height
     }
@@ -425,8 +425,8 @@ class ScorepadViewController: UIViewController,
         // Calculate columns
         
         // Set cell widths
-        roundWidth = size.width > CGFloat(600) ? size.width / CGFloat(10) : 60
-        cellWidth = (size.width - roundWidth) / (CGFloat(2.0) * CGFloat(scorecard.currentPlayers))
+        roundWidth = round(size.width > CGFloat(600) ? size.width / CGFloat(10) : 60)
+        cellWidth = Int(round((size.width - roundWidth) / (CGFloat(2.0) * CGFloat(scorecard.currentPlayers))))
         
         if cellWidth <= combinedTriggerWidth {
             cellWidth *= 2
@@ -438,6 +438,8 @@ class ScorepadViewController: UIViewController,
             narrow = false
             imageRowHeight = 84.0
         }
+        
+        roundWidth = size.width - CGFloat(bodyColumns * scorecard.currentPlayers * cellWidth)
         
         // Work out dealer row requirements from settings
         switch scorecard.settingDealerHighlightMode {
@@ -469,7 +471,7 @@ class ScorepadViewController: UIViewController,
     }
         
         if dealerRowHeight > 0 && scorecard.settingDealerHighlightAbove {
-            headerHeight += dealerRowHeight
+            headerHeight += CGFloat(dealerRowHeight)
             dealerRow = headerRows
             headerRows += 1
         }
@@ -479,20 +481,28 @@ class ScorepadViewController: UIViewController,
         
         if dealerRowHeight > 0 && !scorecard.settingDealerHighlightAbove {
             dealerRow = headerRows
-            headerHeight += dealerRowHeight
+            headerHeight += CGFloat(dealerRowHeight)
             headerRows += 1
         }
         
         // Note headerHeight does not include the player name row since we haven't
         // worked this out yet
         
-        cellHeight = max(minCellHeight, (size.height - dealerRowHeight - imageRowHeight - navigationBar.frame.height) / CGFloat(self.rounds+2)) // Adding 2 for name row in header and total row
+        var floatCellHeight: CGFloat = (size.height - CGFloat(dealerRowHeight) - imageRowHeight - navigationBar.frame.height) / CGFloat(self.rounds+2) // Adding 2 for name row in header and total row
+        floatCellHeight.round()
         
-        // Now add in the player name height
-        headerHeight += cellHeight
+        cellHeight = Int(floatCellHeight)
+        
+        if cellHeight < minCellHeight {
+            cellHeight = minCellHeight
+            headerHeight += CGFloat(cellHeight)
+        } else {
+            headerHeight = size.height - CGFloat((self.rounds+2) * cellHeight)
+            
+        }
         
         headerViewHeightConstraint.constant = headerHeight
-        footerViewHeightConstraint.constant = cellHeight
+        footerViewHeightConstraint.constant = CGFloat(cellHeight)
 
         scorecard.saveHeaderHeight(headerHeight + navigationBar.frame.height)
         
@@ -571,7 +581,7 @@ class ScorepadViewController: UIViewController,
             
         } else if scorepadMode == .amend {
             // Amend mode - enter score
-            scoreEntryButton.setTitle("Score")
+            scoreEntryButton.setTitle("Continue")
             scoreEntryButton.isHidden = false
             
         } else if self.scorecard.isHosting {
@@ -827,7 +837,7 @@ class ScorepadViewController: UIViewController,
             }
             else
             {
-                width = cellWidth * CGFloat(bodyColumns)
+                width = CGFloat(cellWidth * bodyColumns)
             }
         }
         else
@@ -838,7 +848,7 @@ class ScorepadViewController: UIViewController,
             }
             else
             {
-                width = cellWidth
+                width = CGFloat(cellWidth)
             }
         }
         return CGSize(width: width, height: totalHeight)

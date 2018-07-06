@@ -23,7 +23,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ffW-WE-f4E">
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ffW-WE-f4E">
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="jut-No-pBV"/>
@@ -45,14 +45,14 @@
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" width="80" id="fgj-MW-RhM">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="wbi-Gg-AL4" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="334" y="9.5" width="25" height="25"/>
+                                                <rect key="frame" x="261" y="9.5" width="98" height="25"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" image="settings">
+                                                <state key="normal" title="Continue" image="forward">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="overridePressed:" destination="M5N-Yi-C04" eventType="touchUpInside" id="dSn-Gb-Jiq"/>
+                                                    <action selector="continuePressed:" destination="M5N-Yi-C04" eventType="touchUpInside" id="8cC-UA-mmq"/>
                                                 </connections>
                                             </button>
                                         </barButtonItem>
@@ -176,7 +176,7 @@
                                                         <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                 </button>
-                                                <button opaque="NO" tag="3" contentMode="scaleAspectFit" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5QR-vA-soU" customClass="SideImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <button opaque="NO" tag="3" contentMode="scaleAspectFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5QR-vA-soU" customClass="SideImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                     <rect key="frame" x="17.5" y="199" width="340" height="80"/>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                     <constraints>
@@ -184,7 +184,7 @@
                                                         <constraint firstAttribute="width" constant="340" id="WhU-rF-Rhf"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                                    <state key="normal" image="scorecard right">
+                                                    <state key="normal" image="settings blue">
                                                         <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </state>
                                                 </button>
@@ -216,8 +216,8 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <connections>
                                             <outlet property="cutForDealerButton" destination="69E-OW-LQ5" id="FQc-aF-L2C"/>
-                                            <outlet property="gameScorecardButton" destination="5QR-vA-soU" id="Glb-cp-ltA"/>
                                             <outlet property="nextDealerButton" destination="f7a-6R-rUp" id="Gul-1u-ljC"/>
+                                            <outlet property="overrideSettingsButton" destination="5QR-vA-soU" id="Glb-cp-ltA"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="redraw" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Game Setup Action Cell Row" rowHeight="162" id="LNY-e4-JP7" customClass="GameSetupActionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
@@ -256,7 +256,7 @@
                                                         <constraint firstAttribute="width" constant="130" id="N7D-Zt-865"/>
                                                         <constraint firstAttribute="height" constant="130" id="pbc-gu-nHk"/>
                                                     </constraints>
-                                                    <state key="normal" image="scorecard right">
+                                                    <state key="normal" image="settings blue">
                                                         <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </state>
                                                 </button>
@@ -274,8 +274,8 @@
                                         <gestureRecognizers/>
                                         <connections>
                                             <outlet property="cutForDealerButton" destination="wUt-jv-Pnx" id="i9e-PB-zUi"/>
-                                            <outlet property="gameScorecardButton" destination="Pet-Bb-pAU" id="QaP-ao-bmH"/>
                                             <outlet property="nextDealerButton" destination="DNt-CK-BEw" id="IiB-KP-hpr"/>
+                                            <outlet property="overrideSettingsButton" destination="Pet-Bb-pAU" id="QaP-ao-bmH"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -310,7 +310,6 @@
                     <connections>
                         <outlet property="backgroundImage" destination="E7h-Ll-Qym" id="r8v-7c-12p"/>
                         <outlet property="gameSetupView" destination="iUU-8s-ns4" id="4uN-Fo-2Y7"/>
-                        <outlet property="overrideButton" destination="wbi-Gg-AL4" id="NFN-KO-aFL"/>
                         <outlet property="playerTableView" destination="c5K-bm-x10" id="EVS-Gn-Umf"/>
                         <segue destination="6Hq-Pm-vP6" kind="show" identifier="showScorepad" id="OMl-3l-9zT"/>
                         <segue destination="Zg2-0A-XQQ" kind="unwind" identifier="hideGameSetup" unwindAction="hideGameSetupWithSegue:" id="ENU-76-LlQ"/>
@@ -350,8 +349,8 @@
         <image name="back" width="14" height="20"/>
         <image name="background portrait" width="250" height="445"/>
         <image name="cut pack" width="100" height="100"/>
+        <image name="forward" width="14" height="20"/>
         <image name="next dealer" width="100" height="100"/>
-        <image name="scorecard right" width="100" height="100"/>
-        <image name="settings" width="25" height="25"/>
+        <image name="settings blue" width="100" height="100"/>
     </resources>
 </document>

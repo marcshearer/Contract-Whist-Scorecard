@@ -125,6 +125,7 @@ class ErrorRoundedButton: RoundedButton {
 }
 
 class ClearButton: RoundedButton {
+    
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.normalTextColor = self.titleColor(for: .normal)! // Leave as declared
@@ -134,6 +135,31 @@ class ClearButton: RoundedButton {
         self.disabledBackgroundColor = self.normalBackgroundColor
         self.disabledAlpha = 0.3
         super.isEnabled(true)
+    }
+}
+
+class OutlineButton: ClearButton {
+
+    @IBInspectable
+    public var outlineColor: UIColor?
+    {
+        set (color) {
+            self.layer.borderColor = color?.cgColor
+        }
+        
+        get {
+            if let color = self.layer.borderColor
+            {
+                return UIColor(cgColor: color)
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.layer.borderWidth = 1.0
     }
 }
 
@@ -188,7 +214,7 @@ class SideImageButton: RoundedButton {
     override func layoutSubviews() {
         super.layoutSubviews()
         if imageView != nil {
-            imageEdgeInsets = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: bounds.width - bounds.height - spacing)
+            imageEdgeInsets = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: bounds.width - bounds.height + spacing)
             titleEdgeInsets = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: spacing)
         }
     }

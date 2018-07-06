@@ -133,6 +133,12 @@ class GetStartedViewController: UIViewController, UITableViewDelegate, UITableVi
             } else {
                 syncEnabledSelection.selectedSegmentIndex = 0
             }
+            
+            if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
+                cell.instructionLabel.text = "This app uses iCloud to sync data across devices. Click the info button to find out more. If you have used the app on another device enter your unique ID and press download to download your, and your co-players details and history. Otherwise press start playing and add players manually"
+            } else {
+                cell.instructionLabel.text = "This app uses iCloud to sync data across devices. Click the info button to find out more. You must be be connected to the internet and be logged into iCloud to use this option. Otherwise press start playing and add players manually"
+            }
         case 2, 3, 4, 5:
            // Action buttons
             cell = tableView.dequeueReusableCell(withIdentifier: "Action Button Cell", for: indexPath) as! GetStartedCell
@@ -366,7 +372,8 @@ class GetStartedViewController: UIViewController, UITableViewDelegate, UITableVi
             let destination = segue.destination as! StatsViewController
             destination.playerList = self.cloudPlayerList
             destination.scorecard = self.scorecard
-            destination.mode = .none
+            destination.multiSelectMode = true
+            destination.detailMode = .none
             destination.returnSegue = "hideGetStartedDownloadPlayers"
             destination.backText = "Cancel"
             destination.actionText = "Download"
@@ -384,4 +391,5 @@ class GetStartedCell: UITableViewCell {
     @IBOutlet weak var syncEmail: UITextField!
     @IBOutlet weak var syncInfo: RoundedButton!
     @IBOutlet weak var actionButton: RoundedButton!
+    @IBOutlet weak var instructionLabel: UILabel!
 }

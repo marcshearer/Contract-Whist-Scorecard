@@ -28,7 +28,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tap(app.navigationBars["Becky"].buttons["Back"])
         
         // Go into select mode
-        self.tap(app.navigationBars["Select Players"].buttons["Select"])
+        self.tap(app.navigationBars["Players"].buttons["Select"])
         
         // Select Cath & Emma
         self.selectPlayer("Cath")
@@ -54,7 +54,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.selectOption("Player Stats")
         
         // Go into select mode
-        self.tap(app.navigationBars["Select Players"].buttons["Select"])
+        self.tap(app.navigationBars["Players"].buttons["Select"])
         
         // Select Becky, Cath & Emma
         self.selectPlayer("Becky")
@@ -62,15 +62,15 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.selectPlayer("Emma")
         
         // Go into compare
-        self.tap(app.navigationBars["Select Players"].buttons["Compare"])
+        self.tap(app.navigationBars["Players"].buttons["Compare"])
         
         // Go back to stats
-        self.tap(app.navigationBars["Player Comparison"].buttons["Back"])
+        self.tap(app.navigationBars["Statistics"].buttons["Back"])
         
         // Select all players & Compare
-        self.tap(app.navigationBars["Select Players"].buttons["Select"])
-        self.tap(app.navigationBars["Select Players"].buttons["All"])
-        self.tap(app.navigationBars["Select Players"].buttons["Compare"])
+        self.tap(app.navigationBars["Players"].buttons["Select"])
+        self.tap(app.navigationBars["Players"].buttons["All"])
+        self.tap(app.navigationBars["Players"].buttons["Compare"])
         
         // Select player detail for Becky & then exit
         self.tap(app.tables.cells.containing(.staticText, identifier: "Becky").buttons["More Info"])
@@ -92,7 +92,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tap(app.tables.staticTexts["Games Won"])
         
         // Return to stats
-        self.tap(app.navigationBars["Player Comparison"].buttons["Back"])
+        self.tap(app.navigationBars["Statistics"].buttons["Back"])
         
         // Go back to home page
         self.returnHome()

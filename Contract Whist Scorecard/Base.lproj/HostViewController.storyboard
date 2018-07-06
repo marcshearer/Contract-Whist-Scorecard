@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -369,8 +369,21 @@
                                 </connections>
                             </button>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" id="EwI-06-kOe">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="M3a-22-0Ai" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="16" y="11" width="54" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Continue" image="forward">
+                                    <color key="titleColor" name="alternateSelectedControlTextColor" catalog="System" colorSpace="catalog"/>
+                                </state>
+                                <connections>
+                                    <action selector="continuePressed:" destination="jFg-9y-h6N" eventType="touchUpInside" id="Wvm-bB-R5B"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="continueButton" destination="M3a-22-0Ai" id="ceW-kY-ncc"/>
                         <outlet property="finishButton" destination="3fM-J1-Tyc" id="ca2-qH-7vc"/>
                         <outlet property="guestPlayerTableView" destination="Xzo-zR-Jgv" id="Z8M-d8-LjU"/>
                         <outlet property="hostPlayerTableView" destination="94s-Nu-7uO" id="nmw-Fg-wEQ"/>
@@ -406,6 +419,7 @@
         <image name="back" width="14" height="20"/>
         <image name="broadcast green" width="120" height="120"/>
         <image name="cross blue" width="20" height="20"/>
+        <image name="forward" width="14" height="20"/>
         <image name="start game" width="100" height="100"/>
     </resources>
 </document>

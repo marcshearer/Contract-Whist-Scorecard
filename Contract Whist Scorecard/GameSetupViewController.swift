@@ -20,7 +20,6 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
     // Properties to pass state to / from segues
     public var selectedPlayers = [PlayerMO?]()          // Selected players passed in from player selection
     public var returnSegue: String!                    // View to return to
-    public var startButtonImage = "scorecard right"
     public var rabbitMQService: RabbitMQService!
     
     // Local class variables
@@ -57,12 +56,8 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
         self.performSegue(withIdentifier: returnSegue, sender: self)
     }
     
-    @IBAction func overridePressed(_ sender: Any) {
-        // Link to override selection
-        let overrideViewController = OverrideViewController()
-        overrideViewController.show(scorecard: scorecard, completion: {
-            self.formatOverrideButton()
-        })
+    @IBAction func continuePressed(_ sender: Any) {
+        self.goToScorepad()
     }
 
     @IBAction func leftSwipe(recognizer:UISwipeGestureRecognizer) {
@@ -213,12 +208,11 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
             actionCell.nextDealerButton.setTitle("Next Dealer")
             actionCell.nextDealerButton.addTarget(self, action: #selector(GameSetupViewController.actionButtonPressed(_:)), for: UIControlEvents.touchUpInside)
           
-            actionCell.gameScorecardButton.setTitle("Start Playing")
-            actionCell.gameScorecardButton.setImage(startButtonImage)
-            actionCell.gameScorecardButton.addTarget(self, action: #selector(GameSetupViewController.actionButtonPressed(_:)), for: UIControlEvents.touchUpInside)
+            actionCell.overrideSettingsButton.setTitle("Override Settings")
+            actionCell.overrideSettingsButton.addTarget(self, action: #selector(GameSetupViewController.actionButtonPressed(_:)), for: UIControlEvents.touchUpInside)
             
             cell = actionCell
-            
+
         default:
             cell = nil
         }
@@ -244,24 +238,11 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
             showCurrentDealer()
             UserDefaults.standard.set(scorecard.dealerIs, forKey: "dealerIs")
        default:
-            // Go to scorepad
-            if self.scorecard.overrideSelected {
-                self.alertDecision("Overrides for the number of cards/rounds have been selected. Are you sure you want to continue",
-                                   title: "Warning",
-                                   okButtonText: "Use Overrides",
-                                   okHandler: {
-                                        self.showScorepad()
-                                   },
-                                   otherButtonText: "Use Settings",
-                                   otherHandler: {
-                                        self.scorecard.resetOverrideSettings()
-                                        self.showScorepad()
-                                    },
-                                   cancelButtonText: "Cancel")
-            } else {
-                self.showScorepad()
-            }
-            
+            // Link to override selection
+            let overrideViewController = OverrideViewController()
+            overrideViewController.show(scorecard: scorecard, completion: {
+                self.formatOverrideButton()
+            })
         }
     }
     
@@ -314,6 +295,25 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
         
         ScorecardUI.selectBackground(size: size, backgroundImage: backgroundImage)
 
+    }
+    
+    private func goToScorepad() {
+        if self.scorecard.overrideSelected {
+            self.alertDecision("Overrides for the number of cards/rounds have been selected. Are you sure you want to continue",
+                               title: "Warning",
+                               okButtonText: "Use Overrides",
+                               okHandler: {
+                                self.showScorepad()
+            },
+                               otherButtonText: "Use Settings",
+                               otherHandler: {
+                                self.scorecard.resetOverrideSettings()
+                                self.showScorepad()
+            },
+                               cancelButtonText: "Cancel")
+        } else {
+            self.showScorepad()
+        }
     }
     
     func showScorepad() {
@@ -387,7 +387,7 @@ class GameSetupNameCell: UITableViewCell {
 class GameSetupActionCell: UITableViewCell {
     @IBOutlet weak var cutForDealerButton: ImageButton!
     @IBOutlet weak var nextDealerButton: ImageButton!
-    @IBOutlet weak var gameScorecardButton: ImageButton!
+    @IBOutlet weak var overrideSettingsButton: ImageButton!
 }
 
 // MARK: - Utility Classes ================================================================ -

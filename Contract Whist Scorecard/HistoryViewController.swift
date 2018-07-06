@@ -60,7 +60,6 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     @IBOutlet var bodyView: UITableView!
     @IBOutlet var historyView: UIView!
     @IBOutlet var syncButton: RoundedButton!
-    @IBOutlet var syncMessage: UILabel!
 
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
@@ -106,7 +105,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         self.navigationController?.isNavigationBarHidden = true
         
         // Check for network / iCloud login
-        scorecard.checkNetworkConnection(button: syncButton, label: syncMessage)
+        scorecard.checkNetworkConnection(button: syncButton, label: nil)
        
         // Get history
        getHistory()

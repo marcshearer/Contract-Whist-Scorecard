@@ -48,11 +48,15 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
     @IBOutlet weak var animationThumbnailView: UIView!
     @IBOutlet weak var animationDisc: UILabel!
     @IBOutlet weak var animationName: UILabel!
+    @IBOutlet weak var selectedHeadingView: UIView!
+    @IBOutlet weak var selectedView: UIView!
     @IBOutlet weak var selectedViewHeight: NSLayoutConstraint!
     @IBOutlet weak var selectedSubheadingHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var selectedViewWidth: NSLayoutConstraint!
     @IBOutlet weak var backgroundImage: UIImageView!
-    
+    @IBOutlet weak var toolbar: UIToolbar!
+    @IBOutlet weak var toolbarViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var toolbarTopConstraint: NSLayoutConstraint!
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     
@@ -137,7 +141,7 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
         if scorecard.recoveryMode {
             if selectedList.count == scorecard.currentPlayers {
                 self.performSegue(withIdentifier: "showGameSetup", sender: self)
-            } else {
+           } else {
                 scorecard.recoveryMode = false
             }
         }
@@ -151,14 +155,19 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
         
         // Set nofification for image download
         observer = setImageDownloadNotification()
+        
+        // Set selection color
+        ScorecardUI.totalStyleView(self.selectedView)
+        ScorecardUI.totalStyleView(self.selectedHeadingView)
+        toolbar.barTintColor = ScorecardUI.totalColor
 
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         // Select watermark background
-        ScorecardUI.selectBackground(size: size, backgroundImage: backgroundImage)
-       // Resize cells
+        // ScorecardUI.selectBackground(size: size, backgroundImage: backgroundImage)
+        // Resize cells
         setWidth(size: size)
         availableCollectionView.reloadData()
         selectedCollectionView.reloadData()
@@ -168,7 +177,7 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
         
         if firstTime {
             // Select watermark background
-            ScorecardUI.selectBackground(size: selectionView.frame.size, backgroundImage: backgroundImage)
+            // ScorecardUI.selectBackground(size: selectionView.frame.size, backgroundImage: backgroundImage)
             // Resize cells
             setWidth(size: selectionView.frame.size)
             firstTime = false
@@ -213,8 +222,7 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
                                      initials: "",
                                      label: cell.disc)
                 
-                cell.name.text = "New"
-                cell.name.textColor = UIColor.blue
+                cell.name.text = "Add"
                 cell.thumbnailView.alpha = 1.0
                 cell.disc.backgroundColor = ScorecardUI.totalColor
                 cell.name.alpha = 1.0
@@ -235,7 +243,7 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
                 let newAlpha:CGFloat = (isSelected ? selectedAlpha : 1.0)
                 cell.thumbnailView.alpha = newAlpha
                 cell.name.alpha = newAlpha
-                cell.tick.image = UIImage(named: "big tick")
+                cell.tick.image = UIImage(named: "green tick")
                 cell.tick.isHidden = !isSelected
             }
             
@@ -353,8 +361,17 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
     // MARK: - Form Presentation / Handling Routines =================================================== -
     
     func formatButtons() {
+        
         continueButton.isHidden = (selectedList.count >= 3 ? false : true)
-        clearButton.isHidden = (selectedList.count > 0 ? false : true)
+        
+        let toolbarHeight: CGFloat = (selectedList.count > 0 ? 44 : 0)
+        
+        if toolbarHeight != self.toolbarTopConstraint.constant {
+            self.toolbarViewHeightConstraint.constant = toolbarHeight
+            Utility.animate(duration: 0.3) {
+                self.toolbarTopConstraint.constant = toolbarHeight
+            }
+        }
     }
     
     func setWidth(size: CGSize) {
@@ -366,7 +383,7 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
         if (totalHeight <= 400) {
             selectedSubheadingHeightConstraint.constant = 0
         } else {
-            selectedSubheadingHeightConstraint.constant = 32
+            selectedSubheadingHeightConstraint.constant = 0
         }
         setSelectedViewWidthContstraint(selectedList.count)
     }
@@ -698,7 +715,7 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
     func addNewPlayer() {
         if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
             // Either enter a new player or choose from cloud
-            let actionSheet = ActionSheet("Add Player", dark: true, view: availableCollectionView, direction: .left, x: width, y: width / 2)
+            let actionSheet = ActionSheet(view: availableCollectionView, direction: .left, x: width, y: width / 2)
             actionSheet.add("Find existing player", handler: self.selectCloudPlayers)
             actionSheet.add("Create player manually", handler: {
                 self.performSegue(withIdentifier: "selectionNewPlayer", sender: self)
@@ -740,7 +757,8 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
             let destination = segue.destination as! StatsViewController
             destination.playerList = self.cloudPlayerList
             destination.scorecard = self.scorecard
-            destination.mode = .none
+            destination.detailMode = .none
+            destination.multiSelectMode = true
             destination.returnSegue = "selectionHideCloudPlayers"
             destination.backText = "Cancel"
             destination.actionText = "Download"

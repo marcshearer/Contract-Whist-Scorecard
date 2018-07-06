@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -22,13 +22,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CMD-pe-gDa">
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CMD-pe-gDa">
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" name="alternateSelectedControlTextColor" catalog="System" colorSpace="catalog"/>
                                 </textAttributes>
                                 <items>
-                                    <navigationItem title="Select Players" largeTitleDisplayMode="always" id="tiP-qu-fbf">
+                                    <navigationItem title="Players" largeTitleDisplayMode="always" id="tiP-qu-fbf">
                                         <barButtonItem key="leftBarButtonItem" id="0lq-Kn-ItV">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="KBX-t5-3kT" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                 <rect key="frame" x="16" y="11" width="22" height="22"/>
@@ -57,7 +57,7 @@
                                 </items>
                             </navigationBar>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="FRm-Jv-6Gi">
-                                <rect key="frame" x="0.0" y="64" width="375" height="559"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="5" minimumInteritemSpacing="1" id="QDT-Mx-2MO">
                                     <size key="itemSize" width="131" height="131"/>
@@ -243,6 +243,7 @@
                                                                 <constraint firstItem="vgw-wZ-Xvl" firstAttribute="height" secondItem="yje-JT-5I1" secondAttribute="height" id="Ttv-7W-E8v"/>
                                                                 <constraint firstItem="gW4-JU-Ory" firstAttribute="top" secondItem="oX8-Wh-dps" secondAttribute="top" constant="6" id="YDI-OO-YsT"/>
                                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="vgw-wZ-Xvl" secondAttribute="trailing" id="Yd7-5q-5Of"/>
+                                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Zl4-0o-dKa" secondAttribute="trailing" id="ZCr-u7-wjR"/>
                                                                 <constraint firstItem="TLq-W4-lVs" firstAttribute="top" secondItem="DmO-RU-tNH" secondAttribute="bottom" id="ZVx-cQ-ikw"/>
                                                                 <constraint firstItem="gW4-JU-Ory" firstAttribute="height" secondItem="mhO-n6-9gs" secondAttribute="height" id="fh7-KP-scc"/>
                                                                 <constraint firstItem="vgw-wZ-Xvl" firstAttribute="leading" secondItem="yje-JT-5I1" secondAttribute="trailing" constant="10" id="h5a-IE-wvK"/>
@@ -354,75 +355,63 @@
                                     <outlet property="delegate" destination="aCF-cU-Oeh" id="A9S-JY-Mqj"/>
                                 </connections>
                             </collectionView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NUP-2y-buM">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SGf-z8-ZO2" userLabel="Toolbar View">
                                 <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <subviews>
+                                    <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NUP-2y-buM">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="S6n-ut-0wp"/>
+                                        </constraints>
+                                        <items>
+                                            <barButtonItem style="plain" systemItem="flexibleSpace" id="T7q-AX-gNr"/>
+                                            <barButtonItem width="48" style="plain" id="qIh-qi-Xh1">
+                                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="ohY-Mq-YSP" customClass="OutlineButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                    <rect key="frame" x="119.5" y="5" width="136" height="34"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                    <state key="normal" title="Clear Selection">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </state>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="outlineColor">
+                                                            <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="cancelPressedWithSender:" destination="aCF-cU-Oeh" eventType="touchUpInside" id="bhe-8V-Jby"/>
+                                                    </connections>
+                                                </button>
+                                            </barButtonItem>
+                                            <barButtonItem style="plain" systemItem="flexibleSpace" id="4H4-oi-sTz"/>
+                                        </items>
+                                        <color key="barTintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </toolbar>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="TQb-3P-uL1"/>
+                                    <constraint firstItem="NUP-2y-buM" firstAttribute="leading" secondItem="SGf-z8-ZO2" secondAttribute="leading" id="Lu9-qs-TAi"/>
+                                    <constraint firstAttribute="trailing" secondItem="NUP-2y-buM" secondAttribute="trailing" id="a3q-7j-LOb"/>
+                                    <constraint firstAttribute="height" constant="44" id="rdJ-he-d6c"/>
                                 </constraints>
-                                <items>
-                                    <barButtonItem width="48" style="plain" id="qIh-qi-Xh1">
-                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="ohY-Mq-YSP" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                            <rect key="frame" x="16" y="5" width="56" height="34"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                            <state key="normal" title="Cancel"/>
-                                            <connections>
-                                                <action selector="cancelPressedWithSender:" destination="aCF-cU-Oeh" eventType="touchUpInside" id="bhe-8V-Jby"/>
-                                            </connections>
-                                        </button>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="4H4-oi-sTz"/>
-                                    <barButtonItem width="8" style="plain" systemItem="fixedSpace" id="oVn-Wb-JD8"/>
-                                    <barButtonItem style="plain" id="o9e-AQ-j1f">
-                                        <view key="customView" contentMode="scaleToFill" id="sJa-Sp-IPI">
-                                            <rect key="frame" x="329" y="22" width="0.0" height="0.0"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Login to iCloud to Sync" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="QOx-yS-rEm">
-                                                    <rect key="frame" x="0.0" y="0.0" width="21" height="0.0"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstItem="QOx-yS-rEm" firstAttribute="top" secondItem="sJa-Sp-IPI" secondAttribute="top" id="Ohk-a8-yY7"/>
-                                                <constraint firstItem="QOx-yS-rEm" firstAttribute="leading" secondItem="sJa-Sp-IPI" secondAttribute="leading" id="UdD-6p-yrH"/>
-                                                <constraint firstAttribute="bottom" secondItem="QOx-yS-rEm" secondAttribute="bottom" id="aoP-ZQ-5se"/>
-                                                <constraint firstAttribute="trailing" secondItem="QOx-yS-rEm" secondAttribute="trailing" constant="-21" id="iC2-VT-IJF"/>
-                                            </constraints>
-                                        </view>
-                                    </barButtonItem>
-                                    <barButtonItem width="30" style="plain" id="xs8-ao-abe">
-                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="71C-mX-PIw" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                            <rect key="frame" x="329" y="7" width="30" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" image="sync"/>
-                                            <connections>
-                                                <action selector="syncPressedWithSender:" destination="aCF-cU-Oeh" eventType="touchUpInside" id="s70-WY-nOA"/>
-                                            </connections>
-                                        </button>
-                                    </barButtonItem>
-                                </items>
-                            </toolbar>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="CMD-pe-gDa" firstAttribute="leading" secondItem="9pw-Pu-D89" secondAttribute="leading" id="0gA-2e-PDX"/>
+                            <constraint firstItem="SGf-z8-ZO2" firstAttribute="leading" secondItem="9pw-Pu-D89" secondAttribute="leading" id="4wy-Xk-R0y"/>
                             <constraint firstAttribute="trailing" secondItem="CMD-pe-gDa" secondAttribute="trailing" id="5g8-IU-TwX"/>
-                            <constraint firstAttribute="trailing" secondItem="NUP-2y-buM" secondAttribute="trailing" id="9rh-RH-mRV"/>
-                            <constraint firstItem="YLt-RX-ALw" firstAttribute="top" secondItem="NUP-2y-buM" secondAttribute="bottom" id="Btt-51-Zrs"/>
                             <constraint firstItem="FRm-Jv-6Gi" firstAttribute="leading" secondItem="9pw-Pu-D89" secondAttribute="leading" id="CxE-cj-wcO"/>
                             <constraint firstAttribute="trailing" secondItem="FRm-Jv-6Gi" secondAttribute="trailing" id="F4w-ZY-jnk"/>
-                            <constraint firstItem="NUP-2y-buM" firstAttribute="top" secondItem="FRm-Jv-6Gi" secondAttribute="bottom" id="Uyt-qk-YVG"/>
-                            <constraint firstItem="NUP-2y-buM" firstAttribute="leading" secondItem="9pw-Pu-D89" secondAttribute="leading" id="YG6-XO-vv4"/>
+                            <constraint firstItem="YLt-RX-ALw" firstAttribute="top" secondItem="NUP-2y-buM" secondAttribute="top" constant="44" id="H8V-p7-wPy"/>
+                            <constraint firstItem="YLt-RX-ALw" firstAttribute="top" secondItem="SGf-z8-ZO2" secondAttribute="bottom" id="awp-R9-KvX"/>
+                            <constraint firstAttribute="trailing" secondItem="SGf-z8-ZO2" secondAttribute="trailing" id="kGb-9t-egn"/>
                             <constraint firstItem="FRm-Jv-6Gi" firstAttribute="top" secondItem="CMD-pe-gDa" secondAttribute="bottom" id="lM7-iE-8hh"/>
+                            <constraint firstItem="YLt-RX-ALw" firstAttribute="top" secondItem="FRm-Jv-6Gi" secondAttribute="bottom" id="r6L-Qt-sBv"/>
                             <constraint firstItem="CMD-pe-gDa" firstAttribute="top" secondItem="C75-Yd-uVA" secondAttribute="bottom" id="ryd-RM-7of"/>
                         </constraints>
                         <connections>
-                            <outletCollection property="gestureRecognizers" destination="TwZ-Mc-3kA" appends="YES" id="HXU-uh-NOX"/>
                             <outletCollection property="gestureRecognizers" destination="Q0h-Bp-cLH" appends="YES" id="nL8-oH-bb5"/>
                         </connections>
                     </view>
@@ -432,14 +421,13 @@
                         <outlet property="finishButton" destination="KBX-t5-3kT" id="fKV-4q-82q"/>
                         <outlet property="selectButton" destination="ahW-El-tKK" id="hWo-5W-451"/>
                         <outlet property="statsCollectionView" destination="FRm-Jv-6Gi" id="VJO-ih-VgK"/>
-                        <outlet property="statsView" destination="9pw-Pu-D89" id="iZ1-sJ-uWu"/>
-                        <outlet property="syncButton" destination="71C-mX-PIw" id="2ln-pD-Ivr"/>
-                        <outlet property="syncMessage" destination="QOx-yS-rEm" id="4Sh-Ay-0sz"/>
+                        <outlet property="statsView" destination="9pw-Pu-D89" id="AL5-dU-eaO"/>
+                        <outlet property="toolbarTopConstraint" destination="H8V-p7-wPy" id="cMF-73-xOl"/>
+                        <outlet property="toolbarViewHeightConstraint" destination="rdJ-he-d6c" id="nTX-ce-VTz"/>
                         <segue destination="hXi-5H-nxR" kind="popoverPresentation" identifier="showPlayerDetail" popoverAnchorView="9pw-Pu-D89" id="RdC-bI-G6q">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
                         <segue destination="0aR-2H-gBg" kind="unwind" identifier="hidePlayerStats" unwindAction="hidePlayerStatsWithSegue:" id="vRw-rF-DmI"/>
-                        <segue destination="EDc-Kd-3RG" kind="show" identifier="showComparison" id="nD8-3W-Q2F"/>
                         <segue destination="jyU-H0-0Mr" kind="popoverPresentation" identifier="showStatsSync" popoverAnchorView="FRm-Jv-6Gi" id="F1T-bt-b75">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
@@ -448,11 +436,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pQb-Du-Rpn" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="left" id="TwZ-Mc-3kA" userLabel="Left Swipe Gesture Recognizer">
-                    <connections>
-                        <action selector="leftSwipeWithRecognizer:" destination="aCF-cU-Oeh" id="36k-D1-EYb"/>
-                    </connections>
-                </swipeGestureRecognizer>
                 <swipeGestureRecognizer direction="right" id="Q0h-Bp-cLH" userLabel="Right Swipe Gesture Recognizer">
                     <connections>
                         <action selector="rightSwipeWithRecognizer:" destination="aCF-cU-Oeh" id="Pog-Vt-9bJ"/>
@@ -460,15 +443,7 @@
                 </swipeGestureRecognizer>
                 <exit id="0aR-2H-gBg" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="4726.875" y="1001.4084507042254"/>
-        </scene>
-        <!--ComparisonViewController-->
-        <scene sceneID="Mog-kf-xaa">
-            <objects>
-                <viewControllerPlaceholder storyboardName="ComparisonViewController" referencedIdentifier="ComparisonViewController" id="EDc-Kd-3RG" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="L12-HQ-ymB" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="5476" y="1053"/>
+            <point key="canvasLocation" x="4725.6000000000004" y="1000.7496251874064"/>
         </scene>
         <!--Player Detail-->
         <scene sceneID="gyh-Bq-tGP">
@@ -476,7 +451,7 @@
                 <viewControllerPlaceholder storyboardIdentifier="UIViewController-bWc-Jl-GWH" storyboardName="PlayerDetailViewController" referencedIdentifier="PlayerDetailViewController" id="hXi-5H-nxR" userLabel="Player Detail" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8xo-yC-r2V" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5408" y="927"/>
+            <point key="canvasLocation" x="5401" y="1000"/>
         </scene>
         <!--Sync-->
         <scene sceneID="LUg-N9-Dij">
@@ -489,7 +464,6 @@
     </scenes>
     <resources>
         <image name="home" width="22" height="22"/>
-        <image name="sync" width="30" height="30"/>
         <image name="tick" width="17" height="20"/>
     </resources>
 </document>

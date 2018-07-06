@@ -162,10 +162,46 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jtX-GA-7ms">
-                                <rect key="frame" x="0.0" y="503" width="375" height="164"/>
+                                <rect key="frame" x="0.0" y="503" width="375" height="208"/>
+                                <subviews>
+                                    <toolbar clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rkx-tt-68g">
+                                        <rect key="frame" x="0.0" y="120" width="375" height="44"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="lx2-Xx-ht3"/>
+                                        </constraints>
+                                        <items>
+                                            <barButtonItem style="plain" systemItem="flexibleSpace" id="ZBb-nx-uE1"/>
+                                            <barButtonItem width="48" style="plain" id="Q5c-1T-Mzy">
+                                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="yT8-YW-vNq" customClass="OutlineButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                    <rect key="frame" x="119.5" y="5" width="136" height="34"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                    <state key="normal" title="Clear Selection">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </state>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="outlineColor">
+                                                            <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                    <connections>
+                                                        <action selector="clearPressed:" destination="zGV-gf-a3n" eventType="touchUpInside" id="DRq-XF-hgc"/>
+                                                    </connections>
+                                                </button>
+                                            </barButtonItem>
+                                            <barButtonItem style="plain" systemItem="flexibleSpace" id="aTL-X5-VKN"/>
+                                        </items>
+                                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="barTintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </toolbar>
+                                </subviews>
                                 <color key="backgroundColor" red="0.84857636690139771" green="0.9110448956489563" blue="0.95787400007247925" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="164" id="hDj-ni-ebJ"/>
+                                    <constraint firstAttribute="bottom" secondItem="Rkx-tt-68g" secondAttribute="bottom" constant="44" id="F3Z-rJ-Pcm"/>
+                                    <constraint firstAttribute="trailing" secondItem="Rkx-tt-68g" secondAttribute="trailing" id="Tis-Ps-x1j"/>
+                                    <constraint firstAttribute="height" constant="208" id="hDj-ni-ebJ"/>
+                                    <constraint firstItem="Rkx-tt-68g" firstAttribute="leading" secondItem="jtX-GA-7ms" secondAttribute="leading" id="y2J-LQ-8hn"/>
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" tag="2" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="bfj-Ah-ovh" userLabel="Selected Collection View">
@@ -248,47 +284,6 @@
                                     <outlet property="delegate" destination="zGV-gf-a3n" id="PPK-nq-2Im"/>
                                 </connections>
                             </collectionView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DHN-ph-SEz" userLabel="Toolbar View">
-                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
-                                <subviews>
-                                    <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rkx-tt-68g">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="44" id="lx2-Xx-ht3"/>
-                                        </constraints>
-                                        <items>
-                                            <barButtonItem style="plain" systemItem="flexibleSpace" id="ZBb-nx-uE1"/>
-                                            <barButtonItem width="48" style="plain" id="Q5c-1T-Mzy">
-                                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="yT8-YW-vNq" customClass="OutlineButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="119.5" y="5" width="136" height="34"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                    <state key="normal" title="Clear Selection">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    </state>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="color" keyPath="outlineColor">
-                                                            <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
-                                                    <connections>
-                                                        <action selector="clearPressed:" destination="zGV-gf-a3n" eventType="touchUpInside" id="DRq-XF-hgc"/>
-                                                    </connections>
-                                                </button>
-                                            </barButtonItem>
-                                            <barButtonItem style="plain" systemItem="flexibleSpace" id="aTL-X5-VKN"/>
-                                        </items>
-                                        <color key="barTintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </toolbar>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="Rkx-tt-68g" secondAttribute="trailing" id="V4n-EL-AOI"/>
-                                    <constraint firstAttribute="height" constant="44" id="keV-td-R7I"/>
-                                    <constraint firstItem="Rkx-tt-68g" firstAttribute="leading" secondItem="DHN-ph-SEz" secondAttribute="leading" id="oOs-eV-XS6"/>
-                                </constraints>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
@@ -297,21 +292,17 @@
                             <constraint firstItem="xg7-Lf-XRQ" firstAttribute="leading" secondItem="jtX-GA-7ms" secondAttribute="leading" id="7om-QF-aXs"/>
                             <constraint firstAttribute="trailingMargin" secondItem="C6I-tL-iMh" secondAttribute="trailing" id="824-Gh-yLA"/>
                             <constraint firstItem="Tlx-l1-ig7" firstAttribute="leading" secondItem="Whs-Ka-Uxd" secondAttribute="leading" constant="10" id="JrV-bw-eHF"/>
-                            <constraint firstItem="vu5-6S-8V2" firstAttribute="top" secondItem="DHN-ph-SEz" secondAttribute="bottom" id="N4N-or-Nep"/>
                             <constraint firstAttribute="trailing" secondItem="jtX-GA-7ms" secondAttribute="trailing" id="Qcv-hT-QG6"/>
                             <constraint firstItem="C6I-tL-iMh" firstAttribute="leading" secondItem="Whs-Ka-Uxd" secondAttribute="leadingMargin" id="Y4M-Ul-sVc"/>
-                            <constraint firstItem="vu5-6S-8V2" firstAttribute="top" secondItem="jtX-GA-7ms" secondAttribute="bottom" id="cKC-9I-Qfp"/>
+                            <constraint firstItem="vu5-6S-8V2" firstAttribute="top" secondItem="jtX-GA-7ms" secondAttribute="bottom" constant="-44" id="cKC-9I-Qfp"/>
                             <constraint firstItem="bfj-Ah-ovh" firstAttribute="centerX" secondItem="Whs-Ka-Uxd" secondAttribute="centerX" id="cds-9U-T7h"/>
-                            <constraint firstAttribute="trailing" secondItem="DHN-ph-SEz" secondAttribute="trailing" id="el4-k1-n6g"/>
                             <constraint firstItem="vu5-6S-8V2" firstAttribute="top" secondItem="C6I-tL-iMh" secondAttribute="bottom" id="gPq-pz-0GU"/>
-                            <constraint firstItem="vu5-6S-8V2" firstAttribute="top" secondItem="Rkx-tt-68g" secondAttribute="top" constant="44" id="ilg-8e-qjd"/>
                             <constraint firstItem="jtX-GA-7ms" firstAttribute="leading" secondItem="Whs-Ka-Uxd" secondAttribute="leading" id="lde-MW-hLR"/>
                             <constraint firstItem="xg7-Lf-XRQ" firstAttribute="top" secondItem="Tlx-l1-ig7" secondAttribute="bottom" constant="10" id="pIa-Ra-MCl"/>
                             <constraint firstItem="C6I-tL-iMh" firstAttribute="top" secondItem="oNf-e1-yB2" secondAttribute="bottom" id="q10-Lg-yM1"/>
                             <constraint firstItem="jtX-GA-7ms" firstAttribute="top" secondItem="xg7-Lf-XRQ" secondAttribute="bottom" id="rHg-aa-cpa"/>
                             <constraint firstAttribute="trailing" secondItem="Tlx-l1-ig7" secondAttribute="trailing" constant="10" id="s3n-Cw-bEf"/>
                             <constraint firstItem="xg7-Lf-XRQ" firstAttribute="centerX" secondItem="jtX-GA-7ms" secondAttribute="centerX" id="w3g-Cz-8Md"/>
-                            <constraint firstItem="DHN-ph-SEz" firstAttribute="leading" secondItem="Whs-Ka-Uxd" secondAttribute="leading" id="xbK-Ei-oIE"/>
                             <constraint firstItem="bfj-Ah-ovh" firstAttribute="top" secondItem="xg7-Lf-XRQ" secondAttribute="bottom" constant="18" id="yq4-q9-NeN"/>
                         </constraints>
                         <connections>
@@ -358,8 +349,7 @@
                         <outlet property="selectedViewWidth" destination="nqF-Yv-7nT" id="yMz-WW-TNF"/>
                         <outlet property="selectionView" destination="Whs-Ka-Uxd" id="QAl-of-52o"/>
                         <outlet property="toolbar" destination="Rkx-tt-68g" id="cfy-kh-frm"/>
-                        <outlet property="toolbarTopConstraint" destination="ilg-8e-qjd" id="sta-T3-PSu"/>
-                        <outlet property="toolbarViewHeightConstraint" destination="keV-td-R7I" id="RTi-q1-RFR"/>
+                        <outlet property="toolbarBottomConstraint" destination="F3Z-rJ-Pcm" id="Zkm-Km-tnK"/>
                         <segue destination="cPJ-J5-mJc" kind="presentation" identifier="selectionNewPlayer" id="N9w-IV-lmX"/>
                         <segue destination="Vxp-SW-x6a" kind="unwind" identifier="returnSelection" unwindAction="returnSelectionWithSegue:" id="UXW-YD-63I"/>
                         <segue destination="wYy-Td-NIk" kind="show" identifier="showGameSetup" id="zvw-a4-7JA"/>

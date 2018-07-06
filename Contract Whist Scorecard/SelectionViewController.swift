@@ -55,8 +55,7 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
     @IBOutlet weak var selectedViewWidth: NSLayoutConstraint!
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var toolbar: UIToolbar!
-    @IBOutlet weak var toolbarViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var toolbarTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var toolbarBottomConstraint: NSLayoutConstraint!
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     
@@ -135,7 +134,7 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
         assignPlayers()
         
         // Decide if buttons enabled
-        formatButtons()
+        formatButtons(false)
         
         // Check if in recovery mode - if so (and found all players) go straight to game setup
         if scorecard.recoveryMode {
@@ -159,8 +158,10 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
         // Set selection color
         ScorecardUI.totalStyleView(self.selectedView)
         ScorecardUI.totalStyleView(self.selectedHeadingView)
-        toolbar.barTintColor = ScorecardUI.totalColor
-
+        self.toolbar.setBackgroundImage(UIImage(),
+                                        forToolbarPosition: .any,
+                                        barMetrics: .default)
+        self.toolbar.setShadowImage(UIImage(), forToolbarPosition: .any)
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -224,9 +225,8 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
                 
                 cell.name.text = "Add"
                 cell.thumbnailView.alpha = 1.0
-                cell.disc.backgroundColor = ScorecardUI.totalColor
                 cell.name.alpha = 1.0
-                cell.tick.image = UIImage(named: "big plus gray")
+                cell.tick.image = UIImage(named: "big plus")
                 cell.tick.isHidden = false
                 
             } else {
@@ -243,7 +243,7 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
                 let newAlpha:CGFloat = (isSelected ? selectedAlpha : 1.0)
                 cell.thumbnailView.alpha = newAlpha
                 cell.name.alpha = newAlpha
-                cell.tick.image = UIImage(named: "green tick")
+                cell.tick.image = UIImage(named: "big tick")
                 cell.tick.isHidden = !isSelected
             }
             
@@ -360,16 +360,20 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
     
     // MARK: - Form Presentation / Handling Routines =================================================== -
     
-    func formatButtons() {
+    func formatButtons(_ animated: Bool = true) {
         
         continueButton.isHidden = (selectedList.count >= 3 ? false : true)
         
-        let toolbarHeight: CGFloat = (selectedList.count > 0 ? 44 : 0)
+        // Note the selected view extends 44 below the bottom of the screen. Setting the bottom constraint to zero makes the toolbar disappear
+        let toolbarBottom: CGFloat = (selectedList.count > 0 ? 44 : 0)
         
-        if toolbarHeight != self.toolbarTopConstraint.constant {
-            self.toolbarViewHeightConstraint.constant = toolbarHeight
-            Utility.animate(duration: 0.3) {
-                self.toolbarTopConstraint.constant = toolbarHeight
+        if toolbarBottom != self.toolbarBottomConstraint.constant {
+            if animated {
+                Utility.animate(duration: 0.3) {
+                    self.toolbarBottomConstraint.constant = toolbarBottom
+                }
+            } else {
+                self.toolbarBottomConstraint.constant = toolbarBottom
             }
         }
     }
@@ -577,7 +581,7 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
             selectedList.append(updateDisplay ? nil : self.scorecard.playerList[addPlayerNumber-1])
             numberSelected += 1
             
-            formatButtons()
+            formatButtons(updateDisplay)
             
             if updateDisplay {
                 // Animation

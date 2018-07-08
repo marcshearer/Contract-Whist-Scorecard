@@ -112,6 +112,7 @@ class Scorecard {
     public var overrideCards: [Int]! = nil
     public var overrideBounceNumberCards: Bool! = nil
     public var overrideExcludeStats: Bool! = nil
+    public var overrideExcludeHistory: Bool! = nil
     public var overrideSelected: Bool = false
     
     // Link to recover class
@@ -671,7 +672,7 @@ class Scorecard {
         if cards![0] < cards![1] {
             return cards![1] - numberCards + 1
         } else {
-            return numberCards
+            return cards![1] + numberCards - 1
         }
     }
 
@@ -866,12 +867,13 @@ class Scorecard {
         // Only save if last round complete
         if self.gameComplete(rounds: rounds) {
             // Check if need to exclude from stats
-            let excludeStats = (self.overrideSelected && self.overrideExcludeStats != nil && self.overrideExcludeStats!)
+            let excludeHistory = (self.overrideSelected && self.overrideExcludeHistory != nil && self.overrideExcludeHistory!)
+            let excludeStats = excludeHistory || (self.overrideSelected && self.overrideExcludeStats != nil && self.overrideExcludeStats!)
             // Save the game
-            result = self.saveGame(excludeStats: excludeStats)
+            result = self.saveGame(excludeHistory: excludeHistory, excludeStats: excludeStats)
             for player in 1...self.currentPlayers {
                 if result {
-                    result = self.enteredPlayer(player).save(excludeStats: excludeStats)
+                    result = self.enteredPlayer(player).save(excludeHistory: excludeHistory, excludeStats: excludeStats)
                 }
             }
             if result {
@@ -882,10 +884,10 @@ class Scorecard {
         return result
     }
     
-    public func saveGame(excludeStats: Bool) -> Bool {
+    public func saveGame(excludeHistory: Bool, excludeStats: Bool) -> Bool {
     // Save the game - participants will be saved with players
         
-        if self.settingSaveHistory {
+        if !excludeHistory && self.settingSaveHistory {
             if !CoreData.update(updateLogic: {
                 if self.gameMO == nil {
                     // Create the managed object

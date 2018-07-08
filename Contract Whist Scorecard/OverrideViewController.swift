@@ -26,11 +26,15 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
     let endSliderRow = 1
     let bounceRow = 2
     
+    let excludeHistoryRow = 0
+    let excludeStatsRow = 1
+
     // UI elements
     private var cardsSlider: [Int : UISlider] = [:]
     private var cardsValue: [Int : UITextField] = [:]
     private var bounceSelection: UISegmentedControl!
-    private var excludeSelection: UISegmentedControl!
+    private var excludeStatsSelection: UISegmentedControl!
+    private var excludeHistorySelection: UISegmentedControl!
     
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var confirmButton: RoundedButton!
@@ -57,6 +61,7 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
             self.scorecard.overrideCards = self.scorecard.settingCards
             self.scorecard.overrideBounceNumberCards = self.scorecard.settingBounceNumberCards
             self.scorecard.overrideExcludeStats = true
+            self.scorecard.overrideExcludeHistory = false
             self.scorecard.overrideSelected = true
         }
         self.enableButtons()
@@ -69,7 +74,16 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (section == cardsSection ? 3 : 1)
+        switch section {
+        case instructionSection:
+            return 1
+        case cardsSection:
+            return 3
+        case excludeSection:
+            return 2
+        default:
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -79,7 +93,7 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
         case cardsSection:
             return 50
         case excludeSection:
-            return 70
+            return 50
         default:
             return 0
         }
@@ -126,17 +140,35 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
                 break
             }
         case excludeSection:
-            cell = tableView.dequeueReusableCell(withIdentifier: "Exclude Cell", for: indexPath) as! OverrideTableCell
-            excludeSelection = cell.excludeSelection
-            excludeSelection.addTarget(self, action: #selector(OverrideViewController.excludeAction(_:)), for: UIControlEvents.valueChanged)
-            cardsChanged()
-            
-            // Set exclude selection
-            switch scorecard.overrideExcludeStats! {
-            case true:
-                excludeSelection.selectedSegmentIndex = 0
+            switch indexPath.row {
+            case excludeHistoryRow:
+                cell = tableView.dequeueReusableCell(withIdentifier: "Exclude History Cell", for: indexPath) as! OverrideTableCell
+                excludeHistorySelection = cell.excludeHistorySelection
+                excludeHistorySelection.addTarget(self, action: #selector(OverrideViewController.excludeHistoryAction(_:)), for: UIControlEvents.valueChanged)
+                excludeChanged()
+                
+                // Set exclude history selection
+                switch scorecard.overrideExcludeHistory! {
+                case true:
+                    excludeHistorySelection.selectedSegmentIndex = 0
+                default:
+                    excludeHistorySelection.selectedSegmentIndex = 1
+                }
+            case excludeStatsRow:
+                cell = tableView.dequeueReusableCell(withIdentifier: "Exclude Stats Cell", for: indexPath) as! OverrideTableCell
+                excludeStatsSelection = cell.excludeStatsSelection
+                excludeStatsSelection.addTarget(self, action: #selector(OverrideViewController.excludeStatsAction(_:)), for: UIControlEvents.valueChanged)
+                
+                // Set exclude stats selection
+                switch scorecard.overrideExcludeStats! {
+                case true:
+                    excludeStatsSelection.selectedSegmentIndex = 0
+                default:
+                    excludeStatsSelection.selectedSegmentIndex = 1
+                }
+                
             default:
-                excludeSelection.selectedSegmentIndex = 1
+                break
             }
         default:
             break
@@ -161,7 +193,7 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
         case cardsSection:
             return "Number of cards in hands"
         case excludeSection:
-            return "Exclude hand from statistics"
+            return "Exclude from history/statistics"
         default:
             return nil
         }
@@ -194,14 +226,24 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
         self.enableButtons()
     }
     
-    @objc func excludeAction(_ sender: Any) {
-        switch excludeSelection.selectedSegmentIndex {
+    @objc func excludeHistoryAction(_ sender: Any) {
+        switch excludeHistorySelection.selectedSegmentIndex {
+        case 0:
+            scorecard.overrideExcludeHistory = true
+        default:
+            scorecard.overrideExcludeHistory = false
+        }
+        excludeChanged()
+        self.enableButtons()
+    }
+    
+    @objc func excludeStatsAction(_ sender: Any) {
+        switch excludeStatsSelection.selectedSegmentIndex {
         case 0:
             scorecard.overrideExcludeStats = true
         default:
             scorecard.overrideExcludeStats = false
         }
-        cardsChanged()
         self.enableButtons()
     }
     
@@ -214,6 +256,14 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
         bounceSelection.setTitle("Go \(direction) to \(cards[1]) \(cardString)", forSegmentAt: 0)
         cardString = (cards[0] == 1 ? "card" : "cards")
         bounceSelection.setTitle("Return to \(cards[0]) \(cardString)", forSegmentAt: 1)
+    }
+    
+    func excludeChanged() {
+        if self.scorecard.overrideExcludeHistory {
+            self.scorecard.overrideExcludeStats = true
+            self.excludeStatsSelection?.selectedSegmentIndex = 0
+        }
+        self.excludeStatsSelection?.isEnabled = !self.scorecard.overrideExcludeHistory
     }
     
     func enableButtons() {
@@ -250,7 +300,8 @@ class OverrideTableCell: UITableViewCell {
     @IBOutlet weak var cardsSlider: UISlider!
     @IBOutlet weak var cardsValue: UITextField!
     @IBOutlet weak var bounceSelection: UISegmentedControl!
-    @IBOutlet weak var excludeSelection: UISegmentedControl!
+    @IBOutlet weak var excludeStatsSelection: UISegmentedControl!
+    @IBOutlet weak var excludeHistorySelection: UISegmentedControl!
 }
 
 

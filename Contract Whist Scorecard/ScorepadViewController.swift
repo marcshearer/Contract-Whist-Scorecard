@@ -1,4 +1,4 @@
-//
+    //
 //  ScorepadViewController.swift
 //  Contract Whist Scorecard
 //
@@ -66,7 +66,8 @@ class ScorepadViewController: UIViewController,
     private let thinLineWeight: CGFloat = 1
     
     // Local class variables
-    private var firstTimeSubviews = true
+    private var lastNavBarHeight:CGFloat = 0.0
+    private var lastViewHeight:CGFloat = 0.0
     private var firstTimeAppear = true
     private var rotated = false
     private var observer: NSObjectProtocol?
@@ -254,11 +255,6 @@ class ScorepadViewController: UIViewController,
         UIApplication.shared.isIdleTimerDisabled = true
     }
     
-    override internal func viewWillAppear(_ animated: Bool) {
-        // Hide duplicate navigation bar
-        self.navigationController?.isNavigationBarHidden = true
-    }
-    
     override internal func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -291,26 +287,29 @@ class ScorepadViewController: UIViewController,
             self.scorecard.commsHandlerMode = .none
             NotificationCenter.default.post(name: .broadcastHandlerCompleted, object: self, userInfo: nil)
         }
-    }
-    
-    override internal func viewDidDisappear(_ animated: Bool) {
-        self.navigationController?.isNavigationBarHidden = false
+        self.view.setNeedsLayout()
     }
     
     override internal func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        setupSize(to: size)
         super.viewWillTransition(to: size, with: coordinator)
-        headerTableView.reloadData()
-        bodyTableView.reloadData()
-        footerTableView.reloadData()
-        rotated = true
+        coordinator.animate(alongsideTransition: { (context) in
+            self.view.setNeedsLayout()
+            self.headerTableView.reloadData()
+            self.bodyTableView.reloadData()
+            self.footerTableView.reloadData()
+            self.rotated = true
+        }, completion: nil)
     }
     
     override internal func viewWillLayoutSubviews() {
-        
-        if firstTimeSubviews {
+        super.viewWillLayoutSubviews()
+        if lastNavBarHeight != navigationBar.frame.height || lastViewHeight != scorepadView.frame.height {
             setupSize(to: scorepadView.frame.size)
-            firstTimeSubviews = false
+            self.headerTableView.reloadData()
+            self.bodyTableView.reloadData()
+            self.footerTableView.reloadData()
+            lastNavBarHeight = navigationBar.frame.height
+            lastViewHeight = scorepadView.frame.height
         }
     }
     
@@ -497,8 +496,8 @@ class ScorepadViewController: UIViewController,
             cellHeight = minCellHeight
             headerHeight += CGFloat(cellHeight)
         } else {
-            headerHeight = size.height - CGFloat((self.rounds+2) * cellHeight)
-            
+            headerHeight = size.height - CGFloat((self.rounds+1) * cellHeight) - navigationBar.frame.height
+            imageRowHeight = headerHeight - CGFloat(cellHeight)
         }
         
         headerViewHeightConstraint.constant = headerHeight
@@ -551,7 +550,7 @@ class ScorepadViewController: UIViewController,
                 (dealerRowHeight == 0 && (row == playerRow || row == imageRow)) {
                 
                 if scorecard.isScorecardDealer() == playerNumber && !forceClear {
-                    ScorecardUI.brightStyleView(headerCell)
+                    ScorecardUI.totalStyleView(headerCell)
                     if dealerRowHeight >= minCellHeight {
                         headerCell.scorepadCellLabel.text = "Dealer"
                     }
@@ -648,6 +647,7 @@ class ScorepadViewController: UIViewController,
             self.scorecard.gameDatePlayed = Date()
             self.scorecard.gameUUID = UUID().uuidString
             self.recovery.saveLocationAndDate()
+            self.recovery.saveOverride()
         }
     }
     

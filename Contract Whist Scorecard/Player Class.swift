@@ -196,7 +196,7 @@ class Player {
         }
     }
         
-    public func save(excludeStats: Bool) -> Bool {
+    public func save(excludeHistory: Bool, excludeStats: Bool) -> Bool {
         // Save the player to the persistent store
         
         return CoreData.update(updateLogic: {
@@ -266,28 +266,29 @@ class Player {
             }
             
             // Update game participant for history
-            if self.scorecard.settingSaveHistory {
-                if self.participantMO == nil {
-                    // Create the managed object for this participant in the game
-                    self.participantMO = CoreData.create(from: "Participant")
-                    self.participantMO?.gameUUID = scorecard.gameUUID
-                    self.participantMO?.datePlayed = scorecard.gameDatePlayed
-                    self.participantMO?.localDateCreated = Date()
-                    self.participantMO?.deviceUUID = UIDevice.current.identifierForVendor?.uuidString
-                    self.participantMO?.name = self.playerMO?.name
-                    self.participantMO?.email = self.playerMO?.email
-                    self.participantMO?.playerNumber = Int16(self.scorecardPlayerNumber())
+            if !excludeHistory {
+                if self.scorecard.settingSaveHistory {
+                    if self.participantMO == nil {
+                        // Create the managed object for this participant in the game
+                        self.participantMO = CoreData.create(from: "Participant")
+                        self.participantMO?.gameUUID = scorecard.gameUUID
+                        self.participantMO?.datePlayed = scorecard.gameDatePlayed
+                        self.participantMO?.localDateCreated = Date()
+                        self.participantMO?.deviceUUID = UIDevice.current.identifierForVendor?.uuidString
+                        self.participantMO?.name = self.playerMO?.name
+                        self.participantMO?.email = self.playerMO?.email
+                        self.participantMO?.playerNumber = Int16(self.scorecardPlayerNumber())
+                    }
+                    self.participantMO!.handsPlayed = Int16(self.scorecard.rounds)
+                    self.participantMO!.gamesPlayed = 1
+                    self.participantMO!.place = place
+                    self.participantMO!.gamesWon = (place == 1 ? 1 : 0)
+                    self.participantMO!.totalScore = Int16(myScore)
+                    self.participantMO!.handsMade = Int16(roundsMade)
+                    self.participantMO!.twosMade = Int16(twosMade)
+                    self.participantMO!.excludeStats = excludeStats
                 }
-                self.participantMO!.handsPlayed = Int16(self.scorecard.rounds)
-                self.participantMO!.gamesPlayed = 1
-                self.participantMO!.place = place
-                self.participantMO!.gamesWon = (place == 1 ? 1 : 0)
-                self.participantMO!.totalScore = Int16(myScore)
-                self.participantMO!.handsMade = Int16(roundsMade)
-                self.participantMO!.twosMade = Int16(twosMade)
-                self.participantMO!.excludeStats = excludeStats
             }
-            
         })
     }
     
@@ -302,7 +303,7 @@ class Player {
     }
     
     func absoluteModulus(_ value: Int, _ modulus: Int) -> Int {
-        // Return the modulus where it continue smoothly below zero (up to a point)
+        // Return the modulus where it continues smoothly below zero (up to a point)
         return (value + (100 * modulus)) % modulus
     }
     

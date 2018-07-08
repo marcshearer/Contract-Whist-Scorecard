@@ -53,9 +53,7 @@ extension ScorepadViewController {
                 if self.scorecard.isHosting {
                     actionSheet.add("Auto-play", handler: self.startAutoPlay)
                 } else if !self.scorecard.hasJoined {
-                    if Scorecard.adminMode {
-                        actionSheet.add("Fill scorecard", handler: self.fillScorecard)
-                    }
+                    actionSheet.add("Fill scorecard", handler: self.fillScorecard)
                 }
                 actionSheet.add("Show connections", handler: {
                     self.scorecard.commsDelegate?.connectionInfo()

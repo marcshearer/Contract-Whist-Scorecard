@@ -37,7 +37,7 @@ Would be better if host screen wasn't full screen on iPad
 
 Swift Gotchas / hints
 ---------------------
-For good resizing on rotation call view.setNeedsLayout() from viewWillTransition and then override viewDidLayoutSubviews (see HandViewController) - NOTE - NOT viewWillLayoutSubviews
+For good resizing on rotation call view.setNeedsLayout() from viewWillTransition and then override viewDidLayoutSubviews (see HandViewController) - NOTE - NOT viewWillLayoutSubviews - Also look at the animateAlongside approach in ScorepadViewController
 Uncaught exception crashes are normally caused by
     Invalid reuse identifiers on list views / collection views
     Invalid names on segues
@@ -70,4 +70,4 @@ Commands to sort out firewall prompt
     /usr/libexec/ApplicationFirewall/socketfilterfw --add /Applications/Xcode.app/Contents/MacOS/Xcode
     /usr/libexec/ApplicationFirewall/socketfilterfw --add /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/Contents/MacOS/Simulator
     sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
-
+Remapped home and end etc using ~/Library/KeyBindings/DefaultKeyBinding.dict - Did Ctrl-C etc in the keyboard settings app shortcuts

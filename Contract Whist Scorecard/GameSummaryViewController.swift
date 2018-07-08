@@ -36,6 +36,10 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
     private var completionAdvanceDealer: Bool = false
     private var completionResetOverrides: Bool = false
     
+    // Overrides
+    var excludeHistory = false
+    var excludeStats = false
+
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     
     @IBAction func returnGameSummary(segue:UIStoryboardSegue) {
@@ -102,6 +106,9 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
         super.viewDidLoad()
         
         sync.initialise(scorecard: scorecard)
+        
+        self.excludeHistory = (self.scorecard.overrideSelected && self.scorecard.overrideExcludeHistory != nil && self.scorecard.overrideExcludeHistory)
+        self.excludeStats = self.excludeHistory || (self.scorecard.overrideSelected && self.scorecard.overrideExcludeStats != nil && self.scorecard.overrideExcludeStats)
         
         if gameSummaryMode != .amend {
             leftSwipeGesture.isEnabled = false
@@ -343,8 +350,7 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
         // Clear cross reference array
         xref.removeAll()
         
-        let excludeStats = (self.scorecard.overrideSelected && self.scorecard.overrideExcludeStats != nil && self.scorecard.overrideExcludeStats)
-        if !excludeStats {
+        if !self.excludeStats && !self.excludeHistory {
             if self.scorecard.settingSaveHistory {
                 // Load high scores - get 10 to allow for lots of ties
                 // Note - this assumes this game's participants have been placed in the database already
@@ -386,7 +392,7 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
             let score = Int64(scorecard.enteredPlayer(playerNumber).totalScore())
             var ranking = 0
             
-            if !excludeStats {
+            if !self.excludeStats && !self.excludeHistory {
                 for loopCount in 1...highScoreRanking.count {
                     // No need to check if already got a high place
                     if self.scorecard.settingSaveHistory && ranking == 0 {
@@ -440,7 +446,7 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     public func saveGameNotification(newHighScore: Bool, winnerEmail: String, winner: String, winningScore: Int) {
-        if self.scorecard.settingSyncEnabled && self.scorecard.isNetworkAvailable && self.scorecard.isLoggedIn {
+        if self.scorecard.settingSyncEnabled && self.scorecard.isNetworkAvailable && self.scorecard.isLoggedIn && !self.excludeHistory {
             var message = ""
             
             for playerNumber in 1...self.scorecard.currentPlayers {
@@ -481,7 +487,13 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
         }
         
         if confirm {
-            let alertController = UIAlertController(title: "Finish Game", message: "Your game has been saved. However if you continue you will not be able to return to it.\n\n Are you sure you want to do this?", preferredStyle: UIAlertControllerStyle.alert)
+            var message: String
+            if self.excludeHistory || !self.scorecard.settingSaveHistory {
+                message = "If you continue you will not be able to return to this game.\n\n Are you sure you want to do this?"
+            } else {
+                message = "Your game has been saved. However if you continue you will not be able to return to it.\n\n Are you sure you want to do this?"
+            }
+            let alertController = UIAlertController(title: "Finish Game", message: message, preferredStyle: UIAlertControllerStyle.alert)
             alertController.addAction(UIAlertAction(title: "Confirm", style: UIAlertActionStyle.default,
                                                     handler: { (action:UIAlertAction!) -> Void in
                 finish()
@@ -500,7 +512,7 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
         completionToSegue = toSegue
         completionAdvanceDealer = advanceDealer
         completionResetOverrides = resetOverrides
-        if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
+        if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn && !self.excludeHistory {
             view.isUserInteractionEnabled = false
             activityIndicator.startAnimating()
             self.sync.delegate = self

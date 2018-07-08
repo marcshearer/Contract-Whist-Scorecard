@@ -96,12 +96,12 @@ class DarkUnroundedButton: DarkRoundedButton {
     }
 }
 
-class BrightRoundedButton: RoundedButton {
+class TotalRoundedButton: RoundedButton {
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.normalTextColor = UIColor.white
-        self.normalBackgroundColor = ScorecardUI.brightColor
+        self.normalBackgroundColor = ScorecardUI.totalColor
         self.normalAlpha = 1.0
         self.disabledTextColor = self.normalTextColor
         self.disabledBackgroundColor = self.normalBackgroundColor

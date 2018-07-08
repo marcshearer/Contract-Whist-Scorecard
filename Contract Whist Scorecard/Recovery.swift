@@ -99,6 +99,14 @@ class Recovery {
         UserDefaults.standard.set(scorecard.gameUUID, forKey: "recoveryGameUUID")
     }
     
+    func saveOverride() {
+        UserDefaults.standard.set(scorecard.overrideSelected, forKey: "recoveryOverrideSelected")
+        UserDefaults.standard.set(scorecard.overrideCards, forKey: "recoveryOverrideCards")
+        UserDefaults.standard.set(scorecard.overrideBounceNumberCards, forKey: "recoveryOverrideBounceNumberCards")
+        UserDefaults.standard.set(scorecard.overrideExcludeHistory, forKey: "recoveryOverrideExcludeHistory")
+        UserDefaults.standard.set(scorecard.overrideExcludeStats, forKey: "recoveryOverrideStats")
+    }
+    
     func saveInitialValues() {
         // Called at the start of a game to clear out any old values
         
@@ -137,6 +145,7 @@ class Recovery {
         scorecard.setGameInProgress(true, save: false)
         scorecard.maxEnteredRound = 1
         
+        // Reload scores
         for round in 1...scorecard.rounds {
             
             scorecard.setRoundError(round, UserDefaults.standard.bool(forKey: "recoveryRoundError\(round)"))
@@ -158,12 +167,14 @@ class Recovery {
             }
         }
         
+        // Update current round
         if scorecard.roundPlayer(playerNumber: scorecard.currentPlayers, round: scorecard.maxEnteredRound).made(scorecard.maxEnteredRound) != nil && scorecard.maxEnteredRound <= scorecard.rounds {
             // Round complete - move to next
             scorecard.maxEnteredRound = scorecard.maxEnteredRound + 1
         }
         scorecard.selectedRound = scorecard.maxEnteredRound
         
+        // Reload location
         scorecard.gameLocation.description = UserDefaults.standard.string(forKey: "recoveryLocationText")
         let latitude = UserDefaults.standard.double(forKey: "recoveryLocationLatitude")
         let longitude = UserDefaults.standard.double(forKey: "recoveryLocationLongitude")
@@ -171,6 +182,7 @@ class Recovery {
             scorecard.gameLocation.location = CLLocation(latitude: latitude, longitude: longitude)
         }
         
+        // Reload game unique key / date
         scorecard.gameDatePlayed = UserDefaults.standard.object(forKey: "recoveryDatePlayed") as? Date
         scorecard.gameUUID = UserDefaults.standard.string(forKey: "recoveryGameUUID")
         
@@ -207,6 +219,22 @@ class Recovery {
             scorecard.recoveryConnectionEmail = nil
             scorecard.recoveryConnectionDevice = nil
         }
+        
+        // Reload overrides
+        scorecard.overrideSelected = UserDefaults.standard.bool(forKey: "recoveryOverrideSelected")
+        if scorecard.overrideSelected {
+            scorecard.overrideCards = UserDefaults.standard.array(forKey: "recoveryOverrideCards") as! [Int]
+            scorecard.overrideBounceNumberCards = UserDefaults.standard.bool(forKey: "recoveryOverrideBounceNumberCards")
+            scorecard.overrideExcludeHistory = UserDefaults.standard.bool(forKey: "recoveryOverrideExcludeHistory")
+            scorecard.overrideExcludeStats = UserDefaults.standard.bool(forKey: "recoveryOverrideExcludeStats")
+        } else {
+            scorecard.overrideCards = nil
+            scorecard.overrideBounceNumberCards = nil
+            scorecard.overrideExcludeHistory = nil
+            scorecard.overrideExcludeStats = nil
+        }
+        
+        // Finished
         self.recoveryInProgress = false
         self.scorecard.watchManager.updateScores()
     }

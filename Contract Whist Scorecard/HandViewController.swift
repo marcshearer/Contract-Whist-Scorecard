@@ -907,7 +907,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if !self.scorecard.roundStarted(scorecard.selectedRound) {
             statusOverUnderLabel.text = ""
         } else {
-            statusOverUnderLabel.textColor = (totalRemaining == 0 ? UIColor.black : (totalRemaining > 0 ? ScorecardUI.brightColor : UIColor.red))
+            statusOverUnderLabel.textColor = (totalRemaining == 0 ? UIColor.black : (totalRemaining > 0 ? ScorecardUI.totalColor : UIColor.red))
             statusOverUnderLabel.text = " \(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")"
         }
         statusRoundLabel.attributedText = self.scorecard.roundTitle(round, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)

@@ -56,7 +56,7 @@
                                 </variation>
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Tlx-l1-ig7" userLabel="Available Collection View">
-                                <rect key="frame" x="10" y="24" width="355" height="437"/>
+                                <rect key="frame" x="10" y="24" width="355" height="443"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="gIj-Vz-0t7">
                                     <size key="itemSize" width="75" height="100"/>
@@ -143,7 +143,7 @@
                                 </connections>
                             </collectionView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xg7-Lf-XRQ" userLabel="Selected Subheading">
-                                <rect key="frame" x="0.0" y="471" width="375" height="32"/>
+                                <rect key="frame" x="0.0" y="467" width="375" height="32"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Selected Players" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y7s-Vi-Z8I">
                                         <rect key="frame" x="16" y="0.0" width="127" height="32"/>
@@ -162,10 +162,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jtX-GA-7ms">
-                                <rect key="frame" x="0.0" y="503" width="375" height="208"/>
+                                <rect key="frame" x="0.0" y="499" width="375" height="212"/>
                                 <subviews>
                                     <toolbar clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rkx-tt-68g">
-                                        <rect key="frame" x="0.0" y="120" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="124" width="375" height="44"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="lx2-Xx-ht3"/>
@@ -192,7 +192,7 @@
                                             </barButtonItem>
                                             <barButtonItem style="plain" systemItem="flexibleSpace" id="aTL-X5-VKN"/>
                                         </items>
-                                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="barTintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </toolbar>
                                 </subviews>
@@ -205,7 +205,7 @@
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" tag="2" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="bfj-Ah-ovh" userLabel="Selected Collection View">
-                                <rect key="frame" x="37.5" y="521" width="300" height="100"/>
+                                <rect key="frame" x="37.5" y="517" width="300" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="2hr-9o-10K"/>
@@ -291,6 +291,7 @@
                             <constraint firstItem="Tlx-l1-ig7" firstAttribute="top" secondItem="oNf-e1-yB2" secondAttribute="bottom" constant="4" id="4Gf-wW-YZF"/>
                             <constraint firstItem="xg7-Lf-XRQ" firstAttribute="leading" secondItem="jtX-GA-7ms" secondAttribute="leading" id="7om-QF-aXs"/>
                             <constraint firstAttribute="trailingMargin" secondItem="C6I-tL-iMh" secondAttribute="trailing" id="824-Gh-yLA"/>
+                            <constraint firstItem="vu5-6S-8V2" firstAttribute="top" secondItem="bfj-Ah-ovh" secondAttribute="bottom" constant="50" id="E2a-DA-gth"/>
                             <constraint firstItem="Tlx-l1-ig7" firstAttribute="leading" secondItem="Whs-Ka-Uxd" secondAttribute="leading" constant="10" id="JrV-bw-eHF"/>
                             <constraint firstAttribute="trailing" secondItem="jtX-GA-7ms" secondAttribute="trailing" id="Qcv-hT-QG6"/>
                             <constraint firstItem="C6I-tL-iMh" firstAttribute="leading" secondItem="Whs-Ka-Uxd" secondAttribute="leadingMargin" id="Y4M-Ul-sVc"/>
@@ -298,7 +299,7 @@
                             <constraint firstItem="bfj-Ah-ovh" firstAttribute="centerX" secondItem="Whs-Ka-Uxd" secondAttribute="centerX" id="cds-9U-T7h"/>
                             <constraint firstItem="vu5-6S-8V2" firstAttribute="top" secondItem="C6I-tL-iMh" secondAttribute="bottom" id="gPq-pz-0GU"/>
                             <constraint firstItem="jtX-GA-7ms" firstAttribute="leading" secondItem="Whs-Ka-Uxd" secondAttribute="leading" id="lde-MW-hLR"/>
-                            <constraint firstItem="xg7-Lf-XRQ" firstAttribute="top" secondItem="Tlx-l1-ig7" secondAttribute="bottom" constant="10" id="pIa-Ra-MCl"/>
+                            <constraint firstItem="xg7-Lf-XRQ" firstAttribute="top" secondItem="Tlx-l1-ig7" secondAttribute="bottom" id="pIa-Ra-MCl"/>
                             <constraint firstItem="C6I-tL-iMh" firstAttribute="top" secondItem="oNf-e1-yB2" secondAttribute="bottom" id="q10-Lg-yM1"/>
                             <constraint firstItem="jtX-GA-7ms" firstAttribute="top" secondItem="xg7-Lf-XRQ" secondAttribute="bottom" id="rHg-aa-cpa"/>
                             <constraint firstAttribute="trailing" secondItem="Tlx-l1-ig7" secondAttribute="trailing" constant="10" id="s3n-Cw-bEf"/>

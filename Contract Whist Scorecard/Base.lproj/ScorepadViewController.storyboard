@@ -30,7 +30,7 @@
                                     <constraint firstAttribute="height" constant="88" id="Nae-oA-mIW"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Header Table Cell" id="OOV-Fv-Tha" customClass="ScorepadTableViewCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Header Table Cell" id="OOV-Fv-Tha" customClass="ScorepadTableViewCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OOV-Fv-Tha" id="O4n-LO-n5S">
@@ -607,9 +607,9 @@
                             <constraint firstAttribute="trailing" secondItem="Skq-xy-HKr" secondAttribute="trailing" id="Tfe-KX-GZC"/>
                             <constraint firstItem="Skq-xy-HKr" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="XEn-GS-6i4"/>
                             <constraint firstItem="uWQ-Kt-TjV" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Z1z-d4-0wt"/>
+                            <constraint firstItem="m5j-3V-hPG" firstAttribute="top" secondItem="CoM-o8-drH" secondAttribute="bottom" id="blC-pe-3M1"/>
                             <constraint firstAttribute="trailing" secondItem="CoM-o8-drH" secondAttribute="trailing" id="dJj-0f-hw8"/>
-                            <constraint firstItem="uWQ-Kt-TjV" firstAttribute="top" secondItem="m5j-3V-hPG" secondAttribute="bottom" id="fV3-DX-w6N"/>
-                            <constraint firstItem="m5j-3V-hPG" firstAttribute="top" secondItem="CoM-o8-drH" secondAttribute="bottom" id="kn5-fw-H6s"/>
+                            <constraint firstItem="uWQ-Kt-TjV" firstAttribute="top" secondItem="m5j-3V-hPG" secondAttribute="bottom" id="oKi-Sk-mNO"/>
                             <constraint firstAttribute="trailing" secondItem="m5j-3V-hPG" secondAttribute="trailing" id="p9y-wJ-ZBM"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="uWQ-Kt-TjV" secondAttribute="bottom" id="q7V-na-oyS"/>
                             <constraint firstItem="m5j-3V-hPG" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="v0n-ja-RWi"/>

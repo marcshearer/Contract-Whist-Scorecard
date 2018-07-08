@@ -10,6 +10,7 @@ import UIKit
 
 class ScorecardUI {
     
+    // TODO Should name these from XCAssets colors using UIColor(named:) but this is only available in IOS11
     static let darkHighlightColor = UIColor(red: CGFloat(0.85), green: CGFloat(0.85),
                                  blue: CGFloat(0.85), alpha: CGFloat(1.0))
     static let highlightColor = UIColor(red: CGFloat(0.95), green: CGFloat(0.95),
@@ -18,18 +19,13 @@ class ScorecardUI {
     static let errorColor = UIColor.red
     static let boldColor = UIColor(red: CGFloat(0.0), green: CGFloat(0.0),
                             blue: CGFloat(0.7), alpha: CGFloat(1.0))
-    static let brightColor = UIColor(red: CGFloat(0.0), green: CGFloat(0.5), blue: CGFloat(0.5), alpha: CGFloat(1.0))
-    static let sectionHeaderBackgroundColor = UIColor(red: CGFloat(0.85), green: CGFloat(0.85),
-                                               blue: CGFloat(0.85), alpha: CGFloat(1.0))
-    static let sectionHeadingBackgroundColor = brightColor
+    static let totalColor = UIColor(red: CGFloat(0.0), green: CGFloat(0.5), blue: CGFloat(0.5), alpha: CGFloat(1.0))
+    static let sectionHeaderBackgroundColor = darkHighlightColor
+    static let sectionHeadingBackgroundColor = totalColor
     static let madeContractBackgroundColor = UIColor(red: CGFloat(1.0), green: CGFloat(0.7),
                                                 blue: CGFloat(0.7), alpha: CGFloat(1.0))
-    static let blueColor = UIColor(red: CGFloat(69/255), green: CGFloat(134/255),
-                            blue: CGFloat(255/255), alpha: CGFloat(0.6))
-    static let totalColor = brightColor
     static let bannerColor = UIColor(red: CGFloat(0.408), green: CGFloat(0.408), blue: CGFloat(0.408), alpha: CGFloat(1.0))
-    
-    static let darkGreenColor = UIColor(red: 0.0, green: CGFloat(162/255), blue: 0.0, alpha: 1.0)
+    static let tableTopColor = UIColor(red: 0.0, green: CGFloat(162/255), blue: 0.0, alpha: 1.0)
 
     class func roundCorners(_ view: UIView) {
         view.layer.cornerRadius = 5
@@ -142,17 +138,13 @@ class ScorecardUI {
         label.textColor = UIColor.white
     }
 
-    class func brightStyle(_ label: UILabel) {
-        label.backgroundColor = ScorecardUI.brightColor
+    class func totalStyle(_ label: UILabel) {
+        label.backgroundColor = ScorecardUI.totalColor
         label.textColor = UIColor.white
     }
     
-    class func brightStyleView(_ view: UIView) {
-        view.backgroundColor = ScorecardUI.brightColor
-    }
-    
-    class func brightStyle(_ button: UIButton, bigFont: Bool = false) {
-        button.backgroundColor = ScorecardUI.brightColor
+    class func totalStyle(_ button: UIButton, bigFont: Bool = false) {
+        button.backgroundColor = ScorecardUI.totalColor
         button.setTitleColor(UIColor.white, for: .normal)
         if bigFont {
             button.titleLabel!.font = UIFont.boldSystemFont(ofSize: 24)

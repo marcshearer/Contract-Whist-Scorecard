@@ -113,7 +113,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
         self.recoveryMode = self.scorecard.recoveryMode
         
         // Update instructions / title
-        if scorecard.iCloudUserIsMe {
+        if Utility.isSimulator {
             self.titleBar.title = Scorecard.deviceName
         } else {
             self.titleBar.title = self.formTitle

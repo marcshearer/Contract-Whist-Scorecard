@@ -109,7 +109,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
     }
     
     func tapIfExists(_ element: XCUIElement, timeout: TimeInterval = 10) {
-        if element.exists {
+        if element.exists && element.isHittable {
             element.tap()
         }
     }

@@ -259,8 +259,12 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
         self.locationSeparator.isHidden = true
     }
     
-    private func showFinishButtons() {
+    private func showFinishButtons(autoSelect: Bool = false) {
         self.continueButton.isHidden = false
+        if self.testMode && autoSelect {
+            // In test mode automatically select continue
+            self.continuePressed(self.continueButton)
+        }
     }
     // MARK: - Utility Routines ======================================================================== -
 
@@ -380,6 +384,7 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
     
     private func selectRow(_ row: Int) {
         var standard = 0
+        var autoSelect = false
         
         if self.lastLocation != nil && self.lastLocation.description != self.searchBar.text {
             standard += 1
@@ -391,6 +396,7 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
         if row == 0 && self.searchBar.text! != "" {
             // Top row selected - take new description and leave location as is
             self.newLocation.description = searchBar.text
+            autoSelect = true
         } else if row < standard {
             // Last location
             self.newLocation.description = self.lastLocation.description
@@ -398,10 +404,12 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
             searchBar.text = self.lastLocation.description
         } else if !historyMode {
             // Searched geocoder location selected
-            let locationDescription = getLocationDescription(placemark: geocoderLocations![row-standard])
-            searchBar.text = locationDescription.topRow
-            self.newLocation.location = geocoderLocations![row-standard].location
-            self.newLocation.description = searchBar.text
+            if geocoderLocations != nil {
+                let locationDescription = getLocationDescription(placemark: geocoderLocations![row-standard])
+                searchBar.text = locationDescription.topRow
+                self.newLocation.location = geocoderLocations![row-standard].location
+                self.newLocation.description = searchBar.text
+            }
         } else {
             // Searched history location selected
             searchBar.text = filteredHistoryLocations[row-standard].description
@@ -412,7 +420,7 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
         self.hideLocationList()
         searchBar.resignFirstResponder()
         dropPin()
-        self.showFinishButtons()
+        self.showFinishButtons(autoSelect: autoSelect)
     }
     
     private func dropPin() {

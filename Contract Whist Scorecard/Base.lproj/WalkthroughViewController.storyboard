@@ -45,8 +45,8 @@
                                             </button>
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" id="YFF-cg-h4k">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="och-K9-T8l" customClass="LightRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="327" y="7" width="32" height="30"/>
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="och-K9-T8l" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <rect key="frame" x="307" y="7" width="52" height="30"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <gestureRecognizers/>
                                                 <constraints>
@@ -54,7 +54,7 @@
                                                     <constraint firstAttribute="height" constant="30" id="9ua-eg-ifc"/>
                                                     <constraint firstAttribute="height" relation="lessThanOrEqual" constant="30" id="jdB-4j-WNe"/>
                                                 </constraints>
-                                                <state key="normal" title="Next"/>
+                                                <state key="normal" title="Next" image="forward"/>
                                                 <connections>
                                                     <action selector="nextPressedWithSender:" destination="CZ4-zh-Aad" eventType="touchUpInside" id="2dr-sx-dbH"/>
                                                 </connections>
@@ -113,6 +113,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="forward" width="14" height="20"/>
         <image name="home" width="22" height="22"/>
     </resources>
 </document>

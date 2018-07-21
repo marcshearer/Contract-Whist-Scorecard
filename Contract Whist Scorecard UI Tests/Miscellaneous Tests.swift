@@ -13,10 +13,10 @@ extension Contract_Whist_Scorecard_UI_Tests {
    func testSync() {
         
         // Select Player Stats
-        self.selectOption("Player Stats")
+        self.selectOption("Players")
         
         // Select sync
-        self.tap(app.toolbars.buttons["sync"])
+        self.tap(app.navigationBars.buttons["Sync..."])
         
         // Go to home screen
         self.returnHome(timeout: 180)
@@ -55,7 +55,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.selectOption("History")
         
         // Sync
-        self.tap(app.toolbars.buttons["sync"])
+        self.tap(app.navigationBars.buttons["Sync..."])
         
         // Back to home screen
         self.returnHome(timeout: 180)
@@ -64,7 +64,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
     func testPlayerCreateDelete() {
         
         // Select Player Stats
-        self.selectOption("Player Stats")
+        self.selectOption("Players")
         
         // Delete Emma (and AAA Test) if exist
         self.deletePlayer("Emma")
@@ -82,21 +82,21 @@ extension Contract_Whist_Scorecard_UI_Tests {
         // Download a player from cloud
         self.downloadPlayer("Emma")
         
+        // Add second player
+        self.tap(app.collectionViews.staticTexts["Marc"])
+
         // Create another player
         self.createNewPlayer(name: "AAA Test", email: "test@test.com")
         
-        // Add third player
-        self.tap(app.collectionViews.staticTexts["Marc"])
-        
         // Continue to game preview
-        self.tap(app.toolbars.buttons["Continue"])
-        
+        self.tap(app.navigationBars.buttons["Continue"])
+     
         // Return to home page
         self.tap(app.navigationBars["Game Preview"].buttons["Back"])
         self.tap(app.navigationBars["Selection"].buttons["home"])
         
         // Go into player stats and delete AAA Test player
-        self.selectOption("Player Stats")
+        self.selectOption("Players")
         self.deletePlayer("AAA Test")
         
         // Return to home screen

@@ -113,7 +113,7 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
             if selected > 0 {
                 // Go compare
                 if actionSegue != "showComparison" {
-                    self.navigationController?.isNavigationBarHidden = false
+                    self.showNavigationBar()
                 }
                 NotificationCenter.default.removeObserver(observer!)
                 self.performSegue(withIdentifier: actionSegue, sender: self)
@@ -140,7 +140,7 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
 
     @IBAction func finishPressed(sender: UIButton) {
         
-        self.navigationController?.isNavigationBarHidden = false
+        self.showNavigationBar()
         
         // Undo any selection
         for playerNumber in 1...selection.count {
@@ -185,14 +185,14 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
         observer = setImageDownloadNotification()
         
         // Hide navigation bar - using custom one
-        self.navigationController?.isNavigationBarHidden = true
+        self.hideNavigationBar()
         
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         // Hide navigation bar - using custom one
-        self.navigationController?.isNavigationBarHidden = true
+        self.hideNavigationBar()
         view.setNeedsLayout()
     }
     

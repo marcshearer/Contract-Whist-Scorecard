@@ -25,8 +25,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.assertNotEnabled(app.tables.buttons["Enable"])
         self.assertNotEnabled(app.tables.buttons["Vibrate"])
         self.assertSelected(app.tables.buttons["Don't Vibrate"])
-        self.assertNotEnabled(app.tables.buttons["Flash"])
-        self.assertSelected(app.tables.buttons["Don't Flash"])
         self.assertNotEnabled(app.tables.buttons["Receive Notifications"])
         self.assertSelected(app.tables.buttons["No Notifications"])
         
@@ -38,14 +36,14 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.assertNotExists(app.navigationBars["Contract Whist"].buttons["broadcast"])
         
         // Go into Player Stats and check Sync not available
-        self.selectOption("Player Stats")
-        self.assertNotExists(app.toolbars.buttons["sync"])
+        self.selectOption("Players")
+        self.assertNotExists(app.toolbars.buttons["Sync..."])
         
         // Go into Comparison and check Sync not available
         self.tap(app.navigationBars["Players"].buttons["Select"], timeout: 20)
         self.tap(app.navigationBars["Players"].buttons["All"])
         self.tap(app.navigationBars["Players"].buttons["Compare"])
-        self.assertNotExists(app.toolbars.buttons["sync"])
+        self.assertNotExists(app.toolbars.buttons["Sync..."])
         
         // Go back to Home Screen
         self.tap(app.navigationBars["Statistics"].buttons["Back"])
@@ -53,7 +51,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
         // Go into History and check Sync not available
         self.selectOption("History")
-        self.assertNotExists(app.toolbars.buttons["sync"])
+        self.assertNotExists(app.toolbars.buttons["Sync..."])
         
         // Go back to Home Screen
         self.returnHome(timeout: 60)
@@ -69,7 +67,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.assertEnabled(app.tables.buttons["Allow Sharing"])
         self.assertEnabled(app.tables.buttons["Nearby Playing Enabled"])
         self.assertEnabled(app.tables.buttons["Vibrate"])
-        self.assertEnabled(app.tables.buttons["Flash"])
         self.assertEnabled(app.tables.buttons["Receive Notifications"])
         
         // Switch sharing and nearby playing back on
@@ -89,22 +86,20 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.assertEnabled(app.navigationBars["Contract Whist"].buttons["broadcast"])
         
         // Go into Player Stats and check Sync available
-        self.selectOption("Player Stats")
-        self.assertEnabled(app.toolbars.buttons["sync"])
+        self.selectOption("Players")
+        self.assertEnabled(app.toolbars.buttons["Sync..."])
+        self.returnHome()
         
         // Go into Comparison and check Sync available
-        self.tap(app.navigationBars["Players"].buttons["Select"])
-        self.tap(app.navigationBars["Players"].buttons["All"])
-        self.tap(app.navigationBars["Players"].buttons["Compare"])
-        self.assertEnabled(app.toolbars.buttons["sync"])
+        self.selectOption("Statistics")
+        self.assertEnabled(app.toolbars.buttons["Sync..."])
         
         // Go back to Home Screen
-        self.tap(app.navigationBars["Statistics"].buttons["Back"])
         self.returnHome()
         
         // Go into History and check Sync available
         self.selectOption("History")
-        self.assertEnabled(app.toolbars.buttons["sync"])
+        self.assertEnabled(app.toolbars.buttons["Sync..."])
         
         // Go back to Home Screen
         self.returnHome(timeout: 60)
@@ -331,165 +326,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
     }
     
-    func testSettingDealerHighlight() {
-        
-        // Select Settings
-        self.selectSettings()
-        
-        // Switch off Location
-        self.tap(app.tables.buttons["Don't Save Location"])
-        
-        // Swipe up to get to next options
-        self.swipeUp(app.tables.buttons["Don't Vibrate"])
-        
-        // Clear and set Highlight Dealer to None
-        self.tap(app.tables.buttons["None"])
-        
-        // Return to home page
-        self.returnHome()
-        
-        // Select new game
-        self.selectOption("New Game")
-        
-        // Select Emma, Jack and Marc and continue to Game Preview
-        self.selectPlayers("Emma", "Jack", "Marc")
-        
-        // Start game
-        self.tap(app.tables.buttons["scorecard right"])
-        
-        // Check 2 rows in header
-        self.waitFor(app.tables.staticTexts["Total"])
-        XCTAssertEqual(app.tables["header"].cells.count, 6)
-        
-        // Exit to Game Preview
-        self.tap(app.navigationBars.buttons["Exit"])
-        self.tapIfExists(app.alerts["Finish Game"].buttons["Confirm"])
-        
-        // Go back to selection page
-        self.tap(app.navigationBars.buttons["Back"])
-        
-        // Return to home page
-        self.returnHome()
-        
-        // Go back into settings
-        self.selectSettings()
-        
-        // Swipe up to get to next options
-        self.swipeUp(app.tables.buttons["Don't Vibrate"])
-
-        // Set dealer highlight to large row (above)
-        self.tap(app.tables.buttons["Large Row"])
-        self.tap(app.tables.buttons["Receive Notifications"])
-        self.tap(app.tables.buttons["Above Players"])
-
-        // Return to home page
-        self.returnHome()
-        
-        // Select new game
-        self.selectOption("New Game")
-        
-        // Select Emma, Jack and Marc and continue to Game Preview
-        self.selectPlayers("Emma", "Jack", "Marc")
-        
-        // Start game
-        self.tap(app.tables.buttons["scorecard right"])
-        
-        // Check 3 rows in header
-        self.waitFor(app.tables.staticTexts["Total"])
-        XCTAssertEqual(app.tables["header"].cells.count, 7)
-    
-        // Exit to Game Preview
-        self.tap(app.navigationBars.buttons["Exit"])
-        self.tapIfExists(app.alerts["Finish Game"].buttons["Confirm"])
-        
-        // Go back to selection page
-        self.tap(app.navigationBars.buttons["Back"])
-        
-        // Return to home page
-        self.returnHome()
-        
-        // Go back into settings
-        self.selectSettings()
-        
-        // Swipe up to get to next options
-        self.swipeUp(app.tables.buttons["Don't Vibrate"])
-
-        // Set dealer highlight to small row below players
-        self.tap(app.tables.buttons["Small Row"])
-        self.tap(app.tables.buttons["Below Players"])
-        
-        // Return to home page
-        self.returnHome()
-        
-        // Select new game
-        self.selectOption("New Game")
-        
-        // Select Emma, Jack and Marc and continue to Game Preview
-        self.selectPlayers("Emma", "Jack", "Marc")
-        
-        // Start game
-        self.tap(app.tables.buttons["scorecard right"])
-        
-        // Check 3 rows in header
-        self.waitFor(app.tables.staticTexts["Total"])
-        XCTAssertEqual(app.tables["header"].cells.count, 11)
-        
-        // Exit to Game Preview
-        self.tap(app.navigationBars.buttons["Exit"])
-        self.tapIfExists(app.alerts["Finish Game"].buttons["Confirm"])
-        
-        // Go back to selection page
-        self.tap(app.navigationBars.buttons["Back"])
-        
-        // Return to home page
-        self.returnHome()
-        
-        // Go back into settings
-        self.selectSettings()
-        
-        // Swipe up to get to next options
-        self.swipeUp(app.tables.buttons["Don't Vibrate"])
-
-        // Set dealer highlight to highlight mode
-        self.tap(app.tables.buttons["Highlight"])
-        
-        // Return to home page
-        self.returnHome()
-        
-        // Select new game
-        self.selectOption("New Game")
-        
-        // Select Emma, Jack and Marc and continue to Game Preview
-        self.selectPlayers("Emma", "Jack", "Marc")
-        
-        // Start game
-        self.tap(app.tables.buttons["scorecard right"])
-        
-        // Check 2 rows in header
-        self.waitFor(app.tables.staticTexts["Total"])
-        XCTAssertEqual(app.tables["header"].cells.count, 6)
-        
-        // Exit to Game Preview
-        self.tap(app.navigationBars.buttons["Exit"])
-        self.tapIfExists(app.alerts["Finish Game"].buttons["Confirm"])
-        
-        // Go back to selection page
-        self.tap(app.navigationBars.buttons["Back"])
-        
-        // Return to home page
-        self.returnHome()
-        
-        // Go back into settings
-        self.selectSettings()
-        
-        // Switch off Location
-        self.tap(app.tables.buttons["Save Game Location"])
-        
-        // Return to home page
-        self.returnHome()
-        
-    }
-    
     func testSettingBonus2() {
         
         // Select Settings
@@ -500,7 +336,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
         // Swipe up to get to next options
         self.swipeUp(app.tables.buttons["Don't Vibrate"])
-        self.swipeUp(app.tables.buttons["Above Players"])
         
         // Clear Bonus for 2
         self.tap(app.tables.buttons["No Bonus"])
@@ -536,7 +371,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.returnHome(timeout: 60)
         
         // Go into Player Stats and check no Twos shown
-        self.selectOption("Player Stats")
+        self.selectOption("Players")
         self.assertNotExists(app.tables.staticTexts["Twos made %"])
         
         // Select Becky and check Twos not shown
@@ -556,10 +391,10 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.selectPlayers("Emma", "Jack", "Marc")
         
         // Start game
-        self.tap(app.tables.buttons["scorecard right"])
-        
+        self.tap(app.navigationBars.buttons["Continue"])
+
         // Go into score and enter bids
-        self.tap(app.navigationBars.buttons["Score"])
+        self.tap(app.navigationBars.buttons["Continue"])
         self.tap(app.tables.buttons["score4"])
         self.tap(app.tables.buttons["score5"])
         self.tap(app.tables.buttons["score6"])
@@ -588,7 +423,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
 
         // Swipe up to get to next options
         self.swipeUp(app.tables.buttons["Don't Vibrate"])
-        self.swipeUp(app.tables.buttons["Above Players"])
         
         // Switch on 10-point bonus for 2
         self.tap(app.tables.buttons["10 Point Bonus"])
@@ -616,7 +450,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.returnHome(timeout: 60)
         
         // Go into Player Stats
-        self.selectOption("Player Stats")
+        self.selectOption("Players")
         // No longer visible on iPhone
         // self.assertExists(app.collectionViews.staticTexts["Twos made %"])
         
@@ -637,10 +471,10 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.selectPlayers("Emma", "Jack", "Marc")
         
         // Start game
-        self.tap(app.tables.buttons["scorecard right"])
-        
+        self.tap(app.navigationBars.buttons["Continue"])
+
         // Go into score and enter bids
-        self.tap(app.navigationBars.buttons["Score"])
+        self.tap(app.navigationBars.buttons["Continue"])
         self.tap(app.tables.buttons["score4"])
         self.tap(app.tables.buttons["score5"])
         self.tap(app.tables.buttons["score6"])
@@ -709,14 +543,14 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.selectPlayers("Emma", "Jack", "Marc")
         
         // Start game
-        self.tap(app.tables.buttons["scorecard right"])
-        
+        self.tap(app.navigationBars.buttons["Continue"])
+
         // Check 7 rows in body
         self.waitFor(app.tables.staticTexts["Total"])
         XCTAssertEqual(app.tables["body"].cells.count, 7)
         
         // Go into score and check 7 button exists, but not 8
-        self.tap(app.navigationBars.buttons["Score"])
+        self.tap(app.navigationBars.buttons["Continue"])
         self.assertExists(app.tables.buttons["score7"])
         self.assertNotExists(app.tables.buttons["score8"])
         
@@ -775,14 +609,14 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.selectPlayers("Emma", "Jack", "Marc")
         
         // Start game
-        self.tap(app.tables.buttons["scorecard right"])
-        
+        self.tap(app.navigationBars.buttons["Continue"])
+
         // Check 13 rows in body
         self.waitFor(app.tables.staticTexts["Total"])
         XCTAssertEqual(app.tables["body"].cells.count, 13)
         
         // Go into score and check 7 button exists but not 8
-        self.tap(app.navigationBars.buttons["Score"])
+        self.tap(app.navigationBars.buttons["Continue"])
         self.assertExists(app.tables.buttons["score7"])
         self.assertNotExists(app.tables.buttons["score8"])
         
@@ -842,14 +676,14 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.selectPlayers("Emma", "Jack", "Marc")
         
         // Start game
-        self.tap(app.tables.buttons["scorecard right"])
-        
+        self.tap(app.navigationBars.buttons["Continue"])
+
         // Check 1 rows in body
         self.waitFor(app.tables.staticTexts["Total"])
         XCTAssertEqual(app.tables["body"].cells.count, 13)
         
         // Go into score and check 1 button exists but not 2
-        self.tap(app.navigationBars.buttons["Score"])
+        self.tap(app.navigationBars.buttons["Continue"])
         self.assertExists(app.tables.buttons["score1"])
         self.assertNotExists(app.tables.buttons["score2"])
         
@@ -909,14 +743,14 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.selectPlayers("Emma", "Jack", "Marc")
         
         // Start game
-        self.tap(app.tables.buttons["scorecard right"])
-        
+        self.tap(app.navigationBars.buttons["Continue"])
+
         // Check 13 rows in body
         self.waitFor(app.tables.staticTexts["Total"])
         XCTAssertEqual(app.tables["body"].cells.count, 13)
         
         // Go into score and check 13 button exists
-        self.tap(app.navigationBars.buttons["Score"])
+        self.tap(app.navigationBars.buttons["Continue"])
         self.assertExists(app.tables.buttons["score13"])
         
         // Check can't make total add up to 13
@@ -968,7 +802,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
         // Swipe up to get to next options
         self.swipeUp(app.tables.buttons["Don't Vibrate"])
-        self.swipeUp(app.tables.buttons["Above Players"])
+        self.swipeUp(app.tables.buttons["10 Point Bonus"])
         
         self.tap(app.tables.buttons["Don't Include NT"])
         
@@ -982,10 +816,10 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.selectPlayers("Emma", "Jack", "Marc")
         
         // Start game
-        self.tap(app.tables.buttons["scorecard right"])
-        
+        self.tap(app.navigationBars.buttons["Continue"])
+
         // Set up score buttons etc
-        let scoreButton = app.navigationBars["Scorecard"].buttons["Score"]
+        let scoreButton = app.navigationBars["Scorecard"].buttons["Continue"]
         let tablesQuery = app.tables
         let button0 = tablesQuery.buttons["score0"]
         let button1 = tablesQuery.buttons["score1"]
@@ -1065,7 +899,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
         // Swipe up to get to next options
         self.swipeUp(app.tables.buttons["Don't Vibrate"])
-        self.swipeUp(app.tables.buttons["Above Players"])
+        self.swipeUp(app.tables.buttons["10 Point Bonus"])
         
         self.tap(app.tables.buttons["Include No Trumps"])
         
@@ -1079,8 +913,8 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.selectPlayers("Emma", "Jack", "Marc")
         
         // Start game
-        self.tap(app.tables.buttons["scorecard right"])
-        
+        self.tap(app.navigationBars.buttons["Continue"])
+
         //Round 1 - 13C
         self.tap(scoreButton)
         self.tap(button3)                               // Player 1 bid

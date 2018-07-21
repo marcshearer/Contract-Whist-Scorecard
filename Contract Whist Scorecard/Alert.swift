@@ -26,12 +26,12 @@ extension UIViewController {
         }
     }
     
-    public func alertMessage(if condition: Bool, _ message: String!, title: String! = "Warning", buttonText: String! = "OK", completion: @escaping () -> ()) {
+    public func alertMessage(if condition: Bool, _ message: String!, title: String = "Warning", buttonText: String! = "OK", okHandler: @escaping () -> ()) {
         // Pop up alert message if condition is true and execute handler on exit - else execute handler without alert
         if condition {
-            self.alertMessage(message, title: title, buttonText: buttonText, okHandler: completion)
+            self.alertMessage(message, title: title, buttonText: buttonText, okHandler: okHandler)
         } else {
-            completion()
+            okHandler()
         }
     }
 

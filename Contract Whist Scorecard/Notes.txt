@@ -21,6 +21,8 @@ Long-term bugs
 
 Short-term
 ----------
+Add tests for temporary settings
+Add tests for history / location to check they're not saved if play a game
 Leave selected invitees selected (and visible) when filtering
 Get location/notification/online game notification permission in settings (and disable options if permissions not granted)
 Auto-sync when download players in Get Started
@@ -46,7 +48,7 @@ To avoid flashing animations need to put the things that you want to animate ins
 To animate (esp with constraints) need to call layoutIfNeeded immediately before and during animation - see Utility.animate()
 When collection has spaces in it re-set the inter-item space and set scroll to horizontal
 When button bar (or navigation bar) doesn't appear set the title in the parent view
-If you get a duplicate navigation bar you can hide the default one with self.navigationController?.isNavigationBarHidden = false
+If you get a duplicate navigation bar you can hide the default one with self.showNavigationBar()
 Popovers on iPhone - need to set up the view to have a size of freedom and a status bar of none plus the stuff in prepare for segue
 You can force a label to resize to fill its space by setting a height constraint and then setting this progammatically to a very large number
 Get a crash with NS Fetch Controller if don't get rid of any pointers to cells before try to remove from collection view. Also it calls numberOfItemsIn Section internally and if you are adding or deleting cells you need to return +/- 1 or see the change below about deletePlayer()

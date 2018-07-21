@@ -32,7 +32,7 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
     
     func test3PlayerGame() {
         
-        // Select new game and override resume warning if necessary
+       // Select new game and override resume warning if necessary
         self.selectOption("New Game")
         
         // Select Emma, Jack and Marc
@@ -45,13 +45,13 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
         self.tap(app.tables.buttons["Next Dealer"])
         
         // Start game
-        self.tap(app.tables.buttons["scorecard right"])
-        
+        self.tap(app.navigationBars.buttons["Continue"])
+
         // Enter location
         self.enterLocation("Abingdon")
         
         // Set up score buttons etc
-        let scoreButton = app.navigationBars["Scorecard"].buttons["Score"]
+        let scoreButton = app.navigationBars["Scorecard"].buttons["Continue"]
         let tablesQuery = app.tables
         let button0 = tablesQuery.buttons["score0"]
         let button1 = tablesQuery.buttons["score1"]
@@ -256,13 +256,13 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
         self.tap(app.tables.buttons["Next Dealer"])
         
         // Start game
-        self.tap(app.tables.buttons["scorecard right"])
-        
+        self.tap(app.navigationBars.buttons["Continue"])
+
         // Enter location
         self.enterLocation("Abingdon")
         
         // Set up score buttons etc
-        let scoreButton = app.navigationBars["Scorecard"].buttons["Score"]
+        let scoreButton = app.navigationBars["Scorecard"].buttons["Continue"]
         let tablesQuery = app.tables
         let button0 = tablesQuery.buttons["score0"]
         let button1 = tablesQuery.buttons["score1"]
@@ -301,163 +301,167 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 10, execute: {
             self.app.terminate()
             self.app.launch()
+        
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 10, execute: {
+                self.selectOption("Resume Game", timeout: 60)
+                self.tap(scoreButton, timeout: 60)
+                self.tap(button5) ; self.tap(button0)   // Player 3 made ; twos
+                
+                // Check round 2 totals
+                self.checkRunningTotals(18, 37, 20)
+                
+                //Round 3 - 11H
+                self.tap(scoreButton)
+                self.tap(button2)                       // Player 1 bid
+                self.tap(button4)                       // Player 2 bid
+                self.tap(button6)                       // Player 3 bid
+                self.tap(crossWhite)
+                self.tap(button2) ; self.tap(button0)   // Player 1 made ; twos
+                self.tap(button4) ; self.tap(button1)   // Player 2 made ; twos
+                self.tap(button5) ; self.tap(button0)   // Player 3 made ; twos
+                
+                // Check round 3 totals
+                self.checkRunningTotals(42, 42, 32)
+                
+                //Round 4 - 10S
+                self.tap(scoreButton)
+                self.tap(button7)                       // Player 1 bid
+                self.tap(button2)                       // Player 2 bid
+                self.tap(button0)                       // Player 3 bid
+                self.tap(crossWhite)
+                self.tap(button7) ; self.tap(button0)   // Player 1 made ; twos
+                self.tap(button2) ; self.tap(button0)   // Player 2 made ; twos
+                self.tap(button1) ; self.tap(button0)   // Player 3 made ; twos
+                
+                // Check round 4 totals
+                self.checkRunningTotals(59, 54, 33)
+                
+                //Round 5 - 9NT
+                self.tap(scoreButton)
+                self.tap(button2)                       // Player 1 bid
+                self.tap(button5)                       // Player 2 bid
+                self.tap(button3)                       // Player 3 bid
+                self.tap(crossWhite)
+                self.tap(button2) ; self.tap(button0)   // Player 1 made ; twos
+                self.tap(button5) ; self.tap(button0)   // Player 2 made ; twos
+                self.tap(button2) ; self.tap(button0)   // Player 3 made ; twos
+                
+                // Check round 5 totals
+                self.checkRunningTotals(61, 66, 48)
+                
+                //Round 6 - 8C
+                self.tap(scoreButton)
+                self.tap(button3)                       // Player 1 bid
+                self.tap(button3)                       // Player 2 bid
+                self.tap(button1)                       // Player 3 bid
+                self.tap(crossWhite)
+                self.tap(button3) ; self.tap(button0)   // Player 1 made ; twos
+                self.tap(button3) ; self.tap(button2)   // Player 2 made ; twos
+                self.tap(button2) ; self.tap(button0)   // Player 3 made ; twos
+                
+                // Check round 6 totals
+                self.checkRunningTotals(94, 68, 61)
+                
+                //Round 7 - 7D
+                self.tap(scoreButton)
+                self.tap(button0)                       // Player 1 bid
+                self.tap(button3)                       // Player 2 bid
+                self.tap(button3)                       // Player 3 bid
+                self.tap(crossWhite)
+                self.tap(button0) ; self.tap(button0)   // Player 1 made ; twos
+                self.tap(button3) ; self.tap(button0)   // Player 2 made ; twos
+                self.tap(button4) ; self.tap(button0)   // Player 3 made ; twos
+                
+                // Check round 7 totals
+                self.checkRunningTotals(104, 81, 65)
+                
+                //Round 8 -6H
+                self.tap(scoreButton)
+                self.tap(button2)                       // Player 1 bid
+                self.tap(button2)                       // Player 2 bid
+                self.tap(button1)                       // Player 3 bid
+                self.tap(crossWhite)
+                self.tap(button2) ; self.tap(button0)   // Player 1 made ; twos
+                self.tap(button2) ; self.tap(button0)   // Player 2 made ; twos
+                self.tap(button2) ; self.tap(button0)   // Player 3 made ; twos
+                
+                // Check round 8 totals
+                self.checkRunningTotals(106, 93, 77)
+                
+                //Round 9 - 5S
+                self.tap(scoreButton)
+                self.tap(button2)                       // Player 1 bid
+                self.tap(button1)                       // Player 2 bid
+                self.tap(button1)                       // Player 3 bid
+                self.tap(crossWhite)
+                self.tap(button2) ; self.tap(button0)   // Player 1 made ; twos
+                self.tap(button1) ; self.tap(button0)   // Player 2 made ; twos
+                self.tap(button2) ; self.tap(button0)   // Player 3 made ; twos
+                
+                // Check round 9 totals
+                self.checkRunningTotals(117, 95, 89)
+                
+                //Round 10 - 4NT
+                self.tap(scoreButton)
+                self.tap(button2)                       // Player 1 bid
+                self.tap(button1)                       // Player 2 bid
+                self.tap(button2)                       // Player 3 bid
+                self.tap(crossWhite)
+                self.tap(button2) ; self.tap(button0)   // Player 1 made ; twos
+                self.tap(button1) ; self.tap(button0)   // Player 2 made ; twos
+                self.tap(button1) ; self.tap(button0)   // Player 3 made ; twos
+                
+                // Check round 10 totals
+                self.checkRunningTotals(129, 106, 90)
+                
+                //Round 11 - 3C
+                self.tap(scoreButton)
+                self.tap(button2)                       // Player 1 bid
+                self.tap(button1)                       // Player 2 bid
+                self.tap(button1)                       // Player 3 bid
+                self.tap(crossWhite)
+                self.tap(button2) ; self.tap(button0)   // Player 1 made ; twos
+                self.tap(button1) ; self.tap(button0)   // Player 2 made ; twos
+                self.tap(button0) ; self.tap(button0)   // Player 3 made ; twos
+                
+                // Check round 11 totals
+                self.checkRunningTotals(129, 118, 101)
+                
+                //Round 12 - 2D
+                self.tap(scoreButton)
+                self.tap(button1)                       // Player 1 bid
+                self.tap(button1)                       // Player 2 bid
+                self.tap(button1)                       // Player 3 bid
+                self.tap(crossWhite)
+                self.tap(button1) ; self.tap(button0)   // Player 1 made ; twos
+                self.tap(button1) ; self.tap(button0)   // Player 2 made ; twos
+                self.tap(button0) ; self.tap(button0)   // Player 3 made ; twos
+                
+                // Check round 12 totals
+                self.checkRunningTotals(140, 118, 112)
+                
+                //Round 13 - 1H
+                self.tap(scoreButton)
+                self.tap(button0)                       // Player 1 bid
+                self.tap(button0)                       // Player 2 bid
+                self.tap(button0)                       // Player 3 bid
+                self.tap(crossWhite)
+                self.tap(button0) ; self.tap(button0)   // Player 1 made ; twos
+                self.tap(button0) ; self.tap(button0)   // Player 2 made ; twos
+                self.tap(button1) ; self.tap(button0)   // Player 3 made ; twos
+                
+                // Check final totals
+               self.checkFinalTotals(150, 128, 113)
+                
+                // Game completion - select home button and confirm
+                self.tap(self.app.tables.buttons["bighome"])
+                self.tap(self.app.alerts["Finish Game"].buttons["Confirm"])
+                
+                // Finish when home screen displayed
+                self.waitForHome(timeout: 180)
+            })
+            
         })
-        self.selectOption("Resume Game", timeout: 60)
-        self.tap(scoreButton, timeout: 60)
-        self.tap(button5) ; self.tap(button0)   // Player 3 made ; twos
-        
-        // Check round 2 totals
-        checkRunningTotals(18, 37, 20)
-        
-        //Round 3 - 11H
-        self.tap(scoreButton)
-        self.tap(button2)                       // Player 1 bid
-        self.tap(button4)                       // Player 2 bid
-        self.tap(button6)                       // Player 3 bid
-        self.tap(crossWhite)
-        self.tap(button2) ; self.tap(button0)   // Player 1 made ; twos
-        self.tap(button4) ; self.tap(button1)   // Player 2 made ; twos
-        self.tap(button5) ; self.tap(button0)   // Player 3 made ; twos
-        
-        // Check round 3 totals
-        checkRunningTotals(42, 42, 32)
-        
-        //Round 4 - 10S
-        self.tap(scoreButton)
-        self.tap(button7)                       // Player 1 bid
-        self.tap(button2)                       // Player 2 bid
-        self.tap(button0)                       // Player 3 bid
-        self.tap(crossWhite)
-        self.tap(button7) ; self.tap(button0)   // Player 1 made ; twos
-        self.tap(button2) ; self.tap(button0)   // Player 2 made ; twos
-        self.tap(button1) ; self.tap(button0)   // Player 3 made ; twos
-        
-        // Check round 4 totals
-        checkRunningTotals(59, 54, 33)
-        
-        //Round 5 - 9NT
-        self.tap(scoreButton)
-        self.tap(button2)                       // Player 1 bid
-        self.tap(button5)                       // Player 2 bid
-        self.tap(button3)                       // Player 3 bid
-        self.tap(crossWhite)
-        self.tap(button2) ; self.tap(button0)   // Player 1 made ; twos
-        self.tap(button5) ; self.tap(button0)   // Player 2 made ; twos
-        self.tap(button2) ; self.tap(button0)   // Player 3 made ; twos
-        
-        // Check round 5 totals
-        checkRunningTotals(61, 66, 48)
-        
-        //Round 6 - 8C
-        self.tap(scoreButton)
-        self.tap(button3)                       // Player 1 bid
-        self.tap(button3)                       // Player 2 bid
-        self.tap(button1)                       // Player 3 bid
-        self.tap(crossWhite)
-        self.tap(button3) ; self.tap(button0)   // Player 1 made ; twos
-        self.tap(button3) ; self.tap(button2)   // Player 2 made ; twos
-        self.tap(button2) ; self.tap(button0)   // Player 3 made ; twos
-        
-        // Check round 6 totals
-        checkRunningTotals(94, 68, 61)
-        
-        //Round 7 - 7D
-        self.tap(scoreButton)
-        self.tap(button0)                       // Player 1 bid
-        self.tap(button3)                       // Player 2 bid
-        self.tap(button3)                       // Player 3 bid
-        self.tap(crossWhite)
-        self.tap(button0) ; self.tap(button0)   // Player 1 made ; twos
-        self.tap(button3) ; self.tap(button0)   // Player 2 made ; twos
-        self.tap(button4) ; self.tap(button0)   // Player 3 made ; twos
-        
-        // Check round 7 totals
-        checkRunningTotals(104, 81, 65)
-        
-        //Round 8 -6H
-        self.tap(scoreButton)
-        self.tap(button2)                       // Player 1 bid
-        self.tap(button2)                       // Player 2 bid
-        self.tap(button1)                       // Player 3 bid
-        self.tap(crossWhite)
-        self.tap(button2) ; self.tap(button0)   // Player 1 made ; twos
-        self.tap(button2) ; self.tap(button0)   // Player 2 made ; twos
-        self.tap(button2) ; self.tap(button0)   // Player 3 made ; twos
-        
-        // Check round 8 totals
-        checkRunningTotals(106, 93, 77)
-        
-        //Round 9 - 5S
-        self.tap(scoreButton)
-        self.tap(button2)                       // Player 1 bid
-        self.tap(button1)                       // Player 2 bid
-        self.tap(button1)                       // Player 3 bid
-        self.tap(crossWhite)
-        self.tap(button2) ; self.tap(button0)   // Player 1 made ; twos
-        self.tap(button1) ; self.tap(button0)   // Player 2 made ; twos
-        self.tap(button2) ; self.tap(button0)   // Player 3 made ; twos
-        
-        // Check round 9 totals
-        checkRunningTotals(117, 95, 89)
-        
-        //Round 10 - 4NT
-        self.tap(scoreButton)
-        self.tap(button2)                       // Player 1 bid
-        self.tap(button1)                       // Player 2 bid
-        self.tap(button2)                       // Player 3 bid
-        self.tap(crossWhite)
-        self.tap(button2) ; self.tap(button0)   // Player 1 made ; twos
-        self.tap(button1) ; self.tap(button0)   // Player 2 made ; twos
-        self.tap(button1) ; self.tap(button0)   // Player 3 made ; twos
-        
-        // Check round 10 totals
-        checkRunningTotals(129, 106, 90)
-        
-        //Round 11 - 3C
-        self.tap(scoreButton)
-        self.tap(button2)                       // Player 1 bid
-        self.tap(button1)                       // Player 2 bid
-        self.tap(button1)                       // Player 3 bid
-        self.tap(crossWhite)
-        self.tap(button2) ; self.tap(button0)   // Player 1 made ; twos
-        self.tap(button1) ; self.tap(button0)   // Player 2 made ; twos
-        self.tap(button0) ; self.tap(button0)   // Player 3 made ; twos
-        
-        // Check round 11 totals
-        checkRunningTotals(129, 118, 101)
-        
-        //Round 12 - 2D
-        self.tap(scoreButton)
-        self.tap(button1)                       // Player 1 bid
-        self.tap(button1)                       // Player 2 bid
-        self.tap(button1)                       // Player 3 bid
-        self.tap(crossWhite)
-        self.tap(button1) ; self.tap(button0)   // Player 1 made ; twos
-        self.tap(button1) ; self.tap(button0)   // Player 2 made ; twos
-        self.tap(button0) ; self.tap(button0)   // Player 3 made ; twos
-        
-        // Check round 12 totals
-        checkRunningTotals(140, 118, 112)
-        
-        //Round 13 - 1H
-        self.tap(scoreButton)
-        self.tap(button0)                       // Player 1 bid
-        self.tap(button0)                       // Player 2 bid
-        self.tap(button0)                       // Player 3 bid
-        self.tap(crossWhite)
-        self.tap(button0) ; self.tap(button0)   // Player 1 made ; twos
-        self.tap(button0) ; self.tap(button0)   // Player 2 made ; twos
-        self.tap(button1) ; self.tap(button0)   // Player 3 made ; twos
-        
-        // Check final totals
-        checkFinalTotals(150, 128, 113)
-        
-        // Game completion - select home button and confirm
-        self.tap(app.tables.buttons["bighome"])
-        self.tap(app.alerts["Finish Game"].buttons["Confirm"])
-        
-        // Finish when home screen displayed
-        self.waitForHome(timeout: 180)
         
     }
     
@@ -483,13 +487,13 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
         self.tap(app.tables.buttons["Next Dealer"])
         
         // Start game
-        self.tap(app.tables.buttons["scorecard right"])
-        
+        self.tap(app.navigationBars.buttons["Continue"])
+
         // Enter location
        self.enterLocation("Abingdon")
         
         // Set up score buttons etc
-        let scoreButton = app.navigationBars["Scorecard"].buttons["Score"]
+        let scoreButton = app.navigationBars["Scorecard"].buttons["Continue"]
         let tablesQuery = app.tables
         let button0 = tablesQuery.buttons["score0"]
         let button1 = tablesQuery.buttons["score1"]
@@ -501,8 +505,6 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
         let button7 = tablesQuery.buttons["score7"]
         let crossWhite = app.buttons["cross white"]
         let undoButton = app.buttons["undo"]
-        let leftArrowButton = app.buttons["leftarrow"]
-        let rightArrowButton = app.buttons["rightarrow"]
         let summaryButton = app.buttons["summary"]
         let doneButton = app.buttons["Done"]
         
@@ -525,6 +527,7 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
         // Check round 1 totals
         checkRunningTotals(23, 13, 13, 4)
         
+     
         // Round 2 - 12D - with an exit to scorecard followed by some movement and edits
         self.tap(scoreButton)
         self.tap(button3)                       // Player 1 bid
@@ -533,13 +536,9 @@ class Contract_Whist_Scorecard_UI_Tests: XCTestCase {
         self.tap(button3)                       // Player 4 bid
         self.tap(crossWhite)
         self.tap(button3) ; self.tap(button0)   // Player 1 made ; twos
-        self.tap(button5) ; self.tap(button1)   // Player 2 made ; twos
+        self.tap(button5) ; self.tap(button0)   // Player 2 made ; twos
         self.tap(doneButton)
         self.tap(scoreButton)
-        self.tap(leftArrowButton)
-        self.tap(leftArrowButton)
-        self.tap(rightArrowButton)
-        self.tap(button0)                       // Player 2 twos corrected
         self.tap(button2) ; self.tap(button0)   // Player 3 made ; twos
         self.tap(button2) ; self.tap(button0)   // Player 4 made ; twos
         

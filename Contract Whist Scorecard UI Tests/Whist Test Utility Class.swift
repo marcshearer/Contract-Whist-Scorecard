@@ -52,8 +52,8 @@ extension Contract_Whist_Scorecard_UI_Tests {
     
     func createNewPlayer(name: String, email: String) {
         // Assumes you are in the player selection screen
-        self.tap(app.collectionViews.staticTexts["New"])
-        self.tap(app.sheets["Add Player"].buttons["Create player manually"])
+        self.tap(app.collectionViews.staticTexts["Add"])
+        self.tap(app.sheets.buttons["Create player manually"])
         // Enter new player details
         let nameTextField = app.tables.textFields["Player name - Must not be blank"]
         self.typeText(nameTextField, name)
@@ -64,10 +64,11 @@ extension Contract_Whist_Scorecard_UI_Tests {
     }
     
     func downloadPlayer(_ name: String) {
+        
         // Assumes you are in the player selection screen
-        self.tap(app.collectionViews.staticTexts["New"])
+        self.tap(app.collectionViews.staticTexts["Add"])
         // Select download from cloud
-        self.tap(app.sheets["Add Player"].buttons["Find existing player"])
+        self.tap(app.sheets.buttons["Find existing player"])
         // Select Emma
         self.tap(app.collectionViews.staticTexts[name], timeout: 30)
         self.tap(app.navigationBars["Players"].buttons["Download"])
@@ -99,7 +100,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         }
         
         // Start the game
-        self.tap(app.toolbars.buttons["Continue"])
+        self.tap(app.navigationBars.buttons["Continue"])
     }
     
     func enterLocation(_ location: String, _ confirm: Bool = true) {
@@ -114,14 +115,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         // Confirm location
         self.tap(app.tables.cells.containing(.staticText, identifier:"New description for current location").staticTexts[location], timeout: 30)
         
-        // Let things stabilise a while
-        if confirm {
-            // Continue
-            self.tap(app.navigationBars.buttons["Continue"], timeout: 60)
-        } else {
-            // Cancel
-            self.tap(app.navigationBars.buttons["Cancel"], timeout: 30)
-        }
+       // Application will automatically select continue in test mode
     }
 }
 

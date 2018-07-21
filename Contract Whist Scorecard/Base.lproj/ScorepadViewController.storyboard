@@ -23,6 +23,37 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <navigationBar clipsSubviews="YES" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Skq-xy-HKr">
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <textAttributes key="titleTextAttributes">
+                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </textAttributes>
+                                <items>
+                                    <navigationItem title="Scorecard" id="F6Y-rL-bdK">
+                                        <barButtonItem key="leftBarButtonItem" id="51I-1V-L3U">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="bgf-Na-549" userLabel="Finish Button">
+                                                <rect key="frame" x="16" y="11" width="54" height="22"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" title="Back" image="back"/>
+                                                <connections>
+                                                    <action selector="finishGamePressed:" destination="BYZ-38-t0r" eventType="touchUpOutside" id="Qte-Us-usM"/>
+                                                    <action selector="finishGamePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rjT-MV-7o1"/>
+                                                </connections>
+                                            </button>
+                                        </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" width="70" id="hEg-rd-MmQ">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="s5c-DG-O7P" userLabel="Score Entry Button" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <rect key="frame" x="272" y="11" width="87" height="22"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" title="Continue" image="forward"/>
+                                                <connections>
+                                                    <action selector="scorePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RPU-Oa-Req"/>
+                                                </connections>
+                                            </button>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                             <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="CoM-o8-drH" userLabel="Header Table View">
                                 <rect key="frame" x="0.0" y="64" width="375" height="88"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -565,37 +596,6 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="gC0-Ph-gmL"/>
                                 </connections>
                             </tableView>
-                            <navigationBar clipsSubviews="YES" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Skq-xy-HKr">
-                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
-                                <textAttributes key="titleTextAttributes">
-                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </textAttributes>
-                                <items>
-                                    <navigationItem title="Scorecard" id="F6Y-rL-bdK">
-                                        <barButtonItem key="leftBarButtonItem" id="51I-1V-L3U">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="bgf-Na-549" userLabel="Finish Button">
-                                                <rect key="frame" x="16" y="11" width="54" height="22"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Back" image="back"/>
-                                                <connections>
-                                                    <action selector="finishGamePressed:" destination="BYZ-38-t0r" eventType="touchUpOutside" id="Qte-Us-usM"/>
-                                                    <action selector="finishGamePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rjT-MV-7o1"/>
-                                                </connections>
-                                            </button>
-                                        </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" width="70" id="hEg-rd-MmQ">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="s5c-DG-O7P" userLabel="Score Entry Button" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="272" y="11" width="87" height="22"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Continue" image="forward"/>
-                                                <connections>
-                                                    <action selector="scorePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RPU-Oa-Req"/>
-                                                </connections>
-                                            </button>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>

@@ -132,7 +132,7 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     @IBAction func finishGame(segue:UIStoryboardSegue) {
-        self.navigationController?.isNavigationBarHidden = false
+        self.showNavigationBar()
         scorecard.checkNetworkConnection(button: nil, label: syncMessage)
         scorecard.recoveryMode = false
         getCloudVersion(async: true)
@@ -197,6 +197,8 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
         scorecard.checkNetworkConnection(button: nil, label: syncMessage)
         
         ScorecardUI.selectBackground(size: welcomeView.frame.size, backgroundImage: backgroundImage)
+        
+        self.hideNavigationBar()
         
     }
     

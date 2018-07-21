@@ -13,7 +13,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
     func testStats() {
         
         // Select Player Stats
-        self.selectOption("Player Stats")
+        self.selectOption("Players")
         
         // Select Becky
         self.selectPlayer("Becky")
@@ -27,22 +27,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         // Return to Player Stats
         self.tap(app.navigationBars["Becky"].buttons["Back"])
         
-        // Go into select mode
-        self.tap(app.navigationBars["Players"].buttons["Select"])
-        
-        // Select Cath & Emma
-        self.selectPlayer("Cath")
-        self.selectPlayer("Emma")
-        
-        // De-select Cath
-        self.selectPlayer("Cath")
-        
-        // Select Jack
-        self.selectPlayer("Jack")
-        
-        // Cancel select
-        self.tap(app.toolbars.buttons["Cancel"])
-        
         // Go back to home page
         self.returnHome()
         
@@ -51,26 +35,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
     func testCompare() {
         
         // Select Player Stats
-        self.selectOption("Player Stats")
-        
-        // Go into select mode
-        self.tap(app.navigationBars["Players"].buttons["Select"])
-        
-        // Select Becky, Cath & Emma
-        self.selectPlayer("Becky")
-        self.selectPlayer("Cath")
-        self.selectPlayer("Emma")
-        
-        // Go into compare
-        self.tap(app.navigationBars["Players"].buttons["Compare"])
-        
-        // Go back to stats
-        self.tap(app.navigationBars["Statistics"].buttons["Back"])
-        
-        // Select all players & Compare
-        self.tap(app.navigationBars["Players"].buttons["Select"])
-        self.tap(app.navigationBars["Players"].buttons["All"])
-        self.tap(app.navigationBars["Players"].buttons["Compare"])
+        self.selectOption("Statistics")
         
         // Select player detail for Becky & then exit
         self.tap(app.tables.cells.containing(.staticText, identifier: "Becky").buttons["More Info"])
@@ -90,9 +55,6 @@ extension Contract_Whist_Scorecard_UI_Tests {
         
         // Sort by games won
         self.tap(app.tables.staticTexts["Games Won"])
-        
-        // Return to stats
-        self.tap(app.navigationBars["Statistics"].buttons["Back"])
         
         // Go back to home page
         self.returnHome()

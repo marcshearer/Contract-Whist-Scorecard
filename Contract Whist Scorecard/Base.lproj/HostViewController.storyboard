@@ -23,15 +23,52 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="W39-zN-Mkq">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="2AA-z1-N5q"/>
+                                </constraints>
+                                <textAttributes key="titleTextAttributes">
+                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </textAttributes>
+                                <items>
+                                    <navigationItem id="Qj8-GK-V3E">
+                                        <barButtonItem key="leftBarButtonItem" style="plain" id="z1L-j8-Luw">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Y0T-3j-okg" customClass="RoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <rect key="frame" x="16" y="11" width="54" height="22"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" title="Back" image="button:Y0T-3j-okg:image">
+                                                    <color key="titleColor" name="alternateSelectedControlTextColor" catalog="System" colorSpace="catalog"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="finishPressed:" destination="jFg-9y-h6N" eventType="touchUpInside" id="2ZP-Q9-oIh"/>
+                                                </connections>
+                                            </button>
+                                        </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" style="plain" id="aiE-DT-Cn0">
+                                            <button key="customView" hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Pld-cu-sfw" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <rect key="frame" x="272" y="11" width="87" height="22"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" title="Continue" image="forward">
+                                                    <color key="titleColor" name="alternateSelectedControlTextColor" catalog="System" colorSpace="catalog"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="continuePressed:" destination="jFg-9y-h6N" eventType="touchUpInside" id="JNk-6T-4Vt"/>
+                                                </connections>
+                                            </button>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="broadcast green" translatesAutoresizingMaskIntoConstraints="NO" id="6CV-kM-lT6" userLabel="Image">
-                                <rect key="frame" x="8" y="60" width="120" height="120"/>
+                                <rect key="frame" x="8" y="64" width="120" height="120"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="3mo-bZ-iEe"/>
                                     <constraint firstAttribute="width" constant="120" id="oCk-Ix-m4a"/>
                                 </constraints>
                             </imageView>
                             <button hidden="YES" opaque="NO" tag="3" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="58f-B9-MVv" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="8" y="60" width="120" height="120"/>
+                                <rect key="frame" x="8" y="64" width="120" height="120"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="58f-B9-MVv" secondAttribute="height" multiplier="1:1" id="cGX-Jc-0Nz"/>
@@ -44,13 +81,13 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="y3y-fa-eli" userLabel="Instructions">
-                                <rect key="frame" x="148" y="52" width="211" height="108"/>
+                                <rect key="frame" x="148" y="76" width="211" height="88"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelectionDuringEditing="YES" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="94s-Nu-7uO" userLabel="Host Player Table View">
-                                <rect key="frame" x="0.0" y="200" width="375" height="100"/>
+                                <rect key="frame" x="0.0" y="204" width="375" height="100"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="e9m-Xo-u49"/>
@@ -212,7 +249,7 @@
                                 </connections>
                             </tableView>
                             <tableView clipsSubviews="YES" tag="2" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Xzo-zR-Jgv" userLabel="Guest Player Table View">
-                                <rect key="frame" x="0.0" y="300" width="375" height="367"/>
+                                <rect key="frame" x="0.0" y="304" width="375" height="363"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Guest Player Table Cell" id="cmD-3t-Eaw" customClass="HostPlayerTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
@@ -336,62 +373,39 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="Xzo-zR-Jgv" secondAttribute="trailing" id="3s2-Js-na2"/>
                             <constraint firstItem="Xzo-zR-Jgv" firstAttribute="leading" secondItem="zW7-7o-GAX" secondAttribute="leading" id="6K8-dj-xHp"/>
+                            <constraint firstAttribute="trailing" secondItem="W39-zN-Mkq" secondAttribute="trailing" id="9p7-fW-4BA"/>
+                            <constraint firstItem="58f-B9-MVv" firstAttribute="top" secondItem="W39-zN-Mkq" secondAttribute="bottom" constant="20" id="GIW-pW-3dU"/>
                             <constraint firstItem="58f-B9-MVv" firstAttribute="leading" secondItem="6CV-kM-lT6" secondAttribute="leading" id="Gjk-8s-liQ"/>
                             <constraint firstItem="94s-Nu-7uO" firstAttribute="leading" secondItem="zW7-7o-GAX" secondAttribute="leading" id="IY5-0p-mwQ"/>
+                            <constraint firstItem="W39-zN-Mkq" firstAttribute="top" secondItem="zW7-7o-GAX" secondAttribute="top" id="JSG-Q5-iZy"/>
                             <constraint firstItem="94s-Nu-7uO" firstAttribute="top" secondItem="y3y-fa-eli" secondAttribute="bottom" constant="40" id="JoM-cx-CWN"/>
                             <constraint firstItem="58f-B9-MVv" firstAttribute="trailing" secondItem="6CV-kM-lT6" secondAttribute="trailing" id="NvB-41-Ne4"/>
                             <constraint firstItem="y3y-fa-eli" firstAttribute="leading" secondItem="6CV-kM-lT6" secondAttribute="trailing" constant="20" id="UHZ-1K-yjA"/>
+                            <constraint firstItem="W39-zN-Mkq" firstAttribute="leading" secondItem="zW7-7o-GAX" secondAttribute="leading" id="dVW-ZK-WfT"/>
                             <constraint firstItem="94s-Nu-7uO" firstAttribute="top" secondItem="6CV-kM-lT6" secondAttribute="bottom" constant="20" id="efI-XN-GNb"/>
                             <constraint firstItem="6CV-kM-lT6" firstAttribute="leading" secondItem="zW7-7o-GAX" secondAttribute="leading" constant="8" id="iEl-oA-DhY"/>
-                            <constraint firstItem="58f-B9-MVv" firstAttribute="top" secondItem="zW7-7o-GAX" secondAttribute="top" constant="60" id="p5c-ia-wqD"/>
                             <constraint firstAttribute="trailing" secondItem="94s-Nu-7uO" secondAttribute="trailing" id="q6w-f5-zrz"/>
-                            <constraint firstItem="6CV-kM-lT6" firstAttribute="top" secondItem="zW7-7o-GAX" secondAttribute="top" constant="60" id="qdp-eO-YGg"/>
                             <constraint firstItem="58f-B9-MVv" firstAttribute="centerY" secondItem="6CV-kM-lT6" secondAttribute="centerY" id="rOe-7V-fMA"/>
                             <constraint firstAttribute="trailing" secondItem="y3y-fa-eli" secondAttribute="trailing" constant="16" id="rrZ-oG-PhA"/>
+                            <constraint firstItem="6CV-kM-lT6" firstAttribute="top" secondItem="W39-zN-Mkq" secondAttribute="bottom" constant="20" id="tC0-JH-xJt"/>
                             <constraint firstItem="p3A-Cc-HCD" firstAttribute="top" secondItem="Xzo-zR-Jgv" secondAttribute="bottom" id="tGQ-vV-M2H"/>
                             <constraint firstItem="94s-Nu-7uO" firstAttribute="bottom" secondItem="Xzo-zR-Jgv" secondAttribute="top" id="uig-3C-2Oy"/>
-                            <constraint firstItem="y3y-fa-eli" firstAttribute="top" secondItem="51y-1w-9vV" secondAttribute="bottom" constant="32" id="uly-Yd-aeh"/>
+                            <constraint firstItem="y3y-fa-eli" firstAttribute="top" secondItem="W39-zN-Mkq" secondAttribute="bottom" constant="32" id="wJh-Jc-1HB"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="AEn-Bm-4wH" appends="YES" id="ftg-C9-Jxa"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" title="Host a Game" id="lin-Kj-Rfw">
-                        <barButtonItem key="leftBarButtonItem" id="zfp-fV-UtI">
-                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="3fM-J1-Tyc" customClass="RoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="16" y="11" width="54" height="22"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Back" image="back">
-                                    <color key="titleColor" name="alternateSelectedControlTextColor" catalog="System" colorSpace="catalog"/>
-                                </state>
-                                <connections>
-                                    <action selector="finishPressed:" destination="jFg-9y-h6N" eventType="touchUpInside" id="thE-XD-oze"/>
-                                </connections>
-                            </button>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" id="EwI-06-kOe">
-                            <button key="customView" hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="M3a-22-0Ai" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="16" y="11" width="54" height="22"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Continue" image="forward">
-                                    <color key="titleColor" name="alternateSelectedControlTextColor" catalog="System" colorSpace="catalog"/>
-                                </state>
-                                <connections>
-                                    <action selector="continuePressed:" destination="jFg-9y-h6N" eventType="touchUpInside" id="Wvm-bB-R5B"/>
-                                </connections>
-                            </button>
-                        </barButtonItem>
-                    </navigationItem>
                     <connections>
-                        <outlet property="continueButton" destination="M3a-22-0Ai" id="ceW-kY-ncc"/>
-                        <outlet property="finishButton" destination="3fM-J1-Tyc" id="ca2-qH-7vc"/>
+                        <outlet property="continueButton" destination="Pld-cu-sfw" id="rKH-GX-A8b"/>
+                        <outlet property="finishButton" destination="Y0T-3j-okg" id="iPf-RC-SyZ"/>
                         <outlet property="guestPlayerTableView" destination="Xzo-zR-Jgv" id="Z8M-d8-LjU"/>
                         <outlet property="hostPlayerTableView" destination="94s-Nu-7uO" id="nmw-Fg-wEQ"/>
                         <outlet property="hostPlayerTableViewHeightConstraint" destination="e9m-Xo-u49" id="s3I-U4-UyE"/>
                         <outlet property="imageView" destination="6CV-kM-lT6" id="cOs-E0-mBh"/>
                         <outlet property="instructionLabel" destination="y3y-fa-eli" id="nNk-iL-18J"/>
                         <outlet property="scorecardButton" destination="58f-B9-MVv" id="jab-Vf-c1T"/>
-                        <outlet property="titleBar" destination="lin-Kj-Rfw" id="368-bL-PQI"/>
+                        <outlet property="titleBar" destination="Qj8-GK-V3E" id="wWE-oE-V53"/>
                         <segue destination="T57-Vi-NC3" kind="unwind" identifier="hideHost" unwindAction="hideHostWithSegue:" id="sdC-oM-s17"/>
                         <segue destination="76N-sc-y5x" kind="show" identifier="showHostGameSetup" id="PB2-nq-efJ"/>
                     </connections>
@@ -416,8 +430,131 @@
         </scene>
     </scenes>
     <resources>
-        <image name="back" width="14" height="20"/>
         <image name="broadcast green" width="120" height="120"/>
+        <image name="button:Y0T-3j-okg:image" width="14" height="20">
+            <mutableData key="keyedArchiveRepresentation">
+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
+LGJUUkMAAAHYAAAAIGdUUkMAAAHYAAAAIGRlc2MAAAAAAAAAC0Rpc3BsYXkgUDMAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAdGV4dAAAAABDb3B5cmlnaHQgQXBwbGUgSW5jLiwgMjAxNwAAWFlaIAAAAAAAAPNRAAEA
+AAABFsxYWVogAAAAAAAAg98AAD2/////u1hZWiAAAAAAAABKvwAAsTcAAAq5WFlaIAAAAAAAACg4AAAR
+CwAAyLlwYXJhAAAAAAADAAAAAmZmAADypwAADVkAABPQAAAKW3NmMzIAAAAAAAEMQgAABd7///MmAAAH
+kwAA/ZD///ui///9owAAA9wAAMBu0iUmJyhaJGNsYXNzbmFtZVgkY2xhc3Nlc18QEE5TQml0bWFwSW1h
+Z2VSZXCjJykqWk5TSW1hZ2VSZXBYTlNPYmplY3TSJSYsLVdOU0FycmF5oiwq0iUmLzBeTlNNdXRhYmxl
+QXJyYXmjLywq1TIzNDUKNjc4OTpXTlNXaGl0ZVxOU0NvbXBvbmVudHNcTlNDb2xvclNwYWNlXxASTlND
+dXN0b21Db2xvclNwYWNlRDAgMABDMCAwEAOADIAQ1Dw9Pgo/QEFCVE5TSURVTlNJQ0NXTlNNb2RlbBAJ
+gA0QAIAP0kQKRUZXTlMuZGF0YU8REWgAABFoYXBwbAIAAABtbnRyR1JBWVhZWiAH3AAIABcADwAuAA9h
+Y3NwQVBQTAAAAABub25lAAAAAAAAAAAAAAAAAAAAAAAA9tYAAQAAAADTLWFwcGwAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVkZXNjAAAAwAAAAHlkc2NtAAABPAAAB+hj
+cHJ0AAAJJAAAACN3dHB0AAAJSAAAABRrVFJDAAAJXAAACAxkZXNjAAAAAAAAAB9HZW5lcmljIEdyYXkg
+R2FtbWEgMi4yIFByb2ZpbGUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAbWx1YwAAAAAAAAAfAAAADHNrU0sA
+AAAuAAABhGRhREsAAAA4AAABsmNhRVMAAAA4AAAB6nZpVk4AAABAAAACInB0QlIAAABKAAACYnVrVUEA
+AAAsAAACrGZyRlUAAAA+AAAC2Gh1SFUAAAA0AAADFnpoVFcAAAAeAAADSm5iTk8AAAA6AAADaGNzQ1oA
+AAAoAAADomhlSUwAAAAkAAADyml0SVQAAABOAAAD7nJvUk8AAAAqAAAEPGRlREUAAABOAAAEZmtvS1IA
+AAAiAAAEtHN2U0UAAAA4AAABsnpoQ04AAAAeAAAE1mphSlAAAAAmAAAE9GVsR1IAAAAqAAAFGnB0UE8A
+AABSAAAFRG5sTkwAAABAAAAFlmVzRVMAAABMAAAF1nRoVEgAAAAyAAAGInRyVFIAAAAkAAAGVGZpRkkA
+AABGAAAGeGhySFIAAAA+AAAGvnBsUEwAAABKAAAG/HJ1UlUAAAA6AAAHRmVuVVMAAAA8AAAHgGFyRUcA
+AAAsAAAHvABWAWEAZQBvAGIAZQBjAG4A4QAgAHMAaQB2AOEAIABnAGEAbQBhACAAMgAsADIARwBlAG4A
+ZQByAGkAcwBrACAAZwByAOUAIAAyACwAMgAgAGcAYQBtAG0AYQBwAHIAbwBmAGkAbABHAGEAbQBtAGEA
+IABkAGUAIABnAHIAaQBzAG8AcwAgAGcAZQBuAOgAcgBpAGMAYQAgADIALgAyAEMepQB1ACAAaADsAG4A
+aAAgAE0A4AB1ACAAeADhAG0AIABDAGgAdQBuAGcAIABHAGEAbQBtAGEAIAAyAC4AMgBQAGUAcgBmAGkA
+bAAgAEcAZQBuAOkAcgBpAGMAbwAgAGQAYQAgAEcAYQBtAGEAIABkAGUAIABDAGkAbgB6AGEAcwAgADIA
+LAAyBBcEMAQzBDAEOwRMBD0EMAAgAEcAcgBhAHkALQQzBDAEPAQwACAAMgAuADIAUAByAG8AZgBpAGwA
+IABnAOkAbgDpAHIAaQBxAHUAZQAgAGcAcgBpAHMAIABnAGEAbQBtAGEAIAAyACwAMgDBAGwAdABhAGwA
+4QBuAG8AcwAgAHMAegD8AHIAawBlACAAZwBhAG0AbQBhACAAMgAuADKQGnUocHCWjlFJXqYAIAAyAC4A
+MgAggnJfaWPPj/AARwBlAG4AZQByAGkAcwBrACAAZwByAOUAIABnAGEAbQBtAGEAIAAyACwAMgAtAHAA
+cgBvAGYAaQBsAE8AYgBlAGMAbgDhACABYQBlAGQA4QAgAGcAYQBtAGEAIAAyAC4AMgXSBdAF3gXUACAF
+0AXkBdUF6AAgBdsF3AXcBdkAIAAyAC4AMgBQAHIAbwBmAGkAbABvACAAZwByAGkAZwBpAG8AIABnAGUA
+bgBlAHIAaQBjAG8AIABkAGUAbABsAGEAIABnAGEAbQBtAGEAIAAyACwAMgBHAGEAbQBhACAAZwByAGkA
+IABnAGUAbgBlAHIAaQBjAQMAIAAyACwAMgBBAGwAbABnAGUAbQBlAGkAbgBlAHMAIABHAHIAYQB1AHMA
+dAB1AGYAZQBuAC0AUAByAG8AZgBpAGwAIABHAGEAbQBtAGEAIAAyACwAMsd8vBgAINaMwMkAIKwQucgA
+IAAyAC4AMgAg1QS4XNMMx3xmbpAacHBepnz7ZXAAIAAyAC4AMgAgY8+P8GWHTvZOAIIsMLAw7DCkMKww
+8zDeACAAMgAuADIAIDDXMO0w1TChMKQw6wOTA7UDvQO5A7oDzAAgA5MDugPBA7kAIAOTA6wDvAO8A7EA
+IAAyAC4AMgBQAGUAcgBmAGkAbAAgAGcAZQBuAOkAcgBpAGMAbwAgAGQAZQAgAGMAaQBuAHoAZQBuAHQA
+bwBzACAAZABhACAARwBhAG0AbQBhACAAMgAsADIAQQBsAGcAZQBtAGUAZQBuACAAZwByAGkAagBzACAA
+ZwBhAG0AbQBhACAAMgAsADIALQBwAHIAbwBmAGkAZQBsAFAAZQByAGYAaQBsACAAZwBlAG4A6QByAGkA
+YwBvACAAZABlACAAZwBhAG0AbQBhACAAZABlACAAZwByAGkAcwBlAHMAIAAyACwAMg4jDjEOBw4qDjUO
+QQ4BDiEOIQ4yDkAOAQ4jDiIOTA4XDjEOSA4nDkQOGwAgADIALgAyAEcAZQBuAGUAbAAgAEcAcgBpACAA
+RwBhAG0AYQAgADIALAAyAFkAbABlAGkAbgBlAG4AIABoAGEAcgBtAGEAYQBuACAAZwBhAG0AbQBhACAA
+MgAsADIAIAAtAHAAcgBvAGYAaQBpAGwAaQBHAGUAbgBlAHIAaQENAGsAaQAgAEcAcgBhAHkAIABHAGEA
+bQBtAGEAIAAyAC4AMgAgAHAAcgBvAGYAaQBsAFUAbgBpAHcAZQByAHMAYQBsAG4AeQAgAHAAcgBvAGYA
+aQBsACAAcwB6AGEAcgBvAVsAYwBpACAAZwBhAG0AbQBhACAAMgAsADIEHgQxBEkEMARPACAEQQQ1BEAE
+MARPACAEMwQwBDwEPAQwACAAMgAsADIALQQ/BEAEPgREBDgEOwRMAEcAZQBuAGUAcgBpAGMAIABHAHIA
+YQB5ACAARwBhAG0AbQBhACAAMgAuADIAIABQAHIAbwBmAGkAbABlBjoGJwZFBicAIAAyAC4AMgAgBkQG
+SAZGACAGMQZFBicGLwZKACAGOQYnBkV0ZXh0AAAAAENvcHlyaWdodCBBcHBsZSBJbmMuLCAyMDEyAABY
+WVogAAAAAAAA81EAAQAAAAEWzGN1cnYAAAAAAAAEAAAAAAUACgAPABQAGQAeACMAKAAtADIANwA7AEAA
+RQBKAE8AVABZAF4AYwBoAG0AcgB3AHwAgQCGAIsAkACVAJoAnwCkAKkArgCyALcAvADBAMYAywDQANUA
+2wDgAOUA6wDwAPYA+wEBAQcBDQETARkBHwElASsBMgE4AT4BRQFMAVIBWQFgAWcBbgF1AXwBgwGLAZIB
+mgGhAakBsQG5AcEByQHRAdkB4QHpAfIB+gIDAgwCFAIdAiYCLwI4AkECSwJUAl0CZwJxAnoChAKOApgC
+ogKsArYCwQLLAtUC4ALrAvUDAAMLAxYDIQMtAzgDQwNPA1oDZgNyA34DigOWA6IDrgO6A8cD0wPgA+wD
++QQGBBMEIAQtBDsESARVBGMEcQR+BIwEmgSoBLYExATTBOEE8AT+BQ0FHAUrBToFSQVYBWcFdwWGBZYF
+pgW1BcUF1QXlBfYGBgYWBicGNwZIBlkGagZ7BowGnQavBsAG0QbjBvUHBwcZBysHPQdPB2EHdAeGB5kH
+rAe/B9IH5Qf4CAsIHwgyCEYIWghuCIIIlgiqCL4I0gjnCPsJEAklCToJTwlkCXkJjwmkCboJzwnlCfsK
+EQonCj0KVApqCoEKmAquCsUK3ArzCwsLIgs5C1ELaQuAC5gLsAvIC+EL+QwSDCoMQwxcDHUMjgynDMAM
+2QzzDQ0NJg1ADVoNdA2ODakNww3eDfgOEw4uDkkOZA5/DpsOtg7SDu4PCQ8lD0EPXg96D5YPsw/PD+wQ
+CRAmEEMQYRB+EJsQuRDXEPURExExEU8RbRGMEaoRyRHoEgcSJhJFEmQShBKjEsMS4xMDEyMTQxNjE4MT
+pBPFE+UUBhQnFEkUahSLFK0UzhTwFRIVNBVWFXgVmxW9FeAWAxYmFkkWbBaPFrIW1hb6Fx0XQRdlF4kX
+rhfSF/cYGxhAGGUYihivGNUY+hkgGUUZaxmRGbcZ3RoEGioaURp3Gp4axRrsGxQbOxtjG4obshvaHAIc
+KhxSHHscoxzMHPUdHh1HHXAdmR3DHeweFh5AHmoelB6+HukfEx8+H2kflB+/H+ogFSBBIGwgmCDEIPAh
+HCFIIXUhoSHOIfsiJyJVIoIiryLdIwojOCNmI5QjwiPwJB8kTSR8JKsk2iUJJTglaCWXJccl9yYnJlcm
+hya3JugnGCdJJ3onqyfcKA0oPyhxKKIo1CkGKTgpaymdKdAqAio1KmgqmyrPKwIrNitpK50r0SwFLDks
+biyiLNctDC1BLXYtqy3hLhYuTC6CLrcu7i8kL1ovkS/HL/4wNTBsMKQw2zESMUoxgjG6MfIyKjJjMpsy
+1DMNM0YzfzO4M/E0KzRlNJ402DUTNU01hzXCNf02NzZyNq426TckN2A3nDfXOBQ4UDiMOMg5BTlCOX85
+vDn5OjY6dDqyOu87LTtrO6o76DwnPGU8pDzjPSI9YT2hPeA+ID5gPqA+4D8hP2E/oj/iQCNAZECmQOdB
+KUFqQaxB7kIwQnJCtUL3QzpDfUPARANER0SKRM5FEkVVRZpF3kYiRmdGq0bwRzVHe0fASAVIS0iRSNdJ
+HUljSalJ8Eo3Sn1KxEsMS1NLmkviTCpMcky6TQJNSk2TTdxOJU5uTrdPAE9JT5NP3VAnUHFQu1EGUVBR
+m1HmUjFSfFLHUxNTX1OqU/ZUQlSPVNtVKFV1VcJWD1ZcVqlW91dEV5JX4FgvWH1Yy1kaWWlZuFoHWlZa
+plr1W0VblVvlXDVchlzWXSddeF3JXhpebF69Xw9fYV+zYAVgV2CqYPxhT2GiYfViSWKcYvBjQ2OXY+tk
+QGSUZOllPWWSZedmPWaSZuhnPWeTZ+loP2iWaOxpQ2maafFqSGqfavdrT2una/9sV2yvbQhtYG25bhJu
+a27Ebx5veG/RcCtwhnDgcTpxlXHwcktypnMBc11zuHQUdHB0zHUodYV14XY+dpt2+HdWd7N4EXhueMx5
+KnmJeed6RnqlewR7Y3vCfCF8gXzhfUF9oX4BfmJ+wn8jf4R/5YBHgKiBCoFrgc2CMIKSgvSDV4O6hB2E
+gITjhUeFq4YOhnKG14c7h5+IBIhpiM6JM4mZif6KZIrKizCLlov8jGOMyo0xjZiN/45mjs6PNo+ekAaQ
+bpDWkT+RqJIRknqS45NNk7aUIJSKlPSVX5XJljSWn5cKl3WX4JhMmLiZJJmQmfyaaJrVm0Kbr5wcnImc
+951kndKeQJ6unx2fi5/6oGmg2KFHobaiJqKWowajdqPmpFakx6U4pammGqaLpv2nbqfgqFKoxKk3qamq
+HKqPqwKrdavprFys0K1ErbiuLa6hrxavi7AAsHWw6rFgsdayS7LCszizrrQltJy1E7WKtgG2ebbwt2i3
+4LhZuNG5SrnCuju6tbsuu6e8IbybvRW9j74KvoS+/796v/XAcMDswWfB48JfwtvDWMPUxFHEzsVLxcjG
+RsbDx0HHv8g9yLzJOsm5yjjKt8s2y7bMNcy1zTXNtc42zrbPN8+40DnQutE80b7SP9LB00TTxtRJ1MvV
+TtXR1lXW2Ndc1+DYZNjo2WzZ8dp22vvbgNwF3IrdEN2W3hzeot8p36/gNuC94UThzOJT4tvjY+Pr5HPk
+/OWE5g3mlucf56noMui86Ubp0Opb6uXrcOv77IbtEe2c7ijutO9A78zwWPDl8XLx//KM8xnzp/Q09ML1
+UPXe9m32+/eK+Bn4qPk4+cf6V/rn+3f8B/yY/Sn9uv5L/tz/bf//gA7SJSZISV1OU011dGFibGVEYXRh
+o0hKKlZOU0RhdGHSJSZMTVxOU0NvbG9yU3BhY2WiTipcTlNDb2xvclNwYWNl0iUmUFFXTlNDb2xvcqJQ
+KtIlJlNUV05TSW1hZ2WiUypfEA9OU0tleWVkQXJjaGl2ZXLRV1hUcm9vdIABAAgAEQAaACMALQAyADcA
+TABSAF0AZABrAHgAfwCHAIkAiwCQAJIAlACdAKIArQCvALEAswC4ALsAvQC/AMEAwwDIAN8A4QDjCEkI
+TghZCGIIdQh5CIQIjQiSCJoInQiiCLEItQjACMgI1QjiCPcI/AkACQIJBAkGCQ8JFAkaCSIJJAkmCSgJ
+KgkvCTcaoxqlGqoauBq8GsMayBrVGtga5RrqGvIa9Rr6GwIbBRsXGxobHwAAAAAAAAIBAAAAAAAAAFkA
+AAAAAAAAAAAAAAAAABshA
+</mutableData>
+        </image>
         <image name="cross blue" width="20" height="20"/>
         <image name="forward" width="14" height="20"/>
         <image name="start game" width="100" height="100"/>

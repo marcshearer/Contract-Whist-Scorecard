@@ -45,8 +45,6 @@ class ScorepadViewController: UIViewController,
     private var cellWidth = 0
     private var singleColumn = false
     private var narrow = false
-    private var dealerShown = false
-    private var dealerRowHeight = 0
     private var imageRowHeight: CGFloat = 0.0
     private var headerHeight: CGFloat = 0.0
     private let combinedTriggerWidth = 80
@@ -55,7 +53,6 @@ class ScorepadViewController: UIViewController,
     private let showThumbnail = true
     private var headerRows = 0
     private var imageRow = -1
-    private var dealerRow = -1
     private var playerRow = -1
     
     // Body description variables
@@ -322,12 +319,10 @@ class ScorepadViewController: UIViewController,
         case 1:
             // Header
             switch indexPath.row {
-            case dealerRow:
-                height = CGFloat(dealerRowHeight)
             case imageRow:
                 height = imageRowHeight
             default:
-                height = headerHeight - CGFloat(dealerRowHeight) - imageRowHeight
+                height = headerHeight - imageRowHeight
             }
         default:
             // Body and footer
@@ -440,25 +435,8 @@ class ScorepadViewController: UIViewController,
         
         roundWidth = size.width - CGFloat(bodyColumns * scorecard.currentPlayers * cellWidth)
         
-        // Work out dealer row requirements from settings
-        switch scorecard.settingDealerHighlightMode {
-        case DealerHighlightMode.none:
-            dealerRowHeight = 0
-            dealerShown=false
-        case DealerHighlightMode.highlight:
-            dealerRowHeight = 0
-            dealerShown = true
-        case DealerHighlightMode.small:
-            dealerRowHeight = 10
-            dealerShown = true
-        case DealerHighlightMode.large:
-            dealerRowHeight = minCellHeight
-            dealerShown = true
-        }
-        
         // work out what appears in which header row
         imageRow = -1
-        dealerRow = -1
         playerRow = -1
         headerRows = 0
         headerHeight =  0.0
@@ -467,27 +445,16 @@ class ScorepadViewController: UIViewController,
             headerHeight += imageRowHeight
             imageRow = headerRows
             headerRows += 1
-    }
-        
-        if dealerRowHeight > 0 && scorecard.settingDealerHighlightAbove {
-            headerHeight += CGFloat(dealerRowHeight)
-            dealerRow = headerRows
-            headerRows += 1
         }
         
+       
         playerRow = headerRows
         headerRows += 1
-        
-        if dealerRowHeight > 0 && !scorecard.settingDealerHighlightAbove {
-            dealerRow = headerRows
-            headerHeight += CGFloat(dealerRowHeight)
-            headerRows += 1
-        }
         
         // Note headerHeight does not include the player name row since we haven't
         // worked this out yet
         
-        var floatCellHeight: CGFloat = (size.height - CGFloat(dealerRowHeight) - imageRowHeight - navigationBar.frame.height) / CGFloat(self.rounds+2) // Adding 2 for name row in header and total row
+        var floatCellHeight: CGFloat = (size.height - imageRowHeight - navigationBar.frame.height) / CGFloat(self.rounds+2) // Adding 2 for name row in header and total row
         floatCellHeight.round()
         
         cellHeight = Int(floatCellHeight)
@@ -545,21 +512,11 @@ class ScorepadViewController: UIViewController,
     }
     
     private func highlightDealer(headerCell: ScorepadCollectionViewCell, playerNumber: Int, row: Int, forceClear: Bool = false) {
-        if dealerShown && playerNumber >= 0 {
-            if (dealerRowHeight != 0 && row == dealerRow) ||
-                (dealerRowHeight == 0 && (row == playerRow || row == imageRow)) {
-                
-                if scorecard.isScorecardDealer() == playerNumber && !forceClear {
-                    ScorecardUI.totalStyleView(headerCell)
-                    if dealerRowHeight >= minCellHeight {
-                        headerCell.scorepadCellLabel.text = "Dealer"
-                    }
-                } else {
-                    ScorecardUI.emphasisStyleView(headerCell)
-                    if dealerRowHeight >= minCellHeight {
-                        headerCell.scorepadCellLabel.text = ""
-                    }
-                }
+        if playerNumber >= 0 {
+            if scorecard.isScorecardDealer() == playerNumber && !forceClear {
+                ScorecardUI.totalStyleView(headerCell)
+            } else {
+                ScorecardUI.emphasisStyleView(headerCell)
             }
         }
     }
@@ -656,7 +613,7 @@ class ScorepadViewController: UIViewController,
         self.scorecard.scorepadHeaderHeight = 0
         scorecard.inScorepad = false
         UIApplication.shared.isIdleTimerDisabled = false
-        self.navigationController?.isNavigationBarHidden = false
+        self.showNavigationBar()
     }
     
     private func playHand(_ setState: Bool = false, _ recoveryMode: Bool = false) {
@@ -928,7 +885,7 @@ class ScorepadViewController: UIViewController,
                 if column == 0 {
                     // Row titles
                     switch row {
-                    case dealerRow, imageRow:
+                    case imageRow:
                         headerCell.scorepadCellLabel.text=""
                     case playerRow:
                         headerCell.scorepadCellLabel.text="Player"
@@ -940,14 +897,6 @@ class ScorepadViewController: UIViewController,
                 } else {
                     // Row values
                     player = column
-                    
-                    switch row {
-                    case dealerRow:
-                        headerCell.scorepadCellLabel.text = ""
-                    
-                    default:
-                        break
-                    }
                     
                     headerCell.scorepadLeftLineWeight.constant = thickLineWeight
                 }

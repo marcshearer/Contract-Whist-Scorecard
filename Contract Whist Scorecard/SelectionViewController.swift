@@ -25,6 +25,7 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
     private let selectedViewSpacing:CGFloat = 10.0
     private var firstTime = true
     private var selectedAlpha: CGFloat = 0.5
+    private var testMode = false
     
     // Main local state handlers
     private var selectedList = [PlayerMO?]()
@@ -42,7 +43,7 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
     @IBOutlet weak var availableCollectionView: UICollectionView!
     @IBOutlet weak var selectedCollectionView: UICollectionView!
     @IBOutlet weak var selectionView: UIView!
-    @IBOutlet weak var continueButton: RoundedButton!
+    @IBOutlet weak var continueButton: UIButton!
     @IBOutlet weak var clearButton: UIButton!
     @IBOutlet weak var animationThumbnail: UIImageView!
     @IBOutlet weak var animationThumbnailView: UIView!
@@ -117,6 +118,12 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
 
         sync.initialise(scorecard: scorecard)
         
+        if let testModeValue = ProcessInfo.processInfo.environment["TEST_MODE"] {
+            if testModeValue.lowercased() == "true" {
+                self.testMode = true
+            }
+        }
+        
          for _ in 1...scorecard.playerList.count+1 {
             availableCell.append(nil)
         }
@@ -164,6 +171,13 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
         self.toolbar.setShadowImage(UIImage(), forToolbarPosition: .any)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.hideNavigationBar()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        self.showNavigationBar()
+    }
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         // Select watermark background
@@ -362,7 +376,7 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
     
     func formatButtons(_ animated: Bool = true) {
         
-        continueButton.isHidden = (selectedList.count >= 3 ? false : true)
+        continueButton.isHidden = (selectedList.count >= 3 || testMode ? false : true)
         
         // Note the selected view extends 44 below the bottom of the screen. Setting the bottom constraint to zero makes the toolbar disappear
         let toolbarBottom: CGFloat = (selectedList.count > 0 ? 44 : 0)

@@ -35,3 +35,15 @@ class Stepper: UIStepper {
         super.init(frame: frame)
     }
 }
+
+extension UIViewController {
+    
+    func hideNavigationBar() {
+        self.navigationController?.isNavigationBarHidden = true
+    }
+    
+    func showNavigationBar() {
+        self.navigationController?.isNavigationBarHidden = true
+    }
+    
+}

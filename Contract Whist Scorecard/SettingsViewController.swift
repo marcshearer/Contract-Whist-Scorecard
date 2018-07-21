@@ -35,21 +35,16 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     private let nearbySection = 3
     private let onlineSection = 4
     private let alertSection = 5
-    private let     alertVibrateRow = 0
-    private let     alertFlashRow = 1
     private let notificationSection = 6
-    private let dealerSection = 7
-    private let     dealerModeRow = 0
-    private let     dealerPositionRow = 1
-    private let cardsSection = 8
+    private let cardsSection = 7
     private let     cardsStartRow = 0
     private let     cardsEndRow = 1
     private let     cardsBounceRow = 2
-    private let bonus2Section = 9
-    private let trumpSequenceSection = 10
+    private let bonus2Section = 8
+    private let trumpSequenceSection = 9
     private let     trumpSequenceNoTrumpRow = 0
     private let     trumpSequenceSuitRow = 1
-    private let aboutSection = 11
+    private let aboutSection = 10
     private let     aboutVersionRow = 0
     private let     aboutDatabaseRow = 1
     private let     aboutSubheadingRow = 2
@@ -65,9 +60,6 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     private var receiveNotificationsSelection: UISegmentedControl!
     private var allowBroadcastSelection: UISegmentedControl!
     private var alertVibrateSelection: UISegmentedControl!
-    private var alertFlashSelection: UISegmentedControl!
-    private var modeSelection: UISegmentedControl!
-    private var positionSelection: UISegmentedControl!
     private var bonus2Selection: UISegmentedControl!
     private var cardsSlider: [Int : UISlider] = [:]
     private var cardsValue: [Int : UITextField] = [:]
@@ -110,13 +102,13 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: - TableView Overrides ===================================================================== -
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 12
+        return 11
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         switch section {
-        case saveSection, alertSection, dealerSection, trumpSequenceSection:
+        case saveSection, trumpSequenceSection:
             return 2
         case cardsSection:
             return 3
@@ -151,6 +143,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             default:
                 syncEnabledSelection.selectedSegmentIndex = 0
             }
+            
         case saveSection:
             switch indexPath.row {
             case saveHistoryRow:
@@ -166,6 +159,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 default:
                     saveHistorySelection.selectedSegmentIndex = 0
                 }
+                
             case saveLocationRow:
                 // Save Location
                 cell = tableView.dequeueReusableCell(withIdentifier: "Save Location Cell", for: indexPath) as! SettingsTableCell
@@ -180,9 +174,11 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                     saveLocationSelection.selectedSegmentIndex = 0
                 }
                 saveLocationSelection.isEnabled = scorecard.settingSaveHistory
+                
             default:
                 break
             }
+            
         case broadcastSection:
             // Allow broadcast
             cell = tableView.dequeueReusableCell(withIdentifier: "Allow Broadcast Cell", for: indexPath) as! SettingsTableCell
@@ -198,6 +194,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 allowBroadcastSelection.selectedSegmentIndex = 0
             }
             allowBroadcastSelection.isEnabled = scorecard.settingSyncEnabled
+            
         case nearbySection:
             // Nearby playing
             cell = tableView.dequeueReusableCell(withIdentifier: "Nearby Playing Cell", for: indexPath) as! SettingsTableCell
@@ -223,41 +220,21 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             self.displayOnlineCell()
             
         case alertSection:
-            // Alerts
-            switch indexPath.row {
-            case alertVibrateRow:
-                // Alert vibrate
-                cell = tableView.dequeueReusableCell(withIdentifier: "Alert Vibrate Cell", for: indexPath) as! SettingsTableCell
-                alertVibrateSelection = cell.alertVibrateSelection
-                alertVibrateSelection.addTarget(self, action: #selector(SettingsViewController.alertVibrateAction(_:)), for: UIControlEvents.valueChanged)
-                
-                // Set receive notifications
-                switch scorecard.settingAlertVibrate {
-                case true:
-                    alertVibrateSelection.selectedSegmentIndex = 1
-                default:
-                    alertVibrateSelection.selectedSegmentIndex = 0
-                }
-                alertVibrateSelection.isEnabled = scorecard.settingSyncEnabled && ( scorecard.settingNearbyPlaying || scorecard.settingOnlinePlayerEmail != nil)
-            case alertFlashRow:
-                // Alert flash
-                cell = tableView.dequeueReusableCell(withIdentifier: "Alert Flash Cell", for: indexPath) as! SettingsTableCell
-                alertFlashSelection = cell.alertFlashSelection
-                alertFlashSelection.addTarget(self, action: #selector(SettingsViewController.alertFlashAction(_:)), for: UIControlEvents.valueChanged)
-                
-                // Set receive notifications
-                switch scorecard.settingAlertFlash {
-                case true:
-                    alertFlashSelection.selectedSegmentIndex = 1
-                    
-                default:
-                    alertFlashSelection.selectedSegmentIndex = 0
-                }
-                alertFlashSelection.isEnabled = scorecard.settingSyncEnabled
+            // Alert vibrate
+            cell = tableView.dequeueReusableCell(withIdentifier: "Alert Vibrate Cell", for: indexPath) as! SettingsTableCell
+            alertVibrateSelection = cell.alertVibrateSelection
+            alertVibrateSelection.addTarget(self, action: #selector(SettingsViewController.alertVibrateAction(_:)), for: UIControlEvents.valueChanged)
+            
+            // Set receive notifications
+            switch scorecard.settingAlertVibrate {
+            case true:
+                alertVibrateSelection.selectedSegmentIndex = 1
             default:
-                break
+                alertVibrateSelection.selectedSegmentIndex = 0
             }
+            alertVibrateSelection.isEnabled = scorecard.settingSyncEnabled && ( scorecard.settingNearbyPlaying || scorecard.settingOnlinePlayerEmail != nil)
             self.enableAlerts()
+            
         case notificationSection:
             // Receive notifications
             cell = tableView.dequeueReusableCell(withIdentifier: "Receive Notifications Cell", for: indexPath) as! SettingsTableCell
@@ -273,44 +250,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 receiveNotificationsSelection.selectedSegmentIndex = 0
             }
             receiveNotificationsSelection.isEnabled = scorecard.settingSyncEnabled
-        case dealerSection:
-            // Dealer mode & position
-            switch indexPath.row {
-            case dealerModeRow:
-                // Dealer mode
-                cell = tableView.dequeueReusableCell(withIdentifier: "Dealer Mode Cell", for: indexPath) as! SettingsTableCell
-                modeSelection = cell.modeSelection
-                modeSelection.addTarget(self, action: #selector(SettingsViewController.dealerModeAction(_:)), for: UIControlEvents.valueChanged)
-                
-                // Set dealer highlight mode segmented control
-                switch scorecard.settingDealerHighlightMode {
-                case DealerHighlightMode.none:
-                    modeSelection.selectedSegmentIndex = 0
-                case DealerHighlightMode.highlight:
-                    modeSelection.selectedSegmentIndex = 1
-                case DealerHighlightMode.small:
-                    modeSelection.selectedSegmentIndex = 2
-                case DealerHighlightMode.large:
-                    modeSelection.selectedSegmentIndex = 3
-                }
-            case dealerPositionRow:
-                //Dealer position
-                cell = tableView.dequeueReusableCell(withIdentifier: "Dealer Position Cell", for: indexPath) as! SettingsTableCell
-                positionSelection = cell.positionSelection
-                positionSelection.addTarget(self, action: #selector(SettingsViewController.dealerPositionAction(_:)), for: UIControlEvents.valueChanged)
-                
-                // Set dealer highlight position segmented control
-                switch scorecard.settingDealerHighlightAbove {
-                case true:
-                    positionSelection.selectedSegmentIndex = 0
-                case false:
-                    positionSelection.selectedSegmentIndex = 1
-                }
-                enableHighlightPosition()
-            default:
-                break
-            }
-
+            
         case cardsSection:
             // Number of cards
             switch indexPath.row {
@@ -483,8 +423,6 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             return "Alert on Turn to Play"
         case notificationSection:
             return "Receive Notifications"
-        case dealerSection:
-            return "Dealer highlight options"
         case cardsSection:
             return "Number of cards in hands"
         case bonus2Section:
@@ -609,59 +547,11 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         UserDefaults.standard.set(scorecard.settingAlertVibrate, forKey: "alertVibrate")
     }
     
-    @objc internal func alertFlashAction(_ sender: UISegmentedControl) {
-        switch alertFlashSelection.selectedSegmentIndex {
-        case 1:
-            scorecard.settingAlertFlash = true
-        default:
-            scorecard.settingAlertFlash = false
-        }
-        
-        // Save it
-        UserDefaults.standard.set(scorecard.settingAlertFlash, forKey: "alertFlash")
-    }
-    
     @objc internal func twosInfoPressed(_ sender: UIButton) {
         twosInfo()
     }
     
-    @objc internal func dealerModeAction(_ sender: Any) {
-        var setting: String
-        
-        switch modeSelection.selectedSegmentIndex {
-        case 0:
-            scorecard.settingDealerHighlightMode = DealerHighlightMode.none
-            setting = "none"
-        case 1:
-            scorecard.settingDealerHighlightMode = DealerHighlightMode.highlight
-            setting = "highlight"
-        case 2:
-            scorecard.settingDealerHighlightMode = DealerHighlightMode.small
-            setting = "small"
-        default:
-            scorecard.settingDealerHighlightMode = DealerHighlightMode.large
-            setting = "large"
-        }
-        
-        enableHighlightPosition()
-        
-        // Save it
-        UserDefaults.standard.set(setting, forKey: "dealerHighlightMode")
-    }
-    
-    @objc internal func dealerPositionAction(_ sender: Any) {
-        switch positionSelection.selectedSegmentIndex {
-        case 0:
-            scorecard.settingDealerHighlightAbove = true
-        default:
-            scorecard.settingDealerHighlightAbove = false
-        }
-        
-        // Save it
-        UserDefaults.standard.set(scorecard.settingDealerHighlightAbove, forKey: "dealerHighlightAbove")
-    }
-    
-    @objc internal func bonus2Action(_ sender: Any) {
+   @objc internal func bonus2Action(_ sender: Any) {
         switch bonus2Selection.selectedSegmentIndex {
         case 0:
             scorecard.settingBonus2 = false
@@ -862,16 +752,6 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     func enableAlerts() {
         let enabled = self.scorecard.settingSyncEnabled && (self.scorecard.settingNearbyPlaying || self.scorecard.settingOnlinePlayerEmail != nil)
         ScorecardUI.showSegmented(segmented: self.alertVibrateSelection, isEnabled: enabled)
-        ScorecardUI.showSegmented(segmented: self.alertFlashSelection, isEnabled: enabled)
-    }
-    
-    func enableHighlightPosition() {
-        ScorecardUI.showSegmented(segmented: positionSelection,
-                                  isEnabled: (scorecard.settingDealerHighlightMode == DealerHighlightMode.small ||
-                                    scorecard.settingDealerHighlightMode == DealerHighlightMode.large))
-        if !positionSelection.isEnabled {
-            positionSelection.selectedSegmentIndex = 0
-        }
     }
     
     func cardsChanged() {
@@ -927,7 +807,6 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 self.allowBroadcastSelection?.isEnabled = true
                 self.receiveNotificationsSelection?.isEnabled = true
                 self.alertVibrateSelection?.isEnabled = true
-                self.alertFlashSelection?.isEnabled = true
                 self.nearbyPlayingSelection?.isEnabled = true
                 self.onlinePlayerChangeButton?.isEnabled = true
                 self.onlinePlayerChangeButton?.alpha = 1.0
@@ -943,7 +822,6 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 self.nearbyPlayingSelection?.isEnabled = false
                 self.receiveNotificationsSelection?.isEnabled = false
                 self.alertVibrateSelection?.isEnabled = false
-                self.alertFlashSelection?.isEnabled = false
                 self.onlinePlayerChangeButton?.isEnabled = false
                 self.onlinePlayerChangeButton?.alpha = 0.4
             }
@@ -964,10 +842,6 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         self.alertVibrateSelection?.selectedSegmentIndex = 0
         self.scorecard.settingAlertVibrate = false
         UserDefaults.standard.set(self.scorecard.settingAlertVibrate, forKey: "alertVibrate")
-        // Reset Alert Flash
-        self.alertFlashSelection?.selectedSegmentIndex = 0
-        self.scorecard.settingAlertFlash = false
-        UserDefaults.standard.set(self.scorecard.settingAlertFlash, forKey: "alertFlash")
     }
     
     func clearOnline() {
@@ -1079,9 +953,6 @@ class SettingsTableCell: UITableViewCell {
     @IBOutlet weak var receiveNotificationsSelection: UISegmentedControl!
     @IBOutlet weak var allowBroadcastSelection: UISegmentedControl!
     @IBOutlet weak var alertVibrateSelection: UISegmentedControl!
-    @IBOutlet weak var alertFlashSelection: UISegmentedControl!
-    @IBOutlet weak var modeSelection: UISegmentedControl!
-    @IBOutlet weak var positionSelection: UISegmentedControl!
     @IBOutlet weak var bonus2Selection: UISegmentedControl!
     @IBOutlet weak var bonus2Info: UIButton!
     @IBOutlet weak var cardsLabel: UILabel!

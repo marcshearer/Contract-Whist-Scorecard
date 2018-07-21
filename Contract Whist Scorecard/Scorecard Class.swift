@@ -10,13 +10,6 @@ import UIKit
 import CoreData
 import CloudKit
 
-enum DealerHighlightMode {
-    case none
-    case highlight
-    case small
-    case large
-}
-
 enum CommsHandlerMode {
     case none
     case scorepad
@@ -83,8 +76,6 @@ class Scorecard {
     public var watchManager: WatchManager!
     
     // Settings
-    public var settingDealerHighlightMode = DealerHighlightMode.highlight
-    public var settingDealerHighlightAbove = true
     public var settingBonus2 = true
     public var settingCards = [13, 1]
     public var settingBounceNumberCards: Bool = false
@@ -95,7 +86,6 @@ class Scorecard {
     public var settingReceiveNotifications = false
     public var settingAllowBroadcast = true
     public var settingAlertVibrate = true
-    public var settingAlertFlash = true
     public var settingVersion = "0.0"
     public var settingBuild = 0
     public var settingLastVersion = "0.0"
@@ -320,25 +310,6 @@ class Scorecard {
     
     private func loadSettings() {
         
-        // Load dealer highlight mode
-        if let dealerHighlightMode = UserDefaults.standard.string(forKey: "dealerHighlightMode") {
-            switch dealerHighlightMode{
-            case "none":
-                self.settingDealerHighlightMode = DealerHighlightMode.none
-            case "small":
-                self.settingDealerHighlightMode = DealerHighlightMode.small
-            case "large":
-                self.settingDealerHighlightMode = DealerHighlightMode.large
-            default:
-                self.settingDealerHighlightMode = DealerHighlightMode.highlight
-            }
-        } else {
-            self.settingDealerHighlightMode = DealerHighlightMode.highlight
-        }
-        
-        // Load dealer highlight position
-        self.settingDealerHighlightAbove = UserDefaults.standard.bool(forKey: "dealerHighlightAbove")
-        
         // Load bonus for making a trick with a 2
         self.settingBonus2 = UserDefaults.standard.bool(forKey: "bonus2")
                 
@@ -361,7 +332,6 @@ class Scorecard {
         
         // Load alert settings
         self.settingAlertVibrate = UserDefaults.standard.bool(forKey: "alertVibrate")
-        self.settingAlertFlash = UserDefaults.standard.bool(forKey: "alertFlash")
         
         // Load broadcast setting
         self.settingAllowBroadcast = UserDefaults.standard.bool(forKey: "allowBroadcast")

@@ -826,6 +826,9 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
     
     private func segueToGameSummary() {
         self.scorecard.commsHandlerMode = .gameSummary
+        // Need to reset game in progress to avoid resume online game
+        self.scorecard.setGameInProgress(false)
+        self.scorecard.recoveryMode = false
         scorepadViewController.performSegue(withIdentifier: "showGameSummary", sender: scorepadViewController)
     }
     
@@ -897,7 +900,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
     
     private func alertCompletion(alert: Bool, message: String, completion: (()->())?) {
         Utility.mainThread {
-            self.alertMessage(if: alert, message, title: "Connected Devices", completion: {
+            self.alertMessage(if: alert, message, title: "Connected Devices", okHandler: {
                 if completion != nil {
                     completion!()
                 }

@@ -945,9 +945,6 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if self.scorecard.settingAlertVibrate {
             self.alertVibrate()
         }
-        if self.scorecard.settingAlertFlash {
-            self.view.alertFlash()
-        }
     }
     
     // MARK: - Segue Prepare Handler =================================================================== -

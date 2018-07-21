@@ -50,7 +50,7 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
     
     @IBAction func finishGamePressed(_ sender: Any) {
         // Link back to selection
-        self.navigationController?.isNavigationBarHidden = false
+        self.showNavigationBar()
         NotificationCenter.default.removeObserver(observer!)
         self.scorecard.resetOverrideSettings()
         self.performSegue(withIdentifier: returnSegue, sender: self)
@@ -106,7 +106,7 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
         
         // Check if in recovery mode and if so go straight to scorecard
         if scorecard.recoveryMode {
-            self.performSegue(withIdentifier: "showScorepad", sender: self)
+            self.recoveryScorepad()
         }
         
         // Set nofification for image download
@@ -124,7 +124,7 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
         super.viewWillAppear(animated)
 
         // Hide duplicate navigation bar
-        self.navigationController?.isNavigationBarHidden = true
+        self.hideNavigationBar()
     }
  
     // MARK: - Popover Overrides ================================================================ -
@@ -314,6 +314,12 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
         } else {
             self.showScorepad()
         }
+    }
+    
+    private func recoveryScorepad() {
+        self.alertMessage(if: self.scorecard.overrideSelected, "This game was being played with Override Settings", title: "Reminder", okHandler: {
+            self.performSegue(withIdentifier: "showScorepad", sender: self )
+        })
     }
     
     func showScorepad() {

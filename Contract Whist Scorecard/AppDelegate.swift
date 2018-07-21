@@ -52,8 +52,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func registerDefaults() {
         UserDefaults.standard.register(defaults: [
-            "dealerHighlightMode":  true,
-            "dealerHighlightAbove": false,
             "bonus2":               true,
             "cards":                [13, 1],
             "bounceNumberCards":    false,
@@ -70,7 +68,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             "versionMessage":       "",
             "database":             "",
             "rabbitMQUri":          "",
-            "alertFlash":           false,
             "alertVibrate":         true,
             "onlinePlayerEmail":    "",
             "tempOnlineEmail":      false,

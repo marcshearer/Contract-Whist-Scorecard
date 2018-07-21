@@ -349,8 +349,6 @@ extension Scorecard {
     
     func testResetSettings() {
         // Reset all settings to default values - called on entry to app in test mode
-        self.settingDealerHighlightMode = DealerHighlightMode.highlight
-        self.settingDealerHighlightAbove = true
         self.settingBonus2 = true
         self.settingCards = [13, 1]
         self.settingBounceNumberCards = false
@@ -361,7 +359,6 @@ extension Scorecard {
         self.settingReceiveNotifications = false
         self.settingAllowBroadcast = true
         self.settingAlertVibrate = true
-        self.settingAlertFlash = true
         self.settingNearbyPlaying = true
         self.settingOnlinePlayerEmail = "mshearer@waitrose.com"
     }

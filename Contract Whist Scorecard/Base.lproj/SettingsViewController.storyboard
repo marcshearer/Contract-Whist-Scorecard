@@ -232,32 +232,8 @@
                                             <outlet property="alertVibrateSelection" destination="gf8-zG-2X2" id="SFF-gO-heQ"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Alert Flash Cell" rowHeight="76" id="Vy9-d9-aIs" userLabel="Alert Flash Cell" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="528" width="375" height="76"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Vy9-d9-aIs" id="arQ-ZQ-fYb">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="CsI-De-U2T">
-                                                    <rect key="frame" x="105" y="24" width="165" height="29"/>
-                                                    <segments>
-                                                        <segment title="Don't Flash"/>
-                                                        <segment title="Flash"/>
-                                                    </segments>
-                                                </segmentedControl>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="CsI-De-U2T" firstAttribute="centerX" secondItem="arQ-ZQ-fYb" secondAttribute="centerX" id="UEe-MG-d7K"/>
-                                                <constraint firstItem="CsI-De-U2T" firstAttribute="centerY" secondItem="arQ-ZQ-fYb" secondAttribute="centerY" id="ch4-TI-T8J"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <outlet property="alertFlashSelection" destination="CsI-De-U2T" id="zV2-B8-b8S"/>
-                                        </connections>
-                                    </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Receive Notifications Cell" rowHeight="76" id="T8q-p2-LJv" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="604" width="375" height="76"/>
+                                        <rect key="frame" x="0.0" y="528" width="375" height="76"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="T8q-p2-LJv" id="CX3-wd-2Dz">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
@@ -280,64 +256,11 @@
                                             <outlet property="receiveNotificationsSelection" destination="qkU-PV-yl0" id="u4U-jF-1Du"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Dealer Mode Cell" id="X5L-KI-JbX" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="680" width="375" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="X5L-KI-JbX" id="8MG-GI-Vpg">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="jcX-du-vTh">
-                                                    <rect key="frame" x="50" y="8" width="275" height="29"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="275" id="I8T-cm-fVM"/>
-                                                    </constraints>
-                                                    <segments>
-                                                        <segment title="None"/>
-                                                        <segment title="Highlight"/>
-                                                        <segment title="Small Row"/>
-                                                        <segment title="Large Row"/>
-                                                    </segments>
-                                                </segmentedControl>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="jcX-du-vTh" firstAttribute="centerX" secondItem="8MG-GI-Vpg" secondAttribute="centerX" id="GFX-tg-Fky"/>
-                                                <constraint firstItem="jcX-du-vTh" firstAttribute="centerY" secondItem="8MG-GI-Vpg" secondAttribute="centerY" id="uV0-e5-MP9"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <outlet property="modeSelection" destination="jcX-du-vTh" id="a02-FC-wPk"/>
-                                        </connections>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Dealer Position Cell" id="X27-mI-IQx" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="724" width="375" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="X27-mI-IQx" id="P1k-8n-qLf">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Q7r-RV-7kq">
-                                                    <rect key="frame" x="87" y="8" width="201" height="29"/>
-                                                    <segments>
-                                                        <segment title="Above Players"/>
-                                                        <segment title="Below Players"/>
-                                                    </segments>
-                                                </segmentedControl>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="Q7r-RV-7kq" firstAttribute="centerY" secondItem="P1k-8n-qLf" secondAttribute="centerY" id="OYs-zs-8Hh"/>
-                                                <constraint firstItem="Q7r-RV-7kq" firstAttribute="centerX" secondItem="P1k-8n-qLf" secondAttribute="centerX" id="hby-XB-dEX"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <outlet property="positionSelection" destination="Q7r-RV-7kq" id="bO1-4k-FV7"/>
-                                        </connections>
-                                    </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Bonus2 Cell" id="rjj-gR-6eM" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="768" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="604" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rjj-gR-6eM" id="Qzl-mR-ZTt">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="JtH-Za-Sh9">
@@ -368,10 +291,10 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Number Cards Cell" rowHeight="76" id="9V3-KD-sfn" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="812" width="375" height="76"/>
+                                        <rect key="frame" x="0.0" y="648" width="375" height="76"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9V3-KD-sfn" id="SgN-a9-5xB">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="75.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="IkJ-LK-A9Q">
@@ -425,10 +348,10 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Bounce Cell" id="bZG-fh-Pw8" userLabel="Bounce Cell" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="888" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="724" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bZG-fh-Pw8" id="VuV-aa-Qw7">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="6Uz-4f-yzv">
@@ -449,10 +372,10 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Trump Include No Trump Cell" id="7wr-kK-JS7" userLabel="Include No Trumps" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="932" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="768" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7wr-kK-JS7" id="MUf-zJ-kKQ">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Icr-UO-AnD">
@@ -473,10 +396,10 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Trump Sequence Cell" id="rZe-D3-hWE" userLabel="Trump Sequence Cell" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="976" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="812" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rZe-D3-hWE" id="jf0-CM-StV">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="qLu-Us-XZ9">
@@ -542,7 +465,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="About Cell 1 Value" rowHeight="76" id="pne-r4-ZDe" userLabel="About Cell 1-value" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="1020" width="375" height="76"/>
+                                        <rect key="frame" x="0.0" y="856" width="375" height="76"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="pne-r4-ZDe" id="bco-1e-Ksl">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="75.5"/>
@@ -578,7 +501,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="About Cell Heading" rowHeight="40" id="HZM-ER-i3j" userLabel="About Cell Heading" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="1096" width="375" height="40"/>
+                                        <rect key="frame" x="0.0" y="932" width="375" height="40"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="HZM-ER-i3j" id="XJW-aC-Dl4">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="39.5"/>
@@ -631,7 +554,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="About Cell 3 Value" rowHeight="76" id="RH8-Vb-Q8J" userLabel="About Cell 3-value" customClass="SettingsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="1136" width="375" height="76"/>
+                                        <rect key="frame" x="0.0" y="972" width="375" height="76"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="RH8-Vb-Q8J" id="fSN-6S-q9q">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="75.5"/>

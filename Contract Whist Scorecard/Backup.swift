@@ -50,7 +50,7 @@ class Backup {
             
             bodyText = bodyText + "\nGames\n\n"
             
-            bodyText = bodyText + "\"Game UUID\", \"Date played\", \"Device UUID\", \"Location\", \"Latitude\", \"Longitude\", \"Device name\", \"Local created\", \"Player no\", \"Name\", \"Email\", \"Played\", \"Won\", \"Score\", \"Hands played\", \"Hands made\", \"Twos made\", \"Local created\", \"Player no\", \"Name\", \"Email\", \"Played\", \"Won\", \"Score\", \"Hands played\", \"Hands made\", \"Twos made\", \"Local created\", \"Player no\", \"Name\", \"Email\", \"Played\", \"Won\", \"Score\", \"Hands played\", \"Hands made\", \"Twos made\", \"Local created\", \"Player no\", \"Name\", \"Email\", \"Played\", \"Won\", \"Score\", \"Hands played\", \"Hands made\", \"Twos made\", \"Local created\"\n"
+            bodyText = bodyText + "\"Game UUID\", \"Date played\", \"Device UUID\", \"Location\", \"Latitude\", \"Longitude\", \"Device name\", \"Local created\", \"Exclude History\", \"Player no\", \"Name\", \"Email\", \"Played\", \"Won\", \"Score\", \"Hands played\", \"Hands made\", \"Twos made\", \"Local created\", \"Player no\", \"Name\", \"Email\", \"Played\", \"Won\", \"Score\", \"Hands played\", \"Hands made\", \"Twos made\", \"Local created\", \"Player no\", \"Name\", \"Email\", \"Played\", \"Won\", \"Score\", \"Hands played\", \"Hands made\", \"Twos made\", \"Local created\", \"Player no\", \"Name\", \"Email\", \"Played\", \"Won\", \"Score\", \"Hands played\", \"Hands made\", \"Twos made\", \"Local created\"\n"
             
             let history=History(getParticipants: true, includeBF: true)
             for historyGame in history.games {
@@ -63,7 +63,7 @@ class Backup {
                 bodyText = bodyText + ", \(historyGame.gameLocation.location.coordinate.longitude)"
                 bodyText = bodyText + ", \"\(historyGame.deviceName!)\""
                 bodyText = bodyText + ", \(Utility.dateString(historyGame.localDateCreated))"
-                
+                bodyText = bodyText + ", \((historyGame.gameMO.excludeStats ? "true" : "false"))"
                 
                 for historyParticipant in historyGame.participant {
                     bodyText = bodyText + ", \(historyParticipant.playerNumber)"

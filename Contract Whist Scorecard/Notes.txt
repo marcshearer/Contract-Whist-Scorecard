@@ -9,12 +9,12 @@ Resuming goes into scorecard rather than resuming online game
 Show average score in stats
 Show more info on iPad in stats
 Notification gives the wrong winner
+Avoid spurious Resume Online Game messages
 
 Bugs fix now
 ------------
 Add exclude from stats flag (and anything else not there) to backup
 Can't select players reliably (is this just on simulator?)
-Navigation bar disappears when return to home from game summary
 
 Long-term bugs
 --------------

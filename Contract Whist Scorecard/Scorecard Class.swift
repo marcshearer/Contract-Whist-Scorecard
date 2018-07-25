@@ -67,7 +67,8 @@ class Scorecard {
     public var logQueue: RabbitMQQueue!
     
     // Variables for test extensions
-    public var autoPlay: Int = 0
+    public var autoPlayHands: Int = 0
+    public var autoPlayRounds: Int = 0
     
     // Variable to store scorepad header height to re-center popups correctly
     public var scorepadHeaderHeight: CGFloat = 0

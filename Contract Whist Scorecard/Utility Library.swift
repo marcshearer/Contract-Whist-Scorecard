@@ -349,7 +349,17 @@ class Utility {
     
     // MARK: - Functions to get view controllers, use main thread and wrapper system level stuff ==============
     
-    class func getActiveViewController() -> UIViewController? {
+    public static var appDelegate: AppDelegate? {
+        get {
+            if let delegate = UIApplication.shared.delegate as? AppDelegate {
+                return delegate
+            } else {
+                return nil
+            }
+        }
+    }
+
+    public class func getActiveViewController() -> UIViewController? {
         var activeViewController = UIApplication.shared.keyWindow?.rootViewController
         // Work down through any child view controllers
         while true {

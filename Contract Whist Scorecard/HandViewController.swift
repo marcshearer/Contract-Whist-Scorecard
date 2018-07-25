@@ -126,7 +126,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Setup initial state and local references for global state
+   // Setup initial state and local references for global state
         self.state = self.scorecard.handState
         self.enteredPlayerNumber = self.state.enteredPlayerNumber
         self.round = self.state.round
@@ -135,7 +135,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         setupArrays()
         if self.state.handSuits == nil {
-            self.state.handSuits = Pack.sortHand(hand: self.state.hand)
+            self.state.handSuits = HandSuit.sortCards(cards: self.state.hand.cards)
         }
         self.currentCards = self.scorecard.roundCards(round, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
         
@@ -390,7 +390,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.instructionTextView.text = "Bidding Complete"
                 self.finishButton.isHidden = true
                 self.scorecard.commsHandlerMode = .viewTrick
-                Utility.executeAfter(delay: (self.scorecard.autoPlay != 0 ? 0.1 : 3.0), completion: {
+                Utility.executeAfter(delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 3.0), completion: {
                     self.finishButton.isHidden = false
                     self.scorecard.commsHandlerMode = .none
                     NotificationCenter.default.post(name: .broadcastHandlerCompleted, object: self, userInfo: nil)
@@ -483,7 +483,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         // Don't refresh (or exit) for at least 1 second
                         self.scorecard.commsHandlerMode = .viewTrick
                         self.finishButton.isHidden = true
-                        Utility.executeAfter(delay: (self.scorecard.autoPlay != 0 ? 0.1 : 1.0), completion: {
+                        Utility.executeAfter(delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 1.0), completion: {
                             self.finishButton.isHidden = false
                             self.scorecard.commsHandlerMode = .none
                             NotificationCenter.default.post(name: .broadcastHandlerCompleted, object: self, userInfo: nil)
@@ -493,7 +493,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     // Hand finished
                     self.finishButton.isHidden = true
                     self.scorecard.commsHandlerMode = .viewTrick
-                    Utility.executeAfter(delay: (self.scorecard.autoPlay != 0 ? 0.1 : 2.0), completion: {
+                    Utility.executeAfter(delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 2.0), completion: {
                         // Return to scorepad after 2 seconds
                         if self.scorecard.isHosting {
                             // Record scores (in the order they happened)

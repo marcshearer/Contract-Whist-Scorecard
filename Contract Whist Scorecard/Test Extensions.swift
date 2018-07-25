@@ -135,7 +135,7 @@ extension ScorepadViewController {
     }
     
     func autoDeal() {
-        if self.scorecard.autoPlay != 0 && self.scorecard.isHosting {
+        if self.scorecard.autoPlayHands != 0 && self.scorecard.isHosting {
             Utility.executeAfter(delay: 10 * Config.autoPlayTimeUnit, completion: {
                 self.scorePressed(self)
             })
@@ -155,6 +155,10 @@ extension HandViewController {
                 }
                 actionSheet.add("Show connections", handler: {
                     self.scorecard.commsDelegate?.connectionInfo()
+                })
+                actionSheet.add("Show hand information", handler: {
+                    let message = "SelectedRound: \(self.scorecard.selectedRound)\nRound: \(self.state.round)\nCards: \(self.state.hand.toString())\nDealer: \(self.scorecard.dealerIs)\nTrick: \(self.state.trick!)\nCards played: \(self.state.trickCards.count)\nTo lead: \(self.state.toLead!)\nTo play: \(self.state.toPlay!)"
+                    self.alertMessage(message, title: "Hand Information", buttonText: "Continue")
                 })
                 actionSheet.add("Cancel", style: .cancel)
                 actionSheet.present()
@@ -193,8 +197,11 @@ extension BroadcastViewController {
         switch descriptor {
         case "autoPlay":
             let dictionary = data as! [String : Int]
-            if let autoPlay = dictionary["value"] {
-                self.scorecard.autoPlay = autoPlay
+            if let autoPlayHands = dictionary["hands"] {
+                self.scorecard.autoPlayHands = autoPlayHands
+                if let autoPlayRounds = dictionary["rounds"] {
+                    self.scorecard.autoPlayRounds = autoPlayRounds
+                }
             }
         default:
             break
@@ -221,7 +228,7 @@ extension HostViewController {
 extension HandViewController {
     
     func autoBid() {
-        if self.scorecard.autoPlay != 0 {
+        if self.scorecard.autoPlayHands > 0 && (self.scorecard.autoPlayHands > 1 || round <= self.scorecard.autoPlayRounds) {
             var bids: [Int] = []
             for playerNumber in 1...self.scorecard.currentPlayers {
                 let bid = scorecard.entryPlayer(playerNumber).bid(round)
@@ -252,11 +259,14 @@ extension HandViewController {
                     })
                 }
             }
+        } else {
+            self.scorecard.autoPlayHands = 0
+            self.scorecard.autoPlayRounds = 0
         }
     }
     
     func autoPlay() {
-        if self.scorecard.autoPlay != 0 {
+        if self.scorecard.autoPlayHands > 0 && (self.scorecard.autoPlayHands > 1 || round <= self.scorecard.autoPlayRounds) {
             if self.state.toPlay == self.state.enteredPlayerNumber {
                 for suitNumber in 1...self.state.handSuits.count {
                     if suitEnabled[suitNumber-1] {
@@ -272,6 +282,9 @@ extension HandViewController {
                     }
                 }
             }
+        } else {
+            self.scorecard.autoPlayHands = 0
+            self.scorecard.autoPlayRounds = 0
         }
     }
     
@@ -317,9 +330,9 @@ extension GameSummaryViewController {
     internal func autoNewGame() {
         
         if self.scorecard.isHosting {
-            self.scorecard.autoPlay = max(0, self.scorecard.autoPlay - 1)
+            self.scorecard.autoPlayHands = max(0, self.scorecard.autoPlayHands - 1)
             self.scorecard.sendAutoPlay()
-            if self.scorecard.autoPlay != 0 {
+            if self.scorecard.autoPlayHands != 0 {
                 // Play another one
                 Utility.executeAfter(delay: 20 * Config.autoPlayTimeUnit, completion: {
                     self.finishGame(from: self, toSegue: "newGame", advanceDealer: true, resetOverrides: false, confirm: false)
@@ -333,18 +346,23 @@ extension GameSummaryViewController {
 extension Scorecard {
     
     public func getAutoPlayCount(completion: (()->())? = nil) {
-        let confirmCount = ConfirmCountViewController()
+        let confirmHands = ConfirmCount()
         let backColor = UIColor(red: CGFloat(0.0), green: CGFloat(0.5), blue: CGFloat(0.5), alpha: CGFloat(0.8))
-        confirmCount.show(title: "Auto-play", message: "Enter the number of games you want to simulate", backColor: backColor, handler: { (value) in
-            self.autoPlay = value
-            self.sendAutoPlay()
-            completion?()
+        confirmHands.show(title: "Auto-play", message: "Enter the number of games you want to simulate", minimumValue: 1, backColor: backColor, handler: { (value) in
+            self.autoPlayHands = value
+            let confirmRounds = ConfirmCount()
+            confirmRounds.show(title: "Auto-play", message: "Enter the number of hands you want to simulate in the final round", defaultValue: self.rounds, minimumValue: 1, maximumValue: self.rounds, backColor: backColor, handler: { (value) in
+                self.autoPlayRounds = value
+                    self.sendAutoPlay()
+                    completion?()
+            })
         })
     }
     
     public func sendAutoPlay() {
         // Tell other players to enter Autoplay mode (for testing)
-        self.commsDelegate?.send("autoPlay", ["value" : self.autoPlay])
+        self.commsDelegate?.send("autoPlay", ["hands"  : self.autoPlayHands,
+                                              "rounds" : self.autoPlayRounds])
     }
     
     func testResetSettings() {

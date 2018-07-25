@@ -33,32 +33,6 @@ class Pack {
         return deal
     }
     
-    public class func sortHand(hand: Hand) -> [HandSuit] {
-        var suits: [HandSuit] = []
-        
-        // Create empty suits
-        for _ in 1...4 {
-            suits.append(HandSuit())
-        }
-        
-        // Sort hand
-        hand.cards = hand.cards.sorted(by: { $0.toNumber() > $1.toNumber() })
-        
-        // Put hand in suits
-        for card in hand.cards {
-            suits[card.suit.rawValue-1].cards.append(card)
-        }
-        
-        // Remove empty suits
-        for suitNumber in (1...4).reversed() {
-            if suits[suitNumber - 1].cards.count == 0 {
-                suits.remove(at: suitNumber - 1)
-            }
-        }
-        
-        return suits.reversed()
-    }
-    
     public class func findCard(hand: [HandSuit], card: Card) -> (Int, Int)? {
         var suitNumber: Int!
         var cardNumber: Int!

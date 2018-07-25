@@ -13,8 +13,15 @@ Avoid spurious Resume Online Game messages
 
 Bugs fix now
 ------------
+Crash towards end of game where player has fewer cards than others
 Add exclude from stats flag (and anything else not there) to backup
 Can't select players reliably (is this just on simulator?)
+Allows you to bid the number left if you re-bid
+Doesn't seem to reconnect reliably
+When resume core dumps on release version
+When resume doesn't auto select device
+When don't have online enabled doesn't seem to auto select nearby in hosting
+Don't seem to clear resumed game properly - when start new game seemed to go back to interrupted game
 
 Long-term bugs
 --------------

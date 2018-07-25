@@ -100,8 +100,16 @@ class Hand {
     }
     
     public func toString() -> String {
+        var sortedCards: [Card] = []
         var result = ""
-        for card in self.cards {
+        var handSuits: [HandSuit]
+        handSuits = HandSuit.sortCards(cards: self.cards)
+        for handSuit in handSuits {
+            for card in handSuit.cards {
+                sortedCards.append(card)
+            }
+        }
+        for card in sortedCards {
             let stringCard = card.toString()
             if result == "" {
                 result = stringCard
@@ -136,6 +144,33 @@ class HandSuit {
             result.append(card.toNumber())
         }
         return result
+    }
+    
+    public class func sortCards(cards: [Card]) -> [HandSuit] {
+        var suits: [HandSuit] = []
+        
+        // Create empty suits
+        for _ in 1...4 {
+            suits.append(HandSuit())
+        }
+        
+        // Sort hand
+        var cards = cards
+        cards = cards.sorted(by: { $0.toNumber() > $1.toNumber() })
+        
+        // Put hand in suits
+        for card in cards {
+            suits[card.suit.rawValue-1].cards.append(card)
+        }
+        
+        // Remove empty suits
+        for suitNumber in (1...4).reversed() {
+            if suits[suitNumber - 1].cards.count == 0 {
+                suits.remove(at: suitNumber - 1)
+            }
+        }
+        
+        return suits.reversed()
     }
 }
 

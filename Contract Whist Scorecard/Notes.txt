@@ -10,18 +10,20 @@ Show average score in stats
 Show more info on iPad in stats
 Notification gives the wrong winner
 Avoid spurious Resume Online Game messages
+Last hand not shown when return from scorecard after its become your turn
+Crash towards end of game where player has fewer cards than others
+New backup option
+When don't have online enabled doesn't seem to auto select nearby in hosting
+Don't seem to clear resumed game properly on slaves - when start new game seemed to go back to interrupted game
+When resume doesn't auto select device
+Allows you to bid the number left if you re-bid or sometimes if you go into extended view
 
 Bugs fix now
 ------------
-Crash towards end of game where player has fewer cards than others
-Add exclude from stats flag (and anything else not there) to backup
-Can't select players reliably (is this just on simulator?)
-Allows you to bid the number left if you re-bid
-Doesn't seem to reconnect reliably
 When resume core dumps on release version
-When resume doesn't auto select device
-When don't have online enabled doesn't seem to auto select nearby in hosting
-Don't seem to clear resumed game properly - when start new game seemed to go back to interrupted game
+Reduce wait before play card after bidding
+Send round in handState
+Make debug info available on production
 
 Long-term bugs
 --------------
@@ -79,4 +81,4 @@ Commands to sort out firewall prompt
     /usr/libexec/ApplicationFirewall/socketfilterfw --add /Applications/Xcode.app/Contents/MacOS/Xcode
     /usr/libexec/ApplicationFirewall/socketfilterfw --add /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/Contents/MacOS/Simulator
     sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
-Remapped home and end etc using ~/Library/KeyBindings/DefaultKeyBinding.dict - Did Ctrl-C etc in the keyboard settings app shortcuts
+Remapped home and end etc using ~/Library/KeyBindings/DefaultKeyBinding.dict - Did Ctrl-C etc in the keyboard settings app shortcuts but then reversed it

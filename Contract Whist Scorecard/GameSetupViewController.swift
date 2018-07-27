@@ -97,7 +97,7 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
         
         // Make sure dealer not too high
         if self.scorecard.dealerIs > self.scorecard.currentPlayers {
-            self.scorecard.dealerIs = 1
+            self.scorecard.saveDealer(1)
         }
         
         updateSelectedPlayers(selectedPlayers)

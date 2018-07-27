@@ -49,7 +49,8 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     private var multipeerHost: MultipeerService!
     private var rabbitMQHost: RabbitMQService!
     private var currentState: CommsHandlerState = .notStarted
-
+    private var exiting = false
+    
     private var connectedPlayers: Int {
         get {
             var count = 0
@@ -136,13 +137,6 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         } else {
             defaultConnectionMode = .online
         }
-        if online && self.scorecard.recoveryMode && scorecard.recoveryOnlineMode == .invite {
-            self.setConnectionMode(.online, chooseInvitees: false)
-        } else if nearby && scorecard.recoveryMode && scorecard.recoveryOnlineMode == .broadcast {
-            self.setConnectionMode(.nearby)
-        } else {
-            self.setConnectionMode(defaultConnectionMode)
-        }
         
         // Set finish button
         finishButton.setImage(UIImage(named: self.backImage), for: .normal)
@@ -151,14 +145,6 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         // Allow broadcast of scores
         self.scorecard.sendScores = true
         
-        // Update instructions / title
-        if Utility.isSimulator {
-            self.titleBar.title = Scorecard.deviceName
-        } else {
-            self.titleBar.title = self.formTitle
-        }
-        self.setInstructions()
-    
         // Set observer to detect UI handler completion
         observer = self.handlerCompleteNotification()
         
@@ -192,6 +178,22 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             }
         }
         
+        if online && self.scorecard.recoveryMode && scorecard.recoveryOnlineMode == .invite {
+            self.setConnectionMode(.online, chooseInvitees: false)
+        } else if nearby && scorecard.recoveryMode && scorecard.recoveryOnlineMode == .broadcast {
+            self.setConnectionMode(.nearby)
+        } else {
+            self.setConnectionMode(defaultConnectionMode)
+        }
+
+        // Update instructions / title
+        if Utility.isSimulator {
+            self.titleBar.title = Scorecard.deviceName
+        } else {
+            self.titleBar.title = self.formTitle
+        }
+        self.setInstructions()
+        
         // Check if in recovery mode - if so go straight to game setup
         if self.scorecard.recoveryMode {
             self.waitOtherPlayers(completion: {
@@ -209,15 +211,6 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             })
         }
         
-        /* Add in dummy players for testing - TODO make this more elegant - move to test extension
-        var playerMO = self.scorecard.findPlayerByEmail("jackshearer@tesco.net")
-        _ = self.addPlayer(name: playerMO!.name!, email: playerMO!.email!, playerMO: playerMO, peer: CommsPeer(deviceName: "Jack's iPhone", playerEmail: playerMO!.email!, playerName: playerMO!.name!))
-        playerMO = self.scorecard.findPlayerByEmail("emmasarahshearer@gmail.com")
-         _ = self.addPlayer(name: playerMO!.name!, email: playerMO!.email!, playerMO: playerMO, peer: CommsPeer(deviceName: "Emma's iPhone", playerEmail: playerMO!.email!, playerName: playerMO!.name!))
-        playerMO = self.scorecard.findPlayerByEmail("rachel.shearer@tesco.net")
-          _ = self.addPlayer(name: playerMO!.name!, email: playerMO!.email!, playerMO: playerMO, peer: CommsPeer(deviceName: "Rachel's iPad", playerEmail: playerMO!.email!, playerName: playerMO!.name!))
-        */
-
         // Allow resequencing of participants
         guestPlayerTableView.isEditing = true
         
@@ -426,7 +419,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 }
                 if defaultConnectionMode == .unknown {
                     self.setConnectionMode(.unknown)
-                } else {
+                } else if !exiting {
                     self.exitHost()
                 }
             } else if state != .broadcasting {
@@ -855,7 +848,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         let card = Card(fromNumber: data["card"] as! Int)
         if playerNumber != 1 {
             // Only need to remove other players cards since my own will be removed by playing them
-            if let cardNumber = Pack.findCard(hand: self.scorecard.deal.hands[playerNumber - 1], card: card) {
+            if let cardNumber = self.scorecard.deal.hands[playerNumber - 1].findCard(card: card) {
                 self.scorecard.deal.hands[playerNumber - 1].cards.remove(at: cardNumber)
             }
         }
@@ -963,6 +956,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     }
     
     private func exitHost() {
+        self.exiting = true
         self.finishHost()
         self.performSegue(withIdentifier: "hideHost", sender: self)
     }

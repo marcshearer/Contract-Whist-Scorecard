@@ -157,7 +157,7 @@ extension HandViewController {
                     self.scorecard.commsDelegate?.connectionInfo()
                 })
                 actionSheet.add("Show hand information", handler: {
-                    let message = "SelectedRound: \(self.scorecard.selectedRound)\nRound: \(self.state.round)\nCards: \(self.state.hand.toString())\nDealer: \(self.scorecard.dealerIs)\nTrick: \(self.state.trick!)\nCards played: \(self.state.trickCards.count)\nTo lead: \(self.state.toLead!)\nTo play: \(self.state.toPlay!)"
+                    let message = "Selected round: \(self.scorecard.selectedRound)\nRound: \(self.state.round)\nCards: \(self.state.hand.toString())\nDealer: \(self.scorecard.dealerIs)\nTrick: \(self.state.trick!)\nCards played: \(self.state.trickCards.count)\nTo lead: \(self.state.toLead!)\nTo play: \(self.state.toPlay!)"
                     self.alertMessage(message, title: "Hand Information", buttonText: "Continue")
                 })
                 actionSheet.add("Cancel", style: .cancel)

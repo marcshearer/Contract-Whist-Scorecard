@@ -29,12 +29,14 @@ class Recovery {
                     let type = delegate.connectionType.rawValue
                     let mode = delegate.connectionMode.rawValue
                     online = purpose +  "-" + type + "-" + mode
-                    if delegate.connectionPurpose == .playing && delegate.connectionMode == .invite {
+                    if delegate.connectionPurpose == .playing {
                         if delegate.connectionType == .server  {
-                            UserDefaults.standard.set(delegate.connectionUUID, forKey: "recoveryConnectionUUID")
+                            if delegate.connectionMode == .invite {
+                                UserDefaults.standard.set(delegate.connectionUUID, forKey: "recoveryConnectionUUID")
+                            }
                         } else {
-                            UserDefaults.standard.set(delegate.connectionEmail, forKey: "recoveryConnectionEmail")
                             UserDefaults.standard.set(delegate.connectionDevice, forKey: "recoveryConnectionDevice")
+                            UserDefaults.standard.set(delegate.connectionEmail, forKey: "recoveryConnectionEmail")
                         }
                     }
                 }
@@ -194,12 +196,14 @@ class Recovery {
             scorecard.recoveryOnlinePurpose = CommsConnectionPurpose(rawValue: components[0])
             scorecard.recoveryOnlineType = CommsConnectionType(rawValue: components[1])
             scorecard.recoveryOnlineMode = CommsConnectionMode(rawValue: components[2])
-            if scorecard.recoveryOnlinePurpose == .playing && scorecard.recoveryOnlineMode == .invite {
+            if scorecard.recoveryOnlinePurpose == .playing {
                 if scorecard.recoveryOnlineType == .server {
-                    scorecard.recoveryConnectionUUID = UserDefaults.standard.string(forKey: "recoveryConnectionUUID")
+                    if scorecard.recoveryOnlineMode == .invite {
+                        scorecard.recoveryConnectionUUID = UserDefaults.standard.string(forKey: "recoveryConnectionUUID")
+                    }
                 } else {
-                    scorecard.recoveryConnectionEmail = UserDefaults.standard.string(forKey: "recoveryConnectionEmail")
                     scorecard.recoveryConnectionDevice = UserDefaults.standard.string(forKey: "recoveryConnectionDevice")
+                    scorecard.recoveryConnectionEmail = UserDefaults.standard.string(forKey: "recoveryConnectionEmail")
                 }
             } else {
                 scorecard.recoveryConnectionUUID = nil

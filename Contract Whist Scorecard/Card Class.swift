@@ -128,6 +128,12 @@ class Hand {
         }
         return false
     }
+    
+    public func findCard(card: Card) -> Int? {
+        let cardAsNumber = card.toNumber()
+        let index = self.toNumbers().index(where: {$0 == cardAsNumber})
+        return index
+    }
 }
 
 class HandSuit {

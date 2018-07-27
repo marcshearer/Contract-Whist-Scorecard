@@ -389,21 +389,120 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     }
     
     public func processCardPlayed(data: [String : Any]) {
-        if self.handViewController != nil {
-            let round = data["round"] as! Int
-            let trick = data["trick"] as! Int
-            let playerNumber = data["player"] as! Int
-            let card = Card(fromNumber: data["card"] as! Int)
-            self.commsDelegate?.debugMessage("Processing card played \(card.toString())")
-            if self.handState == nil || playerNumber != self.handState.enteredPlayerNumber {
-                // Ignore if from self since should know about it already
+        let round = data["round"] as! Int
+        let trick = data["trick"] as! Int
+        let playerNumber = data["player"] as! Int
+        let card = Card(fromNumber: data["card"] as! Int)
+        
+        self.commsDelegate?.debugMessage("Processing card played \(card.toString())")
+        
+        if self.handState == nil || playerNumber != self.handState.enteredPlayerNumber {
+            // Ignore if from self since should know about it already
+            
+            if self.isHosting {
+                // Reflect it out to other devices
+                self.sendCardPlayed(round: round, trick: trick, playerNumber: playerNumber, card: card)
+            }
+            
+            // Update state
+            self.playCard(card: card)
+            
+            if self.handViewController != nil {
+                // Play the card on the view
                 self.handViewController.reflectCardPlayed(round: round, trick: trick, playerNumber: playerNumber, card: card)
-                if self.isHosting {
-                    // Reflect it out to other devices
-                    self.sendCardPlayed(round: round, trick: trick, playerNumber: playerNumber, card: card)
-                }
+            } else {
+                // State won't be update in view so do it here
+                self.updateState()
             }
         }
+    }
+    
+    public func playCard(card: Card) {
+        if let (suitNumber, cardNumber) = self.handState.findCard(card: card) {
+            self.handState.handSuits[suitNumber].cards.remove(at: cardNumber)
+        }
+        
+        let nextCard = self.handState.trickCards.count
+        if nextCard < self.currentPlayers {
+            self.handState.trickCards.append(card)
+        }
+    }
+    
+    public func updateState() {
+        if self.handState.trickCards.count == self.currentPlayers {
+            // Hand complete - check who won
+            let cardLed = self.handState.trickCards[0]
+            var highLed = cardLed.rank
+            var highTrump: Int!
+            var win2 = (cardLed.toRankString() == "2")
+            self.handState.winner = 1
+            for cardNumber in 2...self.currentPlayers {
+                let cardPlayed = self.handState.trickCards[cardNumber - 1]
+                if cardPlayed.suit == cardLed.suit {
+                    if cardPlayed.rank > highLed! && highTrump == nil {
+                        // Highest card in suit led and no trumps played
+                        highLed = cardPlayed.rank
+                        self.handState.winner = cardNumber
+                        win2 = (cardPlayed.toRankString() == "2")
+                    }
+                } else if cardPlayed.suit == self.roundSuit(self.handState.round, suits: self.handState.suits) && (highTrump == nil || cardPlayed.rank > highTrump) {
+                    highTrump = cardPlayed.rank
+                    self.handState.winner = cardNumber
+                    win2 = (cardPlayed.toRankString() == "2")
+                }
+            }
+            
+            if self.isHosting {
+                // Remove current trick from deal
+                for (index, card) in self.handState.trickCards.enumerated() {
+                    let playerNumber = self.handState.playerNumber(index + 1)
+                    _ = self.deal.hands[playerNumber - 1].removeCard(card)
+                }
+            }
+            
+            // Store and reset cards played / who led / trick
+            self.handState.nextTrick()
+            
+            // Set next to lead from winner
+            self.handState.toLead = self.handState.playerNumber(self.handState.winner)
+            self.handState.toPlay = self.handState.toLead
+            
+            // Update tricks made
+            self.handState.made[self.handState.toPlay! - 1] += 1
+            self.handState.twos[self.handState.toPlay! - 1] += (self.handState.bonus2 && win2 ? 1 : 0)
+            
+            // Save deal and current (blank) trick for recovery
+            if self.isHosting {
+                self.recovery.saveHands(deal: self.deal, made: self.handState.made,twos: self.handState.twos)
+            }
+            
+            if self.handState.trick > self.roundCards(self.handState.round, rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce) {
+                // Hand finished
+                if self.isHosting {
+                    // Record scores (in the order they happened)
+                    for playerNumber in 1...self.currentPlayers {
+                        let player = self.roundPlayer(playerNumber: playerNumber, round: self.handState.round)
+                        player.setMade(self.handState.round, self.handState.made[player.playerNumber - 1])
+                        player.setTwos(self.handState.round, self.handState.twos[player.playerNumber - 1], bonus2: self.handState.bonus2)
+                    }
+                }
+                self.handState.finished = true
+            }
+        } else {
+            // Work out who should play
+            self.handState.toPlay = self.handState.playerNumber(self.handState.trickCards.count + 1)
+        }
+        if self.isHosting {
+            // Save trick for recovery
+            self.recovery.saveTrick(toLead: self.handState.toLead!, trickCards: self.handState.trickCards)
+        }
+    }
+    
+    
+    func updateHandState(toLead: Int?, toPlay: Int?, finished: Bool!) {
+        self.handState.toLead = toLead
+        self.handState.toPlay = toPlay
+        self.handState.finished = finished
     }
     
     public func dealHand(cards: Int) -> Hand! {

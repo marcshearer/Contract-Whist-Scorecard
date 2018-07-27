@@ -714,7 +714,7 @@ class Scorecard {
             
             self.currentPlayers = players
             if self.dealerIs > self.currentPlayers {
-                self.dealerIs = 1
+                self.saveDealer(1)
             }
         }
     }
@@ -730,15 +730,20 @@ class Scorecard {
     }
     
     public func nextDealer() {
-        self.dealerIs = (self.dealerIs % self.currentPlayers) + 1
+        self.saveDealer((self.dealerIs % self.currentPlayers) + 1)
     }
     
     public func previousDealer() {
-        self.dealerIs = ((self.dealerIs + self.currentPlayers - 2) % self.currentPlayers) + 1
+        self.saveDealer(((self.dealerIs + self.currentPlayers - 2) % self.currentPlayers) + 1)
     }
     
     public func randomDealer() {
-        self.dealerIs = Int(arc4random_uniform(UInt32(self.currentPlayers))) + 1
+        self.saveDealer(Int(arc4random_uniform(UInt32(self.currentPlayers))) + 1)
+    }
+    
+    public func saveDealer(_ dealerIs: Int) {
+        self.dealerIs = dealerIs
+        UserDefaults.standard.set(self.dealerIs, forKey: "dealerIs")
     }
     
     public func isScorecardDealer() -> Int {
@@ -1131,15 +1136,18 @@ class Scorecard {
     
     public static var deviceName: String {
         get {
-            var result = "Unknown Device"
+            var result = UIDevice.current.name
+            var email: String? = nil
             if Utility.isSimulator {
-                if let email = Scorecard.onlineEmail() {
-                    if let name = Scorecard.nameFromEmail(email) {
+                email = Scorecard.onlineEmail()
+                if email == nil {
+                    email = Scorecard.defaultPlayerOnDevice()
+                }
+                if email != nil {
+                    if let name = Scorecard.nameFromEmail(email!) {
                         result = "\(name)'s iPhone"
                     }
                 }
-            } else {
-                result = UIDevice.current.name
             }
             return result
         }
@@ -1164,6 +1172,11 @@ class Scorecard {
     public static func onlineEmail() -> String? {
         let onlinePlayerEmail = UserDefaults.standard.string(forKey: "onlinePlayerEmail")
         return (onlinePlayerEmail == nil || onlinePlayerEmail == "" ? nil : onlinePlayerEmail)
+    }
+    
+    public static func defaultPlayerOnDevice() -> String? {
+        let defaultPlayerEmail = UserDefaults.standard.string(forKey: "defaultPlayerOnDevice")
+        return (defaultPlayerEmail == nil || defaultPlayerEmail == "" ? nil : defaultPlayerEmail)
     }
 }
 

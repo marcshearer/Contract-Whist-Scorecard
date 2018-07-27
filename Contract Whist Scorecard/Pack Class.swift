@@ -31,34 +31,5 @@ class Pack {
             deal.hands.append(hand)
         }
         return deal
-    }
-    
-    public class func findCard(hand: [HandSuit], card: Card) -> (Int, Int)? {
-        var suitNumber: Int!
-        var cardNumber: Int!
-        
-        let cardAsNumber = card.toNumber()
-        if hand.count > 0 {
-            for suit in 0...hand.count-1 {
-                let index = hand[suit].toNumbers().index(where: {$0 == cardAsNumber})
-                if index != nil {
-                    suitNumber = suit
-                    cardNumber = index!
-                    break
-                }
-            }
-        }
-        if suitNumber == nil {
-            return nil
-        } else {
-            return (suitNumber, cardNumber)
-        }
-    }
-    
-    public class func findCard(hand: Hand, card: Card) -> Int? {
-        let cardAsNumber = card.toNumber()
-        let index = hand.toNumbers().index(where: {$0 == cardAsNumber})
-        return index
-    }
-    
+    }    
 }

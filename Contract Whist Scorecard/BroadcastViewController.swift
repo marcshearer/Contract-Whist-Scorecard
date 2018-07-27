@@ -131,17 +131,21 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
         
         // Get this player
         if self.commsPurpose == .playing {
-            if self.recoveryMode && self.scorecard.recoveryOnlineMode == .invite {
+            if self.recoveryMode {
                 // Recovering - use same player
                 self.thisPlayer = self.scorecard.recoveryConnectionEmail
                 self.matchDeviceName = self.scorecard.recoveryConnectionDevice
-                if self.thisPlayer == nil {
-                    self.alertMessage("Error recovering game", okHandler: {
-                        self.exitBroadcast()
-                    })
-                    return
+                if self.scorecard.recoveryOnlineMode == .invite {
+                    if self.thisPlayer == nil {
+                        self.alertMessage("Error recovering game", okHandler: {
+                            self.exitBroadcast()
+                        })
+                        return
+                    }
                 }
-            } else {
+            }
+            if self.thisPlayer == nil || self.matchDeviceName == nil {
+                // Not got player and device name from recovery - use default
                 var defaultPlayer: String!
                 if self.scorecard.onlineEnabled {
                     defaultPlayer = self.scorecard.settingOnlinePlayerEmail
@@ -173,7 +177,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
             self.multipeerClient?.stateDelegate = self
             self.multipeerClient?.dataDelegate = self
             self.multipeerClient?.browserDelegate = self
-            self.multipeerClient?.start()
+            self.multipeerClient?.start(email: self.thisPlayer, recoveryMode: self.recoveryMode, matchDeviceName: self.matchDeviceName)
         }
         
         // Create online comms service, take delegates and start listening
@@ -466,6 +470,11 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                 self.broadcastTableView.insertRows(at: [IndexPath(row: self.available.count - 1, section: self.peerSection)],
                                                    with: .automatic)
                 self.broadcastTableView.endUpdates()
+            }
+            if self.recoveryMode && self.matchDeviceName != nil && peer.deviceName == self.matchDeviceName {
+                // Recovering and this is the device I'm waiting for!
+                self.connect(peer: peer)
+                self.reflectState(peer: peer)
             }
             self.setInstructions()
         }

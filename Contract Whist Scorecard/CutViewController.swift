@@ -405,15 +405,15 @@ class CutViewController: UIViewController {
         }
         
         // Determine who won
-        scorecard.dealerIs = 1
+        var dealerIs = 1
         for playerLoop in 1...self.playerName.count {
             if cards[playerLoop-1].toNumber() > cards[scorecard.dealerIs-1].toNumber() {
-                self.scorecard.dealerIs = playerLoop
+                dealerIs = playerLoop
             }
         }
         
         // Save it
-        UserDefaults.standard.set(scorecard.dealerIs, forKey: "dealerIs")
+        self.scorecard.saveDealer(dealerIs)
         
         return cards
     }

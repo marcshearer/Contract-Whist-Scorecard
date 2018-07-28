@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -34,6 +34,9 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="RaZ-ty-O6E" appends="YES" id="ryP-iz-0Ce"/>
+                                </connections>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bHZ-lK-RLV" userLabel="Game Summary Table View">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="646"/>
@@ -297,6 +300,7 @@
                                 <connections>
                                     <outlet property="dataSource" destination="2Ye-nN-zMs" id="ChH-mi-5ZQ"/>
                                     <outlet property="delegate" destination="2Ye-nN-zMs" id="toY-am-Tse"/>
+                                    <outletCollection property="gestureRecognizers" destination="RaZ-ty-O6E" appends="YES" id="yyI-an-NlE"/>
                                 </connections>
                             </tableView>
                         </subviews>
@@ -317,7 +321,7 @@
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="zEq-NV-S5h" appends="YES" id="R6T-pD-IPu"/>
                             <outletCollection property="gestureRecognizers" destination="eQO-xa-QSi" appends="YES" id="40n-7b-r6y"/>
-                            <outletCollection property="gestureRecognizers" destination="ovl-yY-9Ja" appends="YES" id="D40-Tn-SU8"/>
+                            <outletCollection property="gestureRecognizers" destination="RaZ-ty-O6E" appends="YES" id="dlF-Tp-y4M"/>
                         </connections>
                     </view>
                     <connections>
@@ -327,7 +331,7 @@
                         <outlet property="rightSwipeGesture" destination="eQO-xa-QSi" id="W0m-9i-foC"/>
                         <outlet property="syncMessage" destination="9uo-b0-008" id="6JR-EO-y74"/>
                         <outlet property="tableView" destination="bHZ-lK-RLV" id="bGY-ED-cy4"/>
-                        <outlet property="tapGesture" destination="ovl-yY-9Ja" id="92T-JV-buA"/>
+                        <outlet property="tapGesture" destination="RaZ-ty-O6E" id="LQ9-1i-eB5"/>
                         <segue destination="7Z1-ua-FfW" kind="unwind" identifier="hideGameSummary" unwindAction="hideGameSummaryWithSegue:" id="hkQ-yi-YGM"/>
                         <segue destination="7Z1-ua-FfW" kind="unwind" identifier="finishGame" unwindAction="finishGameWithSegue:" id="06m-fS-wsR"/>
                         <segue destination="7Z1-ua-FfW" kind="unwind" identifier="newGame" unwindAction="newGameWithSegue:" id="Wco-se-drV"/>
@@ -349,9 +353,9 @@
                         <action selector="rightSwipeWithRecognizer:" destination="2Ye-nN-zMs" id="1Q8-9V-shG"/>
                     </connections>
                 </swipeGestureRecognizer>
-                <tapGestureRecognizer id="ovl-yY-9Ja">
+                <tapGestureRecognizer id="RaZ-ty-O6E">
                     <connections>
-                        <action selector="tapWithRecognizer:" destination="2Ye-nN-zMs" id="R0q-yR-eTw"/>
+                        <action selector="tapGestureReceivedWithRecognizer:" destination="2Ye-nN-zMs" id="ppW-Z8-Oud"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>

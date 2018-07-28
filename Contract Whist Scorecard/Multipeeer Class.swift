@@ -179,7 +179,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCNearbyServiceBrowserDe
             let session = MCSession(peer: self.myPeerID, securityIdentity: nil, encryptionPreference: .none)
             session.delegate = self
             self.sessionList[broadcastPeer.deviceName] = session
-            self.client.browser.invitePeer(broadcastPeer.mcPeer, to: session, withContext: data, timeout: 20)
+            self.client.browser.invitePeer(broadcastPeer.mcPeer, to: session, withContext: data, timeout: 5)
             self._connectionDevice = broadcastPeer.deviceName
             return true
         } else {

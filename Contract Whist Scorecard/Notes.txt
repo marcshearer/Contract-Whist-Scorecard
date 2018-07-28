@@ -17,13 +17,13 @@ When don't have online enabled doesn't seem to auto select nearby in hosting
 Don't seem to clear resumed game properly on slaves - when start new game seemed to go back to interrupted game
 When resume doesn't auto select device
 Allows you to bid the number left if you re-bid or sometimes if you go into extended view
+Make debug info available on production
+Reduce wait before play card after bidding
+Show over / under in hand
+Send round in handState
 
 Bugs fix now
 ------------
-When resume core dumps on release version
-Reduce wait before play card after bidding
-Send round in handState
-Make debug info available on production
 
 Long-term bugs
 --------------

@@ -330,7 +330,8 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                                                         "made"         : self.handState.made,
                                                         "twos"         : self.handState.twos,
                                                         "trickCards"   : Hand(fromCards: self.handState.trickCards).toNumbers(),
-                                                        "toLead"       : self.handState.toLead],
+                                                        "toLead"       : self.handState.toLead,
+                                                        "round"        : self.handState.round],
                                           to: commsPeer,
                                           matchEmail: self.enteredPlayer(playerNumber).playerMO!.email!)
                 self.sendAutoPlay()

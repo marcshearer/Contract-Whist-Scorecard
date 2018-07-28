@@ -39,6 +39,8 @@
 		B214FBAF1FCB711B00F4F39B /* WatchRoundInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214FBAE1FCB711B00F4F39B /* WatchRoundInterfaceController.swift */; };
 		B214FBB11FCB71EB00F4F39B /* Watch Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214FBB01FCB71EB00F4F39B /* Watch Manager.swift */; };
 		B214FBB31FCB73CA00F4F39B /* Card Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC395F4C1E064EC500165D1C /* Card Class.swift */; };
+		B221EED5210B0DFE00F7FBA0 /* HandViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B221EED3210B0DFE00F7FBA0 /* HandViewController.storyboard */; };
+		B221EED7210B0E2D00F7FBA0 /* HandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B221EED6210B0E2D00F7FBA0 /* HandViewController.swift */; };
 		B22500F11F48425C0042D566 /* Scorecard Comms.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22500F01F48425C0042D566 /* Scorecard Comms.swift */; };
 		B22788EA1FB827A7009BABCA /* SearchViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22788E81FB827A7009BABCA /* SearchViewController.storyboard */; };
 		B22788EF1FB82B45009BABCA /* CutViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22788ED1FB82B45009BABCA /* CutViewController.storyboard */; };
@@ -55,7 +57,6 @@
 		B227891E1FB84F66009BABCA /* LocationViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B227891C1FB84F66009BABCA /* LocationViewController.storyboard */; };
 		B22789211FB881B9009BABCA /* HostViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B227891F1FB881B9009BABCA /* HostViewController.storyboard */; };
 		B22789241FB882F7009BABCA /* BroadcastViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789221FB882F7009BABCA /* BroadcastViewController.storyboard */; };
-		B22789271FB88436009BABCA /* HandViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789251FB88436009BABCA /* HandViewController.storyboard */; };
 		B227892A1FB885AC009BABCA /* ConfirmCountViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789281FB885AC009BABCA /* ConfirmCountViewController.storyboard */; };
 		B227892D1FB88BDD009BABCA /* HistoryDetailViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B227892B1FB88BDD009BABCA /* HistoryDetailViewController.storyboard */; };
 		B22789301FB88D33009BABCA /* HistoryViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B227892E1FB88D33009BABCA /* HistoryViewController.storyboard */; };
@@ -100,7 +101,6 @@
 		B2EA98E51E28609A000B7E54 /* WalkthroughPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2EA98E41E28609A000B7E54 /* WalkthroughPageViewController.swift */; };
 		B2F41B231FB6BBA70043F974 /* Other Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F41B221FB6BBA70043F974 /* Other Extensions.swift */; };
 		B2F70E4E1EE335170092C19F /* Pack Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F70E4D1EE335170092C19F /* Pack Class.swift */; };
-		B2F70E501EE3423D0092C19F /* HandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F70E4F1EE3423D0092C19F /* HandViewController.swift */; };
 		B2F70E521EE8BC470092C19F /* HostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F70E511EE8BC470092C19F /* HostViewController.swift */; };
 		B2F7281B1F6D74F9006F0941 /* Invite.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F7281A1F6D74F9006F0941 /* Invite.swift */; };
 		B2F7281D1F7199AE006F0941 /* RabbitMQ Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F7281C1F7199AE006F0941 /* RabbitMQ Class.swift */; };
@@ -206,6 +206,8 @@
 		B214FBA11FCADC7B00F4F39B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B214FBAE1FCB711B00F4F39B /* WatchRoundInterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchRoundInterfaceController.swift; sourceTree = "<group>"; };
 		B214FBB01FCB71EB00F4F39B /* Watch Manager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Watch Manager.swift"; sourceTree = "<group>"; };
+		B221EED4210B0DFE00F7FBA0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/HandViewController.storyboard; sourceTree = "<group>"; };
+		B221EED6210B0E2D00F7FBA0 /* HandViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandViewController.swift; sourceTree = "<group>"; };
 		B22500F01F48425C0042D566 /* Scorecard Comms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Scorecard Comms.swift"; sourceTree = "<group>"; };
 		B22788E91FB827A7009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SearchViewController.storyboard; sourceTree = "<group>"; };
 		B22788EE1FB82B45009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/CutViewController.storyboard; sourceTree = "<group>"; };
@@ -222,7 +224,6 @@
 		B227891D1FB84F66009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LocationViewController.storyboard; sourceTree = "<group>"; };
 		B22789201FB881B9009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/HostViewController.storyboard; sourceTree = "<group>"; };
 		B22789231FB882F7009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/BroadcastViewController.storyboard; sourceTree = "<group>"; };
-		B22789261FB88436009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/HandViewController.storyboard; sourceTree = "<group>"; };
 		B22789291FB885AC009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ConfirmCountViewController.storyboard; sourceTree = "<group>"; };
 		B227892C1FB88BDD009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/HistoryDetailViewController.storyboard; sourceTree = "<group>"; };
 		B227892F1FB88D33009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/HistoryViewController.storyboard; sourceTree = "<group>"; };
@@ -269,7 +270,6 @@
 		B2EA98E41E28609A000B7E54 /* WalkthroughPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalkthroughPageViewController.swift; sourceTree = "<group>"; };
 		B2F41B221FB6BBA70043F974 /* Other Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Other Extensions.swift"; sourceTree = "<group>"; };
 		B2F70E4D1EE335170092C19F /* Pack Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pack Class.swift"; sourceTree = "<group>"; };
-		B2F70E4F1EE3423D0092C19F /* HandViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandViewController.swift; sourceTree = "<group>"; };
 		B2F70E511EE8BC470092C19F /* HostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = HostViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		B2F7281A1F6D74F9006F0941 /* Invite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Invite.swift; sourceTree = "<group>"; };
 		B2F7281C1F7199AE006F0941 /* RabbitMQ Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RabbitMQ Class.swift"; sourceTree = "<group>"; };
@@ -405,70 +405,264 @@
 			path = "Contract Whist Watch Extension";
 			sourceTree = "<group>";
 		};
-		B22788E01FB82451009BABCA /* Storyboards */ = {
-			isa = PBXGroup;
-			children = (
-				B22788E11FB82685009BABCA /* Scorepad Storyboards */,
-				B22788E21FB8269B009BABCA /* Online Game Storyboards */,
-				B22788E31FB826A6009BABCA /* Other Main Storyboards */,
-				B22788E41FB826AF009BABCA /* Miscellaneous Storyboards */,
-			);
-			name = Storyboards;
-			sourceTree = "<group>";
-		};
-		B22788E11FB82685009BABCA /* Scorepad Storyboards */ = {
+		B221EED9210B191300F7FBA0 /* Welcome */ = {
 			isa = PBXGroup;
 			children = (
 				B22788FC1FB83AA7009BABCA /* WelcomeViewController.storyboard */,
-				B22788FA1FB83AA7009BABCA /* GetStartedViewController.storyboard */,
-				B22788FE1FB83AA7009BABCA /* SelectionViewController.storyboard */,
-				B227890B1FB83D48009BABCA /* GameSetupViewController.storyboard */,
-				B22789101FB844CC009BABCA /* ScorepadViewController.storyboard */,
-				B22789131FB8490F009BABCA /* EntryViewController.storyboard */,
-				B22789161FB84A75009BABCA /* RoundSummaryViewController.storyboard */,
-				B22789191FB84BA2009BABCA /* GameSummaryViewController.storyboard */,
-				B227891C1FB84F66009BABCA /* LocationViewController.storyboard */,
-				B22788ED1FB82B45009BABCA /* CutViewController.storyboard */,
+				B20DA04B1E179DC70040221D /* WelcomeViewController.swift */,
 			);
-			name = "Scorepad Storyboards";
+			name = Welcome;
 			sourceTree = "<group>";
 		};
-		B22788E21FB8269B009BABCA /* Online Game Storyboards */ = {
+		B221EEDA210B192400F7FBA0 /* Get Started */ = {
+			isa = PBXGroup;
+			children = (
+				B22788FA1FB83AA7009BABCA /* GetStartedViewController.storyboard */,
+				B2E7621D1E73E6A6001DAF4F /* GetStartedViewController.swift */,
+			);
+			name = "Get Started";
+			sourceTree = "<group>";
+		};
+		B221EEDB210B194300F7FBA0 /* Selection */ = {
+			isa = PBXGroup;
+			children = (
+				B22788FE1FB83AA7009BABCA /* SelectionViewController.storyboard */,
+				B20DA0431E142D1E0040221D /* SelectionViewController.swift */,
+			);
+			name = Selection;
+			sourceTree = "<group>";
+		};
+		B221EEDC210B194C00F7FBA0 /* Game Setup */ = {
+			isa = PBXGroup;
+			children = (
+				B227890B1FB83D48009BABCA /* GameSetupViewController.storyboard */,
+				CC4CC1151DEAF0F9007FB24F /* GameSetupViewController.swift */,
+			);
+			name = "Game Setup";
+			sourceTree = "<group>";
+		};
+		B221EEDD210B195E00F7FBA0 /* Scorepad */ = {
+			isa = PBXGroup;
+			children = (
+				B22789101FB844CC009BABCA /* ScorepadViewController.storyboard */,
+				CC4CC0FA1DEADC32007FB24F /* ScorepadViewController.swift */,
+			);
+			name = Scorepad;
+			sourceTree = "<group>";
+		};
+		B221EEDE210B196700F7FBA0 /* Entry */ = {
+			isa = PBXGroup;
+			children = (
+				B22789131FB8490F009BABCA /* EntryViewController.storyboard */,
+				CCCA16621DEF9947006AA415 /* EntryViewController.swift */,
+			);
+			name = Entry;
+			sourceTree = "<group>";
+		};
+		B221EEDF210B197200F7FBA0 /* Round Summary */ = {
+			isa = PBXGroup;
+			children = (
+				B22789161FB84A75009BABCA /* RoundSummaryViewController.storyboard */,
+				49AFA50C1E0C42A100DCB1F4 /* RoundSummaryViewController.swift */,
+			);
+			name = "Round Summary";
+			sourceTree = "<group>";
+		};
+		B221EEE0210B197D00F7FBA0 /* Game Summary */ = {
+			isa = PBXGroup;
+			children = (
+				B22789191FB84BA2009BABCA /* GameSummaryViewController.storyboard */,
+				B20A66FD1E24002300E75190 /* GameSummaryViewController.swift */,
+			);
+			name = "Game Summary";
+			sourceTree = "<group>";
+		};
+		B221EEE1210B198500F7FBA0 /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				B227891C1FB84F66009BABCA /* LocationViewController.storyboard */,
+				B206A1371E50526100E26E96 /* LocationViewController.swift */,
+			);
+			name = Location;
+			sourceTree = "<group>";
+		};
+		B221EEE2210B199000F7FBA0 /* Cut For Dealer */ = {
+			isa = PBXGroup;
+			children = (
+				B22788ED1FB82B45009BABCA /* CutViewController.storyboard */,
+				CC395F4A1E063D9600165D1C /* CutViewController.swift */,
+			);
+			name = "Cut For Dealer";
+			sourceTree = "<group>";
+		};
+		B221EEE3210B1A7000F7FBA0 /* Scorepad Views */ = {
+			isa = PBXGroup;
+			children = (
+				B221EED9210B191300F7FBA0 /* Welcome */,
+				B221EEDA210B192400F7FBA0 /* Get Started */,
+				B221EEDB210B194300F7FBA0 /* Selection */,
+				B221EEDC210B194C00F7FBA0 /* Game Setup */,
+				B221EEDD210B195E00F7FBA0 /* Scorepad */,
+				B221EEDE210B196700F7FBA0 /* Entry */,
+				B221EEDF210B197200F7FBA0 /* Round Summary */,
+				B221EEE0210B197D00F7FBA0 /* Game Summary */,
+				B221EEE1210B198500F7FBA0 /* Location */,
+				B221EEE2210B199000F7FBA0 /* Cut For Dealer */,
+			);
+			name = "Scorepad Views";
+			sourceTree = "<group>";
+		};
+		B221EEE5210B1AA900F7FBA0 /* Hand */ = {
+			isa = PBXGroup;
+			children = (
+				B221EED3210B0DFE00F7FBA0 /* HandViewController.storyboard */,
+				B221EED6210B0E2D00F7FBA0 /* HandViewController.swift */,
+			);
+			name = Hand;
+			sourceTree = "<group>";
+		};
+		B221EEE6210B1AB100F7FBA0 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				B22788E81FB827A7009BABCA /* SearchViewController.storyboard */,
+				B26104261EFA585B005AA63C /* SearchViewController.swift */,
+			);
+			name = Search;
+			sourceTree = "<group>";
+		};
+		B221EEE7210B1AB700F7FBA0 /* Broadcast */ = {
+			isa = PBXGroup;
+			children = (
+				B22789221FB882F7009BABCA /* BroadcastViewController.storyboard */,
+				B2D2D2DB1ED9975A00CA7B3A /* BroadcastViewController.swift */,
+			);
+			name = Broadcast;
+			sourceTree = "<group>";
+		};
+		B221EEE8210B1AC000F7FBA0 /* Host */ = {
 			isa = PBXGroup;
 			children = (
 				B227891F1FB881B9009BABCA /* HostViewController.storyboard */,
-				B22789221FB882F7009BABCA /* BroadcastViewController.storyboard */,
-				B22788E81FB827A7009BABCA /* SearchViewController.storyboard */,
-				B22789251FB88436009BABCA /* HandViewController.storyboard */,
+				B2F70E511EE8BC470092C19F /* HostViewController.swift */,
 			);
-			name = "Online Game Storyboards";
+			name = Host;
 			sourceTree = "<group>";
 		};
-		B22788E31FB826A6009BABCA /* Other Main Storyboards */ = {
+		B221EEE9210B1AE800F7FBA0 /* History Detail */ = {
+			isa = PBXGroup;
+			children = (
+				B227892B1FB88BDD009BABCA /* HistoryDetailViewController.storyboard */,
+				B2B755041E58A2D900B1313B /* HistoryDetailViewController.swift */,
+			);
+			name = "History Detail";
+			sourceTree = "<group>";
+		};
+		B221EEEA210B1B0800F7FBA0 /* History */ = {
+			isa = PBXGroup;
+			children = (
+				B227892E1FB88D33009BABCA /* HistoryViewController.storyboard */,
+				B206A1391E50FBAE00E26E96 /* HistoryViewController.swift */,
+			);
+			name = History;
+			sourceTree = "<group>";
+		};
+		B221EEEB210B1B0F00F7FBA0 /* Player Detail */ = {
+			isa = PBXGroup;
+			children = (
+				B22789401FB894AE009BABCA /* PlayerDetailViewController.storyboard */,
+				CC9EF3FF1E003582006E8930 /* PlayerDetailViewController.swift */,
+			);
+			name = "Player Detail";
+			sourceTree = "<group>";
+		};
+		B221EEEC210B1B1700F7FBA0 /* Statistics */ = {
+			isa = PBXGroup;
+			children = (
+				B22789311FB88FA5009BABCA /* ComparisonViewController.storyboard */,
+				CC9EF3F11DFEE54A006E8930 /* ComparisonViewController.swift */,
+			);
+			name = Statistics;
+			sourceTree = "<group>";
+		};
+		B221EEED210B1B2000F7FBA0 /* Players */ = {
+			isa = PBXGroup;
+			children = (
+				B22789341FB8911F009BABCA /* StatsViewController.storyboard */,
+				49075FFB1E0E578E008E06FA /* StatsViewController.swift */,
+			);
+			name = Players;
+			sourceTree = "<group>";
+		};
+		B221EEEE210B1B4400F7FBA0 /* High Scores */ = {
 			isa = PBXGroup;
 			children = (
 				B22789371FB8924C009BABCA /* HighScoresViewController.storyboard */,
-				B22789341FB8911F009BABCA /* StatsViewController.storyboard */,
-				B22789311FB88FA5009BABCA /* ComparisonViewController.storyboard */,
-				B22789401FB894AE009BABCA /* PlayerDetailViewController.storyboard */,
-				B227892E1FB88D33009BABCA /* HistoryViewController.storyboard */,
-				B227892B1FB88BDD009BABCA /* HistoryDetailViewController.storyboard */,
+				B20DA03F1E139C450040221D /* HighScoresViewController.swift */,
 			);
-			name = "Other Main Storyboards";
+			name = "High Scores";
 			sourceTree = "<group>";
 		};
-		B22788E41FB826AF009BABCA /* Miscellaneous Storyboards */ = {
+		B221EEEF210B1BDB00F7FBA0 /* Walkthrough */ = {
+			isa = PBXGroup;
+			children = (
+				B22789031FB83AC4009BABCA /* WalkthroughViewController.storyboard */,
+				B2EA98E41E28609A000B7E54 /* WalkthroughPageViewController.swift */,
+			);
+			name = Walkthrough;
+			sourceTree = "<group>";
+		};
+		B221EEF0210B1BE800F7FBA0 /* Walkthrough Page */ = {
+			isa = PBXGroup;
+			children = (
+				B22789051FB83AC4009BABCA /* WalkthroughPageViewController.storyboard */,
+				B2EA98E21E285F19000B7E54 /* WalkthroughViewController.swift */,
+			);
+			name = "Walkthrough Page";
+			sourceTree = "<group>";
+		};
+		B221EEF1210B1BF100F7FBA0 /* Override */ = {
+			isa = PBXGroup;
+			children = (
+				B202A0691FD119BF0070D5DC /* OverrideViewController.storyboard */,
+				B202A0671FD118940070D5DC /* OverrideViewController.swift */,
+			);
+			name = Override;
+			sourceTree = "<group>";
+		};
+		B221EEF2210B1C0500F7FBA0 /* Confirm Count */ = {
+			isa = PBXGroup;
+			children = (
+				B22789281FB885AC009BABCA /* ConfirmCountViewController.storyboard */,
+				B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */,
+			);
+			name = "Confirm Count";
+			sourceTree = "<group>";
+		};
+		B221EEF3210B1C0E00F7FBA0 /* Sync */ = {
+			isa = PBXGroup;
+			children = (
+				B227893A1FB8932A009BABCA /* SyncViewController.storyboard */,
+				B2D2AAAF1E1FF8A600E211A9 /* SyncViewController.swift */,
+			);
+			name = Sync;
+			sourceTree = "<group>";
+		};
+		B221EEF4210B1C1500F7FBA0 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				B227893D1FB893C9009BABCA /* SettingsViewController.storyboard */,
+				493D3CD51DFC58730075D658 /* SettingsViewController.swift */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
+		B221EEF5210B1C1D00F7FBA0 /* Graph */ = {
 			isa = PBXGroup;
 			children = (
 				B22789431FB8951A009BABCA /* GraphViewController.storyboard */,
-				B227893D1FB893C9009BABCA /* SettingsViewController.storyboard */,
-				B227893A1FB8932A009BABCA /* SyncViewController.storyboard */,
-				B22789281FB885AC009BABCA /* ConfirmCountViewController.storyboard */,
-				B202A0691FD119BF0070D5DC /* OverrideViewController.storyboard */,
-				B22789051FB83AC4009BABCA /* WalkthroughPageViewController.storyboard */,
-				B22789031FB83AC4009BABCA /* WalkthroughViewController.storyboard */,
+				B2DD5D7D1ED323F400725B55 /* GraphViewController.swift */,
 			);
-			name = "Miscellaneous Storyboards";
+			name = Graph;
 			sourceTree = "<group>";
 		};
 		B27B1FE81F9B55ED00ED6FFF /* Contract Whist Scorecard UI Tests */ = {
@@ -485,32 +679,15 @@
 			path = "Contract Whist Scorecard UI Tests";
 			sourceTree = "<group>";
 		};
-		B288FAB41FB801C200633FD7 /* Scorepad Views */ = {
-			isa = PBXGroup;
-			children = (
-				B20DA04B1E179DC70040221D /* WelcomeViewController.swift */,
-				B2E7621D1E73E6A6001DAF4F /* GetStartedViewController.swift */,
-				B20DA0431E142D1E0040221D /* SelectionViewController.swift */,
-				CC4CC1151DEAF0F9007FB24F /* GameSetupViewController.swift */,
-				CC4CC0FA1DEADC32007FB24F /* ScorepadViewController.swift */,
-				CCCA16621DEF9947006AA415 /* EntryViewController.swift */,
-				49AFA50C1E0C42A100DCB1F4 /* RoundSummaryViewController.swift */,
-				B20A66FD1E24002300E75190 /* GameSummaryViewController.swift */,
-				B206A1371E50526100E26E96 /* LocationViewController.swift */,
-				CC395F4A1E063D9600165D1C /* CutViewController.swift */,
-			);
-			name = "Scorepad Views";
-			sourceTree = "<group>";
-		};
 		B288FAB51FB801E200633FD7 /* Other Main Views */ = {
 			isa = PBXGroup;
 			children = (
-				B20DA03F1E139C450040221D /* HighScoresViewController.swift */,
-				49075FFB1E0E578E008E06FA /* StatsViewController.swift */,
-				CC9EF3F11DFEE54A006E8930 /* ComparisonViewController.swift */,
-				CC9EF3FF1E003582006E8930 /* PlayerDetailViewController.swift */,
-				B206A1391E50FBAE00E26E96 /* HistoryViewController.swift */,
-				B2B755041E58A2D900B1313B /* HistoryDetailViewController.swift */,
+				B221EEED210B1B2000F7FBA0 /* Players */,
+				B221EEEC210B1B1700F7FBA0 /* Statistics */,
+				B221EEEB210B1B0F00F7FBA0 /* Player Detail */,
+				B221EEEA210B1B0800F7FBA0 /* History */,
+				B221EEE9210B1AE800F7FBA0 /* History Detail */,
+				B221EEEE210B1B4400F7FBA0 /* High Scores */,
 			);
 			name = "Other Main Views";
 			sourceTree = "<group>";
@@ -518,10 +695,10 @@
 		B288FAB61FB801FC00633FD7 /* Online Game Views */ = {
 			isa = PBXGroup;
 			children = (
-				B2F70E511EE8BC470092C19F /* HostViewController.swift */,
-				B2D2D2DB1ED9975A00CA7B3A /* BroadcastViewController.swift */,
-				B26104261EFA585B005AA63C /* SearchViewController.swift */,
-				B2F70E4F1EE3423D0092C19F /* HandViewController.swift */,
+				B221EEE8210B1AC000F7FBA0 /* Host */,
+				B221EEE7210B1AB700F7FBA0 /* Broadcast */,
+				B221EEE6210B1AB100F7FBA0 /* Search */,
+				B221EEE5210B1AA900F7FBA0 /* Hand */,
 			);
 			name = "Online Game Views";
 			sourceTree = "<group>";
@@ -529,13 +706,13 @@
 		B288FAB71FB8024A00633FD7 /* Miscellaneous Views */ = {
 			isa = PBXGroup;
 			children = (
-				B2DD5D7D1ED323F400725B55 /* GraphViewController.swift */,
-				493D3CD51DFC58730075D658 /* SettingsViewController.swift */,
-				B2D2AAAF1E1FF8A600E211A9 /* SyncViewController.swift */,
-				B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */,
-				B202A0671FD118940070D5DC /* OverrideViewController.swift */,
-				B2EA98E41E28609A000B7E54 /* WalkthroughPageViewController.swift */,
-				B2EA98E21E285F19000B7E54 /* WalkthroughViewController.swift */,
+				B221EEF5210B1C1D00F7FBA0 /* Graph */,
+				B221EEF4210B1C1500F7FBA0 /* Settings */,
+				B221EEF3210B1C0E00F7FBA0 /* Sync */,
+				B221EEF2210B1C0500F7FBA0 /* Confirm Count */,
+				B221EEF1210B1BF100F7FBA0 /* Override */,
+				B221EEF0210B1BE800F7FBA0 /* Walkthrough Page */,
+				B221EEEF210B1BDB00F7FBA0 /* Walkthrough */,
 			);
 			name = "Miscellaneous Views";
 			sourceTree = "<group>";
@@ -644,7 +821,6 @@
 				B20DA04F1E1FEC5F0040221D /* Contract Whist Scorecard.entitlements */,
 				B20DA0491E164EE60040221D /* Section headings */,
 				CC86557B1E021518000AF391 /* Standard Components */,
-				B22788E01FB82451009BABCA /* Storyboards */,
 				CC86557A1E021503000AF391 /* View Controllers */,
 				CC8655831E0216B6000AF391 /* Data & Utility Classes */,
 			);
@@ -654,7 +830,7 @@
 		CC86557A1E021503000AF391 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				B288FAB41FB801C200633FD7 /* Scorepad Views */,
+				B221EEE3210B1A7000F7FBA0 /* Scorepad Views */,
 				B288FAB61FB801FC00633FD7 /* Online Game Views */,
 				B288FAB51FB801E200633FD7 /* Other Main Views */,
 				B288FAB71FB8024A00633FD7 /* Miscellaneous Views */,
@@ -763,7 +939,6 @@
 				CC4CC0F21DEADC32007FB24F /* Frameworks */,
 				CC4CC0F31DEADC32007FB24F /* Resources */,
 				07C8E067D608DAF72309C445 /* [CP] Embed Pods Frameworks */,
-				FD94F03AF8858F699E88E822 /* [CP] Copy Pods Resources */,
 				B214FBAD1FCADC7B00F4F39B /* Embed Watch Content */,
 			);
 			buildRules = (
@@ -889,6 +1064,7 @@
 				B227891B1FB84BA2009BABCA /* GameSummaryViewController.storyboard in Resources */,
 				B227892D1FB88BDD009BABCA /* HistoryDetailViewController.storyboard in Resources */,
 				B22789151FB8490F009BABCA /* EntryViewController.storyboard in Resources */,
+				B221EED5210B0DFE00F7FBA0 /* HandViewController.storyboard in Resources */,
 				B22789301FB88D33009BABCA /* HistoryViewController.storyboard in Resources */,
 				B227892A1FB885AC009BABCA /* ConfirmCountViewController.storyboard in Resources */,
 				CC4CC1061DEADC32007FB24F /* LaunchScreen.storyboard in Resources */,
@@ -901,7 +1077,6 @@
 				B22788EF1FB82B45009BABCA /* CutViewController.storyboard in Resources */,
 				B22789421FB894AE009BABCA /* PlayerDetailViewController.storyboard in Resources */,
 				B227893C1FB8932A009BABCA /* SyncViewController.storyboard in Resources */,
-				B22789271FB88436009BABCA /* HandViewController.storyboard in Resources */,
 				B22789391FB8924C009BABCA /* HighScoresViewController.storyboard in Resources */,
 				B22789181FB84A75009BABCA /* RoundSummaryViewController.storyboard in Resources */,
 				CC4CC0FE1DEADC32007FB24F /* Main.storyboard in Resources */,
@@ -953,21 +1128,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		FD94F03AF8858F699E88E822 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Contract Whist Scorecard/Pods-Contract Whist Scorecard-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1001,6 +1161,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B2B755051E58A2D900B1313B /* HistoryDetailViewController.swift in Sources */,
+				B221EED7210B0E2D00F7FBA0 /* HandViewController.swift in Sources */,
 				49AFA50D1E0C42A100DCB1F4 /* RoundSummaryViewController.swift in Sources */,
 				B206A13A1E50FBAE00E26E96 /* HistoryViewController.swift in Sources */,
 				B2F41B231FB6BBA70043F974 /* Other Extensions.swift in Sources */,
@@ -1053,7 +1214,6 @@
 				B2C054781FB8B55700846F6E /* ConfirmCountViewController.swift in Sources */,
 				CC4CC0F91DEADC32007FB24F /* AppDelegate.swift in Sources */,
 				B2F7281D1F7199AE006F0941 /* RabbitMQ Class.swift in Sources */,
-				B2F70E501EE3423D0092C19F /* HandViewController.swift in Sources */,
 				B26104271EFA585B005AA63C /* SearchViewController.swift in Sources */,
 				CC9EF3F21DFEE54A006E8930 /* ComparisonViewController.swift in Sources */,
 				CCCA16631DEF9947006AA415 /* EntryViewController.swift in Sources */,
@@ -1090,6 +1250,14 @@
 				B214FB8B1FCADC7B00F4F39B /* Base */,
 			);
 			name = Interface.storyboard;
+			sourceTree = "<group>";
+		};
+		B221EED3210B0DFE00F7FBA0 /* HandViewController.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B221EED4210B0DFE00F7FBA0 /* Base */,
+			);
+			name = HandViewController.storyboard;
 			sourceTree = "<group>";
 		};
 		B22788E81FB827A7009BABCA /* SearchViewController.storyboard */ = {
@@ -1210,14 +1378,6 @@
 				B22789231FB882F7009BABCA /* Base */,
 			);
 			name = BroadcastViewController.storyboard;
-			sourceTree = "<group>";
-		};
-		B22789251FB88436009BABCA /* HandViewController.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B22789261FB88436009BABCA /* Base */,
-			);
-			name = HandViewController.storyboard;
 			sourceTree = "<group>";
 		};
 		B22789281FB885AC009BABCA /* ConfirmCountViewController.storyboard */ = {

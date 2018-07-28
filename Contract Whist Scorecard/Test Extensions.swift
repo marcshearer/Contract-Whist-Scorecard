@@ -48,16 +48,20 @@ extension ScorepadViewController {
     @IBAction private func rotationGesture(recognizer:UIRotationGestureRecognizer) {
         // Debug tool to fill the scorecard - only available in debug mode
         if recognizer.state == .ended {
-            if Scorecard.adminMode || self.scorecard.iCloudUserIsMe {
+            if Scorecard.adminMode || self.scorecard.iCloudUserIsMe || self.scorecard.commsDelegate?.connectionFramework == .rabbitMQ {
                 let actionSheet = ActionSheet("Admin Options")
-                if self.scorecard.isHosting {
-                    actionSheet.add("Auto-play", handler: self.startAutoPlay)
-                } else if !self.scorecard.hasJoined {
-                    actionSheet.add("Fill scorecard", handler: self.fillScorecard)
+                if Scorecard.adminMode || self.scorecard.iCloudUserIsMe {
+                    if self.scorecard.isHosting {
+                        actionSheet.add("Auto-play", handler: self.startAutoPlay)
+                    } else if !self.scorecard.hasJoined {
+                        actionSheet.add("Fill scorecard", handler: self.fillScorecard)
+                    }
                 }
-                actionSheet.add("Show connections", handler: {
-                    self.scorecard.commsDelegate?.connectionInfo()
-                })
+                if self.scorecard.commsDelegate?.connectionFramework == .rabbitMQ {
+                    actionSheet.add("Show connections", handler: {
+                        self.scorecard.commsDelegate?.connectionInfo()
+                    })
+                }
                 actionSheet.add("Cancel", style: .cancel)
                 actionSheet.present()
             }
@@ -148,21 +152,23 @@ extension HandViewController {
     
     @IBAction private func rotationGesture(recognizer:UIRotationGestureRecognizer) {
         if recognizer.state == .ended {
+            let actionSheet = ActionSheet("Admin Options")
             if Scorecard.adminMode || self.scorecard.iCloudUserIsMe {
-                let actionSheet = ActionSheet("Admin Options")
                 if self.scorecard.isHosting {
                     actionSheet.add("Auto-play", handler: self.startAutoPlay)
                 }
+            }
+            if self.scorecard.commsDelegate?.connectionFramework == .rabbitMQ {
                 actionSheet.add("Show connections", handler: {
                     self.scorecard.commsDelegate?.connectionInfo()
                 })
-                actionSheet.add("Show hand information", handler: {
-                    let message = "Selected round: \(self.scorecard.selectedRound)\nRound: \(self.state.round)\nCards: \(self.state.hand.toString())\nDealer: \(self.scorecard.dealerIs)\nTrick: \(self.state.trick!)\nCards played: \(self.state.trickCards.count)\nTo lead: \(self.state.toLead!)\nTo play: \(self.state.toPlay!)"
-                    self.alertMessage(message, title: "Hand Information", buttonText: "Continue")
-                })
-                actionSheet.add("Cancel", style: .cancel)
-                actionSheet.present()
             }
+                actionSheet.add("Show debug information", handler: {
+                let message = "Selected round: \(self.scorecard.selectedRound)\nRound: \(self.state.round)\nCards: \(self.state.hand.toString())\nDealer: \(self.scorecard.dealerIs)\nTrick: \(self.state.trick!)\nCards played: \(self.state.trickCards.count)\nTo lead: \(self.state.toLead!)\nTo play: \(self.state.toPlay!)"
+                self.alertMessage(message, title: "Hand Information", buttonText: "Continue")
+            })
+            actionSheet.add("Cancel", style: .cancel)
+            actionSheet.present()
         }
     }
     

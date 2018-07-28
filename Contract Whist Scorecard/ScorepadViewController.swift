@@ -174,6 +174,11 @@ class ScorepadViewController: UIViewController,
                 // Online game in progress - go back to hand
                 self.playHand()
             }
+        } else if self.scorecard.isViewing {
+            if scorecard.gameComplete(rounds: self.rounds) {
+                // Online game complete - go to game summary
+                self.performSegue(withIdentifier: "showGameSummary", sender: self)
+            }
         }
     }
     

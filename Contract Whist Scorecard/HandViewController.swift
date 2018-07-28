@@ -60,6 +60,8 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     private var statusTextFontSize: CGFloat!
     private var playedCardFontSize: CGFloat!
     private var tableTopLabelFontSize: CGFloat!
+    private var bidCollectionTag: Int!
+    private var playedCardCollectionTag: Int!
     
     // UI component pointers
     private var playerCardView: [UIView?] = []
@@ -95,7 +97,10 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet private weak var instructionView: UIView!
     @IBOutlet private weak var finishButton: UIButton!
     @IBOutlet weak var lastHandButton: UIButton!
+    @IBOutlet weak var overUnderButton: UIButton!
     @IBOutlet weak var roundSummaryButton: UIButton!
+    @IBOutlet private weak var titleBarLongPress: UILongPressGestureRecognizer!
+    @IBOutlet private weak var tableTopLongPress: UILongPressGestureRecognizer!
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     
@@ -112,7 +117,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.performSegue(withIdentifier: "showHandRoundSummary", sender: self)
     }
     
-    @IBAction func lastHandPressed(_ sender: UIButton) {
+    @IBAction func lastHandPressed(_ sender: Any) {
         self.lastHand = true
         self.playedCardCollectionView.reloadData()
     }
@@ -122,17 +127,29 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.playedCardCollectionView.reloadData()
     }
     
+    @IBAction func longPresssGesture(_ sender: UILongPressGestureRecognizer) {
+        if sender.state == .began {
+            self.lastHandPressed(sender)
+        } else if sender.state == .ended && self.lastHand {
+            self.lastHandReleased(sender)
+        }
+    }
+    
     // MARK: - View Overrides ========================================================================== -
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-   // Setup initial state and local references for global state
+        // Setup initial state and local references for global state
         self.state = self.scorecard.handState
         self.enteredPlayerNumber = self.state.enteredPlayerNumber
         self.round = self.state.round
         self.scorecard.selectedRound = self.round
         self.scorecard.maxEnteredRound = self.round
+        
+        // Setup grid tags
+        bidCollectionTag = bidCollectionView.tag
+        playedCardCollectionTag = playedCardCollectionView.tag
         
         setupArrays()
         if self.state.handSuits == nil {
@@ -144,6 +161,10 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         // Put suit on summary button
         self.roundSummaryButton.setTitle(self.scorecard.roundSuit(self.round, suits: self.state.suits).toString(), for: .normal)
         self.roundSummaryButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        
+        // Setup over under
+        self.overUnderButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        setupOverUnder()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -216,14 +237,14 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        if collectionView.tag == Int(1e6) {
+        if collectionView.tag == bidCollectionTag {
             // Bid buttons
             if moreMode {
                 return currentCards + 2
             } else {
                 return min(maxBidButton + 2, currentCards + 1)
             }
-        } else if collectionView.tag == Int(2e6) {
+        } else if collectionView.tag == playedCardCollectionTag {
             // Played cards
             if bidMode == nil || bidMode {
                 return 0
@@ -239,10 +260,10 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if collectionView.tag == Int(1e6) {
+        if collectionView.tag == bidCollectionTag {
             // Bid buttons
             return CGSize(width: bidButtonSize, height: bidButtonSize)
-        } else if collectionView.tag == Int(2e6) {
+        } else if collectionView.tag == playedCardCollectionTag {
             // Played cards
             return CGSize(width: tabletopCellWidth, height: tabletopViewHeight - 8)
         } else {
@@ -252,7 +273,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if collectionView.tag == Int(1e6) {
+        if collectionView.tag == bidCollectionTag {
             // Bid buttons
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Bid Collection Cell", for: indexPath) as! BidCollectionCell
             if indexPath.row <= maxBidButton || (moreMode && indexPath.row <= currentCards) {
@@ -268,18 +289,18 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.bidEnable(indexPath.row, bidButtonEnabled[indexPath.row])
             return cell
             
-        } else if collectionView.tag == Int(2e6) {
+        } else if collectionView.tag == playedCardCollectionTag {
             // Played cards
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Played Card Collection Cell", for: indexPath) as! PlayedCardCollectionCell
             
-            var toLead: Int
-            var cards: [Card]
+            var toLead: Int!
+            var cards: [Card]!
             if lastHand {
-                toLead = self.state.lastToLead!
-                cards = self.state.lastCards!
+                toLead = self.state.lastToLead
+                cards = self.state.lastCards
             } else {
-                toLead = self.state.toLead!
-                cards = self.state.trickCards!
+                toLead = self.state.toLead
+                cards = self.state.trickCards
             }
             
             // Name
@@ -341,15 +362,23 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        if collectionView.tag == Int(1e6) {
-                return (self.bidMode && bidButtonEnabled[indexPath.row])
+        
+        if collectionView.tag == bidCollectionTag {
+            // Bid collection - enable if in bid mode and not disabled
+            return (self.bidMode && bidButtonEnabled[indexPath.row])
+            
+        } else if collectionView.tag == playedCardCollectionTag {
+            // Played cards never interactive
+            return false
+            
         } else {
+            // Must be suits collection - enable if not in bid mode
             return !self.bidMode
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if collectionView.tag == Int(1e6) {
+        if collectionView.tag == bidCollectionTag {
             if indexPath.row <= maxBidButton || (moreMode && indexPath.row <= currentCards) {
                 confirmBid(bid: indexPath.row)
             } else {
@@ -388,13 +417,13 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let newBidMode = (bids.count < self.scorecard.currentPlayers)
         if self.bidMode != newBidMode {
             if newBidMode == false && !firstBidRefresh {
-                // About to exit bid mode - delay 3 seconds
+                // About to exit bid mode - delay 1 second
                 setupOverUnder()
                 self.instructionView.backgroundColor = UIColor.darkGray
                 self.instructionTextView.text = "Bidding Complete"
                 self.finishButton.isHidden = true
                 self.scorecard.commsHandlerMode = .viewTrick
-                Utility.executeAfter(delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 2.0), completion: {
+                Utility.executeAfter(delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 1.0), completion: {
                     self.finishButton.isHidden = false
                     self.scorecard.commsHandlerMode = .none
                     NotificationCenter.default.post(name: .broadcastHandlerCompleted, object: self, userInfo: nil)
@@ -424,6 +453,8 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
             setupOverUnder()
             lastHandButton.isHidden = true
+            tableTopLongPress.isEnabled = false
+            titleBarLongPress.isEnabled = false
         } else {
             // Playing cards - save current cards in trick
             let currentTrickCards = self.state.trickCards.count
@@ -438,6 +469,9 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 
                 // Disable lookback
                 lastHandButton.isHidden = true
+                tableTopLongPress.isEnabled = false
+                titleBarLongPress.isEnabled = false
+
                 
                 if self.state.trick <= self.currentCards {
                     // Get ready for the new trick - won't refresh until next card played
@@ -465,8 +499,10 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
             } else {
                 // Work out who should play
                 let hasPlayed = (self.enteredPlayerNumber + (self.state.toLead! > self.enteredPlayerNumber ? self.scorecard.currentPlayers : 0)) >= (self.state.toLead! + self.state.trickCards.count)
-                lastHandButton.isHidden = (self.state.lastCards.count == 0 || !hasPlayed)
-                    
+                lastHandButton.isHidden = (self.state.lastCards.count == 0 || !hasPlayed || self.state.lastToLead == nil)
+                tableTopLongPress.isEnabled = !lastHandButton.isHidden
+                titleBarLongPress.isEnabled = !lastHandButton.isHidden
+
                 self.nextCard()
             }
         }
@@ -591,6 +627,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 firstHandRefresh = false
             }
         }
+        self.overUnderButton.isHidden = bidMode
     }
     
     func bidsEnable(_ enable: Bool, blockRemaining: Bool = false) {
@@ -786,8 +823,6 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.stateController()
     }
     
-    // Move state update part of stateController here from HandViewController
-    
     func confirmBid(bid: Int) {
         let alertController = UIAlertController(title: "", message: "\n\n\n", preferredStyle: UIAlertControllerStyle.alert)
         alertController.addAction(UIAlertAction(title: "Confirm bid", style: UIAlertActionStyle.default, handler: { (UIAlertAction) in
@@ -858,6 +893,10 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func setupOverUnder() {
         let totalRemaining = scorecard.remaining(playerNumber: 0, round: scorecard.selectedRound, mode: Mode.bid, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
+
+        overUnderButton.setTitle("\(totalRemaining >= 0 ? "-" : "+")\(abs(Int64(totalRemaining)))", for: .normal)
+        overUnderButton.setTitleColor((totalRemaining >= 0 ? UIColor.green : UIColor.red), for: .normal)
+
         if !self.scorecard.roundStarted(scorecard.selectedRound) {
             statusOverUnderLabel.text = ""
         } else {

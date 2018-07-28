@@ -97,7 +97,7 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
         self.scorecardPressed(self)
     }
     
-    @IBAction func tap(recognizer:UITapGestureRecognizer) {
+    @IBAction func tapGestureReceived(recognizer:UITapGestureRecognizer) {
         self.scorecardPressed(self)
     }
     
@@ -117,8 +117,6 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
         if self.scorecard.hasJoined || self.gameSummaryMode == .amend {
             // Disable tap gesture as individual buttons active
             tapGesture.isEnabled = false
-        } else {
-            tableView.isUserInteractionEnabled = false
         }
         
         // Work out who's won

@@ -407,7 +407,7 @@ class CutViewController: UIViewController {
         // Determine who won
         var dealerIs = 1
         for playerLoop in 1...self.playerName.count {
-            if cards[playerLoop-1].toNumber() > cards[scorecard.dealerIs-1].toNumber() {
+            if cards[playerLoop-1].toNumber() > cards[dealerIs-1].toNumber() {
                 dealerIs = playerLoop
             }
         }

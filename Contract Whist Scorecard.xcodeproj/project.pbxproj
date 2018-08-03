@@ -74,12 +74,14 @@
 		B250610020CD7F480030EE8F /* Recovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25060FF20CD7F470030EE8F /* Recovery.swift */; };
 		B26104271EFA585B005AA63C /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26104261EFA585B005AA63C /* SearchViewController.swift */; };
 		B2666A1F1FADAC0700A34CB0 /* Test Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2666A1E1FADAC0700A34CB0 /* Test Extensions.swift */; };
+		B2767C1E2110061B0029155E /* Loopback Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2767C1D2110061B0029155E /* Loopback Class.swift */; };
 		B27B1FEA1F9B55ED00ED6FFF /* Scorecard Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27B1FE91F9B55ED00ED6FFF /* Scorecard Tests.swift */; };
 		B28033341F7E046B00CF4696 /* Sync Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28033331F7E046B00CF4696 /* Sync Class.swift */; };
 		B288FAC01FB804D000633FD7 /* Other Main Function Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B288FABF1FB804D000633FD7 /* Other Main Function Tests.swift */; };
 		B288FAC21FB80A0900633FD7 /* Test Utility Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B288FAC11FB80A0900633FD7 /* Test Utility Class.swift */; };
 		B288FAC41FB80A4F00633FD7 /* Whist Test Utility Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B288FAC31FB80A4F00633FD7 /* Whist Test Utility Class.swift */; };
 		B28DFC2D1F79618700E991E4 /* Config Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28DFC2C1F79618700E991E4 /* Config Class.swift */; };
+		B2B180122110128C008D3BAA /* Computer Player Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B180112110128C008D3BAA /* Computer Player Class.swift */; };
 		B2B3EACD1FC0A8A0005E7989 /* Settings Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B3EACC1FC0A8A0005E7989 /* Settings Tests.swift */; };
 		B2B755051E58A2D900B1313B /* HistoryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B755041E58A2D900B1313B /* HistoryDetailViewController.swift */; };
 		B2B755091E5B363200B1313B /* History Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B755081E5B363200B1313B /* History Class.swift */; };
@@ -241,6 +243,7 @@
 		B25060FF20CD7F470030EE8F /* Recovery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Recovery.swift; sourceTree = "<group>"; };
 		B26104261EFA585B005AA63C /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		B2666A1E1FADAC0700A34CB0 /* Test Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Test Extensions.swift"; sourceTree = "<group>"; };
+		B2767C1D2110061B0029155E /* Loopback Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Loopback Class.swift"; sourceTree = "<group>"; };
 		B27B1FE71F9B55ED00ED6FFF /* Contract Whist Scorecard UI Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Contract Whist Scorecard UI Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B27B1FE91F9B55ED00ED6FFF /* Scorecard Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scorecard Tests.swift"; sourceTree = "<group>"; };
 		B27B1FEB1F9B55ED00ED6FFF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -249,6 +252,7 @@
 		B288FAC11FB80A0900633FD7 /* Test Utility Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Test Utility Class.swift"; sourceTree = "<group>"; };
 		B288FAC31FB80A4F00633FD7 /* Whist Test Utility Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Whist Test Utility Class.swift"; sourceTree = "<group>"; };
 		B28DFC2C1F79618700E991E4 /* Config Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Config Class.swift"; sourceTree = "<group>"; };
+		B2B180112110128C008D3BAA /* Computer Player Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Computer Player Class.swift"; sourceTree = "<group>"; };
 		B2B3EACC1FC0A8A0005E7989 /* Settings Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Settings Tests.swift"; sourceTree = "<group>"; };
 		B2B755041E58A2D900B1313B /* HistoryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDetailViewController.swift; sourceTree = "<group>"; };
 		B2B755081E5B363200B1313B /* History Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History Class.swift"; sourceTree = "<group>"; };
@@ -763,6 +767,7 @@
 				B2DA893D1F3CC89C008EE96C /* Comms.swift */,
 				B2C051031EDF194C009DE37F /* Multipeeer Class.swift */,
 				B2F7281C1F7199AE006F0941 /* RabbitMQ Class.swift */,
+				B2767C1D2110061B0029155E /* Loopback Class.swift */,
 				B2F7281A1F6D74F9006F0941 /* Invite.swift */,
 				B235D2BD1F82288A0019384B /* Notification Simulator.swift */,
 			);
@@ -787,6 +792,14 @@
 				B2666A1E1FADAC0700A34CB0 /* Test Extensions.swift */,
 			);
 			name = "Test Classes";
+			sourceTree = "<group>";
+		};
+		B2B1801021101269008D3BAA /* Computer Playing Classes */ = {
+			isa = PBXGroup;
+			children = (
+				B2B180112110128C008D3BAA /* Computer Player Class.swift */,
+			);
+			name = "Computer Playing Classes";
 			sourceTree = "<group>";
 		};
 		CC4CC0EC1DEADC32007FB24F = {
@@ -822,6 +835,7 @@
 				B20DA0491E164EE60040221D /* Section headings */,
 				CC86557B1E021518000AF391 /* Standard Components */,
 				CC86557A1E021503000AF391 /* View Controllers */,
+				B2B1801021101269008D3BAA /* Computer Playing Classes */,
 				CC8655831E0216B6000AF391 /* Data & Utility Classes */,
 			);
 			path = "Contract Whist Scorecard";
@@ -1167,6 +1181,7 @@
 				B2F41B231FB6BBA70043F974 /* Other Extensions.swift in Sources */,
 				B24AABE41EC4DC5F000D34B0 /* Core Data Class.swift in Sources */,
 				B202A06B1FD122F30070D5DC /* OverrideViewController.swift in Sources */,
+				B2767C1E2110061B0029155E /* Loopback Class.swift in Sources */,
 				B20A66FC1E23921E00E75190 /* Buttons.swift in Sources */,
 				CC395F511E0905BE00165D1C /* Utility Library.swift in Sources */,
 				CC395F4D1E064EC500165D1C /* Card Class.swift in Sources */,
@@ -1197,6 +1212,7 @@
 				B2BC51C71F7B5E8C0065F07D /* String Extensions.swift in Sources */,
 				CC4CC1161DEAF0F9007FB24F /* GameSetupViewController.swift in Sources */,
 				B20DA04C1E179DC70040221D /* WelcomeViewController.swift in Sources */,
+				B2B180122110128C008D3BAA /* Computer Player Class.swift in Sources */,
 				B2F7281B1F6D74F9006F0941 /* Invite.swift in Sources */,
 				B20A66FA1E2385B500E75190 /* Reachability.swift in Sources */,
 				B2FA298E1EA9E215002A5D03 /* Alert.swift in Sources */,

@@ -61,7 +61,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCNearbyServiceBrowserDe
     private var broadcastPeerList: [String: BroadcastPeer] = [:]
     private let myPeerID = MCPeerID(displayName: Scorecard.deviceName)
     
-    required init(purpose: CommsConnectionPurpose, type: CommsConnectionType, serviceID: String?) {
+    required init(purpose: CommsConnectionPurpose, type: CommsConnectionType, serviceID: String?, deviceName: String) {
         self.connectionPurpose = purpose
         self.connectionType = type
         self.serviceID = serviceID!

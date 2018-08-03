@@ -23,6 +23,7 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
     public var broadcastTitle: String!
     public var broadcastMatchDeviceName: String!
     public var broadcastCommsPurpose: CommsConnectionPurpose!
+    public var playingVersusComputer = false
 
     // Local state variables
     private var reconcile: Reconcile!
@@ -613,12 +614,14 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
         let actionSheet = ActionSheet( view: onlineGameCell.actionButton, direction: .up)
             actionSheet.add("Host a Game", handler: hostGame)
             actionSheet.add("Join a Game", handler: joinGame)
+            actionSheet.add("Play against Computer", handler: computerGame)
             actionSheet.add("Cancel", style: .cancel)
             actionSheet.present()
         }
     }
     
     private func hostGame() -> Void {
+        self.playingVersusComputer = false
         self.performSegue(withIdentifier: "showHost", sender: self)
     }
     
@@ -626,6 +629,11 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
         self.broadcastCommsPurpose = .playing
         self.broadcastTitle = "Join a Game"
         self.performSegue(withIdentifier: "showBroadcast", sender: self)
+    }
+    
+    private func computerGame() -> Void {
+        self.playingVersusComputer = true
+        self.performSegue(withIdentifier: "showHost", sender: self)
     }
     
     private func viewGame() {
@@ -670,6 +678,7 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
             let destination = segue.destination as! HostViewController
             destination.backImage = "home"
             destination.backText = ""
+            destination.playingVersusComputer = self.playingVersusComputer
             destination.scorecard = self.scorecard
             
         case "showHighScores":

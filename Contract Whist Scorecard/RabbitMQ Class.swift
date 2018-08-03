@@ -72,7 +72,7 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
     
     // MARK: - Comms Handler delegate implementation ======================================================== -
 
-    required init(purpose: CommsConnectionPurpose, type: CommsConnectionType, serviceID: String?) {
+    required init(purpose: CommsConnectionPurpose, type: CommsConnectionType, serviceID: String?, deviceName: String) {
         self.connectionType = type
     }
     

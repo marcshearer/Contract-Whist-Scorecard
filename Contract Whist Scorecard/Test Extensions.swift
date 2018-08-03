@@ -242,15 +242,15 @@ extension HandViewController {
                     bids.append(bid!)
                 }
             }
-            if self.entryPlayerNumber(self.enteredPlayerNumber) == bids.count + 1 {
+            if self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round) == bids.count + 1 {
                 let cards = self.scorecard.roundCards(round, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
                 var range = ((Double(cards) / Double(self.scorecard.currentPlayers)) * 2) + 1
                 range.round()
                 var bid = Utility.random(max(2,Int(range))) - 1
                 bid = min(bid, cards)
-                if self.entryPlayerNumber(self.round) == self.scorecard.currentPlayers {
+                if self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round) == self.scorecard.currentPlayers {
                     // Last to bid - need to avoid remaining
-                    let remaining = scorecard.remaining(playerNumber: entryPlayerNumber(self.enteredPlayerNumber), round: self.round, mode: .bid, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
+                    let remaining = scorecard.remaining(playerNumber: self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round), round: self.round, mode: .bid, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
                     if bid == remaining {
                         if remaining == 0 {
                             bid += 1

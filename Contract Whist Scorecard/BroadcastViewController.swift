@@ -11,7 +11,7 @@ import UIKit
 struct QueueEntry {
     let descriptor: String
     let data: [String : Any?]?
-    let peer: CommsPeer
+    let peer: CommsPeer?
 }
 
 enum AppState {
@@ -225,10 +225,10 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                 self.appState = .connected
                 
                 // Pop top element off the queue
-                let descriptor = self.queue[0].descriptor
-                let data = self.queue[0].data
-                let peer = self.queue[0].peer
-                self.queue.remove(at: 0)
+                let descriptor = self.queue.first!.descriptor
+                let data = self.queue.first!.data
+                let peer = self.queue.first!.peer!
+                self.queue.removeFirst()
                 
                 switch descriptor {
                 case "wait":
@@ -473,8 +473,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                 // New peer - add to list
                 self.broadcastTableView.beginUpdates()
                 self.available.append(Available(peer: peer))
-                self.broadcastTableView.insertRows(at: [IndexPath(row: self.available.count - 1, section: self.peerSection)],
-                                                   with: .automatic)
+                self.broadcastTableView.insertRows(at: [IndexPath(row: self.available.count - 1, section: self.peerSection)], with: .automatic)
                 self.broadcastTableView.endUpdates()
             }
             if self.recoveryMode && self.matchDeviceName != nil && peer.deviceName == self.matchDeviceName {
@@ -549,6 +548,8 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
             self.scorecard.commsDelegate = self.multipeerClient
         case .rabbitMQ:
             self.scorecard.commsDelegate = self.rabbitMQClient
+        default:
+            break
         }
     }
     

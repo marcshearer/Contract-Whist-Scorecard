@@ -37,6 +37,7 @@ class ScorepadViewController: UIViewController,
     public var parentView: UIView!
     public var rabbitMQService: RabbitMQService!
     public var recoveryMode = false
+    public var computerPlayerDelegate: [Int : ComputerPlayerDelegate?]?
     
     // Cell dimensions
     private let minCellHeight = 30
@@ -649,7 +650,7 @@ class ScorepadViewController: UIViewController,
             }
         }
         self.scorecard.setGameInProgress(true)
-        self.scorecard.playHand(from: self, sourceView: self.scorepadView)
+        self.scorecard.playHand(from: self, sourceView: self.scorepadView, computerPlayerDelegate: computerPlayerDelegate)
         if setState {
             // Bids already entered - resend all scores
             self.scorecard.sendScores()

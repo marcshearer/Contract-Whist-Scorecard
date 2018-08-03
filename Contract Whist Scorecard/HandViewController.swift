@@ -35,8 +35,9 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     internal var handTestData = HandTestData()
     private var collectionHandSuits: [HandSuit]!    // Mirror of the hand suits in state - updated to reflect in collection
     
-    // Delegate
+    // Delegates
     public var delegate: HandStatusDelegate!
+    public var computerPlayerDelegate: [ Int : ComputerPlayerDelegate? ]?
     
     // Component sizes
     private var viewWidth: CGFloat!
@@ -393,7 +394,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     setupBidSize()
                     self.bidCollectionView.reloadData()
                 }
-                bidsEnable(true, blockRemaining: self.entryPlayerNumber(self.enteredPlayerNumber) == self.scorecard.currentPlayers)
+                bidsEnable(true, blockRemaining: self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round) == self.scorecard.currentPlayers)
             }
         } else {
             confirmCard(collectionView, indexPath)
@@ -423,7 +424,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.instructionTextView.text = "Bidding Complete"
                 self.finishButton.isHidden = true
                 self.scorecard.commsHandlerMode = .viewTrick
-                Utility.executeAfter(delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 1.0), completion: {
+                Utility.executeAfter("bidComplete", delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 1.0), completion: {
                     self.finishButton.isHidden = false
                     self.scorecard.commsHandlerMode = .none
                     NotificationCenter.default.post(name: .broadcastHandlerCompleted, object: self, userInfo: nil)
@@ -439,7 +440,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if bidMode {
         // Bidding
             cardsEnable(false)
-            if self.entryPlayerNumber(self.enteredPlayerNumber) == bids.count + 1 {
+            if self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round) == bids.count + 1 {
                 // Your bid
                 bidsEnable(true, blockRemaining: bids.count == self.scorecard.currentPlayers - 1)
                 self.instructionTextView.text = "You to bid \(self.scorecard.enteredPlayer(enteredPlayerNumber).playerMO!.name!)"
@@ -450,6 +451,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 bidsEnable(false)
                 self.instructionTextView.text = "\(self.scorecard.entryPlayer(bids.count + 1).playerMO!.name!) to bid"
                 self.instructionView.backgroundColor = UIColor.darkGray
+                self.computerPlayerDelegate?[self.scorecard.entryPlayer(bids.count + 1).playerNumber]??.autoBid()
             }
             setupOverUnder()
             lastHandButton.isHidden = true
@@ -480,7 +482,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         // Don't refresh (or exit) for at least 1 second
                         self.scorecard.commsHandlerMode = .viewTrick
                         self.finishButton.isHidden = true
-                        Utility.executeAfter(delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 1.0), completion: {
+                        Utility.executeAfter("trickComplete", delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 1.0), completion: {
                             self.finishButton.isHidden = false
                             self.scorecard.commsHandlerMode = .none
                             NotificationCenter.default.post(name: .broadcastHandlerCompleted, object: self, userInfo: nil)
@@ -488,12 +490,14 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     }	
                 } else {
                     // Hand finished
+                    self.scorecard.commsDelegate?.debugMessage("Hand finished") // TODO remove
                     self.finishButton.isHidden = true
                     self.scorecard.commsHandlerMode = .viewTrick
-                    Utility.executeAfter(delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 2.0), completion: {
+                    Utility.executeAfter("handFinished", delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 2.0), completion: {
                         // Return to scorepad after 2 seconds
-                        self.scorecard.commsHandlerMode = .dismiss
-                        self.dismissHand()
+                            self.scorecard.commsHandlerMode = .dismiss
+                            self.scorecard.commsDelegate?.debugMessage("Dismissing") // TODO remove
+                            self.dismissHand()
                     })
                 }
             } else {
@@ -533,6 +537,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.cardsEnable(false)
             self.instructionTextView.text = "\(self.scorecard.enteredPlayer(self.state.toPlay).playerMO!.name!) to play"
             self.instructionView.backgroundColor = UIColor.darkGray
+            self.computerPlayerDelegate?[self.state.toPlay]??.autoPlay()
         }
     }
     
@@ -542,7 +547,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         // Must be in bid mode - simply fill in the right bid
         // Note that the player number sent will be the enterd player number and hence must be converted
         if bidMode != nil && bidMode && round == self.round {
-            let entryPlayerNumber = self.entryPlayerNumber(enteredPlayerNumber)
+            let entryPlayerNumber = self.scorecard.entryPlayerNumber(enteredPlayerNumber, round: self.round)
             setupPlayerBidText(entryPlayerNumber: entryPlayerNumber, animate:true)
             self.stateController()
         }
@@ -631,7 +636,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func bidsEnable(_ enable: Bool, blockRemaining: Bool = false) {
-        let remaining = scorecard.remaining(playerNumber: entryPlayerNumber(self.enteredPlayerNumber), round: self.round, mode: .bid, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
+        let remaining = scorecard.remaining(playerNumber: self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round), round: self.round, mode: .bid, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
         for bid in 0...bidButton.count - 1 {
             if !enable || (blockRemaining && (bid == remaining && (moreMode || bid <= maxBidButton))) {
                 bidButtonEnabled[bid] = false
@@ -755,11 +760,11 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let card =  Card(fromNumber: cell!.tag)
         
         func playCard(alertAction: UIAlertAction) {
-            Utility.mainThread { [unowned self] in
+            Utility.mainThread("playCard", execute: { [unowned self] in
                 self.isModalInPopover = true
-                self.scorecard.sendCardPlayed(round: self.round, trick: self.state.trick, playerNumber: self.enteredPlayerNumber, card: card)
                 self.playCard(card: card)
-            }
+                self.scorecard.sendCardPlayed(round: self.round, trick: self.state.trick, playerNumber: self.enteredPlayerNumber, card: card)
+            })
         }
         
         func resetPopover(alertAction: UIAlertAction) {
@@ -851,7 +856,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func makeBid(_ bid: Int) {
         self.isModalInPopover = true
         self.scorecard.enteredPlayer(enteredPlayerNumber).setBid(round, bid)
-        let entryPlayerNumber = self.entryPlayerNumber(enteredPlayerNumber)
+        let entryPlayerNumber = self.scorecard.entryPlayerNumber(enteredPlayerNumber, round: self.round)
         setupPlayerBidText(entryPlayerNumber: entryPlayerNumber, animate: true)
         if moreMode {
             moreMode = false
@@ -885,11 +890,6 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     // MARK: - Utility Routines ======================================================================= -
-        
-    func entryPlayerNumber(_ enteredPlayerNumber: Int) -> Int {
-        // Everything in data is in entered player sequence but bids will be in entry player sequence this converts between them
-        return self.scorecard.enteredPlayer(enteredPlayerNumber).entryPlayerNumber(round: self.round)
-    }
     
     func setupOverUnder() {
         let totalRemaining = scorecard.remaining(playerNumber: 0, round: scorecard.selectedRound, mode: Mode.bid, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)

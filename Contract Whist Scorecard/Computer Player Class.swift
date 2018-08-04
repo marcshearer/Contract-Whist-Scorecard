@@ -13,6 +13,8 @@ protocol ComputerPlayerDelegate : class {
     func autoBid(completion: (()->())?)
     
     func autoPlay(completion: (()->())?)
+    
+    func newHand(hand: Hand)
 }
 
 extension ComputerPlayerDelegate {
@@ -24,9 +26,10 @@ extension ComputerPlayerDelegate {
     func autoPlay() {
         self.autoPlay(completion: nil)
     }
+    
 }
 
-class ComputerPlayer: NSObject, CommsDataDelegate, ComputerPlayerDelegate {
+class ComputerPlayer: NSObject, ComputerPlayerDelegate {
     
     private var scorecard: Scorecard
     private var thisPlayer: String
@@ -36,14 +39,14 @@ class ComputerPlayer: NSObject, CommsDataDelegate, ComputerPlayerDelegate {
     private var commsDelegate: CommsHandlerDelegate!
     private var hostPeer: CommsPeer
     private var handSuits: [HandSuit]!
+    private let autoPlayTimeUnit = 1.0
     
     // Queue
     private var queue: [QueueEntry] = []
     private var pending = false
-    private var computerPlayerQueue: DispatchQueue!
-
+  
     init(scorecard: Scorecard, email: String, name: String, deviceName: String, hostPeer: CommsPeer, playerNumber: Int) {
-        
+                
         // Store properties
         self.scorecard = scorecard
         self.thisPlayer = email
@@ -57,118 +60,12 @@ class ComputerPlayer: NSObject, CommsDataDelegate, ComputerPlayerDelegate {
         // Initialise super-class
         super.init()
         
-        // Setup custom queue
-        computerPlayerQueue = DispatchQueue.main
-
-        // Take loopback service delegates
-        self.loopbackClient.dataDelegate = self
-
         // Start the service
         self.commsDelegate = self.loopbackClient
         self.commsDelegate.start(email: email, name: name)
         
         // Connect back to the host
         _ = self.commsDelegate.connect(to: hostPeer, playerEmail: email, playerName: name, reconnect: false)
-    }
-    
-    // MARK: - Data delegate handlers  ========================================================================= -
-
-    
-    public func didReceiveData(descriptor: String, data: [String : Any?]?, from peer: CommsPeer) {
-        self.computerPlayerQueueExecute("\(self.thisPlayerName)-didReceiveData", execute: {
-            self.scorecard.commsDelegate?.debugMessage("\(descriptor) received from \(peer.deviceName)")
-            
-             switch descriptor {
-                case "hand", "handState", "scores", "played":
-                self.queue.append(QueueEntry(descriptor: descriptor, data: data, peer: peer))
-             default:
-                break}
-        
-            if !self.pending {
-                self.processQueue()
-            } else {
-                self.loopbackClient.debugMessage("Pending")
-            }
-        })
-    }
-    
-    func processQueue() {
-        
-        if self.queue.count > 0 {
-            var queueText = ""
-            for element in self.queue {
-                queueText = queueText + " " + element.descriptor
-            }
-            self.loopbackClient.debugMessage("Processing queue for \(self.thisPlayerName)\(queueText)")
-        }
-        
-        while self.queue.count > 0  {
-            
-            // Pop top element off the queue
-            var checkState = false
-            let descriptor = self.queue.first?.descriptor
-            let data = self.queue.first?.data
-            var mode: String!
-            self.queue.removeFirst()
-            
-            // Only want to look at hands arriving, bids or cards played
-            switch descriptor {
-                
-            case "hand", "handState":
-                // Sort hand
-                
-                
-            // TODO Delete
-                
-            /*
-            case "scores":
-                for (playerNumberData, playerData) in (data as! [String : [String : Any]]) {
-                    if Int(playerNumberData)! != self.thisPlayerNumber {
-                        for (roundNumberData, roundData) in (playerData as! [String : [String : Any]]) {
-                            if Int(roundNumberData)! == self.scorecard.handState.round {
-                                if roundData["bid"] != nil {
-                                    // A bid from someone else
-                                    checkState = true
-                                }
-                            }
-                        }
-                    }
-                }
-                
-            case "played":
-                if data!["player"] as? Int != self.thisPlayerNumber {
-                    // Card played by another player
-                    checkState = true
-                }
-            */
-            default:
-                break
-            }
-            
-            if mode != nil {
-                switch mode {
-                case "bid":
-                    self.autoBid(completion: nil)
-                case "play":
-                    self.autoPlay(completion: nil)
-                default:
-                    break
-                }
-            }
-        }
-    }
-
-    private func stateController() {
-        if self.handSuits == nil {
-            // Sort hand if not there already
-            let hand = self.scorecard.deal.hands[self.thisPlayerNumber - 1]
-            self.handSuits = HandSuit.sortCards(cards: hand.cards)
-        }
-        
-        autoBid(completion: {
-            self.pending = false
-            self.processQueue()
-        })
     }
     
     internal func autoBid(completion: (()->())?) {
@@ -182,12 +79,13 @@ class ComputerPlayer: NSObject, CommsDataDelegate, ComputerPlayerDelegate {
                 bids.append(bid!)
             }
         }
+        
         self.loopbackClient.debugMessage("Player: \(self.thisPlayerNumber!)")
         if self.scorecard.entryPlayerNumber(self.thisPlayerNumber, round: round) == bids.count + 1 {
             
             runCompletionOnExit = false
             
-            self.computerPlayerQueueExecute("autoBid", after: 1.0, execute: {
+            Utility.executeAfter("autoBid", delay: self.autoPlayTimeUnit, completion: {
                 
                 self.loopbackClient.debugMessage(self.thisPlayerName)
                 let cards = self.scorecard.roundCards(round, rounds: self.scorecard.handState.rounds, cards: self.scorecard.handState.cards, bounce: self.scorecard.handState.bounce)
@@ -228,7 +126,6 @@ class ComputerPlayer: NSObject, CommsDataDelegate, ComputerPlayerDelegate {
     internal func autoPlay(completion: (()->())?) {
         var runCompletionOnExit = true
         let round = self.scorecard.handState.round
-        let rounds = self.scorecard.handState.rounds
         let roundCards = self.scorecard.roundCards(round)
         let trick = self.scorecard.handState.trick!
         let trickCards = self.scorecard.handState.trickCards
@@ -251,7 +148,7 @@ class ComputerPlayer: NSObject, CommsDataDelegate, ComputerPlayerDelegate {
                 
                     runCompletionOnExit = false
                     
-                    self.computerPlayerQueueExecute("autoPlay", after: 1.0, execute: {
+                    Utility.executeAfter("autoPlay", delay: self.autoPlayTimeUnit, completion: {
                         
                         // Now work out card to play
                         var cardPlayed: Card!
@@ -278,54 +175,17 @@ class ComputerPlayer: NSObject, CommsDataDelegate, ComputerPlayerDelegate {
                         self.pending = true
                         self.loopbackClient.debugMessage("Card played by \(self.thisPlayerName) of \(cardPlayed.toString())")
                         
-                        /* TODO Remove
-                        // Check if it is me to play again
-                        var winner: Int!
-                        if round < rounds {
-                            if cardsPlayed == self.scorecard.currentPlayers - 1 {
-
-                                (winner, _) = self.scorecard.checkWinner(currentPlayers: self.scorecard.currentPlayers, round: round, suits: self.scorecard.handState.suits, trickCards: trickCards! + [cardPlayed])
-                            }
-                        }
-                        
-                        if winner == self.scorecard.currentPlayers {
-                            self.autoPlay(completion: completion)
-                        } else {
-                        */
                         completion?()
                     })
                 }
             }
         }
         if runCompletionOnExit {
-        completion?()
-    }
-}
-    
-    func computerPlayerQueueExecute(_ message: String! = nil, after delay: Double! = nil, execute: @escaping ()->()) {
-        if delay == nil {
-            if message != nil {
-                self.loopbackClient.debugMessage("\(message!) - Execute closure on computer player queue for \(self.thisPlayerName)")
-            }
-            self.computerPlayerQueue.async {
-                execute()
-                if message != nil {
-                    self.loopbackClient.debugMessage("\(message!) - Completed closure on computer player queue for \(self.thisPlayerName)")
-                }
-            }
-        } else {
-            if message != nil {
-                self.loopbackClient.debugMessage("\(message!) - Queue closure for \(Int(delay!)) seconds on computer player queue for \(self.thisPlayerName)")
-            }
-            self.computerPlayerQueue.asyncAfter(deadline: DispatchTime.now() + delay, qos: .userInteractive) {
-                if message != nil {
-                    self.loopbackClient.debugMessage("\(message!) - Start delayed closure on computer player queue for \(self.thisPlayerName)")
-                }
-                execute()
-                if message != nil {
-                    self.loopbackClient.debugMessage("\(message!) - Completed delayed closure on computer player queue for \(self.thisPlayerName)")
-                }
-            }
+            completion?()
         }
     }
+    internal func newHand(hand: Hand) {
+        self.handSuits = HandSuit.sortCards(cards: hand.cards)
+    }
 }
+

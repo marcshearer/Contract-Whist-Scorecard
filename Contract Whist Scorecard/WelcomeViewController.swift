@@ -23,7 +23,7 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
     public var broadcastTitle: String!
     public var broadcastMatchDeviceName: String!
     public var broadcastCommsPurpose: CommsConnectionPurpose!
-    public var playingVersusComputer = false
+    public var playingComputer = false
 
     // Local state variables
     private var reconcile: Reconcile!
@@ -309,16 +309,16 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
         
         switch indexPath.row + 1 {
         case newGameButton:
-            welcomeActionCell.actionButton.setTitle("New Game", for: .normal)
+            welcomeActionCell.actionButton.setTitle("Score Game", for: .normal)
             newGameCell = welcomeActionCell
         case onlineGameButton:
-            welcomeActionCell.actionButton.setTitle("Online Game", for: .normal)
+            welcomeActionCell.actionButton.setTitle("Play Game", for: .normal)
             onlineGameCell = welcomeActionCell
         case getStartedButton:
             welcomeActionCell.actionButton.setTitle("Get Started", for: .normal)
             getStartedCell = welcomeActionCell
         case resumeGameButton:
-            welcomeActionCell.actionButton.setTitle("Resume Game", for: .normal)
+            welcomeActionCell.actionButton.setTitle("Resume Playing", for: .normal)
             resumeGameCell = welcomeActionCell
         case playerStatsButton:
             welcomeActionCell.actionButton.setTitle("Players", for: .normal)
@@ -417,18 +417,13 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         
         buttons += 1
-        newGameButton = buttons
+        onlineGameButton = buttons
         
         buttons += 1
         resumeGameButton = buttons
         
-        if self.scorecard.settingSyncEnabled && (self.scorecard.settingNearbyPlaying || self.scorecard.settingOnlinePlayerEmail != nil) {
-            buttons += 1
-            onlineGameButton = buttons
-        } else {
-            onlineGameButton = -1
-            onlineGameCell = nil
-        }
+        buttons += 1
+        newGameButton = buttons
         
         buttons += 1
         playerStatsButton = buttons
@@ -507,10 +502,10 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
             if resumeGameCell != nil {
                 let (recoveryEnabled, online) = self.recovery.checkOnlineRecovery()
                 resumeGameCell.actionButton.isEnabled(recoveryEnabled)
-                if recoveryEnabled && online {
-                    resumeGameCell.actionButton.setTitle("Resume Online Game")
+                if recoveryEnabled && !online {
+                    resumeGameCell.actionButton.setTitle("Resume Scoring")
                 } else {
-                    resumeGameCell.actionButton.setTitle("Resume Game")
+                    resumeGameCell.actionButton.setTitle("Resume Playing")
                 }
             }
         }
@@ -584,7 +579,11 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
             scorecard.recoveryMode = true
             if scorecard.recoveryOnlinePurpose != nil && scorecard.recoveryOnlinePurpose == .playing {
                 if scorecard.recoveryOnlineType == .server {
-                    self.hostGame()
+                    if self.scorecard.recoveryOnlineMode == .loopback {
+                        self.computerGame()
+                    } else {
+                        self.hostGame()
+                    }
                 } else {
                     self.joinGame()
                 }
@@ -607,21 +606,23 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     private func onlineGame() {
-      if Utility.compareVersions(version1: self.scorecard.settingVersion,
+        if Utility.compareVersions(version1: self.scorecard.settingVersion,
                                  version2: self.scorecard.latestVersion) == .lessThan {
             self.alertMessage("You must upgrade to the latest version of the app to use this option")
-      } else {
-        let actionSheet = ActionSheet( view: onlineGameCell.actionButton, direction: .up)
+        } else if self.scorecard.settingSyncEnabled && (self.scorecard.settingNearbyPlaying || self.scorecard.settingOnlinePlayerEmail != nil) {
+            let actionSheet = ActionSheet( view: onlineGameCell.actionButton, direction: .up)
             actionSheet.add("Host a Game", handler: hostGame)
             actionSheet.add("Join a Game", handler: joinGame)
             actionSheet.add("Play against Computer", handler: computerGame)
             actionSheet.add("Cancel", style: .cancel)
             actionSheet.present()
+        } else {
+            self.computerGame()
         }
     }
     
     private func hostGame() -> Void {
-        self.playingVersusComputer = false
+        self.playingComputer = false
         self.performSegue(withIdentifier: "showHost", sender: self)
     }
     
@@ -632,7 +633,7 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     private func computerGame() -> Void {
-        self.playingVersusComputer = true
+        self.playingComputer = true
         self.performSegue(withIdentifier: "showHost", sender: self)
     }
     
@@ -678,7 +679,7 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
             let destination = segue.destination as! HostViewController
             destination.backImage = "home"
             destination.backText = ""
-            destination.playingVersusComputer = self.playingVersusComputer
+            destination.playingComputer = self.playingComputer
             destination.scorecard = self.scorecard
             
         case "showHighScores":

@@ -82,6 +82,7 @@
 		B288FAC41FB80A4F00633FD7 /* Whist Test Utility Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B288FAC31FB80A4F00633FD7 /* Whist Test Utility Class.swift */; };
 		B28DFC2D1F79618700E991E4 /* Config Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28DFC2C1F79618700E991E4 /* Config Class.swift */; };
 		B2B180122110128C008D3BAA /* Computer Player Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B180112110128C008D3BAA /* Computer Player Class.swift */; };
+		B2B180142114AD92008D3BAA /* Computer Bidding.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B180132114AD92008D3BAA /* Computer Bidding.swift */; };
 		B2B3EACD1FC0A8A0005E7989 /* Settings Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B3EACC1FC0A8A0005E7989 /* Settings Tests.swift */; };
 		B2B755051E58A2D900B1313B /* HistoryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B755041E58A2D900B1313B /* HistoryDetailViewController.swift */; };
 		B2B755091E5B363200B1313B /* History Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B755081E5B363200B1313B /* History Class.swift */; };
@@ -253,6 +254,7 @@
 		B288FAC31FB80A4F00633FD7 /* Whist Test Utility Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Whist Test Utility Class.swift"; sourceTree = "<group>"; };
 		B28DFC2C1F79618700E991E4 /* Config Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Config Class.swift"; sourceTree = "<group>"; };
 		B2B180112110128C008D3BAA /* Computer Player Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Computer Player Class.swift"; sourceTree = "<group>"; };
+		B2B180132114AD92008D3BAA /* Computer Bidding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Computer Bidding.swift"; sourceTree = "<group>"; };
 		B2B3EACC1FC0A8A0005E7989 /* Settings Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Settings Tests.swift"; sourceTree = "<group>"; };
 		B2B755041E58A2D900B1313B /* HistoryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDetailViewController.swift; sourceTree = "<group>"; };
 		B2B755081E5B363200B1313B /* History Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History Class.swift"; sourceTree = "<group>"; };
@@ -798,6 +800,7 @@
 			isa = PBXGroup;
 			children = (
 				B2B180112110128C008D3BAA /* Computer Player Class.swift */,
+				B2B180132114AD92008D3BAA /* Computer Bidding.swift */,
 			);
 			name = "Computer Playing Classes";
 			sourceTree = "<group>";
@@ -1198,6 +1201,7 @@
 				B2E7621C1E6C98A0001DAF4F /* Notifications.swift in Sources */,
 				B20A66FE1E24002400E75190 /* GameSummaryViewController.swift in Sources */,
 				CC4CC0FB1DEADC32007FB24F /* ScorepadViewController.swift in Sources */,
+				B2B180142114AD92008D3BAA /* Computer Bidding.swift in Sources */,
 				49075FFC1E0E578E008E06FA /* StatsViewController.swift in Sources */,
 				CC395F4B1E063D9600165D1C /* CutViewController.swift in Sources */,
 				B250610020CD7F480030EE8F /* Recovery.swift in Sources */,

@@ -71,17 +71,17 @@ class Card {
 class Hand {
     
     public var cards: [Card]!
-    
-    init() {
-        self.cards = []
-    }
+    public var handSuits: [HandSuit]!
+    public var xref: [Suit : HandSuit]!
     
     init(fromNumbers cardNumbers: [Int]) {
         self.fromNumbers(cardNumbers)
+        self.sortCards()
     }
     
     init(fromCards cards: [Card]) {
         self.cards = cards
+        self.sortCards()
     }
     
     public func toNumbers() -> [Int] {
@@ -102,9 +102,7 @@ class Hand {
     public func toString() -> String {
         var sortedCards: [Card] = []
         var result = ""
-        var handSuits: [HandSuit]
-        handSuits = HandSuit.sortCards(cards: self.cards)
-        for handSuit in handSuits {
+        for handSuit in self.handSuits {
             for card in handSuit.cards {
                 sortedCards.append(card)
             }
@@ -121,12 +119,18 @@ class Hand {
     }
     
     public func removeCard(_ card: Card) -> Bool {
+        var result = false
+        
         let cardNumber = card.toNumber()
         if let index = self.cards.index(where: {$0.toNumber() == cardNumber}) {
             self.cards.remove(at: index)
-            return true
+            result = true
         }
-        return false
+        let handSuit = self.xref[card.suit]!
+        if let index = handSuit.cards.index(where: {$0.toNumber() == cardNumber}) {
+            handSuit.cards.remove(at: index)
+        }
+        return result
     }
     
     public func findCard(card: Card) -> Int? {
@@ -134,6 +138,35 @@ class Hand {
         let index = self.toNumbers().index(where: {$0 == cardAsNumber})
         return index
     }
+    
+    private func sortCards() {
+        var handSuits: [HandSuit] = []
+        
+        // Create empty suits
+        for suitNumber in 1...4 {
+            let handSuit = HandSuit()
+            xref[Suit(rawValue: suitNumber)] = handSuit
+            handSuits.append(handSuit)
+        }
+        
+        // Sort hand
+        self.cards = self.cards.sorted(by: { $0.toNumber() > $1.toNumber() })
+        
+        // Put hand in suits
+        for card in self.cards {
+            handSuits[card.suit.rawValue-1].cards.append(card)
+        }
+        
+        // Remove empty suits
+        for suitNumber in (1...4).reversed() {
+            if handSuits[suitNumber - 1].cards.count == 0 {
+                xref.removeValue(forKey: Suit(rawValue: suitNumber))
+                handSuits.remove(at: suitNumber - 1)
+            }
+        }
+        self.handSuits = handSuits.reversed()
+    }
+    
 }
 
 class HandSuit {
@@ -152,32 +185,7 @@ class HandSuit {
         return result
     }
     
-    public class func sortCards(cards: [Card]) -> [HandSuit] {
-        var suits: [HandSuit] = []
-        
-        // Create empty suits
-        for _ in 1...4 {
-            suits.append(HandSuit())
-        }
-        
-        // Sort hand
-        var cards = cards
-        cards = cards.sorted(by: { $0.toNumber() > $1.toNumber() })
-        
-        // Put hand in suits
-        for card in cards {
-            suits[card.suit.rawValue-1].cards.append(card)
-        }
-        
-        // Remove empty suits
-        for suitNumber in (1...4).reversed() {
-            if suits[suitNumber - 1].cards.count == 0 {
-                suits.remove(at: suitNumber - 1)
-            }
-        }
-        
-        return suits.reversed()
-    }
+   
 }
 
 class Deal {

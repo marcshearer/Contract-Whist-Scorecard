@@ -230,11 +230,15 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
             // Setup name and score
             cell.playerName.text  = scorecard.enteredPlayer(playerNumber).playerMO!.name!
             cell.playerScore.text = "\(scorecard.enteredPlayer(playerNumber).totalScore())"
-            // Setup high score / PB icon
-            if playerResults.ranking != 0 {
-                cell.playerImage.image = UIImage(named: "high score \(playerResults.ranking)")
-            } else if playerResults.personalBest {
-                cell.playerImage.image = UIImage(named: "personal best")
+            if !self.scorecard.isPlayingComputer {
+                // Setup high score / PB icon
+                if playerResults.ranking != 0 {
+                    cell.playerImage.image = UIImage(named: "high score \(playerResults.ranking)")
+                } else if playerResults.personalBest {
+                    cell.playerImage.image = UIImage(named: "personal best")
+                } else {
+                    cell.playerImage.image = nil
+                }
             } else {
                 cell.playerImage.image = nil
             }
@@ -265,7 +269,7 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if indexPath.section < 2 && gameSummaryMode == .amend {
+        if indexPath.section < 2 && gameSummaryMode == .amend && !self.scorecard.isPlayingComputer {
             return indexPath
         } else {
             return nil
@@ -444,7 +448,7 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     public func saveGameNotification(newHighScore: Bool, winnerEmail: String, winner: String, winningScore: Int) {
-        if self.scorecard.settingSyncEnabled && self.scorecard.isNetworkAvailable && self.scorecard.isLoggedIn && !self.excludeHistory {
+        if self.scorecard.settingSyncEnabled && self.scorecard.isNetworkAvailable && self.scorecard.isLoggedIn && !self.excludeHistory && !self.scorecard.isPlayingComputer {
             var message = ""
             
             for playerNumber in 1...self.scorecard.currentPlayers {
@@ -510,7 +514,7 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
         completionToSegue = toSegue
         completionAdvanceDealer = advanceDealer
         completionResetOverrides = resetOverrides
-        if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn && !self.excludeHistory {
+        if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn && !self.excludeHistory && !self.scorecard.isPlayingComputer {
             view.isUserInteractionEnabled = false
             activityIndicator.startAnimating()
             self.sync.delegate = self

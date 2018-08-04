@@ -451,6 +451,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 bidsEnable(false)
                 self.instructionTextView.text = "\(self.scorecard.entryPlayer(bids.count + 1).playerMO!.name!) to bid"
                 self.instructionView.backgroundColor = UIColor.darkGray
+                // Get computer player to bid
                 self.computerPlayerDelegate?[self.scorecard.entryPlayer(bids.count + 1).playerNumber]??.autoBid()
             }
             setupOverUnder()
@@ -466,8 +467,8 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             if currentTrickCards == self.scorecard.currentPlayers && self.state.trick > 1 {
                 // Hand complete - update tricks made on screen
-                self.playerMadeLabel[self.state.winner-1]?.text = playerMadeText(self.state.toPlay!)
-                self.playerMadeLabel[self.state.winner-1]?.textColor = UIColor.white
+                self.playerMadeLabel[self.state.winner! - 1]?.text = playerMadeText(self.state.toPlay!)
+                self.playerMadeLabel[self.state.winner! - 1]?.textColor = UIColor.white
                 
                 // Disable lookback
                 lastHandButton.isHidden = true
@@ -537,6 +538,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.cardsEnable(false)
             self.instructionTextView.text = "\(self.scorecard.enteredPlayer(self.state.toPlay).playerMO!.name!) to play"
             self.instructionView.backgroundColor = UIColor.darkGray
+            // Get computer player to play
             self.computerPlayerDelegate?[self.state.toPlay]??.autoPlay()
         }
     }
@@ -1048,7 +1050,7 @@ class HandState {
     public var toLead: Int!
     public var lastToLead: Int!
     public var toPlay: Int!
-    public var winner: Int!
+    public var winner: Int?
     
     public var xref: [Suit : Int]!
     private var _handSuits: [HandSuit]!

@@ -36,7 +36,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     public var formTitle = "Host a Game"
     public var backText = "Back"
     public var backImage = "back"
-    public var playingVersusComputer = false
+    public var playingComputer = false
     public var computerPlayerDelegate: [ Int : ComputerPlayerDelegate? ]?
     
     // Queue
@@ -136,7 +136,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         // Stop any existing sharing activity
         self.scorecard.stopSharing()
         
-        if self.playingVersusComputer {
+        if self.playingComputer {
             // Game against computer
             loopback = true
              defaultConnectionMode = .loopback
@@ -214,9 +214,9 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         }
         self.setInstructions()
         
-        // Check if in recovery mode - if so go straight to game setup
-        if self.scorecard.recoveryMode {
-            self.waitOtherPlayers(completion: {
+        // Check if in recovery mode or playing computer - if so go straight to game setup
+        if self.playingComputer || self.scorecard.recoveryMode {
+            self.waitOtherPlayers(showDialog: !self.playingComputer, completion: {
                 self.gameInProgress = true
                 if self.scorecard.recoveryOnlineMode == .invite {
                     // Simulate return from invitee search
@@ -229,6 +229,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                     }
                 }
             })
+
         }
         
         // Allow resequencing of participants
@@ -390,8 +391,9 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             self.scorecardButton.isHidden = !ready
             self.continueButton.isHidden = !ready
             self.setInstructions()
-            if self.scorecard.recoveryMode && self.connectedPlayers == self.scorecard.currentPlayers {
-                // Recovering  - go straight to game setup
+            if (self.scorecard.recoveryMode || self.playingComputer) && self.connectedPlayers == self.scorecard.currentPlayers {
+                // Recovering or playing computer  - go straight to game setup
+                self.setupPlayers()
                 if self.alertController != nil {
                     self.alertController.dismiss(animated: true, completion: {
                         self.performSegue(withIdentifier: "showHostGameSetup", sender: self)
@@ -861,7 +863,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     
     private func startLoopbackClient(scorecard: Scorecard, email: String, name: String, deviceName: String, hostPeer: CommsPeer, playerNumber: Int) {
         let computerPlayer = ComputerPlayer(scorecard: scorecard, email: email, name: name, deviceName: deviceName, hostPeer: hostPeer, playerNumber: playerNumber)
-        computerPlayers?[playerNumber] = computerPlayer as? ComputerPlayerDelegate
+        computerPlayers?[playerNumber] = computerPlayer as ComputerPlayerDelegate
    }
 
     private func takeDelegates(_ delegate: Any?) {
@@ -894,9 +896,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         let card = Card(fromNumber: data["card"] as! Int)
         if playerNumber != 1 {
             // Only need to remove other players cards since my own will be removed by playing them
-            if let cardNumber = self.scorecard.deal.hands[playerNumber - 1].findCard(card: card) {
-                self.scorecard.deal.hands[playerNumber - 1].cards.remove(at: cardNumber)
-            }
+            _ = self.scorecard.deal.hands[playerNumber - 1].removeCard(card)
         }
     }
     
@@ -977,13 +977,17 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         }
     }
     
-    private func waitOtherPlayers(completion: (()->())? = nil) {
-        self.alertController = UIAlertController(title: "Ready", message: "Waiting for other players to rejoin...", preferredStyle: .alert)
-        self.alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { UIAlertAction -> () in
-            self.exitHost()
-            self.alertController = nil
-        }))
-        self.present(self.alertController, animated: true, completion: completion)
+    private func waitOtherPlayers(showDialog: Bool = true, completion: (()->())? = nil) {
+        if showDialog {
+            self.alertController = UIAlertController(title: "Ready", message: "Waiting for other players to rejoin...", preferredStyle: .alert)
+            self.alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { UIAlertAction -> () in
+                self.exitHost()
+                self.alertController = nil
+            }))
+            self.present(self.alertController, animated: true, completion: completion)
+        } else {
+            completion?()
+        }
     }
     
     private func startHostBroadcast(email: String!, name: String!, invite: [String]? = nil, queueUUID: String! = nil) {

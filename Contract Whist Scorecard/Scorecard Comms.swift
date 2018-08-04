@@ -44,6 +44,12 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         }
     }
     
+    public var isPlayingComputer: Bool {
+        get {
+            return (self.commsDelegate != nil && self.commsDelegate!.connectionMode == .loopback  && self.commsDelegate!.connectionPurpose == .playing)
+        }
+    }
+    
     public func setupSharing() {
         if self.settingAllowBroadcast {
             self.sharingService = MultipeerService(purpose: .sharing, type: .server, serviceID: self.serviceID(.sharing))
@@ -132,13 +138,21 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     public func playHand(from viewController: UIViewController, sourceView: UIView, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil) {
         if self.isHosting || self.hasJoined {
             // Now play the hand
-            if self.isHosting && self.handState.hand == nil {
-                // Need to deal next hand
-                self.handState.hand = self.dealHand(cards: self.roundCards(self.handState.round, rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce))
-                if self.isHosting {
+            if self.isHosting {
+                if self.handState.hand == nil {
+                    // Need to deal next hand
+                    self.handState.hand = self.dealHand(cards: self.roundCards(self.handState.round, rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce))
+        
                     // Save hand and (blank) trick in case need to recover
                     self.recovery.saveHands(deal: self.deal, made: self.handState.made, twos: self.handState.twos)
                     self.recovery.saveTrick(toLead: self.handState.toLead, trickCards: [])
+                }
+                
+                // Set up hands in computer player mode
+                if computerPlayerDelegate != nil {
+                    for (playerNumber, computerPlayerDelegate) in computerPlayerDelegate! {
+                        computerPlayerDelegate?.newHand(hand: self.deal.hands[playerNumber-1])
+                    }
                 }
             }
             if self.handState.hand != nil && (self.handState.hand.cards.count > 0 || self.handState.trickCards.count != 0) {
@@ -449,7 +463,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         }
     }
     
-    func checkWinner(currentPlayers: Int, round: Int, suits: [Suit], trickCards: [Card]) -> (Int!, Bool) {
+    func checkWinner(currentPlayers: Int, round: Int, suits: [Suit], trickCards: [Card]) -> (Int?, Bool) {
         var winner = 1
         let cardLed = trickCards.first!
         var highLed = cardLed.rank
@@ -491,7 +505,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             self.handState.nextTrick()
             
             // Set next to lead from winner
-            self.handState.toLead = self.handState.playerNumber(self.handState.winner)
+            self.handState.toLead = self.handState.playerNumber(self.handState.winner!)
             self.handState.toPlay = self.handState.toLead
             
             // Update tricks made

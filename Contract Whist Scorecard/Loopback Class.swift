@@ -69,12 +69,12 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
             // Add to local list of connected peers
             self.addConnection(from: commsPeer.deviceName, to: commsPeer)
             
-            // Set this peer to connected
-            self.myPeer.state = .connected
-            
             
             // Check if connection OK and then send state change
             if (loopbackDelegates.connectionDelegate?.connectionReceived(from: self.myPeer.commsPeer))! {
+                
+                // Set this peer to connected
+                self.myPeer.state = .connected
                 
                 // Add to remote list of peers
                 loopbackDelegates.loopbackServiceDelegate?.addConnection(from: self.myPeer.deviceName, to: self.myPeer.commsPeer)

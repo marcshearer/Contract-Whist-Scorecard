@@ -511,7 +511,12 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             // Deal pack
             self.deal = Pack.deal(numberCards: cards,
                                   numberPlayers: self.currentPlayers)
+            // Save in history
+            self.dealHistory[self.handState.round] = self.deal
+            
+            // Send hands to other players
             sendHands()
+            
             return self.deal.hands[0]
         } else {
             return nil

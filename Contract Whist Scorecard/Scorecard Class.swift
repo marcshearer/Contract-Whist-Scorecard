@@ -58,6 +58,7 @@ class Scorecard {
     public var deal: Deal!
     public var handViewController: HandViewController!
     public var handState: HandState!
+    public var dealHistory: [Int : Deal] = [:]
     public var commsHandlerMode: CommsHandlerMode = .none
     public var sendScores = false
     public var notificationSimulator: NotificationSimulator!

@@ -37,6 +37,7 @@ class ScorepadViewController: UIViewController,
     public var parentView: UIView!
     public var rabbitMQService: RabbitMQService!
     public var recoveryMode = false
+    public var reviewRound: Int!
     
     // Cell dimensions
     private let minCellHeight = 30
@@ -88,7 +89,7 @@ class ScorepadViewController: UIViewController,
     @IBOutlet private weak var scoreEntryButton: RoundedButton!
     @IBOutlet private weak var finishButton: UIButton!
     @IBOutlet private weak var navigationBar: UINavigationBar!
-    @IBOutlet private weak var tagGestureRecognizer: UITapGestureRecognizer!
+    @IBOutlet private weak var tapGestureRecognizer: UITapGestureRecognizer!
 
     // MARK: - IB Unwind Segue Handlers ================================================================ -
  
@@ -129,6 +130,9 @@ class ScorepadViewController: UIViewController,
         firstGameSummary=false
         gameSummaryViewController = nil
         returnEntry()
+    }
+    
+    @IBAction private func hideReview(segue:UIStoryboardSegue) {
     }
     
     @IBAction private func newGame(segue:UIStoryboardSegue) {
@@ -277,10 +281,10 @@ class ScorepadViewController: UIViewController,
 
         if scorepadMode != .amend {
             headerTableView.isUserInteractionEnabled = false
-            bodyTableView.isUserInteractionEnabled = false
             footerTableView.isUserInteractionEnabled = false
+            tapGestureRecognizer.isEnabled = false
         } else {
-            tagGestureRecognizer.isEnabled = false
+            tapGestureRecognizer.isEnabled = false
         }
         formatButtons()
         
@@ -747,6 +751,16 @@ class ScorepadViewController: UIViewController,
             destination.returnSegue = "hideLocation"
             destination.useCurrentLocation = true
             
+        case "showReview":
+            
+            let destination = segue.destination as! ReviewViewController
+            destination.modalPresentationStyle = UIModalPresentationStyle.popover
+            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+            destination.popoverPresentationController?.sourceView = scorepadView
+            destination.preferredContentSize = CGSize(width: 400, height: 554)
+            destination.scorecard = self.scorecard
+            destination.round = self.reviewRound
+            
         default:
             break
         }
@@ -1012,7 +1026,15 @@ class ScorepadViewController: UIViewController,
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
+        if self.scorepadMode == .amend {
+            return true
+        } else {
+            if self.scorecard.isHosting && self.scorecard.dealHistory[indexPath.row+1] != nil { // TODO && (indexPath.row < self.scorecard.handState.round || (indexPath.row == self.scorecard.handState.round && self.scorecard.handState.finished)) {
+                return true
+            } else {
+                return false
+            }
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -1022,12 +1044,16 @@ class ScorepadViewController: UIViewController,
         } else {
             // Body row tapped
             let round = collectionView.tag+1
-            if round >= scorecard.maxEnteredRound {
-                // Row which is not yet entered tapped - edit last row
-                self.scorecard.selectedRound = scorecard.maxEnteredRound
-              } else {
-                self.scorecard.selectedRound = round
+            if self.scorepadMode == .amend {
+                if round >= scorecard.maxEnteredRound {
+                    // Row which is not yet entered tapped - edit last row
+                    self.scorecard.selectedRound = scorecard.maxEnteredRound
+                  } else {
+                    self.scorecard.selectedRound = round
+                }
             }
+            self.reviewRound = round
+            self.performSegue(withIdentifier: "showReview", sender: self)
         }
         makeEntry()
     }

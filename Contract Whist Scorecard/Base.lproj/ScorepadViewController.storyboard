@@ -633,7 +633,7 @@
                         <outlet property="navigationBar" destination="Skq-xy-HKr" id="jEp-W5-THd"/>
                         <outlet property="scoreEntryButton" destination="s5c-DG-O7P" id="1TD-Ep-oUA"/>
                         <outlet property="scorepadView" destination="8bC-Xf-vdC" id="5On-pJ-fOR"/>
-                        <outlet property="tagGestureRecognizer" destination="AaK-e0-qgV" id="abv-CF-F9v"/>
+                        <outlet property="tapGestureRecognizer" destination="AaK-e0-qgV" id="klw-dw-bMu"/>
                         <segue destination="0NF-0V-58Q" kind="unwind" identifier="hideScorepad" unwindAction="hideScorepadWithSegue:" id="WRV-wF-mTI"/>
                         <segue destination="2kj-Q9-HHB" kind="popoverPresentation" identifier="showEntry" animates="NO" popoverAnchorView="8bC-Xf-vdC" id="6cj-gG-58b">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
@@ -642,6 +642,7 @@
                         <segue destination="0NF-0V-58Q" kind="unwind" identifier="hideBroadcastScorepad" unwindAction="hideBroadcastScorepadWithSegue:" id="5lo-qG-Ijd"/>
                         <segue destination="pX9-oc-ySn" kind="presentation" identifier="showBroadcastRoundSummary" id="vPO-zT-e4v"/>
                         <segue destination="9d3-4Z-Nee" kind="presentation" identifier="showGameSummary" id="oKI-Me-0aw"/>
+                        <segue destination="5RA-CT-Qsg" kind="presentation" identifier="showReview" id="x0z-Nu-Fvk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -663,7 +664,7 @@
                 </rotationGestureRecognizer>
                 <tapGestureRecognizer id="AaK-e0-qgV">
                     <connections>
-                        <action selector="tapGestureWithRecognizer:" destination="BYZ-38-t0r" id="N4R-gF-7S1"/>
+                        <action selector="tapGestureWithRecognizer:" destination="BYZ-38-t0r" id="iAO-Lm-cry"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
@@ -700,6 +701,14 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fXA-jd-5y5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="9590" y="300"/>
+        </scene>
+        <!--ReviewViewController-->
+        <scene sceneID="FqN-e5-8Cf">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="Review" storyboardName="ReviewViewController" referencedIdentifier="ReviewViewController" id="5RA-CT-Qsg" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="anV-Wo-ZXv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="9552" y="347"/>
         </scene>
     </scenes>
     <resources>

@@ -80,6 +80,8 @@
 		B288FAC21FB80A0900633FD7 /* Test Utility Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B288FAC11FB80A0900633FD7 /* Test Utility Class.swift */; };
 		B288FAC41FB80A4F00633FD7 /* Whist Test Utility Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B288FAC31FB80A4F00633FD7 /* Whist Test Utility Class.swift */; };
 		B28DFC2D1F79618700E991E4 /* Config Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28DFC2C1F79618700E991E4 /* Config Class.swift */; };
+		B2B1801821186350008D3BAA /* ReviewViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2B1801721186350008D3BAA /* ReviewViewController.storyboard */; };
+		B2B1801A21186372008D3BAA /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B1801921186372008D3BAA /* ReviewViewController.swift */; };
 		B2B3EACD1FC0A8A0005E7989 /* Settings Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B3EACC1FC0A8A0005E7989 /* Settings Tests.swift */; };
 		B2B755051E58A2D900B1313B /* HistoryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B755041E58A2D900B1313B /* HistoryDetailViewController.swift */; };
 		B2B755091E5B363200B1313B /* History Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B755081E5B363200B1313B /* History Class.swift */; };
@@ -249,6 +251,8 @@
 		B288FAC11FB80A0900633FD7 /* Test Utility Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Test Utility Class.swift"; sourceTree = "<group>"; };
 		B288FAC31FB80A4F00633FD7 /* Whist Test Utility Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Whist Test Utility Class.swift"; sourceTree = "<group>"; };
 		B28DFC2C1F79618700E991E4 /* Config Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Config Class.swift"; sourceTree = "<group>"; };
+		B2B1801721186350008D3BAA /* ReviewViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ReviewViewController.storyboard; sourceTree = "<group>"; };
+		B2B1801921186372008D3BAA /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		B2B3EACC1FC0A8A0005E7989 /* Settings Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Settings Tests.swift"; sourceTree = "<group>"; };
 		B2B755041E58A2D900B1313B /* HistoryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDetailViewController.swift; sourceTree = "<group>"; };
 		B2B755081E5B363200B1313B /* History Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History Class.swift"; sourceTree = "<group>"; };
@@ -699,6 +703,7 @@
 				B221EEE7210B1AB700F7FBA0 /* Broadcast */,
 				B221EEE6210B1AB100F7FBA0 /* Search */,
 				B221EEE5210B1AA900F7FBA0 /* Hand */,
+				B2B18016211862FF008D3BAA /* Review */,
 			);
 			name = "Online Game Views";
 			sourceTree = "<group>";
@@ -787,6 +792,15 @@
 				B2666A1E1FADAC0700A34CB0 /* Test Extensions.swift */,
 			);
 			name = "Test Classes";
+			sourceTree = "<group>";
+		};
+		B2B18016211862FF008D3BAA /* Review */ = {
+			isa = PBXGroup;
+			children = (
+				B2B1801721186350008D3BAA /* ReviewViewController.storyboard */,
+				B2B1801921186372008D3BAA /* ReviewViewController.swift */,
+			);
+			name = Review;
 			sourceTree = "<group>";
 		};
 		CC4CC0EC1DEADC32007FB24F = {
@@ -1070,6 +1084,7 @@
 				CC4CC1061DEADC32007FB24F /* LaunchScreen.storyboard in Resources */,
 				B22789071FB83AC4009BABCA /* WalkthroughViewController.storyboard in Resources */,
 				B20DA04A1E164EE60040221D /* Section headings in Resources */,
+				B2B1801821186350008D3BAA /* ReviewViewController.storyboard in Resources */,
 				B2DD5D7A1ECE3C8800725B55 /* Assets.xcassets in Resources */,
 				B227891E1FB84F66009BABCA /* LocationViewController.storyboard in Resources */,
 				B22789001FB83AA7009BABCA /* GetStartedViewController.storyboard in Resources */,
@@ -1198,6 +1213,7 @@
 				CC4CC1161DEAF0F9007FB24F /* GameSetupViewController.swift in Sources */,
 				B20DA04C1E179DC70040221D /* WelcomeViewController.swift in Sources */,
 				B2F7281B1F6D74F9006F0941 /* Invite.swift in Sources */,
+				B2B1801A21186372008D3BAA /* ReviewViewController.swift in Sources */,
 				B20A66FA1E2385B500E75190 /* Reachability.swift in Sources */,
 				B2FA298E1EA9E215002A5D03 /* Alert.swift in Sources */,
 				B2D2D2DC1ED9975A00CA7B3A /* BroadcastViewController.swift in Sources */,

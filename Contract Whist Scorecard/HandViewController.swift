@@ -517,8 +517,8 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.cardsEnable(true)
             } else {
                 let cardLed = self.state.trickCards[0]
-                let suitLedXref = self.state.xref[cardLed.suit]
-                if  suitLedXref == nil || self.state.hand.handSuits[suitLedXref!].cards.count == 0 {
+                let suitLed = self.state.hand.xrefSuit[cardLed.suit]
+                if suitLed == nil || suitLed!.cards.count == 0 {
                     // Dont' have this suit - can play anything
                     self.cardsEnable(true)
                 } else {
@@ -1041,25 +1041,6 @@ class HandState {
     public var lastToLead: Int!
     public var toPlay: Int!
     public var winner: Int?
-    
-    public var xref: [Suit : Int]!
-    private var _handSuits: [HandSuit]!
-    public var handSuits: [HandSuit]! {
-        get {
-            return self._handSuits
-        }
-        set {
-            self._handSuits = newValue
-            xref = [:]
-            if self._handSuits != nil && self._handSuits.count > 0 {
-                for suitNumber in 1...self._handSuits.count {
-                    if self._handSuits[suitNumber - 1].cards.count != 0 {
-                        xref[self._handSuits[suitNumber - 1].cards[0].suit] = suitNumber - 1
-                    }
-                }
-            }
-        }
-    }
     public var finished: Bool!
     
     init(enteredPlayerNumber: Int, round: Int, dealerIs: Int, players: Int, rounds: Int, cards: [Int], bounce: Bool, bonus2: Bool, suits: [Suit],
@@ -1106,7 +1087,6 @@ class HandState {
         self.toLead = (((self.dealerIs - 1) + (self.round - 1)) % self.players) + 1
         self.toPlay = self.toLead
         self.hand = nil
-        self.handSuits = nil
         self.finished = false
     }
     

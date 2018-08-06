@@ -69,7 +69,6 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
     internal func autoBid(completion: (()->())?) {
         let round = self.scorecard.handState.round
         var bids: [Int] = []
-        var runCompletionOnExit = true
         
         for playerNumber in 1...self.scorecard.currentPlayers {
             let bid = scorecard.entryPlayer(playerNumber).bid(round)
@@ -80,93 +79,58 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
         
         if self.scorecard.entryPlayerNumber(self.thisPlayerNumber, round: round) == bids.count + 1 {
             
-            runCompletionOnExit = false
-            
             Utility.executeAfter("autoBid", delay: self.autoPlayTimeUnit, completion: {
                 
-                let cards = self.scorecard.roundCards(round, rounds: self.scorecard.handState.rounds, cards: self.scorecard.handState.cards, bounce: self.scorecard.handState.bounce)
-                var range = ((Double(cards) / Double(self.scorecard.currentPlayers)) * 2) + 1
-                range.round()
-                var bid = Utility.random(max(2,Int(range))) - 1
-                bid = min(bid, cards)
-                if self.scorecard.entryPlayerNumber(self.thisPlayerNumber, round: round) == self.scorecard.currentPlayers {
-                    // Last to bid - need to avoid remaining
-                    let remaining = self.scorecard.remaining(playerNumber: self.scorecard.entryPlayerNumber(self.thisPlayerNumber, round: round), round: round, mode: .bid, rounds: self.scorecard.handState.rounds, cards: self.scorecard.handState.cards, bounce: self.scorecard.handState.bounce)
-                    if bid == remaining {
-                        if remaining == 0 {
-                            bid += 1
-                        } else {
-                            bid -= 1
-                        }
-                    }
-                }
+                let computerBidding = ComputerBidding(hand: self.hand, trumpSuit: self.scorecard.roundSuit(self.scorecard.handState.round, suits: self.scorecard.handState.suits), bids: bids, numberPlayers: self.scorecard.currentPlayers)
+                let bid = computerBidding.bid()
                 self.scorecard.sendScores(playerNumber: self.thisPlayerNumber, round: round, mode: .bid, overrideBid: bid, to: self.hostPeer, using: self.loopbackClient)
-                if bids.count == self.scorecard.currentPlayers {
-                    self.autoPlay(completion: completion)
-                } else {
-                    completion?()
-                }
-            })
-        }
-        if runCompletionOnExit {
-            if bids.count == self.scorecard.currentPlayers {
-                self.autoPlay(completion: completion)
-            } else {
                 completion?()
-            }
+            })
+        } else {
+            completion?()
         }
     }
     
     internal func autoPlay(completion: (()->())?) {
-        var runCompletionOnExit = true
         let round = self.scorecard.handState.round
         let roundCards = self.scorecard.roundCards(round)
         let trick = self.scorecard.handState.trick!
         let trickCards = self.scorecard.handState.trickCards
         let cardsPlayed = trickCards!.count
         
-        if trick <= roundCards {
-            if self.scorecard.handState.toPlay == self.thisPlayerNumber {
-                // Me to play
-                
-                if self.hand.cards.count >= (roundCards - trick + 1) {
-                    // Have enough cards to play 1 to this trick (or I am leading having just won but trick may not be up to date
-                
-                    runCompletionOnExit = false
+        if trick <= roundCards && self.scorecard.handState.toPlay == self.thisPlayerNumber && self.hand.cards.count >= (roundCards - trick + 1) {
                     
-                    Utility.executeAfter("autoPlay", delay: self.autoPlayTimeUnit, completion: {
-                        
-                        // Now work out card to play
-                        var cardPlayed: Card!
-                        
-                        // Try to find a card in the suit led if possible - else anything
-                        var trySuitLed = ((cardsPlayed) != 0)
-                        var loop = 0
-                        while loop < 2 && cardPlayed == nil {
-                            loop += 1
-                            for handSuit in self.hand.handSuits {
-                                if handSuit.cards.count > 0 && (cardsPlayed == 0 || handSuit.cards!.last!.suit == trickCards!.first!.suit || !trySuitLed) {
-                                    // Choose a random card from this suit
-                                    let cardNumber = Utility.random(handSuit.cards.count) - 1
-                                    cardPlayed = handSuit.cards[cardNumber]
-                                    handSuit.cards.remove(at: cardNumber)
-                                    break
-                                }
-                            }
-                            trySuitLed = false
+            Utility.executeAfter("autoPlay", delay: self.autoPlayTimeUnit, completion: {
+                
+                // Now work out card to play
+                var cardPlayed: Card!
+                
+                // Try to find a card in the suit led if possible - else anything
+                var trySuitLed = ((cardsPlayed) != 0)
+                var loop = 0
+                while loop < 2 && cardPlayed == nil {
+                    loop += 1
+                    for handSuit in self.hand.handSuits {
+                        if handSuit.cards.count > 0 && (cardsPlayed == 0 || handSuit.cards!.last!.suit == trickCards!.first!.suit || !trySuitLed) {
+                            // Choose a random card from this suit
+                            let cardNumber = Utility.random(handSuit.cards.count) - 1
+                            cardPlayed = handSuit.cards[cardNumber]
+                            handSuit.cards.remove(at: cardNumber)
+                            break
                         }
-                        
-                        self.scorecard.sendCardPlayed(round: round, trick: trick, playerNumber: self.thisPlayerNumber, card: cardPlayed, using: self.loopbackClient)
-                        
-                        completion?()
-                    })
+                    }
+                    trySuitLed = false
                 }
-            }
-        }
-        if runCompletionOnExit {
+                
+                self.scorecard.sendCardPlayed(round: round, trick: trick, playerNumber: self.thisPlayerNumber, card: cardPlayed, using: self.loopbackClient)
+                
+                completion?()
+            })
+        } else {
             completion?()
         }
     }
+    
     internal func newHand(hand: Hand) {
         self.hand = hand
     }

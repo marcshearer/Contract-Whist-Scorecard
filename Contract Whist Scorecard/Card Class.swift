@@ -198,7 +198,7 @@ class Hand : NSObject, NSCopying {
         // Copy elements rather than pointers
         let copy = Hand()
         for card in self.cards {
-            self.cards.append(card)
+            copy.cards.append(card)
         }
         if self.handSuits.count > 0 {
             for handSuit in self.handSuits {

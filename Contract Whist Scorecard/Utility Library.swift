@@ -193,6 +193,12 @@ class Utility {
         return Int(quotient)
     }
     
+    class func round(_ value: Double) -> Int {
+        var value = value
+        value.round()
+        return Int(value)
+    }
+    
     //MARK: Cloud functions - get field from cloud for various types =====================================
     
     class func objectString(cloudObject: CKRecord, forKey: String) -> String! {

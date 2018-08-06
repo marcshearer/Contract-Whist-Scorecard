@@ -12,7 +12,7 @@ class ComputerBidding {
     
     private var hand: Hand
     private var trumpSuit: Suit
-    private var bid: [Int]
+    private var bids: [Int]
     private var numberPlayers: Int
     private let cardsInPack = 52
     private let cardsInSuit = 13
@@ -47,16 +47,16 @@ class ComputerBidding {
         }
     }
     
-    init(hand: Hand, trumpSuit: Suit, bid: [Int], numberPlayers: Int) {
+    init(hand: Hand, trumpSuit: Suit, bids: [Int], numberPlayers: Int) {
         self.hand = hand
         self.trumpSuit = trumpSuit
-        self.bid = bid
+        self.bids = bids
         self.numberPlayers = numberPlayers
     }
     
-    public func evaluate() -> Double {
+    public func bid() -> Int {
         
-        let winners = self.countHandWinners()
+        let winners = Utility.round(self.countHandWinners())
         
         return winners
     }
@@ -79,27 +79,34 @@ class ComputerBidding {
             cardNumber += 1
             missingCards += lastRank - 1 - card.rank
             lastRank = card.rank
-            winners += winnerProbability(gapAbove: missingCards, coverRequired: missingCards, card: card)
+            winners += winnerProbability(gapAbove: missingCards, coverRequired: missingCards+1, card: card)
         }
         
         return winners
     }
     
     private func winnerProbability(gapAbove: Int, coverRequired: Int, card: Card) -> Double {
+        var probability: Double
         if gapAbove == 0 {
-            return pow(holdsAtLeast(cards: coverRequired, in: card.suit), Double(self.numberPlayers-1)) * (self.mySuitCount(card.suit) >= coverRequired + 1 ? 1 : 0)
+            if self.mySuitCount(card.suit) < coverRequired {
+                probability = 0
+            } else {
+                probability = pow(holdsAtLeast(cards: coverRequired, in: card.suit), Double(self.numberPlayers-1))
+            }
         } else {
-            let inPlay = cardInPlayProtected(card: card)
-            return inPlay * (winnerProbability(gapAbove:gapAbove - 1, coverRequired: coverRequired + 1, card:card)) + (1-inPlay) * winnerProbability(gapAbove:gapAbove - 1, coverRequired: coverRequired, card:card)
+            let inPlay = cardInPlayProtected(card: Card(rank: card.rank+gapAbove, suit: card.suit))
+            probability = (inPlay *               0.6 * winnerProbability(gapAbove:gapAbove - 1, coverRequired: coverRequired, card:card)) +
+                          ((Double(1.0)-inPlay) * winnerProbability(gapAbove:gapAbove - 1, coverRequired: coverRequired - 1, card:card))
         }
+        return probability
     }
     
     private func cardInPlayProtected(card: Card) -> Double {
         // Probability a card is in play and protected (ignoring trumps)
-        var probabilityInPlay: Double = Double((numberPlayers * self.handCards) / self.unseenCardsInPack)
-        let above = self.cardsInSuit - card.rank - 1
-        probabilityInPlay *= holdsAtLeast(cards: above, in: card.suit, reducedBy: 1)
-        return probabilityInPlay
+        var probability: Double = Double((numberPlayers-1) * self.handCards) / Double(self.unseenCardsInPack)
+        let above = self.cardsInSuit - card.rank
+        probability *= holdsAtLeast(cards: above, in: card.suit, reducedBy: 1)
+        return probability
     }
     
     private func holdsAtLeast(cards: Int, in suit: Suit, reducedBy: Int = 0) -> Double {

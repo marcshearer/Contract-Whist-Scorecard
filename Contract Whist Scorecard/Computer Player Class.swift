@@ -38,15 +38,13 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
     private var loopbackClient: LoopbackService
     private var commsDelegate: CommsHandlerDelegate!
     private var hostPeer: CommsPeer
-    private var handSuits: [HandSuit]!
-    private let autoPlayTimeUnit = 1.0
+    private var hand: Hand!
+    private let autoPlayTimeUnit = 0.05 // TODO Should be 1.0
     
-    // Queue
-    private var queue: [QueueEntry] = []
-    private var pending = false
-  
-    init(scorecard: Scorecard, email: String, name: String, deviceName: String, hostPeer: CommsPeer, playerNumber: Int) {
-                
+   init(scorecard: Scorecard, email: String, name: String, deviceName: String, hostPeer: CommsPeer, playerNumber: Int) {
+        
+        Config.autoPlayTimeUnit = 0.05 // TODO Remove this
+        
         // Store properties
         self.scorecard = scorecard
         self.thisPlayer = email
@@ -80,14 +78,12 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
             }
         }
         
-        self.loopbackClient.debugMessage("Player: \(self.thisPlayerNumber!)")
         if self.scorecard.entryPlayerNumber(self.thisPlayerNumber, round: round) == bids.count + 1 {
             
             runCompletionOnExit = false
             
             Utility.executeAfter("autoBid", delay: self.autoPlayTimeUnit, completion: {
                 
-                self.loopbackClient.debugMessage(self.thisPlayerName)
                 let cards = self.scorecard.roundCards(round, rounds: self.scorecard.handState.rounds, cards: self.scorecard.handState.cards, bounce: self.scorecard.handState.bounce)
                 var range = ((Double(cards) / Double(self.scorecard.currentPlayers)) * 2) + 1
                 range.round()
@@ -104,8 +100,6 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
                         }
                     }
                 }
-                self.pending = true
-                self.loopbackClient.debugMessage("Bid by \(self.thisPlayerName) of \(bid)")
                 self.scorecard.sendScores(playerNumber: self.thisPlayerNumber, round: round, mode: .bid, overrideBid: bid, to: self.hostPeer, using: self.loopbackClient)
                 if bids.count == self.scorecard.currentPlayers {
                     self.autoPlay(completion: completion)
@@ -132,18 +126,10 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
         let cardsPlayed = trickCards!.count
         
         if trick <= roundCards {
-        
-            self.loopbackClient.debugMessage("Checking to play \(self.scorecard.handState.toPlay!) \(self.thisPlayerName) \(cardsPlayed)")
-            
             if self.scorecard.handState.toPlay == self.thisPlayerNumber {
                 // Me to play
                 
-                var cardCount = 0
-                for handSuit in self.handSuits {
-                    cardCount += handSuit.cards.count
-                }
-                
-                if cardCount >= (roundCards - trick + 1) {
+                if self.hand.cards.count >= (roundCards - trick + 1) {
                     // Have enough cards to play 1 to this trick (or I am leading having just won but trick may not be up to date
                 
                     runCompletionOnExit = false
@@ -158,7 +144,7 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
                         var loop = 0
                         while loop < 2 && cardPlayed == nil {
                             loop += 1
-                            for handSuit in self.handSuits {
+                            for handSuit in self.hand.handSuits {
                                 if handSuit.cards.count > 0 && (cardsPlayed == 0 || handSuit.cards!.last!.suit == trickCards!.first!.suit || !trySuitLed) {
                                     // Choose a random card from this suit
                                     let cardNumber = Utility.random(handSuit.cards.count) - 1
@@ -171,9 +157,6 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
                         }
                         
                         self.scorecard.sendCardPlayed(round: round, trick: trick, playerNumber: self.thisPlayerNumber, card: cardPlayed, using: self.loopbackClient)
-                
-                        self.pending = true
-                        self.loopbackClient.debugMessage("Card played by \(self.thisPlayerName) of \(cardPlayed.toString())")
                         
                         completion?()
                     })
@@ -185,7 +168,7 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
         }
     }
     internal func newHand(hand: Hand) {
-        self.handSuits = HandSuit.sortCards(cards: hand.cards)
+        self.hand = hand
     }
 }
 

@@ -453,9 +453,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     }
     
     public func playCard(card: Card) {
-        if let (suitNumber, cardNumber) = self.handState.findCard(card: card) {
-            self.handState.handSuits[suitNumber].cards.remove(at: cardNumber)
-        }
+        _ = self.handState.hand.remove(card: card)
         
         let nextCard = self.handState.trickCards.count
         if nextCard < self.currentPlayers {
@@ -497,7 +495,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 // Remove current trick from deal
                 for (index, card) in self.handState.trickCards.enumerated() {
                     let playerNumber = self.handState.playerNumber(index + 1)
-                    _ = self.deal.hands[playerNumber - 1].removeCard(card)
+                    _ = self.deal.hands[playerNumber - 1].remove(card: card)
                 }
             }
             

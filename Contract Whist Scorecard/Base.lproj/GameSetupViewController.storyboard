@@ -316,7 +316,7 @@
                         <outlet property="playerTableView" destination="c5K-bm-x10" id="EVS-Gn-Umf"/>
                         <segue destination="6Hq-Pm-vP6" kind="show" identifier="showScorepad" id="OMl-3l-9zT"/>
                         <segue destination="Zg2-0A-XQQ" kind="unwind" identifier="hideGameSetup" unwindAction="hideGameSetupWithSegue:" id="ENU-76-LlQ"/>
-                        <segue destination="Zg2-0A-XQQ" kind="unwind" identifier="hideHostGameSetup" unwindAction="hideHostGameSetupWithSegue:" id="uHv-ar-5U8"/>
+                        <segue destination="Zg2-0A-XQQ" kind="unwind" identifier="hideHostGameSetup" customClass="UIStoryboardSegueWithCompletion" customModule="Contract_Whist_Scorecard" customModuleProvider="target" unwindAction="hideHostGameSetupWithSegue:" id="uHv-ar-5U8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vNy-VM-1Ya" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -33,7 +33,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     internal var suitEnabled = [Bool](repeating: false, count: 6)
     private var lastHand = false
     internal var handTestData = HandTestData()
-    private var collectionHandSuits: [HandSuit]!    // Mirror of the hand suits in state - updated to reflect in collection
+    private var collectionHand: Hand!    // Mirror of the hand in state - updated to reflect in collection
     
     // Delegates
     public var delegate: HandStatusDelegate!
@@ -153,9 +153,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         playedCardCollectionTag = playedCardCollectionView.tag
         
         setupArrays()
-        if self.state.handSuits == nil {
-            self.state.handSuits = HandSuit.sortCards(cards: self.state.hand.cards)
-        }
+       
         self.mirrorHandSuitsToCollection()
         self.currentCards = self.scorecard.roundCards(round, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
         
@@ -207,11 +205,11 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - TableView Overrides ===================================================================== -
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (handCardWidth == nil ? 0 : self.collectionHandSuits.count)
+        return (handCardWidth == nil ? 0 : self.collectionHand.handSuits.count)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return handCardHeight * CGFloat(Int((self.collectionHandSuits[indexPath.row].cards.count - 1) / handCardsPerRow) + 1)
+        return handCardHeight * CGFloat(Int((self.collectionHand.handSuits[indexPath.row].cards.count - 1) / handCardsPerRow) + 1)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -254,7 +252,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
         } else {
             // Hand cards
-            return self.collectionHandSuits[collectionView.tag].cards.count
+            return self.collectionHand.handSuits[collectionView.tag].cards.count
         }
     }
     
@@ -353,10 +351,10 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Card Collection Cell", for: indexPath) as! CardCollectionCell
             
-            cell.cardLabel.attributedText = self.collectionHandSuits[suit-1].cards[card - 1].toAttributedString()
+            cell.cardLabel.attributedText = self.collectionHand.handSuits[suit-1].cards[card - 1].toAttributedString()
             cell.cardLabel.font = UIFont.systemFont(ofSize: self.handCardFontSize)
             ScorecardUI.moreRoundCorners(cell.cardView)
-            cell.tag = self.collectionHandSuits[suit-1].cards[card - 1].toNumber()
+            cell.tag = self.collectionHand.handSuits[suit-1].cards[card - 1].toNumber()
             
             return cell
         }
@@ -491,13 +489,11 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     }	
                 } else {
                     // Hand finished
-                    self.scorecard.commsDelegate?.debugMessage("Hand finished") // TODO remove
                     self.finishButton.isHidden = true
                     self.scorecard.commsHandlerMode = .viewTrick
                     Utility.executeAfter("handFinished", delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 2.0), completion: {
                         // Return to scorepad after 2 seconds
                             self.scorecard.commsHandlerMode = .dismiss
-                            self.scorecard.commsDelegate?.debugMessage("Dismissing") // TODO remove
                             self.dismissHand()
                     })
                 }
@@ -522,7 +518,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
             } else {
                 let cardLed = self.state.trickCards[0]
                 let suitLedXref = self.state.xref[cardLed.suit]
-                if  suitLedXref == nil || self.state.handSuits[suitLedXref!].cards.count == 0 {
+                if  suitLedXref == nil || self.state.hand.handSuits[suitLedXref!].cards.count == 0 {
                     // Dont' have this suit - can play anything
                     self.cardsEnable(true)
                 } else {
@@ -660,15 +656,15 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func cardsEnable(_ enable: Bool, suit matchSuit: Suit! = nil) {
-        if self.state.handSuits != nil && self.state.handSuits.count > 0 {
-            for suitNumber in 1...self.state.handSuits.count {
+        if self.state.hand.handSuits != nil && self.state.hand.handSuits.count > 0 {
+            for suitNumber in 1...self.state.hand.handSuits.count {
                 suitEnable(enable: enable, suitNumber: suitNumber, matchSuit: matchSuit)
             }
         }
     }
     
     func suitEnable(enable: Bool, suitNumber: Int, matchSuit: Suit! = nil) {
-        let suit = self.state.handSuits[suitNumber - 1]
+        let suit = self.state.hand.handSuits[suitNumber - 1]
         if enable && suit.cards.count != 0 && (matchSuit == nil || matchSuit == suit.cards[0].suit) {
             suitCollectionView[suitNumber-1]?.isUserInteractionEnabled = true
             suitCollectionView[suitNumber-1]?.alpha = 1.0
@@ -694,7 +690,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         // Set hand height
         self.handHeightConstraint.constant = handViewHeight
         
-        for suit in self.state.handSuits {
+        for suit in self.state.hand.handSuits {
             maxSuitCards = max(maxSuitCards, suit.cards.count)
         }
         
@@ -703,7 +699,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
             loop+=1
         
             var handRows = 0
-            for suit in self.state.handSuits {
+            for suit in self.state.hand.handSuits {
                 handRows += Int((suit.cards.count - 1) / handCardsPerRow) + 1
             }
             handRows = max(4, handRows)
@@ -805,7 +801,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.cardsEnable(false)
 
         // Remove the card from your hand
-        if let (suitNumber, cardNumber) = HandState.findCard(handSuits: self.collectionHandSuits, card: card) {
+        if let (suitNumber, cardNumber) = self.collectionHand.find(card: card) {
             let collectionView = suitCollectionView[suitNumber]!
             let indexPath = IndexPath(row: cardNumber, section: 0)
             collectionView.performBatchUpdates({
@@ -945,13 +941,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     private func mirrorHandSuitsToCollection() {
         // Copy the hand suits to the version used by the collection (inside performBatchUpdates)
         // Need to copy individual values rather than pointers
-        self.collectionHandSuits = []
-        for suitCount in 0..<self.state.handSuits.count {
-            self.collectionHandSuits.append(HandSuit())
-            for cardCount in 0..<self.state.handSuits[suitCount].cards.count {
-                self.collectionHandSuits[suitCount].cards.append(self.state.handSuits[suitCount].cards[cardCount])
-            }
-        }
+        self.collectionHand = self.scorecard.handState.hand.copy() as! Hand
     }
     
     // MARK: - Segue Prepare Handler =================================================================== -
@@ -1132,34 +1122,5 @@ class HandState {
     
     public func playerNumber(_ sequence: Int) -> Int {
         return (((self.toLead - 1) + (sequence - 1)) % self.players) + 1
-    }
-    
-    func findCard(card: Card) -> (Int, Int)? {
-        return HandState.findCard(handSuits: self.handSuits, card: card)
-    }
-    
-    static func findCard(handSuits: [HandSuit]!, card: Card) -> (Int, Int)? {
-        var suitNumber: Int!
-        var cardNumber: Int!
-
-        if handSuits != nil {
-            let cardAsNumber = card.toNumber()
-            if handSuits.count > 0 {
-                for suit in 0...handSuits.count-1 {
-                    let index = handSuits[suit].toNumbers().index(where: {$0 == cardAsNumber})
-                    if index != nil {
-                        suitNumber = suit
-                        cardNumber = index!
-                        break
-                    }
-                }
-            }
-        }
-        
-        if suitNumber == nil {
-            return nil
-        } else {
-            return (suitNumber, cardNumber)
-        }
     }
 }

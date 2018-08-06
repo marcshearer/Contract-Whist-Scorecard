@@ -274,10 +274,10 @@ extension HandViewController {
     func autoPlay() {
         if self.scorecard.autoPlayHands > 0 && (self.scorecard.autoPlayHands > 1 || round <= self.scorecard.autoPlayRounds) {
             if self.state.toPlay == self.state.enteredPlayerNumber {
-                for suitNumber in 1...self.state.handSuits.count {
+                for suitNumber in 1...self.state.hand.handSuits.count {
                     if suitEnabled[suitNumber-1] {
-                        if let card = self.state.handSuits[suitNumber-1].cards.last {
-                            if self.checkCardAvailable(suitNumber, self.state.handSuits[suitNumber-1].cards.count) {
+                        if let card = self.state.hand.handSuits[suitNumber-1].cards.last {
+                            if self.checkCardAvailable(suitNumber, self.state.hand.handSuits[suitNumber-1].cards.count) {
                                 Utility.executeAfter(delay: 1 * Config.autoPlayTimeUnit, completion: {
                                     self.scorecard.sendCardPlayed(round: self.round, trick: self.state.trick, playerNumber: self.enteredPlayerNumber, card: card)
                                     self.playCard(card: card)

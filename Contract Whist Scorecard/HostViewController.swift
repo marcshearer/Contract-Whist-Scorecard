@@ -99,6 +99,13 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     
     @IBAction func hideHostGameSetup(segue:UIStoryboardSegue) {
         gameInProgress = false
+        if self.playingComputer {
+            if let segue = segue as? UIStoryboardSegueWithCompletion {
+                segue.completion = {
+                    self.exitHost()
+                }
+            }
+        }
     }
     
     @IBAction private func linkFinishGame(segue:UIStoryboardSegue) {
@@ -896,7 +903,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         let card = Card(fromNumber: data["card"] as! Int)
         if playerNumber != 1 {
             // Only need to remove other players cards since my own will be removed by playing them
-            _ = self.scorecard.deal.hands[playerNumber - 1].removeCard(card)
+            _ = self.scorecard.deal.hands[playerNumber - 1].remove(card: card)
         }
     }
     

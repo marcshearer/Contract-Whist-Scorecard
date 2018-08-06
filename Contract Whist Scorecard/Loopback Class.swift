@@ -64,11 +64,9 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
 
     public func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, reconnect: Bool) -> Bool {
         if let loopbackDelegates = LoopbackService.peerList[commsPeer.deviceName] {
-            self.debugMessage("Connect sent from \(commsPeer.fromDeviceName!)", device: commsPeer.deviceName)
             
             // Add to local list of connected peers
             self.addConnection(from: commsPeer.deviceName, to: commsPeer)
-            
             
             // Check if connection OK and then send state change
             if (loopbackDelegates.connectionDelegate?.connectionReceived(from: self.myPeer.commsPeer))! {
@@ -89,8 +87,6 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
     }
     
     public func disconnect(from commsPeer: CommsPeer, reason: String) {
-        
-        // TODO SWAP PEERS
         
         // Pass across state change and remove from connection list
         if let loopbackDelegates = LoopbackService.peerList[commsPeer.deviceName] {
@@ -148,8 +144,8 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
     func stateChange(for peer: CommsPeer, reason: String?) {
         switch peer.state {
         case .connected:
-            // Add to connection list
-            self.debugMessage("Connected to \(peer.fromDeviceName!)", device: peer.deviceName)
+            // Already added to connection list
+            break
         case .notConnected:
             // Remove from connection list
             self.connectionList.removeValue(forKey: peer.deviceName)

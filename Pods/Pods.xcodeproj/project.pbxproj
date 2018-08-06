@@ -16,29 +16,28 @@
 		0ABB0464A5A6767C840350D6DFBDD918 /* RMQMethodMap.h in Headers */ = {isa = PBXBuildFile; fileRef = E2C177656284DBAF97693ADEC74B63AA /* RMQMethodMap.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0AD06769B182CE15B780231F34249121 /* RMQSynchronizedMutableDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = ABEE2C192A0DF158467C13FE52464381 /* RMQSynchronizedMutableDictionary.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		0B562DB3EF25E1EE60B552AD06D6278A /* RMQProtocolHeader.h in Headers */ = {isa = PBXBuildFile; fileRef = 7A1323A0749FFDDEBB46E2F2604925DF /* RMQProtocolHeader.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0BFC46F1F4DD0F4255E42C218DB174E5 /* JKVProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7994F6ABD031B09A9F40973C87BB86 /* JKVProperty.m */; };
+		0B8D6C7D826E29FD535FE7EA64CF2853 /* GCDAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = D61EFC22A4B0DD1CC4B7ABF1398DAAD5 /* GCDAsyncUdpSocket.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0 -w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		0C11011B58F53FC0448CB65E4BD72B37 /* GCDAsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = E8ECE1F91A150E91A1435528C5D52691 /* GCDAsyncSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0C92F4DACC79BD096AB10B1FD754564E /* RMQClient-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D451C8DDD65DFDA460C01A01879DD86 /* RMQClient-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0CE7D0FA3A54378B4676D4CFCF13536F /* RMQWaiter.h in Headers */ = {isa = PBXBuildFile; fileRef = EAD8F6CE01D8729E803F5D38B1D01A7F /* RMQWaiter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		0DEB43CECADEE6FA1894F15A95C846EA /* JKVValue-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 874BDFB6C82AF59E12BA4D67D9E0D669 /* JKVValue-dummy.m */; };
 		0FB0CF6A0FD90DD05ACBA1312376A5CA /* RMQTickingClock.h in Headers */ = {isa = PBXBuildFile; fileRef = C04DF52E0105A7182611F96388FA6247 /* RMQTickingClock.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		105A428475D2541D92FF7A11BA7ED406 /* RMQParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 768B2329B9B16E69EDBF269637F27826 /* RMQParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		12BCB6738A941D6F32B75A533C41C26D /* Pods-Contract Whist Scorecard-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 02D547F3F23652BCA21F0D9748CAA235 /* Pods-Contract Whist Scorecard-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		135E7D83A1A3C2F7A163E18C22282E6E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E9429B835E9754D798BB5CF7BB0ED4A /* Foundation.framework */; };
 		140AA094BD196B249050F1755E0B591B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E9429B835E9754D798BB5CF7BB0ED4A /* Foundation.framework */; };
-		14B5D9E073871C7F9A07EF81EAA382F4 /* JKVKeyedEncoderVisitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CA7606392BE5F1FF8B3430579FD4D61 /* JKVKeyedEncoderVisitor.m */; };
 		183202592A104EB7B4551971986A3981 /* RMQURI.h in Headers */ = {isa = PBXBuildFile; fileRef = 0199C003CC3AFDD9F5262CEF5398D424 /* RMQURI.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		18D14A0BD5D41A75CE08A4B1DA307A5D /* RMQConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E690F6CD2C89858F1DE2BB3FC65967D /* RMQConnection.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		1DE19DE96390C69F6606153506FD205C /* GCDAsyncUdpSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 8CE44AD8499CA92CBA1B59752E33E40B /* GCDAsyncUdpSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		20E21D072135311952450A11A886738E /* RMQTCPSocketTransport.h in Headers */ = {isa = PBXBuildFile; fileRef = 0F1D7215E1F8D90053498F40267AA057 /* RMQTCPSocketTransport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		215C3CAC2E69A47DBA30D657D03F3950 /* RMQFrameset.h in Headers */ = {isa = PBXBuildFile; fileRef = 78E2DEC44C3492F65A0F32A3DAD21FA4 /* RMQFrameset.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		216C1E4589EF57E400955B201C812F1B /* RMQGCDHeartbeatSender.h in Headers */ = {isa = PBXBuildFile; fileRef = 1B998E14BAF23B8877D22A27FF8629FF /* RMQGCDHeartbeatSender.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		26A86F069D9743B0A18F8BF9E240C552 /* JKVFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = BC00F6652E33D7AD331ADD2B33D4911B /* JKVFactory.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		26C7A6EA5E2012CA48E49C9F91B3C675 /* RMQConnectionRecover.h in Headers */ = {isa = PBXBuildFile; fileRef = 03DE4403B6AA296B29DD06F07CB11276 /* RMQConnectionRecover.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		28C0AA50FE8D8240F488DEBA3235CC63 /* JKVKeyedEncoderVisitor.h in Headers */ = {isa = PBXBuildFile; fileRef = A7EA9F620BF3BAA421C052F72CB4558E /* JKVKeyedEncoderVisitor.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		2C2547C9D71CC56FB769DE5AF8653A86 /* RMQStarter.h in Headers */ = {isa = PBXBuildFile; fileRef = DFA7BDD9ADF05782BDB4E73CDA1D2505 /* RMQStarter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2C396D4A09547722251D602CBC47E291 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 7692BBCFCF6770BB84869716D9C48147 /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		30C488B83E64A5C42DA44B280B94D293 /* AsyncUdpSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 9372E4C6396CC170C2BE99FCCE449DA8 /* AsyncUdpSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		333C2DB5EC59CCF710290EF879A631F3 /* JKVFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EA1CBA5A04A2BC20A1BD8A0077308D8 /* JKVFactory.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3575A38E03B4FD19EA449338E4C261B5 /* JKVClassInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = F58AF5CF4DF2CDD99879699A07456F09 /* JKVClassInspector.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		392D214DCEBB72121941FD167A9D7ECC /* RMQBasicProperties+MergeDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = BCA2D900A4B2DB4BC576DBE91A3B0EED /* RMQBasicProperties+MergeDefaults.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3B71C3114E9DD5F0B4C1D0C52EB6BA2B /* RMQPKCS12CertificateConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 45E5DBD0BF21DCAE88F75CAF76D1A66C /* RMQPKCS12CertificateConverter.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		3CC38A371319FF5A3ACC6411B81F7F10 /* RMQSuspendResumeDispatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = BC1228DF071C4B441F23EB67413D97F8 /* RMQSuspendResumeDispatcher.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
@@ -48,12 +47,12 @@
 		4193BA4FC830A9C0DD731B4BF31368FF /* RMQChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E3DAA834863B7CA79F9541FF9617020 /* RMQChannel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		424DB8EA4A6256DF09886777FF395EC6 /* RMQChannelAllocator.h in Headers */ = {isa = PBXBuildFile; fileRef = F53926EDA2F2D4DD0909882EF6CF22F3 /* RMQChannelAllocator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		45082B56F06B8175A9C423E4CA22ED35 /* RMQConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 17B39E47C05CFB71F346E2272B58A858 /* RMQConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		47CCBFE5558B32A58AD81708953D62E8 /* JKVKeyedEncoderVisitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CA7606392BE5F1FF8B3430579FD4D61 /* JKVKeyedEncoderVisitor.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		481BE426F8165E619908A75047842709 /* RMQMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 305071A73FCCEDC152339544CBBD899D /* RMQMessage.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		49A0091F62AD1113339D8011D4AEE6E2 /* RMQClient-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3025E9AD061F7400ED16C5B7AC0CDF13 /* RMQClient-dummy.m */; };
 		4B3407120CCBEAA4C73D2DD2D96D4361 /* RMQConsumer.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EE8621AB64EC569B8D71409862C3488 /* RMQConsumer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C129DB1587B4E10D1DD61B9BBC46841 /* RMQExchange.h in Headers */ = {isa = PBXBuildFile; fileRef = 3529A5378352F4238C40096560A7EA6D /* RMQExchange.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CF56949CE3EECF4157484BC1CB6CCEB /* RMQDispatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 6AD1B15342A8374FC67AA068ABC88417 /* RMQDispatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4D8C620F3A6902B7D7ACE9ADBE1169C0 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = C1739654694322AA519F41F7C9140F0B /* AsyncSocket.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		4DAD587CBD691DEED6DA0EAF67A0AF35 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E9429B835E9754D798BB5CF7BB0ED4A /* Foundation.framework */; };
 		4ED795831D05E0146ADDE098DA3D7471 /* JKVObjectPrinter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1680E9E22E361506E70B774842627EA3 /* JKVObjectPrinter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4F399C5B9B484013D4E8E53D3E2D2B27 /* RMQUnallocatedChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D4920490FBA46BE07991C4357E34074 /* RMQUnallocatedChannel.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -63,9 +62,7 @@
 		5303399CD2E4B57CF2D16A939F04116B /* RMQBasicProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = E5DE618E3D50221B8E810848AED55EEB /* RMQBasicProperties.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		53B6EE10A4D1DEC1DB54B86CA7173259 /* RMQConnectionDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 4596A6B717D6186BEBDB9C21DDF79EE6 /* RMQConnectionDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		55BB63A6D1B13D379E1A39C13543EFCD /* RMQQueuingConnectionDelegateProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 3C89A1F02D1EA3E250273E76C5DBA255 /* RMQQueuingConnectionDelegateProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5894C32B5FE5DD2778F15303962DC923 /* GCDAsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = D61EFC22A4B0DD1CC4B7ABF1398DAAD5 /* GCDAsyncUdpSocket.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		5F95EA9C7764960A7DC136BF3516477A /* RMQHandshaker.h in Headers */ = {isa = PBXBuildFile; fileRef = D0D3CA9F01043D57C48053AA4AF04ED6 /* RMQHandshaker.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		612B1E90E1BB0F77F15BB1F6F8FA77DC /* JKVMutableValue.m in Sources */ = {isa = PBXBuildFile; fileRef = B351EFE3E7D47674A6598D2F065D7CC6 /* JKVMutableValue.m */; };
 		61FC0C66246E8C2B9AFF855DAE9AC22D /* JKVObjectPrinter-Protected.h in Headers */ = {isa = PBXBuildFile; fileRef = 12CF57CACC0389C2FBBDA10B3515613C /* JKVObjectPrinter-Protected.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		63AEA5FA437B16D2D4392AAEABC5EF65 /* RMQMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = 22F0791B7442AE9A518D6B6FC22C0C56 /* RMQMessage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		63F124DCD7503404032D61CD2E3F3DD4 /* RMQMethods+Convenience.h in Headers */ = {isa = PBXBuildFile; fileRef = 0A09C278EF6F9FBA264925D979E78523 /* RMQMethods+Convenience.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -80,16 +77,17 @@
 		6F5BA40285566855489B088069D1EEEA /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48A58D6B33C15106BB0E2F2123EBA09D /* CFNetwork.framework */; };
 		7393EAAF0ECC486ABF702B98F450791B /* RMQTable.h in Headers */ = {isa = PBXBuildFile; fileRef = FB381F47A826D609CE265574F7B7D76D /* RMQTable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		73E10E0FEB934FE65790E307F1A70BFB /* RMQConfirmationTransaction.h in Headers */ = {isa = PBXBuildFile; fileRef = EAEFCB69BC2EABD6D4EF2DE35802ED30 /* RMQConfirmationTransaction.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		743F5E1DB42399D4818DF573D1F5AF88 /* JKVKeyedDecoderVisitor.m in Sources */ = {isa = PBXBuildFile; fileRef = F7592BD822EA70004CEB172D0A78E473 /* JKVKeyedDecoderVisitor.m */; };
 		76AB7D3D94114E72600CC993C6FB9DBC /* RMQConnectionDelegateLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = FAB6610AF00FB0ABC17FA5DA3EBE070F /* RMQConnectionDelegateLogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7B753031DD311B0FB8C480C5BA77877E /* RMQTLSOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = BDEEC719D6C44BFB0DFED5A12CFA46D4 /* RMQTLSOptions.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		7F15C0A879CBA92EC04A5D7B6C886500 /* RMQAllocatedChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = 498D4DBEE86878C741B79223F525999E /* RMQAllocatedChannel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		86530C969C6AA2C898E1F6F7A57163A4 /* RMQHandshaker.m in Sources */ = {isa = PBXBuildFile; fileRef = 02B756B2B64C1863D6751CB82D14AEA6 /* RMQHandshaker.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		89EFEE7128B4847732290C4E16BA7547 /* RMQProcessInfoNameGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 955DDB32D6CB245B9A983768419371E0 /* RMQProcessInfoNameGenerator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8B94D8D4B033A4C91075CD5957B3C23E /* RMQConnectionConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 29978775C98906EA22986C813F11B6F2 /* RMQConnectionConfig.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		8C0ED5475F6D56303433666D31DA9175 /* JKVValue-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 874BDFB6C82AF59E12BA4D67D9E0D669 /* JKVValue-dummy.m */; };
 		8FD9DEF620274A6E7A77153ABDBA98FE /* RMQConsumerHandlers.h in Headers */ = {isa = PBXBuildFile; fileRef = 6880C15FD9AA9BF66AA27B48F8C89F96 /* RMQConsumerHandlers.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		90CBAF51B7ED2F2FD5A52F069BBE877B /* RMQBasicProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 99727E9A07C3E9F84C88BB87E96C9085 /* RMQBasicProperties.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		925834A9C773834D8E1BE34689AE3D02 /* RMQHeartbeat.m in Sources */ = {isa = PBXBuildFile; fileRef = 138D5332B4F4984C2B5248A28F1A1EF8 /* RMQHeartbeat.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		93212EC6DC8BC4C7BD7C2FB8E11681EF /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = C1739654694322AA519F41F7C9140F0B /* AsyncSocket.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0 -w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		951EB8923C7856DBBE437D6643AFAC3B /* RMQConsumer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6491974B965451B6A785E7DFBC5FD14B /* RMQConsumer.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		952A0F94957C1AAAD1C2D6D1AC04284D /* RMQMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 22FE5C0AB19B22F6AF869AC564C42CCA /* RMQMethods.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		95C5246B533A4FDCB7FFB0E260EB93F2 /* JKVValue-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 1D5CFCD7F7400E1ED216DAFEF5919BCD /* JKVValue-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -97,30 +95,31 @@
 		9BDCB1931655C3D54621492EF77F7B76 /* RMQSuspendResumeDispatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 279264E4FC0C994D5865E8D22AA6F8E5 /* RMQSuspendResumeDispatcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9BEF67962C1F51264E458C878284F4A4 /* RMQTransactionalConfirmations.h in Headers */ = {isa = PBXBuildFile; fileRef = 74E477D733C402C4215C5D40301E6979 /* RMQTransactionalConfirmations.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9C7AE70383CABAA9E0E6580C766ABDB7 /* RMQTransport.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C7E266CAFA04D214E31BD260C19B5F7 /* RMQTransport.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A06D46BB11006C990DE2C80578BB0EE8 /* JKVProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B7994F6ABD031B09A9F40973C87BB86 /* JKVProperty.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		A3F38EB4A0F87A7A220C69ACF44C66F4 /* RMQHeartbeatSender.h in Headers */ = {isa = PBXBuildFile; fileRef = 8F64103980EB0C9BA4BCE8D42EE76F55 /* RMQHeartbeatSender.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AAE2EE0E80F48CD469D2ADA45F8D61BD /* RMQTransportDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 7CEA9368AE6BFA8457DA987FE5453BF2 /* RMQTransportDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AC2B2F8FFB5D133270C3DFA766D978C3 /* RMQConfirmationTransaction.m in Sources */ = {isa = PBXBuildFile; fileRef = 3659EF0EDA0307EA53D3F80FB5564C6F /* RMQConfirmationTransaction.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		AE75856D3E6CDFABEA1AC5B9300D05E4 /* RMQBasicProperties+MergeDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = D86E206B67608DD8F1EF15BCD6CEC80C /* RMQBasicProperties+MergeDefaults.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		AEDCCBB4E94D5EFA401C17156E42F9F2 /* JKVNonZeroSetterVisitor.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE92E20E7CFB4EC75F21144AC16DD7B /* JKVNonZeroSetterVisitor.m */; };
 		B0E04812843BF5B6DDFBA6772BAC2F7F /* RMQReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 106619F7877E7C07987846DB76BE655F /* RMQReader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B1691C4BB667D5DC26D482BC536783F5 /* RMQSemaphoreWaiter.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C32D921FB220D49656CCEE6E5A68514 /* RMQSemaphoreWaiter.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		B18C17EEC7DE8F735282A18672BFE019 /* RMQQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B894C6D46989ED933D7571DBAA1C375 /* RMQQueue.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		B3599570A2041A20DD13F5C4401E351B /* RMQExchange.m in Sources */ = {isa = PBXBuildFile; fileRef = 5440C71AEAD74A3D43053675D93B6ED3 /* RMQExchange.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		B3A8D0D2C14F179FE5FEB1F02EEF4AE7 /* RMQFramesetValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = C8F1BA7AA364AA23CDB9C17866BA8928 /* RMQFramesetValidator.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		B3DFA1A4A104DC0D046489BA0EA71255 /* RMQWaiterFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = A9A41E0552E670F7BB86744D589BA524 /* RMQWaiterFactory.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B676B15C2C3B3436DD3D57AE65D9A57E /* JKVObjectPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = EB19C1CC3E637722497DFA31829BA3A4 /* JKVObjectPrinter.m */; };
 		B7906091F33CEE4B297D7F987214E9E6 /* JKVValue.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C3DD58347EDB94C458AE694458D0599 /* JKVValue.framework */; };
 		B7E1A92731AB69C3C787938F236B2101 /* JKVKeyedDecoderVisitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 9F3A4D944B877F24B047FCBA2CD44899 /* JKVKeyedDecoderVisitor.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		B826B45B51596CC5D679EEF5970137D0 /* RMQGCDSerialQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = BE81B2FE276C5AF5305654A07035FF02 /* RMQGCDSerialQueue.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		B8EA127200782EC0F0F391F4A3E70465 /* RMQSemaphoreWaiter.h in Headers */ = {isa = PBXBuildFile; fileRef = 3043924E5AC95E5AE06730876DAF8CDD /* RMQSemaphoreWaiter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B97CC2B5C88DDAF64F6F3ED30CAF0BBF /* RMQSender.h in Headers */ = {isa = PBXBuildFile; fileRef = B92FDFBB75ABFA3F541F3C80E0CB86A9 /* RMQSender.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B9B1A50394F70A1353DBA39642C2F8B8 /* JKVMutableValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 0D3F40B1C45A077BB09B8D93EEDD8CAF /* JKVMutableValue.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BB9A03C91E1B758189FE6E39F72C43DE /* JKVKeyedDecoderVisitor.m in Sources */ = {isa = PBXBuildFile; fileRef = F7592BD822EA70004CEB172D0A78E473 /* JKVKeyedDecoderVisitor.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		BC8FC1EC66A863FE693F34C79492C625 /* RMQLocalSerialQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B2FFC58615E82414322C11C7988CEE7 /* RMQLocalSerialQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BE48BA316804465D54C5C72D4801CB83 /* RMQConnectionRecovery.h in Headers */ = {isa = PBXBuildFile; fileRef = 75CC89BCB12CDD64844381C1062D18CB /* RMQConnectionRecovery.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BF3D6E6F16E5E7AFFDC000CBFA706F65 /* RMQConnectionRecover.m in Sources */ = {isa = PBXBuildFile; fileRef = FA239E97907670CD7793FBBE31C1FEDD /* RMQConnectionRecover.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		BFC5BD6BED4C4F31EC711432B4D41D64 /* RMQURI.m in Sources */ = {isa = PBXBuildFile; fileRef = AF35D8FD8A31B0BFFE29DC63E58BA888 /* RMQURI.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		C1AD6BCF34768AB153F103C97FBC3D2A /* RMQHeartbeat.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B8E64FF5B462405E704B1059FD60D57 /* RMQHeartbeat.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C1DF438F2E0573AF37582DD0AAA8F5CE /* RMQMultipleChannelAllocator.h in Headers */ = {isa = PBXBuildFile; fileRef = D59151D13BF3864D173526CBA2F5CF2C /* RMQMultipleChannelAllocator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C3519AE79DFAC7E1A03AEBEE5E157355 /* JKVMutableValue.m in Sources */ = {isa = PBXBuildFile; fileRef = B351EFE3E7D47674A6598D2F065D7CC6 /* JKVMutableValue.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		C5D61B24F4E41F745E771DFAC799100E /* RMQConnectionDelegateLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = B479523FE52D235231E5B614B763B6C1 /* RMQConnectionDelegateLogger.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		C6E788D5935876C752101913DEB70A36 /* RMQMethods.h in Headers */ = {isa = PBXBuildFile; fileRef = D6F42666083D1DE53AEFF75F76352A7E /* RMQMethods.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C74EC86DF868DC60D1F393FD310CFF68 /* RMQAllocatedChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 68774DA80A3B330E36F0238CE471E535 /* RMQAllocatedChannel.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
@@ -131,27 +130,28 @@
 		CC267A186D417AF1ECE0CE32976FEEA2 /* RMQConfirmations.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F3BA904E56E8A9A1373346638D4437 /* RMQConfirmations.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CC730DE78DD4695F0A712E0EBCAF40A2 /* RMQValues.m in Sources */ = {isa = PBXBuildFile; fileRef = 33B5ADDEE25BCB0BB19F4D2D94ABA54E /* RMQValues.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		CD87E21433FFF259E1B4B1A9F94F0A6C /* RMQMethodDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = B055D5774CCDD643182F937E72BBA677 /* RMQMethodDecoder.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
-		CD95D454D4AFA3A57BD22AC0099ACC75 /* JKVClassInspector.m in Sources */ = {isa = PBXBuildFile; fileRef = F58AF5CF4DF2CDD99879699A07456F09 /* JKVClassInspector.m */; };
 		D091AD5386D4E22A07A8A11F18D98612 /* RMQSynchronizedMutableDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EC30029772C40FEC4322C66855DD301 /* RMQSynchronizedMutableDictionary.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D242DABB3C7A57A5AA60EBF8C41F8C90 /* RMQFramesetValidationResult.m in Sources */ = {isa = PBXBuildFile; fileRef = AF463A2CB5E1B6E07406C29D90AA772B /* RMQFramesetValidationResult.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
+		D39B602EB044F6F3300A597122D8E2A0 /* JKVValueImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A4F359C8483959A6B6EC52015923F4A /* JKVValueImpl.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		D416CC9D014759848DB89D15D4DD6FA3 /* AsyncSocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 23EF5DA883A5826EE9EA0516D440F2B2 /* AsyncSocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D714F7D986F827ED61C525CD1009C1B0 /* RMQFrameset.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B5C0EFB28D472F53EAF7012E5D7FB3 /* RMQFrameset.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		DA18FEDE70C33162C9189430F1F631B1 /* Pods-Contract Whist Scorecard-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 55CB07B9F19A6620B1CA99BAE72BCB2F /* Pods-Contract Whist Scorecard-dummy.m */; };
-		DC192C1FD14865856E2A6E411BF42F14 /* JKVFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = BC00F6652E33D7AD331ADD2B33D4911B /* JKVFactory.m */; };
 		DCA5B4C0498ED01431C60042A212A9EA /* JKVNonZeroSetterVisitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 8848D6D6566393E40A8DEDE9735F1CF1 /* JKVNonZeroSetterVisitor.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		E0DBA7F18F81806C66FA5D43C6DF3275 /* JKVValueImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A4F359C8483959A6B6EC52015923F4A /* JKVValueImpl.m */; };
 		E0F84B8D327AC4A840AD42512193CACD /* RMQFramesetValidator.h in Headers */ = {isa = PBXBuildFile; fileRef = 487B757149F5C590917749714DB8161C /* RMQFramesetValidator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E20C42745BF0FE5E3DEE20B73916927B /* RMQSemaphoreWaiterFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D141F266560A536F59E6B41162E2B5 /* RMQSemaphoreWaiterFactory.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		E20DAEE167D3F8D9FC168BB6F5C1F5CC /* JKVValue.h in Headers */ = {isa = PBXBuildFile; fileRef = 76124DE376BC6AB72858F8F64EE7ACD4 /* JKVValue.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E20F14EBB5E75F696F8AF446F0D7B907 /* AsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 8796DC3B2C5C3AB2D469CC93E179AC9A /* AsyncUdpSocket.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0 -w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		E860E4DC7DAED8DB08D556F03D5C4E90 /* RMQQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = C1360E9EFDFE68E1A02B2EBB06686E15 /* RMQQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E965CA87F53DF5A131B536B676408659 /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 7692BBCFCF6770BB84869716D9C48147 /* GCDAsyncSocket.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0 -w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		EB5B1A387BD771F122AA4E1E833AFF45 /* RMQProtocolHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FC60D97DFC66BA3951C55507DD9EBAA /* RMQProtocolHeader.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		EDED0AB4B7B7429A90EB37894205F349 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E9429B835E9754D798BB5CF7BB0ED4A /* Foundation.framework */; };
 		EDF732BB0C274FCECDF0C920F0BA8B30 /* RMQFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = A6DFC2AA0342D1BC7EFFC95E9F2F7596 /* RMQFrame.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F005AE1D1111457F1DED229B98861CAB /* JKVObjectPrinter.m in Sources */ = {isa = PBXBuildFile; fileRef = EB19C1CC3E637722497DFA31829BA3A4 /* JKVObjectPrinter.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		F0E57361E4F341FF77F5CEBF69891292 /* CocoaAsyncSocket-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = F892347CCF3F47FC40187E5E703CDCDC /* CocoaAsyncSocket-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F18A59FDD2D4DB269331093EAD312FBB /* RMQTCPSocketTransport.m in Sources */ = {isa = PBXBuildFile; fileRef = F4D1CDAFE367807D419ABF15ADAB040B /* RMQTCPSocketTransport.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		F2624589CD3A4BE73F2962AA0696DC44 /* RMQMethodDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EDF19568001CDE26B901AA2B26C21A4 /* RMQMethodDecoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F263CD99F16F4924E2CAB4A817A6AC6A /* AsyncUdpSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 8796DC3B2C5C3AB2D469CC93E179AC9A /* AsyncUdpSocket.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		F42DC2D25E6A15C579581F43E3712CDC /* RMQClient.h in Headers */ = {isa = PBXBuildFile; fileRef = ABB9E196BB30CE4AD97483D8408D89C1 /* RMQClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F5233AF18E7E07F981B23480E376863F /* JKVNonZeroSetterVisitor.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE92E20E7CFB4EC75F21144AC16DD7B /* JKVNonZeroSetterVisitor.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		F6455B161C8A982716F96A8509C19892 /* RMQQueuingConnectionDelegateProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = C83ADE7E762A97DB3F20E3FE8D086702 /* RMQQueuingConnectionDelegateProxy.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		F77041FF5882D80A3FC1D92EBBCCA7AD /* RMQTickingClock.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D391171D4D95E685912000A5A2995F /* RMQTickingClock.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
 		FAF1C1E678812E1BD51153E44CC50259 /* RMQParser.m in Sources */ = {isa = PBXBuildFile; fileRef = CAD60A54A519C36D43B89B1CE2A54352 /* RMQParser.m */; settings = {COMPILER_FLAGS = "-w -Xanalyzer -analyzer-disable-all-checks"; }; };
@@ -869,7 +869,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6757B5B2C6B28EEC92EE8F24C31F0A6A /* Build configuration list for PBXNativeTarget "JKVValue" */;
 			buildPhases = (
-				E3338B2176B0D517990858F65935A264 /* Sources */,
+				7D788F001D27578B6AD777EB2354943C /* Sources */,
 				101CB9D99A2FE76C24DDF0D100968AE1 /* Frameworks */,
 				8F00CEDED472F41782DA95A261C380F5 /* Headers */,
 			);
@@ -987,11 +987,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D8C620F3A6902B7D7ACE9ADBE1169C0 /* AsyncSocket.m in Sources */,
-				F263CD99F16F4924E2CAB4A817A6AC6A /* AsyncUdpSocket.m in Sources */,
+				93212EC6DC8BC4C7BD7C2FB8E11681EF /* AsyncSocket.m in Sources */,
+				E20F14EBB5E75F696F8AF446F0D7B907 /* AsyncUdpSocket.m in Sources */,
 				FC06F196A47F2657455AA209102EBEF8 /* CocoaAsyncSocket-dummy.m in Sources */,
-				2C396D4A09547722251D602CBC47E291 /* GCDAsyncSocket.m in Sources */,
-				5894C32B5FE5DD2778F15303962DC923 /* GCDAsyncUdpSocket.m in Sources */,
+				E965CA87F53DF5A131B536B676408659 /* GCDAsyncSocket.m in Sources */,
+				0B8D6C7D826E29FD535FE7EA64CF2853 /* GCDAsyncUdpSocket.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1003,20 +1003,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E3338B2176B0D517990858F65935A264 /* Sources */ = {
+		7D788F001D27578B6AD777EB2354943C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD95D454D4AFA3A57BD22AC0099ACC75 /* JKVClassInspector.m in Sources */,
-				DC192C1FD14865856E2A6E411BF42F14 /* JKVFactory.m in Sources */,
-				743F5E1DB42399D4818DF573D1F5AF88 /* JKVKeyedDecoderVisitor.m in Sources */,
-				14B5D9E073871C7F9A07EF81EAA382F4 /* JKVKeyedEncoderVisitor.m in Sources */,
-				612B1E90E1BB0F77F15BB1F6F8FA77DC /* JKVMutableValue.m in Sources */,
-				AEDCCBB4E94D5EFA401C17156E42F9F2 /* JKVNonZeroSetterVisitor.m in Sources */,
-				B676B15C2C3B3436DD3D57AE65D9A57E /* JKVObjectPrinter.m in Sources */,
-				0BFC46F1F4DD0F4255E42C218DB174E5 /* JKVProperty.m in Sources */,
-				0DEB43CECADEE6FA1894F15A95C846EA /* JKVValue-dummy.m in Sources */,
-				E0DBA7F18F81806C66FA5D43C6DF3275 /* JKVValueImpl.m in Sources */,
+				3575A38E03B4FD19EA449338E4C261B5 /* JKVClassInspector.m in Sources */,
+				26A86F069D9743B0A18F8BF9E240C552 /* JKVFactory.m in Sources */,
+				BB9A03C91E1B758189FE6E39F72C43DE /* JKVKeyedDecoderVisitor.m in Sources */,
+				47CCBFE5558B32A58AD81708953D62E8 /* JKVKeyedEncoderVisitor.m in Sources */,
+				C3519AE79DFAC7E1A03AEBEE5E157355 /* JKVMutableValue.m in Sources */,
+				F5233AF18E7E07F981B23480E376863F /* JKVNonZeroSetterVisitor.m in Sources */,
+				F005AE1D1111457F1DED229B98861CAB /* JKVObjectPrinter.m in Sources */,
+				A06D46BB11006C990DE2C80578BB0EE8 /* JKVProperty.m in Sources */,
+				8C0ED5475F6D56303433666D31DA9175 /* JKVValue-dummy.m in Sources */,
+				D39B602EB044F6F3300A597122D8E2A0 /* JKVValueImpl.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

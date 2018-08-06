@@ -386,6 +386,14 @@ class Scorecard {
                     playerListNumber += 1
                     
                 }
+                
+                if self.player![player-1].playerMO == nil {
+                    // Might be recovering from a computer game - recreate player
+                    self.player![player-1].playerMO = CoreData.create(from: "Player") as? PlayerMO
+                    self.player![player-1].playerMO!.name = UserDefaults.standard.string(forKey: "player\(player)name")
+                    self.player![player-1].playerMO!.email = UserDefaults.standard.string(forKey: "player\(player)email")
+                    self.player![player-1].playerNumber = player
+                }
             }
         }
         
@@ -680,6 +688,8 @@ class Scorecard {
                 let playerMO = selectedPlayers[playerNumber-1]!
                 self.enteredPlayer(playerNumber).playerMO = playerMO
                 UserDefaults.standard.set(self.playerURI(playerMO), forKey: "player\(playerNumber)")
+                UserDefaults.standard.set(playerMO.name, forKey: "player\(playerNumber)name")
+                UserDefaults.standard.set(playerMO.email, forKey: "player\(playerNumber)email")
             }
         }
     }
@@ -842,7 +852,7 @@ class Scorecard {
     public func savePlayers(rounds: Int) -> Bool {
         var result = true
         // Only save if last round complete
-        if self.gameComplete(rounds: rounds) {
+        if self.gameComplete(rounds: rounds) && !self.isPlayingComputer {
             // Check if need to exclude from stats
             let excludeHistory = (self.overrideSelected && self.overrideExcludeHistory != nil && self.overrideExcludeHistory!)
             let excludeStats = excludeHistory || (self.overrideSelected && self.overrideExcludeStats != nil && self.overrideExcludeStats!)
@@ -853,10 +863,10 @@ class Scorecard {
                     result = self.enteredPlayer(player).save(excludeHistory: excludeHistory, excludeStats: excludeStats)
                 }
             }
-            if result {
-                // Can't recover once we've saved
-                self.setGameInProgress(false, suppressWatch: true)
-            }
+        }
+        if result {
+            // Can't recover once we've saved
+            self.setGameInProgress(false, suppressWatch: true)
         }
         return result
     }

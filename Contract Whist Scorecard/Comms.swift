@@ -27,16 +27,19 @@ public enum CommsConnectionState {
 public enum CommsConnectionMode: String {
     case broadcast = "broadcast"
     case invite = "invite"
+    case loopback = "loopback"
 }
 
 public enum CommsConnectionFramework {
     case multipeer
     case rabbitMQ
+    case loopback
 }
 
 public enum CommsConnectionProximity {
     case nearby
     case online
+    case loopback
 }
 
 public enum CommsConnectionType: String {
@@ -58,7 +61,7 @@ public class CommsPeer {
     public let playerName: String?
     public let state: CommsConnectionState
     public let reason: String?
-    private let parent: CommsHandlerDelegate
+    private var parent: CommsHandlerDelegate
     
     public var mode: CommsConnectionMode {
         get {
@@ -85,6 +88,12 @@ public class CommsPeer {
             return self.parent.connectionPurpose
         }
     }
+    
+    public var fromDeviceName: String? {
+        get {
+            return self.parent.connectionDevice
+        }
+    }
 
     init(parent: CommsHandlerDelegate, deviceName: String, playerEmail: String? = "", playerName: String? = "", state: CommsConnectionState = .notConnected, reason: String? = nil) {
         self.parent = parent
@@ -93,6 +102,10 @@ public class CommsPeer {
         self.playerName = playerName
         self.state = state
         self.reason = reason
+    }
+    
+    func setParent(to parent: CommsHandlerDelegate) {
+        self.parent = parent
     }
 }
 
@@ -167,7 +180,7 @@ protocol CommsHandlerDelegate : class {
     var connectionDelegate: CommsConnectionDelegate! { get set }
     var handlerStateDelegate: CommsHandlerStateDelegate! { get set }
     
-    init(purpose: CommsConnectionPurpose, type: CommsConnectionType, serviceID: String?)
+    init(purpose: CommsConnectionPurpose, type: CommsConnectionType, serviceID: String?, deviceName: String)
     
     func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool, matchDeviceName: String!)
     
@@ -186,12 +199,20 @@ protocol CommsHandlerDelegate : class {
 
 extension CommsHandlerDelegate {
     
+    init(purpose: CommsConnectionPurpose, type: CommsConnectionType, serviceID: String?) {
+        self.init(purpose: purpose, type: type, serviceID: serviceID, deviceName: "")
+    }
+    
     func start() {
         start(email: nil, queueUUID: nil, name: nil, invite: nil, recoveryMode: false, matchDeviceName: nil)
     }
     
     func start(email: String!) {
         start(email: email, queueUUID: nil, name: nil, invite: nil, recoveryMode: false, matchDeviceName: nil)
+    }
+    
+    func start(email: String!, name: String!) {
+        start(email: email, queueUUID: nil, name: name, invite: nil, recoveryMode: false, matchDeviceName: nil)
     }
     
     func start(email: String!, recoveryMode: Bool, matchDeviceName: String!) {

@@ -12,6 +12,7 @@ enum ConnectionMode {
     case unknown
     case nearby
     case online
+    case loopback
 }
         
 enum InviteStatus {
@@ -35,6 +36,8 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     public var formTitle = "Host a Game"
     public var backText = "Back"
     public var backImage = "back"
+    public var playingComputer = false
+    public var computerPlayerDelegate: [ Int : ComputerPlayerDelegate? ]?
     
     // Queue
     private var queue: [QueueEntry] = []
@@ -48,8 +51,10 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     private var defaultConnectionMode: ConnectionMode!
     private var multipeerHost: MultipeerService!
     private var rabbitMQHost: RabbitMQService!
+    private var loopbackHost: LoopbackService!
     private var currentState: CommsHandlerState = .notStarted
     private var exiting = false
+    private var computerPlayers: [Int : ComputerPlayerDelegate]?
     
     private var connectedPlayers: Int {
         get {
@@ -94,6 +99,13 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     
     @IBAction func hideHostGameSetup(segue:UIStoryboardSegue) {
         gameInProgress = false
+        if self.playingComputer {
+            if let segue = segue as? UIStoryboardSegueWithCompletion {
+                segue.completion = {
+                    self.exitHost()
+                }
+            }
+        }
     }
     
     @IBAction private func linkFinishGame(segue:UIStoryboardSegue) {
@@ -119,6 +131,10 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     // MARK: - View Overrides ========================================================================== -
     
     override func viewDidLoad() {
+        var nearby = false
+        var online = false
+        var loopback = false
+        
         super.viewDidLoad()
         
         // Stop existing server service (sharing)
@@ -127,15 +143,24 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         // Stop any existing sharing activity
         self.scorecard.stopSharing()
         
-        // Start broadcasting unless need to give option to use Online
-        let nearby = self.scorecard.settingNearbyPlaying
-        let online = self.scorecard.settingOnlinePlayerEmail != nil
-        if nearby && online {
-            defaultConnectionMode = .unknown
-        } else if nearby {
-            defaultConnectionMode = .nearby
+        if self.playingComputer {
+            // Game against computer
+            loopback = true
+             defaultConnectionMode = .loopback
+            // Don't send scores automatically when updated - send explicitly
+            self.scorecard.sendScores = false
+            
         } else {
-            defaultConnectionMode = .online
+            // Start broadcasting unless need to give option to use Online
+            nearby = self.scorecard.settingNearbyPlaying
+            online = self.scorecard.settingOnlinePlayerEmail != nil
+            if nearby && online {
+                defaultConnectionMode = .unknown
+            } else if nearby {
+                defaultConnectionMode = .nearby
+            } else {
+                defaultConnectionMode = .online
+            }
         }
         
         // Set finish button
@@ -178,7 +203,9 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             }
         }
         
-        if online && self.scorecard.recoveryMode && scorecard.recoveryOnlineMode == .invite {
+        if loopback {
+            self.setConnectionMode(.loopback, chooseInvitees: false)
+        } else if online && self.scorecard.recoveryMode && scorecard.recoveryOnlineMode == .invite {
             self.setConnectionMode(.online, chooseInvitees: false)
         } else if nearby && scorecard.recoveryMode && scorecard.recoveryOnlineMode == .broadcast {
             self.setConnectionMode(.nearby)
@@ -194,9 +221,9 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         }
         self.setInstructions()
         
-        // Check if in recovery mode - if so go straight to game setup
-        if self.scorecard.recoveryMode {
-            self.waitOtherPlayers(completion: {
+        // Check if in recovery mode or playing computer - if so go straight to game setup
+        if self.playingComputer || self.scorecard.recoveryMode {
+            self.waitOtherPlayers(showDialog: !self.playingComputer, completion: {
                 self.gameInProgress = true
                 if self.scorecard.recoveryOnlineMode == .invite {
                     // Simulate return from invitee search
@@ -209,6 +236,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                     }
                 }
             })
+
         }
         
         // Allow resequencing of participants
@@ -370,8 +398,9 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             self.scorecardButton.isHidden = !ready
             self.continueButton.isHidden = !ready
             self.setInstructions()
-            if self.scorecard.recoveryMode && self.connectedPlayers == self.scorecard.currentPlayers {
-                // Recovering  - go straight to game setup
+            if (self.scorecard.recoveryMode || self.playingComputer) && self.connectedPlayers == self.scorecard.currentPlayers {
+                // Recovering or playing computer  - go straight to game setup
+                self.setupPlayers()
                 if self.alertController != nil {
                     self.alertController.dismiss(animated: true, completion: {
                         self.performSegue(withIdentifier: "showHostGameSetup", sender: self)
@@ -787,12 +816,17 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                  self.stopHostBroadcast()
                 self.takeDelegates(nil)
             } else {
-                if self.connectionMode == .online {
+                switch self.connectionMode {
+                case .online:
                     if chooseInvitees {
                         self.chooseOnlineInvitees()
                     }
-                } else {
+                case .nearby:
                     self.startNearbyConnection()
+                case .loopback:
+                    self.startLoopbackMode()
+                default:
+                    break
                 }
             }
             
@@ -807,7 +841,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         self.scorecard.commsDelegate = multipeerHost
         self.takeDelegates(self)
         if self.playerData.count > 0 {
-            self.startHostBroadcast(email: playerData[0].email, name: playerData[0].name)
+            self.startHostBroadcast(email: playerData[0].email, name: playerData[0].email)
         }
     }
 
@@ -817,6 +851,27 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         self.scorecard.commsDelegate = rabbitMQHost
         self.takeDelegates(self)
     }
+    
+    private func startLoopbackMode() {
+        // Create loopback service, take delegate and then start loopback service
+        loopbackHost = LoopbackService(purpose: .playing, type: .server, serviceID: nil, deviceName: Scorecard.deviceName)
+        self.scorecard.commsDelegate = loopbackHost
+        self.takeDelegates(self)
+        self.loopbackHost.start(email: playerData[0].email, name: playerData[0].name)
+        
+        // Set up other players - they should call the host back
+        let hostPeer = CommsPeer(parent: loopbackHost, deviceName: Scorecard.deviceName, playerEmail: self.playerData.first?.email, playerName: playerData.first?.playerMO.name)
+        self.computerPlayers = [:]
+        var names = ["Harry", "Snape", "Ron"]
+        for playerNumber in 2...4 {
+            self.startLoopbackClient(scorecard: self.scorecard, email: "_Player\(playerNumber)", name: names[playerNumber - 2], deviceName: "\(names[playerNumber - 2])'s iPhone", hostPeer: hostPeer, playerNumber: playerNumber)
+        }
+    }
+    
+    private func startLoopbackClient(scorecard: Scorecard, email: String, name: String, deviceName: String, hostPeer: CommsPeer, playerNumber: Int) {
+        let computerPlayer = ComputerPlayer(scorecard: scorecard, email: email, name: name, deviceName: deviceName, hostPeer: hostPeer, playerNumber: playerNumber)
+        computerPlayers?[playerNumber] = computerPlayer as ComputerPlayerDelegate
+   }
 
     private func takeDelegates(_ delegate: Any?) {
         self.scorecard.commsDelegate?.stateDelegate = delegate as! CommsStateDelegate?
@@ -848,9 +903,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         let card = Card(fromNumber: data["card"] as! Int)
         if playerNumber != 1 {
             // Only need to remove other players cards since my own will be removed by playing them
-            if let cardNumber = self.scorecard.deal.hands[playerNumber - 1].findCard(card: card) {
-                self.scorecard.deal.hands[playerNumber - 1].cards.remove(at: cardNumber)
-            }
+            _ = self.scorecard.deal.hands[playerNumber - 1].remove(card: card)
         }
     }
     
@@ -931,13 +984,17 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         }
     }
     
-    private func waitOtherPlayers(completion: (()->())? = nil) {
-        self.alertController = UIAlertController(title: "Ready", message: "Waiting for other players to rejoin...", preferredStyle: .alert)
-        self.alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { UIAlertAction -> () in
-            self.exitHost()
-            self.alertController = nil
-        }))
-        self.present(self.alertController, animated: true, completion: completion)
+    private func waitOtherPlayers(showDialog: Bool = true, completion: (()->())? = nil) {
+        if showDialog {
+            self.alertController = UIAlertController(title: "Ready", message: "Waiting for other players to rejoin...", preferredStyle: .alert)
+            self.alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { UIAlertAction -> () in
+                self.exitHost()
+                self.alertController = nil
+            }))
+            self.present(self.alertController, animated: true, completion: completion)
+        } else {
+            completion?()
+        }
     }
     
     private func startHostBroadcast(email: String!, name: String!, invite: [String]? = nil, queueUUID: String! = nil) {
@@ -976,6 +1033,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             destination.scorecard = self.scorecard
             destination.returnSegue = "hideHostGameSetup"
             destination.rabbitMQService = self.rabbitMQHost
+            destination.computerPlayerDelegate = self.computerPlayers
             
         default:
             break

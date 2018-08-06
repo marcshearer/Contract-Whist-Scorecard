@@ -30,6 +30,7 @@ Long-term bugs
 
 Short-term
 ----------
+Add connection info to nearby and change it from debug to and alertMessage in rabbit
 Add tests for temporary settings
 Add tests for history / location to check they're not saved if play a game
 Leave selected invitees selected (and visible) when filtering

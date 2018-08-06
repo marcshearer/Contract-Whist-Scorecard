@@ -242,15 +242,15 @@ extension HandViewController {
                     bids.append(bid!)
                 }
             }
-            if self.entryPlayerNumber(self.enteredPlayerNumber) == bids.count + 1 {
+            if self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round) == bids.count + 1 {
                 let cards = self.scorecard.roundCards(round, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
                 var range = ((Double(cards) / Double(self.scorecard.currentPlayers)) * 2) + 1
                 range.round()
                 var bid = Utility.random(max(2,Int(range))) - 1
                 bid = min(bid, cards)
-                if self.entryPlayerNumber(self.round) == self.scorecard.currentPlayers {
+                if self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round) == self.scorecard.currentPlayers {
                     // Last to bid - need to avoid remaining
-                    let remaining = scorecard.remaining(playerNumber: entryPlayerNumber(self.enteredPlayerNumber), round: self.round, mode: .bid, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
+                    let remaining = scorecard.remaining(playerNumber: self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round), round: self.round, mode: .bid, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
                     if bid == remaining {
                         if remaining == 0 {
                             bid += 1
@@ -274,10 +274,10 @@ extension HandViewController {
     func autoPlay() {
         if self.scorecard.autoPlayHands > 0 && (self.scorecard.autoPlayHands > 1 || round <= self.scorecard.autoPlayRounds) {
             if self.state.toPlay == self.state.enteredPlayerNumber {
-                for suitNumber in 1...self.state.handSuits.count {
+                for suitNumber in 1...self.state.hand.handSuits.count {
                     if suitEnabled[suitNumber-1] {
-                        if let card = self.state.handSuits[suitNumber-1].cards.last {
-                            if self.checkCardAvailable(suitNumber, self.state.handSuits[suitNumber-1].cards.count) {
+                        if let card = self.state.hand.handSuits[suitNumber-1].cards.last {
+                            if self.checkCardAvailable(suitNumber, self.state.hand.handSuits[suitNumber-1].cards.count) {
                                 Utility.executeAfter(delay: 1 * Config.autoPlayTimeUnit, completion: {
                                     self.scorecard.sendCardPlayed(round: self.round, trick: self.state.trick, playerNumber: self.enteredPlayerNumber, card: card)
                                     self.playCard(card: card)

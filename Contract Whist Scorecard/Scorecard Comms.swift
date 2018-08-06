@@ -44,6 +44,12 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         }
     }
     
+    public var isPlayingComputer: Bool {
+        get {
+            return (self.commsDelegate != nil && self.commsDelegate!.connectionMode == .loopback  && self.commsDelegate!.connectionPurpose == .playing)
+        }
+    }
+    
     public func setupSharing() {
         if self.settingAllowBroadcast {
             self.sharingService = MultipeerService(purpose: .sharing, type: .server, serviceID: self.serviceID(.sharing))
@@ -97,7 +103,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             
         case .connected:
             // New connection - resend state
-            Utility.mainThread { [unowned self] in
+            Utility.mainThread("stateChange", execute: { [unowned self] in
                 if self.gameInProgress {
                     // Only here when sharing
                     if self.isHosting || self.hasJoined {
@@ -108,7 +114,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 } else {
                     self.sendInstruction("wait", to: peer)
                 }
-            }
+            })
             
         default:
             break
@@ -117,28 +123,36 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     
     public func didReceiveData(descriptor: String, data: [String : Any?]?, from commsPeer: CommsPeer) {
         
-        Utility.mainThread { [unowned self] in
+        Utility.mainThread("didReceiveData", execute: { [unowned self] in
             switch descriptor {
             case "requestThumbnail":
                 self.sendPlayerThumbnail(playerEmail: data!["email"] as! String, to: commsPeer)
             default:
                 break
             }
-        }
+        })
     }
     
     // MARK: - Utility routines =============================================================== -
     
-    public func playHand(from viewController: UIViewController, sourceView: UIView) {
+    public func playHand(from viewController: UIViewController, sourceView: UIView, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil) {
         if self.isHosting || self.hasJoined {
             // Now play the hand
-            if self.isHosting && self.handState.hand == nil {
-                // Need to deal next hand
-                self.handState.hand = self.dealHand(cards: self.roundCards(self.handState.round, rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce))
-                if self.isHosting {
+            if self.isHosting {
+                if self.handState.hand == nil {
+                    // Need to deal next hand
+                    self.handState.hand = self.dealHand(cards: self.roundCards(self.handState.round, rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce))
+        
                     // Save hand and (blank) trick in case need to recover
                     self.recovery.saveHands(deal: self.deal, made: self.handState.made, twos: self.handState.twos)
                     self.recovery.saveTrick(toLead: self.handState.toLead, trickCards: [])
+                }
+                
+                // Set up hands in computer player mode
+                if computerPlayerDelegate != nil {
+                    for (playerNumber, computerPlayerDelegate) in computerPlayerDelegate! {
+                        computerPlayerDelegate?.newHand(hand: self.deal.hands[playerNumber-1])
+                    }
                 }
             }
             if self.handState.hand != nil && (self.handState.hand.cards.count > 0 || self.handState.trickCards.count != 0) {
@@ -151,9 +165,11 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 handViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
                 handViewController.popoverPresentationController?.sourceView = sourceView
                 handViewController.preferredContentSize = CGSize(width: 400, height: 554)
-                Utility.mainThread {
+                handViewController.computerPlayerDelegate = computerPlayerDelegate
+                
+                Utility.mainThread("playHand", execute: {
                     viewController.present(handViewController, animated: true, completion: nil)
-                }
+                })
                 self.handViewController = handViewController
             } else if self.commsHandlerMode == .playHand {
                 // Notify broadcast controller that hand display already complete
@@ -215,14 +231,14 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         }
     }
     
-    public func sendScores(playerNumber: Int! = nil, round: Int! = nil, mode: Mode! = nil, to commsPeer: CommsPeer! = nil) {
+    public func sendScores(playerNumber: Int! = nil, round: Int! = nil, mode: Mode! = nil, overrideBid: Int? = nil, to commsPeer: CommsPeer! = nil, using commsDelegate: CommsHandlerDelegate? = nil) {
         var scoreList: [String : Any] = [:]
         var playerRange: CountableClosedRange<Int>
         var roundRange: CountableClosedRange<Int>
         
         if self.sendScores {
             
-            self.commsDelegate?.debugMessage("Sending scores, player: \(playerNumber == nil ? "All" : "\(playerNumber!)"), round: \(round == nil ? "All" : "\(round!)"), mode: \(mode == nil ? "All" : "\(mode == .bid ? "bid" : (mode == .made ? "made" : "twos")))")", device: commsPeer?.deviceName, force: false)
+            self.commsDelegate?.debugMessage("Sending scores, player: \(playerNumber == nil ? "All" : "\(playerNumber!)"), round: \(round == nil ? "All" : "\(round!)"), mode: \(mode == nil ? "All" : "\(mode == .bid ? "bid" : (mode == .made ? "made" : "twos"))")", device: commsPeer?.deviceName, force: false)
             
             // Set up ranges
             if playerNumber == nil {
@@ -246,7 +262,11 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                     
                     // Send required values
                     if mode == nil || mode == .bid {
-                        let bid = self.enteredPlayer(playerNumber).bid(round)
+                        var bid = overrideBid
+                        if bid == nil {
+                            // Will only be overridden by computer player
+                            bid = self.enteredPlayer(playerNumber).bid(round)
+                        }
                         if bid != nil {
                             roundScore["bid"] = bid
                         } else {
@@ -284,7 +304,12 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             }
             // Send if non-nil scores
             if scoreList.count != 0 {
-                self.commsDelegate?.send((playerNumber == nil && round == nil && mode == nil ? "allscores" : "scores"), scoreList, to: commsPeer)
+                // Setup comms handler
+                var commsDelegate = commsDelegate
+                if commsDelegate == nil {
+                    commsDelegate = self.commsDelegate
+                }
+                commsDelegate?.send((playerNumber == nil && round == nil && mode == nil ? "allscores" : "scores"), scoreList, to: commsPeer)
             }
         }
     }
@@ -314,8 +339,13 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                                  to: commsPeer)
     }
     
-    public func sendCardPlayed(round: Int, trick: Int, playerNumber: Int, card: Card) {
-        self.commsDelegate?.send("played", [ "round"           : round,
+    public func sendCardPlayed(round: Int, trick: Int, playerNumber: Int, card: Card, using commsDelegate: CommsHandlerDelegate? = nil) {
+        // Setup comms handler
+        var commsDelegate = commsDelegate
+        if commsDelegate == nil {
+            commsDelegate = self.commsDelegate
+        }
+        commsDelegate?.send("played", [ "round"           : round,
                                              "trick"           : trick,
                                              "player"          : playerNumber,
                                              "card"            : card.toNumber() ])
@@ -361,10 +391,14 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                             bid = roundData["bid"] as! Int?
                         }
                         self.enteredPlayer(playerNumber).setBid(roundNumber, bid, bonus2: bonus2)
+                        self.commsDelegate?.debugMessage("Processing score, player: \(playerNumber), round: \(roundNumber), mode: bid")
                         if self.handViewController != nil {
                             self.handViewController.reflectBid(round: roundNumber, enteredPlayerNumber: playerNumber)
                         }
                     }
+                    Utility.executeAfter(delay: 0.1, completion: {
+                        self.sendScores(playerNumber: playerNumber, round: roundNumber, mode: .bid)
+                    })
                 }
                 if roundData["made"] != nil {
                     var made: Int!
@@ -400,28 +434,26 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         if self.handState == nil || playerNumber != self.handState.enteredPlayerNumber {
             // Ignore if from self since should know about it already
             
+            // Update state
+            self.playCard(card: card)
+            
             if self.isHosting {
                 // Reflect it out to other devices
                 self.sendCardPlayed(round: round, trick: trick, playerNumber: playerNumber, card: card)
             }
             
-            // Update state
-            self.playCard(card: card)
-            
             if self.handViewController != nil {
                 // Play the card on the view
                 self.handViewController.reflectCardPlayed(round: round, trick: trick, playerNumber: playerNumber, card: card)
             } else {
-                // State won't be update in view so do it here
+                // State won't be updated in view so do it here
                 self.updateState()
             }
         }
     }
     
     public func playCard(card: Card) {
-        if let (suitNumber, cardNumber) = self.handState.findCard(card: card) {
-            self.handState.handSuits[suitNumber].cards.remove(at: cardNumber)
-        }
+        _ = self.handState.hand.remove(card: card)
         
         let nextCard = self.handState.trickCards.count
         if nextCard < self.currentPlayers {
@@ -429,35 +461,41 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         }
     }
     
+    func checkWinner(currentPlayers: Int, round: Int, suits: [Suit], trickCards: [Card]) -> (Int?, Bool) {
+        var winner = 1
+        let cardLed = trickCards.first!
+        var highLed = cardLed.rank
+        var highTrump: Int!
+        var win2 = (cardLed.toRankString() == "2")
+        for cardNumber in 2...currentPlayers {
+            let cardPlayed = trickCards[cardNumber - 1]
+            if cardPlayed.suit == cardLed.suit {
+                if cardPlayed.rank > highLed! && highTrump == nil {
+                    // Highest card in suit led and no trumps played
+                    highLed = cardPlayed.rank
+                    winner = cardNumber
+                    win2 = (cardPlayed.toRankString() == "2")
+                }
+            } else if cardPlayed.suit == self.roundSuit(round, suits: suits) && (highTrump == nil || cardPlayed.rank > highTrump) {
+                highTrump = cardPlayed.rank
+                winner = cardNumber
+                win2 = (cardPlayed.toRankString() == "2")
+            }
+        }
+        return (winner, win2)
+    }
+    
     public func updateState() {
         if self.handState.trickCards.count == self.currentPlayers {
             // Hand complete - check who won
-            let cardLed = self.handState.trickCards[0]
-            var highLed = cardLed.rank
-            var highTrump: Int!
-            var win2 = (cardLed.toRankString() == "2")
-            self.handState.winner = 1
-            for cardNumber in 2...self.currentPlayers {
-                let cardPlayed = self.handState.trickCards[cardNumber - 1]
-                if cardPlayed.suit == cardLed.suit {
-                    if cardPlayed.rank > highLed! && highTrump == nil {
-                        // Highest card in suit led and no trumps played
-                        highLed = cardPlayed.rank
-                        self.handState.winner = cardNumber
-                        win2 = (cardPlayed.toRankString() == "2")
-                    }
-                } else if cardPlayed.suit == self.roundSuit(self.handState.round, suits: self.handState.suits) && (highTrump == nil || cardPlayed.rank > highTrump) {
-                    highTrump = cardPlayed.rank
-                    self.handState.winner = cardNumber
-                    win2 = (cardPlayed.toRankString() == "2")
-                }
-            }
+            var win2: Bool
+            (self.handState.winner, win2) = self.checkWinner(currentPlayers: self.currentPlayers, round: self.handState.round, suits: self.handState.suits, trickCards: self.handState.trickCards)
             
             if self.isHosting {
                 // Remove current trick from deal
                 for (index, card) in self.handState.trickCards.enumerated() {
                     let playerNumber = self.handState.playerNumber(index + 1)
-                    _ = self.deal.hands[playerNumber - 1].removeCard(card)
+                    _ = self.deal.hands[playerNumber - 1].remove(card: card)
                 }
             }
             
@@ -465,7 +503,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             self.handState.nextTrick()
             
             // Set next to lead from winner
-            self.handState.toLead = self.handState.playerNumber(self.handState.winner)
+            self.handState.toLead = self.handState.playerNumber(self.handState.winner!)
             self.handState.toPlay = self.handState.toLead
             
             // Update tricks made
@@ -569,5 +607,10 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         searchViewController.preferredContentSize = CGSize(width: 400, height: 600)
         searchViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
         viewController.present(searchViewController, animated: true, completion: nil)
+    }
+    
+    func entryPlayerNumber(_ enteredPlayerNumber: Int, round: Int) -> Int {
+        // Everything in data is in entered player sequence but bids will be in entry player sequence this converts between them
+        return self.enteredPlayer(enteredPlayerNumber).entryPlayerNumber(round: round)
     }
 }

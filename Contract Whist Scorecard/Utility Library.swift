@@ -17,14 +17,28 @@ class Utility {
     
     // MARK: - Execute closure after delay ===================================================================== -
     
-    class func mainThread(execute: @escaping ()->()) {
-        DispatchQueue.main.async(execute: execute)
+    class func mainThread(_ message: String = "Utility", suppressDebug: Bool = false, qos: DispatchQoS = .userInteractive, execute: @escaping ()->()) {
+        if !suppressDebug {
+            Utility.debugMessage(message, "About to execute closure on main thread", mainThread: false)
+        }
+        DispatchQueue.main.async(qos: qos, execute: execute)
+        if !suppressDebug {
+            Utility.debugMessage(message, "Main thread closure executed", mainThread: false)
+        }
     }
     
-    class func executeAfter(delay: Double, completion: (()->())?) {
-        let when = DispatchTime.now() + delay
-        DispatchQueue.main.asyncAfter(deadline: when, execute: {
+    class func executeAfter(_ message: String="Utility", delay: Double, suppressDebug: Bool = false, qos: DispatchQoS = .userInteractive, completion: (()->())?) {
+        if !suppressDebug {
+            Utility.debugMessage(message, "Queing closure after \(delay)", mainThread: false)
+        }
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay, qos: qos, execute: {
+            if !suppressDebug {
+                Utility.debugMessage(message, "About to execute delayed closure", mainThread: false)
+            }
             completion?()
+            if !suppressDebug {
+                    Utility.debugMessage(message, "Delayed closure executed", mainThread: false)
+            }
         })
     }
     
@@ -179,6 +193,17 @@ class Utility {
         return Int(quotient)
     }
     
+    class func round(_ value: Double) -> Int {
+        var value = value
+        value.round()
+        return Int(value)
+    }
+    
+    // MARK: - Array helper functions ==================================================================== -
+    
+    class func sum(_ array: [Int]) -> Int {
+        return array.reduce(0) {$0 + $1}
+    }
     //MARK: Cloud functions - get field from cloud for various types =====================================
     
     class func objectString(cloudObject: CKRecord, forKey: String) -> String! {
@@ -379,32 +404,42 @@ class Utility {
         return activeViewController
     }
     
-    class func debugMessage(_ from: String, _ message: String, showDevice: Bool = false, force: Bool = false) {
-        if Utility.isDevelopment || Scorecard.adminMode || force {
-            Utility.mainThread {
-                var outputMessage: String
-                let timestamp = Utility.dateString(Date(), format: "hh:mm:ss.SS", localized: false)
-                outputMessage = "DEBUG(\(from)): \(timestamp)"
-                if showDevice {
-                    #if ContractWhist
-                    outputMessage = outputMessage + " - Device:\(Scorecard.deviceName)"
-                    #else
-                    outputMessage = outputMessage + UIDevice.current.name
-                    #endif
-                }
-                outputMessage = outputMessage + " - \(message)"
-                print(outputMessage)
+    class func debugMessage(_ from: String, _ message: String, showDevice: Bool = false, force: Bool = false, mainThread: Bool = true) {
+        
+        func closure() {
+            var outputMessage: String
+            let timestamp = Utility.dateString(Date(), format: "hh:mm:ss.SS", localized: false)
+            outputMessage = "DEBUG(\(from)): \(timestamp)"
+            if showDevice {
                 #if ContractWhist
-                    if (Config.rabbitMQUri_DevMode != .amqpServer || Scorecard.adminMode || force) && Config.rabbitMQLogQueue != "" && Config.rabbitMQUri != "" {
-                        let scorecard = Scorecard.getScorecard()!
-                        if scorecard.logService == nil {
-                            scorecard.logService = RabbitMQService(purpose: .other, type: .queue, serviceID: Config.rabbitMQUri)
-                            scorecard.logQueue = scorecard.logService.startQueue(delegate: scorecard.logService, queueUUID: Config.rabbitMQLogQueue)
-                        }
-                        scorecard.logQueue.sendBroadcast(data: ["message" : outputMessage,
-                                                                "timestamp" : timestamp])
-                    }
+                outputMessage = outputMessage + " - Device:\(Scorecard.deviceName)"
+                #else
+                outputMessage = outputMessage + UIDevice.current.name
                 #endif
+            }
+            outputMessage = outputMessage + " - \(message)"
+            print(outputMessage)
+            fflush(stdout)
+            #if ContractWhist
+            if (Config.rabbitMQUri_DevMode != .amqpServer || Scorecard.adminMode || force) && Config.rabbitMQLogQueue != "" && Config.rabbitMQUri != "" {
+                let scorecard = Scorecard.getScorecard()!
+                if scorecard.logService == nil {
+                    scorecard.logService = RabbitMQService(purpose: .other, type: .queue, serviceID: Config.rabbitMQUri)
+                    scorecard.logQueue = scorecard.logService.startQueue(delegate: scorecard.logService, queueUUID: Config.rabbitMQLogQueue)
+                }
+                scorecard.logQueue.sendBroadcast(data: ["message" : outputMessage,
+                                                        "timestamp" : timestamp])
+            }
+            #endif
+        }
+        
+        if Utility.isDevelopment || Scorecard.adminMode || force {
+            if mainThread {
+                Utility.mainThread(suppressDebug: true, execute: {
+                    closure()
+                })
+            } else {
+                closure()
             }
         }
     }

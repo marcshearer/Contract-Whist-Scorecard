@@ -108,24 +108,29 @@ class PlayerDetail {
     
     public func createMO(noSync: Bool = true) -> PlayerMO! {
         var playerMO: PlayerMO!
-        if !CoreData.update(updateLogic: {
+        if self.scorecard.isPlayingComputer {
             playerMO = CoreData.create(from: "Player") as! PlayerMO
             self.toManagedObject(playerMO: playerMO)
-            // If necessary avoid syncing values back to cloud
-            if noSync {
-                playerMO.syncGamesPlayed = playerMO.gamesPlayed
-                playerMO.syncGamesWon = playerMO.gamesWon
-                playerMO.syncHandsPlayed = playerMO.handsPlayed
-                playerMO.syncHandsMade = playerMO.handsMade
-                playerMO.syncTwosMade = playerMO.twosMade
-                playerMO.syncTotalScore = playerMO.totalScore
-            }
-        }) {
-            // Ignore errors
         } else {
-            let index = self.scorecard.playerList.index(where: {($0.name! > self.name)})
-            self.scorecard.playerList.insert(playerMO, at: (index == nil ? self.scorecard.playerList.count : index!))
-            self.objectID = playerMO.objectID
+            if !CoreData.update(updateLogic: {
+                playerMO = CoreData.create(from: "Player") as! PlayerMO
+                self.toManagedObject(playerMO: playerMO)
+                // If necessary avoid syncing values back to cloud
+                if noSync {
+                    playerMO.syncGamesPlayed = playerMO.gamesPlayed
+                    playerMO.syncGamesWon = playerMO.gamesWon
+                    playerMO.syncHandsPlayed = playerMO.handsPlayed
+                    playerMO.syncHandsMade = playerMO.handsMade
+                    playerMO.syncTwosMade = playerMO.twosMade
+                    playerMO.syncTotalScore = playerMO.totalScore
+                }
+            }) {
+                // Ignore errors
+            } else {
+                let index = self.scorecard.playerList.index(where: {($0.name! > self.name)})
+                self.scorecard.playerList.insert(playerMO, at: (index == nil ? self.scorecard.playerList.count : index!))
+                self.objectID = playerMO.objectID
+            }
         }
         return playerMO
     }

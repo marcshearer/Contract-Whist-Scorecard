@@ -253,7 +253,7 @@ class Recovery {
         // Remove cards in current trick from deal
         for (index, card) in self.scorecard.handState.trickCards.enumerated() {
             let playerNumber = self.scorecard.handState.playerNumber(index + 1)
-            _ = self.scorecard.deal.hands[playerNumber - 1].removeCard(card)
+            _ = self.scorecard.deal.hands[playerNumber - 1].remove(card: card)
         }
         // Get number of tricks and twos made
         scorecard.handState.made = UserDefaults.standard.array(forKey: "recoveryMade") as! [Int]

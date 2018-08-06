@@ -21,6 +21,7 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
     public var selectedPlayers = [PlayerMO?]()          // Selected players passed in from player selection
     public var returnSegue: String!                    // View to return to
     public var rabbitMQService: RabbitMQService!
+    public var computerPlayerDelegate: [Int: ComputerPlayerDelegate?]?
     
     // Local class variables
     private var buttonMode = "Triangle"
@@ -373,6 +374,7 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
             destination.returnSegue = "hideScorepad"
             destination.rabbitMQService = self.rabbitMQService
             destination.recoveryMode = self.scorecard.recoveryMode
+            destination.computerPlayerDelegate = self.computerPlayerDelegate
             self.scorecard.recoveryMode = false
             
         default:

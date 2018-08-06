@@ -33,10 +33,11 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     internal var suitEnabled = [Bool](repeating: false, count: 6)
     private var lastHand = false
     internal var handTestData = HandTestData()
-    private var collectionHandSuits: [HandSuit]!    // Mirror of the hand suits in state - updated to reflect in collection
+    private var collectionHand: Hand!    // Mirror of the hand in state - updated to reflect in collection
     
-    // Delegate
+    // Delegates
     public var delegate: HandStatusDelegate!
+    public var computerPlayerDelegate: [ Int : ComputerPlayerDelegate? ]?
     
     // Component sizes
     private var viewWidth: CGFloat!
@@ -152,9 +153,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         playedCardCollectionTag = playedCardCollectionView.tag
         
         setupArrays()
-        if self.state.handSuits == nil {
-            self.state.handSuits = HandSuit.sortCards(cards: self.state.hand.cards)
-        }
+       
         self.mirrorHandSuitsToCollection()
         self.currentCards = self.scorecard.roundCards(round, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
         
@@ -206,11 +205,11 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - TableView Overrides ===================================================================== -
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (handCardWidth == nil ? 0 : self.collectionHandSuits.count)
+        return (handCardWidth == nil ? 0 : self.collectionHand.handSuits.count)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return handCardHeight * CGFloat(Int((self.collectionHandSuits[indexPath.row].cards.count - 1) / handCardsPerRow) + 1)
+        return handCardHeight * CGFloat(Int((self.collectionHand.handSuits[indexPath.row].cards.count - 1) / handCardsPerRow) + 1)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -253,7 +252,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
         } else {
             // Hand cards
-            return self.collectionHandSuits[collectionView.tag].cards.count
+            return self.collectionHand.handSuits[collectionView.tag].cards.count
         }
     }
     
@@ -352,10 +351,10 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Card Collection Cell", for: indexPath) as! CardCollectionCell
             
-            cell.cardLabel.attributedText = self.collectionHandSuits[suit-1].cards[card - 1].toAttributedString()
+            cell.cardLabel.attributedText = self.collectionHand.handSuits[suit-1].cards[card - 1].toAttributedString()
             cell.cardLabel.font = UIFont.systemFont(ofSize: self.handCardFontSize)
             ScorecardUI.moreRoundCorners(cell.cardView)
-            cell.tag = self.collectionHandSuits[suit-1].cards[card - 1].toNumber()
+            cell.tag = self.collectionHand.handSuits[suit-1].cards[card - 1].toNumber()
             
             return cell
         }
@@ -393,7 +392,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     setupBidSize()
                     self.bidCollectionView.reloadData()
                 }
-                bidsEnable(true, blockRemaining: self.entryPlayerNumber(self.enteredPlayerNumber) == self.scorecard.currentPlayers)
+                bidsEnable(true, blockRemaining: self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round) == self.scorecard.currentPlayers)
             }
         } else {
             confirmCard(collectionView, indexPath)
@@ -423,7 +422,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.instructionTextView.text = "Bidding Complete"
                 self.finishButton.isHidden = true
                 self.scorecard.commsHandlerMode = .viewTrick
-                Utility.executeAfter(delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 1.0), completion: {
+                Utility.executeAfter("bidComplete", delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 1.0), completion: {
                     self.finishButton.isHidden = false
                     self.scorecard.commsHandlerMode = .none
                     NotificationCenter.default.post(name: .broadcastHandlerCompleted, object: self, userInfo: nil)
@@ -439,7 +438,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if bidMode {
         // Bidding
             cardsEnable(false)
-            if self.entryPlayerNumber(self.enteredPlayerNumber) == bids.count + 1 {
+            if self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round) == bids.count + 1 {
                 // Your bid
                 bidsEnable(true, blockRemaining: bids.count == self.scorecard.currentPlayers - 1)
                 self.instructionTextView.text = "You to bid \(self.scorecard.enteredPlayer(enteredPlayerNumber).playerMO!.name!)"
@@ -450,6 +449,8 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 bidsEnable(false)
                 self.instructionTextView.text = "\(self.scorecard.entryPlayer(bids.count + 1).playerMO!.name!) to bid"
                 self.instructionView.backgroundColor = UIColor.darkGray
+                // Get computer player to bid
+                self.computerPlayerDelegate?[self.scorecard.entryPlayer(bids.count + 1).playerNumber]??.autoBid()
             }
             setupOverUnder()
             lastHandButton.isHidden = true
@@ -464,8 +465,8 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
             
             if currentTrickCards == self.scorecard.currentPlayers && self.state.trick > 1 {
                 // Hand complete - update tricks made on screen
-                self.playerMadeLabel[self.state.winner-1]?.text = playerMadeText(self.state.toPlay!)
-                self.playerMadeLabel[self.state.winner-1]?.textColor = UIColor.white
+                self.playerMadeLabel[self.state.winner! - 1]?.text = playerMadeText(self.state.toPlay!)
+                self.playerMadeLabel[self.state.winner! - 1]?.textColor = UIColor.white
                 
                 // Disable lookback
                 lastHandButton.isHidden = true
@@ -480,7 +481,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         // Don't refresh (or exit) for at least 1 second
                         self.scorecard.commsHandlerMode = .viewTrick
                         self.finishButton.isHidden = true
-                        Utility.executeAfter(delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 1.0), completion: {
+                        Utility.executeAfter("trickComplete", delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 1.0), completion: {
                             self.finishButton.isHidden = false
                             self.scorecard.commsHandlerMode = .none
                             NotificationCenter.default.post(name: .broadcastHandlerCompleted, object: self, userInfo: nil)
@@ -490,10 +491,10 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                     // Hand finished
                     self.finishButton.isHidden = true
                     self.scorecard.commsHandlerMode = .viewTrick
-                    Utility.executeAfter(delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 2.0), completion: {
+                    Utility.executeAfter("handFinished", delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 2.0), completion: {
                         // Return to scorepad after 2 seconds
-                        self.scorecard.commsHandlerMode = .dismiss
-                        self.dismissHand()
+                            self.scorecard.commsHandlerMode = .dismiss
+                            self.dismissHand()
                     })
                 }
             } else {
@@ -516,8 +517,8 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.cardsEnable(true)
             } else {
                 let cardLed = self.state.trickCards[0]
-                let suitLedXref = self.state.xref[cardLed.suit]
-                if  suitLedXref == nil || self.state.handSuits[suitLedXref!].cards.count == 0 {
+                let suitLed = self.state.hand.xrefSuit[cardLed.suit]
+                if suitLed == nil || suitLed!.cards.count == 0 {
                     // Dont' have this suit - can play anything
                     self.cardsEnable(true)
                 } else {
@@ -533,6 +534,8 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.cardsEnable(false)
             self.instructionTextView.text = "\(self.scorecard.enteredPlayer(self.state.toPlay).playerMO!.name!) to play"
             self.instructionView.backgroundColor = UIColor.darkGray
+            // Get computer player to play
+            self.computerPlayerDelegate?[self.state.toPlay]??.autoPlay()
         }
     }
     
@@ -542,7 +545,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         // Must be in bid mode - simply fill in the right bid
         // Note that the player number sent will be the enterd player number and hence must be converted
         if bidMode != nil && bidMode && round == self.round {
-            let entryPlayerNumber = self.entryPlayerNumber(enteredPlayerNumber)
+            let entryPlayerNumber = self.scorecard.entryPlayerNumber(enteredPlayerNumber, round: self.round)
             setupPlayerBidText(entryPlayerNumber: entryPlayerNumber, animate:true)
             self.stateController()
         }
@@ -631,7 +634,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func bidsEnable(_ enable: Bool, blockRemaining: Bool = false) {
-        let remaining = scorecard.remaining(playerNumber: entryPlayerNumber(self.enteredPlayerNumber), round: self.round, mode: .bid, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
+        let remaining = scorecard.remaining(playerNumber: self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round), round: self.round, mode: .bid, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
         for bid in 0...bidButton.count - 1 {
             if !enable || (blockRemaining && (bid == remaining && (moreMode || bid <= maxBidButton))) {
                 bidButtonEnabled[bid] = false
@@ -653,15 +656,15 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func cardsEnable(_ enable: Bool, suit matchSuit: Suit! = nil) {
-        if self.state.handSuits != nil && self.state.handSuits.count > 0 {
-            for suitNumber in 1...self.state.handSuits.count {
+        if self.state.hand.handSuits != nil && self.state.hand.handSuits.count > 0 {
+            for suitNumber in 1...self.state.hand.handSuits.count {
                 suitEnable(enable: enable, suitNumber: suitNumber, matchSuit: matchSuit)
             }
         }
     }
     
     func suitEnable(enable: Bool, suitNumber: Int, matchSuit: Suit! = nil) {
-        let suit = self.state.handSuits[suitNumber - 1]
+        let suit = self.state.hand.handSuits[suitNumber - 1]
         if enable && suit.cards.count != 0 && (matchSuit == nil || matchSuit == suit.cards[0].suit) {
             suitCollectionView[suitNumber-1]?.isUserInteractionEnabled = true
             suitCollectionView[suitNumber-1]?.alpha = 1.0
@@ -687,7 +690,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         // Set hand height
         self.handHeightConstraint.constant = handViewHeight
         
-        for suit in self.state.handSuits {
+        for suit in self.state.hand.handSuits {
             maxSuitCards = max(maxSuitCards, suit.cards.count)
         }
         
@@ -696,7 +699,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
             loop+=1
         
             var handRows = 0
-            for suit in self.state.handSuits {
+            for suit in self.state.hand.handSuits {
                 handRows += Int((suit.cards.count - 1) / handCardsPerRow) + 1
             }
             handRows = max(4, handRows)
@@ -755,11 +758,11 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let card =  Card(fromNumber: cell!.tag)
         
         func playCard(alertAction: UIAlertAction) {
-            Utility.mainThread { [unowned self] in
+            Utility.mainThread("playCard", execute: { [unowned self] in
                 self.isModalInPopover = true
-                self.scorecard.sendCardPlayed(round: self.round, trick: self.state.trick, playerNumber: self.enteredPlayerNumber, card: card)
                 self.playCard(card: card)
-            }
+                self.scorecard.sendCardPlayed(round: self.round, trick: self.state.trick, playerNumber: self.enteredPlayerNumber, card: card)
+            })
         }
         
         func resetPopover(alertAction: UIAlertAction) {
@@ -798,7 +801,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.cardsEnable(false)
 
         // Remove the card from your hand
-        if let (suitNumber, cardNumber) = HandState.findCard(handSuits: self.collectionHandSuits, card: card) {
+        if let (suitNumber, cardNumber) = self.collectionHand.find(card: card) {
             let collectionView = suitCollectionView[suitNumber]!
             let indexPath = IndexPath(row: cardNumber, section: 0)
             collectionView.performBatchUpdates({
@@ -851,7 +854,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func makeBid(_ bid: Int) {
         self.isModalInPopover = true
         self.scorecard.enteredPlayer(enteredPlayerNumber).setBid(round, bid)
-        let entryPlayerNumber = self.entryPlayerNumber(enteredPlayerNumber)
+        let entryPlayerNumber = self.scorecard.entryPlayerNumber(enteredPlayerNumber, round: self.round)
         setupPlayerBidText(entryPlayerNumber: entryPlayerNumber, animate: true)
         if moreMode {
             moreMode = false
@@ -885,11 +888,6 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     // MARK: - Utility Routines ======================================================================= -
-        
-    func entryPlayerNumber(_ enteredPlayerNumber: Int) -> Int {
-        // Everything in data is in entered player sequence but bids will be in entry player sequence this converts between them
-        return self.scorecard.enteredPlayer(enteredPlayerNumber).entryPlayerNumber(round: self.round)
-    }
     
     func setupOverUnder() {
         let totalRemaining = scorecard.remaining(playerNumber: 0, round: scorecard.selectedRound, mode: Mode.bid, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
@@ -943,13 +941,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     private func mirrorHandSuitsToCollection() {
         // Copy the hand suits to the version used by the collection (inside performBatchUpdates)
         // Need to copy individual values rather than pointers
-        self.collectionHandSuits = []
-        for suitCount in 0..<self.state.handSuits.count {
-            self.collectionHandSuits.append(HandSuit())
-            for cardCount in 0..<self.state.handSuits[suitCount].cards.count {
-                self.collectionHandSuits[suitCount].cards.append(self.state.handSuits[suitCount].cards[cardCount])
-            }
-        }
+        self.collectionHand = self.scorecard.handState.hand.copy() as! Hand
     }
     
     // MARK: - Segue Prepare Handler =================================================================== -
@@ -1048,26 +1040,7 @@ class HandState {
     public var toLead: Int!
     public var lastToLead: Int!
     public var toPlay: Int!
-    public var winner: Int!
-    
-    public var xref: [Suit : Int]!
-    private var _handSuits: [HandSuit]!
-    public var handSuits: [HandSuit]! {
-        get {
-            return self._handSuits
-        }
-        set {
-            self._handSuits = newValue
-            xref = [:]
-            if self._handSuits != nil && self._handSuits.count > 0 {
-                for suitNumber in 1...self._handSuits.count {
-                    if self._handSuits[suitNumber - 1].cards.count != 0 {
-                        xref[self._handSuits[suitNumber - 1].cards[0].suit] = suitNumber - 1
-                    }
-                }
-            }
-        }
-    }
+    public var winner: Int?
     public var finished: Bool!
     
     init(enteredPlayerNumber: Int, round: Int, dealerIs: Int, players: Int, rounds: Int, cards: [Int], bounce: Bool, bonus2: Bool, suits: [Suit],
@@ -1114,7 +1087,6 @@ class HandState {
         self.toLead = (((self.dealerIs - 1) + (self.round - 1)) % self.players) + 1
         self.toPlay = self.toLead
         self.hand = nil
-        self.handSuits = nil
         self.finished = false
     }
     
@@ -1130,34 +1102,5 @@ class HandState {
     
     public func playerNumber(_ sequence: Int) -> Int {
         return (((self.toLead - 1) + (sequence - 1)) % self.players) + 1
-    }
-    
-    func findCard(card: Card) -> (Int, Int)? {
-        return HandState.findCard(handSuits: self.handSuits, card: card)
-    }
-    
-    static func findCard(handSuits: [HandSuit]!, card: Card) -> (Int, Int)? {
-        var suitNumber: Int!
-        var cardNumber: Int!
-
-        if handSuits != nil {
-            let cardAsNumber = card.toNumber()
-            if handSuits.count > 0 {
-                for suit in 0...handSuits.count-1 {
-                    let index = handSuits[suit].toNumbers().index(where: {$0 == cardAsNumber})
-                    if index != nil {
-                        suitNumber = suit
-                        cardNumber = index!
-                        break
-                    }
-                }
-            }
-        }
-        
-        if suitNumber == nil {
-            return nil
-        } else {
-            return (suitNumber, cardNumber)
-        }
     }
 }

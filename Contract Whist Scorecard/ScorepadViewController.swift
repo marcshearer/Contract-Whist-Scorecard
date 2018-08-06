@@ -653,7 +653,7 @@ class ScorepadViewController: UIViewController,
             }
         }
         self.scorecard.setGameInProgress(true)
-        self.scorecard.playHand(from: self, sourceView: self.scorepadView)
+        self.scorecard.playHand(from: self, sourceView: self.scorepadView, computerPlayerDelegate: computerPlayerDelegate)
         if setState {
             // Bids already entered - resend all scores
             self.scorecard.sendScores()

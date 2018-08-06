@@ -24,7 +24,6 @@ class Card {
     init(fromNumber: Int) {
         self.fromNumber(fromNumber)
     }
-    
 
     func fromNumber(_ cardNumber: Int) {
         // Convert a card number (1-52) into card
@@ -68,20 +67,30 @@ class Card {
     }
 }
 
-class Hand {
+class Hand : NSObject, NSCopying {
     
     public var cards: [Card]!
+    public var handSuits: [HandSuit]!
+    public var xrefSuit: [Suit : HandSuit]!
+    public var xrefElement: [Suit: Int]!
     
-    init() {
+    override init() {
         self.cards = []
+        self.handSuits = []
+        self.xrefSuit = [:]
+        self.xrefElement = [:]
     }
     
     init(fromNumbers cardNumbers: [Int]) {
+        super.init()
         self.fromNumbers(cardNumbers)
+        self.sort()
     }
     
     init(fromCards cards: [Card]) {
+        super.init()
         self.cards = cards
+        self.sort()
     }
     
     public func toNumbers() -> [Int] {
@@ -102,9 +111,7 @@ class Hand {
     public func toString() -> String {
         var sortedCards: [Card] = []
         var result = ""
-        var handSuits: [HandSuit]
-        handSuits = HandSuit.sortCards(cards: self.cards)
-        for handSuit in handSuits {
+        for handSuit in self.handSuits {
             for card in handSuit.cards {
                 sortedCards.append(card)
             }
@@ -120,28 +127,106 @@ class Hand {
         return result
     }
     
-    public func removeCard(_ card: Card) -> Bool {
+    public func remove(card: Card) -> Bool {
+        var result = false
+        
         let cardNumber = card.toNumber()
         if let index = self.cards.index(where: {$0.toNumber() == cardNumber}) {
             self.cards.remove(at: index)
-            return true
+            result = true
+            let handSuit = self.xrefSuit[card.suit]!
+            if let index = handSuit.cards.index(where: {$0.toNumber() == cardNumber}) {
+                handSuit.cards.remove(at: index)
+            }
         }
-        return false
+        return result
     }
     
-    public func findCard(card: Card) -> Int? {
-        let cardAsNumber = card.toNumber()
-        let index = self.toNumbers().index(where: {$0 == cardAsNumber})
-        return index
+    public func find(card: Card) -> (Int, Int)? {
+        if let suitNumber = self.xrefElement[card.suit] {
+            let cardAsNumber = card.toNumber()
+            if let cardNumber = self.handSuits[suitNumber].toNumbers().index(where: {$0 == cardAsNumber}) {
+                return (suitNumber, cardNumber)
+            } else {
+                return nil
+            }
+        } else {
+            return nil
+        }
+    }
+    
+    private func sort() {
+        var handSuits: [HandSuit] = []
+        self.xrefSuit = [:]
+        self.xrefElement = [:]
+        
+        // Create empty suits
+        for _ in 1...4 {
+            let handSuit = HandSuit()
+            handSuits.append(handSuit)
+        }
+        
+        // Sort hand
+        self.cards = self.cards.sorted(by: { $0.toNumber() > $1.toNumber() })
+        
+        // Put hand in suits
+        for card in self.cards {
+            handSuits[card.suit.rawValue-1].cards.append(card)
+        }
+        
+        // Remove empty suits
+        for suitNumber in (1...4).reversed() {
+            if handSuits[suitNumber - 1].cards.count == 0 {
+                handSuits.remove(at: suitNumber - 1)
+            }
+        }
+        
+        self.handSuits = handSuits.reversed()
+        self.setupXref()
+        
+    }
+    
+    private func setupXref() {
+        for suitNumber in 0..<self.handSuits.count {
+            self.xrefSuit[self.handSuits[suitNumber].cards.first!.suit] = self.handSuits[suitNumber]
+            self.xrefElement[self.handSuits[suitNumber].cards.first!.suit] = suitNumber
+        }
+    }
+    
+    public func copy(with zone: NSZone? = nil) -> Any {
+        // Copy elements rather than pointers
+        let copy = Hand()
+        for card in self.cards {
+            copy.cards.append(card)
+        }
+        if self.handSuits.count > 0 {
+            for handSuit in self.handSuits {
+                copy.handSuits.append(handSuit.copy() as! HandSuit)
+            }
+        }
+        for (suit, handSuit) in self.xrefSuit {
+            copy.xrefSuit[suit] = handSuit
+        }
+        for (suit, element) in self.xrefElement {
+            copy.xrefElement[suit] = element
+        }
+        return copy
     }
 }
 
-class HandSuit {
+class HandSuit: NSObject, NSCopying {
     
     public var cards: [Card]!
     
-    init() {
+    override init() {
         cards = []
+    }
+    
+    init(fromNumbers: [Int]) {
+        cards = []
+        for number in fromNumbers {
+            self.cards.append(Card(fromNumber: number))
+        }
     }
     
     public func toNumbers() -> [Int] {
@@ -152,31 +237,10 @@ class HandSuit {
         return result
     }
     
-    public class func sortCards(cards: [Card]) -> [HandSuit] {
-        var suits: [HandSuit] = []
-        
-        // Create empty suits
-        for _ in 1...4 {
-            suits.append(HandSuit())
-        }
-        
-        // Sort hand
-        var cards = cards
-        cards = cards.sorted(by: { $0.toNumber() > $1.toNumber() })
-        
-        // Put hand in suits
-        for card in cards {
-            suits[card.suit.rawValue-1].cards.append(card)
-        }
-        
-        // Remove empty suits
-        for suitNumber in (1...4).reversed() {
-            if suits[suitNumber - 1].cards.count == 0 {
-                suits.remove(at: suitNumber - 1)
-            }
-        }
-        
-        return suits.reversed()
+    public func copy(with zone: NSZone? = nil) -> Any {
+        // Copy elements rather than pointers
+        let copy = HandSuit(fromNumbers: self.toNumbers())
+        return copy
     }
 }
 
@@ -208,7 +272,7 @@ class Deal {
     }
 }
     
-private enum SuitEnum : Int {
+public enum SuitEnum : Int {
     case noTrump = 0
     case club = 1
     case diamond = 2
@@ -222,6 +286,10 @@ class Suit : Hashable {
     
     init(rawValue: Int) {
         self.suitEnum = SuitEnum(rawValue: rawValue)!
+    }
+    
+    init(_ suitEnum: SuitEnum) {
+        self.suitEnum = suitEnum
     }
     
     init(fromString: String) {

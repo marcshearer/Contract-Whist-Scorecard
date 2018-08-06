@@ -55,10 +55,21 @@ class ComputerBidding {
     }
     
     public func bid() -> Int {
+        var bid: Int
         
-        let winners = Utility.round(self.countHandWinners())
+        let winners = self.countHandWinners()
+        bid = Utility.round(winners)
         
-        return winners
+        if self.bids.count >= self.numberPlayers - 1 && bid == self.handCards - Utility.sum(bids) {
+            // Preferred bid equals number remaining - adjust it
+            if Double(bid) < winners || bid == 0 {
+                bid += 1
+            } else {
+                bid -= 1
+            }
+        }
+        
+        return bid
     }
     
     func countHandWinners() -> Double {

@@ -199,6 +199,11 @@ class Utility {
         return Int(value)
     }
     
+    // MARK: - Array helper functions ==================================================================== -
+    
+    class func sum(_ array: [Int]) -> Int {
+        return array.reduce(0) {$0 + $1}
+    }
     //MARK: Cloud functions - get field from cloud for various types =====================================
     
     class func objectString(cloudObject: CKRecord, forKey: String) -> String! {

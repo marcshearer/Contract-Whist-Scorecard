@@ -82,10 +82,14 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
             Utility.executeAfter("autoBid", delay: self.autoPlayTimeUnit, completion: {
                 
                 let computerBidding = ComputerBidding(hand: self.hand, trumpSuit: self.scorecard.roundSuit(self.scorecard.handState.round, suits: self.scorecard.handState.suits), bids: bids, numberPlayers: self.scorecard.currentPlayers)
+                
                 let bid = computerBidding.bid()
+                
                 self.scorecard.sendScores(playerNumber: self.thisPlayerNumber, round: round, mode: .bid, overrideBid: bid, to: self.hostPeer, using: self.loopbackClient)
+                
                 completion?()
             })
+            
         } else {
             completion?()
         }

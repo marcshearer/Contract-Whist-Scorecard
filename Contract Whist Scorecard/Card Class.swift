@@ -24,7 +24,6 @@ class Card {
     init(fromNumber: Int) {
         self.fromNumber(fromNumber)
     }
-    
 
     func fromNumber(_ cardNumber: Int) {
         // Convert a card number (1-52) into card

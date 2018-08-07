@@ -38,6 +38,7 @@ class ScorepadViewController: UIViewController,
     public var rabbitMQService: RabbitMQService!
     public var recoveryMode = false
     public var reviewRound: Int!
+    public var computerPlayerDelegate: [Int : ComputerPlayerDelegate?]?
     
     // Cell dimensions
     private let minCellHeight = 30
@@ -1029,8 +1030,13 @@ class ScorepadViewController: UIViewController,
         if self.scorepadMode == .amend {
             return true
         } else {
-            if self.scorecard.isHosting && self.scorecard.dealHistory[indexPath.row+1] != nil { // TODO && (indexPath.row < self.scorecard.handState.round || (indexPath.row == self.scorecard.handState.round && self.scorecard.handState.finished)) {
-                return true
+            if collectionView.tag < 1000000 {
+                let round = collectionView.tag + 1
+                if self.scorecard.isHosting && self.scorecard.dealHistory[round] != nil && (round < self.scorecard.handState.round || (round == self.scorecard.handState.round && self.scorecard.handState.finished)) {
+                    return true
+                } else {
+                    return false
+                }
             } else {
                 return false
             }
@@ -1051,9 +1057,10 @@ class ScorepadViewController: UIViewController,
                   } else {
                     self.scorecard.selectedRound = round
                 }
+            } else if self.scorecard.isHosting || self.scorecard.isPlayingComputer { // TODO include hasJoined when send deals
+                self.reviewRound = round
+                self.performSegue(withIdentifier: "showReview", sender: self)
             }
-            self.reviewRound = round
-            self.performSegue(withIdentifier: "showReview", sender: self)
         }
         makeEntry()
     }

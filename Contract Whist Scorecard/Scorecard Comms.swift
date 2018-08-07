@@ -314,8 +314,14 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         }
     }
     
-    public func sendHands(to commsPeer: CommsPeer! = nil) {
+    public func sendDeal(to commsPeer: CommsPeer! = nil) {
         // Send other players their cards
+        
+        self.commsDelegate?.send("deal", [ "round" : self.handState.round,
+                                           "deal" : self.deal.toNumbers()])
+        
+        /*
+        // TODO This is old code - remove it
         for playerNumber in 2...self.currentPlayers {
             let hand = self.deal.hands[playerNumber - 1]
             self.commsDelegate?.send("hand", ["player": playerNumber,
@@ -323,6 +329,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                                       to: commsPeer,
                                       matchEmail: self.enteredPlayer(playerNumber).playerMO!.email!)
         }
+    */
     }
     
     public func sendCut(cutCards: [Card], to commsPeer: CommsPeer! = nil) {
@@ -550,10 +557,13 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             self.deal = Pack.deal(numberCards: cards,
                                   numberPlayers: self.currentPlayers)
             // Save in history
-            self.dealHistory[self.handState.round] = self.deal
+            self.dealHistory[self.handState.round] = self.deal.copy() as? Deal
+            
+            // Save for recovery
+            self.recovery.saveDeal(round: self.handState.round, deal: self.deal)
             
             // Send hands to other players
-            sendHands()
+            sendDeal()
             
             return self.deal.hands[0]
         } else {

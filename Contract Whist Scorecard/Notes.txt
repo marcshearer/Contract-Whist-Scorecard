@@ -21,9 +21,13 @@ Make debug info available on production
 Reduce wait before play card after bidding
 Show over / under in hand
 Send round in handState
+Sort out text entry in confirm count (or block it)
 
 Bugs fix now
 ------------
+Cut for dealer when joining from an iPad was out of position
+Save deal history and recover
+Send deal history to remotes
 
 Long-term bugs
 --------------
@@ -83,3 +87,4 @@ Commands to sort out firewall prompt
     /usr/libexec/ApplicationFirewall/socketfilterfw --add /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/Contents/MacOS/Simulator
     sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
 Remapped home and end etc using ~/Library/KeyBindings/DefaultKeyBinding.dict - Did Ctrl-C etc in the keyboard settings app shortcuts but then reversed it
+To get rid of insets in a table view need to include willDisplayCell delegate routine and set content to be fixed insets of zero. See ReviewViewController

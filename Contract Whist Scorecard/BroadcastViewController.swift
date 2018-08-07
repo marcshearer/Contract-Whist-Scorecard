@@ -367,7 +367,25 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                         NotificationCenter.default.post(name: .playerImageDownloaded, object: self, userInfo: ["playerObjectID": playerMO.objectID])
                     }
                     
-                case "hand":
+                case "deal":
+                    if let round = data!["round"] as? Int {
+                        if let dealCards = data!["deal"] as? [[Int]] {
+                            let deal = Deal(fromNumbers: dealCards)
+                            let hand = deal.hands[self.thisPlayerNumber - 1]
+                            self.scorecard.commsDelegate?.debugMessage("Hand: \(hand.toString())")
+                            self.playHand(peer: peer, dismiss: self.newGame, hand: hand)
+                            self.newGame = false
+                            
+                            // Save in history
+                            self.scorecard.dealHistory[round] = deal
+                            
+                            // Save for recovery
+                            self.recovery.saveDeal(round: round, deal: deal)
+                        }
+                    }
+                    
+                    /*
+                    // TODO This is old code - remove
                     let playerNumber = data!["player"] as! Int
                     if playerNumber == self.thisPlayerNumber {
                         let cardNumbers = data!["cards"] as! [Int]
@@ -376,6 +394,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                         self.playHand(peer: peer, dismiss: self.newGame, hand: hand)
                         self.newGame = false
                     }
+                    */
                     
                 case "played":
                     _ = self.scorecard.processCardPlayed(data: data! as Any as! [String : Any])
@@ -390,7 +409,6 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                     let trickCards = Hand(fromNumbers: data!["trickCards"] as! [Int]).cards
                     let toLead = data!["toLead"] as! Int
                     let round = data!["round"] as! Int
-                    
                     
                     self.playHand(peer: peer, dismiss: true, hand: hand, round: round, trick: trick, made: made, twos: twos, trickCards: trickCards, toLead: toLead)
                     

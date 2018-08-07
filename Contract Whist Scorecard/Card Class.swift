@@ -244,15 +244,16 @@ class HandSuit: NSObject, NSCopying {
     }
 }
 
-class Deal {
+class Deal: NSObject, NSCopying {
     
     public var hands: [Hand]!
     
-    init() {
+    override init() {
         hands = []
     }
     
     init(fromNumbers cardNumbers: [[Int]]) {
+        super.init()
         self.fromNumbers(cardNumbers)
     }
     
@@ -269,6 +270,14 @@ class Deal {
         for cardNumber in cardNumbers {
             self.hands.append(Hand(fromNumbers: cardNumber))
         }
+    }
+    
+    public func copy(with zone: NSZone? = nil) -> Any {
+        let copy = Deal()
+        for hand in self.hands {
+            copy.hands.append(hand.copy() as! Hand)
+        }
+        return copy
     }
 }
     

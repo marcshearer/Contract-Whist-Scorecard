@@ -109,6 +109,10 @@ class Recovery {
         UserDefaults.standard.set(scorecard.overrideExcludeStats, forKey: "recoveryOverrideStats")
     }
     
+    func saveDeal(round: Int, deal: Deal) {
+        UserDefaults.standard.set(deal.toNumbers(), forKey: "recoveryDeal\(round)")
+    }
+    
     func saveInitialValues() {
         // Called at the start of a game to clear out any old values
         
@@ -222,6 +226,15 @@ class Recovery {
             scorecard.recoveryConnectionUUID = nil
             scorecard.recoveryConnectionEmail = nil
             scorecard.recoveryConnectionDevice = nil
+        }
+        
+        // Load deal history
+        if self.scorecard.recoveryOnlinePurpose == .playing {
+            for round in 1...self.scorecard.selectedRound {
+                if let dealNumbers = UserDefaults.standard.array(forKey: "recoveryDeal\(round)") as? [[Int]] {
+                    self.scorecard.dealHistory[round] = Deal(fromNumbers: dealNumbers)
+                }
+            }
         }
         
         // Reload overrides

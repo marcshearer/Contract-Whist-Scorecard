@@ -351,8 +351,8 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
         
         // Clear cross reference array
         xref.removeAll()
-        
-        if !self.excludeStats && !self.excludeHistory {
+    
+        if !self.excludeStats && !self.excludeHistory && !self.scorecard.isPlayingComputer {
             if self.scorecard.settingSaveHistory {
                 // Load high scores - get 10 to allow for lots of ties
                 // Note - this assumes this game's participants have been placed in the database already
@@ -394,7 +394,7 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
             let score = Int64(scorecard.enteredPlayer(playerNumber).totalScore())
             var ranking = 0
             
-            if !self.excludeStats && !self.excludeHistory {
+            if !self.excludeStats && !self.excludeHistory && !self.scorecard.isPlayingComputer {
                 for loopCount in 1...highScoreRanking.count {
                     // No need to check if already got a high place
                     if self.scorecard.settingSaveHistory && ranking == 0 {

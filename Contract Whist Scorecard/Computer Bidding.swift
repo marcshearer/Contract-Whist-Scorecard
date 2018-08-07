@@ -127,7 +127,7 @@ class ComputerBidding {
         var cardsLeftInOtherSuits = self.unseenCardsInOtherSuits(suit)
         var cardsLeftInPack = self.unseenCardsInPack - reducedBy
         
-        if self.trumpSuit != Suit(.noTrump) && suit != self.trumpSuit && cards > 0 {
+        if self.trumpSuit != Suit(.noTrump) && suit != self.trumpSuit && cards > 0 && cards <= handCards - reducedBy {
             // Don't worry about short suits if this is trumps or there are no trumps
             // Calculate the probability of them not having this number of this suit
             // i.e. Work out the probability of them having too many of the other suits and take the inverse

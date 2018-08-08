@@ -761,6 +761,7 @@ class ScorepadViewController: UIViewController,
             destination.preferredContentSize = CGSize(width: 400, height: 554)
             destination.scorecard = self.scorecard
             destination.round = self.reviewRound
+            destination.thisPlayer = self.scorecard.handState.enteredPlayerNumber
             
         default:
             break
@@ -1032,7 +1033,7 @@ class ScorepadViewController: UIViewController,
         } else {
             if collectionView.tag < 1000000 {
                 let round = collectionView.tag + 1
-                if self.scorecard.isHosting && self.scorecard.dealHistory[round] != nil && (round < self.scorecard.handState.round || (round == self.scorecard.handState.round && self.scorecard.handState.finished)) {
+                if (self.scorecard.isHosting || self.scorecard.hasJoined) && self.scorecard.dealHistory[round] != nil && (round < self.scorecard.handState.round || (round == self.scorecard.handState.round && self.scorecard.handState.finished)) {
                     return true
                 } else {
                     return false
@@ -1057,7 +1058,7 @@ class ScorepadViewController: UIViewController,
                   } else {
                     self.scorecard.selectedRound = round
                 }
-            } else if self.scorecard.isHosting || self.scorecard.isPlayingComputer { // TODO include hasJoined when send deals
+            } else if self.scorecard.isHosting || self.scorecard.hasJoined { 
                 self.reviewRound = round
                 self.performSegue(withIdentifier: "showReview", sender: self)
             }

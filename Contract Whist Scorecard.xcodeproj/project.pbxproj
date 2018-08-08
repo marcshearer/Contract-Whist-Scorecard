@@ -557,7 +557,6 @@
 			isa = PBXGroup;
 			children = (
 				B227891F1FB881B9009BABCA /* HostViewController.storyboard */,
-				B2B1802021195FFA008D3BAA /* Contract Whist Scorecard.pages */,
 				B2F70E511EE8BC470092C19F /* HostViewController.swift */,
 			);
 			name = Host;
@@ -852,6 +851,7 @@
 			isa = PBXGroup;
 			children = (
 				CCEA53E21DF3D19F0045292C /* Notes.txt */,
+				B2B1802021195FFA008D3BAA /* Contract Whist Scorecard.pages */,
 				CC4CC0F61DEADC32007FB24F /* Products */,
 				B20DA04F1E1FEC5F0040221D /* Contract Whist Scorecard.entitlements */,
 				B20DA0491E164EE60040221D /* Section headings */,

@@ -26,7 +26,7 @@ class Config {
     public static let rabbitMQLogQueue = "WhistLogger"
     
     // Time unit for auto-play testing (in seconds) - card is played every unit
-    public static var autoPlayTimeUnit = 1.0 // Better at 0.05
+    public static var autoPlayTimeUnit = 0.05
     
     // MARK: - Utility code - should not need to be changed ============================================== -
     

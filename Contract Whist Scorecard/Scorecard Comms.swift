@@ -403,9 +403,11 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                             self.handViewController.reflectBid(round: roundNumber, enteredPlayerNumber: playerNumber)
                         }
                     }
-                    Utility.executeAfter(delay: 0.1, completion: {
-                        self.sendScores(playerNumber: playerNumber, round: roundNumber, mode: .bid)
-                    })
+                    if self.sendScores {
+                        Utility.executeAfter(delay: 0.1, completion: {
+                            self.sendScores(playerNumber: playerNumber, round: roundNumber, mode: .bid)
+                        })
+                    }
                 }
                 if roundData["made"] != nil {
                     var made: Int!

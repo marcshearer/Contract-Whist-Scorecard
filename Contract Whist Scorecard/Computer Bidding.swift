@@ -17,6 +17,7 @@ class ComputerBidding {
     private let cardsInPack = 52
     private let cardsInSuit = 13
     private let suits = 4
+    private var debug: String = ""
    
     private var myTrumps: Int {
         get {
@@ -58,6 +59,8 @@ class ComputerBidding {
         var bid: Int
         
         let winners = self.countHandWinners()
+        Utility.debugMessage("bid", self.debug)
+        
         bid = Utility.round(winners)
         
         if self.bids.count >= self.numberPlayers - 1 && bid == self.handCards - Utility.sum(bids) {
@@ -90,7 +93,9 @@ class ComputerBidding {
             cardNumber += 1
             missingCards += lastRank - 1 - card.rank
             lastRank = card.rank
-            winners += winnerProbability(gapAbove: missingCards, coverRequired: missingCards+1, card: card)
+            let winner = winnerProbability(gapAbove: missingCards, coverRequired: missingCards+1, card: card)
+            self.debug = self.debug + "\(card.toString()) = \(String(format:"%2f",winner))\n"
+            winners += winner
         }
         
         return winners
@@ -102,11 +107,12 @@ class ComputerBidding {
             if self.mySuitCount(card.suit) < coverRequired {
                 probability = 0
             } else {
-                probability = pow(holdsAtLeast(cards: coverRequired, in: card.suit), Double(self.numberPlayers-1))
+                // Allow for probability of not being trumped by any of the other players
+                probability = pow(notTrumped(cards: coverRequired, in: card.suit), Double(self.numberPlayers-1))
             }
         } else {
             let inPlay = cardInPlayProtected(card: Card(rank: card.rank+gapAbove, suit: card.suit))
-            probability = (inPlay *               0.6 * winnerProbability(gapAbove:gapAbove - 1, coverRequired: coverRequired, card:card)) +
+            probability = (inPlay * 0.6 * winnerProbability(gapAbove:gapAbove - 1, coverRequired: coverRequired, card:card)) +
                           ((Double(1.0)-inPlay) * winnerProbability(gapAbove:gapAbove - 1, coverRequired: coverRequired - 1, card:card))
         }
         return probability
@@ -120,6 +126,15 @@ class ComputerBidding {
         return probability
     }
     
+    private func notTrumped(cards: Int, in suit: Suit) -> Double {
+        // Probability that a trick will not be trumped
+        if self.trumpSuit != Suit(.noTrump) && suit != self.trumpSuit {
+            // Don't worry about short suits if this is trumps or there are no trumps
+            return 1.0
+        } else {
+            return holdsAtLeast(cards: cards, in: suit)
+        }
+    }
     private func holdsAtLeast(cards: Int, in suit: Suit, reducedBy: Int = 0) -> Double {
         // Probability that a number (usually all) other players have at least a number of cards in a suit
         
@@ -127,8 +142,7 @@ class ComputerBidding {
         var cardsLeftInOtherSuits = self.unseenCardsInOtherSuits(suit)
         var cardsLeftInPack = self.unseenCardsInPack - reducedBy
         
-        if self.trumpSuit != Suit(.noTrump) && suit != self.trumpSuit && cards > 0 && cards <= handCards - reducedBy {
-            // Don't worry about short suits if this is trumps or there are no trumps
+         if cards > 0 && cards <= handCards - reducedBy {
             // Calculate the probability of them not having this number of this suit
             // i.e. Work out the probability of them having too many of the other suits and take the inverse
             var inversePlayerProbability:Double = 1.0

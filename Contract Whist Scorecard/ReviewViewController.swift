@@ -109,11 +109,14 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
     
     private func setupPlayers() {
         
-        tableViewPlayer[3] = thisPlayer
-        
-        for increment in 1..<self.scorecard.currentPlayers {
+        for increment in 0..<self.scorecard.currentPlayers {
             let playerNumber = ((thisPlayer + increment - 1) % self.scorecard.currentPlayers) + 1
-            let tag = ((3 + increment - 1) % self.scorecard.currentPlayers) + 1
+            var tag: Int
+            if self.scorecard.currentPlayers < 4 {
+                tag = ((2 + increment - 1) % self.scorecard.currentPlayers) + 2
+            } else {
+                tag = ((3 + increment - 1) % self.scorecard.currentPlayers) + 1
+            }
             tableViewPlayer[tag] = playerNumber
         }
     }
@@ -121,23 +124,23 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
     private func setupText() {
         
         self.text = []
-        for handNumber in 1...self.scorecard.currentPlayers {
+        for playerNumber in 1...self.scorecard.currentPlayers {
             self.text.append([])
-            let player = self.scorecard.enteredPlayer(playerNumber: handNumber)
-            self.text[handNumber-1].append("\(player.playerMO!.name!) \(player.bid(self.round)!)/\(player.made(self.round)!)")
+            let player = self.scorecard.enteredPlayer(playerNumber)
+            self.text[playerNumber-1].append("\(player.playerMO!.name!) \(player.bid(self.round)!)/\(player.made(self.round)!)")
             if let hand: Hand = self.scorecard.dealHistory[self.round]?.hands[player.playerNumber - 1] {
                 for handSuit in hand.handSuits {
                     var suitText = handSuit.cards.first!.suit.toString()
                     for cardNumber in 0..<min(splitSuit,handSuit.cards.count) {
                         suitText = suitText + " " + handSuit.cards[cardNumber].toRankString()
                     }
-                    self.text[handNumber-1].append(suitText)
+                    self.text[playerNumber-1].append(suitText)
                     if handSuit.cards.count > self.splitSuit {
                         var suitText = "  "
                         for cardNumber in self.splitSuit..<handSuit.cards.count {
                             suitText = suitText + "  " + handSuit.cards[cardNumber].toRankString()
                         }
-                        self.text[handNumber-1].append(suitText)
+                        self.text[playerNumber-1].append(suitText)
                     }
                 }
             }
@@ -182,6 +185,7 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
         var tableTopHeight = totalHeight - (2.0 * maxHeight) - 10.0
         var tableTopWidth = totalWidth - (2.0 * maxWidth) - 10.0
         var innerTableTopSize = min(tableTopHeight, tableTopWidth)
+        var offset: CGFloat = 0.0
         if innerTableTopSize >= maxHeight && innerTableTopSize > maxWidth  {
             // Can fit all hands around this - no need to adjust
             tableTopHeight = innerTableTopSize
@@ -189,7 +193,7 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
             innerTableTopSize -= 80
         } else if totalHeight > totalWidth {
             // Portrait - Move hands 1 and 3 away from centre to allow hands 2 and 4 to fit
-            tableTopHeight = maxHeight + (totalHeight * 0.2)
+            tableTopHeight = maxHeight + (totalHeight * 0.1)
             tableTopWidth = innerTableTopSize
             innerTableTopSize -= 20
         } else {
@@ -198,26 +202,29 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
             tableTopWidth = maxWidth + (totalWidth * 0.2)
             innerTableTopSize -= 20
         }
+        if self.scorecard.currentPlayers < 4 {
+            offset = -totalHeight / 8.0
+        }
         
         // Setup displayed table top
         if innerTableTopSize <= 50.0 {
             tableTopView.isHidden = true
         } else {
             tableTopView.isHidden = false
-            self.tableTopView.frame = CGRect(x: (totalWidth - innerTableTopSize) / 2.0, y: (totalHeight - innerTableTopSize) / 2.0, width: innerTableTopSize, height: innerTableTopSize)
+            self.tableTopView.frame = CGRect(x: (totalWidth - innerTableTopSize) / 2.0, y: offset + (totalHeight - innerTableTopSize) / 2.0, width: innerTableTopSize, height: innerTableTopSize)
         }
         
         // Setup hand 1
-        self.hand1TableView.frame = CGRect(x: (totalWidth - width[0]) / 2.0, y: ((totalHeight - tableTopHeight) / 2.0) - height[0], width: width[0], height: height[0])
+        self.hand1TableView.frame = CGRect(x: (totalWidth - width[0]) / 2.0, y: offset + ((totalHeight - tableTopHeight) / 2.0) - height[0], width: width[0], height: height[0])
         
         // Setup hand 2
-        self.hand2TableView.frame = CGRect(x: (totalWidth + tableTopWidth) / 2.0, y: (totalHeight - height[1]) / 2.0, width: width[1], height: height[1])
+        self.hand2TableView.frame = CGRect(x: (totalWidth + tableTopWidth) / 2.0, y: offset + ((totalHeight - height[1]) / 2.0), width: width[1], height: height[1])
         
         // Setup hand 3
-        self.hand3TableView.frame = CGRect(x: (totalWidth - width[2]) / 2.0, y: ((totalHeight + tableTopHeight) / 2.0), width: width[2], height: height[2])
+        self.hand3TableView.frame = CGRect(x: (totalWidth - width[2]) / 2.0, y: offset + ((totalHeight + tableTopHeight) / 2.0), width: width[2], height: height[2])
         
         // Setup hand 4
-        self.hand4TableView.frame = CGRect(x: ((totalWidth - tableTopWidth) / 2.0) - width[3], y: (totalHeight - height[3]) / 2.0, width: width[3], height: height[3])
+        self.hand4TableView.frame = CGRect(x: ((totalWidth - tableTopWidth) / 2.0) - width[3], y: offset + ((totalHeight - height[3]) / 2.0), width: width[3], height: height[3])
         
     }
     

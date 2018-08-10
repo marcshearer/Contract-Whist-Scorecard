@@ -21,6 +21,8 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
     public var selectedPlayers = [PlayerMO?]()          // Selected players passed in from player selection
     public var returnSegue: String!                    // View to return to
     public var rabbitMQService: RabbitMQService!
+    public var readOnly = false
+    public var cutDelegate: CutDelegate?
     
     // Local class variables
     private var buttonMode = "Triangle"
@@ -37,7 +39,7 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
     @IBOutlet weak var gameSetupView: UIView!
     @IBOutlet weak var playerTableView: UITableView!
     @IBOutlet weak var backgroundImage: UIImageView!
-    @IBOutlet weak var overrideButton: UIButton!
+    @IBOutlet weak var continueButton: UIButton!
 
     // MARK: - IB Unwind Segue Handlers ================================================================ -
 
@@ -50,10 +52,14 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
     
     @IBAction func finishGamePressed(_ sender: Any) {
         // Link back to selection
-        self.showNavigationBar()
-        NotificationCenter.default.removeObserver(observer!)
-        self.scorecard.resetOverrideSettings()
-        self.performSegue(withIdentifier: returnSegue, sender: self)
+        if self.readOnly {
+            self.dismiss(animated: true, completion: nil)
+        } else {
+            self.showNavigationBar()
+            NotificationCenter.default.removeObserver(observer!)
+            self.scorecard.resetOverrideSettings()
+            self.performSegue(withIdentifier: returnSegue, sender: self)
+        }
     }
     
     @IBAction func continuePressed(_ sender: Any) {
@@ -112,6 +118,12 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
         // Set nofification for image download
         observer = setImageDownloadNotification()
 
+        // Set readonly
+        if self.readOnly {
+            self.playerTableView.isUserInteractionEnabled = false
+            self.continueButton.isHidden = true
+        }
+        
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -270,8 +282,11 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
     
     // MARK: - Cut for dealer delegate routines ===================================================================== -
     
-    func cutComplete() {
-        showCurrentDealer()
+    public func cutComplete() {
+        for playerNumber in 1...self.scorecard.currentPlayers {
+            self.showDealer(playerNumber: playerNumber)
+        }
+        self.cutDelegate?.cutComplete()
     }
     
     // MARK: - Form Presentation / Handling Routines ================================================================ -
@@ -332,7 +347,7 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
         showDealer(playerNumber: scorecard.dealerIs)
     }
     
-    func showDealer(playerNumber: Int, forceHide: Bool = false) {
+    public func showDealer(playerNumber: Int, forceHide: Bool = false) {
         gameSetupNameCell[playerNumber-1]!.playerButton.isHidden =
             (playerNumber == scorecard.dealerIs && !playerTableView.isEditing && !forceHide ? false : true)
     }
@@ -378,6 +393,21 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
         default:
             break
         }
+    }
+    
+    // MARK: - Function to present this view ==============================================================
+    
+    class func showGameSetup(viewController: UIViewController, scorecard: Scorecard, selectedPlayers: [PlayerMO]) -> GameSetupViewController {
+        let storyboard = UIStoryboard(name: "GameSetupViewController", bundle: nil)
+        let gameSetupViewController = storyboard.instantiateViewController(withIdentifier: "GameSetupViewController") as! GameSetupViewController
+        gameSetupViewController.modalPresentationStyle = UIModalPresentationStyle.fullScreen
+        
+        gameSetupViewController.scorecard = scorecard
+        gameSetupViewController.selectedPlayers = selectedPlayers
+        gameSetupViewController.readOnly = true
+        
+        viewController.present(gameSetupViewController, animated: true, completion: nil)
+        return gameSetupViewController
     }
 }
 

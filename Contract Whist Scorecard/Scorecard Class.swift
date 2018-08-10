@@ -742,7 +742,12 @@ class Scorecard {
     }
     
     public func saveDealer(_ dealerIs: Int) {
-        self.dealerIs = dealerIs
+        if self.dealerIs != dealerIs {
+            self.dealerIs = dealerIs
+            if self.isHosting {
+                self.sendDealer()
+            }
+        }
         UserDefaults.standard.set(self.dealerIs, forKey: "dealerIs")
     }
     
@@ -1185,6 +1190,7 @@ class Scorecard {
 class GameLocation {
     var location: CLLocation!
     var description: String!
+    var subDescription: String!
     
     init() {
     }

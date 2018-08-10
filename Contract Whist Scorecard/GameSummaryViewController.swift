@@ -566,7 +566,6 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
             break
         }
     }
-
 }
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -

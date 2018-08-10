@@ -102,8 +102,7 @@ class ScorepadViewController: UIViewController,
                     }
                 }
                 if complete {
-                    self.saveDate()
-                    self.playHand(true)
+                    self.scorecard.playHand(from: self, sourceView: self.scorepadView)
                 } else {
                     self.performSegue(withIdentifier: "hideScorepad", sender: self)
                 }
@@ -143,10 +142,10 @@ class ScorepadViewController: UIViewController,
         self.formatButtons()
         if self.scorecard.isHosting {
             // Start new game
-            self.playHand(true)
+            self.playHand(setState: true)
         } else {
             // Re-send players to sharing device to trigger new game
-            self.scorecard.sendPlayers(rounds: self.rounds, cards: self.cards, bounce: self.bounce, bonus2: self.bonus2, suits: self.suits)
+            self.scorecard.sendPlay(rounds: self.rounds, cards: self.cards, bounce: self.bounce, bonus2: self.bonus2, suits: self.suits)
         }
     }
     
@@ -271,7 +270,7 @@ class ScorepadViewController: UIViewController,
             } else {
                 
                 self.saveDate()
-                self.playHand(true, recoveryMode)
+                self.playHand(setState: true, recoveryMode: recoveryMode)
             }
         }
 
@@ -589,10 +588,13 @@ class ScorepadViewController: UIViewController,
             self.scorecard.gameLocation.description = "Online"
             self.scorecard.gameLocation.location = nil
             self.saveDate()
-            self.playHand(true)
+            self.playHand(setState: true)
         } else {
             // Prompt for location
             Utility.mainThread {
+                // Get the other hands started
+                self.saveDate()
+                self.playHand(setState: true, show: false)
                 self.performSegue(withIdentifier: "showLocation", sender: self)
             }
         }
@@ -621,7 +623,7 @@ class ScorepadViewController: UIViewController,
         self.showNavigationBar()
     }
     
-    private func playHand(_ setState: Bool = false, _ recoveryMode: Bool = false) {
+    private func playHand(setState: Bool = false, recoveryMode: Bool = false, show: Bool = true) {
         // Send players if hosting or sharing
         if self.scorecard.isHosting {
             self.scorecard.setGameInProgress(true)
@@ -642,14 +644,17 @@ class ScorepadViewController: UIViewController,
                         self.scorecard.handState.hand = self.scorecard.deal.hands[0]
                     }
                 }
-                self.scorecard.sendPlayers(rounds: self.rounds, cards: self.cards, bounce: self.bounce, bonus2: self.bonus2, suits: self.suits)
+                self.scorecard.sendPlay(rounds: self.rounds, cards: self.cards, bounce: self.bounce, bonus2: self.bonus2, suits: self.suits)
             } else if scorecard.handState.finished {
                 // Clear last hand
                 scorecard.handState.hand = nil
             }
         }
         self.scorecard.setGameInProgress(true)
-        self.scorecard.playHand(from: self, sourceView: self.scorepadView)
+        self.scorecard.dealHand()
+        if show {
+            self.scorecard.playHand(from: self, sourceView: self.scorepadView)
+        }
         if setState {
             // Bids already entered - resend all scores
             self.scorecard.sendScores()

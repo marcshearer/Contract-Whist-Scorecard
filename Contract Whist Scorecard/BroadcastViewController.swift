@@ -29,6 +29,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
     private var recovery: Recovery!
     private var scorepadViewController: ScorepadViewController!
     private var cutViewController: CutViewController!
+    private var gameSetupViewController: GameSetupViewController!
 
     // Properties to pass state to / from segues
     public var returnSegue = ""
@@ -249,7 +250,6 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                     for suitString in suitStrings {
                         self.suits.append(Suit(fromString: suitString))
                     }
-                    self.scorecard.dealerIs = data!["dealer"] as! Int
                     let gameUUID = data!["gameUUID"] as! String
                     if self.gameUUID == nil || self.gameUUID != gameUUID {
                         self.newGame = true
@@ -261,7 +261,13 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                     self.scorecard.maxEnteredRound = data!["round"] as! Int
                     self.scorecard.selectedRound = self.scorecard.maxEnteredRound
                     
-                case "players":
+                case "dealer":
+                    self.scorecard.dealerIs = data!["dealer"] as! Int
+                    if self.gameSetupViewController != nil {
+                        self.gameSetupViewController.cutComplete()
+                    }
+                    
+                case "play", "players":
                     self.scorecard.setCurrentPlayers(players: data!.count)
                     for (playerNumberData, playerData) in data as! [String : [String : Any]] {
                         let playerNumber = Int(playerNumberData)!
@@ -286,13 +292,22 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                             }
                         }
                     }
-                    
-                    if self.scorecard.isViewing && self.scorepadViewController != nil {
-                        // Need to clear grid just in case less data now than there was
-                        self.scorepadViewController.reloadScorepad()
-                    
+                    if descriptor == "players" {
+                        var selectedPlayers: [PlayerMO] = []
+                        for playerNumber in 1...self.scorecard.currentPlayers {
+                            selectedPlayers.append(self.scorecard.enteredPlayer(playerNumber).playerMO!)
+                        }
+                        self.dismissAll {
+                            self.gameSetupViewController = GameSetupViewController.showGameSetup(viewController: self, scorecard: self.scorecard, selectedPlayers: selectedPlayers)
+                        }
+                    } else {
+                        if self.scorecard.isViewing && self.scorepadViewController != nil {
+                            // Need to clear grid just in case less data now than there was
+                            self.scorepadViewController.reloadScorepad()
+                        
+                        }
+                        self.queue.insert(QueueEntry(descriptor: "playHand", data: nil, peer: peer), at: 0)
                     }
-                    self.queue.insert(QueueEntry(descriptor: "playHand", data: nil, peer: peer), at: 0)
                     
                 case "cut":
                     var preCutCards: [Card] = []
@@ -302,10 +317,17 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                     }
                     let playerName = data!["names"] as! [String]
                     self.cutViewController?.delegate = nil
-                    self.dismissAll {
-                        self.cutViewController = CutViewController.cutForDealer(viewController: self, view: self.view, scorecard: self.scorecard, cutDelegate: self, preCutCards: preCutCards, playerName: playerName)
-                    }
                     
+                    var viewController: UIViewController
+                    if self.gameSetupViewController != nil {
+                        self.gameSetupViewController.cutDelegate = self
+                        viewController = self.gameSetupViewController
+                    } else {
+                        viewController = self
+                    }
+                    let cutDelegate = viewController as! CutDelegate
+                    self.cutViewController = CutViewController.cutForDealer(viewController: viewController, view: viewController.view, scorecard: self.scorecard, cutDelegate: cutDelegate, preCutCards: preCutCards, playerName: playerName)
+                
                 case "scores", "allscores":
                     
                     self.gameOver = false
@@ -571,6 +593,9 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
     // MARK: - Cut for dealer delegate routines ===================================================================== -
     
     func cutComplete() {
+        if self.gameSetupViewController != nil {
+            self.gameSetupViewController.cutDelegate = nil
+        }
         self.cutViewController.delegate = nil
         self.cutViewController = nil
     }
@@ -891,7 +916,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
             reason = "Connection with remote device lost"
         }
         
-        if self.scorepadViewController == nil && self.cutViewController == nil {
+        if self.scorepadViewController == nil && self.cutViewController == nil && self.gameSetupViewController == nil {
             // Check alert controller
             if self.alertController != nil {
                 self.alertController.dismiss(animated: true, completion: {
@@ -947,20 +972,34 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
             })
         }
         
+        func dismissGameSetup() {
+            if self.gameSetupViewController != nil {
+                self.gameSetupViewController.dismiss(animated: true, completion: {
+                    self.gameSetupViewController = nil
+                    doCompletion()
+                })
+            } else {
+                doCompletion()
+            }
+        }
+        
         if self.scorecard.commsHandlerMode == .none {
             self.scorecard.commsHandlerMode = .dismiss
         }
         
-        if self.scorepadViewController == nil && self.cutViewController == nil {
+        if self.scorepadViewController == nil && self.cutViewController == nil && self.gameSetupViewController == nil{
             doCompletion()
         } else {
-            if self.cutViewController != nil {
-                self.cutViewController.dismiss(animated: true, completion: {
-                    self.cutViewController?.delegate = nil
-                    self.cutViewController = nil
-                    doCompletion()
-                })
-                self.cutViewController = nil
+            if self.cutViewController != nil  || self.gameSetupViewController != nil {
+                if self.cutViewController != nil {
+                    self.cutViewController.dismiss(animated: true, completion: {
+                        self.cutViewController?.delegate = nil
+                        self.cutViewController = nil
+                        dismissGameSetup()
+                    })
+                } else {
+                    dismissGameSetup()
+                }
             } else if self.scorepadViewController.roundSummaryViewController != nil {
                 self.scorepadViewController.roundSummaryViewController.dismiss(animated: true, completion: dismissScorepad)
             } else if self.scorepadViewController != nil && self.scorepadViewController.gameSummaryViewController != nil {

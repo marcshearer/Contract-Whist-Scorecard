@@ -312,6 +312,7 @@
                     <toolbarItems/>
                     <connections>
                         <outlet property="backgroundImage" destination="E7h-Ll-Qym" id="r8v-7c-12p"/>
+                        <outlet property="continueButton" destination="wbi-Gg-AL4" id="M3X-2e-kMw"/>
                         <outlet property="gameSetupView" destination="iUU-8s-ns4" id="4uN-Fo-2Y7"/>
                         <outlet property="playerTableView" destination="c5K-bm-x10" id="EVS-Gn-Umf"/>
                         <segue destination="6Hq-Pm-vP6" kind="show" identifier="showScorepad" id="OMl-3l-9zT"/>

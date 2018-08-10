@@ -113,6 +113,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     @IBAction func continuePressed(_ sender: RoundedButton) {
         self.setupPlayers()
         gameInProgress = true
+        self.scorecard.sendPlayers()
         self.performSegue(withIdentifier: "showHostGameSetup", sender: self)
     }
     
@@ -349,7 +350,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                                 self.scorecard.sendInstruction("wait", to: peer)
                             } else {
                                 // Game in progress - need to resend state - luckily have what we need in handState
-                                self.scorecard.sendPlayers(rounds: self.scorecard.handState.rounds, cards: self.scorecard.handState.cards, bounce: self.scorecard.handState.bounce, bonus2: self.scorecard.handState.bonus2, suits: self.scorecard.handState.suits, to: peer)
+                                self.scorecard.sendPlay(rounds: self.scorecard.handState.rounds, cards: self.scorecard.handState.cards, bounce: self.scorecard.handState.bounce, bonus2: self.scorecard.handState.bonus2, suits: self.scorecard.handState.suits, to: peer)
                                 self.scorecard.sendScores(to: peer)
                                 self.scorecard.sendHandState(to: peer)
                             }

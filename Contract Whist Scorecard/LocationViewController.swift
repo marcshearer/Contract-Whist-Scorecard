@@ -30,6 +30,7 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
     private var historyLocations: [GameLocation]!
     private var filteredHistoryLocations: [GameLocation]!
     private var newLocation = GameLocation()
+    private var currentLocation: GameLocation!
     private var lastLocation: GameLocation!
     private var historyMode = false
     private var testMode = false
@@ -64,10 +65,6 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
                 self.testMode = true
             }
         }
-    }
-    
-    override internal func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         
         self.gameLocation.copy(to: self.newLocation)
         
@@ -76,21 +73,36 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
             self.lastLocation = GameLocation(location: self.newLocation.location!, description: self.newLocation.description)
         }
         
-        self.searchBar.text = self.newLocation.description
-        historyMode = (self.searchBar.text == "")
+        if self.newLocation.description != "" {
+            self.searchBar.text = self.newLocation.description
+            historyMode = false
+        } else {
+            self.getHistoryList()
+            if self.historyLocations.count != 0 {
+                self.historyMode = true
+                self.searchBar.becomeFirstResponder()
+            } else {
+                self.historyMode = false
+            }
+        }
+        
         if self.useCurrentLocation {
             if !getCurrentLocation() {
-                historyMode = true
-                getHistoryList()
+                self.historyMode = true
+                self.getHistoryList()
                 self.searchBar.becomeFirstResponder()
             }
         } else {
             dropPin()
         }
-        if self.searchBar.text == "" || self.mustChange {
+        if self.mustChange || self.newLocation.description == "" {
             hideFinishButtons()
         }
-        hideLocationList()
+        if historyMode {
+            showLocationList()
+        } else {
+            hideLocationList()
+        }
     }
     
     override internal func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -155,7 +167,7 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
         } else  if historyMode && filteredHistoryLocations != nil {
             // Show entry in list from game history
             topRow = filteredHistoryLocations[indexPath.row-standard].description
-            bottomRow = ""
+            bottomRow = filteredHistoryLocations[indexPath.row-standard].subDescription ?? ""
         }
     
         cell = tableView.dequeueReusableCell(withIdentifier: "Location Table Cell", for: indexPath) as! LocationTableCell
@@ -174,6 +186,10 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: - SearchBar delegate Overrides ============================================================= -
     
     internal func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        updateSearch()
+    }
+    
+    private func updateSearch() {
         if self.searchBar.text!.count > 4 {
             historyMode = false
             getGeocoderList()
@@ -200,26 +216,37 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
         // Check this isn't the same location as last time
         if self.newLocation.location != nil {
             let distanceInMeters = self.newLocation.location.distance(from: locations[0])
-            nearby = (distanceInMeters <= 3000)        }
-        // Update the location
-        self.newLocation.location = locations[0]
-        self.dropPin()
+            nearby = (distanceInMeters <= 3000)
+        }
+        // Update the current location
+        
         
         // If nearby keep current description - otherwise reverse look up
         if !nearby || self.newLocation.description == nil || self.newLocation.description == "" {
             // Get text name for location
             let geoCoder = CLGeocoder()
-            geoCoder.reverseGeocodeLocation(self.newLocation.location, completionHandler: { placemarks, error in
+            geoCoder.reverseGeocodeLocation(locations[0], completionHandler: { placemarks, error in
                 if error != nil {
                     self.newLocation.description = ""
                     self.searchBar.text = ""
                     self.historyMode = true
                     self.hideFinishButtons()
                 } else {
-                    self.newLocation.description = placemarks?[0].locality
-                    self.searchBar.text = placemarks?[0].locality
-                    self.historyMode = (self.searchBar.text == "")
-                    self.showFinishButtons()
+                    if self.historyLocations.count != 0 && self.currentLocation == nil {
+                        self.currentLocation = GameLocation(location: locations[0], description: (placemarks?[0].locality)!)
+                        self.currentLocation.subDescription = "Current location"
+                        // Add it to the history list
+                        Utility.debugMessage("locationManager", "Inserting current location")
+                        self.historyLocations.insert(self.currentLocation, at: 0)
+                        if self.historyMode {
+                            self.updateSearch()
+                        }
+                    } else {
+                        self.newLocation = GameLocation(location: locations[0], description: (placemarks?[0].locality)!)
+                        self.searchBar.text = placemarks?[0].locality
+                        self.dropPin()
+                        self.showFinishButtons()
+                    }
                 }
                 self.resetPlaceholder()
             })
@@ -271,7 +298,7 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
     private func getCurrentLocation() -> Bool {
         var result = false
         
-         searchBar.placeholder = "Please wait - getting location"
+        searchBar.placeholder = "Please wait - getting location"
         let authorizationStatus = CLLocationManager.authorizationStatus()
         if authorizationStatus == .restricted || authorizationStatus == .denied {
             // Not allowed to use location - go straight to input
@@ -290,7 +317,7 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
                 self.activityIndicator.startAnimating()
                 self.activityIndicator.isHidden = false
                 self.activityIndicator.superview!.bringSubview(toFront: self.activityIndicator)
-                self.searchBar.isUserInteractionEnabled = false
+                // self.searchBar.isUserInteractionEnabled = false
                 self.locationManager.requestLocation()
             }
             result = true
@@ -325,6 +352,7 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
                                                              longitude: longitude,
                                                              skipLocation: (lastLocation == nil ? "" : lastLocation.description))
         }
+        
         if self.searchBar.text == "" {
             // No filter - use whole list
             self.filteredHistoryLocations = historyLocations

@@ -248,7 +248,9 @@ class History {
                         gameLocations.append(GameLocation(
                             location: CLLocation(latitude: gameList[game-1].latitude,
                                                  longitude: gameList[game-1].longitude),
-                            description: gameList[game-1].location!))
+                            description: gameList[game-1].location!,
+                            subDescription: "Last played \(Utility.dateString(gameList[game-1].datePlayed!, format: "MMMM yyyy"))")
+                        )
                     }
                 }
                 

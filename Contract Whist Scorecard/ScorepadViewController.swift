@@ -314,6 +314,10 @@ class ScorepadViewController: UIViewController,
         }
     }
     
+    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+        self.scorecard.motionBegan(motion, with: event)
+    }
+    
     // MARK: - TableView Overrides ===================================================================== -
 
     internal func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -740,7 +744,6 @@ class ScorepadViewController: UIViewController,
             
         case "showLocation":
             
-            notAllowedInDisplay()
             let destination = segue.destination as! LocationViewController
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.isModalInPopover = true

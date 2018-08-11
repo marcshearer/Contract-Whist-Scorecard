@@ -34,15 +34,15 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
     private var lastLocation: GameLocation!
     private var historyMode = false
     private var testMode = false
+    private let rowHeight: CGFloat = 44.0
     
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet weak private var locationMapView: MKMapView!
     @IBOutlet weak private var searchBar: UISearchBar!
     @IBOutlet weak private var locationTableView: UITableView!
-    @IBOutlet weak private var locationSeparator: UIView!
     @IBOutlet weak private var continueButton: UIButton!
     @IBOutlet weak private var activityIndicator: UIActivityIndicatorView!
-
+    @IBOutlet weak private var locationTableViewHeight: NSLayoutConstraint!
     
     // MARK: - IB Actions ============================================================================== -
  
@@ -109,7 +109,19 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
         super.viewWillTransition(to: size, with: coordinator)
         
         scorecard.reCenterPopup(self)
+        self.view.setNeedsLayout()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
+        if self.locationTableViewHeight.constant != 0.0 {
+            self.showLocationList()
+        }
+    }
+    
+    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+        self.scorecard.motionBegan(motion, with: event)
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -135,6 +147,10 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
                 return geocoderLocations.count + standard
             }
         }
+    }
+    
+    internal func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return rowHeight
     }
     
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -268,9 +284,8 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: - Form Presentation / Handling Routines =================================================== -
     
     private func showLocationList() {
-        self.locationTableView.isHidden = false
-        self.locationMapView.isHidden = true
-        self.locationSeparator.isHidden = false
+        let availableHeight = locationMapView.frame.maxY - searchBar.frame.maxY
+        self.locationTableViewHeight.constant = CGFloat(Int(availableHeight / 2.0 / rowHeight)) * rowHeight
         hideFinishButtons()
     }
     
@@ -281,9 +296,7 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     private func hideLocationList() {
-        self.locationTableView.isHidden = true
-        self.locationMapView.isHidden = false
-        self.locationSeparator.isHidden = true
+        self.locationTableViewHeight.constant = 0.0
     }
     
     private func showFinishButtons(autoSelect: Bool = false) {

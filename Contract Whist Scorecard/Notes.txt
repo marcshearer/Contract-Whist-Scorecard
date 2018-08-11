@@ -30,6 +30,9 @@ Long-term bugs
 
 Short-term
 ----------
+Make admin rotate options less available
+Remove TODOs from admin menu when have loopback
+Add shake handler to review view controller
 Add tests for temporary settings
 Add tests for history / location to check they're not saved if play a game
 Leave selected invitees selected (and visible) when filtering

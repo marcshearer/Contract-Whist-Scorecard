@@ -138,6 +138,10 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
         // Hide duplicate navigation bar
         self.hideNavigationBar()
     }
+    
+    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+        self.scorecard.motionBegan(motion, with: event)
+    }
  
     // MARK: - Popover Overrides ================================================================ -
     

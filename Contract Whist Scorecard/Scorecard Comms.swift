@@ -129,6 +129,17 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     
     // MARK: - Utility routines =============================================================== -
     
+    public func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+        if motion == .motionShake {
+            
+            // Play sound
+            Utility.getActiveViewController()?.alertSound()
+            
+            // Reset all connections
+            self.commsDelegate?.reset()
+        }
+    }
+    
     public func dealHand() {
         if self.isHosting && self.handState.hand == nil {
             // Need to deal next hand

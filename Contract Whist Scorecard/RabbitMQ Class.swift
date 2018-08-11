@@ -102,6 +102,16 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
         }
     }
     
+    public func reset() {
+        if self.connectionType == .server || self.connectionType == .client {
+            self.debugMessage("Resetting RabbitMQ")
+            // Disconnect from any existing peers - they should reconnect
+            self.sendReset(mode: "reset")
+        }
+    }
+            
+
+    
     public func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, reconnect: Bool = true) -> Bool{
         var connectSuccess = false
         self.debugMessage("Connect to \(commsPeer.deviceName)")
@@ -122,9 +132,9 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
         self.handlerStateDelegate?.handlerStateChange(to: state)
     }
     
-    public func disconnect(from commsPeer: CommsPeer, reason: String = "") {
+    public func disconnect(from commsPeer: CommsPeer, reason: String = "", reconnect: Bool) {
         if let rabbitMQPeer = findRabbitMQPeer(deviceName: commsPeer.deviceName) {
-            rabbitMQPeer.disconnect(reason: reason)
+            rabbitMQPeer.disconnect(reason: reason, reconnect: reconnect)
         }
     }
    
@@ -192,16 +202,17 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
     }
     
     public func connectionInfo() {
-        self.debugMessage("Peers", force: true)
-        self.debugMessage("=====", force: true)
+        var message = "Peers\n"
         self.forEachPeer { (rabbitMQPeer) in
-            self.debugMessage("Device: \(rabbitMQPeer.deviceName), Player: \(rabbitMQPeer.playerName!), state: \(rabbitMQPeer.state), sessionUUID: \((rabbitMQPeer.sessionUUID == nil ? "nil" : rabbitMQPeer.sessionUUID!))", force: true)
+            message = message + "Device: \(rabbitMQPeer.deviceName), Player: \(rabbitMQPeer.playerName!), state: \(rabbitMQPeer.state), sessionUUID: \((rabbitMQPeer.sessionUUID == nil ? "nil" : rabbitMQPeer.sessionUUID!))"
         }
-        self.debugMessage("Queues", force: true)
-        self.debugMessage("======", force: true)
+    
+        message = message + "\nQueues\n"
         for (_, queue) in self.rabbitMQQueueList {
-            self.debugMessage("QueueUUID: \(queue.queueUUID!)", force: true)
+            message = message + "QueueUUID: \(queue.queueUUID!)\n"
         }
+        
+        Utility.getActiveViewController()?.alertMessage(message, title: "RabbitMQ Connection Info", buttonText: "Close")
     }
     
     internal func debugMessage(_ message: String, device: String? = nil, force: Bool = false) {

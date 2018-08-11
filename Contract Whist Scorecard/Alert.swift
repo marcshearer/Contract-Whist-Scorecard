@@ -65,6 +65,12 @@ extension UIViewController {
             AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
     }
     
+    public func alertSound() {
+        
+        AudioServicesPlayAlertSound(SystemSoundID(1109))
+        
+    }
+    
     public func alertWait(_ message: String, title: String = "", completion: (()->())? = nil) -> UIAlertController {
         let alertController = UIAlertController(title: title, message: message + "\n\n\n\n", preferredStyle: .alert)
     

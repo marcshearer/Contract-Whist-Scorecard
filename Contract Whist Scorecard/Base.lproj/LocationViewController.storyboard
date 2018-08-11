@@ -71,19 +71,12 @@
                                     <outlet property="delegate" destination="IhQ-um-kHy" id="0pl-VS-oEi"/>
                                 </connections>
                             </searchBar>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JXg-WF-eWO">
-                                <rect key="frame" x="0.0" y="139" width="375" height="1"/>
-                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="1" id="9g3-yL-x7J"/>
-                                </constraints>
-                            </view>
-                            <mapView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" mapType="standard" rotateEnabled="NO" pitchEnabled="NO" showsPointsOfInterest="NO" showsScale="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KRq-QD-SP0">
-                                <rect key="frame" x="0.0" y="140" width="375" height="527"/>
-                            </mapView>
-                            <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="uko-az-7BL">
-                                <rect key="frame" x="0.0" y="140.5" width="375" height="526.5"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="uko-az-7BL">
+                                <rect key="frame" x="0.0" y="139" width="375" height="275"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="275" id="swJ-Ow-NCo"/>
+                                </constraints>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Location Table Cell" id="G6K-I8-6o4" customClass="LocationTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
@@ -129,6 +122,9 @@
                                     <outlet property="delegate" destination="IhQ-um-kHy" id="SMC-yK-m27"/>
                                 </connections>
                             </tableView>
+                            <mapView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" mapType="standard" rotateEnabled="NO" pitchEnabled="NO" showsPointsOfInterest="NO" showsScale="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KRq-QD-SP0">
+                                <rect key="frame" x="0.0" y="414" width="375" height="253"/>
+                            </mapView>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="X7E-aZ-m9h">
                                 <rect key="frame" x="169" y="315" width="37" height="37"/>
                                 <color key="color" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -137,33 +133,29 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="uko-az-7BL" firstAttribute="top" secondItem="qQB-iI-YgT" secondAttribute="bottom" id="833-Q0-xYP"/>
                             <constraint firstItem="cmV-E0-sSi" firstAttribute="top" secondItem="KRq-QD-SP0" secondAttribute="bottom" id="CuE-qh-hJO"/>
                             <constraint firstAttribute="trailing" secondItem="smV-Xs-9Xb" secondAttribute="trailing" id="MVM-nm-0gy"/>
-                            <constraint firstItem="JXg-WF-eWO" firstAttribute="top" secondItem="qQB-iI-YgT" secondAttribute="bottom" id="PuK-o8-SLV"/>
                             <constraint firstItem="X7E-aZ-m9h" firstAttribute="centerX" secondItem="Od0-bd-l1r" secondAttribute="centerX" id="Rwa-IO-ohp"/>
-                            <constraint firstItem="cmV-E0-sSi" firstAttribute="top" secondItem="uko-az-7BL" secondAttribute="bottom" id="UGL-EC-SzE"/>
-                            <constraint firstItem="uko-az-7BL" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="UMi-MS-2tF"/>
+                            <constraint firstAttribute="trailing" secondItem="uko-az-7BL" secondAttribute="trailing" id="Umk-UY-Dk5"/>
                             <constraint firstItem="KRq-QD-SP0" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="bBu-uS-Tgq"/>
                             <constraint firstItem="X7E-aZ-m9h" firstAttribute="centerY" secondItem="Od0-bd-l1r" secondAttribute="centerY" id="bGu-WZ-cdY"/>
                             <constraint firstItem="smV-Xs-9Xb" firstAttribute="top" secondItem="Gsy-HM-R7k" secondAttribute="bottom" id="fma-kJ-pyg"/>
-                            <constraint firstAttribute="trailing" secondItem="uko-az-7BL" secondAttribute="trailing" id="g46-nB-qlM"/>
                             <constraint firstAttribute="trailing" secondItem="qQB-iI-YgT" secondAttribute="trailing" id="hsN-Y1-716"/>
-                            <constraint firstItem="KRq-QD-SP0" firstAttribute="top" secondItem="JXg-WF-eWO" secondAttribute="bottom" id="k84-jn-fys"/>
-                            <constraint firstAttribute="trailing" secondItem="JXg-WF-eWO" secondAttribute="trailing" id="l8V-BX-2fX"/>
                             <constraint firstItem="qQB-iI-YgT" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="mYr-WO-NNZ"/>
                             <constraint firstItem="smV-Xs-9Xb" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="mp5-lJ-9tF"/>
                             <constraint firstAttribute="trailing" secondItem="KRq-QD-SP0" secondAttribute="trailing" id="ooc-Fy-96K"/>
                             <constraint firstItem="qQB-iI-YgT" firstAttribute="top" secondItem="smV-Xs-9Xb" secondAttribute="bottom" id="uP3-f7-Krf"/>
-                            <constraint firstItem="uko-az-7BL" firstAttribute="top" secondItem="JXg-WF-eWO" secondAttribute="bottom" id="vnF-Qn-gk5"/>
-                            <constraint firstItem="JXg-WF-eWO" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="xng-dB-zxX"/>
+                            <constraint firstItem="uko-az-7BL" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="wgE-dw-hgW"/>
+                            <constraint firstItem="KRq-QD-SP0" firstAttribute="top" secondItem="uko-az-7BL" secondAttribute="bottom" id="zNU-ZV-4Wx"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="X7E-aZ-m9h" id="hwZ-Q7-Jtm"/>
                         <outlet property="continueButton" destination="Zb2-G3-4jd" id="gni-2H-THW"/>
                         <outlet property="locationMapView" destination="KRq-QD-SP0" id="FCf-Od-HV5"/>
-                        <outlet property="locationSeparator" destination="JXg-WF-eWO" id="hS7-8L-YyF"/>
                         <outlet property="locationTableView" destination="uko-az-7BL" id="xwd-Kw-i6P"/>
+                        <outlet property="locationTableViewHeight" destination="swJ-Ow-NCo" id="T6L-fD-S52"/>
                         <outlet property="searchBar" destination="qQB-iI-YgT" id="Iae-ha-og2"/>
                         <segue destination="2DU-V6-gAp" kind="unwind" identifier="hideUpdateLocation" unwindAction="hideUpdateLocationWithSegue:" id="RRe-qA-hoh"/>
                         <segue destination="2DU-V6-gAp" kind="unwind" identifier="hideLocation" customClass="UIStoryboardSegueWithCompletion" customModule="Contract_Whist_Scorecard" customModuleProvider="target" unwindAction="hideLocationWithSegue:" id="Cf9-7F-9yj"/>
@@ -172,7 +164,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AIX-En-fx9" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="2DU-V6-gAp" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="8876" y="-1293"/>
+            <point key="canvasLocation" x="8876" y="-1293.1034482758621"/>
         </scene>
     </scenes>
     <resources>

@@ -17,11 +17,11 @@ public enum CommsHandlerState {
     case browsing
 }
 
-public enum CommsConnectionState {
-    case notConnected
-    case connecting
-    case connected
-    case reconnecting
+public enum CommsConnectionState: String {
+    case notConnected = "Not connected"
+    case connecting = "Connecting"
+    case connected = "Connected"
+    case reconnecting = "Re-connecting"
 }
 
 public enum CommsConnectionMode: String {
@@ -173,9 +173,11 @@ protocol CommsHandlerDelegate : class {
     
     func stop()
     
+    func reset()
+    
     func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, reconnect: Bool) -> Bool
 
-    func disconnect(from commsPeer: CommsPeer, reason: String)
+    func disconnect(from commsPeer: CommsPeer, reason: String, reconnect: Bool)
     
     func send(_ descriptor: String, _ dictionary: Dictionary<String, Any?>!, to commsPeer: CommsPeer?, matchEmail: String?)
     
@@ -215,6 +217,10 @@ extension CommsHandlerDelegate {
     
     func send(_ descriptor: String, _ dictionary: Dictionary<String, Any?>!) {
         send(descriptor, dictionary, to: nil, matchEmail: nil)
+    }
+    
+    func disconnect(from commsPeer: CommsPeer, reason: String) {
+        disconnect(from: commsPeer, reason: reason, reconnect: false)
     }
     
     func debugMessage(_ message: String) {

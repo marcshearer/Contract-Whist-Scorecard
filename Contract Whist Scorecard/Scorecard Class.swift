@@ -1195,9 +1195,10 @@ class GameLocation {
     init() {
     }
     
-    init(location: CLLocation!, description: String) {
+    init(location: CLLocation!, description: String, subDescription: String = "") {
         self.location = location
         self.description = description
+        self.subDescription = subDescription
     }
     
     func copy(to gameLocation: GameLocation!) {

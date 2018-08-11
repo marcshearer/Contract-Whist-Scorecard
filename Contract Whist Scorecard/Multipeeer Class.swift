@@ -91,6 +91,19 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCNearbyServiceBrowserDe
         }
     }
     
+    public func reset() {
+        switch self.connectionType {
+        case .server:
+            // Disconnect - remote connections should reconnect
+            self.endSessions()
+        case .client:
+            // Disconnect any connections and then reconnect
+            self.endSessions()
+        default:
+            break
+        }
+    }
+    
     private func startServer() {
         self.debugMessage("Start Server \(self.connectionPurpose)")
         let advertiser = MCNearbyServiceAdvertiser(peer: self.myPeerID, discoveryInfo: nil, serviceType: self.serviceID)
@@ -188,11 +201,11 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCNearbyServiceBrowserDe
         }
     }
     
-    public func disconnect(from commsPeer: CommsPeer, reason: String = "") {
+    public func disconnect(from commsPeer: CommsPeer, reason: String = "", reconnect: Bool) {
         let deviceName = commsPeer.deviceName
         if let broadcastPeer = broadcastPeerList[deviceName] {
-            broadcastPeer.shouldReconnect = false
-            broadcastPeer.reconnect = false
+            broadcastPeer.shouldReconnect = reconnect
+            broadcastPeer.reconnect = reconnect
         }
         self.send("disconnect", ["reason" : reason], to: commsPeer)
     }
@@ -244,6 +257,17 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCNearbyServiceBrowserDe
     }
     	
     public func connectionInfo() {
+        var message = "\nPeers\n"
+        for (deviceName, peer) in self.broadcastPeerList {
+            message = message + "Device: \(deviceName), Player: \(peer.playerName ?? ""), \(peer.state.rawValue)\n"
+        }
+        
+        message = message + "\nSessions\n"
+        for (deviceName, session) in self.sessionList {
+            message = message + "Device: \(deviceName)\n"
+        }
+        
+        Utility.getActiveViewController()?.alertMessage(message, title: "Multipeer Connection Info", buttonText: "Close")
     }
     
     internal func debugMessage(_ message: String, device: String? = nil, force: Bool = false) {

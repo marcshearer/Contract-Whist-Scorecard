@@ -94,6 +94,9 @@ class CutViewController: UIViewController {
         animateCut()
     }
     
+    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+        self.scorecard.motionBegan(motion, with: event)
+    }
     
     // MARK: - Action Handlers  - Gestures ============================================================= -
 

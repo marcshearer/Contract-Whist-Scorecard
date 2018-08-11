@@ -186,15 +186,14 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         if self.checkOverride() {
             // Use override values
             let rounds = self.calculateRounds(cards: self.overrideCards, bounce: self.overrideBounceNumberCards)
-            self.sendPlayers(rounds: rounds, cards: self.overrideCards, bounce: self.overrideBounceNumberCards, bonus2: self.settingBonus2, suits: self.suits, to: peer)
+            self.sendPlay(rounds: rounds, cards: self.overrideCards, bounce: self.overrideBounceNumberCards, bonus2: self.settingBonus2, suits: self.suits, to: peer)
         } else {
             // Use settings values
-            self.sendPlayers(rounds: self.rounds, cards: self.settingCards, bounce: self.settingBounceNumberCards, bonus2: self.settingBonus2, suits: self.suits, to: peer)
+            self.sendPlay(rounds: self.rounds, cards: self.settingCards, bounce: self.settingBounceNumberCards, bonus2: self.settingBonus2, suits: self.suits, to: peer)
         }
     }
     
-    public func sendPlayers(rounds: Int, cards: [Int], bounce: Bool, bonus2: Bool, suits: [Suit], to commsPeer: CommsPeer! = nil) {
-        var playerList: [String : Any] = [:]
+    public func sendPlay(rounds: Int, cards: [Int], bounce: Bool, bonus2: Bool, suits: [Suit], to commsPeer: CommsPeer! = nil) {
         
         if self.isSharing || self.isHosting {
             // Send general settings
@@ -208,7 +207,6 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 suitStrings.append(suit.toString())
             }
             settings["suits"] = suitStrings
-            settings["dealer"] = self.dealerIs
             settings["gameUUID"] = self.gameUUID!
             var round = self.selectedRound
             if self.entryPlayer(self.currentPlayers).score(round) != nil {
@@ -218,17 +216,29 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             settings["round"] = round
             self.commsDelegate?.send("settings", settings, to: commsPeer)
             
-            // Send players
-            for playerNumber in 1...self.currentPlayers {
-                var player: [String : String] = [:]
-                let playerMO = enteredPlayer(playerNumber).playerMO!
-                player["name"] = playerMO.name!
-                player["email"] = playerMO.email!
-                playerList["\(playerNumber)"] = player
-            }
-            self.commsDelegate?.send("players", playerList, to: commsPeer)
+            // Send players with directive to play
+            self.sendPlayers(descriptor: "play", to: commsPeer)
             self.sendScores = true
         }
+    }
+            
+    public func sendPlayers(descriptor: String = "players", to commsPeer: CommsPeer! = nil) {
+        var playerList: [String : Any] = [:]
+        // Send players
+        for playerNumber in 1...self.currentPlayers {
+            var player: [String : String] = [:]
+            let playerMO = enteredPlayer(playerNumber).playerMO!
+            player["name"] = playerMO.name!
+            player["email"] = playerMO.email!
+            playerList["\(playerNumber)"] = player
+        }
+        self.commsDelegate?.send(descriptor, playerList, to: commsPeer)
+        self.sendDealer()
+    }
+    
+    public func sendDealer(to commsPeer: CommsPeer! = nil) {
+        let dealer: [String: Any] = [ "dealer" : self.dealerIs ]
+        self.commsDelegate?.send("dealer", dealer, to: commsPeer)
     }
     
     public func sendScores(playerNumber: Int! = nil, round: Int! = nil, mode: Mode! = nil, overrideBid: Int? = nil, to commsPeer: CommsPeer! = nil, using commsDelegate: CommsHandlerDelegate? = nil) {

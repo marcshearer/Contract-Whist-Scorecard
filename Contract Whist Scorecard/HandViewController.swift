@@ -202,6 +202,10 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.resizing = false
     }
     
+    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+        self.scorecard.motionBegan(motion, with: event)
+    }
+    
     // MARK: - TableView Overrides ===================================================================== -
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

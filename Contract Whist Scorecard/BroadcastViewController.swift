@@ -29,6 +29,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
     private var recovery: Recovery!
     private var scorepadViewController: ScorepadViewController!
     private var cutViewController: CutViewController!
+    private var gameSetupViewController: GameSetupViewController!
 
     // Properties to pass state to / from segues
     public var returnSegue = ""
@@ -64,6 +65,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
     private var appState: AppState = .notConnected
     private var invite: Invite!
     private var recoveryMode = false
+    private var changePlayerButton: UIButton!
     
     // MARK: - IB Outlets ============================================================================== -
     
@@ -170,27 +172,14 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
             }
         }
         
-        // Create nearby comms service, take delegates and start listening
-        if !self.recoveryMode || self.scorecard.recoveryOnlineMode == .broadcast {
-            self.multipeerClient = MultipeerService(purpose: self.commsPurpose, type: .client, serviceID: self.scorecard.serviceID(self.commsPurpose))
-            self.multipeerClient?.stateDelegate = self
-            self.multipeerClient?.dataDelegate = self
-            self.multipeerClient?.browserDelegate = self
-            self.multipeerClient?.start(email: self.thisPlayer, recoveryMode: self.recoveryMode, matchDeviceName: self.matchDeviceName)
-        }
-        
-        // Create online comms service, take delegates and start listening
-        if self.commsPurpose == .playing && self.scorecard.onlineEnabled && (!self.recoveryMode || self.scorecard.recoveryOnlineMode == .invite) {
-            self.rabbitMQClient = RabbitMQService(purpose: self.commsPurpose, type: .client, serviceID: nil)
-            self.rabbitMQClient?.stateDelegate = self
-            self.rabbitMQClient?.dataDelegate = self
-            self.rabbitMQClient?.browserDelegate = self
-            self.rabbitMQClient?.start(email: self.thisPlayer, recoveryMode: self.recoveryMode, matchDeviceName: self.matchDeviceName)
-        }
+        self.createConnections()
         
         self.available = []
         self.scorecard.sendScores = true
         self.scorecard.commsHandlerMode = .none
+        
+        // Clear hand state
+        self.scorecard.handState = nil
         
         // Set observer to detect UI handler completion
         broadcastHandlerObserver = self.handlerCompleteNotification()
@@ -199,6 +188,19 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
          scorecard.reCenterPopup(self)
+    }
+    
+    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+        
+        // Play sound
+        self.alertSound()
+        
+        // Reset connections
+        self.closeConnections()
+        self.available = []
+        self.appState = .notConnected
+        self.refreshStatus()
+        self.createConnections()
     }
 
     // MARK: - Comms Delegate Overrides ==================================================== -
@@ -223,6 +225,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                 
                 // Set state to connected unless receive wait
                 self.appState = .connected
+                self.changePlayerAvailable()
                 
                 // Pop top element off the queue
                 let descriptor = self.queue.first!.descriptor
@@ -249,7 +252,6 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                     for suitString in suitStrings {
                         self.suits.append(Suit(fromString: suitString))
                     }
-                    self.scorecard.dealerIs = data!["dealer"] as! Int
                     let gameUUID = data!["gameUUID"] as! String
                     if self.gameUUID == nil || self.gameUUID != gameUUID {
                         self.newGame = true
@@ -261,7 +263,13 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                     self.scorecard.maxEnteredRound = data!["round"] as! Int
                     self.scorecard.selectedRound = self.scorecard.maxEnteredRound
                     
-                case "players":
+                case "dealer":
+                    self.scorecard.dealerIs = data!["dealer"] as! Int
+                    if self.gameSetupViewController != nil {
+                        self.gameSetupViewController.cutComplete()
+                    }
+                    
+                case "play", "players":
                     self.scorecard.setCurrentPlayers(players: data!.count)
                     for (playerNumberData, playerData) in data as! [String : [String : Any]] {
                         let playerNumber = Int(playerNumberData)!
@@ -286,13 +294,23 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                             }
                         }
                     }
-                    
-                    if self.scorecard.isViewing && self.scorepadViewController != nil {
-                        // Need to clear grid just in case less data now than there was
-                        self.scorepadViewController.reloadScorepad()
-                    
+                    if descriptor == "players" && self.scorecard.handState == nil {
+                        var selectedPlayers: [PlayerMO] = []
+                        for playerNumber in 1...self.scorecard.currentPlayers {
+                            selectedPlayers.append(self.scorecard.enteredPlayer(playerNumber).playerMO!)
+                        }
+                        self.dismissAll {
+                            self.gameSetupViewController = GameSetupViewController.showGameSetup(viewController: self, scorecard: self.scorecard, selectedPlayers: selectedPlayers)
+                        }
                     }
-                    self.queue.insert(QueueEntry(descriptor: "playHand", data: nil, peer: peer), at: 0)
+                    if descriptor == "play" {
+                        if self.scorecard.isViewing && self.scorepadViewController != nil {
+                            // Need to clear grid just in case less data now than there was
+                            self.scorepadViewController.reloadScorepad()
+                        
+                        }
+                        self.queue.insert(QueueEntry(descriptor: "playHand", data: nil, peer: peer), at: 0)
+                    }
                     
                 case "cut":
                     var preCutCards: [Card] = []
@@ -302,10 +320,17 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                     }
                     let playerName = data!["names"] as! [String]
                     self.cutViewController?.delegate = nil
-                    self.dismissAll {
-                        self.cutViewController = CutViewController.cutForDealer(viewController: self, view: self.view, scorecard: self.scorecard, cutDelegate: self, preCutCards: preCutCards, playerName: playerName)
-                    }
                     
+                    var viewController: UIViewController
+                    if self.gameSetupViewController != nil {
+                        self.gameSetupViewController.cutDelegate = self
+                        viewController = self.gameSetupViewController
+                    } else {
+                        viewController = self
+                    }
+                    let cutDelegate = viewController as! CutDelegate
+                    self.cutViewController = CutViewController.cutForDealer(viewController: viewController, view: viewController.view, scorecard: self.scorecard, cutDelegate: cutDelegate, preCutCards: preCutCards, playerName: playerName)
+                
                 case "scores", "allscores":
                     
                     self.gameOver = false
@@ -496,7 +521,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
             }
             if self.recoveryMode && self.matchDeviceName != nil && peer.deviceName == self.matchDeviceName {
                 // Recovering and this is the device I'm waiting for!
-                self.connect(peer: peer)
+                _ = self.connect(peer: peer)
                 self.reflectState(peer: peer)
             }
             self.setInstructions()
@@ -514,12 +539,14 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
         Utility.mainThread { [unowned self] in
             if peer.state == .notConnected {
                 self.appState = .notConnected
+                self.changePlayerAvailable()
                 self.dismissAll(true, reason: (reason == nil ? "" : reason!), completion: {
                     self.scorecard.commsDelegate?.start(email: self.thisPlayer)
                     self.reflectState(peer: peer)
                     UIApplication.shared.isIdleTimerDisabled = false
                 })
             } else {
+                self.changePlayerAvailable()
                 if peer.state == .connected && self.alertController != nil {
                     // Can dismiss re-connecting dialog
                     self.alertController.dismiss(animated: true, completion: nil)
@@ -541,11 +568,37 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
         self.available = []
         self.broadcastTableView.reloadData()
         self.appState = .notConnected
+        self.changePlayerAvailable()
         scorecard.reset()
         scorecard.setGameInProgress(false)
     }
     
-    func connect(peer: CommsPeer) {
+    private func closeConnections() {
+        self.multipeerClient?.stop()
+        self.rabbitMQClient?.stop()
+    }
+    
+    private func createConnections() {
+        // Create nearby comms service, take delegates and start listening
+        if !self.recoveryMode || self.scorecard.recoveryOnlineMode == .broadcast {
+            self.multipeerClient = MultipeerService(purpose: self.commsPurpose, type: .client, serviceID: self.scorecard.serviceID(self.commsPurpose))
+            self.multipeerClient?.stateDelegate = self
+            self.multipeerClient?.dataDelegate = self
+            self.multipeerClient?.browserDelegate = self
+            self.multipeerClient?.start(email: self.thisPlayer, recoveryMode: self.recoveryMode, matchDeviceName: self.matchDeviceName)
+        }
+        
+        // Create online comms service, take delegates and start listening
+        if self.commsPurpose == .playing && self.scorecard.onlineEnabled && (!self.recoveryMode || self.scorecard.recoveryOnlineMode == .invite) {
+            self.rabbitMQClient = RabbitMQService(purpose: self.commsPurpose, type: .client, serviceID: nil)
+            self.rabbitMQClient?.stateDelegate = self
+            self.rabbitMQClient?.dataDelegate = self
+            self.rabbitMQClient?.browserDelegate = self
+            self.rabbitMQClient?.start(email: self.thisPlayer, recoveryMode: self.recoveryMode, matchDeviceName: self.matchDeviceName)
+        }
+    }
+    
+    func connect(peer: CommsPeer) -> Bool {
         var playerName: String!
         if self.thisPlayer != nil {
             let playerMO = scorecard.findPlayerByEmail(self.thisPlayer)
@@ -556,7 +609,10 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
         
         if !self.scorecard.commsDelegate!.connect(to: peer, playerEmail: self.thisPlayer, playerName: playerName, reconnect: true) {
             self.alertMessage("Error connecting to device", title: "Error")
+            return false
         }
+        
+        return true
     }
     
     func selectFramework(framework: CommsConnectionFramework) {
@@ -574,6 +630,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
     func reflectState(peer: CommsPeer) {
         if let combinedIndex = available.index(where: {$0.deviceName == peer.deviceName && $0.framework == peer.framework}) {
             let availableFound = self.available[combinedIndex]
+            availableFound.connecting = false
             availableFound.oldState = availableFound.peer.state
             availableFound.peer = peer
             self.refreshStatus()
@@ -590,6 +647,9 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
     // MARK: - Cut for dealer delegate routines ===================================================================== -
     
     func cutComplete() {
+        if self.gameSetupViewController != nil {
+            self.gameSetupViewController.cutDelegate = nil
+        }
         self.cutViewController.delegate = nil
         self.cutViewController = nil
     }
@@ -636,14 +696,14 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell: BroadcastTableCell
-        
-        if commsPurpose != .playing || indexPath.section == self.peerSection {
+        var cell: BroadcastTableCell!
+        if self.commsPurpose != .playing || indexPath.section == self.peerSection {
             // List of remote peers
             cell = tableView.dequeueReusableCell(withIdentifier: "Service Cell", for: indexPath) as! BroadcastTableCell
+            
             let availableFound = self.available[indexPath.row]
             let deviceName = availableFound.deviceName
-            let mode = available[indexPath.row].peer.mode
+            let mode = self.available[indexPath.row].peer.mode
             let state = availableFound.state
             let oldState = availableFound.oldState
             
@@ -652,8 +712,10 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
             case .notConnected:
                 if oldState != .notConnected {
                     cell.stateLabel.text = "Disconnected"
-                } else if commsPurpose == .sharing {
+                } else if self.commsPurpose == .sharing {
                     cell.stateLabel.text = "Offering to share scorecard"
+                } else if availableFound.connecting {
+                    cell.stateLabel.text = "Connecting..."
                 } else {
                     if mode == .invite {
                         let hostName = availableFound.peer.playerName!
@@ -665,27 +727,27 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
             case .connected:
                 var message: String
                 message = "Connected"
-                if appState == .waiting {
+                if self.appState == .waiting {
                     message = message + ". Waiting to start..."
                 }
                 cell.stateLabel.text = message
             case .connecting:
                 if self.recoveryMode {
-                    cell.stateLabel.text = "Trying to reconnect"
+                    cell.stateLabel.text = "Trying to reconnect..."
                 } else {
-                    cell.stateLabel.text = "Connecting"
+                    cell.stateLabel.text = "Connecting..."
                 }
             case .reconnecting:
                 cell.stateLabel.text = "Trying to reconnect"
             }
             
-            if appState == .notConnected || state != .notConnected {
+            if self.appState == .notConnected || state != .notConnected {
                 cell.isUserInteractionEnabled = true
+                cell.isEditing = false
                 cell.serviceLabel.textColor = UIColor.black
                 cell.stateLabel.textColor = UIColor.blue
-                cell.disconnectButton.isHidden = (appState == .notConnected)
+                cell.disconnectButton.isHidden = (self.appState == .notConnected)
             } else {
-                cell.isUserInteractionEnabled = false
                 cell.serviceLabel.textColor = ScorecardUI.darkHighlightColor
                 cell.stateLabel.textColor = ScorecardUI.highlightColor
                 cell.disconnectButton.isHidden = true
@@ -696,8 +758,8 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
         } else {
             // My details when joining a game
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Cell", for: indexPath) as! BroadcastTableCell
-            if thisPlayer != nil {
-                if let playerMO = scorecard.findPlayerByEmail(thisPlayer) {
+            if self.thisPlayer != nil {
+                if let playerMO = self.scorecard.findPlayerByEmail(self.thisPlayer) {
                     cell.playerNameLabel.text = playerMO.name!
                     Utility.setThumbnail(data: playerMO.thumbnail,
                                          imageView: cell.playerImage,
@@ -707,22 +769,23 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                 }
             }
             
-            if self.recoveryMode {
-                cell.changePlayerButton.isEnabled = false
-            } else {
+            self.changePlayerButton = cell.changePlayerButton
+            if !self.recoveryMode {
                 cell.changePlayerButton.addTarget(self, action: #selector(BroadcastViewController.changePlayerPressed(_:)), for: UIControlEvents.touchUpInside)
             }
+            self.changePlayerAvailable()
         }
         
-        let backgroundView = UIView()
-        backgroundView.backgroundColor = UIColor.clear
-        cell.selectedBackgroundView = backgroundView
+        // let backgroundView = UIView()
+        // backgroundView.backgroundColor = UIColor.clear
+        //  cell.selectedBackgroundView = backgroundView
         
-        return cell
+        return cell!
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if appState == .notConnected && indexPath.section == self.peerSection {
+        let availableFound = self.available[indexPath.row]
+        if (appState == .notConnected && availableFound.state == .notConnected) && indexPath.section == self.peerSection {
             return indexPath
         } else {
             return nil
@@ -732,7 +795,11 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == self.peerSection {
             let availableFound = available[indexPath.row]
-            self.connect(peer: availableFound.peer)
+            availableFound.connecting = true
+            self.refreshStatus()
+            if !self.connect(peer: availableFound.peer) {
+                availableFound.connecting = false
+            }
             self.refreshStatus()
         }
     }
@@ -800,6 +867,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
             self.scorecard.commsDelegate?.stop()
             self.scorecard.commsDelegate?.start(email: self.thisPlayer)
             self.appState = .notConnected
+            self.changePlayerAvailable()
             self.refreshStatus()
         }
     }
@@ -809,6 +877,12 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
             // Exclude current player
             return (self.thisPlayer == nil || self.thisPlayer != playerMO.email )
         })
+    }
+    
+    func changePlayerAvailable() {
+        let available = self.appState == .notConnected && !self.recoveryMode
+        self.changePlayerButton?.isEnabled = available
+        self.changePlayerButton?.setTitleColor((available ? UIColor.blue : UIColor.lightGray), for: .normal)
     }
     
     func refreshRoundSummary() {
@@ -910,7 +984,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
             reason = "Connection with remote device lost"
         }
         
-        if self.scorepadViewController == nil && self.cutViewController == nil {
+        if self.scorepadViewController == nil && self.cutViewController == nil && self.gameSetupViewController == nil {
             // Check alert controller
             if self.alertController != nil {
                 self.alertController.dismiss(animated: true, completion: {
@@ -966,20 +1040,38 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
             })
         }
         
+        func dismissGameSetup() {
+            if self.gameSetupViewController != nil {
+                Utility.debugMessage("dismiss", "Dismissing setup")
+                self.gameSetupViewController.dismiss(animated: true, completion: {
+                    Utility.debugMessage("dismiss", "Setup dismissed")
+                    self.gameSetupViewController = nil
+                    doCompletion()
+                })
+            } else {
+                doCompletion()
+            }
+        }
+        
         if self.scorecard.commsHandlerMode == .none {
             self.scorecard.commsHandlerMode = .dismiss
         }
         
-        if self.scorepadViewController == nil && self.cutViewController == nil {
+        if self.scorepadViewController == nil && self.cutViewController == nil && self.gameSetupViewController == nil{
             doCompletion()
         } else {
-            if self.cutViewController != nil {
-                self.cutViewController.dismiss(animated: true, completion: {
-                    self.cutViewController?.delegate = nil
-                    self.cutViewController = nil
-                    doCompletion()
-                })
-                self.cutViewController = nil
+            if self.cutViewController != nil  || self.gameSetupViewController != nil {
+                if self.cutViewController != nil {
+                    Utility.debugMessage("dismiss", "Dismissing cut")
+                    self.cutViewController.dismiss(animated: true, completion: {
+                        Utility.debugMessage("dismiss", "Cut dismissed")
+                        self.cutViewController?.delegate = nil
+                        self.cutViewController = nil
+                        dismissGameSetup()
+                    })
+                } else {
+                    dismissGameSetup()
+                }
             } else if self.scorepadViewController.roundSummaryViewController != nil {
                 self.scorepadViewController.roundSummaryViewController.dismiss(animated: true, completion: dismissScorepad)
             } else if self.scorepadViewController != nil && self.scorepadViewController.gameSummaryViewController != nil {
@@ -1059,6 +1151,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
 class Available {
     var peer: CommsPeer
     var oldState: CommsConnectionState = .notConnected
+    var connecting = false
     var expires: Date?
     var inviteUUID: String?
     

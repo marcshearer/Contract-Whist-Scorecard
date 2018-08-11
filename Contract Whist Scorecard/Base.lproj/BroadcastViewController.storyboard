@@ -46,14 +46,14 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="60" sectionHeaderHeight="37" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dtV-HG-agM">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="60" sectionHeaderHeight="37" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dtV-HG-agM">
                                 <rect key="frame" x="0.0" y="224" width="375" height="443"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Player Cell" id="DWM-b5-d8B" customClass="BroadcastTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Player Cell" id="DWM-b5-d8B" customClass="BroadcastTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="37" width="375" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="DWM-b5-d8B" id="Xe4-4Z-48C">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" tableViewCell="DWM-b5-d8B" id="Xe4-4Z-48C">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
@@ -146,7 +146,7 @@
                                             <outlet property="playerNameLabel" destination="iMN-2e-x1S" id="dcf-sx-js1"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Service Cell" rowHeight="60" id="57Y-fT-rsC" userLabel="Broadcast Service Cell" customClass="BroadcastTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Service Cell" rowHeight="60" id="57Y-fT-rsC" userLabel="Broadcast Service Cell" customClass="BroadcastTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="97" width="375" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="57Y-fT-rsC" id="ZcL-vg-Z6W">
@@ -246,7 +246,7 @@
                             <constraint firstItem="y3A-eA-Tmp" firstAttribute="top" secondItem="hFM-Q5-ViO" secondAttribute="top" id="zEh-o0-CZf"/>
                         </constraints>
                         <connections>
-                            <outletCollection property="gestureRecognizers" destination="bxb-aw-ubp" appends="YES" id="1EH-Nb-ydz"/>
+                            <outletCollection property="gestureRecognizers" destination="T3J-B5-Pwe" appends="YES" id="7Ru-7d-OWw"/>
                         </connections>
                     </view>
                     <navigationItem key="navigationItem" id="K9H-Ar-v7H"/>
@@ -262,9 +262,9 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UDy-kc-SSJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="xqo-YA-Qav" userLabel="Exit" sceneMemberID="exit"/>
-                <rotationGestureRecognizer id="bxb-aw-ubp">
+                <rotationGestureRecognizer id="T3J-B5-Pwe">
                     <connections>
-                        <action selector="rotationGestureWithRecognizer:" destination="aZe-pG-rMs" id="cOT-my-fwn"/>
+                        <action selector="rotationGestureWithRecognizer:" destination="aZe-pG-rMs" id="QfO-QT-Kha"/>
                     </connections>
                 </rotationGestureRecognizer>
             </objects>

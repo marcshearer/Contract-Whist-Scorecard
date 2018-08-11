@@ -125,6 +125,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     @IBAction func continuePressed(_ sender: RoundedButton) {
         self.setupPlayers()
         gameInProgress = true
+        self.scorecard.sendPlayers()
         self.performSegue(withIdentifier: "showHostGameSetup", sender: self)
     }
     
@@ -247,6 +248,48 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         scorecard.reCenterPopup(self)
+    }
+    
+    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+        
+        // Play sound
+        self.alertSound()
+        
+        if self.currentState != .inviting {
+            // Don't reset while in middle of inviting
+            
+            if let mode = self.connectionMode {
+                
+                // Disconnect
+                self.setConnectionMode(.unknown)
+            
+                switch mode {
+                case .nearby:
+                    // Start broadcasting
+                    self.setConnectionMode(.nearby)
+                    
+                case .online:
+                    // Start connection
+                    self.setConnectionMode(.online, chooseInvitees: false)
+                    
+                    if let selectedPlayers = self.selectedPlayers {
+                        // Resend invites
+                        let invitees = selectedPlayers.count - 1
+                        if invitees > 0 {
+                            let playerMO = Array(selectedPlayers[1...invitees])
+                            self.returnPlayers(complete: true, playerMO: playerMO, info: ["invitees" : true])
+                        }
+                    } else {
+                        // Select players
+                        self.chooseOnlineInvitees()
+                        hostPlayerTableView.reloadData()
+                        self.setInstructions()
+                    }
+                default:
+                    break
+                }
+            }
+        }
     }
     
     // MARK: - Broadcast Service Delegate Overrides ==================================================== -
@@ -377,7 +420,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                                 self.scorecard.sendInstruction("wait", to: peer)
                             } else {
                                 // Game in progress - need to resend state - luckily have what we need in handState
-                                self.scorecard.sendPlayers(rounds: self.scorecard.handState.rounds, cards: self.scorecard.handState.cards, bounce: self.scorecard.handState.bounce, bonus2: self.scorecard.handState.bonus2, suits: self.scorecard.handState.suits, to: peer)
+                                self.scorecard.sendPlay(rounds: self.scorecard.handState.rounds, cards: self.scorecard.handState.cards, bounce: self.scorecard.handState.bounce, bonus2: self.scorecard.handState.bonus2, suits: self.scorecard.handState.suits, to: peer)
                                 self.scorecard.sendScores(to: peer)
                                 self.scorecard.sendHandState(to: peer)
                             }
@@ -410,7 +453,9 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 }
             } else if self.connectionMode == .online && self.playerData.count >= 3 && self.connectedPlayers == self.playerData.count {
                 // Have connections from all invited players - press continue button
-                self.continuePressed(self.scorecardButton)
+                if !self.gameInProgress {
+                    self.continuePressed(self.scorecardButton)
+                }
             }
         }
     }
@@ -442,7 +487,8 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     
     func handlerStateChange(to state: CommsHandlerState) {
         if state != self.currentState {
-            if state == .notStarted {
+            switch state {
+            case .notStarted:
                 if self.currentState == .invited || self.currentState == .inviting {
                     self.alertMessage("Invitation failed")
                 }
@@ -451,7 +497,10 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 } else if !exiting {
                     self.exitHost()
                 }
-            } else if state != .broadcasting {
+            case .broadcasting:
+                break
+                
+            default:
                 var inviteStatus: InviteStatus = .none
                 switch state {
                 case .inviting:
@@ -708,7 +757,12 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             }
         } else if info?["invitees"] != nil {
             if complete {
-                // Returning invitees - Insert selected players into list
+                // Returning invitees
+                
+                // Save selected players
+                self.selectedPlayers = [self.playerData[0].playerMO!] + playerMO!
+                
+                // Insert selected players into list
                 var invite: [String] = []
                 for player in playerMO! {
                     invite.append(player.email!)
@@ -718,10 +772,17 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                                    peer: nil,
                                    inviteStatus: .inviting)
                 }
+                
+                // Refresh UI
                 self.guestPlayerTableView.reloadData()
+                
+                
+                // Open connection and send invites
                 self.startOnlineConnection()
                 self.startHostBroadcast(email: self.playerData[0].email, name: self.playerData[0].name, invite: invite, queueUUID: (self.scorecard.recoveryMode ? self.scorecard.recoveryConnectionUUID : nil))
+                
              } else {
+                // Incomplete list of invitees - exit
                 if self.defaultConnectionMode == .unknown {
                     self.setConnectionMode(.unknown)
                 } else {
@@ -795,6 +856,10 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         let oldConnectionMode = self.connectionMode
         if connectionMode != oldConnectionMode {
             self.connectionMode = connectionMode
+            
+            // Clear hand state
+            self.scorecard.handState = nil
+            
             // Format table views
             switch connectionMode {
             case .unknown:
@@ -813,7 +878,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             
             // Switch connection mode
             if self.connectionMode == .unknown {
-                 self.stopHostBroadcast()
+                self.stopHostBroadcast()
                 self.takeDelegates(nil)
             } else {
                 switch self.connectionMode {

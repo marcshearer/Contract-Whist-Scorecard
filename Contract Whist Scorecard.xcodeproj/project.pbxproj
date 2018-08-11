@@ -793,6 +793,7 @@
 				B2B7550C1E619A3F00B1313B /* DataAdmin.swift */,
 				B24AABDF1EC07274000D34B0 /* Backup.swift */,
 				B24AABE11EC0BC08000D34B0 /* Upgrade.swift */,
+				B2AB64F0211EACFA00F35481 /* Admin Menu.swift */,
 			);
 			name = "Miscellaneous Classes";
 			sourceTree = "<group>";
@@ -1200,6 +1201,7 @@
 			files = (
 				B2B755051E58A2D900B1313B /* HistoryDetailViewController.swift in Sources */,
 				B221EED7210B0E2D00F7FBA0 /* HandViewController.swift in Sources */,
+				B2AB64F1211EACFA00F35481 /* Admin Menu.swift in Sources */,
 				49AFA50D1E0C42A100DCB1F4 /* RoundSummaryViewController.swift in Sources */,
 				B206A13A1E50FBAE00E26E96 /* HistoryViewController.swift in Sources */,
 				B2F41B231FB6BBA70043F974 /* Other Extensions.swift in Sources */,

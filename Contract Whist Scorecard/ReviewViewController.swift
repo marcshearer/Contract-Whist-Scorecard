@@ -23,6 +23,7 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
     private var height: [CGFloat] = []
     private var text: [[String]]!
     private var rowHeight: CGFloat!
+    private var titleHeight: CGFloat!
     private let splitSuit = 6
     private var fontSize: CGFloat = 17.0
     
@@ -33,6 +34,10 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet private weak var hand3TableView: UITableView!
     @IBOutlet private weak var hand4TableView: UITableView!
     @IBOutlet private weak var tableTopView: UIView!
+    @IBOutlet private weak var roundTitleLabel: UILabel!
+    @IBOutlet private weak var overUnderLabel: UILabel!
+    @IBOutlet private weak var titleView: UIView!
+    @IBOutlet private weak var titleViewHeight: NSLayoutConstraint!
     
     @IBAction func finishPressed(_ sender: UIButton) {
         self.performSegue(withIdentifier: "hideReview", sender: self)
@@ -52,8 +57,8 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
         
         self.setupPlayers()
         self.setupOutlets()
+        self.setupTitle()
         self.setupText()
-        
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -129,6 +134,13 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
+    private func setupTitle() {
+        self.roundTitleLabel.attributedText = scorecard.roundTitle(round, rankColor: UIColor.white)
+        let totalRemaining = self.scorecard.remaining(playerNumber: 0, round: self.round, mode: Mode.bid, rounds: self.scorecard.rounds, cards: self.scorecard.handState.cards, bounce: self.scorecard.handState.bounce)
+        self.overUnderLabel.text = "\(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")"
+        self.overUnderLabel.textColor = (totalRemaining == 0 ? UIColor.black : (totalRemaining > 0 ? UIColor.green : UIColor.red))
+    }
+    
     private func setupText() {
         
         self.text = []
@@ -156,9 +168,21 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     private func setupHeight(totalHeight: CGFloat) {
+        if totalHeight <= 320.0 {
+            self.titleHeight = 0.0
+            self.roundTitleLabel.isHidden = true
+            self.overUnderLabel.isHidden = true
+            self.titleView.backgroundColor = UIColor.clear
+        } else {
+            self.titleHeight = (totalHeight < 500.0 ? 40.0 : 50.0)
+            self.titleViewHeight.constant = self.titleHeight
+            self.roundTitleLabel.isHidden = false
+            self.overUnderLabel.isHidden = false
+            self.titleView.backgroundColor = UIColor.darkGray
+        }
+        let useableHeight = totalHeight - 30.0 - titleHeight
         let totalRows = self.text[0].count + self.text[2].count
-        let useableHeight = totalHeight - 30
-        rowHeight = min(30, useableHeight/CGFloat(totalRows))
+        rowHeight = min(30.0, useableHeight/CGFloat(totalRows))
         for (tableView, handNumber) in tableViewPlayer {
             let height = CGFloat(self.text[handNumber-1].count) * rowHeight
             self.height[tableView-1] = height
@@ -188,12 +212,13 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     private func setupPosition(totalHeight: CGFloat, totalWidth: CGFloat) {
+        let useableHeight = totalHeight - self.titleHeight
         let maxHeight = self.height.max()!
         let maxWidth = self.width.max()!
-        var tableTopHeight = totalHeight - (2.0 * maxHeight) - 10.0
+        var tableTopHeight = useableHeight - (2.0 * maxHeight) - 10.0
         var tableTopWidth = totalWidth - (2.0 * maxWidth) - 10.0
         var innerTableTopSize = min(tableTopHeight, tableTopWidth)
-        var offset: CGFloat = 0.0
+        var offset: CGFloat = titleHeight
         if innerTableTopSize >= maxHeight && innerTableTopSize > maxWidth  {
             // Can fit all hands around this - no need to adjust
             tableTopHeight = innerTableTopSize
@@ -201,7 +226,7 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
             innerTableTopSize -= 80
         } else if totalHeight > totalWidth {
             // Portrait - Move hands 1 and 3 away from centre to allow hands 2 and 4 to fit
-            tableTopHeight = maxHeight + (totalHeight * 0.1)
+            tableTopHeight = maxHeight + (useableHeight * 0.1)
             tableTopWidth = innerTableTopSize
             innerTableTopSize -= 20
         } else {
@@ -211,7 +236,7 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
             innerTableTopSize -= 20
         }
         if self.scorecard.currentPlayers < 4 {
-            offset = -totalHeight / 8.0
+            offset = -useableHeight / 8.0
         }
         
         // Setup displayed table top
@@ -219,20 +244,20 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
             tableTopView.isHidden = true
         } else {
             tableTopView.isHidden = false
-            self.tableTopView.frame = CGRect(x: (totalWidth - innerTableTopSize) / 2.0, y: offset + (totalHeight - innerTableTopSize) / 2.0, width: innerTableTopSize, height: innerTableTopSize)
+            self.tableTopView.frame = CGRect(x: (totalWidth - innerTableTopSize) / 2.0, y: offset + (useableHeight - innerTableTopSize) / 2.0, width: innerTableTopSize, height: innerTableTopSize)
         }
         
         // Setup hand 1
-        self.hand1TableView.frame = CGRect(x: (totalWidth - width[0]) / 2.0, y: offset + ((totalHeight - tableTopHeight) / 2.0) - height[0], width: width[0], height: height[0])
+        self.hand1TableView.frame = CGRect(x: (totalWidth - width[0]) / 2.0, y: offset + ((useableHeight - tableTopHeight) / 2.0) - height[0], width: width[0], height: height[0])
         
         // Setup hand 2
-        self.hand2TableView.frame = CGRect(x: (totalWidth + tableTopWidth) / 2.0, y: offset + ((totalHeight - height[1]) / 2.0), width: width[1], height: height[1])
+        self.hand2TableView.frame = CGRect(x: (totalWidth + tableTopWidth) / 2.0, y: offset + ((useableHeight - height[1]) / 2.0), width: width[1], height: height[1])
         
         // Setup hand 3
-        self.hand3TableView.frame = CGRect(x: (totalWidth - width[2]) / 2.0, y: offset + ((totalHeight + tableTopHeight) / 2.0), width: width[2], height: height[2])
+        self.hand3TableView.frame = CGRect(x: (totalWidth - width[2]) / 2.0, y: offset + ((useableHeight + tableTopHeight) / 2.0), width: width[2], height: height[2])
         
         // Setup hand 4
-        self.hand4TableView.frame = CGRect(x: ((totalWidth - tableTopWidth) / 2.0) - width[3], y: offset + ((totalHeight - height[3]) / 2.0), width: width[3], height: height[3])
+        self.hand4TableView.frame = CGRect(x: ((totalWidth - tableTopWidth) / 2.0) - width[3], y: offset + ((useableHeight - height[3]) / 2.0), width: width[3], height: height[3])
         
     }
     

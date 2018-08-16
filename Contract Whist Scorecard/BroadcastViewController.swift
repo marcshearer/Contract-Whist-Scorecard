@@ -396,7 +396,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                     if let round = data!["round"] as? Int {
                         if let dealCards = data!["deal"] as? [[Int]] {
                             let deal = Deal(fromNumbers: dealCards)
-                            let hand = deal.hands[self.thisPlayerNumber - 1]
+                            let hand = deal.hands[self.thisPlayerNumber - 1].copy() as! Hand
                             self.scorecard.commsDelegate?.debugMessage("Hand: \(hand.toString())")
                             self.playHand(peer: peer, dismiss: self.newGame, hand: hand)
                             self.newGame = false

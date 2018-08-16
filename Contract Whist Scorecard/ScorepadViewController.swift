@@ -96,7 +96,7 @@ class ScorepadViewController: UIViewController,
  
     @IBAction private func hideLocation(segue:UIStoryboardSegue) {
         var complete = false
-        if let segue = segue as? UIStoryboardSegueWithCompletion {
+                if let segue = segue as? UIStoryboardSegueWithCompletion {
             segue.completion = {
                 if let sourceViewController = segue.source as? LocationViewController {
                     if sourceViewController.complete {
@@ -104,8 +104,12 @@ class ScorepadViewController: UIViewController,
                     }
                 }
                 if complete {
+                    // Resave updated location
+                    self.saveLocationAndDate()
+                    // Play hand
                     self.scorecard.playHand(from: self, sourceView: self.scorepadView, computerPlayerDelegate: self.computerPlayerDelegate)
                 } else {
+                    // Exit
                     self.performSegue(withIdentifier: "hideScorepad", sender: self)
                 }
             }
@@ -143,7 +147,7 @@ class ScorepadViewController: UIViewController,
         self.headerTableView.reloadData()
         self.bodyTableView.reloadData()
         self.footerTableView.reloadData()
-        self.saveDate()
+        self.saveNewGame()
         self.formatButtons()
         if self.scorecard.isHosting {
             // Start new game
@@ -274,7 +278,7 @@ class ScorepadViewController: UIViewController,
                 self.getLocation()
             } else {
                 
-                self.saveDate()
+                self.saveNewGame()
                 self.playHand(setState: true, recoveryMode: recoveryMode)
             }
         }
@@ -596,14 +600,15 @@ class ScorepadViewController: UIViewController,
             // Online - location not appropriate
             self.scorecard.gameLocation.description = "Online"
             self.scorecard.gameLocation.location = nil
-            self.saveDate()
+            self.saveNewGame()
             self.playHand(setState: true)
         } else {
             // Prompt for location
             Utility.mainThread {
                 // Get the other hands started
-                self.saveDate()
+                self.saveNewGame()
                 self.playHand(setState: true, show: false)
+                // Link to location view
                 self.performSegue(withIdentifier: "showLocation", sender: self)
             }
         }
@@ -615,13 +620,17 @@ class ScorepadViewController: UIViewController,
         self.performSegue(withIdentifier: returnSegue, sender: self)
     }
     
-    private func saveDate() {
+    private func saveNewGame() {
         if !self.scorecard.hasJoined && !self.scorecard.isViewing {
             self.scorecard.gameDatePlayed = Date()
             self.scorecard.gameUUID = UUID().uuidString
-            self.recovery.saveLocationAndDate()
+            self.saveLocationAndDate()
             self.recovery.saveOverride()
         }
+    }
+    
+    private func saveLocationAndDate() {
+         self.recovery.saveLocationAndDate()
     }
     
     private func tidyUp() {

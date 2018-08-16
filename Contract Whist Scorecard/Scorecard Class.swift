@@ -606,7 +606,7 @@ class Scorecard {
         }
     }
     
-    public func roundTitle(_ round: Int, rankColor: UIColor = UIColor.black, rounds: Int, cards: [Int]! = nil, bounce: Bool! = nil, suits: [Suit]! = nil) -> NSMutableAttributedString {
+    public func roundTitle(_ round: Int, rankColor: UIColor = UIColor.black, rounds: Int! = nil, cards: [Int]! = nil, bounce: Bool! = nil, suits: [Suit]! = nil) -> NSMutableAttributedString {
         
         let rankColor = [NSAttributedStringKey.foregroundColor: rankColor]
         let rank = NSMutableAttributedString(string: "\(self.roundCards(round, rounds: rounds, cards: cards, bounce: bounce))", attributes: rankColor)
@@ -979,7 +979,7 @@ class Scorecard {
         get {
             return ((Utility.isDevelopment || (self.isNetworkAvailable && self.isLoggedIn)) &&
                     Scorecard.settingRabbitMQUri != "" &&
-                    self.settingOnlinePlayerEmail != "")
+                    self.settingOnlinePlayerEmail ?? "" != "")
         }
     }
     

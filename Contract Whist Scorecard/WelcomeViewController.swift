@@ -309,16 +309,16 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
         
         switch indexPath.row + 1 {
         case newGameButton:
-            welcomeActionCell.actionButton.setTitle("Score Game", for: .normal)
+            welcomeActionCell.actionButton.setTitle("New Game", for: .normal)
             newGameCell = welcomeActionCell
         case onlineGameButton:
-            welcomeActionCell.actionButton.setTitle("Play Game", for: .normal)
+            welcomeActionCell.actionButton.setTitle("Online Game", for: .normal)
             onlineGameCell = welcomeActionCell
         case getStartedButton:
             welcomeActionCell.actionButton.setTitle("Get Started", for: .normal)
             getStartedCell = welcomeActionCell
         case resumeGameButton:
-            welcomeActionCell.actionButton.setTitle("Resume Playing", for: .normal)
+            welcomeActionCell.actionButton.setTitle("Resume Game", for: .normal)
             resumeGameCell = welcomeActionCell
         case playerStatsButton:
             welcomeActionCell.actionButton.setTitle("Players", for: .normal)
@@ -416,15 +416,19 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
             getStartedCell = nil
         }
         
-        buttons += 1
-        onlineGameButton = buttons
-        
-        buttons += 1
-        resumeGameButton = buttons
-        
+        // TODO Reinstate (move below online game)
         buttons += 1
         newGameButton = buttons
         
+        // TODO Reinstate (move below online game)
+        buttons += 1
+        resumeGameButton = buttons
+        
+        if (self.scorecard.settingSyncEnabled && self.scorecard.settingNearbyPlaying || self.scorecard.onlineEnabled) { // TODO Reinstate (remove)
+            buttons += 1
+            onlineGameButton = buttons
+        } // TODO Reinstate (remove
+            
         buttons += 1
         playerStatsButton = buttons
         
@@ -613,11 +617,11 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
             let actionSheet = ActionSheet( view: onlineGameCell.actionButton, direction: .up)
             actionSheet.add("Host a Game", handler: hostGame)
             actionSheet.add("Join a Game", handler: joinGame)
-            actionSheet.add("Play against Computer", handler: computerGame)
+            // TODO reinstate actionSheet.add("Play against Computer", handler: computerGame)
             actionSheet.add("Cancel", style: .cancel)
             actionSheet.present()
         } else {
-            self.computerGame()
+            // TODO reinstate self.computerGame()
         }
     }
     

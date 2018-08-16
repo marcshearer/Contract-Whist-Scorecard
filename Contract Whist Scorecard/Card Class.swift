@@ -196,18 +196,19 @@ class Hand : NSObject, NSCopying {
     public func copy(with zone: NSZone? = nil) -> Any {
         // Copy elements rather than pointers
         let copy = Hand()
+        // Copy cards
         for card in self.cards {
             copy.cards.append(card)
         }
+        // Copy suits
         if self.handSuits.count > 0 {
             for handSuit in self.handSuits {
                 copy.handSuits.append(handSuit.copy() as! HandSuit)
             }
         }
-        for (suit, handSuit) in self.xrefSuit {
-            copy.xrefSuit[suit] = handSuit
-        }
+        // Create xref
         for (suit, element) in self.xrefElement {
+            copy.xrefSuit[suit] = copy.handSuits[element]
             copy.xrefElement[suit] = element
         }
         return copy

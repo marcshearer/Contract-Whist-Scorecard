@@ -135,6 +135,27 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     
     // MARK: - Utility routines =============================================================== -
     
+    public func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+        if motion == .motionShake {
+            
+            // Play sound
+            Utility.getActiveViewController()?.alertSound()
+            
+            // Reset all connections
+            self.commsDelegate?.reset()
+        }
+    }
+    
+    public func dealHand() {
+        if self.isHosting && self.handState.hand == nil {
+            // Need to deal next hand
+            self.handState.hand = self.dealHand(cards: self.roundCards(self.handState.round, rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce))
+            // Save hand and (blank) trick in case need to recover
+            self.recovery.saveHands(deal: self.deal, made: self.handState.made, twos: self.handState.twos)
+            self.recovery.saveTrick(toLead: self.handState.toLead, trickCards: [])
+        }
+    }
+    
     public func playHand(from viewController: UIViewController, sourceView: UIView, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil) {
         if self.isHosting || self.hasJoined {
             // Now play the hand
@@ -330,16 +351,6 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         self.commsDelegate?.send("deal", [ "round" : self.handState.round,
                                            "deal" : self.deal.toNumbers()])
         
-        /*
-        // TODO This is old code - remove it
-        for playerNumber in 2...self.currentPlayers {
-            let hand = self.deal.hands[playerNumber - 1]
-            self.commsDelegate?.send("hand", ["player": playerNumber,
-                                              "cards" : hand.toNumbers()],
-                                      to: commsPeer,
-                                      matchEmail: self.enteredPlayer(playerNumber).playerMO!.email!)
-        }
-    */
     }
     
     public func sendCut(cutCards: [Card], to commsPeer: CommsPeer! = nil) {

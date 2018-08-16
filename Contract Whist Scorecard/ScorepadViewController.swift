@@ -104,7 +104,7 @@ class ScorepadViewController: UIViewController,
                     }
                 }
                 if complete {
-                    self.scorecard.playHand(from: self, sourceView: self.scorepadView)
+                    self.scorecard.playHand(from: self, sourceView: self.scorepadView, computerPlayerDelegate: self.computerPlayerDelegate)
                 } else {
                     self.performSegue(withIdentifier: "hideScorepad", sender: self)
                 }
@@ -660,7 +660,10 @@ class ScorepadViewController: UIViewController,
             }
         }
         self.scorecard.setGameInProgress(true)
-        self.scorecard.playHand(from: self, sourceView: self.scorepadView, computerPlayerDelegate: computerPlayerDelegate)
+        self.scorecard.dealHand()
+        if show {
+            self.scorecard.playHand(from: self, sourceView: self.scorepadView, computerPlayerDelegate: self.computerPlayerDelegate)
+        }
         if setState {
             // Bids already entered - resend all scores
             self.scorecard.sendScores()

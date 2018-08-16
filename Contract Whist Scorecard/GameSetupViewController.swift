@@ -22,6 +22,8 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
     public var returnSegue: String!                    // View to return to
     public var rabbitMQService: RabbitMQService!
     public var computerPlayerDelegate: [Int: ComputerPlayerDelegate?]?
+    public var cutDelegate: CutDelegate?
+    public var readOnly = false
     
     // Local class variables
     private var buttonMode = "Triangle"

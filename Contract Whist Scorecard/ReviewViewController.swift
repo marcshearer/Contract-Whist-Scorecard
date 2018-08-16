@@ -44,7 +44,7 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        for handNumber in 1...self.scorecard.numberPlayers {
+        for _ in 1...self.scorecard.numberPlayers {
             maxContentSize.append(0.0)
             height.append(0)
             width.append(0)
@@ -72,6 +72,12 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
         }
         self.view.setNeedsLayout()
     }
+    
+    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+        self.scorecard.motionBegan(motion, with: event)
+    }
+    
+    // MARK: - TableView Overrides ===================================================================== -
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let handNumber = tableViewPlayer[tableView.tag] {
@@ -106,6 +112,8 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
         cell.preservesSuperviewLayoutMargins = false
         cell.layoutMargins = UIEdgeInsets.zero
     }
+    
+    // MARK: - Utility Routines ======================================================================== -
     
     private func setupPlayers() {
         

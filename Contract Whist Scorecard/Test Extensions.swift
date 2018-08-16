@@ -158,40 +158,6 @@ extension HandViewController {
             }
         })
     }
-}
-
-extension BroadcastViewController {
-    
-    @IBAction private func rotationGesture(recognizer:UIRotationGestureRecognizer) {
-        
-        AdminMenu.rotationGesture(recognizer: recognizer, scorecard: self.scorecard)
-    }
-    
-    func checkTestMessages(descriptor: String, data: [String : Any?]?, peer: CommsPeer) {
-        switch descriptor {
-        case "autoPlay":
-            let dictionary = data as! [String : Int]
-            if let autoPlayHands = dictionary["hands"] {
-                self.scorecard.autoPlayHands = autoPlayHands
-                if let autoPlayRounds = dictionary["rounds"] {
-                    self.scorecard.autoPlayRounds = autoPlayRounds
-                }
-            }
-        default:
-            break
-        }
-    }
-}
-
-extension HostViewController {
-    
-    @IBAction private func rotationGesture(recognizer:UIRotationGestureRecognizer) {
-        
-        AdminMenu.rotationGesture(recognizer: recognizer, scorecard: self.scorecard)
-    }
-}
-
-extension HandViewController {
     
     func autoBid() {
         if self.scorecard.autoPlayHands > 0 && (self.scorecard.autoPlayHands > 1 || round <= self.scorecard.autoPlayRounds) {
@@ -288,6 +254,45 @@ extension HandViewController {
             NotificationCenter.default.removeObserver(self.handTestData.observer)
             self.checkTestWait()
         }
+    }
+}
+
+extension BroadcastViewController {
+    
+    @IBAction private func rotationGesture(recognizer:UIRotationGestureRecognizer) {
+        
+        AdminMenu.rotationGesture(recognizer: recognizer, scorecard: self.scorecard)
+    }
+    
+    func checkTestMessages(descriptor: String, data: [String : Any?]?, peer: CommsPeer) {
+        switch descriptor {
+        case "autoPlay":
+            let dictionary = data as! [String : Int]
+            if let autoPlayHands = dictionary["hands"] {
+                self.scorecard.autoPlayHands = autoPlayHands
+                if let autoPlayRounds = dictionary["rounds"] {
+                    self.scorecard.autoPlayRounds = autoPlayRounds
+                }
+            }
+        default:
+            break
+        }
+    }
+}
+
+extension HostViewController {
+    
+    @IBAction private func rotationGesture(recognizer:UIRotationGestureRecognizer) {
+        
+        AdminMenu.rotationGesture(recognizer: recognizer, scorecard: self.scorecard)
+    }
+}
+
+extension ReviewViewController {
+    
+    @IBAction private func rotationGesture(recognizer:UIRotationGestureRecognizer) {
+        
+        AdminMenu.rotationGesture(recognizer: recognizer, scorecard: self.scorecard)
     }
 }
 

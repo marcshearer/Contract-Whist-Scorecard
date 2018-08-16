@@ -22,17 +22,19 @@ Reduce wait before play card after bidding
 Show over / under in hand
 Send round in handState
 Sort out text entry in confirm count (or block it)
+Can't see over/under on iPhone 5S
+Can choose bid which adds up to total - seemed to be when 1 less than <
+Add shake handler to review view controller
+Add connection info to nearby and change it from debug to and alertMessage in rabbit
 
 Bugs fix now
 ------------
 Cut for dealer when joining from an iPad was out of position
 
-Long-term bugs
---------------
 
 Short-term
 ----------
-Add connection info to nearby and change it from debug to and alertMessage in rabbit
+Make admin rotate options less available
 Add tests for temporary settings
 Add tests for history / location to check they're not saved if play a game
 Leave selected invitees selected (and visible) when filtering

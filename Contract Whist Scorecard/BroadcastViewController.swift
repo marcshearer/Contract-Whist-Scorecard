@@ -408,19 +408,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                             self.recovery.saveDeal(round: round, deal: deal)
                         }
                     }
-                    
-                    /*
-                    // TODO This is old code - remove
-                    let playerNumber = data!["player"] as! Int
-                    if playerNumber == self.thisPlayerNumber {
-                        let cardNumbers = data!["cards"] as! [Int]
-                        let hand = Hand(fromNumbers: cardNumbers)
-                        self.scorecard.commsDelegate?.debugMessage("Hand: \(hand.toString())")
-                        self.playHand(peer: peer, dismiss: self.newGame, hand: hand)
-                        self.newGame = false
-                    }
-                    */
-                    
+                                       
                 case "played":
                     _ = self.scorecard.processCardPlayed(data: data! as Any as! [String : Any])
                     

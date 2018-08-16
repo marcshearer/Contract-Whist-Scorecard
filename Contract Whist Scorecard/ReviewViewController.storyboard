@@ -215,6 +215,7 @@
                         <viewLayoutGuide key="safeArea" id="uOh-9P-zjM"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="dMg-px-0h6" appends="YES" id="WEB-fX-CCS"/>
+                            <outletCollection property="gestureRecognizers" destination="LLf-cU-FGA" appends="YES" id="QFb-4r-auu"/>
                         </connections>
                     </view>
                     <connections>
@@ -235,6 +236,11 @@
                         <action selector="tapGestureWithRecognizer:" destination="Mox-uR-fC4" id="w5s-tN-PlU"/>
                     </connections>
                 </tapGestureRecognizer>
+                <rotationGestureRecognizer id="LLf-cU-FGA">
+                    <connections>
+                        <action selector="rotationGestureWithRecognizer:" destination="Mox-uR-fC4" id="Yau-52-Ya7"/>
+                    </connections>
+                </rotationGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="116" y="222.63868065967017"/>
         </scene>

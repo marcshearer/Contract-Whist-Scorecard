@@ -55,7 +55,9 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     private var tabletopCellWidth: CGFloat!
     private var bidButtonSize: CGFloat = 50.0
     private let instructionHeight: CGFloat = 50.0
-    private var maxBidButton = 8
+    private var maxBidButton: Int!
+    private var buttonsAcross: Int!
+    private var buttonsDown: Int!
     private var moreMode = false
     private var handCardFontSize: CGFloat!
     private var statusTextFontSize: CGFloat!
@@ -97,9 +99,9 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet private weak var playedCardCollectionView: UICollectionView!
     @IBOutlet private weak var instructionView: UIView!
     @IBOutlet private weak var finishButton: UIButton!
-    @IBOutlet weak var lastHandButton: UIButton!
-    @IBOutlet weak var overUnderButton: UIButton!
-    @IBOutlet weak var roundSummaryButton: UIButton!
+    @IBOutlet private weak var lastHandButton: UIButton!
+    @IBOutlet private weak var overUnderButton: UIButton!
+    @IBOutlet private weak var roundSummaryButton: UIButton!
     @IBOutlet private weak var titleBarLongPress: UILongPressGestureRecognizer!
     @IBOutlet private weak var tableTopLongPress: UILongPressGestureRecognizer!
     
@@ -193,6 +195,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         super.viewDidLayoutSubviews()
         viewHeight = view.frame.height
         viewWidth = view.frame.width
+        self.setButtonFormat()
         if self.resizing {
             self.bidMode = nil
             self.firstBidRefresh = true
@@ -577,12 +580,8 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
             playerMadeLabel.append(nil)
         }
     }
-
-    func bidMode(_ mode: Bool!) {
-        var buttonsAcross: Int
-        var buttonsDown: Int
-        
-        self.bidMode = mode
+    
+    func setButtonFormat() {
         if ScorecardUI.landscapePhone() {
             buttonsAcross = 2
             buttonsDown = 4
@@ -593,6 +592,10 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
             bidSeparator.isHidden = true
         }
         maxBidButton = (buttonsAcross * buttonsDown) - 2
+    }
+
+    func bidMode(_ mode: Bool!) {
+        self.bidMode = mode
         if ScorecardUI.landscapePhone() {
             bidViewHeight = viewHeight - instructionHeight
             bidButtonSize = min(50.0, (((bidViewHeight * CGFloat(4.0/5.0)) - 8.0) / CGFloat(buttonsDown)) - 10.0)

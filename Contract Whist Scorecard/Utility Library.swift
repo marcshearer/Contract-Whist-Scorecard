@@ -483,6 +483,39 @@ class Utility {
         // Execute the query
         publicDatabase.add(queryOperation)
     }
+
+    // MARK: - FaceTime ======================================================================== -
+
+    private class func faceTimeInternal(phoneNumber:String = "", video: Bool = false, checkOnly: Bool = false) -> Bool {
+        var ok = false
+        var prefix: String
+        if video {
+            prefix = "facetime"
+        } else {
+            prefix = "facetime-audio"
+        }
+        
+        if let faceTimeURL:URL = URL(string: "\(prefix)://\(phoneNumber)") {
+            let application:UIApplication = UIApplication.shared
+            if (application.canOpenURL(faceTimeURL)) {
+                ok = true
+                if !checkOnly {
+                    application.open(faceTimeURL)
+                }
+            }
+        }
+        return ok
+    }
+
+    public class func faceTime(phoneNumber:String, video: Bool) {
+        if !Utility.faceTimeInternal(phoneNumber: phoneNumber, video: video) {
+            Utility.getActiveViewController()?.alertMessage("FaceTime not available")
+        }
+    }
+
+    private class func faceTimeAvailable(video: Bool = false) {
+        _ = Utility.faceTimeInternal(video: video, checkOnly: true)
+    }
 }
 
 // MARK: - Utility Class for Field Output ==================================================== -

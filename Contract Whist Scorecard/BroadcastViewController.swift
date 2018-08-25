@@ -298,7 +298,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                             }
                         }
                     }
-                    if descriptor == "players" && self.scorecard.handState == nil {
+                    if descriptor == "players" && self.gameSetupViewController == nil {
                         var selectedPlayers: [PlayerMO] = []
                         for playerNumber in 1...self.scorecard.currentPlayers {
                             selectedPlayers.append(self.scorecard.enteredPlayer(playerNumber).playerMO!)

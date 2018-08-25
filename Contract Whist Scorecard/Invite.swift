@@ -216,13 +216,23 @@ class Invite {
                 // Log invites received
                 if self.inviteEmails != nil {
                     for email in self.inviteEmails {
-                        Utility.debugMessage("Invite", "To \(email) - \(Utility.dateString(self.expiryDate, format: "dd/MM/yyyy HH:mm:ss.ff", localized: false)) - \(self.inviteUUID)")
+                        Utility.debugMessage("Invite", "To \(email) - \(Utility.dateString(self.expiryDate, format: "dd/MM/yyyy HH:mm:ss.ff", localized: false)) - \(self.inviteUUID!)")
                     }
                 }
                 
                 // Reset all deleted queues
                 if deleteUUIDs != nil {
-                    RabbitMQService.reset(queueUUIDs: deleteUUIDs)
+                    var resetUUIDs: [String] = []
+                    for deleteUUID in deleteUUIDs {
+                        if deleteUUID != self.inviteUUID {
+                            // Not an old invite for the queue we are inviting on
+                            if resetUUIDs.index(where: {$0 == deleteUUID}) == nil {
+                                // Not already in list
+                                resetUUIDs.append(deleteUUID)
+                            }
+                        }
+                    }
+                    RabbitMQService.reset(queueUUIDs: resetUUIDs)
                 }
                 
                 // Link back to controller for next phase
@@ -259,12 +269,13 @@ class Invite {
             let hostName = Utility.objectString(cloudObject: record, forKey: "hostName")!
             let hostDeviceName = Utility.objectString(cloudObject: record, forKey: "hostDeviceName")!
             let inviteUUID = Utility.objectString(cloudObject: record, forKey: "inviteUUID")!
+            let expires = Utility.objectDate(cloudObject: record, forKey: "expires")!
     
             self.invited.append(InviteReceived(deviceName: hostDeviceName,
                                                email: hostEmail,
                                                name: hostName,
                                                inviteUUID: inviteUUID))
-            Utility.debugMessage("Invite", "From \(hostEmail) - \((expiry == nil ? "no expiry" : Utility.dateString(expiry! as Date, format: "dd/MM/yyyy HH:mm:ss.ff", localized: false))) - \(inviteUUID)")
+            Utility.debugMessage("Invite", "From \(hostEmail) - \((!checkExpiry ? "no expiry" : Utility.dateString(expires as Date, format: "dd/MM/yyyy HH:mm:ss.ff", localized: false))) - \(inviteUUID)")
         }
         
         queryOperation.queryCompletionBlock = { (cursor, error) -> Void in

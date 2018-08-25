@@ -238,7 +238,7 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
     // MARK: - Start/Stop Routines ================================================================= -
 
     private func startServer(email: String, name: String, invite: [String]?, serverInviteUUID: String! = nil) {
-        self.debugMessage("Start Server \(self.connectionPurpose) \(serverInviteUUID)")
+        self.debugMessage("Start Server \(self.connectionPurpose) \(serverInviteUUID!)")
         self.serverInviteUUID = serverInviteUUID
         if self.serverInviteUUID == nil {
             // New connection
@@ -486,7 +486,7 @@ public protocol RabbitMQBroadcastDelegate : class {
     func didReceiveBroadcast(descriptor: String, data: Any?, from queue: RabbitMQQueue)
 }
 
-public class RabbitMQQueue {
+public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
     
     private weak var connection: RMQConnection!
     private weak var channel: RMQChannel!
@@ -513,7 +513,8 @@ public class RabbitMQQueue {
         self.parent = parent
         self.filterBroadcast = filterBroadcast
         self._queueUUID = queueUUID
-        self.connection = RMQConnection(uri: self.rabbitMQUri, delegate: RMQConnectionDelegateLogger())
+        super.init()
+        self.connection = RMQConnection(uri: self.rabbitMQUri, delegate: self)
         connection.start()
         self.channel = self.connection.createChannel()
         self.queue = self.channel.queue("", options: .exclusive)
@@ -539,7 +540,6 @@ public class RabbitMQQueue {
         self.exchange = nil
         self.channel = nil
         self.connection = nil
-        self.parent = nil
         self.messageDelegate = nil
         self.connectionDelegate = [:]
         self.dataDelegate = [:]
@@ -643,6 +643,37 @@ public class RabbitMQQueue {
     public func findPeer(deviceName: String) -> RabbitMQPeer? {
         return self.rabbitMQPeerList[deviceName]
     }
+    
+    // MARK: - RMQConnectionDelegate Handlers ========================================================================== -
+
+    public func connection(_ connection: RMQConnection!, failedToConnectWithError error: Error!) {
+        self.parent?.debugMessage("Failed to connect with error - \(error.localizedDescription)")
+    }
+    
+    public func connection(_ connection: RMQConnection!, disconnectedWithError error: Error!) {
+        self.parent?.debugMessage("Disconnected with error - \(error.localizedDescription)")
+    }
+    
+    public func channel(_ channel: RMQChannel!, error: Error!) {
+        if error != nil {
+            self.parent?.debugMessage("Channel with error - \(error.localizedDescription)")
+        }
+    }
+    
+    
+    public func willStartRecovery(with connection: RMQConnection!) {
+        self.parent?.debugMessage("Will start recovery")
+    }
+    
+    public func startingRecovery(with connection: RMQConnection!) {
+        self.parent?.debugMessage("Starting recovery")
+    }
+    
+    public func recoveredConnection(_ connection: RMQConnection!) {
+        self.parent?.debugMessage("Recovered")
+        // Disconnect any remotes and let them reconnect to get things back in sync?
+    }
+    
 }
 
 // MARK: RabbitMQPeer Class ==========================================================

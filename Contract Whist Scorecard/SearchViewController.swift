@@ -140,6 +140,13 @@ class SearchViewController: UIViewController, UITableViewDataSource, UITableView
         return cell
     }
     
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if selected[indexPath.row] {
+            cell.setSelected(true, animated: false)
+            tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+        }
+    }
+    
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if self.minPlayers > 1 && self.selectedCount >= maxPlayers {
             return nil
@@ -160,11 +167,13 @@ class SearchViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
+    func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
+        return indexPath
+    }
+    
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        if self.minPlayers > 1 {
-            self.selected[indexPath.row] = false
-            self.enableSelectButton()
-        }
+        self.selected[indexPath.row] = false
+        self.enableSelectButton()
     }
     
     // MARK: - SearchBar delegate Overrides ============================================================= -
@@ -176,16 +185,31 @@ class SearchViewController: UIViewController, UITableViewDataSource, UITableView
     // MARK: - Utility Routines ======================================================================== -
     
     func getSearchList() {
-        self.results = []
-        if self.disableOption != nil {
+        if self.results.count > 0 {
+            // Remove everything except the disable option and anything selected
+            for index in (0..<self.results.count).reversed() {
+                if self.results[index] != nil && !self.selected[index] {
+                    self.results.remove(at: index)
+                    self.selected.remove(at: index)
+                }
+            }
+        } else if self.disableOption != nil {
+            // Add in disable option
             self.results.append(nil)
             self.selected.append(false)
         }
+        
         for playerMO in self.scorecard.playerList {
             if self.filter == nil || self.filter!(playerMO) {
                 if playerMO.name!.left(self.searchBar.text!.length).lowercased() == self.searchBar.text?.lowercased() {
-                    self.results.append(playerMO)
-                    self.selected.append(false)
+                    // Matches search
+                    
+                    if self.results.index(where: { $0 != nil && $0!.email! == playerMO.email!}) == nil  {
+                        // Not already in list - add it to result set
+                        
+                        self.results.append(playerMO)
+                        self.selected.append(false)
+                    }
                 }
             }
         }

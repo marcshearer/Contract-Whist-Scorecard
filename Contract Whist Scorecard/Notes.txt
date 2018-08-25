@@ -27,6 +27,15 @@ Can choose bid which adds up to total - seemed to be when 1 less than <
 Add shake handler to review view controller
 Add connection info to nearby and change it from debug to and alertMessage in rabbit
 
+6.1(2) ---------
+Better reconnection for online games including 10 second refresh in broadcast
+FaceTime call support
+
+6.1(3) ---------
+Avoid blue lines in player search
+Leave selected invitees selected (and visible) when filtering
+
+
 Bugs fix now
 ------------
 Cut for dealer when joining from an iPad was out of position
@@ -37,7 +46,6 @@ Short-term
 Make admin rotate options less available
 Add tests for temporary settings
 Add tests for history / location to check they're not saved if play a game
-Leave selected invitees selected (and visible) when filtering
 Get location/notification/online game notification permission in settings (and disable options if permissions not granted)
 Auto-sync when download players in Get Started
 Host view controller doesn't scroll when rotate
@@ -74,6 +82,7 @@ Swipes are associated with a specific control - look at the swipes right click -
 There is a problem in collection views when you delete or insert items. You have to do this in a batch update with the change to the counter - see deletePlayer() in StatsViewController
 Note that frame sizes are not correct yet until you get to viewDidAppear - you might have to avoid returning non-zero table view row count until you get to this point - see HandViewController
 Table views don't always scroll in Swift 4 - set   tableView.delaysContentTouches = TRUE (Best through User-Defined Runtime Attributes in Storyboard editor)
+To select a cell at initial display in a table view need to call cell.setSelected and tableView.selectRow from tableView.willDisplay (See SearchViewController)
 To make an image transparent background use Preview. Click the toolbox and a toolbar appears. Select the wand. Drag a rectangle anywhere in background. Turns red. Press delete. File/Save.
 To remove menus from test scripts
     1,$s/[/][*][@]START_MENU_TOKEN[@][*][/]//g

@@ -66,7 +66,7 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
         // Not implemented
     }
 
-    public func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, reconnect: Bool) -> Bool {
+    public func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, context: [String : String]? = nil, reconnect: Bool) -> Bool {
         if let loopbackDelegates = LoopbackService.peerList[commsPeer.deviceName] {
             
             // Add to local list of connected peers

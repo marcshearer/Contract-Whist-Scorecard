@@ -602,7 +602,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         if let playerMO = self.findPlayerByEmail(playerEmail) {
             if playerMO.thumbnail != nil {
                 let imageData = playerMO.thumbnail?.base64EncodedString(options: [])
-                self.commsDelegate?.send("thumbnail", ["email" : playerEmail,
+                self.commsDelegate?.send("thumbnail", [ "email" : playerEmail,
                                                         "image" : imageData,
                                                         "date"  : Utility.dateString(playerMO.thumbnailDate! as Date,
                                                                                      localized: false)],

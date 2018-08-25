@@ -638,7 +638,6 @@ class ScorepadViewController: UIViewController,
         self.scorecard.scorepadHeaderHeight = 0
         scorecard.inScorepad = false
         UIApplication.shared.isIdleTimerDisabled = false
-        self.showNavigationBar()
     }
     
     private func playHand(setState: Bool = false, recoveryMode: Bool = false, show: Bool = true) {

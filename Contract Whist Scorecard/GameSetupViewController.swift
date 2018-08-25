@@ -9,6 +9,10 @@
 import UIKit
 import CoreData
 
+protocol GameSetupDelegate {
+    func gameSetupComplete()
+}
+
 class GameSetupViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, CutDelegate, UIPopoverPresentationControllerDelegate {
     
     // MARK: - Class Properties ================================================================ -
@@ -17,9 +21,13 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
     public var scorecard: Scorecard!
     private var recovery: Recovery!
 
+    // Delegate
+    public var delegate: GameSetupDelegate!
+    
     // Properties to pass state to / from segues
     public var selectedPlayers = [PlayerMO?]()          // Selected players passed in from player selection
-    public var returnSegue: String!                    // View to return to
+    public var faceTimeAddress: [String] = []          // FaceTime addresses for the above
+    public var returnSegue: String!                     // View to return to
     public var rabbitMQService: RabbitMQService!
     public var computerPlayerDelegate: [Int: ComputerPlayerDelegate?]?
     public var cutDelegate: CutDelegate?
@@ -30,6 +38,7 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
     private var buttonRowHeight:CGFloat = 0.0
     private var playerRowHeight:CGFloat = 0.0
     private var observer: NSObjectProtocol?
+    private var faceTimeAvailable = false
     
     // UI component pointers
     private var gameSetupNameCell = [GameSetupNameCell?]()
@@ -54,9 +63,9 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
     @IBAction func finishGamePressed(_ sender: Any) {
         // Link back to selection
         if self.readOnly {
+            self.delegate?.gameSetupComplete()
             self.dismiss(animated: true, completion: nil)
         } else {
-            self.showNavigationBar()
             NotificationCenter.default.removeObserver(observer!)
             self.scorecard.resetOverrideSettings()
             self.performSegue(withIdentifier: returnSegue, sender: self)
@@ -81,13 +90,15 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
     
     @IBAction func rotationGesture(recognizer:UIRotationGestureRecognizer) {
         if recognizer.state == .ended {
-            showDealer(playerNumber: scorecard.dealerIs, forceHide: true)
-            if recognizer.rotation > 0 {
-                scorecard.nextDealer()
-            } else {
-                scorecard.previousDealer()
+            if !self.readOnly {
+                showDealer(playerNumber: scorecard.dealerIs, forceHide: true)
+                if recognizer.rotation > 0 {
+                    scorecard.nextDealer()
+                } else {
+                    scorecard.previousDealer()
+                }
+                showCurrentDealer()
             }
-            showCurrentDealer()
         }
     }
     
@@ -125,6 +136,10 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
             self.continueButton.isHidden = true
         }
         
+        if !self.readOnly {
+            self.checkFaceTimeAvailable()
+        }
+        
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -137,7 +152,6 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
         super.viewWillAppear(animated)
 
         // Hide duplicate navigation bar
-        self.hideNavigationBar()
     }
     
     override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
@@ -212,6 +226,23 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
                                      initials: scorecard.enteredPlayer(playerNumber).playerMO!.name!,
                                      label: gameSetupNameCell[playerNumber-1]!.playerDisc,
                                      size: playerRowHeight-4)
+                
+                // Make facetime button available
+                if self.faceTimeAvailable {
+                    gameSetupNameCell[playerNumber-1]!.faceTimeButtonWidth.constant = 40
+                    gameSetupNameCell[playerNumber-1]!.faceTimeButtonTrailing.constant = 8
+                    if playerNumber <= self.faceTimeAddress.count && self.faceTimeAddress[playerNumber - 1] != "" {
+                        gameSetupNameCell[playerNumber-1]!.faceTimeButton.isHidden = false
+                        gameSetupNameCell[playerNumber-1]!.faceTimeButton.tag = playerNumber
+                        gameSetupNameCell[playerNumber-1]!.faceTimeButton.addTarget(self, action: #selector(GameSetupViewController.faceTimePressed(_:)), for: UIControlEvents.touchUpInside)
+                    } else {
+                        gameSetupNameCell[playerNumber-1]!.faceTimeButton.isHidden = true
+                    }
+                } else {
+                    gameSetupNameCell[playerNumber-1]!.faceTimeButtonWidth.constant = 0
+                    gameSetupNameCell[playerNumber-1]!.faceTimeButtonTrailing.constant = 0
+                }
+                
                 // Setup return value
                 cell = gameSetupNameCell[playerNumber-1]
             
@@ -238,8 +269,7 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
     
     // MARK: - Action Handlers ================================================================ -
 
-    @objc func actionButtonPressed(_ button: UIButton)
-    {
+    @objc func actionButtonPressed(_ button: UIButton) {
         switch button.tag {
         case 1:
             // Choose dealer at random
@@ -263,6 +293,11 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
         }
     }
     
+    @objc func faceTimePressed(_ button: UIButton) {
+        let playerNumber = button.tag
+        Utility.faceTime(phoneNumber: self.faceTimeAddress[playerNumber - 1])
+    }
+    
     // MARK: - Image download handlers =================================================== -
     
     func setImageDownloadNotification() -> NSObjectProtocol? {
@@ -278,7 +313,7 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
         // Find any cells containing an image which has just been downloaded asynchronously
         Utility.mainThread {
             let index = self.scorecard.enteredIndex(objectID)
-            if index != nil {
+            if index != nil {	
                 // Found it - reload the cell
                 self.playerTableView.reloadRows(at: [IndexPath(row: index!, section: 0)], with: .fade)
             }
@@ -369,6 +404,22 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
 
     }
     
+    private func checkFaceTimeAvailable() {
+        self.faceTimeAvailable = false
+        if self.scorecard.isHosting && self.scorecard.commsDelegate?.connectionProximity == .online && Utility.faceTimeAvailable() {
+            var allBlank = true
+            if self.faceTimeAddress.count > 0 {
+                for address in self.faceTimeAddress {
+                    if address != "" {
+                        allBlank = false
+                        break
+                    }
+                }
+            }
+            self.faceTimeAvailable = !allBlank
+        }
+    }
+    
     // MARK: - Segue Prepare Handler ================================================================ -
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -424,6 +475,9 @@ class GameSetupNameCell: UITableViewCell {
     @IBOutlet var playerButton: UIButton!
     @IBOutlet weak var playerImage: UIImageView!
     @IBOutlet weak var playerDisc: UILabel!
+    @IBOutlet weak var faceTimeButton: UIButton!
+    @IBOutlet weak var faceTimeButtonWidth: NSLayoutConstraint!
+    @IBOutlet weak var faceTimeButtonTrailing: NSLayoutConstraint!
 }
 
 class GameSetupActionCell: UITableViewCell {

@@ -77,13 +77,11 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func finishPressed(_ sender: UIButton) {
-        self.showNavigationBar()
         self.performSegue(withIdentifier: "hideHistory", sender: self )
     }
     
     @IBAction func leftSwipe(recognizer:UISwipeGestureRecognizer) {
         if recognizer.state == .ended {
-            self.showNavigationBar()
             self.performSegue(withIdentifier: "hideHistory", sender: self )
         }
     }
@@ -100,10 +98,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         for _ in 1...availableFields.count {
             displayedFields.append(nil)
         }
-        
-        // Hide navigation bar - using custom one
-        self.hideNavigationBar()
-        
+             
         // Check for network / iCloud login
         scorecard.checkNetworkConnection(button: syncButton, label: nil)
        

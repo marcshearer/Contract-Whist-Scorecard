@@ -36,7 +36,7 @@ extension UIViewController {
     }
 
     public func alertDecision(_ message: String, title: String = "Warning", okButtonText: String = "OK", okHandler: (() -> ())? = nil, otherButtonText: String? = nil, otherHandler: (() -> ())? = nil, cancelButtonText: String = "Cancel", cancelHandler: (() -> ())? = nil) {
-        
+  
         func alertDecisionOkCompletion(alertAction: UIAlertAction) {
             okHandler?()
         }
@@ -57,6 +57,15 @@ extension UIViewController {
             }
             alertController.addAction(UIAlertAction(title: cancelButtonText, style: UIAlertActionStyle.cancel, handler: alertDecisionCancelCompletion))
             self.present(alertController, animated: true, completion: nil)
+        }
+    }
+
+    public func alertDecision(if condition: Bool,_ message: String, title: String = "Warning", okButtonText: String = "OK", okHandler: (() -> ())? = nil, otherButtonText: String? = nil, otherHandler: (() -> ())? = nil, cancelButtonText: String = "Cancel", cancelHandler: (() -> ())? = nil) {
+        // Pop up alert decision if condition is true and execute handler on exit - else execute ok handler without alert
+        if condition {
+            self.alertDecision(message, title: title, okButtonText: okButtonText, okHandler: okHandler, otherButtonText: otherButtonText, otherHandler: otherHandler, cancelButtonText: cancelButtonText, cancelHandler: cancelHandler)
+        } else {
+            okHandler?()
         }
     }
     

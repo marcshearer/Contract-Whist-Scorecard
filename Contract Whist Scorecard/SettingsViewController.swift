@@ -34,17 +34,18 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     private let broadcastSection = 2
     private let nearbySection = 3
     private let onlineSection = 4
-    private let alertSection = 5
-    private let notificationSection = 6
-    private let cardsSection = 7
+    private let faceTimeSection = 5
+    private let alertSection = 6
+    private let notificationSection = 7
+    private let cardsSection = 8
     private let     cardsStartRow = 0
     private let     cardsEndRow = 1
     private let     cardsBounceRow = 2
-    private let bonus2Section = 8
-    private let trumpSequenceSection = 9
+    private let bonus2Section = 9
+    private let trumpSequenceSection = 10
     private let     trumpSequenceNoTrumpRow = 0
     private let     trumpSequenceSuitRow = 1
-    private let aboutSection = 10
+    private let aboutSection = 11
     private let     aboutVersionRow = 0
     private let     aboutDatabaseRow = 1
     private let     aboutSubheadingRow = 2
@@ -69,6 +70,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     private var nearbyPlayingSelection: UISegmentedControl!
     private var onlinePlayerLabel: UILabel!
     private var onlinePlayerChangeButton: UIButton!
+    private var faceTimeAddressTextField: UITextField!
     
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet weak var finishButton: RoundedButton!
@@ -212,12 +214,21 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             
         case onlineSection:
             // Online remote player
-            onlineRow = indexPath.row
-            cell = tableView.dequeueReusableCell(withIdentifier: "Online Player Cell", for: indexPath) as! SettingsTableCell
+           cell = tableView.dequeueReusableCell(withIdentifier: "Online Player Cell", for: indexPath) as! SettingsTableCell
             onlinePlayerLabel = cell.onlinePlayerLabel
             onlinePlayerChangeButton = cell.onlinePlayerChangeButton
             onlinePlayerChangeButton.addTarget(self, action: #selector(SettingsViewController.onlinePlayerChangeAction(_:)), for: UIControlEvents.touchUpInside)
             self.displayOnlineCell()
+            
+        case faceTimeSection:
+            // FaceTime address
+            onlineRow = indexPath.row
+            cell = tableView.dequeueReusableCell(withIdentifier: "FaceTime Cell", for: indexPath) as! SettingsTableCell
+            cell.faceTimeAddressTextField.addTarget(self, action: #selector(SettingsViewController.faceTimeTextFieldChanged), for: UIControlEvents.editingChanged)
+            cell.faceTimeAddressTextField.addTarget(self, action: #selector(SettingsViewController.faceTimeTextFieldChanged), for: UIControlEvents.editingDidEnd)
+            self.faceTimeAddressTextField = cell.faceTimeAddressTextField
+            cell.faceTimeInfoButton.addTarget(self, action: #selector(SettingsViewController.faceTimeInfoPressed(_:)), for: UIControlEvents.touchUpInside)
+            self.displayFaceTimeCell()
             
         case alertSection:
             // Alert vibrate
@@ -419,6 +430,8 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             return "Play Games with Nearby Devices"
         case onlineSection:
             return "Play Games with Remote Devices"
+        case faceTimeSection:
+            return "FaceTime Calls in Remote Games"
         case alertSection:
             return "Alert on Turn to Play"
         case notificationSection:
@@ -614,6 +627,18 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         identifyOnlinePlayer(disableOption: disableOption)
     }
     
+    @objc internal func faceTimeTextFieldChanged(_ sender: UITextField) {
+        
+        self.scorecard.settingFaceTimeAddress = self.faceTimeAddressTextField.text
+        
+        // Save it
+        UserDefaults.standard.set(self.scorecard.settingFaceTimeAddress, forKey: "faceTimeAddress")
+    }
+    
+    @objc internal func faceTimeInfoPressed(_ sender: UIButton) {
+        faceTimeInfo()
+    }
+    
     @objc internal func nearbyPlayingAction(_ sender: Any) {
         switch nearbyPlayingSelection.selectedSegmentIndex {
         case 0:
@@ -737,10 +762,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 }
             } else {
                 // Disabling Online games - blank out the player
-                playerEmail = nil
-                if playerEmail != self.scorecard.settingOnlinePlayerEmail {
-                    self.saveOnlineEmailLocally(playerEmail: playerEmail)
-                }
+                self.clearOnline()
                 self.displayOnlineCell(inProgress: "Disabling")
                 self.enableAlerts()
             }
@@ -774,6 +796,10 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func trumpSequenceInfo() {
         self.alertMessage("Press and hold a suit and then drag it to a new position to change the trump suit sequence", title: "Trump Suit Sequence")
+    }
+    
+    func faceTimeInfo() {
+        self.alertMessage("In an online game you can request the host to call you back on FaceTime audio. You will be called at this address. If you leave this field blank this functionality will not be available.", title: "FaceTime Address")
     }
     
     // MARK: - Utility Routines ======================================================================== -
@@ -848,6 +874,10 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         if self.scorecard.settingOnlinePlayerEmail != nil {
             self.scorecard.settingOnlinePlayerEmail = nil
             UserDefaults.standard.set(nil, forKey: "onlinePlayerEmail")
+            // Delete FaceTime address
+            self.scorecard.settingFaceTimeAddress = nil
+            UserDefaults.standard.set(nil, forKey: "faceTimeAddress")
+            // Update cell
             self.displayOnlineCell(inProgress: "Disabling")
             // Delete subscriptions
             self.updateOnlineGameSubscriptions()
@@ -894,6 +924,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         let enabled = (scorecard.settingSyncEnabled && inProgress == nil)
         self.onlinePlayerChangeButton.isEnabled = enabled
         self.onlinePlayerChangeButton.alpha = enabled ? 1.0 : 0.4
+        self.displayFaceTimeCell()
     }
     
     private func identifyOnlinePlayer(disableOption: String! = nil) {
@@ -929,6 +960,24 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             })
         }
     }
+    
+    private func displayFaceTimeCell() {
+        if let faceTimeAddressTextField = self.faceTimeAddressTextField {
+            faceTimeAddressTextField.text = self.scorecard.settingFaceTimeAddress ?? ""
+            if self.scorecard.settingOnlinePlayerEmail ?? "" == "" {
+                // Field should have been already cleared - just disable it
+                faceTimeAddressTextField.isEnabled = false
+                faceTimeAddressTextField.layer.borderWidth = 0.0
+            } else {
+                // Show the field
+                faceTimeAddressTextField.text = self.scorecard.settingFaceTimeAddress ?? ""
+                faceTimeAddressTextField.isEnabled = true
+                faceTimeAddressTextField.layer.cornerRadius = 5.0
+                faceTimeAddressTextField.layer.borderWidth = 0.3
+                faceTimeAddressTextField.layer.borderColor = UIColor.blue.cgColor
+            }
+        }
+    }
 }
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
@@ -961,6 +1010,8 @@ class SettingsTableCell: UITableViewCell {
     @IBOutlet weak var nearbyPlayingSelection: UISegmentedControl!
     @IBOutlet weak var onlinePlayerLabel: UILabel!
     @IBOutlet weak var onlinePlayerChangeButton: UIButton!
+    @IBOutlet weak var faceTimeAddressTextField: UITextField!
+    @IBOutlet weak var faceTimeInfoButton: UIButton!
     @IBOutlet weak var bounceSelection: UISegmentedControl!
     @IBOutlet weak var trumpSequenceInfo: UIButton!
     @IBOutlet weak var trumpIncludeNoTrumpSelection: UISegmentedControl!

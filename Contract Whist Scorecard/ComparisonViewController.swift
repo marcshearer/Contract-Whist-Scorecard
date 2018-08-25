@@ -143,7 +143,6 @@ class ComparisonViewController: UIViewController, UITableViewDataSource, UITable
     // MARK: - IB Actions ============================================================================== -
 
     @IBAction func finishPressed(_ sender: UIButton) {
-        self.showNavigationBar()
         self.performSegue(withIdentifier: returnSegue, sender: self )
         NotificationCenter.default.removeObserver(observer!)
     }
@@ -166,9 +165,6 @@ class ComparisonViewController: UIViewController, UITableViewDataSource, UITable
         for _ in 1...selectedList.count {
             collectionView.append(nil)
         }
-        
-        // Hide navigation bar - using custom one
-        self.hideNavigationBar()
         
         // Check for network / iCloud login
         scorecard.checkNetworkConnection(button: syncButton, label: syncMessage)

@@ -112,10 +112,7 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
         if multiSelectMode {
             if selected > 0 {
                 // Go compare
-                if actionSegue != "showComparison" {
-                    self.showNavigationBar()
-                }
-                NotificationCenter.default.removeObserver(observer!)
+                 NotificationCenter.default.removeObserver(observer!)
                 self.performSegue(withIdentifier: actionSegue, sender: self)
             } else {
                 // Select all
@@ -140,9 +137,7 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
 
     @IBAction func finishPressed(sender: UIButton) {
         
-        self.showNavigationBar()
-        
-        // Undo any selection
+         // Undo any selection
         for playerNumber in 1...selection.count {
             setSelection(playerNumber, false)
         }
@@ -184,15 +179,10 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
         // Set nofification for image download
         observer = setImageDownloadNotification()
         
-        // Hide navigation bar - using custom one
-        self.hideNavigationBar()
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        // Hide navigation bar - using custom one
-        self.hideNavigationBar()
         view.setNeedsLayout()
     }
     

@@ -766,9 +766,11 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         func playCard(alertAction: UIAlertAction) {
             Utility.mainThread("playCard", execute: { [unowned self] in
+                let round = self.round!
+                let trick = self.state.trick!
                 self.isModalInPopover = true
                 self.playCard(card: card)
-                self.scorecard.sendCardPlayed(round: self.round, trick: self.state.trick, playerNumber: self.enteredPlayerNumber, card: card)
+                self.scorecard.sendCardPlayed(round: round, trick: trick, playerNumber: self.enteredPlayerNumber, card: card)
             })
         }
         

@@ -112,12 +112,12 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
             
 
     
-    public func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, reconnect: Bool = true) -> Bool{
+    public func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, context: [String : String]? = nil, reconnect: Bool = true) -> Bool{
         var connectSuccess = false
         self.debugMessage("Connect to \(commsPeer.deviceName)")
         let deviceName = commsPeer.deviceName
         if let rabbitMQPeer = self.findRabbitMQPeer(deviceName: deviceName) {
-            connectSuccess = rabbitMQPeer.connect(to : commsPeer, playerEmail: playerEmail, playerName: playerName, reconnect: reconnect)
+            connectSuccess = rabbitMQPeer.connect(to : commsPeer, playerEmail: playerEmail, playerName: playerName, context: context, reconnect: reconnect)
         }
         if connectSuccess {
             self._connectionDevice = commsPeer.deviceName
@@ -153,7 +153,7 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
     
     func connectionReceived(from peer: CommsPeer, info: [String : Any?]?) -> Bool {
         if let connectionDelegate = self.connectionDelegate {
-            return connectionDelegate.connectionReceived(from: peer)
+            return connectionDelegate.connectionReceived(from: peer, info: info)
         } else {
             return true
         }
@@ -202,14 +202,14 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
     }
     
     public func connectionInfo() {
-        var message = "Peers\n"
+        var message = "Peers"
         self.forEachPeer { (rabbitMQPeer) in
-            message = message + "Device: \(rabbitMQPeer.deviceName), Player: \(rabbitMQPeer.playerName!), state: \(rabbitMQPeer.state), sessionUUID: \((rabbitMQPeer.sessionUUID == nil ? "nil" : rabbitMQPeer.sessionUUID!))"
+            message = message + "\nDevice: \(rabbitMQPeer.deviceName), Player: \(rabbitMQPeer.playerName!), state: \(rabbitMQPeer.state), sessionUUID: \((rabbitMQPeer.sessionUUID == nil ? "nil" : rabbitMQPeer.sessionUUID!))"
         }
     
-        message = message + "\nQueues\n"
+        message = message + "\nQueues"
         for (_, queue) in self.rabbitMQQueueList {
-            message = message + "QueueUUID: \(queue.queueUUID!)\n"
+            message = message + "\nQueueUUID: \(queue.queueUUID!)\n"
         }
         
         Utility.getActiveViewController()?.alertMessage(message, title: "RabbitMQ Connection Info", buttonText: "Close")
@@ -221,6 +221,18 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
             outputMessage = outputMessage + " Device: \(device)"
         }
         Utility.debugMessage("rabbitMQ", outputMessage, force: force)
+    }
+    
+    // MARK: - Queue Reset Routines ================================================================= -
+    
+    public class func reset(queueUUIDs: [String]) {
+        // Stop and start a list of queues (to notify anyone listening on them to stop)
+        let service = RabbitMQService(purpose: .other, type: CommsConnectionType.queue, serviceID: nil, deviceName: Scorecard.deviceName)
+        for queueUUID in queueUUIDs {
+            _ = service.startQueue(delegate: service, queueUUID: queueUUID, email: nil)
+            service.sendReset(mode: "stop")
+            service.stopQueue()
+        }
     }
     
     // MARK: - Start/Stop Routines ================================================================= -
@@ -700,7 +712,7 @@ public class RabbitMQPeer: NSObject, CommsDataDelegate, CommsConnectionDelegate 
         }
     }
     
-    public func connect(to peer: CommsPeer, playerEmail: String?, playerName: String?, reconnect: Bool = true) -> Bool{
+    public func connect(to peer: CommsPeer, playerEmail: String?, playerName: String?, context: [String : String]? = nil, reconnect: Bool = true) -> Bool{
         var connectSuccess = false
          // Clear any existing connections
         self.disconnect(reason: "Re-connecting")
@@ -711,11 +723,16 @@ public class RabbitMQPeer: NSObject, CommsDataDelegate, CommsConnectionDelegate 
         self.shouldReconnect = reconnect
         self.reconnect = false
         if let playerName = playerName {
+            var dictionary = context
+            if dictionary == nil {
+                dictionary = [:]
+            }
+            dictionary!["sessionUUID"] = sessionUUID
+            dictionary!["playerEmail"] = playerEmail
+            dictionary!["playerName"] = playerName
             if self.publishMessage(descriptor: "connectRequest",
                                    matchSessionUUIDs: [sessionUUID],
-                                   dictionary: ["sessionUUID" : sessionUUID,
-                                                "playerEmail" : playerEmail,
-                                                "playerName" : playerName]) {
+                                   dictionary: dictionary) {
                 // Update state
                 self.state = .connecting
                 self.stateDelegate?.stateChange(for: self.commsPeer)

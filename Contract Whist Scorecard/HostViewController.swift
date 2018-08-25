@@ -33,6 +33,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     // Properties to pass state to / from segues
     public var returnSegue = ""
     public var selectedPlayers: [PlayerMO]!
+    public var faceTimeAddress: [String]!
     public var formTitle = "Host a Game"
     public var backText = "Back"
     public var backImage = "back"
@@ -340,6 +341,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         if let index = self.playerData.index(where: {($0.peer != nil && $0.peer.deviceName == peer.deviceName) && $0.email == peer.playerEmail}) {
             // A player returning from the same device - probably a reconnect - just update the details
             self.playerData[index].peer = peer
+            self.updateFaceTimeAddress(info: info, playerData: self.playerData[index])
         } else if self.connectionMode == .online {
             // Should already be in list
             if let index = self.playerData.index(where: {$0.email == peer.playerEmail}) {
@@ -348,6 +350,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                     addPlayer(name: name, email: peer.playerEmail!, playerMO: playerMO, peer: peer, inviteStatus: .none, disconnectReason: "This player has already joined from another device")
                 } else {
                     self.playerData[index].peer = peer
+                    self.updateFaceTimeAddress(info: info, playerData: self.playerData[index])
                 }
             } else {
                 // Not found - shouldn't happen - add it temporarily - to disconnect in state change
@@ -357,6 +360,14 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             addPlayer(name: name, email: peer.playerEmail!, playerMO: playerMO, peer: peer)
         }
         return true
+    }
+    
+    func updateFaceTimeAddress(info: [String : Any?]?, playerData: PlayerData) {
+        if let address = info?["faceTimeAddress"] {
+            playerData.faceTimeAddress = address as! String?
+        } else {
+            playerData.faceTimeAddress = nil
+        }
     }
     
     func addPlayer(name: String, email: String, playerMO: PlayerMO?, peer: CommsPeer?, inviteStatus: InviteStatus! = nil, disconnectReason: String? = nil) {
@@ -776,7 +787,6 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 // Refresh UI
                 self.guestPlayerTableView.reloadData()
                 
-                
                 // Open connection and send invites
                 self.startOnlineConnection()
                 self.startHostBroadcast(email: self.playerData[0].email, name: self.playerData[0].name, invite: invite, queueUUID: (self.scorecard.recoveryMode ? self.scorecard.recoveryConnectionUUID : nil))
@@ -1006,7 +1016,9 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         
     private func setupPlayers() {
         var playerNumber = 0
-        selectedPlayers = []
+        self.selectedPlayers = []
+        self.faceTimeAddress = []
+        
         for playerData in self.playerData {
             var playerMO = playerData.playerMO
             if playerMO == nil {
@@ -1022,9 +1034,10 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 }
             }
             playerNumber += 1
-            selectedPlayers.append(playerMO!)
+            self.selectedPlayers.append(playerMO!)
+            self.faceTimeAddress.append(playerData.faceTimeAddress ?? "")
         }
-        self.scorecard.updateSelectedPlayers(selectedPlayers)
+        self.scorecard.updateSelectedPlayers(self.selectedPlayers)
     }
     
     private func resetResumedPlayers() {
@@ -1094,7 +1107,8 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         switch segue.identifier! {
         case "showHostGameSetup":
             let destination = segue.destination as! GameSetupViewController
-            destination.selectedPlayers = selectedPlayers
+            destination.selectedPlayers = self.selectedPlayers
+            destination.faceTimeAddress = self.faceTimeAddress
             destination.scorecard = self.scorecard
             destination.returnSegue = "hideHostGameSetup"
             destination.rabbitMQService = self.rabbitMQHost
@@ -1117,6 +1131,7 @@ class PlayerData {
     var unique: Int
     var disconnectReason: String! // Have only accepted connection to be able to pass this message when disconnect
     var inviteStatus: InviteStatus!
+    var faceTimeAddress: String!
     
     init(name: String, email: String, playerMO: PlayerMO!, peer: CommsPeer!, unique: Int,  disconnectReason: String!, inviteStatus: InviteStatus!) {
         self.name = name

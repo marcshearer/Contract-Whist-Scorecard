@@ -99,6 +99,7 @@ class Scorecard {
     public static var settingRabbitMQUri = ""
     public var settingNearbyPlaying = false
     public var settingOnlinePlayerEmail: String!
+    public var settingFaceTimeAddress: String!
     
     // Override Settings
     public var overrideCards: [Int]! = nil
@@ -343,6 +344,9 @@ class Scorecard {
         
         // Load Online Game settings
         self.settingOnlinePlayerEmail = Scorecard.onlineEmail()
+        if self.settingOnlinePlayerEmail != nil {
+            self.settingFaceTimeAddress = UserDefaults.standard.string(forKey: "faceTimeAddress")
+        }
         
         // Get previous version and build
         self.settingLastVersion = UserDefaults.standard.string(forKey: "version")!

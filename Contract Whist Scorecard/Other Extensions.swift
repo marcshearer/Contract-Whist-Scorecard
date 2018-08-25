@@ -43,7 +43,7 @@ extension UIViewController {
     }
     
     func showNavigationBar() {
-        self.navigationController?.isNavigationBarHidden = true
+        self.navigationController?.isNavigationBarHidden = false
     }
     
 }

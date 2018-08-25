@@ -18,25 +18,25 @@ class Utility {
     // MARK: - Execute closure after delay ===================================================================== -
     
     class func mainThread(_ message: String = "Utility", suppressDebug: Bool = false, qos: DispatchQoS = .userInteractive, execute: @escaping ()->()) {
-        if !suppressDebug {
+        if false && !suppressDebug {
             Utility.debugMessage(message, "About to execute closure on main thread", mainThread: false)
         }
         DispatchQueue.main.async(qos: qos, execute: execute)
-        if !suppressDebug {
+        if false && !suppressDebug {
             Utility.debugMessage(message, "Main thread closure executed", mainThread: false)
         }
     }
     
     class func executeAfter(_ message: String="Utility", delay: Double, suppressDebug: Bool = false, qos: DispatchQoS = .userInteractive, completion: (()->())?) {
-        if !suppressDebug {
+        if false && !suppressDebug {
             Utility.debugMessage(message, "Queing closure after \(delay)", mainThread: false)
         }
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay, qos: qos, execute: {
-            if !suppressDebug {
+            if false && !suppressDebug {
                 Utility.debugMessage(message, "About to execute delayed closure", mainThread: false)
             }
             completion?()
-            if !suppressDebug {
+            if false && !suppressDebug {
                     Utility.debugMessage(message, "Delayed closure executed", mainThread: false)
             }
         })
@@ -408,7 +408,7 @@ class Utility {
         
         func closure() {
             var outputMessage: String
-            let timestamp = Utility.dateString(Date(), format: "hh:mm:ss.SS", localized: false)
+            let timestamp = Utility.dateString(Date(), format: "HH:mm:ss.SS", localized: false)
             outputMessage = "DEBUG(\(from)): \(timestamp)"
             if showDevice {
                 #if ContractWhist
@@ -507,14 +507,20 @@ class Utility {
         return ok
     }
 
-    public class func faceTime(phoneNumber:String, video: Bool) {
-        if !Utility.faceTimeInternal(phoneNumber: phoneNumber, video: video) {
+    public class func faceTime(phoneNumber:String, video: Bool = false) {
+        if Utility.isSimulator {
+            Utility.getActiveViewController()?.alertDecision(phoneNumber, title: "", okButtonText: "Call", cancelButtonText: "Cancel")
+        } else if !Utility.faceTimeInternal(phoneNumber: phoneNumber, video: video) {
             Utility.getActiveViewController()?.alertMessage("FaceTime not available")
         }
     }
 
-    private class func faceTimeAvailable(video: Bool = false) {
-        _ = Utility.faceTimeInternal(video: video, checkOnly: true)
+    public class func faceTimeAvailable(video: Bool = false) -> Bool {
+        if Utility.isSimulator {
+            return true
+        } else {
+            return Utility.faceTimeInternal(video: video, checkOnly: true)
+        }
     }
 }
 

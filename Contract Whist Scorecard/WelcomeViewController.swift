@@ -133,7 +133,6 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     @IBAction func finishGame(segue:UIStoryboardSegue) {
-        self.showNavigationBar()
         scorecard.checkNetworkConnection(button: nil, label: syncMessage)
         scorecard.recoveryMode = false
         getCloudVersion(async: true)
@@ -185,6 +184,8 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.hideNavigationBar()
+        
         // Possible clear all data in test mode
         TestMode.resetApp()
         
@@ -198,8 +199,6 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
         scorecard.checkNetworkConnection(button: nil, label: syncMessage)
         
         ScorecardUI.selectBackground(size: welcomeView.frame.size, backgroundImage: backgroundImage)
-        
-        self.hideNavigationBar()
         
     }
     

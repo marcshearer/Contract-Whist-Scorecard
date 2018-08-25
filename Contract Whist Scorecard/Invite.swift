@@ -27,6 +27,7 @@ class Invite {
     private var inviteEmails: [String]!
     private var createRecords: [CKRecord]!
     private var deleteRecordIDs: [CKRecordID]!
+    private var deleteUUIDs: [String]!
     private var inviteUUID: String!
     private var expiryDate: Date!
     private var checkExpiry: Bool!
@@ -115,7 +116,7 @@ class Invite {
                                          inviteUUID: self.inviteUUID,
                                          inviteEmails: self.inviteEmails)
             case .phaseUpdateCloud:
-                self.sendUpdatedRecords(createRecords: self.createRecords, deleteRecordIDs: deleteRecordIDs)
+                self.sendUpdatedRecords(createRecords: self.createRecords, deleteRecordIDs: self.deleteRecordIDs, deleteUUIDs: self.deleteUUIDs)
             case .phaseCheck:
                 self.checkInviteRecords(inviteEmails: self.inviteEmails, checkExpiry: self.checkExpiry)
             case .phaseCompletion:
@@ -129,6 +130,7 @@ class Invite {
         var queryOperation: CKQueryOperation
         var predicate: NSPredicate!
         deleteRecordIDs = []
+        deleteUUIDs = []
         
         // Fetch host record from cloud
         let cloudContainer = CKContainer.default()
@@ -136,11 +138,12 @@ class Invite {
         predicate = NSPredicate(format: "hostEmail == %@", hostEmail)
         let query = CKQuery(recordType: "Invites", predicate: predicate)
         queryOperation = CKQueryOperation(query: query, qos: .userInteractive)
-        queryOperation.desiredKeys = ["hostEmail"]
+        queryOperation.desiredKeys = ["hostEmail", "inviteUUID"]
         queryOperation.queuePriority = .veryHigh
         
         queryOperation.recordFetchedBlock = { (record) -> Void in
             self.deleteRecordIDs.append(record.recordID)
+            self.deleteUUIDs.append(Utility.objectString(cloudObject: record, forKey: "inviteUUID"))
         }
         
         queryOperation.queryCompletionBlock = { (cursor, error) -> Void in
@@ -187,7 +190,7 @@ class Invite {
 
     }
     
-    func sendUpdatedRecords(createRecords: [CKRecord]!, deleteRecordIDs: [CKRecordID]!) {
+    func sendUpdatedRecords(createRecords: [CKRecord]!, deleteRecordIDs: [CKRecordID]!, deleteUUIDs: [String]!) {
         // Now send back new / updated records
         let cloudContainer = CKContainer.default()
         let publicDatabase = cloudContainer.publicCloudDatabase
@@ -210,6 +213,18 @@ class Invite {
                     NotificationSimulator.sendNotifications(hostEmail: self.hostEmail, hostName: self.hostName, inviteEmails: self.inviteEmails)
                 }
                 
+                // Log invites received
+                if self.inviteEmails != nil {
+                    for email in self.inviteEmails {
+                        Utility.debugMessage("Invite", "To \(email) - \(Utility.dateString(self.expiryDate, format: "dd/MM/yyyy HH:mm:ss.ff", localized: false)) - \(self.inviteUUID)")
+                    }
+                }
+                
+                // Reset all deleted queues
+                if deleteUUIDs != nil {
+                    RabbitMQService.reset(queueUUIDs: deleteUUIDs)
+                }
+                
                 // Link back to controller for next phase
                 self.controller()
             }
@@ -227,8 +242,10 @@ class Invite {
         // Fetch host record from cloud
         let cloudContainer = CKContainer.default()
         let publicDatabase = cloudContainer.publicCloudDatabase
+        var expiry: NSDate?
         if checkExpiry {
-            predicate = NSPredicate(format: "inviteEmail == %@ AND expires >= %@", inviteEmails[0], NSDate())
+            expiry = NSDate()
+            predicate = NSPredicate(format: "inviteEmail == %@ AND expires >= %@", inviteEmails[0], expiry!)
         } else {
             predicate = NSPredicate(format: "inviteEmail == %@", inviteEmails[0])
         }
@@ -247,6 +264,7 @@ class Invite {
                                                email: hostEmail,
                                                name: hostName,
                                                inviteUUID: inviteUUID))
+            Utility.debugMessage("Invite", "From \(hostEmail) - \((expiry == nil ? "no expiry" : Utility.dateString(expiry! as Date, format: "dd/MM/yyyy HH:mm:ss.ff", localized: false))) - \(inviteUUID)")
         }
         
         queryOperation.queryCompletionBlock = { (cursor, error) -> Void in

@@ -171,13 +171,6 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
         self.toolbar.setShadowImage(UIImage(), forToolbarPosition: .any)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        self.hideNavigationBar()
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        self.showNavigationBar()
-    }
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         // Select watermark background

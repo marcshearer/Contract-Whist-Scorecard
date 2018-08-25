@@ -70,7 +70,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                                 <prototypes>
-                                    <tableViewCell userInteractionEnabled="NO" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Game Setup Name Cell" id="qhF-D0-gxF" customClass="GameSetupNameCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Game Setup Name Cell" id="qhF-D0-gxF" customClass="GameSetupNameCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qhF-D0-gxF" id="82X-px-Cl8">
@@ -78,17 +78,17 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ljp-aT-UKz">
-                                                    <rect key="frame" x="8" y="2" width="40" height="40"/>
+                                                    <rect key="frame" x="8" y="2" width="39.5" height="40"/>
                                                     <subviews>
                                                         <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2rE-Pd-lRg">
-                                                            <rect key="frame" x="2" y="2" width="36" height="36"/>
+                                                            <rect key="frame" x="2" y="2" width="35.5" height="36"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="2rE-Pd-lRg" secondAttribute="height" multiplier="1:1" id="zrt-1n-L7F"/>
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TR6-ka-137">
-                                                            <rect key="frame" x="2" y="2" width="36" height="36"/>
+                                                            <rect key="frame" x="2" y="2" width="35.5" height="36"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="TR6-ka-137" secondAttribute="height" multiplier="1:1" id="kZ5-7g-9Gs"/>
                                                             </constraints>
@@ -111,12 +111,29 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="JJq-oJ-QJT">
-                                                    <rect key="frame" x="64" y="11" width="257" height="32"/>
+                                                    <rect key="frame" x="63.5" y="11.5" width="201.5" height="32"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bSJ-0W-aGl" userLabel="Dealer Button" customClass="TotalRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                    <rect key="frame" x="273" y="15.5" width="44" height="13"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="44" id="8LB-9G-YsI"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <state key="normal" title="Button"/>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Dd-qR-woZ" userLabel="FaceTime">
+                                                    <rect key="frame" x="325" y="2.5" width="40" height="40"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="5Dd-qR-woZ" secondAttribute="height" multiplier="1:1" id="XFZ-CA-MVG"/>
+                                                        <constraint firstAttribute="width" constant="40" id="osb-cr-gMo"/>
+                                                    </constraints>
+                                                    <state key="normal" image="phone"/>
+                                                </button>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="auR-9N-5f6" userLabel="Separator">
                                                     <rect key="frame" x="10" y="43" width="365" height="1"/>
                                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -125,22 +142,15 @@
                                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="1" id="gBx-56-bDm"/>
                                                     </constraints>
                                                 </view>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bSJ-0W-aGl" customClass="TotalRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="321" y="15" width="44" height="13"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="44" id="8LB-9G-YsI"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                    <state key="normal" title="Button"/>
-                                                </button>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="auR-9N-5f6" secondAttribute="bottom" id="4G7-De-Dt5"/>
-                                                <constraint firstAttribute="trailing" secondItem="bSJ-0W-aGl" secondAttribute="trailing" constant="10" id="6F9-hM-hNJ"/>
-                                                <constraint firstItem="bSJ-0W-aGl" firstAttribute="leading" secondItem="JJq-oJ-QJT" secondAttribute="trailing" id="Bw7-NU-zsb"/>
+                                                <constraint firstItem="bSJ-0W-aGl" firstAttribute="leading" secondItem="JJq-oJ-QJT" secondAttribute="trailing" constant="8" id="5XK-zP-G1f"/>
+                                                <constraint firstItem="5Dd-qR-woZ" firstAttribute="centerY" secondItem="82X-px-Cl8" secondAttribute="centerY" id="7vh-6g-oCt"/>
                                                 <constraint firstItem="bSJ-0W-aGl" firstAttribute="top" secondItem="82X-px-Cl8" secondAttribute="top" constant="15" id="F06-NM-5au"/>
+                                                <constraint firstAttribute="trailing" secondItem="5Dd-qR-woZ" secondAttribute="trailing" constant="10" id="PBH-vf-kmP"/>
+                                                <constraint firstItem="5Dd-qR-woZ" firstAttribute="leading" secondItem="bSJ-0W-aGl" secondAttribute="trailing" constant="8" id="Q26-Cf-5mU"/>
                                                 <constraint firstItem="auR-9N-5f6" firstAttribute="leading" secondItem="82X-px-Cl8" secondAttribute="leading" constant="10" id="VjN-LZ-Q1y"/>
                                                 <constraint firstItem="auR-9N-5f6" firstAttribute="top" secondItem="JJq-oJ-QJT" secondAttribute="bottom" id="YHT-GC-Ym0"/>
                                                 <constraint firstItem="ljp-aT-UKz" firstAttribute="top" secondItem="82X-px-Cl8" secondAttribute="top" constant="2" id="gr9-a3-lKn"/>
@@ -154,6 +164,9 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <connections>
+                                            <outlet property="faceTimeButton" destination="5Dd-qR-woZ" id="Uka-JR-FCZ"/>
+                                            <outlet property="faceTimeButtonTrailing" destination="Q26-Cf-5mU" id="q7d-bv-hTb"/>
+                                            <outlet property="faceTimeButtonWidth" destination="osb-cr-gMo" id="9cl-mM-pFO"/>
                                             <outlet property="playerButton" destination="bSJ-0W-aGl" id="s4B-Kg-eUO"/>
                                             <outlet property="playerDisc" destination="TR6-ka-137" id="AhR-FH-9b2"/>
                                             <outlet property="playerImage" destination="2rE-Pd-lRg" id="Ib6-l2-urs"/>
@@ -355,6 +368,7 @@
         <image name="cut pack" width="100" height="100"/>
         <image name="forward" width="14" height="20"/>
         <image name="next dealer" width="100" height="100"/>
+        <image name="phone" width="100" height="100"/>
         <image name="settings blue" width="100" height="100"/>
     </resources>
 </document>

@@ -169,7 +169,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCNearbyServiceBrowserDe
         session.delegate = nil
     }
     
-    public func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, reconnect: Bool = true) -> Bool{
+    public func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, context: [String : String]?, reconnect: Bool = true) -> Bool{
         self.debugMessage("Connect to \(String(describing: commsPeer.deviceName))")
         if let broadcastPeer = self.broadcastPeerList[commsPeer.deviceName] {
             broadcastPeer.shouldReconnect = reconnect
@@ -178,12 +178,15 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCNearbyServiceBrowserDe
             var data: Data! = nil
             if let playerName = playerName {
                 do {
-                    var context: [String: String] = [:]
-                    context["player"] = playerName
-                    if let playerEmail = playerEmail {
-                        context["email"] = playerEmail
+                    var context = context
+                    if context == nil {
+                        context = [:]
                     }
-                    data = try JSONSerialization.data(withJSONObject: context, options: .prettyPrinted)
+                    context!["player"] = playerName
+                    if let playerEmail = playerEmail {
+                        context!["email"] = playerEmail
+                    }
+                    data = try JSONSerialization.data(withJSONObject: context!, options: .prettyPrinted)
                 } catch {
                     Utility.getActiveViewController()?.alertMessage("Error connecting to device", title: "Error")
                     return false
@@ -257,14 +260,14 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCNearbyServiceBrowserDe
     }
     	
     public func connectionInfo() {
-        var message = "\nPeers\n"
+        var message = "\nPeers"
         for (deviceName, peer) in self.broadcastPeerList {
-            message = message + "Device: \(deviceName), Player: \(peer.playerName ?? ""), \(peer.state.rawValue)\n"
+            message = message + "\nDevice: \(deviceName), Player: \(peer.playerName ?? ""), \(peer.state.rawValue)\n"
         }
         
-        message = message + "\nSessions\n"
-        for (deviceName, session) in self.sessionList {
-            message = message + "Device: \(deviceName)\n"
+        message = message + "\nSessions"
+        for (deviceName, _) in self.sessionList {
+            message = message + "\nDevice: \(deviceName)\n"
         }
         
         Utility.getActiveViewController()?.alertMessage(message, title: "Multipeer Connection Info", buttonText: "Close")
@@ -322,7 +325,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCNearbyServiceBrowserDe
         session.delegate = self
         
         if connectionDelegate != nil {
-            if connectionDelegate.connectionReceived(from: broadcastPeer.commsPeer) {
+            if connectionDelegate.connectionReceived(from: broadcastPeer.commsPeer, info: propertyList) {
                 invitationHandler(true, session)
             }
         } else {

@@ -123,6 +123,7 @@ class SearchViewController: UIViewController, UITableViewDataSource, UITableView
         cell = tableView.dequeueReusableCell(withIdentifier: "Player Cell", for: indexPath) as! SearchTableCell
         if let playerMO = results[indexPath.row] {
             cell.playerNameLabel.text = playerMO.name
+            cell.playerNameLabel.textColor = UIColor.black
             Utility.setThumbnail(data: playerMO.thumbnail,
                                  imageView: cell.playerImage,
                                  initials: playerMO.name!,

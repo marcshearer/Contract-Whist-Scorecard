@@ -238,7 +238,8 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
     // MARK: - Start/Stop Routines ================================================================= -
 
     private func startServer(email: String, name: String, invite: [String]?, serverInviteUUID: String! = nil) {
-        self.debugMessage("Start Server \(self.connectionPurpose) \(serverInviteUUID!)")
+        
+        self.debugMessage("Start Server \(self.connectionPurpose) \(serverInviteUUID ?? "")")
         self.serverInviteUUID = serverInviteUUID
         if self.serverInviteUUID == nil {
             // New connection

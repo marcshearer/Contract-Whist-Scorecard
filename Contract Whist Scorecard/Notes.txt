@@ -36,17 +36,15 @@ Avoid blue lines in player search
 Leave selected invitees selected (and visible) when filtering
 
 6.1 (5) ---------
-Reinstated version in settings
 Fixed crash when searching for players
 
 6.1 (7) ---------
+Reinstated version in settings
 Got simulated notifications working again (wait for RabbitMQUri to be set up)
 Connect correctly after accepting notification
 
 Bugs fix now
 ------------
-Cut for dealer when joining from an iPad was out of position
-
 
 Short-term
 ----------

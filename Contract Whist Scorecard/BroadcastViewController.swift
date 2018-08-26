@@ -171,9 +171,6 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                 }
             }
             self.broadcastTableView.reloadRows(at: [IndexPath(row: 0, section: playerSection)], with: .automatic)
-            if self.matchDeviceName != nil {
-                self.recoveryMode = true
-            }
         }
         
         self.createConnections()
@@ -512,8 +509,8 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                 self.broadcastTableView.insertRows(at: [IndexPath(row: self.available.count - 1, section: self.peerSection)], with: .automatic)
                 self.broadcastTableView.endUpdates()
             }
-            if self.recoveryMode && self.matchDeviceName != nil && peer.deviceName == self.matchDeviceName {
-                // Recovering and this is the device I'm waiting for!
+            if self.matchDeviceName != nil && peer.deviceName == self.matchDeviceName {
+                // Recovering/reacting to notification and this is the device I'm waiting for!
                 _ = self.connect(peer: peer)
                 self.reflectState(peer: peer)
             }

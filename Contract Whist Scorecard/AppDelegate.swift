@@ -31,12 +31,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Cache main context for core data
         Scorecard.context = self.persistentContainer.viewContext
 
-        // Setup simulated notification rabbitMQ queue
-        if Config.pushNotifications_rabbitMQ {
-            notificationSimulator = NotificationSimulator()
-            notificationSimulator.start()
-        }
-        
         // Check if lauchned from notification
         if let options = launchOptions {
             let remoteNotification = options[.remoteNotification] as? [AnyHashable : Any]

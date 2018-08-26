@@ -104,7 +104,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     // MARK: - TableView Overrides ===================================================================== -
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 11
+        return aboutSection + 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

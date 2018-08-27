@@ -737,7 +737,11 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
             let state = availableFound.state
             let oldState = availableFound.oldState
             
-            cell.serviceLabel.text = deviceName
+            if mode == .invite {
+                cell.serviceLabel.text = availableFound.peer.playerName
+            } else {
+                cell.serviceLabel.text = deviceName
+            }
             switch state {
             case .notConnected:
                 if oldState != .notConnected {
@@ -926,6 +930,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
             self.exitBroadcast(resetRecovery: false)
         } else {
             self.scorecard.commsDelegate?.stop()
+            self.matchDeviceName = nil
             self.scorecard.commsDelegate?.start(email: self.thisPlayer)
             self.appStateChange(to: .notConnected)
             self.changePlayerAvailable()
@@ -1002,6 +1007,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     public func finishBroadcast(resetRecovery: Bool = true) {
+        self.clearSchedule()
         UIApplication.shared.isIdleTimerDisabled = false
         self.scorecard.commsDelegate?.stop()
         self.scorecard.commsDelegate?.browserDelegate = nil

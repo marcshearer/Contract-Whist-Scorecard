@@ -43,6 +43,11 @@ Reinstated version in settings
 Got simulated notifications working again (wait for RabbitMQUri to be set up)
 Connect correctly after accepting notification
 
+6.1 (8) ---------
+Avoid being locked in once accept notification for game
+Stop timer when exit broadcast
+Show players name rather than device for online games
+
 Bugs fix now
 ------------
 

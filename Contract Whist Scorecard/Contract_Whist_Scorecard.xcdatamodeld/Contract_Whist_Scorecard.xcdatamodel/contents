@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13533" systemVersion="16G1036" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14135" systemVersion="17G65" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Game" representedClassName="GameMO" syncable="YES" codeGenerationType="class">
         <attribute name="datePlayed" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="deviceName" optional="YES" attributeType="String" syncable="YES"/>
@@ -67,6 +67,7 @@
         <attribute name="maxTwosDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
         <attribute name="nameDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="playerUUID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="syncDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="syncGamesPlayed" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="syncGamesWon" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
@@ -85,9 +86,15 @@
             <fetchIndexElement property="name" type="Binary" order="ascending"/>
         </fetchIndex>
     </entity>
+    <entity name="PlayerUUIDs" representedClassName="PlayerUUIDMO" syncable="YES" codeGenerationType="class">
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="playerUUID" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <elements>
         <element name="Game" positionX="0" positionY="0" width="128" height="225"/>
         <element name="Participant" positionX="0" positionY="0" width="128" height="300"/>
-        <element name="Player" positionX="0" positionY="0" width="128" height="525"/>
+        <element name="Player" positionX="0" positionY="0" width="128" height="540"/>
+        <element name="PlayerUUIDs" positionX="0" positionY="153" width="128" height="90"/>
     </elements>
 </model>

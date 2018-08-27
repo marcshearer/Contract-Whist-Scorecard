@@ -47,6 +47,7 @@ Connect correctly after accepting notification
 Avoid being locked in once accept notification for game
 Stop timer when exit broadcast
 Show players name rather than device for online games
+Avoid accessing AppDelegate not on main thread
 
 Bugs fix now
 ------------

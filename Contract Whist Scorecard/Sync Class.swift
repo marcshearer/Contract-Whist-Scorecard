@@ -328,9 +328,11 @@ class Sync {
             UserDefaults.standard.set(cloudRabbitMQUri, forKey: "rabbitMQUri")
             
             // Setup simulated notification rabbitMQ queue
-            if Config.pushNotifications_rabbitMQ &&  Utility.appDelegate?.notificationSimulator == nil {
-                Utility.appDelegate?.notificationSimulator = NotificationSimulator()
-                Utility.appDelegate?.notificationSimulator.start()
+            Utility.mainThread {
+                if Config.pushNotifications_rabbitMQ &&  Utility.appDelegate?.notificationSimulator == nil {
+                    Utility.appDelegate?.notificationSimulator = NotificationSimulator()
+                    Utility.appDelegate?.notificationSimulator.start()
+                }
             }
             
             // Set messages

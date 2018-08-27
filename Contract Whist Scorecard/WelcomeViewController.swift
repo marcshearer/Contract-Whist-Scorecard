@@ -308,10 +308,10 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
         
         switch indexPath.row + 1 {
         case newGameButton:
-            welcomeActionCell.actionButton.setTitle("New Game", for: .normal)
+            welcomeActionCell.actionButton.setTitle("Score Game", for: .normal)
             newGameCell = welcomeActionCell
         case onlineGameButton:
-            welcomeActionCell.actionButton.setTitle("Online Game", for: .normal)
+            welcomeActionCell.actionButton.setTitle("Play Game", for: .normal)
             onlineGameCell = welcomeActionCell
         case getStartedButton:
             welcomeActionCell.actionButton.setTitle("Get Started", for: .normal)
@@ -415,19 +415,15 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
             getStartedCell = nil
         }
         
-        // TODO Reinstate (move below online game)
+        buttons += 1
+        onlineGameButton = buttons
+        
         buttons += 1
         newGameButton = buttons
         
-        // TODO Reinstate (move below online game)
         buttons += 1
         resumeGameButton = buttons
         
-        if (self.scorecard.settingSyncEnabled && self.scorecard.settingNearbyPlaying || self.scorecard.onlineEnabled) { // TODO Reinstate (remove)
-            buttons += 1
-            onlineGameButton = buttons
-        } // TODO Reinstate (remove
-            
         buttons += 1
         playerStatsButton = buttons
         
@@ -616,11 +612,11 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
             let actionSheet = ActionSheet( view: onlineGameCell.actionButton, direction: .up)
             actionSheet.add("Host a Game", handler: hostGame)
             actionSheet.add("Join a Game", handler: joinGame)
-            // TODO reinstate actionSheet.add("Play against Computer", handler: computerGame)
+            actionSheet.add("Play against Computer", handler: computerGame)
             actionSheet.add("Cancel", style: .cancel)
             actionSheet.present()
         } else {
-            // TODO reinstate self.computerGame()
+            self.computerGame()
         }
     }
     

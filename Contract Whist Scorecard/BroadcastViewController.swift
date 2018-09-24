@@ -53,6 +53,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
     private var alertController: UIAlertController!
     public var thisPlayer: String!
     private var thisPlayerNumber: Int!
+
     private var timer: Timer!
 
     private var newGame: Bool!
@@ -511,8 +512,10 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
             }
             if self.matchDeviceName != nil && peer.deviceName == self.matchDeviceName {
                 // Recovering/reacting to notification and this is the device I'm waiting for!
-                _ = self.connect(peer: peer)
-                self.reflectState(peer: peer)
+                self.checkFaceTime(peer: peer, completion: { (faceTimeAddress) in
+                    _ = self.connect(peer: peer, faceTimeAddress: faceTimeAddress)
+                    self.reflectState(peer: peer)
+                })
             }
             self.setInstructions()
         }
@@ -611,7 +614,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
         }
     }
     
-    func connect(peer: CommsPeer) -> Bool {
+    func connect(peer: CommsPeer, faceTimeAddress: String?) -> Bool {
         var playerName: String!
         var context: [String : String]? = [:]
         
@@ -622,12 +625,9 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
         
         self.selectFramework(framework: peer.framework)
         
-        if let combinedIndex = self.available.index(where: {$0.deviceName == peer.deviceName && $0.framework == peer.framework}) {
-            let availableFound = self.available[combinedIndex]
-            if let address = availableFound.faceTimeAddress {
-                // Send face time address to remote
-                context?["faceTimeAddress"] = address
-            }
+        if faceTimeAddress != nil {
+            // Send face time address to remote
+            context?["faceTimeAddress"] = faceTimeAddress!
         }
         
         if !self.scorecard.commsDelegate!.connect(to: peer, playerEmail: self.thisPlayer, playerName: playerName, context: context, reconnect: true) {
@@ -832,32 +832,31 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
             let availableFound = available[indexPath.row]
             availableFound.connecting = true
             self.refreshStatus()
-            
-            func connectRow() {
-                if !self.connect(peer: availableFound.peer) {
+        
+            self.checkFaceTime(peer: availableFound.peer, completion: { (faceTimeAddress) in
+                if !self.connect(peer: availableFound.peer, faceTimeAddress: faceTimeAddress) {
                     availableFound.connecting = false
                 }
                 self.refreshStatus()
-            }
-        
-            availableFound.faceTimeAddress = nil
-            
-            if availableFound.peer.proximity == .online && (self.scorecard.settingFaceTimeAddress ?? "") != "" && Utility.faceTimeAvailable() {
-                self.alertDecision("\nWould you like the host to call you back on FaceTime at '\(self.scorecard.settingFaceTimeAddress!)'?\n\nNote that this will make this address visible to the host",
+            })
+                
+        }
+    }
+    
+    func checkFaceTime(peer: CommsPeer, completion: @escaping (String?)->()) {
+        if peer.proximity == .online && (self.scorecard.settingFaceTimeAddress ?? "") != "" && Utility.faceTimeAvailable() {
+            self.alertDecision("\nWould you like the host to call you back on FaceTime at '\(self.scorecard.settingFaceTimeAddress!)'?\n\nNote that this will make this address visible to the host",
                 title: "FaceTime",
                 okButtonText: "Yes",
                 okHandler: {
-                    availableFound.faceTimeAddress = self.scorecard.settingFaceTimeAddress
-                    connectRow()
-                },
+                    completion(self.scorecard.settingFaceTimeAddress)
+            },
                 cancelButtonText: "No",
                 cancelHandler: {
-                    connectRow()
-                })
-            } else {
-                connectRow()
-            }
-                
+                    completion(nil)
+            })
+        } else {
+            completion(nil)
         }
     }
     
@@ -1222,10 +1221,11 @@ class Available {
     var connecting = false
     var expires: Date?
     var inviteUUID: String?
-    var faceTimeAddress: String?
     
     var state: CommsConnectionState {
-        return self.peer.state
+        get {
+            return self.peer.state
+        }
     }
     var deviceName: String {
         get {

@@ -109,11 +109,11 @@ class PlayerDetail {
     public func createMO(noSync: Bool = true) -> PlayerMO! {
         var playerMO: PlayerMO!
         if self.scorecard.isPlayingComputer {
-            playerMO = CoreData.create(from: "Player") as! PlayerMO
+            playerMO = CoreData.create(from: "Player") as? PlayerMO
             self.toManagedObject(playerMO: playerMO)
         } else {
             if !CoreData.update(updateLogic: {
-                playerMO = CoreData.create(from: "Player") as! PlayerMO
+                playerMO = CoreData.create(from: "Player") as? PlayerMO
                 self.toManagedObject(playerMO: playerMO)
                 // If necessary avoid syncing values back to cloud
                 if noSync {

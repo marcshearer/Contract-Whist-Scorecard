@@ -135,7 +135,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         switch indexPath.section {
         case syncSection:
             // Sync Group
-            cell = tableView.dequeueReusableCell(withIdentifier: "Sync Enabled Cell", for: indexPath) as! SettingsTableCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Sync Enabled Cell", for: indexPath) as? SettingsTableCell
             syncEnabledSelection = cell.syncEnabledSelection
             cell.syncEnabledSelection.addTarget(self, action: #selector(SettingsViewController.syncEnabledChanged(_:)), for: UIControl.Event.valueChanged)
             // Set sync group field
@@ -150,7 +150,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             switch indexPath.row {
             case saveHistoryRow:
                 // Save History
-                cell = tableView.dequeueReusableCell(withIdentifier: "Save History Cell", for: indexPath) as! SettingsTableCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "Save History Cell", for: indexPath) as? SettingsTableCell
                 saveHistorySelection = cell.saveHistorySelection
                 saveHistorySelection.addTarget(self, action: #selector(SettingsViewController.saveHistoryAction(_:)), for: UIControl.Event.valueChanged)
                 
@@ -164,7 +164,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 
             case saveLocationRow:
                 // Save Location
-                cell = tableView.dequeueReusableCell(withIdentifier: "Save Location Cell", for: indexPath) as! SettingsTableCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "Save Location Cell", for: indexPath) as? SettingsTableCell
                 saveLocationSelection = cell.saveLocationSelection
                 saveLocationSelection.addTarget(self, action: #selector(SettingsViewController.saveLocationAction(_:)), for: UIControl.Event.valueChanged)
                 
@@ -183,7 +183,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             
         case broadcastSection:
             // Allow broadcast
-            cell = tableView.dequeueReusableCell(withIdentifier: "Allow Broadcast Cell", for: indexPath) as! SettingsTableCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Allow Broadcast Cell", for: indexPath) as? SettingsTableCell
             allowBroadcastSelection = cell.allowBroadcastSelection
             allowBroadcastSelection.addTarget(self, action: #selector(SettingsViewController.allowBroadcastAction(_:)), for: UIControl.Event.valueChanged)
             
@@ -199,7 +199,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             
         case nearbySection:
             // Nearby playing
-            cell = tableView.dequeueReusableCell(withIdentifier: "Nearby Playing Cell", for: indexPath) as! SettingsTableCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Nearby Playing Cell", for: indexPath) as? SettingsTableCell
             nearbyPlayingSelection = cell.nearbyPlayingSelection
             nearbyPlayingSelection.addTarget(self, action: #selector(SettingsViewController.nearbyPlayingAction(_:)), for: UIControl.Event.valueChanged)
             
@@ -214,7 +214,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             
         case onlineSection:
             // Online remote player
-           cell = tableView.dequeueReusableCell(withIdentifier: "Online Player Cell", for: indexPath) as! SettingsTableCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Online Player Cell", for: indexPath) as? SettingsTableCell
             onlinePlayerLabel = cell.onlinePlayerLabel
             onlinePlayerChangeButton = cell.onlinePlayerChangeButton
             onlinePlayerChangeButton.addTarget(self, action: #selector(SettingsViewController.onlinePlayerChangeAction(_:)), for: UIControl.Event.touchUpInside)
@@ -223,7 +223,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         case faceTimeSection:
             // FaceTime address
             onlineRow = indexPath.row
-            cell = tableView.dequeueReusableCell(withIdentifier: "FaceTime Cell", for: indexPath) as! SettingsTableCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "FaceTime Cell", for: indexPath) as? SettingsTableCell
             cell.faceTimeAddressTextField.addTarget(self, action: #selector(SettingsViewController.faceTimeTextFieldChanged), for: UIControl.Event.editingChanged)
             cell.faceTimeAddressTextField.addTarget(self, action: #selector(SettingsViewController.faceTimeTextFieldChanged), for: UIControl.Event.editingDidEnd)
             self.faceTimeAddressTextField = cell.faceTimeAddressTextField
@@ -232,7 +232,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             
         case alertSection:
             // Alert vibrate
-            cell = tableView.dequeueReusableCell(withIdentifier: "Alert Vibrate Cell", for: indexPath) as! SettingsTableCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Alert Vibrate Cell", for: indexPath) as? SettingsTableCell
             alertVibrateSelection = cell.alertVibrateSelection
             alertVibrateSelection.addTarget(self, action: #selector(SettingsViewController.alertVibrateAction(_:)), for: UIControl.Event.valueChanged)
             
@@ -248,7 +248,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             
         case notificationSection:
             // Receive notifications
-            cell = tableView.dequeueReusableCell(withIdentifier: "Receive Notifications Cell", for: indexPath) as! SettingsTableCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Receive Notifications Cell", for: indexPath) as? SettingsTableCell
             receiveNotificationsSelection = cell.receiveNotificationsSelection
             receiveNotificationsSelection.addTarget(self, action: #selector(SettingsViewController.receiveNotificationsAction(_:)), for: UIControl.Event.valueChanged)
             
@@ -266,7 +266,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             // Number of cards
             switch indexPath.row {
             case cardsStartRow, cardsEndRow:
-                cell = tableView.dequeueReusableCell(withIdentifier: "Number Cards Cell", for: indexPath) as! SettingsTableCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "Number Cards Cell", for: indexPath) as? SettingsTableCell
                 let cardsSlider = cell.cardsSlider!
                 let cardsValue = cell.cardsValue!
                 cardsSlider.tag = indexPath.row
@@ -289,7 +289,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 self.cardsValue[indexPath.row] = cardsValue
                 
             case cardsBounceRow:
-                cell = tableView.dequeueReusableCell(withIdentifier: "Bounce Cell", for: indexPath) as! SettingsTableCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "Bounce Cell", for: indexPath) as? SettingsTableCell
                 bounceSelection = cell.bounceSelection
                 bounceSelection.addTarget(self, action: #selector(SettingsViewController.bounceAction(_:)), for: UIControl.Event.valueChanged)
                 cardsChanged()
@@ -307,7 +307,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             
         case bonus2Section:
             // Bonus for winning with a 2
-            cell = tableView.dequeueReusableCell(withIdentifier: "Bonus2 Cell", for: indexPath) as! SettingsTableCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Bonus2 Cell", for: indexPath) as? SettingsTableCell
             bonus2Selection = cell.bonus2Selection
             bonus2Selection.addTarget(self, action: #selector(SettingsViewController.bonus2Action(_:)), for: UIControl.Event.valueChanged)
             cell.bonus2Info.addTarget(self, action: #selector(SettingsViewController.twosInfoPressed(_:)), for: UIControl.Event.touchUpInside)
@@ -324,7 +324,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             // Trump suit sequence
             switch indexPath.row {
             case trumpSequenceNoTrumpRow:
-                cell = tableView.dequeueReusableCell(withIdentifier: "Trump Include No Trump Cell", for: indexPath) as! SettingsTableCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "Trump Include No Trump Cell", for: indexPath) as? SettingsTableCell
                 trumpIncludeNoTrumpSelection = cell.trumpIncludeNoTrumpSelection
                 trumpIncludeNoTrumpSelection.addTarget(self, action: #selector(SettingsViewController.trumpIncludeNoTrumpAction(_:)), for: .valueChanged)
                 
@@ -336,7 +336,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 }
                 
             case trumpSequenceSuitRow:
-                cell = tableView.dequeueReusableCell(withIdentifier: "Trump Sequence Cell", for: indexPath) as! SettingsTableCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "Trump Sequence Cell", for: indexPath) as? SettingsTableCell
                 cell.trumpSequenceInfo.addTarget(self, action: #selector(SettingsViewController.trumpSequenceInfoPressed(_:)), for: .touchUpInside)
                 
             default:
@@ -347,21 +347,21 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             switch indexPath.row {
             case aboutVersionRow:
                 // Version number
-                cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 1 Value", for: indexPath) as! SettingsTableCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 1 Value", for: indexPath) as? SettingsTableCell
                 cell.aboutLabel.text = "Version:"
                 cell.aboutValue1.text = "\(self.scorecard.settingVersion) (\(self.scorecard.settingBuild))"
             case aboutDatabaseRow:
                 // Database
-                cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 1 Value", for: indexPath) as! SettingsTableCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 1 Value", for: indexPath) as? SettingsTableCell
                 cell.aboutLabel.text = "Database:"
                 cell.aboutValue1.text = self.scorecard.settingDatabase
             case aboutSubheadingRow:
                 // Sub-heading
-                cell = tableView.dequeueReusableCell(withIdentifier: "About Cell Heading", for: indexPath) as! SettingsTableCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "About Cell Heading", for: indexPath) as? SettingsTableCell
                 ScorecardUI.sectionHeaderStyleView(cell)
             case aboutPlayersRow:
                 // Players
-                cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 3 Value", for: indexPath) as! SettingsTableCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 3 Value", for: indexPath) as? SettingsTableCell
                 let totalScore = self.scorecard.playerList.reduce(0) { $0 + $1.totalScore }
                 cell.aboutLabel.text = "Players:"
                 cell.aboutValue1.text = "\(self.scorecard.playerList.count)"
@@ -376,7 +376,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 cell.aboutValue3.text = "\(totalScore)"
             case aboutGamesRow:
                 // Games
-                cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 3 Value", for: indexPath) as! SettingsTableCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 3 Value", for: indexPath) as? SettingsTableCell
                 let historyGames: [GameMO] = CoreData.fetch(from: "Game")
                 cell.aboutLabel.text = "Games:"
                 cell.aboutValue1.text = "\(historyGames.count)"
@@ -391,7 +391,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 cell.aboutValue3.text = ""
             case aboutParticipantsRow:
                 // Participants
-                cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 3 Value", for: indexPath) as! SettingsTableCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 3 Value", for: indexPath) as? SettingsTableCell
                 let historyParticipants: [ParticipantMO] = CoreData.fetch(from: "Participant")
                 var totalScore:Int64 = 0
                 for participantMO in historyParticipants {

@@ -240,7 +240,7 @@ class Recovery {
         // Reload overrides
         scorecard.overrideSelected = UserDefaults.standard.bool(forKey: "recoveryOverrideSelected")
         if scorecard.overrideSelected {
-            scorecard.overrideCards = UserDefaults.standard.array(forKey: "recoveryOverrideCards") as! [Int]
+            scorecard.overrideCards = UserDefaults.standard.array(forKey: "recoveryOverrideCards") as? [Int]
             scorecard.overrideBounceNumberCards = UserDefaults.standard.bool(forKey: "recoveryOverrideBounceNumberCards")
             scorecard.overrideExcludeHistory = UserDefaults.standard.bool(forKey: "recoveryOverrideExcludeHistory")
             scorecard.overrideExcludeStats = UserDefaults.standard.bool(forKey: "recoveryOverrideExcludeStats")
@@ -269,8 +269,8 @@ class Recovery {
             _ = self.scorecard.deal.hands[playerNumber - 1].remove(card: card)
         }
         // Get number of tricks and twos made
-        scorecard.handState.made = UserDefaults.standard.array(forKey: "recoveryMade") as! [Int]
-        scorecard.handState.twos = UserDefaults.standard.array(forKey: "recoveryTwos") as! [Int]
+        scorecard.handState.made = UserDefaults.standard.array(forKey: "recoveryMade") as? [Int]
+        scorecard.handState.twos = UserDefaults.standard.array(forKey: "recoveryTwos") as? [Int]
         
         // Work out trick
         var trick = 0

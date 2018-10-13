@@ -729,7 +729,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
         var cell: BroadcastTableCell!
         if self.commsPurpose != .playing || indexPath.section == self.peerSection {
             // List of remote peers
-            cell = tableView.dequeueReusableCell(withIdentifier: "Service Cell", for: indexPath) as! BroadcastTableCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Service Cell", for: indexPath) as? BroadcastTableCell
             
             let availableFound = self.available[indexPath.row]
             let deviceName = availableFound.deviceName
@@ -791,7 +791,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
             
         } else {
             // My details when joining a game
-            cell = tableView.dequeueReusableCell(withIdentifier: "Player Cell", for: indexPath) as! BroadcastTableCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Player Cell", for: indexPath) as? BroadcastTableCell
             if self.thisPlayer != nil {
                 if let playerMO = self.scorecard.findPlayerByEmail(self.thisPlayer) {
                     cell.playerNameLabel.text = playerMO.name!
@@ -1195,7 +1195,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
         
         switch segue.identifier! {
         case "showBroadcastScorepad":
-            scorepadViewController = segue.destination as! ScorepadViewController
+            scorepadViewController = segue.destination as? ScorepadViewController
             scorepadViewController.scorecard = self.scorecard
             scorepadViewController.scorepadMode = .display
             scorepadViewController.rounds = self.rounds

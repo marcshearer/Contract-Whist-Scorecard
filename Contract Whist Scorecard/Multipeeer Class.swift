@@ -305,7 +305,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCNearbyServiceBrowserDe
         var propertyList: [String : String]! = nil
         if context != nil {
             do {
-                propertyList = try JSONSerialization.jsonObject(with: context!, options: []) as! [String : String]
+                propertyList = try JSONSerialization.jsonObject(with: context!, options: []) as? [String : String]
             } catch {
             }
             playerName = propertyList["player"]

@@ -950,7 +950,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     private func mirrorHandSuitsToCollection() {
         // Copy the hand suits to the version used by the collection (inside performBatchUpdates)
         // Need to copy individual values rather than pointers
-        self.collectionHand = self.scorecard.handState.hand.copy() as! Hand
+        self.collectionHand = self.scorecard.handState.hand.copy() as? Hand
     }
     
     // MARK: - Segue Prepare Handler =================================================================== -

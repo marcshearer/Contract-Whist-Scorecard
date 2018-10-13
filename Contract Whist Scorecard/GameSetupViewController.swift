@@ -248,7 +248,7 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
             
         case 1:
             // Action buttons
-            actionCell = tableView.dequeueReusableCell(withIdentifier: "Game Setup Action Cell " + buttonMode, for: indexPath) as! GameSetupActionCell
+            actionCell = tableView.dequeueReusableCell(withIdentifier: "Game Setup Action Cell " + buttonMode, for: indexPath) as? GameSetupActionCell
             
             actionCell.cutForDealerButton.setTitle("Cut for Dealer")
             actionCell.cutForDealerButton.addTarget(self, action: #selector(GameSetupViewController.actionButtonPressed(_:)), for: UIControl.Event.touchUpInside)

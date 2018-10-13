@@ -107,11 +107,11 @@ class GetStartedViewController: UIViewController, UITableViewDelegate, UITableVi
         switch indexPath.row {
         case 0:
             // Get Started message
-            cell = tableView.dequeueReusableCell(withIdentifier: "Get Started Cell", for: indexPath) as! GetStartedCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Get Started Cell", for: indexPath) as? GetStartedCell
             
         case 1:
             // Sync Enabled
-            cell = tableView.dequeueReusableCell(withIdentifier: "Sync Enabled Cell", for: indexPath) as! GetStartedCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Sync Enabled Cell", for: indexPath) as? GetStartedCell
             cell.syncInfo.removeTarget(nil, action: nil, for: .allEvents)
             cell.syncInfo.addTarget(self, action: #selector(GetStartedViewController.syncInfoPressed(_:)), for: UIControl.Event.touchUpInside)
             
@@ -141,7 +141,7 @@ class GetStartedViewController: UIViewController, UITableViewDelegate, UITableVi
             }
         case 2, 3, 4, 5:
            // Action buttons
-            cell = tableView.dequeueReusableCell(withIdentifier: "Action Button Cell", for: indexPath) as! GetStartedCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Action Button Cell", for: indexPath) as? GetStartedCell
             cell.actionButton.removeTarget(nil, action: nil, for: .allEvents)
             
             switch indexPath.row {

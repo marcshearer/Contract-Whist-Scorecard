@@ -730,7 +730,7 @@ class ScorepadViewController: UIViewController,
             
         case "showBroadcastRoundSummary":
             
-            roundSummaryViewController  = segue.destination as! RoundSummaryViewController
+            roundSummaryViewController  = segue.destination as? RoundSummaryViewController
             roundSummaryViewController.modalPresentationStyle = UIModalPresentationStyle.popover
             roundSummaryViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             roundSummaryViewController.popoverPresentationController?.sourceView = scorepadView
@@ -744,7 +744,7 @@ class ScorepadViewController: UIViewController,
             
         case "showGameSummary":
             
-            gameSummaryViewController = segue.destination as! GameSummaryViewController
+            gameSummaryViewController = segue.destination as? GameSummaryViewController
             gameSummaryViewController.modalPresentationStyle = UIModalPresentationStyle.popover
             gameSummaryViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             gameSummaryViewController.popoverPresentationController?.sourceView = scorepadView

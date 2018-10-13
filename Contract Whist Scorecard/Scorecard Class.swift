@@ -888,7 +888,7 @@ class Scorecard {
                 if self.gameMO == nil {
                     // Create the managed object
                     
-                    self.gameMO = CoreData.create(from: "Game") as! GameMO
+                    self.gameMO = CoreData.create(from: "Game") as? GameMO
                 }
                 if self.gameDatePlayed == nil || self.gameUUID == "" {
                     self.gameDatePlayed = Date()

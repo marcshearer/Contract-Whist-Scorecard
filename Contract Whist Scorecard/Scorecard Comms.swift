@@ -180,7 +180,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 let storyboard = UIStoryboard(name: "HandViewController", bundle: nil)
                 let handViewController = storyboard.instantiateViewController(withIdentifier: "HandViewController") as! HandViewController
                 handViewController.scorecard = self
-                handViewController.delegate = viewController as! HandStatusDelegate
+                handViewController.delegate = viewController as? HandStatusDelegate
                 handViewController.modalPresentationStyle = UIModalPresentationStyle.popover
                 handViewController.isModalInPopover = true
                 handViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()

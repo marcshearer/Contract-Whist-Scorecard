@@ -104,12 +104,12 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
         
         switch indexPath.section {
         case instructionSection:
-            cell = tableView.dequeueReusableCell(withIdentifier: "Instructions Cell", for: indexPath) as! OverrideTableCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Instructions Cell", for: indexPath) as? OverrideTableCell
             cell.instructionLabel.text = "You can override the number of cards/deals for the next few games only. The games will still appear in history (if you save it), but you can exclude them from player summary statistics since they might distort average values."
         case cardsSection:
             switch indexPath.row {
             case startSliderRow, endSliderRow:
-                cell = tableView.dequeueReusableCell(withIdentifier: "Number Cards Cell", for: indexPath) as! OverrideTableCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "Number Cards Cell", for: indexPath) as? OverrideTableCell
                 let cardsSlider = cell.cardsSlider!
                 let cardsValue = cell.cardsValue!
                 cardsSlider.tag = indexPath.row
@@ -124,7 +124,7 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
                 self.cardsSlider[indexPath.row] = cardsSlider
                 self.cardsValue[indexPath.row] = cardsValue
             case bounceRow:
-                cell = tableView.dequeueReusableCell(withIdentifier: "Bounce Cell", for: indexPath) as! OverrideTableCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "Bounce Cell", for: indexPath) as? OverrideTableCell
                 bounceSelection = cell.bounceSelection
                 bounceSelection.addTarget(self, action: #selector(OverrideViewController.bounceAction(_:)), for: UIControl.Event.valueChanged)
                 cardsChanged()
@@ -142,7 +142,7 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
         case excludeSection:
             switch indexPath.row {
             case excludeHistoryRow:
-                cell = tableView.dequeueReusableCell(withIdentifier: "Exclude History Cell", for: indexPath) as! OverrideTableCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "Exclude History Cell", for: indexPath) as? OverrideTableCell
                 excludeHistorySelection = cell.excludeHistorySelection
                 excludeHistorySelection.addTarget(self, action: #selector(OverrideViewController.excludeHistoryAction(_:)), for: UIControl.Event.valueChanged)
                 excludeChanged()
@@ -155,7 +155,7 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
                     excludeHistorySelection.selectedSegmentIndex = 1
                 }
             case excludeStatsRow:
-                cell = tableView.dequeueReusableCell(withIdentifier: "Exclude Stats Cell", for: indexPath) as! OverrideTableCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "Exclude Stats Cell", for: indexPath) as? OverrideTableCell
                 excludeStatsSelection = cell.excludeStatsSelection
                 excludeStatsSelection.addTarget(self, action: #selector(OverrideViewController.excludeStatsAction(_:)), for: UIControl.Event.valueChanged)
                 

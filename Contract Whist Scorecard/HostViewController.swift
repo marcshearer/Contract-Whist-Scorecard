@@ -891,7 +891,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 self.stopHostBroadcast()
                 self.takeDelegates(nil)
             } else {
-                switch self.connectionMode {
+                switch self.connectionMode! {
                 case .online:
                     if chooseInvitees {
                         self.chooseOnlineInvitees()

@@ -251,7 +251,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         scorecard.reCenterPopup(self)
     }
     
-    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         
         // Play sound
         self.alertSound()
@@ -678,7 +678,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         return (tableView.tag == 2)
     }
     
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return .none
     }
     
@@ -831,7 +831,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             
             if hostMode {
                 // Host
-                cell.changeButton.addTarget(self, action: #selector(HostViewController.changeHostButtonPressed(_:)), for: UIControlEvents.touchUpInside)
+                cell.changeButton.addTarget(self, action: #selector(HostViewController.changeHostButtonPressed(_:)), for: UIControl.Event.touchUpInside)
                 cell.changeButton.isHidden = (self.connectionMode == .online)
             } else {
                 // Guest
@@ -853,7 +853,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 } else {
                     cell.deviceNameLabel.text = "Connected on \(String(describing: playerData.peer!.deviceName))"
                 }
-                cell.disconnectButton.addTarget(self, action: #selector(HostViewController.disconnectButtonPressed(_:)), for: UIControlEvents.touchUpInside)
+                cell.disconnectButton.addTarget(self, action: #selector(HostViewController.disconnectButtonPressed(_:)), for: UIControl.Event.touchUpInside)
                 cell.disconnectButton.tag = playerData.unique
                 cell.disconnectButton.isHidden = (self.connectionMode == .online)
             }

@@ -351,8 +351,8 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         
         welcomeActionCell.actionButton.tag = indexPath.row + 1
-        welcomeActionCell.separatorInset = UIEdgeInsetsMake(0.0, welcomeActionCell.bounds.size.width, 0.0, 0.0);
-        welcomeActionCell.actionButton.addTarget(self, action: #selector(WelcomeViewController.actionButtonPressed(_:)), for: UIControlEvents.touchUpInside)
+        welcomeActionCell.separatorInset = UIEdgeInsets.init(top: 0.0, left: welcomeActionCell.bounds.size.width, bottom: 0.0, right: 0.0);
+        welcomeActionCell.actionButton.addTarget(self, action: #selector(WelcomeViewController.actionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
         self.enableButtons(button: indexPath.row+1)
         
         return welcomeActionCell as UITableViewCell
@@ -766,7 +766,7 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
             }
             
             self.reconcileAlertController = UIAlertController(title: title, message: "", preferredStyle: .alert)
-            self.reconcileContinue = UIAlertAction(title: "Continue", style: UIAlertActionStyle.default, handler: nil)
+            self.reconcileContinue = UIAlertAction(title: "Continue", style: UIAlertAction.Style.default, handler: nil)
             self.reconcileAlertController.addAction(self.reconcileContinue)
             self.reconcileContinue.isEnabled = false
             
@@ -774,7 +774,7 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
             self.reconcileIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 0, y: 150,
                                                                                 width: self.reconcileAlertController.view.frame.width,
                                                                                 height: 100))
-            self.reconcileIndicatorView.activityIndicatorViewStyle = .whiteLarge
+            self.reconcileIndicatorView.style = .whiteLarge
             self.reconcileIndicatorView.color = UIColor.black
             self.reconcileIndicatorView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             self.reconcileAlertController.view.addSubview(self.reconcileIndicatorView)

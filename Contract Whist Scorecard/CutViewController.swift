@@ -94,7 +94,7 @@ class CutViewController: UIViewController {
         animateCut()
     }
     
-    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         self.scorecard.motionBegan(motion, with: event)
     }
     
@@ -369,7 +369,7 @@ class CutViewController: UIViewController {
         }
     
         let outcome = NSMutableAttributedString()
-        let outcomeTextColor = [NSAttributedStringKey.foregroundColor: UIColor.white]
+        let outcomeTextColor = [NSAttributedString.Key.foregroundColor: UIColor.white]
         
         outcome.append(NSMutableAttributedString(string: self.playerName[self.scorecard.dealerIs - 1], attributes: outcomeTextColor))
         outcome.append(NSMutableAttributedString(string: " wins with ", attributes: outcomeTextColor))

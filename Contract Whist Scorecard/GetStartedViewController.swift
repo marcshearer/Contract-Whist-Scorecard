@@ -113,17 +113,17 @@ class GetStartedViewController: UIViewController, UITableViewDelegate, UITableVi
             // Sync Enabled
             cell = tableView.dequeueReusableCell(withIdentifier: "Sync Enabled Cell", for: indexPath) as! GetStartedCell
             cell.syncInfo.removeTarget(nil, action: nil, for: .allEvents)
-            cell.syncInfo.addTarget(self, action: #selector(GetStartedViewController.syncInfoPressed(_:)), for: UIControlEvents.touchUpInside)
+            cell.syncInfo.addTarget(self, action: #selector(GetStartedViewController.syncInfoPressed(_:)), for: UIControl.Event.touchUpInside)
             
             // Add handler for change of sync enabled segmented control
             cell.syncEnabledSelection.removeTarget(nil, action: nil, for: .allEvents)
-            cell.syncEnabledSelection.addTarget(self, action: #selector(GetStartedViewController.syncEnabledChanged(_:)), for: UIControlEvents.valueChanged)
+            cell.syncEnabledSelection.addTarget(self, action: #selector(GetStartedViewController.syncEnabledChanged(_:)), for: UIControl.Event.valueChanged)
             syncEnabledSelection = cell.syncEnabledSelection
             
             // Add handler for change / return pressed of sync email text field
             cell.syncEmail.removeTarget(nil, action: nil, for: .allEvents)
-            cell.syncEmail.addTarget(self, action: #selector(GetStartedViewController.syncEmailValueChanged), for: UIControlEvents.editingChanged)
-            cell.syncEmail.addTarget(self, action: #selector(GetStartedViewController.syncEmailReturnPressed), for: UIControlEvents.editingDidEndOnExit)
+            cell.syncEmail.addTarget(self, action: #selector(GetStartedViewController.syncEmailValueChanged), for: UIControl.Event.editingChanged)
+            cell.syncEmail.addTarget(self, action: #selector(GetStartedViewController.syncEmailReturnPressed), for: UIControl.Event.editingDidEndOnExit)
             cell.syncEmail.returnKeyType = .search
             syncEmailTextField = cell.syncEmail
             
@@ -149,25 +149,25 @@ class GetStartedViewController: UIViewController, UITableViewDelegate, UITableVi
                 // Download from cloud button
                 downloadPlayersButton = cell.actionButton
                 downloadPlayersButton.setTitle("Download Players from Cloud")
-                downloadPlayersButton.addTarget(self, action: #selector(GetStartedViewController.downloadPlayersPressed(_:)), for: UIControlEvents.touchUpInside)
+                downloadPlayersButton.addTarget(self, action: #selector(GetStartedViewController.downloadPlayersPressed(_:)), for: UIControl.Event.touchUpInside)
                 enableButtons()
             case 3:
                 // Other settings button
                 otherSettingsButton = cell.actionButton
                 otherSettingsButton.setTitle("Other Settings")
-                otherSettingsButton.addTarget(self, action: #selector(GetStartedViewController.otherSettingsPressed(_:)), for: UIControlEvents.touchUpInside)
+                otherSettingsButton.addTarget(self, action: #selector(GetStartedViewController.otherSettingsPressed(_:)), for: UIControl.Event.touchUpInside)
                 otherSettingsButton.backgroundColor = ScorecardUI.emphasisColor
             case 4:
                 // Game walkthrough button
                 gameWalkthroughButton = cell.actionButton
                 gameWalkthroughButton.setTitle("Game Walkthrough")
-                gameWalkthroughButton.addTarget(self, action: #selector(GetStartedViewController.gameWalkthroughPressed(_:)), for: UIControlEvents.touchUpInside)
+                gameWalkthroughButton.addTarget(self, action: #selector(GetStartedViewController.gameWalkthroughPressed(_:)), for: UIControl.Event.touchUpInside)
                 gameWalkthroughButton.backgroundColor = ScorecardUI.emphasisColor
             case 5:
                 // Start playing
                 startPlayingButton = cell.actionButton
                 startPlayingButton.setTitle("Home Screen")
-                startPlayingButton.addTarget(self, action: #selector(GetStartedViewController.startPlayingPressed(_:)), for: UIControlEvents.touchUpInside)
+                startPlayingButton.addTarget(self, action: #selector(GetStartedViewController.startPlayingPressed(_:)), for: UIControl.Event.touchUpInside)
                 startPlayingButton.backgroundColor = ScorecardUI.totalColor
             default:
                 break
@@ -211,8 +211,8 @@ class GetStartedViewController: UIViewController, UITableViewDelegate, UITableVi
     }
 
     @objc func syncInfoPressed(_ sender: UIButton) {
-        let alertController = UIAlertController(title: "iCloud Synchronisation", message: "Contract Whist Scorecard allows you to synchronise player details, history and high scores over iCloud. You need to select 'Sync with iCloud' to enable it.\n\n If you are new to the app you should then select 'New Game' and you will have to create players manually.\n\nIf you have played before on another device, enter your unique ID and press download to download your, and your previous co-players details and history.\n\nSynchronisation will only work if you are on Wifi (or if you have selected 'Use Mobile Data' for iCloud documents and data) and are logged into iCloud.", preferredStyle: UIAlertControllerStyle.alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default,
+        let alertController = UIAlertController(title: "iCloud Synchronisation", message: "Contract Whist Scorecard allows you to synchronise player details, history and high scores over iCloud. You need to select 'Sync with iCloud' to enable it.\n\n If you are new to the app you should then select 'New Game' and you will have to create players manually.\n\nIf you have played before on another device, enter your unique ID and press download to download your, and your previous co-players details and history.\n\nSynchronisation will only work if you are on Wifi (or if you have selected 'Use Mobile Data' for iCloud documents and data) and are logged into iCloud.", preferredStyle: UIAlertController.Style.alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default,
                                                 handler: nil))
         present(alertController, animated: true, completion: nil)
     }
@@ -303,7 +303,7 @@ class GetStartedViewController: UIViewController, UITableViewDelegate, UITableVi
                 UIActivityIndicatorView(frame: CGRect(x: 0, y: 100,
                                                       width: self.cloudAlertController.view.frame.width,
                                                       height: 100))
-            self.cloudIndicatorView.activityIndicatorViewStyle = .whiteLarge
+            self.cloudIndicatorView.style = .whiteLarge
             self.cloudIndicatorView.color = UIColor.black
             self.cloudIndicatorView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             self.cloudAlertController.view.addSubview(self.cloudIndicatorView)

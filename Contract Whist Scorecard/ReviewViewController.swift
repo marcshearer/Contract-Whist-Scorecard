@@ -78,7 +78,7 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
         self.view.setNeedsLayout()
     }
     
-    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         self.scorecard.motionBegan(motion, with: event)
     }
     

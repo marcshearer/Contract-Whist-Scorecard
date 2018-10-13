@@ -52,7 +52,7 @@ class Utility {
             imageView.contentMode = .scaleAspectFill
             imageView.clipsToBounds = true
             imageView.alpha = 1.0
-            imageView.superview!.bringSubview(toFront: imageView)
+            imageView.superview!.bringSubviewToFront(imageView)
             imageView.isHidden = false
             ScorecardUI.veryRoundCorners(imageView, radius: size / 2)
             if label != nil {
@@ -276,7 +276,7 @@ class Utility {
             // Write the image to local file for temporary use
             let imageFilePath = NSTemporaryDirectory() + name
             let imageFileURL = URL(fileURLWithPath: imageFilePath)
-            try? UIImageJPEGRepresentation(scaledImage, 0.8)?.write(to: imageFileURL)
+            try? scaledImage.jpegData(compressionQuality: 0.8)?.write(to: imageFileURL)
             // Create image asset for upload
             let imageAsset = CKAsset(fileURL: imageFileURL)
             cloudObject.setValue(imageAsset, forKey: "thumbnail")
@@ -359,7 +359,7 @@ class Utility {
     
     // MARK: - Animate ============================================================================== -
     
-    public class func animate(view: UIView? = nil, duration: TimeInterval = 0.5, curve: UIViewAnimationCurve = .linear, afterDelay: TimeInterval = 0.0, animations: @escaping ()->()) {
+    public class func animate(view: UIView? = nil, duration: TimeInterval = 0.5, curve: UIView.AnimationCurve = .linear, afterDelay: TimeInterval = 0.0, animations: @escaping ()->()) {
         var view = view
         if view == nil {
             view = Utility.getActiveViewController()!.view!
@@ -388,10 +388,10 @@ class Utility {
         var activeViewController = UIApplication.shared.keyWindow?.rootViewController
         // Work down through any child view controllers
         while true {
-            if activeViewController?.childViewControllers == nil || activeViewController?.childViewControllers.count == 0 {
+            if activeViewController?.children == nil || activeViewController?.children.count == 0 {
                 break
             }
-            activeViewController = activeViewController?.childViewControllers[(activeViewController?.childViewControllers.count)!-1]
+            activeViewController = activeViewController?.children[(activeViewController?.children.count)!-1]
         }
         // Now work down through any presented controllers
         while true {
@@ -444,7 +444,7 @@ class Utility {
         }
     }
     
-    public static func getCloudRecordCount(_ table: String, predicate: NSPredicate? = nil, cursor: CKQueryCursor? = nil, runningTotal: Int! = nil, completion: ((Int?)->())? = nil) {
+    public static func getCloudRecordCount(_ table: String, predicate: NSPredicate? = nil, cursor: CKQueryOperation.Cursor? = nil, runningTotal: Int! = nil, completion: ((Int?)->())? = nil) {
         // Fetch data from cloud
         var queryOperation: CKQueryOperation
         let cloudContainer = CKContainer.default()

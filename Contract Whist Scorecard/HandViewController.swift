@@ -205,7 +205,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.resizing = false
     }
     
-    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         self.scorecard.motionBegan(motion, with: event)
     }
     
@@ -779,9 +779,9 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
         
         // Confirm card
-        let alertController = UIAlertController(title: "", message: "\n\n\n\n\n", preferredStyle: UIAlertControllerStyle.alert)
-        alertController.addAction(UIAlertAction(title: "Play card", style: UIAlertActionStyle.default, handler: playCard))
-        alertController.addAction(UIAlertAction(title: "Change card", style: UIAlertActionStyle.default, handler: resetPopover))
+        let alertController = UIAlertController(title: "", message: "\n\n\n\n\n", preferredStyle: UIAlertController.Style.alert)
+        alertController.addAction(UIAlertAction(title: "Play card", style: UIAlertAction.Style.default, handler: playCard))
+        alertController.addAction(UIAlertAction(title: "Change card", style: UIAlertAction.Style.default, handler: resetPopover))
         alertController.view.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
         let subview = (alertController.view.subviews.first?.subviews.first?.subviews.first!)! as UIView
         subview.backgroundColor = ScorecardUI.totalColor
@@ -836,11 +836,11 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func confirmBid(bid: Int) {
-        let alertController = UIAlertController(title: "", message: "\n\n\n", preferredStyle: UIAlertControllerStyle.alert)
-        alertController.addAction(UIAlertAction(title: "Confirm bid", style: UIAlertActionStyle.default, handler: { (UIAlertAction) in
+        let alertController = UIAlertController(title: "", message: "\n\n\n", preferredStyle: UIAlertController.Style.alert)
+        alertController.addAction(UIAlertAction(title: "Confirm bid", style: UIAlertAction.Style.default, handler: { (UIAlertAction) in
             self.makeBid(bid)
         }))
-        alertController.addAction(UIAlertAction(title: "Change bid", style: UIAlertActionStyle.default, handler: { (UIAlertAction) in
+        alertController.addAction(UIAlertAction(title: "Change bid", style: UIAlertAction.Style.default, handler: { (UIAlertAction) in
             self.resetPopover()
         }))
         alertController.view.frame = CGRect(x: 0, y: 0, width: 200, height: 100)

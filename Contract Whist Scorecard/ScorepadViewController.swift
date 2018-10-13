@@ -323,7 +323,7 @@ class ScorepadViewController: UIViewController,
         }
     }
     
-    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         self.scorecard.motionBegan(motion, with: event)
     }
     

@@ -203,7 +203,7 @@ class HistoryDetailViewController: UIViewController, UITableViewDataSource, UITa
                 self.mapView.addAnnotation(annotation)
                 
                 // Set the zoom level
-                let region = MKCoordinateRegionMakeWithDistance(annotation.coordinate, 2e5, 2e5)
+                let region = MKCoordinateRegion.init(center: annotation.coordinate, latitudinalMeters: 2e5, longitudinalMeters: 2e5)
                 self.mapView.setRegion(region, animated: false)
             }
         }

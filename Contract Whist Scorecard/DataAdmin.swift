@@ -36,8 +36,8 @@ class DataAdmin {
         })
     }
     
-    class func deleteAllCloudRecords(viewController: UIViewController, recordType: String, cursor: CKQueryCursor! = nil, completion: @escaping ()->()) {
-        var recordIdList: [CKRecordID] = []
+    class func deleteAllCloudRecords(viewController: UIViewController, recordType: String, cursor: CKQueryOperation.Cursor! = nil, completion: @escaping ()->()) {
+        var recordIdList: [CKRecord.ID] = []
         var errors = false
         let cloudContainer = CKContainer.default()
         let publicDatabase = cloudContainer.publicCloudDatabase
@@ -72,7 +72,7 @@ class DataAdmin {
                 }
                 
                 // Assign a completion handler
-                deleteOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecordID]?, error: Error?) -> Void in
+                deleteOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecord.ID]?, error: Error?) -> Void in
                     if error != nil {
                         errors = true
                     }

@@ -378,7 +378,7 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
     
     func formatCell(_ cell: StatsCell, to: Bool) {
         cell.playerTick.isHidden = !to
-        cell.playerTick.superview!.bringSubview(toFront: cell.playerTick)
+        cell.playerTick.superview!.bringSubviewToFront(cell.playerTick)
         let alpha: CGFloat = (to || !multiSelectMode ? 1.0 : 0.5)
         cell.playerDetailsView.alpha = alpha
         cell.playerValuesView.alpha = alpha

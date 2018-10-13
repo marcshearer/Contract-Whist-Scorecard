@@ -154,7 +154,7 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
         // Hide duplicate navigation bar
     }
     
-    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         self.scorecard.motionBegan(motion, with: event)
     }
  
@@ -234,7 +234,7 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
                     if playerNumber <= self.faceTimeAddress.count && self.faceTimeAddress[playerNumber - 1] != "" {
                         gameSetupNameCell[playerNumber-1]!.faceTimeButton.isHidden = false
                         gameSetupNameCell[playerNumber-1]!.faceTimeButton.tag = playerNumber
-                        gameSetupNameCell[playerNumber-1]!.faceTimeButton.addTarget(self, action: #selector(GameSetupViewController.faceTimePressed(_:)), for: UIControlEvents.touchUpInside)
+                        gameSetupNameCell[playerNumber-1]!.faceTimeButton.addTarget(self, action: #selector(GameSetupViewController.faceTimePressed(_:)), for: UIControl.Event.touchUpInside)
                     } else {
                         gameSetupNameCell[playerNumber-1]!.faceTimeButton.isHidden = true
                     }
@@ -251,13 +251,13 @@ class GameSetupViewController: UIViewController, UITableViewDataSource, UITableV
             actionCell = tableView.dequeueReusableCell(withIdentifier: "Game Setup Action Cell " + buttonMode, for: indexPath) as! GameSetupActionCell
             
             actionCell.cutForDealerButton.setTitle("Cut for Dealer")
-            actionCell.cutForDealerButton.addTarget(self, action: #selector(GameSetupViewController.actionButtonPressed(_:)), for: UIControlEvents.touchUpInside)
+            actionCell.cutForDealerButton.addTarget(self, action: #selector(GameSetupViewController.actionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
             
             actionCell.nextDealerButton.setTitle("Next Dealer")
-            actionCell.nextDealerButton.addTarget(self, action: #selector(GameSetupViewController.actionButtonPressed(_:)), for: UIControlEvents.touchUpInside)
+            actionCell.nextDealerButton.addTarget(self, action: #selector(GameSetupViewController.actionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
           
             actionCell.overrideSettingsButton.setTitle("Override Settings")
-            actionCell.overrideSettingsButton.addTarget(self, action: #selector(GameSetupViewController.actionButtonPressed(_:)), for: UIControlEvents.touchUpInside)
+            actionCell.overrideSettingsButton.addTarget(self, action: #selector(GameSetupViewController.actionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
             
             cell = actionCell
 

@@ -26,7 +26,7 @@ class Invite {
     private var hostName: String!
     private var inviteEmails: [String]!
     private var createRecords: [CKRecord]!
-    private var deleteRecordIDs: [CKRecordID]!
+    private var deleteRecordIDs: [CKRecord.ID]!
     private var deleteUUIDs: [String]!
     private var inviteUUID: String!
     private var expiryDate: Date!
@@ -190,7 +190,7 @@ class Invite {
 
     }
     
-    func sendUpdatedRecords(createRecords: [CKRecord]!, deleteRecordIDs: [CKRecordID]!, deleteUUIDs: [String]!) {
+    func sendUpdatedRecords(createRecords: [CKRecord]!, deleteRecordIDs: [CKRecord.ID]!, deleteUUIDs: [String]!) {
         // Now send back new / updated records
         let cloudContainer = CKContainer.default()
         let publicDatabase = cloudContainer.publicCloudDatabase
@@ -201,7 +201,7 @@ class Invite {
         uploadOperation.database = publicDatabase
         
         // Assign a completion handler
-        uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecordID]?, error: Error?) -> Void in
+        uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecord.ID]?, error: Error?) -> Void in
             Utility.mainThread { [unowned self] in
                 if error != nil {
                     self.completion(false, "Unable to connect to iCloud")

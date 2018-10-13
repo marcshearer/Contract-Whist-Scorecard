@@ -87,7 +87,7 @@ class Notifications {
                     let predicate = NSPredicate(format:"email = %@", email)
                     let subscription = CKQuerySubscription(recordType: "Notifications", predicate: predicate, options: [.firesOnRecordCreation, .firesOnRecordUpdate])
                     
-                    let notification = CKNotificationInfo()
+                    let notification = CKSubscription.NotificationInfo()
                     notification.alertLocalizationKey = "%1$@"
                     notification.alertLocalizationArgs = ["message"]
                     notification.category = "highScore"
@@ -118,7 +118,7 @@ class Notifications {
             let predicate = NSPredicate(format:"inviteEmail = %@", inviteEmail)
             let subscription = CKQuerySubscription(recordType: "Invites", predicate: predicate, options: [.firesOnRecordCreation])
             
-            let notification = CKNotificationInfo()
+            let notification = CKSubscription.NotificationInfo()
             notification.alertLocalizationKey = "%1$@ has invited you to play online. Click this notification to accept, or start the Whist app and go to 'Online Game' and select 'Join a Game' to see the invitation"
             notification.alertLocalizationArgs = ["hostName", "hostEmail", "hostDeviceName", "inviteEmail"]
             notification.category = category

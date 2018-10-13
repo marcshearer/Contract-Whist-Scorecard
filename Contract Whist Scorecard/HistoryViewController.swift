@@ -353,11 +353,11 @@ extension HistoryViewController: UICollectionViewDelegate, UICollectionViewDataS
             case "detail":
                 cell = collectionView.dequeueReusableCell(withReuseIdentifier: "History Detail Body Cell", for: indexPath) as! HistoryCollectionCell
                 cell.historyButton.tag = row
-                cell.historyButton.addTarget(self, action: #selector(HistoryViewController.historyButtonPressed(_:)), for: UIControlEvents.touchUpInside)
+                cell.historyButton.addTarget(self, action: #selector(HistoryViewController.historyButtonPressed(_:)), for: UIControl.Event.touchUpInside)
             case "delete":
                 cell = collectionView.dequeueReusableCell(withReuseIdentifier: "History Delete Body Cell", for: indexPath) as! HistoryCollectionCell
                 cell.historyButton.tag = row
-                cell.historyButton.addTarget(self, action: #selector(HistoryViewController.historyDeletePressed(_:)), for: UIControlEvents.touchUpInside)
+                cell.historyButton.addTarget(self, action: #selector(HistoryViewController.historyDeletePressed(_:)), for: UIControl.Event.touchUpInside)
                 
             default:
                 cell = collectionView.dequeueReusableCell(withReuseIdentifier: "History Body Cell", for: indexPath) as! HistoryCollectionCell

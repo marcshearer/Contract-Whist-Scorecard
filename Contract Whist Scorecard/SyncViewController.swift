@@ -95,8 +95,8 @@ class SyncViewController: UIViewController, UITableViewDelegate, UITableViewData
             self.stopAnimations(self.errors == 0)
             if self.errors > 0 {
                 // Warn user of errors
-                let alertController = UIAlertController(title: "Warning", message: "Warning: Errors occurred during synchronisation", preferredStyle: UIAlertControllerStyle.alert)
-                alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler:  {
+                let alertController = UIAlertController(title: "Warning", message: "Warning: Errors occurred during synchronisation", preferredStyle: UIAlertController.Style.alert)
+                alertController.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler:  {
                     (action:UIAlertAction!) -> Void in
                     self.finishButton.isHidden = false
                 }))

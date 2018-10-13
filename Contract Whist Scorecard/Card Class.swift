@@ -62,7 +62,7 @@ class Card {
     }
     
     func toAttributedString() -> NSMutableAttributedString {
-        let suitColor = [NSAttributedStringKey.foregroundColor: self.suit.color]
+        let suitColor = [NSAttributedString.Key.foregroundColor: self.suit.color]
         return NSMutableAttributedString(string: self.toString(), attributes: suitColor)
     }
 }
@@ -360,7 +360,7 @@ class Suit : Hashable {
     }
     
     func toAttributedString() -> NSAttributedString {
-        let suitColor = [NSAttributedStringKey.foregroundColor: self.color]
+        let suitColor = [NSAttributedString.Key.foregroundColor: self.color]
         return NSMutableAttributedString(string: self.toString(), attributes: suitColor)
     }
 }

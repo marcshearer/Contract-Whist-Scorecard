@@ -120,7 +120,7 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
     
-    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         self.scorecard.motionBegan(motion, with: event)
     }
     
@@ -329,7 +329,7 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
                 // Ask for location and continue in did update locations delegate or did fail with error delegate
                 self.activityIndicator.startAnimating()
                 self.activityIndicator.isHidden = false
-                self.activityIndicator.superview!.bringSubview(toFront: self.activityIndicator)
+                self.activityIndicator.superview!.bringSubviewToFront(self.activityIndicator)
                 // self.searchBar.isUserInteractionEnabled = false
                 self.locationManager.requestLocation()
             }
@@ -478,7 +478,7 @@ class LocationViewController: UIViewController, UITableViewDataSource, UITableVi
             self.locationMapView.addAnnotation(annotation)
             
             // Set the zoom level
-            let region = MKCoordinateRegionMakeWithDistance(annotation.coordinate, 2e5, 2e5)
+            let region = MKCoordinateRegion.init(center: annotation.coordinate, latitudinalMeters: 2e5, longitudinalMeters: 2e5)
             self.locationMapView.setRegion(region, animated: false)
         }
     }

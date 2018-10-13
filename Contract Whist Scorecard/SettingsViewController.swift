@@ -137,7 +137,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             // Sync Group
             cell = tableView.dequeueReusableCell(withIdentifier: "Sync Enabled Cell", for: indexPath) as! SettingsTableCell
             syncEnabledSelection = cell.syncEnabledSelection
-            cell.syncEnabledSelection.addTarget(self, action: #selector(SettingsViewController.syncEnabledChanged(_:)), for: UIControlEvents.valueChanged)
+            cell.syncEnabledSelection.addTarget(self, action: #selector(SettingsViewController.syncEnabledChanged(_:)), for: UIControl.Event.valueChanged)
             // Set sync group field
             switch scorecard.settingSyncEnabled {
             case true:
@@ -152,7 +152,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 // Save History
                 cell = tableView.dequeueReusableCell(withIdentifier: "Save History Cell", for: indexPath) as! SettingsTableCell
                 saveHistorySelection = cell.saveHistorySelection
-                saveHistorySelection.addTarget(self, action: #selector(SettingsViewController.saveHistoryAction(_:)), for: UIControlEvents.valueChanged)
+                saveHistorySelection.addTarget(self, action: #selector(SettingsViewController.saveHistoryAction(_:)), for: UIControl.Event.valueChanged)
                 
                 // Set save history
                 switch scorecard.settingSaveHistory {
@@ -166,7 +166,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 // Save Location
                 cell = tableView.dequeueReusableCell(withIdentifier: "Save Location Cell", for: indexPath) as! SettingsTableCell
                 saveLocationSelection = cell.saveLocationSelection
-                saveLocationSelection.addTarget(self, action: #selector(SettingsViewController.saveLocationAction(_:)), for: UIControlEvents.valueChanged)
+                saveLocationSelection.addTarget(self, action: #selector(SettingsViewController.saveLocationAction(_:)), for: UIControl.Event.valueChanged)
                 
                 // Set save location
                 switch scorecard.settingSaveLocation {
@@ -185,7 +185,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             // Allow broadcast
             cell = tableView.dequeueReusableCell(withIdentifier: "Allow Broadcast Cell", for: indexPath) as! SettingsTableCell
             allowBroadcastSelection = cell.allowBroadcastSelection
-            allowBroadcastSelection.addTarget(self, action: #selector(SettingsViewController.allowBroadcastAction(_:)), for: UIControlEvents.valueChanged)
+            allowBroadcastSelection.addTarget(self, action: #selector(SettingsViewController.allowBroadcastAction(_:)), for: UIControl.Event.valueChanged)
             
             // Set allow broadcast
             switch scorecard.settingAllowBroadcast {
@@ -201,7 +201,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             // Nearby playing
             cell = tableView.dequeueReusableCell(withIdentifier: "Nearby Playing Cell", for: indexPath) as! SettingsTableCell
             nearbyPlayingSelection = cell.nearbyPlayingSelection
-            nearbyPlayingSelection.addTarget(self, action: #selector(SettingsViewController.nearbyPlayingAction(_:)), for: UIControlEvents.valueChanged)
+            nearbyPlayingSelection.addTarget(self, action: #selector(SettingsViewController.nearbyPlayingAction(_:)), for: UIControl.Event.valueChanged)
             
             // Set online playing
             switch scorecard.settingNearbyPlaying {
@@ -217,24 +217,24 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
            cell = tableView.dequeueReusableCell(withIdentifier: "Online Player Cell", for: indexPath) as! SettingsTableCell
             onlinePlayerLabel = cell.onlinePlayerLabel
             onlinePlayerChangeButton = cell.onlinePlayerChangeButton
-            onlinePlayerChangeButton.addTarget(self, action: #selector(SettingsViewController.onlinePlayerChangeAction(_:)), for: UIControlEvents.touchUpInside)
+            onlinePlayerChangeButton.addTarget(self, action: #selector(SettingsViewController.onlinePlayerChangeAction(_:)), for: UIControl.Event.touchUpInside)
             self.displayOnlineCell()
             
         case faceTimeSection:
             // FaceTime address
             onlineRow = indexPath.row
             cell = tableView.dequeueReusableCell(withIdentifier: "FaceTime Cell", for: indexPath) as! SettingsTableCell
-            cell.faceTimeAddressTextField.addTarget(self, action: #selector(SettingsViewController.faceTimeTextFieldChanged), for: UIControlEvents.editingChanged)
-            cell.faceTimeAddressTextField.addTarget(self, action: #selector(SettingsViewController.faceTimeTextFieldChanged), for: UIControlEvents.editingDidEnd)
+            cell.faceTimeAddressTextField.addTarget(self, action: #selector(SettingsViewController.faceTimeTextFieldChanged), for: UIControl.Event.editingChanged)
+            cell.faceTimeAddressTextField.addTarget(self, action: #selector(SettingsViewController.faceTimeTextFieldChanged), for: UIControl.Event.editingDidEnd)
             self.faceTimeAddressTextField = cell.faceTimeAddressTextField
-            cell.faceTimeInfoButton.addTarget(self, action: #selector(SettingsViewController.faceTimeInfoPressed(_:)), for: UIControlEvents.touchUpInside)
+            cell.faceTimeInfoButton.addTarget(self, action: #selector(SettingsViewController.faceTimeInfoPressed(_:)), for: UIControl.Event.touchUpInside)
             self.displayFaceTimeCell()
             
         case alertSection:
             // Alert vibrate
             cell = tableView.dequeueReusableCell(withIdentifier: "Alert Vibrate Cell", for: indexPath) as! SettingsTableCell
             alertVibrateSelection = cell.alertVibrateSelection
-            alertVibrateSelection.addTarget(self, action: #selector(SettingsViewController.alertVibrateAction(_:)), for: UIControlEvents.valueChanged)
+            alertVibrateSelection.addTarget(self, action: #selector(SettingsViewController.alertVibrateAction(_:)), for: UIControl.Event.valueChanged)
             
             // Set receive notifications
             switch scorecard.settingAlertVibrate {
@@ -250,7 +250,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             // Receive notifications
             cell = tableView.dequeueReusableCell(withIdentifier: "Receive Notifications Cell", for: indexPath) as! SettingsTableCell
             receiveNotificationsSelection = cell.receiveNotificationsSelection
-            receiveNotificationsSelection.addTarget(self, action: #selector(SettingsViewController.receiveNotificationsAction(_:)), for: UIControlEvents.valueChanged)
+            receiveNotificationsSelection.addTarget(self, action: #selector(SettingsViewController.receiveNotificationsAction(_:)), for: UIControl.Event.valueChanged)
             
             // Set receive notifications
             switch scorecard.settingReceiveNotifications {
@@ -270,11 +270,11 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
                 let cardsSlider = cell.cardsSlider!
                 let cardsValue = cell.cardsValue!
                 cardsSlider.tag = indexPath.row
-                cardsSlider.addTarget(self, action: #selector(SettingsViewController.cardsSliderAction(_:)), for: UIControlEvents.valueChanged)
+                cardsSlider.addTarget(self, action: #selector(SettingsViewController.cardsSliderAction(_:)), for: UIControl.Event.valueChanged)
                 if self.testMode {
                     cardsValue.tag = indexPath.row
-                    cardsValue.addTarget(self, action: #selector(SettingsViewController.cardsValueAction(_:)), for: UIControlEvents.editingChanged)
-                    cardsValue.addTarget(self, action: #selector(SettingsViewController.cardsValueExit(_:)), for: UIControlEvents.editingDidEndOnExit)
+                    cardsValue.addTarget(self, action: #selector(SettingsViewController.cardsValueAction(_:)), for: UIControl.Event.editingChanged)
+                    cardsValue.addTarget(self, action: #selector(SettingsViewController.cardsValueExit(_:)), for: UIControl.Event.editingDidEndOnExit)
                     cardsValue.accessibilityIdentifier = "cardsValue\(indexPath.row)"
                 }
                 cardsValue.isUserInteractionEnabled = testMode
@@ -291,7 +291,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             case cardsBounceRow:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Bounce Cell", for: indexPath) as! SettingsTableCell
                 bounceSelection = cell.bounceSelection
-                bounceSelection.addTarget(self, action: #selector(SettingsViewController.bounceAction(_:)), for: UIControlEvents.valueChanged)
+                bounceSelection.addTarget(self, action: #selector(SettingsViewController.bounceAction(_:)), for: UIControl.Event.valueChanged)
                 cardsChanged()
                 
                 // Set bounce number of cards selection
@@ -309,8 +309,8 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             // Bonus for winning with a 2
             cell = tableView.dequeueReusableCell(withIdentifier: "Bonus2 Cell", for: indexPath) as! SettingsTableCell
             bonus2Selection = cell.bonus2Selection
-            bonus2Selection.addTarget(self, action: #selector(SettingsViewController.bonus2Action(_:)), for: UIControlEvents.valueChanged)
-            cell.bonus2Info.addTarget(self, action: #selector(SettingsViewController.twosInfoPressed(_:)), for: UIControlEvents.touchUpInside)
+            bonus2Selection.addTarget(self, action: #selector(SettingsViewController.bonus2Action(_:)), for: UIControl.Event.valueChanged)
+            cell.bonus2Info.addTarget(self, action: #selector(SettingsViewController.twosInfoPressed(_:)), for: UIControl.Event.touchUpInside)
             
             // Set bonus for a 2 selection
             switch scorecard.settingBonus2 {
@@ -724,14 +724,14 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         
         switch(gesture.state) {
             
-        case UIGestureRecognizerState.began:
+        case UIGestureRecognizer.State.began:
             guard let selectedIndexPath = trumpSequenceCollectionView.indexPathForItem(at: gesture.location(in: trumpSequenceCollectionView)) else {
                 break
             }
             trumpSequenceCollectionView.beginInteractiveMovementForItem(at: selectedIndexPath)
-        case UIGestureRecognizerState.changed:
+        case UIGestureRecognizer.State.changed:
             trumpSequenceCollectionView.updateInteractiveMovementTargetPosition(gesture.location(in: gesture.view!))
-        case UIGestureRecognizerState.ended:
+        case UIGestureRecognizer.State.ended:
             trumpSequenceCollectionView.endInteractiveMovement()
         default:
             trumpSequenceCollectionView.cancelInteractiveMovement()

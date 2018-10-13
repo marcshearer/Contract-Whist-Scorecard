@@ -240,7 +240,7 @@ class GraphView: UIView {
                                                               width: xScale,
                                                               height: 100))
                         button.tag = (dataset.tag * Int(1e6)) + i
-                        button.addTarget(self, action: #selector(GraphView.detailButtonPressed(_:)), for: UIControlEvents.touchUpInside)
+                        button.addTarget(self, action: #selector(GraphView.detailButtonPressed(_:)), for: UIControl.Event.touchUpInside)
                         self.addSubview(button)
                     }
                 }

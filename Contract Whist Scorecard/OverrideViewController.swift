@@ -113,7 +113,7 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
                 let cardsSlider = cell.cardsSlider!
                 let cardsValue = cell.cardsValue!
                 cardsSlider.tag = indexPath.row
-                cardsSlider.addTarget(self, action: #selector(OverrideViewController.cardsSliderAction(_:)), for: UIControlEvents.valueChanged)
+                cardsSlider.addTarget(self, action: #selector(OverrideViewController.cardsSliderAction(_:)), for: UIControl.Event.valueChanged)
                 
                 // Set number of rounds value and slider
                 cell.cardsLabel.text = (indexPath.row == startSliderRow ? "Start:" : "End:")
@@ -126,7 +126,7 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
             case bounceRow:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Bounce Cell", for: indexPath) as! OverrideTableCell
                 bounceSelection = cell.bounceSelection
-                bounceSelection.addTarget(self, action: #selector(OverrideViewController.bounceAction(_:)), for: UIControlEvents.valueChanged)
+                bounceSelection.addTarget(self, action: #selector(OverrideViewController.bounceAction(_:)), for: UIControl.Event.valueChanged)
                 cardsChanged()
                 
                 // Set bounce number of cards selection
@@ -144,7 +144,7 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
             case excludeHistoryRow:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Exclude History Cell", for: indexPath) as! OverrideTableCell
                 excludeHistorySelection = cell.excludeHistorySelection
-                excludeHistorySelection.addTarget(self, action: #selector(OverrideViewController.excludeHistoryAction(_:)), for: UIControlEvents.valueChanged)
+                excludeHistorySelection.addTarget(self, action: #selector(OverrideViewController.excludeHistoryAction(_:)), for: UIControl.Event.valueChanged)
                 excludeChanged()
                 
                 // Set exclude history selection
@@ -157,7 +157,7 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
             case excludeStatsRow:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Exclude Stats Cell", for: indexPath) as! OverrideTableCell
                 excludeStatsSelection = cell.excludeStatsSelection
-                excludeStatsSelection.addTarget(self, action: #selector(OverrideViewController.excludeStatsAction(_:)), for: UIControlEvents.valueChanged)
+                excludeStatsSelection.addTarget(self, action: #selector(OverrideViewController.excludeStatsAction(_:)), for: UIControl.Event.valueChanged)
                 
                 // Set exclude stats selection
                 switch scorecard.overrideExcludeStats! {

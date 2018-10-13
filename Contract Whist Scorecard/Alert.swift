@@ -20,8 +20,8 @@ extension UIViewController {
         }
         
         Utility.mainThread {
-            let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-            alertController.addAction(UIAlertAction(title: buttonText, style: UIAlertActionStyle.default, handler: alertMessageCompletion))
+            let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
+            alertController.addAction(UIAlertAction(title: buttonText, style: UIAlertAction.Style.default, handler: alertMessageCompletion))
             self.present(alertController, animated: true, completion: nil)
         }
     }
@@ -50,12 +50,12 @@ extension UIViewController {
         }
         
         Utility.mainThread {
-            let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-            alertController.addAction(UIAlertAction(title: okButtonText, style: UIAlertActionStyle.default, handler: alertDecisionOkCompletion))
+            let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
+            alertController.addAction(UIAlertAction(title: okButtonText, style: UIAlertAction.Style.default, handler: alertDecisionOkCompletion))
             if otherButtonText != nil {
-                 alertController.addAction(UIAlertAction(title: otherButtonText, style: UIAlertActionStyle.default, handler: alertDecisionOtherCompletion))
+                 alertController.addAction(UIAlertAction(title: otherButtonText, style: UIAlertAction.Style.default, handler: alertDecisionOtherCompletion))
             }
-            alertController.addAction(UIAlertAction(title: cancelButtonText, style: UIAlertActionStyle.cancel, handler: alertDecisionCancelCompletion))
+            alertController.addAction(UIAlertAction(title: cancelButtonText, style: UIAlertAction.Style.cancel, handler: alertDecisionCancelCompletion))
             self.present(alertController, animated: true, completion: nil)
         }
     }
@@ -88,7 +88,7 @@ extension UIViewController {
             UIActivityIndicatorView(frame: CGRect(x: 0, y: 100,
                                                   width: alertController.view.frame.width,
                                                   height: 100))
-        indicatorView.activityIndicatorViewStyle = .whiteLarge
+        indicatorView.style = .whiteLarge
         indicatorView.color = UIColor.black
         indicatorView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         alertController.view.addSubview(indicatorView)
@@ -137,14 +137,14 @@ class ActionSheet : NSObject, UIPopoverPresentationControllerDelegate {
         self.alertController = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
         if let title = title {
             // Set attributed title
-            let attributes = [NSAttributedStringKey.foregroundColor : UIColor.black,
-                              NSAttributedStringKey.font : UIFont.boldSystemFont(ofSize: 22.0)]
+            let attributes = [NSAttributedString.Key.foregroundColor : UIColor.black,
+                              NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 22.0)]
             let titleString = NSMutableAttributedString(string: title, attributes: attributes)
             alertController.setValue(titleString, forKey: "attributedTitle")
         }
         if let message = message {
             // Set attributed message
-            let attributes = [NSAttributedStringKey.foregroundColor : (dark ? UIColor.lightGray : UIColor.darkGray)]
+            let attributes = [NSAttributedString.Key.foregroundColor : (dark ? UIColor.lightGray : UIColor.darkGray)]
             let messageString = NSMutableAttributedString(string: message, attributes: attributes)
             alertController.setValue(messageString, forKey: "attributedMessage")
         }
@@ -159,7 +159,7 @@ class ActionSheet : NSObject, UIPopoverPresentationControllerDelegate {
             } else {
                 popover.permittedArrowDirections = [direction]
                 if x == nil || y == nil {
-                    switch direction {
+                    switch direction! {
                     case .left:
                         popover.sourceRect = CGRect(x: view.frame.width, y: view.frame.height / 2, width: 0, height: 0)
                     case .right:
@@ -188,7 +188,7 @@ class ActionSheet : NSObject, UIPopoverPresentationControllerDelegate {
         }
     }
     
-    public func add(_ title: String, style: UIAlertActionStyle = UIAlertActionStyle.default, handler: (()->())! = nil) {
+    public func add(_ title: String, style: UIAlertAction.Style = UIAlertAction.Style.default, handler: (()->())! = nil) {
         let action = UIAlertAction(title: title, style: (dark ? style : style), handler: { (UIAlertAction)->() in
             handler?()
         })

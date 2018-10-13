@@ -515,8 +515,8 @@ class EntryViewController: UIViewController, UITableViewDataSource, UITableViewD
                     }
                 }
                 message="\(message)\n\nYou must correct all errors before exiting"
-                let alertController = UIAlertController(title: "Warning", message: message, preferredStyle: UIAlertControllerStyle.alert)
-                alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                let alertController = UIAlertController(title: "Warning", message: message, preferredStyle: UIAlertController.Style.alert)
+                alertController.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                 present(alertController, animated: true, completion: nil)
                 canFinish=false
             } else {
@@ -732,7 +732,7 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
             scoreCell[indexPath.row] = collectionView.dequeueReusableCell(withReuseIdentifier: "Entry Score Cell",for: indexPath) as? EntryScoreCell
             ScorecardUI.roundCorners(scoreCell[indexPath.row]!.scoreButton)
             scoreCell[indexPath.row]!.scoreButton.setTitle("\(indexPath.row)", for: .normal)
-            scoreCell[indexPath.row]!.scoreButton.addTarget(self, action: #selector(EntryViewController.scoreActionButtonPressed(_:)), for: UIControlEvents.touchUpInside)
+            scoreCell[indexPath.row]!.scoreButton.addTarget(self, action: #selector(EntryViewController.scoreActionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
             scoreCell[indexPath.row]!.scoreButton.tag = indexPath.row
             scoreCell[indexPath.row]!.scoreButton.accessibilityIdentifier = "score\(indexPath.row)"
 

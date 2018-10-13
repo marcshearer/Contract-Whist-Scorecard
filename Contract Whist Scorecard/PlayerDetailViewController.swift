@@ -144,8 +144,8 @@ class PlayerDetailViewController: UIViewController, UITableViewDataSource, UITab
             // Single input value
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Body Single", for: indexPath) as? PlayerDetailCell
             cell?.playerDetailField.tag = indexPath.row
-            cell?.playerDetailField.addTarget(self, action: #selector(PlayerDetailViewController.textFieldDidChange(_:)), for: UIControlEvents.editingChanged)
-            cell?.playerDetailField.addTarget(self, action: #selector(PlayerDetailViewController.textFieldShouldReturn(_:)), for: UIControlEvents.editingDidEndOnExit)
+            cell?.playerDetailField.addTarget(self, action: #selector(PlayerDetailViewController.textFieldDidChange(_:)), for: UIControl.Event.editingChanged)
+            cell?.playerDetailField.addTarget(self, action: #selector(PlayerDetailViewController.textFieldShouldReturn(_:)), for: UIControl.Event.editingDidEndOnExit)
             cell?.playerDetailField.returnKeyType = .next
             cell?.playerDetailField.isSecureTextEntry = false
             cell?.playerDetailSecure.isHidden = true
@@ -197,8 +197,8 @@ class PlayerDetailViewController: UIViewController, UITableViewDataSource, UITab
             cell!.playerDetailField.keyboardType = .emailAddress
             cell!.playerDetailField.autocapitalizationType = .none
             cell!.playerDetailField.returnKeyType = .done
-            cell?.playerDetailSecure.addTarget(self, action: #selector(PlayerDetailViewController.secureButtonPressed(_:)), for: UIControlEvents.touchUpInside)
-            cell?.playerDetailSecureInfo.addTarget(self, action: #selector(PlayerDetailViewController.secureInfoButtonPressed(_:)), for: UIControlEvents.touchUpInside)
+            cell?.playerDetailSecure.addTarget(self, action: #selector(PlayerDetailViewController.secureButtonPressed(_:)), for: UIControl.Event.touchUpInside)
+            cell?.playerDetailSecureInfo.addTarget(self, action: #selector(PlayerDetailViewController.secureInfoButtonPressed(_:)), for: UIControl.Event.touchUpInside)
             emailCell = cell
             // Hidden entry if value already filled in
             setEmailVisible(self.playerDetail.visibleLocally)
@@ -430,7 +430,7 @@ class PlayerDetailViewController: UIViewController, UITableViewDataSource, UITab
 
    // MARK: - Image Picker Routines / Overrides ============================================================ -
 
-    func getPicture(from: UIImagePickerControllerSourceType) {
+    func getPicture(from: UIImagePickerController.SourceType) {
        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
@@ -440,16 +440,19 @@ class PlayerDetailViewController: UIViewController, UITableViewDataSource, UITab
             present(imagePicker, animated: true, completion: nil)
         }
     }
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+// Local variable inserted by Swift 4.2 migrator.
+let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
+
         
-        if let selectedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+        if let selectedImage = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage {
             var rotatedImage:UIImage
             
             imageView!.image = selectedImage
             
             if let rawImage = imageView!.image {
                 rotatedImage = rotateImage(image: rawImage)
-                if let imageData = UIImagePNGRepresentation(rotatedImage) {
+                if let imageData = rotatedImage.pngData() {
                     playerDetail.thumbnail  = Data(imageData)
                     playerDetail.thumbnailDate = Date()
                 }
@@ -467,7 +470,7 @@ class PlayerDetailViewController: UIViewController, UITableViewDataSource, UITab
     
     func rotateImage(image: UIImage) -> UIImage {
         
-        if (image.imageOrientation == UIImageOrientation.up ) {
+        if (image.imageOrientation == UIImage.Orientation.up ) {
             return image
         }
         
@@ -533,15 +536,15 @@ class PlayerDetailViewController: UIViewController, UITableViewDataSource, UITab
 
     func checkDeletePlayer() {
         var alertController: UIAlertController
-        alertController = UIAlertController(title: "Warning", message: "This will remove the player \n'\(playerDetail.name)'\nfrom this device.\n\nIf you are synchronising with iCloud the player will still be available to download in future.\n Otherwise this will remove their details permanently.\n\n Are you sure you want to do this?", preferredStyle: UIAlertControllerStyle.alert)
-        alertController.addAction(UIAlertAction(title: "Confirm", style: UIAlertActionStyle.default,
+        alertController = UIAlertController(title: "Warning", message: "This will remove the player \n'\(playerDetail.name)'\nfrom this device.\n\nIf you are synchronising with iCloud the player will still be available to download in future.\n Otherwise this will remove their details permanently.\n\n Are you sure you want to do this?", preferredStyle: UIAlertController.Style.alert)
+        alertController.addAction(UIAlertAction(title: "Confirm", style: UIAlertAction.Style.default,
                                                 handler: { (action:UIAlertAction!) -> Void in
             
             self.deletePlayer = true
             self.performSegue(withIdentifier: self.returnSegue, sender: self )
                                                     
         }))
-        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler:nil))
+        alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler:nil))
         present(alertController, animated: true, completion: nil)
     }
     
@@ -591,3 +594,13 @@ class PlayerDetailCell: UITableViewCell {
 }
 
 
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
+	return input.rawValue
+}

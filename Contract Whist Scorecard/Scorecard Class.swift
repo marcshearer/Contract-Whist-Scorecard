@@ -481,7 +481,7 @@ class Scorecard {
                     } else {
                         imageView.image = nil
                     }
-                    imageView.superview!.bringSubview(toFront: imageView)
+                    imageView.superview!.bringSubviewToFront(imageView)
                 }
             }
         default:
@@ -612,7 +612,7 @@ class Scorecard {
     
     public func roundTitle(_ round: Int, rankColor: UIColor = UIColor.black, rounds: Int! = nil, cards: [Int]! = nil, bounce: Bool! = nil, suits: [Suit]! = nil) -> NSMutableAttributedString {
         
-        let rankColor = [NSAttributedStringKey.foregroundColor: rankColor]
+        let rankColor = [NSAttributedString.Key.foregroundColor: rankColor]
         let rank = NSMutableAttributedString(string: "\(self.roundCards(round, rounds: rounds, cards: cards, bounce: bounce))", attributes: rankColor)
         let suit = self.roundSuit(round, suits: suits)
         let roundTitle = NSMutableAttributedString()
@@ -818,13 +818,13 @@ class Scorecard {
                 // Game is still in progress
                 message = "Warning: This will clear the existing score card and start a new game."
             }
-            let alertController = UIAlertController(title: "Finish Game", message: message + "\n\n Are you sure you want to do this?", preferredStyle: UIAlertControllerStyle.alert)
-            alertController.addAction(UIAlertAction(title: "Confirm", style: UIAlertActionStyle.default,
+            let alertController = UIAlertController(title: "Finish Game", message: message + "\n\n Are you sure you want to do this?", preferredStyle: UIAlertController.Style.alert)
+            alertController.addAction(UIAlertAction(title: "Confirm", style: UIAlertAction.Style.default,
                                                     handler: { (action:UIAlertAction!) -> Void in
                                                         self.exitScorecard(from: from, toSegue: toSegue, advanceDealer: advanceDealer, rounds: rounds,
                                                                            resetOverrides: resetOverrides , completion: completion)
                 }))
-            alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel,
+            alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel,
                                                     handler:nil))
             from.present(alertController, animated: true, completion: nil)
             
@@ -1102,7 +1102,7 @@ class Scorecard {
     
     class func getWelcomeViewController() -> WelcomeViewController? {
         if let rootViewController = UIApplication.shared.keyWindow?.rootViewController {
-            let childViewControllers = rootViewController.childViewControllers
+            let childViewControllers = rootViewController.children
             if childViewControllers.count > 0 {
                 let welcomeViewController = childViewControllers[0]
                 if welcomeViewController is WelcomeViewController {
@@ -1140,7 +1140,7 @@ class Scorecard {
                     dismissLastChild(parent: parent, navigation: navigation, child: nextChild, completion: completion)
                 })
             } else {
-                if let lastChild = nextChild.childViewControllers.last {
+                if let lastChild = nextChild.children.last {
                     lastChild.dismiss(animated: true, completion: {
                         dismissLastChild(parent: parent, navigation: navigation, child: nextChild, completion: completion)
                     })

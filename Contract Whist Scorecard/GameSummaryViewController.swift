@@ -297,8 +297,8 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
                         let date = formatter.string(from: scorecard.enteredPlayer(playerNumber).previousMaxScoreDate)
                         message = "Congratulations \(name!) on your new personal best of \(playerResults.score).\n\nYour previous best was \(scorecard.enteredPlayer(playerNumber).previousMaxScore) which you achieved on \(date)"
                     }
-                    let alertController = UIAlertController(title: "Congratulations", message: message, preferredStyle: UIAlertControllerStyle.alert)
-                    alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                    let alertController = UIAlertController(title: "Congratulations", message: message, preferredStyle: UIAlertController.Style.alert)
+                    alertController.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
                     present(alertController, animated: true, completion: nil)
                 } else {
                     // Not a PB - Link to high scores
@@ -495,12 +495,12 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
             } else {
                 message = "Your game has been saved. However if you continue you will not be able to return to it.\n\n Are you sure you want to do this?"
             }
-            let alertController = UIAlertController(title: "Finish Game", message: message, preferredStyle: UIAlertControllerStyle.alert)
-            alertController.addAction(UIAlertAction(title: "Confirm", style: UIAlertActionStyle.default,
+            let alertController = UIAlertController(title: "Finish Game", message: message, preferredStyle: UIAlertController.Style.alert)
+            alertController.addAction(UIAlertAction(title: "Confirm", style: UIAlertAction.Style.default,
                                                     handler: { (action:UIAlertAction!) -> Void in
                 finish()
             }))
-            alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel,
+            alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel,
                                                     handler:nil))
             from.present(alertController, animated: true, completion: nil)
         } else {

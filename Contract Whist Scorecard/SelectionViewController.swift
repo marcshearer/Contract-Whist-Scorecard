@@ -407,14 +407,14 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
         
         switch(gesture.state) {
             
-        case UIGestureRecognizerState.began:
+        case UIGestureRecognizer.State.began:
             guard let selectedIndexPath = selectedCollectionView.indexPathForItem(at: gesture.location(in: selectedCollectionView)) else {
                 break
             }
             selectedCollectionView.beginInteractiveMovementForItem(at: selectedIndexPath)
-        case UIGestureRecognizerState.changed:
+        case UIGestureRecognizer.State.changed:
             selectedCollectionView.updateInteractiveMovementTargetPosition(gesture.location(in: gesture.view!))
-        case UIGestureRecognizerState.ended:
+        case UIGestureRecognizer.State.ended:
             selectedCollectionView.endInteractiveMovement()
         default:
             selectedCollectionView.cancelInteractiveMovement()
@@ -445,7 +445,7 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
                 UIActivityIndicatorView(frame: CGRect(x: 0, y: 100,
                                                       width: self.cloudAlertController.view.frame.width,
                                                       height: 100))
-            self.cloudIndicatorView.activityIndicatorViewStyle = .whiteLarge
+            self.cloudIndicatorView.style = .whiteLarge
             self.cloudIndicatorView.color = UIColor.black
             self.cloudIndicatorView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             self.cloudAlertController.view.addSubview(self.cloudIndicatorView)
@@ -617,7 +617,7 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
                                      imageView: self.animationThumbnail,
                                      initials: self.scorecard.playerList[addPlayerNumber-1].name!,
                                      label: self.animationDisc)
-                self.animationThumbnailView.superview!.bringSubview(toFront: self.animationThumbnailView)
+                self.animationThumbnailView.superview!.bringSubviewToFront(self.animationThumbnailView)
                 self.animationName.text = self.scorecard.playerList[addPlayerNumber-1].name
                 self.animationThumbnailView.isHidden = false
                 self.animationName.isHidden = false
@@ -663,8 +663,8 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
                         self.animationThumbnail.frame = CGRect(x: 0, y: 0, width: self.width, height: self.width)
                         self.animationDisc.frame = CGRect(x: 0, y: 0, width: self.width, height: self.width)
                         self.animationName.frame = CGRect(x: selectedLabelPoint.x, y: selectedLabelPoint.y, width: labelWidth, height: labelHeight)
-                        self.animationThumbnailView.superview!.bringSubview(toFront: self.animationThumbnailView)
-                        self.animationName.superview!.bringSubview(toFront: self.animationName)
+                        self.animationThumbnailView.superview!.bringSubviewToFront(self.animationThumbnailView)
+                        self.animationName.superview!.bringSubviewToFront(self.animationName)
                     }
                     animation.addCompletion( {_ in
                         // Cell will have been filled when we inserted it - just need to make it visible

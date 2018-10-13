@@ -192,7 +192,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
          scorecard.reCenterPopup(self)
     }
     
-    override func motionBegan(_ motion: UIEventSubtype, with event: UIEvent?) {
+    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         
         // Play sound
         self.alertSound()
@@ -787,7 +787,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                 cell.disconnectButton.isHidden = true
             }
             
-            cell.disconnectButton.addTarget(self, action: #selector(BroadcastViewController.disconnectPressed(_:)), for: UIControlEvents.touchUpInside)
+            cell.disconnectButton.addTarget(self, action: #selector(BroadcastViewController.disconnectPressed(_:)), for: UIControl.Event.touchUpInside)
             
         } else {
             // My details when joining a game
@@ -805,7 +805,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
             
             self.changePlayerButton = cell.changePlayerButton
             if !self.recoveryMode {
-                cell.changePlayerButton.addTarget(self, action: #selector(BroadcastViewController.changePlayerPressed(_:)), for: UIControlEvents.touchUpInside)
+                cell.changePlayerButton.addTarget(self, action: #selector(BroadcastViewController.changePlayerPressed(_:)), for: UIControl.Event.touchUpInside)
             }
             self.changePlayerAvailable()
         }

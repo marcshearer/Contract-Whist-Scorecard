@@ -469,7 +469,7 @@ class Sync {
         return getParticipantsFromCloudQuery(getParticipantMode, gameUUIDList: gameUUIDList)
     }
     
-    func getParticipantsFromCloudQuery(_ getParticipantMode: GetParticipantMode, gameUUIDList: [String]? = nil, remainder: [String]? = nil, cursor: CKQueryCursor! = nil) -> Bool {
+    func getParticipantsFromCloudQuery(_ getParticipantMode: GetParticipantMode, gameUUIDList: [String]? = nil, remainder: [String]? = nil, cursor: CKQueryOperation.Cursor! = nil) -> Bool {
         // Fetch data from cloud
         var queryOperation: CKQueryOperation
         let cloudContainer = CKContainer.default()
@@ -589,7 +589,7 @@ class Sync {
                 let localRecordName = historyParticipant.participantMO.syncRecordID
                 let localSyncDate = (historyParticipant.participantMO.syncDate ?? Date(timeIntervalSinceReferenceDate: -1)) as Date
                 let cloudSyncDate = Utility.objectDate(cloudObject: cloudObject, forKey: "syncDate")
-                if localRecordName == nil || (CKRecordID(recordName: localRecordName!) == cloudObject.recordID &&
+                if localRecordName == nil || (CKRecord.ID(recordName: localRecordName!) == cloudObject.recordID &&
                     cloudSyncDate! > localSyncDate) {
                     // Only update if never synced before or cloud newer and not a duplicate
                     _ = CoreData.update(updateLogic: {
@@ -665,7 +665,7 @@ class Sync {
         return getGamesFromCloudQuery(gameUUIDList: gameUUIDList)
     }
     
-    func getGamesFromCloudQuery(gameUUIDList: [String]! = nil, remainder: [String]! = nil, cursor: CKQueryCursor! = nil) -> Bool {
+    func getGamesFromCloudQuery(gameUUIDList: [String]! = nil, remainder: [String]! = nil, cursor: CKQueryOperation.Cursor! = nil) -> Bool {
         // Fetch data from cloud
         var gameUUIDList = gameUUIDList
         var remainder = remainder
@@ -755,7 +755,7 @@ class Sync {
                     let localRecordName = historyGame.gameMO.syncRecordID
                     let localSyncDate = (historyGame.gameMO.syncDate ?? Date(timeIntervalSinceReferenceDate: -1)) as Date
                     let cloudSyncDate = Utility.objectDate(cloudObject: cloudObject, forKey: "syncDate")
-                    if localRecordName == nil || (CKRecordID(recordName: localRecordName!) == cloudObject.recordID &&
+                    if localRecordName == nil || (CKRecord.ID(recordName: localRecordName!) == cloudObject.recordID &&
                         cloudSyncDate! > localSyncDate) {
                         // Only update if never synced before or cloud newer and not a duplicate
                         History.cloudGameToMO(cloudObject: cloudObject, gameMO: historyGame.gameMO)
@@ -865,7 +865,7 @@ class Sync {
         }
         
         // Assign a completion handler
-        uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecordID]?, error: Error?) -> Void in
+        uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecord.ID]?, error: Error?) -> Void in
             if error != nil {
                 if let error = error as? CKError {
                     if error.code == .limitExceeded {
@@ -931,7 +931,7 @@ class Sync {
     
     func downloadPlayersFromCloudQuery(specificExternalId: String! = nil,
                                        specificEmail: [String],
-                                       cursor: CKQueryCursor! = nil,
+                                       cursor: CKQueryOperation.Cursor! = nil,
                                        downloadAction: @escaping (CKRecord) -> (),
                                        completeAction: @escaping () -> ()) -> Bool {
         
@@ -1290,7 +1290,7 @@ class Sync {
         }
         
         // Assign a completion handler
-        uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecordID]?, error: Error?) -> Void in
+        uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecord.ID]?, error: Error?) -> Void in
             guard error==nil else {
                 self.syncMessage("Error updating records. Sync failed")
                 self.errors += 1
@@ -1341,15 +1341,15 @@ class Sync {
             
             let cloudContainer = CKContainer.default()
             let publicDatabase = cloudContainer.publicCloudDatabase
-            var imageRecordID: [CKRecordID] = []
+            var imageRecordID: [CKRecord.ID] = []
             
             for playerNumber in 1...playerImageFromCloud.count {
-                imageRecordID.append(CKRecordID(recordName: playerImageFromCloud[playerNumber-1].syncRecordID!))
+                imageRecordID.append(CKRecord.ID(recordName: playerImageFromCloud[playerNumber-1].syncRecordID!))
             }
             let fetchOperation = CKFetchRecordsOperation(recordIDs: imageRecordID)
             fetchOperation.desiredKeys = ["email", "thumbnail", "thumbnailDate"]
             
-            fetchOperation.perRecordCompletionBlock = { (cloudObject: CKRecord?, syncRecordID: CKRecordID?, error: Error?) -> Void in
+            fetchOperation.perRecordCompletionBlock = { (cloudObject: CKRecord?, syncRecordID: CKRecord.ID?, error: Error?) -> Void in
                 if error == nil && cloudObject != nil {
                     self.cloudObjectList.append(cloudObject!)
                 }
@@ -1388,7 +1388,7 @@ class Sync {
             
             for playerNumber in 1...playerImageToCloud.count {
                 // Fetch record
-                let imageRecordID = CKRecordID(recordName: playerImageToCloud[playerNumber-1].syncRecordID!)
+                let imageRecordID = CKRecord.ID(recordName: playerImageToCloud[playerNumber-1].syncRecordID!)
                 let fetchOperation = CKFetchRecordsOperation(recordIDs: [imageRecordID])
                 fetchOperation.desiredKeys = []
                 fetchOperation.fetchRecordsCompletionBlock = { (records, error) in
@@ -1410,7 +1410,7 @@ class Sync {
                         uploadOperation.isAtomic = true
                         uploadOperation.database = publicDatabase
                         
-                        uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecordID]?, error: Error?) -> Void in
+                        uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecord.ID]?, error: Error?) -> Void in
                             
                             // Tidy up temporary files
                             Utility.tidyObject(name: playerImageToCloud[playerNumber-1].name!)
@@ -1481,7 +1481,7 @@ class Sync {
             uploadOperation.database = publicDatabase
             
             // Assign a completion handler
-            uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecordID]?, error: Error?) -> Void in
+            uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecord.ID]?, error: Error?) -> Void in
                 if error != nil {
                     completion(false, "Error updating records. Sync failed")
                     return
@@ -1597,7 +1597,7 @@ extension CKQueryOperation {
         self.qualityOfService = qos
     }
     
-    convenience init(cursor: CKQueryCursor, qos: QualityOfService) {
+    convenience init(cursor: CKQueryOperation.Cursor, qos: QualityOfService) {
         self.init(cursor: cursor)
         self.qualityOfService = qos
     }

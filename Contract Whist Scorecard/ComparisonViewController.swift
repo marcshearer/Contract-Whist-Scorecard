@@ -413,12 +413,12 @@ extension ComparisonViewController: UICollectionViewDelegate, UICollectionViewDa
             case "detail":
                 cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Comparison Detail Body Cell", for: indexPath) as! ComparisonCollectionCell
                 cell.comparisonButton.tag = collectionView.tag
-                cell.comparisonButton.addTarget(self, action: #selector(ComparisonViewController.comparisonDetailButtonPressed(_:)), for: UIControlEvents.touchUpInside)
+                cell.comparisonButton.addTarget(self, action: #selector(ComparisonViewController.comparisonDetailButtonPressed(_:)), for: UIControl.Event.touchUpInside)
                 cell.comparisonButton.isEnabled = true
             case "graph":
                 cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Comparison Graph Body Cell", for: indexPath) as! ComparisonCollectionCell
                 cell.comparisonButton.tag = collectionView.tag
-                cell.comparisonButton.addTarget(self, action: #selector(ComparisonViewController.comparisonGraphButtonPressed(_:)), for: UIControlEvents.touchUpInside)
+                cell.comparisonButton.addTarget(self, action: #selector(ComparisonViewController.comparisonGraphButtonPressed(_:)), for: UIControl.Event.touchUpInside)
                 cell.comparisonButton.isEnabled = (selectedList[collectionView.tag].handsPlayed > 0 && selectedList[collectionView.tag].datePlayed >= Utility.dateFromString("01/04/2017")!)
             case "thumbnail":
                 cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Comparison Image Body Cell", for: indexPath) as! ComparisonCollectionCell

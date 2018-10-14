@@ -608,7 +608,9 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
                 availableCell.name.alpha = self.selectedAlpha
                 availableCell.tick.isHidden = false
                 
-                // Draw a new thumbnail over top of existing
+                // Draw a new thumbnail over top of existing - add in views which are uninstalled in IB to avoid warnings of no constraints
+                view.addSubview(self.animationThumbnailView)
+                view.addSubview(self.animationName)
                 self.animationThumbnailView.frame = CGRect(x: availablePoint.x, y: availablePoint.y, width: self.width, height: self.width)
                 self.animationThumbnail.frame = CGRect(x: 0, y: 0, width: self.width, height: self.width)
                 self.animationDisc.frame = CGRect(x: 0, y: 0, width: self.width, height: self.width)

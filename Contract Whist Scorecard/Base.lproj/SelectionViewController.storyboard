@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
-        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -31,7 +28,7 @@
                                 </textAttributes>
                                 <items>
                                     <navigationItem title="Selection" id="sxd-YE-KrL">
-                                        <barButtonItem key="leftBarButtonItem" style="plain" id="t32-EF-2FA">
+                                        <barButtonItem key="leftBarButtonItem" id="t32-EF-2FA">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="eQy-4V-yYX">
                                                 <rect key="frame" x="16" y="11" width="60" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -41,7 +38,7 @@
                                                 </connections>
                                             </button>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" style="plain" id="FL2-Z1-EDp">
+                                        <barButtonItem key="rightBarButtonItem" id="FL2-Z1-EDp">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Rmr-6u-jtL" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                 <rect key="frame" x="272" y="11" width="87" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -139,7 +136,7 @@
                                                     </variation>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="big tick" translatesAutoresizingMaskIntoConstraints="NO" id="Kur-dS-clF">
-                                                    <rect key="frame" x="19" y="19" width="37" height="38"/>
+                                                    <rect key="frame" x="19" y="19" width="37.5" height="37.5"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </imageView>
                                             </subviews>
@@ -230,7 +227,6 @@
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="Rkx-tt-68g" secondAttribute="bottom" constant="44" id="F3Z-rJ-Pcm"/>
                                     <constraint firstAttribute="trailing" secondItem="Rkx-tt-68g" secondAttribute="trailing" id="Tis-Ps-x1j"/>
-                                    <constraint firstAttribute="height" constant="208" id="hDj-ni-ebJ"/>
                                     <constraint firstItem="Rkx-tt-68g" firstAttribute="leading" secondItem="jtX-GA-7ms" secondAttribute="leading" id="y2J-LQ-8hn"/>
                                 </constraints>
                             </view>

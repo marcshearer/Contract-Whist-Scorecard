@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -34,9 +33,6 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="RaZ-ty-O6E" appends="YES" id="ryP-iz-0Ce"/>
-                                </connections>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bHZ-lK-RLV" userLabel="Game Summary Table View">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="646"/>
@@ -189,13 +185,13 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="UYj-82-CUx">
-                                                    <rect key="frame" x="104" y="15" width="139" height="21"/>
+                                                    <rect key="frame" x="104" y="14.5" width="139" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="jB8-9C-SQg">
-                                                    <rect key="frame" x="251" y="15" width="40" height="21"/>
+                                                    <rect key="frame" x="251" y="14.5" width="40" height="21"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="40" id="cnH-o0-Hvs"/>
                                                     </constraints>
@@ -266,7 +262,7 @@
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yd7-Xi-p4i" userLabel="New Game Button" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                     <rect key="frame" x="249.5" y="27" width="80" height="80"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="80" id="SqR-DM-gpK"/>
+                                                        <constraint firstAttribute="width" constant="80" id="SqR-DM-gpK"/>
                                                         <constraint firstAttribute="height" constant="80" id="za3-vy-anE"/>
                                                     </constraints>
                                                     <state key="normal" title="Button" image="new game"/>
@@ -321,7 +317,6 @@
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="zEq-NV-S5h" appends="YES" id="R6T-pD-IPu"/>
                             <outletCollection property="gestureRecognizers" destination="eQO-xa-QSi" appends="YES" id="40n-7b-r6y"/>
-                            <outletCollection property="gestureRecognizers" destination="RaZ-ty-O6E" appends="YES" id="dlF-Tp-y4M"/>
                         </connections>
                     </view>
                     <connections>

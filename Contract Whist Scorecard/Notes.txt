@@ -51,6 +51,7 @@ Avoid accessing AppDelegate not on main thread
 
 Bugs fix now
 ------------
+In search dialogue (on iPad) if filter search any users who don't have a picture sometimes get changed to squares
 
 Short-term
 ----------

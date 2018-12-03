@@ -81,16 +81,20 @@ class Hand : NSObject, NSCopying {
         self.xrefElement = [:]
     }
     
-    init(fromNumbers cardNumbers: [Int]) {
+    init(fromNumbers cardNumbers: [Int], sorted: Bool = false) {
         super.init()
         self.fromNumbers(cardNumbers)
-        self.sort()
+        if sorted {
+            self.sort()
+        }
     }
     
-    init(fromCards cards: [Card]) {
+    init(fromCards cards: [Card], sorted: Bool = false) {
         super.init()
         self.cards = cards
-        self.sort()
+        if sorted {
+            self.sort()
+        }
     }
     
     public func toNumbers() -> [Int] {
@@ -269,7 +273,7 @@ class Deal: NSObject, NSCopying {
     public func fromNumbers(_ cardNumbers: [[Int]]) {
         self.hands = []
         for cardNumber in cardNumbers {
-            self.hands.append(Hand(fromNumbers: cardNumber))
+            self.hands.append(Hand(fromNumbers: cardNumber, sorted: true))
         }
     }
     

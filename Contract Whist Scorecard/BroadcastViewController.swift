@@ -418,7 +418,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                 case "handState":
                     // Updated state to re-sync after a disconnect - should already have a scorepad view controller so just fill in state
                     let cardNumbers = data!["cards"] as! [Int]
-                    let hand = Hand(fromNumbers: cardNumbers)
+                    let hand = Hand(fromNumbers: cardNumbers, sorted: true)
                     let trick = data!["trick"] as! Int
                     let made = data!["made"] as! [Int]
                     let twos = data!["twos"] as! [Int]

@@ -27,7 +27,7 @@ class Pack {
         let pack = Pack.shuffle()
         let deal = Deal()
         for handNumber in 0...numberPlayers - 1 {
-            let hand = Hand(fromNumbers: Array(pack[(handNumber * numberCards)...(((handNumber + 1) * numberCards) - 1)]))
+            let hand = Hand(fromNumbers: Array(pack[(handNumber * numberCards)...(((handNumber + 1) * numberCards) - 1)]), sorted: true)
             deal.hands.append(hand)
         }
         return deal

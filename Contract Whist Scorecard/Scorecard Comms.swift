@@ -138,11 +138,21 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     public func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         if motion == .motionShake {
             
-            // Play sound
-            Utility.getActiveViewController()?.alertSound()
-            
-            // Reset all connections
-            self.commsDelegate?.reset()
+            if self.isHosting || self.isSharing {
+                
+                // Play sound
+                Utility.getActiveViewController()?.alertSound()
+                
+                if self.gameInProgress && self.handState != nil {
+                    // Game in progress - need to resend state - luckily have what we need in handState
+                    self.sendPlay(rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce, bonus2: self.handState.bonus2, suits: self.handState.suits)
+                    if self.isHosting {
+                        self.sendScores()
+                        self.sendHandState()
+                    }
+                }
+                
+            }
         }
     }
     

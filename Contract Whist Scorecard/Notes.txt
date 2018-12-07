@@ -49,9 +49,19 @@ Stop timer when exit broadcast
 Show players name rather than device for online games
 Avoid accessing AppDelegate not on main thread
 
+6.2 (1) ----------
+More reliable communication in internet game
+
+6.2 (2) ----------
+Avoid current trick being sorted and hence wrong player having wrong card after a resume
+
+6.2 (3) ----------
+Shake now sends refresh (or requests refresh) rather than resetting network
+
 Bugs fix now
 ------------
 In search dialogue (on iPad) if filter search any users who don't have a picture sometimes get changed to squares
+Refresh always leaves "last trick" disabled
 
 Short-term
 ----------

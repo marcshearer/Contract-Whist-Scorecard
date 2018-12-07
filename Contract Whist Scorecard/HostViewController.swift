@@ -312,6 +312,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 // Pop top element off the queue
                 let descriptor = self.queue[0].descriptor
                 let data = self.queue[0].data
+                let peer = self.queue[0].peer
                 self.queue.remove(at: 0)
                 
                 switch descriptor {
@@ -320,6 +321,9 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 case "played":
                     _ = self.scorecard.processCardPlayed(data: data! as Any as! [String : Any])
                     self.removeCardPlayed(data: data! as Any as! [String : Any])
+                case "refresh":
+                    // Remote device wants a refresh of the currentstate
+                    self.scorecard.refreshState(to: peer)
                 default:
                     break
                 }

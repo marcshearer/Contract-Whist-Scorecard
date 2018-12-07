@@ -138,20 +138,16 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     public func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         if motion == .motionShake {
             
+            // Play sound
+            Utility.getActiveViewController()?.alertSound()
+            
             if self.isHosting || self.isSharing {
+                // Refresh state to all devices
+                self.refreshState()
                 
-                // Play sound
-                Utility.getActiveViewController()?.alertSound()
-                
-                if self.gameInProgress && self.handState != nil {
-                    // Game in progress - need to resend state - luckily have what we need in handState
-                    self.sendPlay(rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce, bonus2: self.handState.bonus2, suits: self.handState.suits)
-                    if self.isHosting {
-                        self.sendScores()
-                        self.sendHandState()
-                    }
-                }
-                
+            } else {
+                // Request refresh
+                self.sendRefreshRequest()
             }
         }
     }
@@ -403,6 +399,22 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                                           to: commsPeer,
                                           matchEmail: self.enteredPlayer(playerNumber).playerMO!.email!)
                 self.sendAutoPlay()
+            }
+        }
+    }
+    
+    public func sendRefreshRequest() {
+         self.sendInstruction("refresh")
+    }
+    
+    public func refreshState(to commsPeer: CommsPeer! = nil) {
+        
+        if self.gameInProgress && self.handState != nil {
+            // Game in progress - need to resend state - luckily have what we need in handState
+            self.sendPlay(rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce, bonus2: self.handState.bonus2, suits: self.handState.suits, to: commsPeer)
+            if self.isHosting {
+                self.sendScores(to: commsPeer)
+                self.sendHandState(to: commsPeer)
             }
         }
     }

@@ -678,6 +678,7 @@ class ScorepadViewController: UIViewController,
             if recoveryMode && self.scorecard.isHosting {
                 // Recovering - resend hand state to other players
                 self.recovery.loadCurrentTrick()
+                self.recovery.loadLastTrick()
                 self.scorecard.sendHandState()
             }
         }

@@ -417,16 +417,24 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                     
                 case "handState":
                     // Updated state to re-sync after a disconnect - should already have a scorepad view controller so just fill in state
+                    var lastCards: [Card]!
+                    var lastToLead: Int!
                     let cardNumbers = data!["cards"] as! [Int]
                     let hand = Hand(fromNumbers: cardNumbers, sorted: true)
                     let trick = data!["trick"] as! Int
                     let made = data!["made"] as! [Int]
                     let twos = data!["twos"] as! [Int]
                     let trickCards = Hand(fromNumbers: data!["trickCards"] as! [Int]).cards
+                    if data!["lastCards"] != nil {
+                        lastCards = Hand(fromNumbers: data!["lastCards"] as! [Int]).cards
+                    }
                     let toLead = data!["toLead"] as! Int
+                    if data!["lastToLead"] != nil && data!["lastToLead"] as! Int >= 0 {
+                        lastToLead = data!["lastToLead"] as? Int
+                    }
                     let round = data!["round"] as! Int
                     
-                    self.playHand(peer: peer, dismiss: true, hand: hand, round: round, trick: trick, made: made, twos: twos, trickCards: trickCards, toLead: toLead)
+                    self.playHand(peer: peer, dismiss: true, hand: hand, round: round, trick: trick, made: made, twos: twos, trickCards: trickCards, toLead: toLead, lastCards: lastCards, lastToLead: lastToLead)
                     
                 // Special cases which are not transmitted but added to queue locally
                     
@@ -450,7 +458,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
         }
     }
     
-    private func playHand(peer: CommsPeer, dismiss: Bool = false, hand: Hand! = nil, round: Int! = nil, trick: Int! = nil, made: [Int]! = nil, twos: [Int]! = nil, trickCards: [Card]! = nil, toLead: Int! = nil) {
+    private func playHand(peer: CommsPeer, dismiss: Bool = false, hand: Hand! = nil, round: Int! = nil, trick: Int! = nil, made: [Int]! = nil, twos: [Int]! = nil, trickCards: [Card]! = nil, toLead: Int! = nil, lastCards: [Card]! = nil, lastToLead: Int! = nil) {
         
         if self.commsPurpose == .sharing || (self.thisPlayerNumber != nil && hand != nil) {
             if self.available.index(where: { $0.deviceName == peer.deviceName && $0.framework == peer.framework}) != nil {
@@ -462,10 +470,10 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
                     // Need to start a new scorecard?
                     if dismiss {
                         self.dismissAll(completion: {
-                            self.playHandScorecard(peer: peer, hand: hand, round: round, trick: trick, made: made, twos: twos, trickCards: trickCards, toLead: toLead)
+                            self.playHandScorecard(peer: peer, hand: hand, round: round, trick: trick, made: made, twos: twos, trickCards: trickCards, toLead: toLead, lastCards: lastCards, lastToLead: lastToLead)
                         })
                     } else if self.scorepadViewController == nil {
-                        self.playHandScorecard(peer: peer, hand: hand, round: round, trick: trick, made: made, twos: twos, trickCards: trickCards, toLead: toLead)
+                        self.playHandScorecard(peer: peer, hand: hand, round: round, trick: trick, made: made, twos: twos, trickCards: trickCards, toLead: toLead, lastCards: lastCards, lastToLead: lastToLead)
                     }
                 }
             } else {
@@ -475,14 +483,14 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
         processQueue()
     }
     
-    private func playHandScorecard(peer: CommsPeer, hand: Hand!, round: Int!, trick: Int!, made: [Int]!, twos: [Int]!, trickCards: [Card]!, toLead: Int!) {
+    private func playHandScorecard(peer: CommsPeer, hand: Hand!, round: Int!, trick: Int!, made: [Int]!, twos: [Int]!, trickCards: [Card]!, toLead: Int!, lastCards: [Card]!, lastToLead: Int! = nil) {
         var mode: CommsHandlerMode = .scorepad
         if self.commsPurpose == .playing {
             if round != nil {
                 self.scorecard.selectedRound = round
                 self.scorecard.maxEnteredRound = round
             }
-            self.scorecard.handState = HandState(enteredPlayerNumber: self.thisPlayerNumber, round: self.scorecard.selectedRound, dealerIs: self.scorecard.dealerIs, players: self.scorecard.currentPlayers, rounds: self.rounds, cards: self.cards, bounce: self.bounce, bonus2: self.bonus2, suits: self.suits, trick: trick, made: made, twos: twos, trickCards: trickCards, toLead: toLead)
+            self.scorecard.handState = HandState(enteredPlayerNumber: self.thisPlayerNumber, round: self.scorecard.selectedRound, dealerIs: self.scorecard.dealerIs, players: self.scorecard.currentPlayers, rounds: self.rounds, cards: self.cards, bounce: self.bounce, bonus2: self.bonus2, suits: self.suits, trick: trick, made: made, twos: twos, trickCards: trickCards, toLead: toLead, lastCards: lastCards, lastToLead: lastToLead)
             self.scorecard.handState.hand = hand
             mode = .playHand
         }

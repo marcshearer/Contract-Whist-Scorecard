@@ -159,6 +159,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             // Save hand and (blank) trick in case need to recover
             self.recovery.saveHands(deal: self.deal, made: self.handState.made, twos: self.handState.twos)
             self.recovery.saveTrick(toLead: self.handState.toLead, trickCards: [])
+            self.recovery.saveLastTrick(lastToLead: nil, lastCards: nil)
         }
     }
     
@@ -169,10 +170,6 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 if self.handState.hand == nil {
                     // Need to deal next hand
                     self.handState.hand = self.dealHand(cards: self.roundCards(self.handState.round, rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce))
-        
-                    // Save hand and (blank) trick in case need to recover
-                    self.recovery.saveHands(deal: self.deal, made: self.handState.made, twos: self.handState.twos)
-                    self.recovery.saveTrick(toLead: self.handState.toLead, trickCards: [])
                 }
                 
                 // Set up hands in computer player mode
@@ -394,7 +391,9 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                                                         "made"         : self.handState.made,
                                                         "twos"         : self.handState.twos,
                                                         "trickCards"   : Hand(fromCards: self.handState.trickCards).toNumbers(),
+                                                        "lastCards"    : Hand(fromCards: self.handState.lastCards).toNumbers(),
                                                         "toLead"       : self.handState.toLead,
+                                                        "lastToLead"   : self.handState.lastToLead ?? -1,
                                                         "round"        : self.handState.round],
                                           to: commsPeer,
                                           matchEmail: self.enteredPlayer(playerNumber).playerMO!.email!)
@@ -584,8 +583,13 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             self.handState.toPlay = self.handState.playerNumber(self.handState.trickCards.count + 1)
         }
         if self.isHosting {
-            // Save trick for recovery
+            // Save current and last trick for recovery
             self.recovery.saveTrick(toLead: self.handState.toLead!, trickCards: self.handState.trickCards)
+            if self.handState.trick <= 1 {
+                self.recovery.saveLastTrick(lastToLead: nil, lastCards: nil)
+            } else {
+                self.recovery.saveLastTrick(lastToLead: self.handState.lastToLead, lastCards: self.handState.lastCards)
+            }
         }
     }
     

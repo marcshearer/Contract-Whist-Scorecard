@@ -1053,7 +1053,7 @@ class HandState {
     public var finished: Bool!
     
     init(enteredPlayerNumber: Int, round: Int, dealerIs: Int, players: Int, rounds: Int, cards: [Int], bounce: Bool, bonus2: Bool, suits: [Suit],
-         trick: Int? = nil, made: [Int]? = nil, twos: [Int]? = nil, trickCards: [Card]? = nil, toLead: Int? = nil) {
+         trick: Int? = nil, made: [Int]? = nil, twos: [Int]? = nil, trickCards: [Card]? = nil, toLead: Int? = nil, lastCards: [Card]! = nil, lastToLead: Int! = nil) {
         self.enteredPlayerNumber = enteredPlayerNumber
         self.round = round
         self.players = players
@@ -1080,6 +1080,12 @@ class HandState {
         if toLead != nil {
             self.toLead = toLead
             self.toPlay = self.playerNumber(self.trickCards.count + 1)
+        }
+        if lastCards != nil {
+            self.lastCards = lastCards
+        }
+        if lastToLead != nil {
+            self.lastToLead = lastToLead
         }
     }
     

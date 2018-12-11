@@ -84,11 +84,16 @@ class Recovery {
     
     func saveTrick(toLead: Int, trickCards: [Card]) {
         UserDefaults.standard.set(toLead, forKey: "recoveryToLead")
-        var trickNumbers: [Int] = []
-        for card in trickCards {
-            trickNumbers.append(card.toNumber())
+        UserDefaults.standard.set(Hand(fromCards: trickCards).toNumbers(), forKey: "recoveryTrick")
+    }
+    
+    func saveLastTrick(lastToLead: Int!, lastCards: [Card]!) {
+        UserDefaults.standard.set(lastToLead, forKey: "recoveryLastToLead")
+        if lastCards == nil {
+            UserDefaults.standard.set(nil, forKey: "recoveryLastTrick")
+        } else {
+            UserDefaults.standard.set(Hand(fromCards: lastCards).toNumbers(), forKey: "recoveryLastTrick")
         }
-        UserDefaults.standard.set(trickNumbers, forKey: "recoveryTrick")
     }
     
     func saveLocationAndDate() {
@@ -260,9 +265,8 @@ class Recovery {
         // Set up player to lead
         scorecard.handState.toLead = UserDefaults.standard.integer(forKey: "recoveryToLead")
         // Get trick cards - will never be all cards since then would have been removed from hands
-        let trickCardNumbers: [Int] = UserDefaults.standard.array(forKey: "recoveryTrick") as! [Int]
-        scorecard.handState.trickCards = trickCardNumbers.map({Card(fromNumber: $0)})
-        scorecard.handState.toPlay = scorecard.handState.playerNumber(trickCardNumbers.count + 1)
+        scorecard.handState.trickCards = Hand(fromNumbers: UserDefaults.standard.array(forKey: "recoveryTrick") as! [Int]).cards
+        scorecard.handState.toPlay = scorecard.handState.playerNumber(scorecard.handState.trickCards.count + 1)
         // Remove cards in current trick from deal
         for (index, card) in self.scorecard.handState.trickCards.enumerated() {
             let playerNumber = self.scorecard.handState.playerNumber(index + 1)
@@ -278,5 +282,16 @@ class Recovery {
             trick += made
         }
         scorecard.handState.trick = min(trick + 1, self.scorecard.rounds)
+    }
+    
+    public func loadLastTrick() {
+        // Set up last player to lead
+        scorecard.handState.lastToLead = UserDefaults.standard.integer(forKey: "recoveryLastToLead")
+        // Get last trick cards
+        if scorecard.handState.lastToLead == nil || scorecard.handState.lastToLead <= 0 {
+            scorecard.handState.lastCards = []
+        } else {
+            scorecard.handState.lastCards = Hand(fromNumbers: UserDefaults.standard.array(forKey: "recoveryLastTrick") as! [Int]).cards
+        }
     }
 }

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -15,14 +14,13 @@
         <scene sceneID="GD7-Uz-hLB">
             <objects>
                 <viewController storyboardIdentifier="GameSetupViewController" title="Game Preview" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="M5N-Yi-C04" userLabel="Game Preview" customClass="GameSetupViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="cS1-0c-IBj"/>
-                        <viewControllerLayoutGuide type="bottom" id="3Zd-83-lpV"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="iUU-8s-ns4" userLabel="Game Preview View">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2QN-TN-Yp2" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                            </view>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ffW-WE-f4E">
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <constraints>
@@ -78,17 +76,17 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ljp-aT-UKz">
-                                                    <rect key="frame" x="8" y="2" width="39.5" height="40"/>
+                                                    <rect key="frame" x="8" y="2" width="40" height="40"/>
                                                     <subviews>
                                                         <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2rE-Pd-lRg">
-                                                            <rect key="frame" x="2" y="2" width="35.5" height="36"/>
+                                                            <rect key="frame" x="2" y="2" width="36" height="36"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="2rE-Pd-lRg" secondAttribute="height" multiplier="1:1" id="zrt-1n-L7F"/>
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TR6-ka-137">
-                                                            <rect key="frame" x="2" y="2" width="35.5" height="36"/>
+                                                            <rect key="frame" x="2" y="2" width="36" height="36"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="TR6-ka-137" secondAttribute="height" multiplier="1:1" id="kZ5-7g-9Gs"/>
                                                             </constraints>
@@ -111,14 +109,14 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="JJq-oJ-QJT">
-                                                    <rect key="frame" x="63.5" y="11.5" width="201.5" height="32"/>
+                                                    <rect key="frame" x="64" y="11" width="201" height="32"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bSJ-0W-aGl" userLabel="Dealer Button" customClass="TotalRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="273" y="15.5" width="44" height="13"/>
+                                                    <rect key="frame" x="273" y="15" width="44" height="13"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" relation="lessThanOrEqual" constant="44" id="8LB-9G-YsI"/>
@@ -127,7 +125,7 @@
                                                     <state key="normal" title="Button"/>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Dd-qR-woZ" userLabel="FaceTime">
-                                                    <rect key="frame" x="325" y="2.5" width="40" height="40"/>
+                                                    <rect key="frame" x="325" y="2" width="40" height="40"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="5Dd-qR-woZ" secondAttribute="height" multiplier="1:1" id="XFZ-CA-MVG"/>
                                                         <constraint firstAttribute="width" constant="40" id="osb-cr-gMo"/>
@@ -176,12 +174,12 @@
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Game Setup Action Cell Triangle" rowHeight="290" id="r5N-qG-hqd" customClass="GameSetupActionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="99.5" width="375" height="290"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="r5N-qG-hqd" id="aov-Ia-Wcc">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="r5N-qG-hqd" id="aov-Ia-Wcc">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="290"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" tag="1" contentMode="scaleAspectFit" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="69E-OW-LQ5" customClass="SideImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="17" y="11" width="341" height="80"/>
+                                                    <rect key="frame" x="17.5" y="11" width="341" height="80"/>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="341" id="Fg2-EV-nmR"/>
@@ -304,18 +302,23 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="ffW-WE-f4E" firstAttribute="top" secondItem="cS1-0c-IBj" secondAttribute="bottom" id="CEF-D5-lth"/>
-                            <constraint firstItem="c5K-bm-x10" firstAttribute="leading" secondItem="iUU-8s-ns4" secondAttribute="leading" id="Gu7-ig-Aqd"/>
+                            <constraint firstItem="2QN-TN-Yp2" firstAttribute="leading" secondItem="iUU-8s-ns4" secondAttribute="leading" id="5eh-QL-LSx"/>
+                            <constraint firstItem="ffW-WE-f4E" firstAttribute="top" secondItem="wSn-mE-2UN" secondAttribute="top" id="CEF-D5-lth"/>
+                            <constraint firstItem="c5K-bm-x10" firstAttribute="leading" secondItem="wSn-mE-2UN" secondAttribute="leading" id="Gu7-ig-Aqd"/>
                             <constraint firstItem="ffW-WE-f4E" firstAttribute="leading" secondItem="iUU-8s-ns4" secondAttribute="leading" id="JzB-y0-eHa"/>
-                            <constraint firstItem="E7h-Ll-Qym" firstAttribute="leading" secondItem="iUU-8s-ns4" secondAttribute="leading" constant="16" id="Ngq-ko-1oc"/>
-                            <constraint firstAttribute="trailing" secondItem="E7h-Ll-Qym" secondAttribute="trailing" constant="16" id="Oie-EV-ai6"/>
-                            <constraint firstAttribute="bottom" secondItem="c5K-bm-x10" secondAttribute="bottom" id="Xhf-Z4-CdP"/>
+                            <constraint firstItem="E7h-Ll-Qym" firstAttribute="leading" secondItem="wSn-mE-2UN" secondAttribute="leading" constant="16" id="Ngq-ko-1oc"/>
+                            <constraint firstItem="wSn-mE-2UN" firstAttribute="trailing" secondItem="E7h-Ll-Qym" secondAttribute="trailing" constant="16" id="Oie-EV-ai6"/>
+                            <constraint firstItem="2QN-TN-Yp2" firstAttribute="top" secondItem="iUU-8s-ns4" secondAttribute="top" id="Pqs-06-AB9"/>
+                            <constraint firstItem="2QN-TN-Yp2" firstAttribute="trailing" secondItem="iUU-8s-ns4" secondAttribute="trailing" id="VdM-H9-jKl"/>
+                            <constraint firstItem="wSn-mE-2UN" firstAttribute="bottom" secondItem="c5K-bm-x10" secondAttribute="bottom" id="Xhf-Z4-CdP"/>
                             <constraint firstItem="E7h-Ll-Qym" firstAttribute="top" secondItem="ffW-WE-f4E" secondAttribute="bottom" id="g44-my-Jak"/>
                             <constraint firstItem="c5K-bm-x10" firstAttribute="top" secondItem="ffW-WE-f4E" secondAttribute="bottom" id="hfF-tw-5fG"/>
                             <constraint firstAttribute="bottomMargin" secondItem="E7h-Ll-Qym" secondAttribute="bottom" constant="16" id="iLf-yT-o2F"/>
+                            <constraint firstItem="wSn-mE-2UN" firstAttribute="top" secondItem="2QN-TN-Yp2" secondAttribute="bottom" id="nSJ-Fw-9tK"/>
                             <constraint firstAttribute="trailing" secondItem="ffW-WE-f4E" secondAttribute="trailing" id="t8j-bC-T7F"/>
-                            <constraint firstAttribute="trailing" secondItem="c5K-bm-x10" secondAttribute="trailing" id="wZy-Fn-C4h"/>
+                            <constraint firstItem="wSn-mE-2UN" firstAttribute="trailing" secondItem="c5K-bm-x10" secondAttribute="trailing" id="wZy-Fn-C4h"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="wSn-mE-2UN"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="nmb-H1-Bc3" appends="YES" id="tXd-xD-PK6"/>
                             <outletCollection property="gestureRecognizers" destination="lM9-Xe-2y0" appends="YES" id="Ozh-gZ-y0l"/>

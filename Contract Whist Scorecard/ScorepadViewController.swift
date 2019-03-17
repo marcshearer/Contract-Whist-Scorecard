@@ -314,7 +314,7 @@ class ScorepadViewController: UIViewController,
     override internal func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         if lastNavBarHeight != navigationBar.frame.height || lastViewHeight != scorepadView.frame.height {
-            setupSize(to: scorepadView.frame.size)
+            setupSize(to: scorepadView.safeAreaLayoutGuide.layoutFrame.size)
             self.headerTableView.reloadData()
             self.bodyTableView.reloadData()
             self.footerTableView.reloadData()

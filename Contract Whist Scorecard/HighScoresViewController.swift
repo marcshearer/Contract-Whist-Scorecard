@@ -94,6 +94,11 @@ class HighScoresViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        let header = view as! UITableViewHeaderFooterView
+        ScorecardUI.sectionHeaderStyleView(header.backgroundView!)
+    }
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         let view = UITableViewHeaderFooterView()

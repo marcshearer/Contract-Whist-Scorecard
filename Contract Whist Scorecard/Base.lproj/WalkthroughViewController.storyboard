@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -14,16 +14,15 @@
         <scene sceneID="hsB-Wb-qeA">
             <objects>
                 <viewController storyboardIdentifier="WalkthroughViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="CZ4-zh-Aad" userLabel="Walkthrough" customClass="WalkthroughViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="WAO-C7-Ra8"/>
-                        <viewControllerLayoutGuide type="bottom" id="prb-px-CIu"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Q6F-gP-f2q">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0e6-gC-L9v" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                            </view>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jb7-3u-gPZ">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="0wg-PI-yG4"/>
                                     <constraint firstAttribute="height" relation="lessThanOrEqual" constant="44" id="OIL-98-UEc"/>
@@ -45,7 +44,7 @@
                                             </button>
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" id="YFF-cg-h4k">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="och-K9-T8l" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="och-K9-T8l" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                 <rect key="frame" x="307" y="7" width="52" height="30"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <gestureRecognizers/>
@@ -64,7 +63,7 @@
                                 </items>
                             </navigationBar>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="ofA-Gc-GQp">
-                                <rect key="frame" x="143.5" y="426" width="88" height="209"/>
+                                <rect key="frame" x="143.5" y="446" width="88" height="189"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -73,7 +72,7 @@
                                 <rect key="frame" x="96" y="630" width="183" height="37"/>
                             </pageControl>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WTF-gJ-Yco">
-                                <rect key="frame" x="44" y="56" width="287" height="362"/>
+                                <rect key="frame" x="44" y="76" width="287" height="362"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="287" id="e06-a6-3kI"/>
                                     <constraint firstAttribute="height" constant="362" id="q75-B8-V3R"/>
@@ -83,19 +82,24 @@
                         <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="prb-px-CIu" firstAttribute="top" secondItem="VPU-6g-ZC3" secondAttribute="bottom" id="0yb-Vx-ugB"/>
-                            <constraint firstItem="jb7-3u-gPZ" firstAttribute="top" secondItem="Q6F-gP-f2q" secondAttribute="top" id="7Nu-zq-0Ev"/>
+                            <constraint firstItem="qhp-Ul-ro7" firstAttribute="bottom" secondItem="VPU-6g-ZC3" secondAttribute="bottom" id="0yb-Vx-ugB"/>
+                            <constraint firstItem="jb7-3u-gPZ" firstAttribute="top" secondItem="qhp-Ul-ro7" secondAttribute="top" id="7Nu-zq-0Ev"/>
+                            <constraint firstItem="0e6-gC-L9v" firstAttribute="trailing" secondItem="Q6F-gP-f2q" secondAttribute="trailing" id="9XM-5r-RRQ"/>
+                            <constraint firstItem="0e6-gC-L9v" firstAttribute="leading" secondItem="Q6F-gP-f2q" secondAttribute="leading" id="cLA-Md-LsQ"/>
                             <constraint firstItem="jb7-3u-gPZ" firstAttribute="leading" secondItem="Q6F-gP-f2q" secondAttribute="leading" id="car-Zy-aD8"/>
                             <constraint firstItem="ofA-Gc-GQp" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Q6F-gP-f2q" secondAttribute="leadingMargin" constant="30" id="d4O-G2-iuT"/>
                             <constraint firstItem="WTF-gJ-Yco" firstAttribute="top" secondItem="jb7-3u-gPZ" secondAttribute="bottom" constant="12" id="hVJ-fl-dZt"/>
-                            <constraint firstItem="prb-px-CIu" firstAttribute="top" secondItem="ofA-Gc-GQp" secondAttribute="bottom" constant="32" id="hXD-Zl-vZX"/>
+                            <constraint firstItem="qhp-Ul-ro7" firstAttribute="bottom" secondItem="ofA-Gc-GQp" secondAttribute="bottom" constant="32" id="hXD-Zl-vZX"/>
                             <constraint firstAttribute="trailing" secondItem="jb7-3u-gPZ" secondAttribute="trailing" id="hfX-sX-Xda"/>
-                            <constraint firstItem="WTF-gJ-Yco" firstAttribute="centerX" secondItem="Q6F-gP-f2q" secondAttribute="centerX" id="qQL-qu-KO1"/>
+                            <constraint firstItem="WTF-gJ-Yco" firstAttribute="centerX" secondItem="qhp-Ul-ro7" secondAttribute="centerX" id="qQL-qu-KO1"/>
+                            <constraint firstItem="qhp-Ul-ro7" firstAttribute="top" secondItem="0e6-gC-L9v" secondAttribute="bottom" id="rkz-wp-rvQ"/>
                             <constraint firstItem="ofA-Gc-GQp" firstAttribute="centerX" secondItem="VPU-6g-ZC3" secondAttribute="centerX" id="xWW-mh-gcz"/>
-                            <constraint firstItem="VPU-6g-ZC3" firstAttribute="centerX" secondItem="Q6F-gP-f2q" secondAttribute="centerX" id="xje-uF-C0d"/>
+                            <constraint firstItem="VPU-6g-ZC3" firstAttribute="centerX" secondItem="qhp-Ul-ro7" secondAttribute="centerX" id="xje-uF-C0d"/>
+                            <constraint firstItem="0e6-gC-L9v" firstAttribute="top" secondItem="Q6F-gP-f2q" secondAttribute="top" id="xmJ-Kq-QA9"/>
                             <constraint firstItem="ofA-Gc-GQp" firstAttribute="top" secondItem="WTF-gJ-Yco" secondAttribute="bottom" constant="8" symbolic="YES" id="zXb-Q3-QIp"/>
                             <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="ofA-Gc-GQp" secondAttribute="trailing" constant="30" id="zfL-dT-Jvp"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="qhp-Ul-ro7"/>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <connections>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -15,27 +15,24 @@
         <scene sceneID="Wg3-yJ-Ux1">
             <objects>
                 <viewController storyboardIdentifier="SearchViewController" title="Search" useStoryboardIdentifierAsRestorationIdentifier="YES" id="qmE-4Z-KTg" customClass="SearchViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="qZQ-k0-bTc"/>
-                        <viewControllerLayoutGuide type="bottom" id="XDB-bE-5P5"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="fj5-OH-nui">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MUf-qi-Xw6">
-                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rd7-8i-rBz" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="667" height="0.0"/>
+                            </view>
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z8e-3N-7h5">
+                                <rect key="frame" x="0.0" y="0.0" width="667" height="44"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="fM2-gh-bhk"/>
+                                    <constraint firstAttribute="height" constant="44" id="dyU-Z3-aWN"/>
                                 </constraints>
-                                <textAttributes key="titleTextAttributes">
-                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </textAttributes>
+                                <color key="barTintColor" name="Banner"/>
                                 <items>
                                     <navigationItem title="Search" id="aj7-go-SOW">
                                         <barButtonItem key="leftBarButtonItem" id="dj8-cd-3dN">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="y7I-Zm-cNu" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="16" y="11" width="54" height="22"/>
+                                                <rect key="frame" x="20" y="5" width="54" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Back" image="back">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -47,7 +44,7 @@
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" id="l9A-Pe-7KF">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="YcS-ux-M1m" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="294" y="11" width="65" height="22"/>
+                                                <rect key="frame" x="582" y="5" width="65" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Select" image="forward"/>
                                                 <connections>
@@ -58,21 +55,21 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rCu-dO-Jhx" userLabel="Spacer">
-                                <rect key="frame" x="-4" y="64" width="383" height="10"/>
-                                <color key="backgroundColor" red="0.87267187570000004" green="0.87636111179999998" blue="0.87450980389999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="In1-Ye-GQs" userLabel="Spacer">
+                                <rect key="frame" x="0.0" y="44" width="667" height="10"/>
+                                <color key="backgroundColor" red="0.87450980392156863" green="0.87450980392156863" blue="0.87450980392156863" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="10" id="3t9-FG-wi9"/>
+                                    <constraint firstAttribute="height" constant="10" id="w40-6V-cID"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" verticalCompressionResistancePriority="250" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="slf-FU-hcP">
-                                <rect key="frame" x="-4" y="74" width="383" height="0.0"/>
+                                <rect key="frame" x="0.0" y="54" width="667" height="0.0"/>
                                 <color key="backgroundColor" red="0.87450980392156863" green="0.87636111179999998" blue="0.87450980392156863" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="21"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <searchBar contentMode="redraw" placeholder="Filter search list" translatesAutoresizingMaskIntoConstraints="NO" id="Rfb-9f-KJK" customClass="SearchBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="74" width="375" height="56"/>
+                                <rect key="frame" x="0.0" y="54" width="667" height="56"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="56" id="SBd-5H-h43"/>
                                 </constraints>
@@ -87,21 +84,21 @@
                                 </connections>
                             </searchBar>
                             <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ziC-nA-1Mj" userLabel="Separator">
-                                <rect key="frame" x="0.0" y="130" width="375" height="1"/>
+                                <rect key="frame" x="0.0" y="110" width="667" height="1"/>
                                 <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="1" id="5jA-1f-8Y4"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="RFU-ae-J30">
-                                <rect key="frame" x="0.0" y="131" width="375" height="536"/>
+                                <rect key="frame" x="0.0" y="111" width="667" height="264"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Player Cell" id="BYL-uh-znU" customClass="SearchTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="28" width="667" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="BYL-uh-znU" id="8qi-PF-nO8">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="667" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleAspectFit" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="E9w-Ac-PMU">
@@ -185,28 +182,33 @@
                                 </connections>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.87450980392156863" green="0.87450980392156863" blue="0.87450980392156863" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="In1-Ye-GQs" firstAttribute="leading" secondItem="fj5-OH-nui" secondAttribute="leading" id="0j5-eC-B36"/>
                             <constraint firstItem="Rfb-9f-KJK" firstAttribute="top" secondItem="slf-FU-hcP" secondAttribute="bottom" id="3kt-gJ-xyR"/>
+                            <constraint firstAttribute="trailing" secondItem="In1-Ye-GQs" secondAttribute="trailing" id="4XL-KR-Mpg"/>
+                            <constraint firstItem="cqr-dB-6Ii" firstAttribute="top" secondItem="rd7-8i-rBz" secondAttribute="bottom" id="7Lc-s4-Kl1"/>
                             <constraint firstItem="ziC-nA-1Mj" firstAttribute="leading" secondItem="fj5-OH-nui" secondAttribute="leading" id="7Mh-6Y-4zC"/>
-                            <constraint firstAttribute="trailing" secondItem="MUf-qi-Xw6" secondAttribute="trailing" id="8cw-lx-Pe2"/>
-                            <constraint firstItem="rCu-dO-Jhx" firstAttribute="leading" secondItem="fj5-OH-nui" secondAttribute="leadingMargin" constant="-20" id="IEI-Xq-Boj"/>
                             <constraint firstItem="RFU-ae-J30" firstAttribute="top" secondItem="ziC-nA-1Mj" secondAttribute="bottom" id="JIY-pz-CKr"/>
                             <constraint firstAttribute="trailing" secondItem="ziC-nA-1Mj" secondAttribute="trailing" id="JfD-gd-8gB"/>
-                            <constraint firstItem="rCu-dO-Jhx" firstAttribute="bottom" secondItem="slf-FU-hcP" secondAttribute="top" id="OgH-dZ-pUx"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="rCu-dO-Jhx" secondAttribute="trailing" constant="-20" id="TYE-ur-M00"/>
+                            <constraint firstItem="In1-Ye-GQs" firstAttribute="bottom" secondItem="slf-FU-hcP" secondAttribute="top" id="Lf3-GA-NVp"/>
+                            <constraint firstItem="rd7-8i-rBz" firstAttribute="leading" secondItem="fj5-OH-nui" secondAttribute="leading" id="Os8-ae-Hfc"/>
                             <constraint firstItem="ziC-nA-1Mj" firstAttribute="top" secondItem="Rfb-9f-KJK" secondAttribute="bottom" id="UAX-lE-SIw"/>
-                            <constraint firstItem="MUf-qi-Xw6" firstAttribute="leading" secondItem="fj5-OH-nui" secondAttribute="leading" id="UTJ-sW-qA7"/>
                             <constraint firstItem="Rfb-9f-KJK" firstAttribute="leading" secondItem="fj5-OH-nui" secondAttribute="leading" id="a3r-Ng-q13"/>
                             <constraint firstItem="RFU-ae-J30" firstAttribute="leading" secondItem="fj5-OH-nui" secondAttribute="leading" id="aQY-s5-ZZJ"/>
                             <constraint firstAttribute="trailing" secondItem="Rfb-9f-KJK" secondAttribute="trailing" id="cUJ-Sm-QpK"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="slf-FU-hcP" secondAttribute="trailing" constant="-20" id="h11-Zr-A5y"/>
-                            <constraint firstItem="rCu-dO-Jhx" firstAttribute="top" secondItem="MUf-qi-Xw6" secondAttribute="bottom" id="mok-OG-38b"/>
-                            <constraint firstItem="XDB-bE-5P5" firstAttribute="top" secondItem="RFU-ae-J30" secondAttribute="bottom" id="oLq-0e-0Xf"/>
-                            <constraint firstItem="MUf-qi-Xw6" firstAttribute="top" secondItem="qZQ-k0-bTc" secondAttribute="bottom" id="qaZ-3S-aZ8"/>
+                            <constraint firstItem="rd7-8i-rBz" firstAttribute="trailing" secondItem="fj5-OH-nui" secondAttribute="trailing" id="e2m-iP-2Hk"/>
+                            <constraint firstAttribute="trailing" secondItem="slf-FU-hcP" secondAttribute="trailing" id="h11-Zr-A5y"/>
+                            <constraint firstItem="z8e-3N-7h5" firstAttribute="leading" secondItem="fj5-OH-nui" secondAttribute="leading" id="h5l-OZ-Big"/>
+                            <constraint firstItem="rd7-8i-rBz" firstAttribute="top" secondItem="fj5-OH-nui" secondAttribute="top" id="jeo-V7-jqh"/>
+                            <constraint firstItem="In1-Ye-GQs" firstAttribute="top" secondItem="z8e-3N-7h5" secondAttribute="bottom" id="kbh-0x-1t1"/>
+                            <constraint firstItem="z8e-3N-7h5" firstAttribute="top" secondItem="cqr-dB-6Ii" secondAttribute="top" id="mDn-mO-HRz"/>
+                            <constraint firstAttribute="bottom" secondItem="RFU-ae-J30" secondAttribute="bottom" id="oLq-0e-0Xf"/>
                             <constraint firstAttribute="trailing" secondItem="RFU-ae-J30" secondAttribute="trailing" id="ssS-Jm-oea"/>
-                            <constraint firstItem="slf-FU-hcP" firstAttribute="leading" secondItem="fj5-OH-nui" secondAttribute="leadingMargin" constant="-20" id="sxc-yI-a90"/>
+                            <constraint firstItem="slf-FU-hcP" firstAttribute="leading" secondItem="fj5-OH-nui" secondAttribute="leading" id="sxc-yI-a90"/>
+                            <constraint firstAttribute="trailing" secondItem="z8e-3N-7h5" secondAttribute="trailing" id="uw8-kH-cRj"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="cqr-dB-6Ii"/>
                     </view>
                     <connections>
                         <outlet property="finishButton" destination="y7I-Zm-cNu" id="UlB-VL-qYh"/>
@@ -225,5 +227,8 @@
     <resources>
         <image name="back" width="14" height="20"/>
         <image name="forward" width="14" height="20"/>
+        <namedColor name="Banner">
+            <color red="0.33300000429153442" green="0.33300000429153442" blue="0.33300000429153442" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

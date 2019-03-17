@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,15 +19,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="22l-fD-ik1" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                                <color key="backgroundColor" red="0.40784313729999999" green="0.40784313729999999" blue="0.40784313729999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fNx-6D-Fun" userLabel="Title Padder">
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <color key="backgroundColor" name="Banner"/>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wym-eE-JCq">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bz4-29-ZE2" userLabel="Finish Button" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="4" y="8" width="20" height="22"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="22" id="Crn-Ak-eKy"/>
                                             <constraint firstAttribute="height" constant="22" id="Oj2-PZ-fM1"/>
-                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="20" id="epi-lg-2JL"/>
                                             <constraint firstAttribute="width" constant="20" id="qRg-cY-5nf"/>
                                         </constraints>
                                         <state key="normal" image="cross white"/>
@@ -36,7 +42,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="Mzm-ri-OLh">
-                                        <rect key="frame" x="162" y="0.0" width="50" height="50"/>
+                                        <rect key="frame" x="162.5" y="0.0" width="50" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="50" id="zLd-sh-GhW"/>
                                         </constraints>
@@ -45,20 +51,20 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="fRi-Eh-euY">
-                                        <rect key="frame" x="212" y="0.0" width="155" height="50"/>
+                                        <rect key="frame" x="212.5" y="0.0" width="154.5" height="44"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
-                                <color key="backgroundColor" red="0.40784313729999999" green="0.40784313729999999" blue="0.40784313729999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" name="Banner"/>
                                 <constraints>
                                     <constraint firstItem="Mzm-ri-OLh" firstAttribute="centerX" secondItem="wym-eE-JCq" secondAttribute="centerX" id="0qo-LI-wj1"/>
                                     <constraint firstAttribute="bottom" secondItem="Mzm-ri-OLh" secondAttribute="bottom" id="3aD-hb-7Nr"/>
                                     <constraint firstItem="fRi-Eh-euY" firstAttribute="leading" secondItem="Mzm-ri-OLh" secondAttribute="trailing" id="EPU-A0-Cq7"/>
                                     <constraint firstItem="bz4-29-ZE2" firstAttribute="top" secondItem="wym-eE-JCq" secondAttribute="top" constant="8" id="Iqo-Xd-c4W"/>
                                     <constraint firstAttribute="bottom" secondItem="fRi-Eh-euY" secondAttribute="bottom" id="J2b-JU-dKN"/>
-                                    <constraint firstAttribute="height" constant="50" id="MeZ-zx-Vfz"/>
+                                    <constraint firstAttribute="height" constant="44" id="MeZ-zx-Vfz"/>
                                     <constraint firstItem="bz4-29-ZE2" firstAttribute="leading" secondItem="wym-eE-JCq" secondAttribute="leading" constant="4" id="Y3E-mM-KId"/>
                                     <constraint firstItem="fRi-Eh-euY" firstAttribute="top" secondItem="wym-eE-JCq" secondAttribute="top" id="fqi-ph-sfj"/>
                                     <constraint firstItem="Mzm-ri-OLh" firstAttribute="top" secondItem="wym-eE-JCq" secondAttribute="top" id="hJq-4X-zwp"/>
@@ -240,11 +246,19 @@
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="wym-eE-JCq" firstAttribute="leading" secondItem="uOh-9P-zjM" secondAttribute="leading" id="1ba-c9-NNT"/>
-                            <constraint firstItem="wym-eE-JCq" firstAttribute="top" secondItem="mAZ-tv-8uT" secondAttribute="top" id="2SZ-li-HJP"/>
+                            <constraint firstItem="wym-eE-JCq" firstAttribute="top" secondItem="uOh-9P-zjM" secondAttribute="top" id="2SZ-li-HJP"/>
+                            <constraint firstItem="fNx-6D-Fun" firstAttribute="leading" secondItem="mAZ-tv-8uT" secondAttribute="leading" id="63W-PW-3ev"/>
                             <constraint firstItem="bab-Kf-C0n" firstAttribute="bottom" secondItem="uOh-9P-zjM" secondAttribute="bottom" id="IXb-ag-dMW"/>
                             <constraint firstItem="uOh-9P-zjM" firstAttribute="trailing" secondItem="wym-eE-JCq" secondAttribute="trailing" id="NOZ-Dn-5im"/>
+                            <constraint firstItem="fNx-6D-Fun" firstAttribute="trailing" secondItem="mAZ-tv-8uT" secondAttribute="trailing" id="P00-rR-Vtt"/>
+                            <constraint firstItem="22l-fD-ik1" firstAttribute="leading" secondItem="mAZ-tv-8uT" secondAttribute="leading" id="USZ-xN-NgD"/>
                             <constraint firstItem="bab-Kf-C0n" firstAttribute="leading" secondItem="uOh-9P-zjM" secondAttribute="leading" id="Vfb-nE-4nU"/>
+                            <constraint firstItem="fNx-6D-Fun" firstAttribute="top" secondItem="wym-eE-JCq" secondAttribute="top" id="ekz-Ew-faZ"/>
+                            <constraint firstItem="uOh-9P-zjM" firstAttribute="top" secondItem="22l-fD-ik1" secondAttribute="bottom" id="lhi-SZ-5yY"/>
+                            <constraint firstItem="22l-fD-ik1" firstAttribute="trailing" secondItem="mAZ-tv-8uT" secondAttribute="trailing" id="peZ-w8-cWX"/>
                             <constraint firstItem="uOh-9P-zjM" firstAttribute="trailing" secondItem="bab-Kf-C0n" secondAttribute="trailing" id="syb-op-Pdr"/>
+                            <constraint firstItem="fNx-6D-Fun" firstAttribute="bottom" secondItem="wym-eE-JCq" secondAttribute="bottom" id="vfa-hw-mrU"/>
+                            <constraint firstItem="22l-fD-ik1" firstAttribute="top" secondItem="mAZ-tv-8uT" secondAttribute="top" id="wsV-kz-X7A"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="uOh-9P-zjM"/>
                         <connections>
@@ -285,5 +299,8 @@
     </scenes>
     <resources>
         <image name="cross white" width="20" height="20"/>
+        <namedColor name="Banner">
+            <color red="0.33300000429153442" green="0.33300000429153442" blue="0.33300000429153442" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

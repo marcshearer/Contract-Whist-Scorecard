@@ -199,10 +199,9 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
         }
     }
     
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = UITableViewHeaderFooterView()
-        ScorecardUI.sectionHeaderStyleView(view)
-        return view
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        let header = view as! UITableViewHeaderFooterView
+        ScorecardUI.sectionHeaderStyleView(header.backgroundView!)
     }
 
     // MARK: - Action Handlers ========================================================================= -

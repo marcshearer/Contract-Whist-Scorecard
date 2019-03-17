@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -13,17 +14,46 @@
         <scene sceneID="Uey-IF-7Ov">
             <objects>
                 <viewController storyboardIdentifier="PlayerDetailViewController" title="Player Detail" useStoryboardIdentifierAsRestorationIdentifier="YES" id="bWc-Jl-GWH" customClass="PlayerDetailViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="b2Y-Rt-bYo"/>
-                        <viewControllerLayoutGuide type="bottom" id="2Lg-NS-h1i"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="rYz-bu-WB3">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" bounces="NO" showsHorizontalScrollIndicator="NO" canCancelContentTouches="NO" bouncesZoom="NO" keyboardDismissMode="interactive" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3Pf-sG-Che">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oEM-x6-cmp" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="0.0"/>
+                            </view>
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gXs-Is-mIL">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                <textAttributes key="titleTextAttributes">
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </textAttributes>
+                                <items>
+                                    <navigationItem title="Player Name" id="c5v-ql-NOg">
+                                        <barButtonItem key="leftBarButtonItem" id="PwO-mV-Smy">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="tailTruncation" id="nao-U2-GpM" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <rect key="frame" x="16" y="11" width="54" height="22"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" title="Back" image="back"/>
+                                                <connections>
+                                                    <action selector="finishButtonPressed:" destination="bWc-Jl-GWH" eventType="touchUpInside" id="Pe6-Ls-cAZ"/>
+                                                </connections>
+                                            </button>
+                                        </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" width="70" id="QGS-ra-h1h">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="9gf-xI-wrn" customClass="LightRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <rect key="frame" x="234" y="7" width="70" height="30"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <state key="normal" title="Delete"/>
+                                                <connections>
+                                                    <action selector="deleteButtonPressed:" destination="bWc-Jl-GWH" eventType="touchUpInside" id="8hc-Pp-iLr"/>
+                                                </connections>
+                                            </button>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" canCancelContentTouches="NO" bouncesZoom="NO" keyboardDismissMode="interactive" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3Pf-sG-Che">
                                 <rect key="frame" x="0.0" y="44" width="320" height="356"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Player Detail Header Single" rowHeight="20" id="Iqn-31-i02" customClass="PlayerDetailCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
@@ -423,45 +453,23 @@
                                     <outlet property="delegate" destination="bWc-Jl-GWH" id="JfU-Gb-vxH"/>
                                 </connections>
                             </tableView>
-                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gXs-Is-mIL">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                <textAttributes key="titleTextAttributes">
-                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </textAttributes>
-                                <items>
-                                    <navigationItem title="Player Name" id="c5v-ql-NOg">
-                                        <barButtonItem key="leftBarButtonItem" id="PwO-mV-Smy">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="tailTruncation" id="nao-U2-GpM" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="16" y="11" width="54" height="22"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Back" image="back"/>
-                                                <connections>
-                                                    <action selector="finishButtonPressed:" destination="bWc-Jl-GWH" eventType="touchUpInside" id="Pe6-Ls-cAZ"/>
-                                                </connections>
-                                            </button>
-                                        </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" width="70" id="QGS-ra-h1h">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="9gf-xI-wrn" customClass="LightRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="234" y="7" width="70" height="30"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <state key="normal" title="Delete"/>
-                                                <connections>
-                                                    <action selector="deleteButtonPressed:" destination="bWc-Jl-GWH" eventType="touchUpInside" id="8hc-Pp-iLr"/>
-                                                </connections>
-                                            </button>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="3Pf-sG-Che" firstAttribute="top" secondItem="gXs-Is-mIL" secondAttribute="bottom" id="9pn-2h-W7Z"/>
                             <constraint firstAttribute="trailing" secondItem="gXs-Is-mIL" secondAttribute="trailing" id="EON-Um-gyK"/>
+                            <constraint firstItem="o3W-OF-Z0q" firstAttribute="top" secondItem="oEM-x6-cmp" secondAttribute="bottom" id="Ihu-aU-clz"/>
+                            <constraint firstItem="3Pf-sG-Che" firstAttribute="bottom" secondItem="o3W-OF-Z0q" secondAttribute="bottom" id="KCV-FW-m3J"/>
+                            <constraint firstItem="3Pf-sG-Che" firstAttribute="trailing" secondItem="rYz-bu-WB3" secondAttribute="trailing" id="Nfe-di-RzQ"/>
+                            <constraint firstAttribute="trailing" secondItem="oEM-x6-cmp" secondAttribute="trailing" id="NkH-0z-lB0"/>
+                            <constraint firstItem="oEM-x6-cmp" firstAttribute="leading" secondItem="rYz-bu-WB3" secondAttribute="leading" id="QRZ-oN-kHQ"/>
                             <constraint firstItem="gXs-Is-mIL" firstAttribute="leading" secondItem="rYz-bu-WB3" secondAttribute="leading" id="f27-dE-BJr"/>
-                            <constraint firstItem="gXs-Is-mIL" firstAttribute="top" secondItem="rYz-bu-WB3" secondAttribute="top" id="kP6-IP-iQy"/>
+                            <constraint firstItem="gXs-Is-mIL" firstAttribute="top" secondItem="o3W-OF-Z0q" secondAttribute="top" id="kP6-IP-iQy"/>
+                            <constraint firstItem="3Pf-sG-Che" firstAttribute="leading" secondItem="rYz-bu-WB3" secondAttribute="leading" id="nKv-9x-RaD"/>
+                            <constraint firstItem="oEM-x6-cmp" firstAttribute="top" secondItem="rYz-bu-WB3" secondAttribute="top" id="uoA-ZN-1fQ"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="o3W-OF-Z0q"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="6D8-ix-WCm" appends="YES" id="17i-zB-GcS"/>
                             <outletCollection property="gestureRecognizers" destination="Lri-49-wlc" appends="YES" id="mAh-b9-qtK"/>

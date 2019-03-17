@@ -725,7 +725,7 @@ class BroadcastViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let header = view as! UITableViewHeaderFooterView
-        ScorecardUI.sectionHeaderStyleView(header)
+        ScorecardUI.sectionHeaderStyleView(header.backgroundView!)
         header.textLabel!.font = UIFont.boldSystemFont(ofSize: 18.0)
     }
     

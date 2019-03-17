@@ -105,6 +105,10 @@ There is a problem in collection views when you delete or insert items. You have
 Note that frame sizes are not correct yet until you get to viewDidAppear - you might have to avoid returning non-zero table view row count until you get to this point - see HandViewController
 Table views don't always scroll in Swift 4 - set   tableView.delaysContentTouches = TRUE (Best through User-Defined Runtime Attributes in Storyboard editor)
 To select a cell at initial display in a table view need to call cell.setSelected and tableView.selectRow from tableView.willDisplay (See SearchViewController)
+To make the navigation bar the same colour as other controls - set the tint color of the navigation bar to the colour you want and uncheck the translucent bar
+You can find the size outside the safe area using view.safeAreaInsets.top and view.safeAreaInsets.bottom etc
+You can get the size of the safe area using view.safeAreaLayoutGuide.layoutFrame
+To change the background colour of a section title in a TableView so that it still works on an iPhone X you have to set the colour of the backgroundView in willDisplayHeaderView (see HostViewController)
 To make an image transparent background use Preview. Click the toolbox and a toolbar appears. Select the wand. Drag a rectangle anywhere in background. Turns red. Press delete. File/Save.
 To remove menus from test scripts
     1,$s/[/][*][@]START_MENU_TOKEN[@][*][/]//g

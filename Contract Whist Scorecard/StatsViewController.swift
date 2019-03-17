@@ -54,7 +54,7 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
     @IBOutlet weak var finishButton: RoundedButton!
     @IBOutlet weak var navigationBar: UINavigationBar!
     @IBOutlet weak var toolbarViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var toolbarTopConstraint: NSLayoutConstraint!
+    @IBOutlet weak var footerPaddingTopConstraint: NSLayoutConstraint!
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     @IBAction func statsHidePlayer(segue:UIStoryboardSegue) {
@@ -194,7 +194,8 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         layoutComplete = true
-        setWidth(frame: statsView.frame)
+        setWidth(frame: statsView.safeAreaLayoutGuide.layoutFrame)
+        self.formatButtons()
         self.statsCollectionView.reloadData()
     }
     
@@ -229,11 +230,7 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
                              label: cell.playerDisc)
         
         cell.playerName.text = self.playerList[playerNumber-1].name
-        /*
-        if self.playerList[playerNumber-1].externalId != nil {
-            cell.playerName.text = cell.playerName.text! + " '\(self.playerList[playerNumber-1].externalId!)'" // TODO Remove or re-use possibly for Skype ID
-        }
-        */
+        
         cell.playerPlayed.text = "\(self.playerList[playerNumber-1].gamesPlayed)"
         cell.playerWon.text = "\(Utility.roundPercent(self.playerList[playerNumber-1].gamesWon, self.playerList[playerNumber-1].gamesPlayed)) %"
         cell.playerAverageScore.text = "\(Utility.roundQuotient(self.playerList[playerNumber-1].totalScore, self.playerList[playerNumber-1].gamesPlayed))"
@@ -361,10 +358,11 @@ class StatsViewController: UIViewController, UICollectionViewDelegate, UICollect
         finishButton.setImage(UIImage(named: self.backImage), for: .normal)
         finishButton.setTitle(self.backText)
         
-        if toolbarHeight != self.toolbarTopConstraint.constant {
-            self.toolbarViewHeightConstraint.constant = toolbarHeight
-            Utility.animate() {
-                self.toolbarTopConstraint.constant = toolbarHeight
+        let newToolbarTop = (toolbarHeight == 0 ? 44 : 44 + view.safeAreaInsets.bottom + toolbarHeight)
+        if newToolbarTop != self.toolbarViewHeightConstraint.constant {
+            // self.footerPaddingTopConstraint.constant = (toolbarHeight == 0 ? 0 : 44)
+            Utility.animate {
+                self.toolbarViewHeightConstraint.constant = newToolbarTop
             }
         }
     }

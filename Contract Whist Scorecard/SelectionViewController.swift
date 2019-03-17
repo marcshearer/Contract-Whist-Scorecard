@@ -90,8 +90,10 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
     }
 
     @IBAction func clearPressed(_ sender: UIButton) {
-        for _ in 1...selectedList.count {
-            removeSelection(1)
+        if selectedList.count > 0 {
+            for _ in 1...selectedList.count {
+                removeSelection(1)
+            }
         }
     }
 
@@ -140,9 +142,6 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
         scorecard.loadGameDefaults()
         assignPlayers()
         
-        // Decide if buttons enabled
-        formatButtons(false)
-        
         // Check if in recovery mode - if so (and found all players) go straight to game setup
         if scorecard.recoveryMode {
             if selectedList.count == scorecard.currentPlayers {
@@ -189,6 +188,9 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
             // Resize cells
             setWidth(size: selectionView.frame.size)
             firstTime = false
+            
+            // Decide if buttons enabled
+            formatButtons(false)
         }
     }
     
@@ -372,15 +374,14 @@ class SelectionViewController: UIViewController, UICollectionViewDelegate, UICol
         continueButton.isHidden = (selectedList.count >= 3 || testMode ? false : true)
         
         // Note the selected view extends 44 below the bottom of the screen. Setting the bottom constraint to zero makes the toolbar disappear
-        let toolbarBottom: CGFloat = (selectedList.count > 0 ? 44 : 0)
-        
-        if toolbarBottom != self.toolbarBottomConstraint.constant {
+        let toolbarBottomOffset: CGFloat = (selectedList.count > 0 ? 44 + self.view.safeAreaInsets.bottom : 0)
+        if toolbarBottomOffset != self.toolbarBottomConstraint.constant {
             if animated {
                 Utility.animate(duration: 0.3) {
-                    self.toolbarBottomConstraint.constant = toolbarBottom
+                    self.toolbarBottomConstraint.constant = toolbarBottomOffset
                 }
             } else {
-                self.toolbarBottomConstraint.constant = toolbarBottom
+                self.toolbarBottomConstraint.constant = toolbarBottomOffset
             }
         }
     }

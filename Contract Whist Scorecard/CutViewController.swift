@@ -45,8 +45,12 @@ class CutViewController: UIViewController {
     
     // UI component pointers
     private var playerCardView = [UIView?]()
+    private var playerBackView = [UIView?]()
     private var playerCardLabel = [UILabel?]()
     private var playerNameLabel = [UILabel?]()
+    
+    // Other
+    private var firstTime = true
 
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet weak private var cutToDealView: UIView!
@@ -56,6 +60,10 @@ class CutViewController: UIViewController {
     @IBOutlet weak private var player2CardView: UIView!
     @IBOutlet weak private var player3CardView: UIView!
     @IBOutlet weak private var player4CardView: UIView!
+    @IBOutlet weak private var player1BackView: UIView!
+    @IBOutlet weak private var player2BackView: UIView!
+    @IBOutlet weak private var player3BackView: UIView!
+    @IBOutlet weak private var player4BackView: UIView!
     @IBOutlet weak private var player1CardLabel: UILabel!
     @IBOutlet weak private var player2CardLabel: UILabel!
     @IBOutlet weak private var player3CardLabel: UILabel!
@@ -86,12 +94,16 @@ class CutViewController: UIViewController {
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-            scorecard.reCenterPopup(self)
+        scorecard.reCenterPopup(self)
+        self.view.setNeedsLayout()
     }
     
     override func viewWillLayoutSubviews() {
-        setupSize(to: cutToDealView.frame.size)
-        animateCut()
+        setupSize(to: cutToDealView.safeAreaLayoutGuide.layoutFrame)
+        if firstTime {
+            animateCut()
+            firstTime = false
+        }
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
@@ -109,52 +121,35 @@ class CutViewController: UIViewController {
     // MARK: - Form Presentation / Handling Routines =================================================== -
     
     private func animateCut() {
-        var cardBackView = [UIView]()
         
         // Hide the outcome
         outcomeLabel.alpha = 0.0
         
-        // Set up card backs for each card
-        for playerNumber in 1...self.playerName.count {
-            cardBackView.append(UIView())
-            cardBackView[playerNumber-1].backgroundColor = UIColor(red: CGFloat(0.0), green: CGFloat(0.0),
-                                                 blue: CGFloat(0.4), alpha: CGFloat(1.0))
-            cardBackView[playerNumber-1].frame = CGRect(x: playerCardView[playerNumber-1]!.frame.minX + 8,
-                                    y: playerCardView[playerNumber-1]!.frame.minY + 8,
-                                    width: playerCardView[playerNumber-1]!.frame.width - 16,
-                                    height: playerCardView[playerNumber-1]!.frame.height - 16)
-            playerCardView[0]!.superview!.addSubview(cardBackView[playerNumber-1])
-        }
-        
         // Animate card 1
         let animation = UIViewPropertyAnimator(duration: self.stepDuration, curve: .easeIn) {
-            cardBackView[0].alpha = 0.0
+            self.playerBackView[0]?.alpha = 0.0
         }
         animation.addCompletion( {_ in 
-            cardBackView[0].removeFromSuperview()
             
             // When complete animate card 2
             let animation = UIViewPropertyAnimator(duration: self.stepDuration, curve: .easeIn) {
-                cardBackView[1].alpha = 0.0
+                self.playerBackView[1]?.alpha = 0.0
             }
             animation.addCompletion( {_ in 
-                cardBackView[1].removeFromSuperview()
                 
                 // When complete animate card 3
                 let animation = UIViewPropertyAnimator(duration: self.stepDuration, curve: .easeIn) {
-                    cardBackView[2].alpha = 0.0
+                    self.playerBackView[2]?.alpha = 0.0
                 }
                 animation.addCompletion( {_ in 
-                    cardBackView[2].removeFromSuperview()
                     
                     // When complete animate card 4 (if 4 player game)
                     if self.playerName.count >= 4 {
                         
                         let animation = UIViewPropertyAnimator(duration: self.stepDuration, curve: .easeIn) {
-                            cardBackView[3].alpha = 0.0
+                            self.playerBackView[3]?.alpha = 0.0
                         }
                         animation.addCompletion( {_ in 
-                            cardBackView[3].removeFromSuperview()
                             
                            self.animateOutcome()
                         })
@@ -225,7 +220,7 @@ class CutViewController: UIViewController {
         animation.startAnimation()
     }
     
-    private func setupSize(to: CGSize) {
+    private func setupSize(to: CGRect) {
         height = to.height
         width = to.width
         minDimension = min(height, width)
@@ -252,8 +247,8 @@ class CutViewController: UIViewController {
         
         
         // Table Top
-        tableTopView.frame = CGRect(x: left,
-                                    y: top,
+        tableTopView.frame = CGRect(x: to.minX + left,
+                                    y: to.minY + top,
                                     width: minDimension,
                                     height: minDimension)
         
@@ -294,6 +289,17 @@ class CutViewController: UIViewController {
                                                 width: cardWidth,
                                                 height: cardHeight)
         
+        }
+        
+        // Card backs
+        
+        for playerNumber in 1...playerBackView.count {
+            
+            playerBackView[playerNumber - 1]!.frame = CGRect(x: playerCardView[playerNumber-1]!.frame.minX + 8,
+                                                            y: playerCardView[playerNumber-1]!.frame.minY + 8,
+                                                            width: playerCardView[playerNumber-1]!.frame.width - 16,
+                                                            height: playerCardView[playerNumber-1]!.frame.height - 16)
+            
         }
         
         // Name labels
@@ -383,6 +389,10 @@ class CutViewController: UIViewController {
         playerCardView.append(player2CardView)
         playerCardView.append(player3CardView)
         playerCardView.append(player4CardView)
+        playerBackView.append(player1BackView)
+        playerBackView.append(player2BackView)
+        playerBackView.append(player3BackView)
+        playerBackView.append(player4BackView)
         playerCardLabel.append(player1CardLabel)
         playerCardLabel.append(player2CardLabel)
         playerCardLabel.append(player3CardLabel)

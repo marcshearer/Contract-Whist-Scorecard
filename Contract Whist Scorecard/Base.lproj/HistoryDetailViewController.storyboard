@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -14,16 +14,15 @@
         <scene sceneID="lnl-WN-6N4">
             <objects>
                 <viewController storyboardIdentifier="HistoryDetailViewController" title="History Detail" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2Wg-gN-UgP" customClass="HistoryDetailViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="DJ7-pa-LVy"/>
-                        <viewControllerLayoutGuide type="bottom" id="f01-BK-kfe"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="BER-xO-Vlg">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hEU-UB-5K2" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                            </view>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y6r-2O-8jb">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </textAttributes>
@@ -48,7 +47,7 @@
                                 </items>
                             </navigationBar>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jfH-ib-leT" userLabel="Body View">
-                                <rect key="frame" x="0.0" y="44" width="375" height="623"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nDe-x0-Zfu">
                                         <rect key="frame" x="0.0" y="310" width="375" height="40"/>
@@ -124,13 +123,13 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="adH-9J-E1r">
-                                                            <rect key="frame" x="8" y="0.0" width="168" height="43"/>
+                                                            <rect key="frame" x="8" y="0.0" width="168" height="43.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Score" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="Gc4-eb-UX4">
-                                                            <rect key="frame" x="180" y="11" width="60" height="22"/>
+                                                            <rect key="frame" x="180" y="31" width="60" height="2"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="8nZ-AP-Qqg"/>
                                                             </constraints>
@@ -139,7 +138,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Made" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="h3I-Th-017">
-                                                            <rect key="frame" x="244" y="11" width="60" height="22"/>
+                                                            <rect key="frame" x="244" y="31" width="60" height="2"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="57R-0A-HUg"/>
                                                             </constraints>
@@ -148,7 +147,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Twos" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="zj4-QV-zjc">
-                                                            <rect key="frame" x="308" y="11" width="60" height="22"/>
+                                                            <rect key="frame" x="308" y="31" width="60" height="2"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="F7R-2q-5xR"/>
                                                             </constraints>
@@ -189,7 +188,7 @@
                                         </connections>
                                     </tableView>
                                     <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" rotateEnabled="NO" pitchEnabled="NO" showsPointsOfInterest="NO" showsScale="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e7x-Iq-giA">
-                                        <rect key="frame" x="0.0" y="350" width="375" height="273"/>
+                                        <rect key="frame" x="0.0" y="350" width="375" height="253"/>
                                     </mapView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -214,14 +213,19 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="Y6r-2O-8jb" firstAttribute="top" secondItem="BER-xO-Vlg" secondAttribute="top" id="0J4-Yh-io7"/>
+                            <constraint firstItem="Y6r-2O-8jb" firstAttribute="top" secondItem="SSv-xj-RMn" secondAttribute="top" id="0J4-Yh-io7"/>
                             <constraint firstItem="jfH-ib-leT" firstAttribute="leading" secondItem="BER-xO-Vlg" secondAttribute="leading" id="3D1-sv-TZq"/>
                             <constraint firstItem="Y6r-2O-8jb" firstAttribute="leading" secondItem="BER-xO-Vlg" secondAttribute="leading" id="IDe-dl-JcX"/>
+                            <constraint firstItem="hEU-UB-5K2" firstAttribute="leading" secondItem="BER-xO-Vlg" secondAttribute="leading" id="MY1-eh-O2p"/>
                             <constraint firstAttribute="trailing" secondItem="Y6r-2O-8jb" secondAttribute="trailing" id="TZ7-ak-gjI"/>
-                            <constraint firstItem="f01-BK-kfe" firstAttribute="top" secondItem="jfH-ib-leT" secondAttribute="bottom" id="ceb-Hx-oz8"/>
+                            <constraint firstAttribute="bottom" secondItem="jfH-ib-leT" secondAttribute="bottom" id="ceb-Hx-oz8"/>
                             <constraint firstAttribute="trailing" secondItem="jfH-ib-leT" secondAttribute="trailing" id="csu-zq-xhB"/>
                             <constraint firstItem="jfH-ib-leT" firstAttribute="top" secondItem="Y6r-2O-8jb" secondAttribute="bottom" id="ecK-a3-Vbn"/>
+                            <constraint firstItem="SSv-xj-RMn" firstAttribute="top" secondItem="hEU-UB-5K2" secondAttribute="bottom" id="o9z-72-CJY"/>
+                            <constraint firstItem="hEU-UB-5K2" firstAttribute="trailing" secondItem="BER-xO-Vlg" secondAttribute="trailing" id="xiJ-4e-ATq"/>
+                            <constraint firstItem="hEU-UB-5K2" firstAttribute="top" secondItem="BER-xO-Vlg" secondAttribute="top" id="yTJ-70-Pst"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="SSv-xj-RMn"/>
                     </view>
                     <connections>
                         <outlet property="actionButton" destination="qm5-ma-qEr" id="lHk-7q-OhZ"/>
@@ -231,6 +235,8 @@
                         <outlet property="finishButton" destination="C99-Bz-aQ9" id="NA8-zW-6a5"/>
                         <outlet property="locationBackground" destination="nDe-x0-Zfu" id="cTQ-uU-jKk"/>
                         <outlet property="locationBackgroundHeightConstraint" destination="rej-tX-Fpk" id="INR-iY-IA2"/>
+                        <outlet property="locationBackgroundLeadingConstraint" destination="pif-S3-Bjn" id="rc8-mq-Xws"/>
+                        <outlet property="locationBackgroundTrailingConstraint" destination="2sw-Zh-vCa" id="Kif-FC-b3f"/>
                         <outlet property="locationText" destination="OnX-jC-bPu" id="qFA-Od-Ohm"/>
                         <outlet property="mapView" destination="e7x-Iq-giA" id="bfl-gf-Id1"/>
                         <outlet property="participantTableView" destination="f3E-iU-lrl" id="W2x-Y7-mP5"/>

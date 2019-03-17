@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -14,14 +14,34 @@
         <scene sceneID="hlL-aM-BP7">
             <objects>
                 <viewController storyboardIdentifier="SyncViewController" title="Sync" useStoryboardIdentifierAsRestorationIdentifier="YES" id="kEX-6R-oYT" customClass="SyncViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="sRZ-8R-J16"/>
-                        <viewControllerLayoutGuide type="bottom" id="Ecm-91-VII"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleAspectFill" id="dRk-3e-k2c">
                         <rect key="frame" x="0.0" y="0.0" width="400" height="523"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vyU-iN-Rma" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="234" width="400" height="289"/>
+                            </view>
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pPE-oz-OCx">
+                                <rect key="frame" x="0.0" y="20" width="400" height="40"/>
+                                <color key="barTintColor" red="0.40784313729999999" green="0.40784313729999999" blue="0.40784313729999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <textAttributes key="titleTextAttributes">
+                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </textAttributes>
+                                <items>
+                                    <navigationItem title="Sync Players" id="QE3-YK-Vgx">
+                                        <barButtonItem key="leftBarButtonItem" id="UWK-Lf-2VC">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="4KG-BW-XxS" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <rect key="frame" x="20" y="11" width="54" height="22"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" title="Back" image="back"/>
+                                                <connections>
+                                                    <action selector="finishPressed:" destination="kEX-6R-oYT" eventType="touchUpInside" id="pgz-fF-SHv"/>
+                                                </connections>
+                                            </button>
+                                        </barButtonItem>
+                                    </navigationItem>
+                                </items>
+                            </navigationBar>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="965-CX-o1K">
                                 <rect key="frame" x="16" y="60" width="368" height="44"/>
                                 <constraints>
@@ -79,42 +99,29 @@
                                     <outlet property="delegate" destination="kEX-6R-oYT" id="jho-ga-5yq"/>
                                 </connections>
                             </tableView>
-                            <navigationBar contentMode="scaleToFill" fixedFrame="YES" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pPE-oz-OCx">
-                                <rect key="frame" x="0.0" y="-7" width="400" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <color key="barTintColor" red="0.40784313729999999" green="0.40784313729999999" blue="0.40784313729999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <textAttributes key="titleTextAttributes">
-                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </textAttributes>
-                                <items>
-                                    <navigationItem title="Sync Players" id="QE3-YK-Vgx">
-                                        <barButtonItem key="leftBarButtonItem" id="UWK-Lf-2VC">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="4KG-BW-XxS" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="11" width="54" height="22"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Back" image="back"/>
-                                                <connections>
-                                                    <action selector="finishPressed:" destination="kEX-6R-oYT" eventType="touchUpInside" id="pgz-fF-SHv"/>
-                                                </connections>
-                                            </button>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                            </navigationBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="Ecm-91-VII" firstAttribute="top" secondItem="Y7G-kk-6TA" secondAttribute="bottom" constant="20" id="4Nq-40-LA2"/>
+                            <constraint firstItem="Ye1-Hk-Ldd" firstAttribute="bottom" secondItem="Y7G-kk-6TA" secondAttribute="bottom" constant="20" id="4Nq-40-LA2"/>
                             <constraint firstItem="Y7G-kk-6TA" firstAttribute="leading" secondItem="dRk-3e-k2c" secondAttribute="leading" id="69e-A7-IEa"/>
-                            <constraint firstAttribute="trailing" secondItem="965-CX-o1K" secondAttribute="trailing" constant="16" id="Lrk-yv-g9N"/>
+                            <constraint firstItem="vyU-iN-Rma" firstAttribute="leading" secondItem="dRk-3e-k2c" secondAttribute="leading" id="8wm-ca-rbb"/>
+                            <constraint firstItem="vyU-iN-Rma" firstAttribute="top" secondItem="dRk-3e-k2c" secondAttribute="bottom" id="Hoa-Af-ttO"/>
+                            <constraint firstItem="Ye1-Hk-Ldd" firstAttribute="trailing" secondItem="965-CX-o1K" secondAttribute="trailing" constant="16" id="Lrk-yv-g9N"/>
                             <constraint firstItem="owS-TZ-KyE" firstAttribute="top" secondItem="965-CX-o1K" secondAttribute="bottom" constant="30" id="O8c-x2-XpK"/>
-                            <constraint firstItem="owS-TZ-KyE" firstAttribute="centerX" secondItem="dRk-3e-k2c" secondAttribute="centerX" id="bHv-Td-rSH"/>
-                            <constraint firstItem="965-CX-o1K" firstAttribute="leading" secondItem="dRk-3e-k2c" secondAttribute="leading" constant="16" id="r7d-wA-ZK3"/>
+                            <constraint firstItem="Ye1-Hk-Ldd" firstAttribute="top" secondItem="vyU-iN-Rma" secondAttribute="bottom" id="aNb-WI-aQ2"/>
+                            <constraint firstItem="owS-TZ-KyE" firstAttribute="centerX" secondItem="Ye1-Hk-Ldd" secondAttribute="centerX" id="bHv-Td-rSH"/>
+                            <constraint firstItem="965-CX-o1K" firstAttribute="top" secondItem="pPE-oz-OCx" secondAttribute="bottom" id="iba-yW-FFA"/>
+                            <constraint firstItem="965-CX-o1K" firstAttribute="leading" secondItem="Ye1-Hk-Ldd" secondAttribute="leading" constant="16" id="r7d-wA-ZK3"/>
                             <constraint firstItem="Y7G-kk-6TA" firstAttribute="top" secondItem="owS-TZ-KyE" secondAttribute="bottom" constant="29" id="s2N-ad-FE3"/>
+                            <constraint firstItem="pPE-oz-OCx" firstAttribute="top" secondItem="Ye1-Hk-Ldd" secondAttribute="top" id="ucZ-gK-yTQ"/>
                             <constraint firstAttribute="trailing" secondItem="Y7G-kk-6TA" secondAttribute="trailing" id="xrK-Mw-i0E"/>
-                            <constraint firstItem="965-CX-o1K" firstAttribute="top" secondItem="sRZ-8R-J16" secondAttribute="bottom" constant="40" id="z2q-hY-TZm"/>
+                            <constraint firstAttribute="trailing" secondItem="vyU-iN-Rma" secondAttribute="trailing" id="yBM-k1-cXj"/>
+                            <constraint firstItem="pPE-oz-OCx" firstAttribute="leading" secondItem="dRk-3e-k2c" secondAttribute="leading" id="yJd-0d-FDI"/>
+                            <constraint firstItem="pPE-oz-OCx" firstAttribute="trailing" secondItem="dRk-3e-k2c" secondAttribute="trailing" id="yTc-Ld-Kp8"/>
+                            <constraint firstItem="965-CX-o1K" firstAttribute="top" secondItem="Ye1-Hk-Ldd" secondAttribute="top" constant="40" id="z2q-hY-TZm"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="Ye1-Hk-Ldd"/>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="400" height="523"/>

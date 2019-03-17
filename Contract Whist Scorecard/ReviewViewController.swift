@@ -69,9 +69,9 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.setupWidth(totalWidth: self.view.frame.width)
-        self.setupHeight(totalHeight: self.view.frame.height)
-        self.setupPosition(totalHeight: self.view.frame.height, totalWidth: self.view.frame.width)
+        self.setupWidth(totalWidth: self.view.safeAreaLayoutGuide.layoutFrame.width)
+        self.setupHeight(totalHeight: self.view.safeAreaLayoutGuide.layoutFrame.height)
+        self.setupPosition(frame: self.view.safeAreaLayoutGuide.layoutFrame)
         for tableView in self.tableView {
             tableView.reloadData()
         }
@@ -174,12 +174,12 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
             self.overUnderLabel.isHidden = true
             self.titleView.backgroundColor = UIColor.clear
         } else {
-            self.titleHeight = (totalHeight < 500.0 ? 40.0 : 50.0)
-            self.titleViewHeight.constant = self.titleHeight
+            self.titleHeight = (ScorecardUI.landscapePhone() ? 35.0 : 44.0)
             self.roundTitleLabel.isHidden = false
             self.overUnderLabel.isHidden = false
             self.titleView.backgroundColor = UIColor.darkGray
         }
+        self.titleViewHeight.constant = self.titleHeight
         let useableHeight = totalHeight - 30.0 - titleHeight
         let totalRows = self.text[0].count + self.text[2].count
         rowHeight = min(30.0, useableHeight/CGFloat(totalRows))
@@ -211,7 +211,9 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
         dummyLabel.isHidden = true
     }
     
-    private func setupPosition(totalHeight: CGFloat, totalWidth: CGFloat) {
+    private func setupPosition(frame: CGRect) {
+        let totalHeight = frame.height
+        let totalWidth = frame.width
         let useableHeight = totalHeight - self.titleHeight
         let maxHeight = self.height.max()!
         let maxWidth = self.width.max()!
@@ -244,20 +246,20 @@ class ReviewViewController: UIViewController, UITableViewDataSource, UITableView
             tableTopView.isHidden = true
         } else {
             tableTopView.isHidden = false
-            self.tableTopView.frame = CGRect(x: (totalWidth - innerTableTopSize) / 2.0, y: offset + (useableHeight - innerTableTopSize) / 2.0, width: innerTableTopSize, height: innerTableTopSize)
+            self.tableTopView.frame = CGRect(x: frame.minX + (totalWidth - innerTableTopSize) / 2.0, y: frame.minY + offset + (useableHeight - innerTableTopSize) / 2.0, width: innerTableTopSize, height: innerTableTopSize)
         }
         
         // Setup hand 1
-        self.hand1TableView.frame = CGRect(x: (totalWidth - width[0]) / 2.0, y: offset + ((useableHeight - tableTopHeight) / 2.0) - height[0], width: width[0], height: height[0])
+        self.hand1TableView.frame = CGRect(x: frame.minX + (totalWidth - width[0]) / 2.0, y: frame.minY + offset + ((useableHeight - tableTopHeight) / 2.0) - height[0], width: width[0], height: height[0])
         
         // Setup hand 2
-        self.hand2TableView.frame = CGRect(x: (totalWidth + tableTopWidth) / 2.0, y: offset + ((useableHeight - height[1]) / 2.0), width: width[1], height: height[1])
+        self.hand2TableView.frame = CGRect(x: (totalWidth + tableTopWidth) / 2.0, y: frame.minY + offset + ((useableHeight - height[1]) / 2.0), width: width[1], height: height[1])
         
         // Setup hand 3
-        self.hand3TableView.frame = CGRect(x: (totalWidth - width[2]) / 2.0, y: offset + ((useableHeight + tableTopHeight) / 2.0), width: width[2], height: height[2])
+        self.hand3TableView.frame = CGRect(x: frame.minX + (totalWidth - width[2]) / 2.0, y: frame.minY + offset + ((useableHeight + tableTopHeight) / 2.0), width: width[2], height: height[2])
         
         // Setup hand 4
-        self.hand4TableView.frame = CGRect(x: ((totalWidth - tableTopWidth) / 2.0) - width[3], y: offset + ((useableHeight - height[3]) / 2.0), width: width[3], height: height[3])
+        self.hand4TableView.frame = CGRect(x: frame.minX + ((totalWidth - tableTopWidth) / 2.0) - width[3], y: frame.minY + offset + ((useableHeight - height[3]) / 2.0), width: width[3], height: height[3])
         
     }
     

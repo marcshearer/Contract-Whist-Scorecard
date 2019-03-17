@@ -665,11 +665,6 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
             
         case "showBroadcast":
             let destination = segue.destination as! BroadcastViewController
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = welcomeView
-            destination.preferredContentSize = CGSize(width: 400, height: 600)
-            destination.popoverPresentationController?.delegate = self
             destination.returnSegue = "hideBroadcast"
             destination.backImage = "home"
             destination.backText = ""

@@ -32,6 +32,8 @@ class HistoryDetailViewController: UIViewController, UITableViewDataSource, UITa
     @IBOutlet var locationText: UILabel!
     @IBOutlet var locationBackground: UIView!
     @IBOutlet weak var locationBackgroundHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var locationBackgroundLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var locationBackgroundTrailingConstraint: NSLayoutConstraint!
     @IBOutlet var mapView: MKMapView!
     @IBOutlet weak var participantTableViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var titleNavigationItem: UINavigationItem!
@@ -116,6 +118,14 @@ class HistoryDetailViewController: UIViewController, UITableViewDataSource, UITa
         super.viewWillTransition(to: size, with: coordinator)
         
         scorecard.reCenterPopup(self)
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        // Allow for safe area in layout indents
+        locationBackgroundLeadingConstraint.constant = view.safeAreaInsets.left + 8
+        locationBackgroundTrailingConstraint.constant = view.safeAreaInsets.right + 8
     }
     
     // MARK: - TableView Overrides ===================================================================== -

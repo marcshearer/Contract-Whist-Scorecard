@@ -26,20 +26,20 @@ class ComparisonViewController: UIViewController, UITableViewDataSource, UITable
 
     // Local class variables
     let availableFields = [
-        Field("name",         "Player Name",      sequence: 1,     width: 80 , hide: false, align: NSTextAlignment.center),
+        Field("name",         "Player Name",      sequence: 1,     width: 80),
         Field("detail",       "",                 sequence: 13,    width: 40),
-        Field("gamesPlayed",  "Games Played",     sequence: 2,     width: 80),
-        Field("gamesWon",     "Games Won",        sequence: 3,     width: 80),
-        Field("gamesWon%",    "Games Won %",      sequence: 4,     width: 80),
+        Field("gamesPlayed",  "Games Played",     sequence: 2,     width: 75),
+        Field("gamesWon%",    "Games Won %",      sequence: 4,     width: 75),
+        Field("gamesWon",     "Games Won",        sequence: 3,     width: 75),
         Field("graph",        "",                 sequence: 12,    width: 50),
         Field("thumbnail",    "",                 sequence: 0,     width: 60),
-        Field("averageScore", "Average Score",    sequence: 6,     width: 80),
-        Field("handsMade%",   "Hands Made %",     sequence: 9,     width: 80),
-        Field("twosMade%",    "Twos Made %",      sequence: 11,    width: 80 , hide: true),
-        Field("totalScore",   "Total Score",      sequence: 5,     width: 80),
-        Field("handsMade",    "Hands Made",       sequence: 8,     width: 80),
-        Field("twosMade",     "Twos Made",        sequence: 10,    width: 80 , hide: true),
-        Field("handsPlayed",  "Hands Played",     sequence: 7,     width: 80),
+        Field("averageScore", "Average Score",    sequence: 6,     width: 75),
+        Field("handsMade%",   "Hands Made %",     sequence: 9,     width: 75),
+        Field("twosMade%",    "Twos Made %",      sequence: 11,    width: 75 , hide: true),
+        Field("totalScore",   "Total Score",      sequence: 5,     width: 75),
+        Field("handsMade",    "Hands Made",       sequence: 8,     width: 75),
+        Field("twosMade",     "Twos Made",        sequence: 10,    width: 75 , hide: true),
+        Field("handsPlayed",  "Hands Played",     sequence: 7,     width: 75),
     ]
 
 
@@ -180,7 +180,7 @@ class ComparisonViewController: UIViewController, UITableViewDataSource, UITable
     
     override func viewWillLayoutSubviews() {
         if firstTime {
-            checkFieldDisplay(to: comparisonView.frame.size)
+            checkFieldDisplay(to: comparisonView.safeAreaLayoutGuide.layoutFrame.size)
             firstTime = true
         }
     }
@@ -229,6 +229,7 @@ class ComparisonViewController: UIViewController, UITableViewDataSource, UITable
     
     func checkFieldDisplay(to size: CGSize) {
         // Check how many fields we can display
+        var skipping = false
         let availableWidth = size.width - paddingWidth // Allow for padding each end and detail button
         var widthRemaining = availableWidth
         var nameColumn = 0
@@ -237,14 +238,18 @@ class ComparisonViewController: UIViewController, UITableViewDataSource, UITable
         for field in 0...availableFields.count-1 {
             if !availableFields[field].hide || scorecard.settingBonus2 {
                 
-                // Include if space
-                if availableFields[field].width <= widthRemaining {
-                    widthRemaining -= availableFields[field].width
-                    displayedFields.append(Field(availableFields[field].field,
-                                                               availableFields[field].title,
-                                                               sequence: availableFields[field].sequence,
-                                                               width: availableFields[field].width,
-                                                               align: availableFields[field].align))
+                // Include if space and not already skipping
+                if !skipping {
+                    if availableFields[field].width <= widthRemaining {
+                        widthRemaining -= availableFields[field].width
+                        displayedFields.append(Field(availableFields[field].field,
+                                                                   availableFields[field].title,
+                                                                   sequence: availableFields[field].sequence,
+                                                                   width: availableFields[field].width,
+                                                                   align: availableFields[field].align))
+                    } else {
+                        skipping = true
+                    }
                 }
             }
         }

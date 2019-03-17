@@ -24,8 +24,8 @@ class ScorecardUI {
     static let sectionHeadingBackgroundColor = totalColor
     static let madeContractBackgroundColor = UIColor(red: CGFloat(1.0), green: CGFloat(0.7),
                                                 blue: CGFloat(0.7), alpha: CGFloat(1.0))
-    static let bannerColor = UIColor(red: CGFloat(0.408), green: CGFloat(0.408), blue: CGFloat(0.408), alpha: CGFloat(1.0))
-    static let tableTopColor = UIColor(red: 0.0, green: CGFloat(162/255), blue: 0.0, alpha: 1.0)
+    static let bannerColor = emphasisColor
+    static let tableTopColor = UIColor(red: 0.0, green: 0.635, blue: 0.0, alpha: 1.0)
 
     class func roundCorners(_ view: UIView) {
         view.layer.cornerRadius = 5

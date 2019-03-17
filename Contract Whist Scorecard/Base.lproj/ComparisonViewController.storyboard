@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -13,14 +14,13 @@
         <scene sceneID="RZz-A7-732">
             <objects>
                 <viewController storyboardIdentifier="ComparisonViewController" title="Comparison" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FsR-Kn-dnU" customClass="ComparisonViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="wLf-Np-296"/>
-                        <viewControllerLayoutGuide type="bottom" id="1nA-8n-RTy"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="5eb-gD-VJV">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P6c-mS-fXT" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="-603" width="375" height="623"/>
+                            </view>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H5B-2k-XF2">
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <textAttributes key="titleTextAttributes">
@@ -371,17 +371,22 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="1nA-8n-RTy" firstAttribute="top" secondItem="zs1-6Q-Kuk" secondAttribute="bottom" id="AYq-rs-Ksq"/>
-                            <constraint firstItem="H5B-2k-XF2" firstAttribute="top" secondItem="wLf-Np-296" secondAttribute="bottom" id="Ag6-uh-bWj"/>
+                            <constraint firstItem="P6c-mS-fXT" firstAttribute="top" secondItem="5eb-gD-VJV" secondAttribute="top" constant="-603" id="0YQ-Bk-SQG"/>
+                            <constraint firstItem="X5U-rg-RZw" firstAttribute="top" secondItem="P6c-mS-fXT" secondAttribute="bottom" id="4aE-Yi-jat"/>
+                            <constraint firstItem="X5U-rg-RZw" firstAttribute="bottom" secondItem="zs1-6Q-Kuk" secondAttribute="bottom" id="AYq-rs-Ksq"/>
+                            <constraint firstItem="H5B-2k-XF2" firstAttribute="top" secondItem="X5U-rg-RZw" secondAttribute="top" id="Ag6-uh-bWj"/>
                             <constraint firstAttribute="trailing" secondItem="zs1-6Q-Kuk" secondAttribute="trailing" id="B16-Gk-bwo"/>
                             <constraint firstItem="55F-UG-Ned" firstAttribute="top" secondItem="H5B-2k-XF2" secondAttribute="bottom" id="Jil-nc-t11"/>
+                            <constraint firstItem="P6c-mS-fXT" firstAttribute="trailing" secondItem="5eb-gD-VJV" secondAttribute="trailing" id="NMj-z3-Fkn"/>
                             <constraint firstItem="55F-UG-Ned" firstAttribute="leading" secondItem="5eb-gD-VJV" secondAttribute="leading" id="NYN-Gm-kRP"/>
                             <constraint firstItem="zs1-6Q-Kuk" firstAttribute="top" secondItem="55F-UG-Ned" secondAttribute="bottom" id="dXd-W9-svZ"/>
                             <constraint firstItem="H5B-2k-XF2" firstAttribute="leading" secondItem="5eb-gD-VJV" secondAttribute="leading" id="mHz-Kd-0dA"/>
                             <constraint firstAttribute="trailing" secondItem="55F-UG-Ned" secondAttribute="trailing" id="oFX-8X-2oA"/>
                             <constraint firstAttribute="trailing" secondItem="H5B-2k-XF2" secondAttribute="trailing" id="tty-9P-u0a"/>
+                            <constraint firstItem="P6c-mS-fXT" firstAttribute="leading" secondItem="5eb-gD-VJV" secondAttribute="leading" id="u1X-IP-DTs"/>
                             <constraint firstItem="zs1-6Q-Kuk" firstAttribute="leading" secondItem="5eb-gD-VJV" secondAttribute="leading" id="uAB-D1-Lfy"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="X5U-rg-RZw"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="sN4-Nw-Os5" appends="YES" id="ZDb-sh-l49"/>
                         </connections>

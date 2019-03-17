@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -13,10 +14,6 @@
         <scene sceneID="qJp-yc-8it">
             <objects>
                 <viewController storyboardIdentifier="GameSummaryViewController" title="Game Summary" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2Ye-nN-zMs" customClass="GameSummaryViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="7Zw-sB-RrN"/>
-                        <viewControllerLayoutGuide type="bottom" id="iAa-HM-VbG"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="dDC-WM-Jrb" userLabel="Game Summary View">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -35,7 +32,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bHZ-lK-RLV" userLabel="Game Summary Table View">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="646"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="626"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Game Summary Header" rowHeight="140" id="jLB-kS-FZ8" customClass="GameSummaryTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
@@ -303,17 +300,18 @@
                         <color key="backgroundColor" red="0.4079226553440094" green="0.40791574120521545" blue="0.40792429447174072" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="bHZ-lK-RLV" firstAttribute="top" secondItem="dDC-WM-Jrb" secondAttribute="top" id="1D9-d1-hv7"/>
+                            <constraint firstItem="bHZ-lK-RLV" firstAttribute="top" secondItem="QwS-ao-9CA" secondAttribute="top" id="1D9-d1-hv7"/>
                             <constraint firstItem="9uo-b0-008" firstAttribute="top" secondItem="bHZ-lK-RLV" secondAttribute="bottom" id="2La-gN-fOM"/>
-                            <constraint firstItem="iAa-HM-VbG" firstAttribute="top" secondItem="9uo-b0-008" secondAttribute="bottom" id="5k2-5G-QTZ"/>
-                            <constraint firstItem="bHZ-lK-RLV" firstAttribute="leading" secondItem="dDC-WM-Jrb" secondAttribute="leading" id="7YP-Ok-WoK"/>
-                            <constraint firstAttribute="trailing" secondItem="bHZ-lK-RLV" secondAttribute="trailing" id="EBA-yY-Nh9"/>
-                            <constraint firstItem="9uo-b0-008" firstAttribute="leading" secondItem="dDC-WM-Jrb" secondAttribute="leading" constant="8" id="FoI-t8-QVf"/>
-                            <constraint firstItem="k0v-pi-t17" firstAttribute="top" secondItem="7Zw-sB-RrN" secondAttribute="bottom" constant="130" id="Hk9-oD-jXg"/>
-                            <constraint firstAttribute="trailing" secondItem="9uo-b0-008" secondAttribute="trailing" constant="8" id="h9r-kQ-ecN"/>
+                            <constraint firstItem="QwS-ao-9CA" firstAttribute="bottom" secondItem="9uo-b0-008" secondAttribute="bottom" id="5k2-5G-QTZ"/>
+                            <constraint firstItem="bHZ-lK-RLV" firstAttribute="leading" secondItem="QwS-ao-9CA" secondAttribute="leading" id="7YP-Ok-WoK"/>
+                            <constraint firstItem="QwS-ao-9CA" firstAttribute="trailing" secondItem="bHZ-lK-RLV" secondAttribute="trailing" id="EBA-yY-Nh9"/>
+                            <constraint firstItem="9uo-b0-008" firstAttribute="leading" secondItem="QwS-ao-9CA" secondAttribute="leading" constant="8" id="FoI-t8-QVf"/>
+                            <constraint firstItem="k0v-pi-t17" firstAttribute="top" secondItem="QwS-ao-9CA" secondAttribute="top" constant="130" id="Hk9-oD-jXg"/>
+                            <constraint firstItem="QwS-ao-9CA" firstAttribute="trailing" secondItem="9uo-b0-008" secondAttribute="trailing" constant="8" id="h9r-kQ-ecN"/>
                             <constraint firstAttribute="trailingMargin" secondItem="k0v-pi-t17" secondAttribute="trailing" constant="126" id="mML-nD-w4Q"/>
                             <constraint firstItem="k0v-pi-t17" firstAttribute="leading" secondItem="dDC-WM-Jrb" secondAttribute="leadingMargin" constant="125" id="tRn-kH-1Sf"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="QwS-ao-9CA"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="zEq-NV-S5h" appends="YES" id="R6T-pD-IPu"/>
                             <outletCollection property="gestureRecognizers" destination="eQO-xa-QSi" appends="YES" id="40n-7b-r6y"/>

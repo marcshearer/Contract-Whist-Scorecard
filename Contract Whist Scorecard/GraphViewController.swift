@@ -20,8 +20,6 @@ class GraphViewController: UIViewController, GraphDetailDelegate {
     var gameDetail: HistoryGame!
     var returnSegue: String!
     
-    // Local class variables
-    
     // UI component pointers
     @IBOutlet weak var graphView: GraphView!
     
@@ -47,16 +45,20 @@ class GraphViewController: UIViewController, GraphDetailDelegate {
         super.viewWillTransition(to: size, with: coordinator)
         
         scorecard.reCenterPopup(self)
-        drawGraph(size: size)
-    
+        view.setNeedsLayout()
     }
     
-    func drawGraph(size: CGSize = UIScreen.main.bounds.size) {
+    override func viewWillLayoutSubviews() {
+        drawGraph(frame: graphView.frame)
+        graphView.setNeedsDisplay()
+    }
+    
+    func drawGraph(frame: CGRect = UIScreen.main.bounds) {
         var values: [CGFloat] = []
         var drillRef: [String] = []
         var xAxisLabels: [String] = []
         let phoneSize = ScorecardUI.phoneSize()
-        let portraitPhoneSize = phoneSize && size.height > size.width
+        let portraitPhoneSize = phoneSize && frame.height > frame.width
         let showLimit = (portraitPhoneSize ? 12 : (phoneSize ? 25 : 50))
         let participantList = History.getParticipantRecordsForPlayer(playerEmail: playerDetail.email, includeBF: false)
         
@@ -119,9 +121,6 @@ class GraphViewController: UIViewController, GraphDetailDelegate {
             }
             
             graphView.addTitle(title: "Game Score History for \(playerDetail.name)")
-            
-            graphView.setNeedsDisplay()
-            
         }
     }
     

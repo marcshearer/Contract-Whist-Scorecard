@@ -82,6 +82,7 @@
 		B288FAC21FB80A0900633FD7 /* Test Utility Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B288FAC11FB80A0900633FD7 /* Test Utility Class.swift */; };
 		B288FAC41FB80A4F00633FD7 /* Whist Test Utility Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B288FAC31FB80A4F00633FD7 /* Whist Test Utility Class.swift */; };
 		B28DFC2D1F79618700E991E4 /* Config Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28DFC2C1F79618700E991E4 /* Config Class.swift */; };
+		B29FFF31223BA302002C01FE /* Inset Padding.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29FFF30223BA302002C01FE /* Inset Padding.swift */; };
 		B2B180122110128C008D3BAA /* (null) in Sources */ = {isa = PBXBuildFile; };
 		B2B180142114AD92008D3BAA /* (null) in Sources */ = {isa = PBXBuildFile; };
 		B2B1801D21195FB0008D3BAA /* Computer Bidding.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B1801C21195FB0008D3BAA /* Computer Bidding.swift */; };
@@ -260,6 +261,7 @@
 		B288FAC11FB80A0900633FD7 /* Test Utility Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Test Utility Class.swift"; sourceTree = "<group>"; };
 		B288FAC31FB80A4F00633FD7 /* Whist Test Utility Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Whist Test Utility Class.swift"; sourceTree = "<group>"; };
 		B28DFC2C1F79618700E991E4 /* Config Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Config Class.swift"; sourceTree = "<group>"; };
+		B29FFF30223BA302002C01FE /* Inset Padding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Inset Padding.swift"; sourceTree = "<group>"; };
 		B2B1801C21195FB0008D3BAA /* Computer Bidding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Computer Bidding.swift"; sourceTree = "<group>"; };
 		B2B1801E21195FBC008D3BAA /* Computer Player Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Computer Player Class.swift"; sourceTree = "<group>"; };
 		B2B1802021195FFA008D3BAA /* Contract Whist Scorecard.pages */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Contract Whist Scorecard.pages"; sourceTree = "<group>"; };
@@ -741,6 +743,7 @@
 				B20A66FB1E23921E00E75190 /* Buttons.swift */,
 				B2BC51C61F7B5E8C0065F07D /* String Extensions.swift */,
 				B2F41B221FB6BBA70043F974 /* Other Extensions.swift */,
+				B29FFF30223BA302002C01FE /* Inset Padding.swift */,
 			);
 			name = "Core Class Extensions";
 			sourceTree = "<group>";
@@ -1259,6 +1262,7 @@
 				B2B1801F21195FBC008D3BAA /* Computer Player Class.swift in Sources */,
 				49410E501DF1A712000BDA6D /* Scorecard Class.swift in Sources */,
 				B2B7550D1E619A3F00B1313B /* DataAdmin.swift in Sources */,
+				B29FFF31223BA302002C01FE /* Inset Padding.swift in Sources */,
 				B2EA98E31E285F19000B7E54 /* WalkthroughViewController.swift in Sources */,
 				B2C054781FB8B55700846F6E /* ConfirmCountViewController.swift in Sources */,
 				CC4CC0F91DEADC32007FB24F /* AppDelegate.swift in Sources */,

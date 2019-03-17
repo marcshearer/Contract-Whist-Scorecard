@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -13,19 +15,19 @@
         <scene sceneID="R22-7m-aji">
             <objects>
                 <viewController storyboardIdentifier="WelcomeViewController" title="Welcome" useStoryboardIdentifierAsRestorationIdentifier="YES" id="s50-DJ-DGN" customClass="WelcomeViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="ajN-8U-7ZR"/>
-                        <viewControllerLayoutGuide type="bottom" id="Tfv-Yo-8ih"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="jyL-Wg-M4O">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ivm-JK-J61" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                            </view>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y4F-la-z16">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="kLt-di-ap3"/>
                                 </constraints>
+                                <color key="barTintColor" name="Banner"/>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </textAttributes>
@@ -66,10 +68,10 @@
                                 </items>
                             </navigationBar>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background portrait" translatesAutoresizingMaskIntoConstraints="NO" id="mgp-4O-v5c">
-                                <rect key="frame" x="16" y="44" width="343" height="623"/>
+                                <rect key="frame" x="16" y="64" width="343" height="603"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.20000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="3rN-Yr-fUs">
-                                <rect key="frame" x="16" y="44" width="343" height="100"/>
+                                <rect key="frame" x="16" y="64" width="343" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="150" id="DkX-Fk-1Hw">
@@ -81,7 +83,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="64" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="f9f-U1-c0o" userLabel="Welcome Actions">
-                                <rect key="frame" x="0.0" y="144" width="375" height="473"/>
+                                <rect key="frame" x="0.0" y="164" width="375" height="453"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Welcome Action Cell" id="hOQ-Em-KVE" customClass="WelcomeActionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
@@ -130,25 +132,30 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="Tfv-Yo-8ih" firstAttribute="top" secondItem="UMX-ec-cGj" secondAttribute="bottom" id="4Wo-qO-FtB"/>
-                            <constraint firstItem="3rN-Yr-fUs" firstAttribute="leading" secondItem="jyL-Wg-M4O" secondAttribute="leading" constant="16" id="7vH-mm-H8d"/>
+                            <constraint firstItem="9e5-uf-7bY" firstAttribute="bottom" secondItem="UMX-ec-cGj" secondAttribute="bottom" id="4Wo-qO-FtB"/>
+                            <constraint firstItem="3rN-Yr-fUs" firstAttribute="leading" secondItem="9e5-uf-7bY" secondAttribute="leading" constant="16" id="7vH-mm-H8d"/>
                             <constraint firstItem="mgp-4O-v5c" firstAttribute="trailing" secondItem="jyL-Wg-M4O" secondAttribute="trailingMargin" id="9F1-bJ-FMZ"/>
-                            <constraint firstAttribute="trailing" secondItem="UMX-ec-cGj" secondAttribute="trailing" id="BPT-cg-nnz"/>
+                            <constraint firstItem="9e5-uf-7bY" firstAttribute="trailing" secondItem="UMX-ec-cGj" secondAttribute="trailing" id="BPT-cg-nnz"/>
                             <constraint firstItem="f9f-U1-c0o" firstAttribute="top" secondItem="3rN-Yr-fUs" secondAttribute="bottom" id="DvZ-7h-xmk"/>
-                            <constraint firstItem="f9f-U1-c0o" firstAttribute="leading" secondItem="jyL-Wg-M4O" secondAttribute="leading" id="HlZ-S6-Ktr"/>
+                            <constraint firstItem="f9f-U1-c0o" firstAttribute="leading" secondItem="9e5-uf-7bY" secondAttribute="leading" id="HlZ-S6-Ktr"/>
                             <constraint firstItem="3rN-Yr-fUs" firstAttribute="top" secondItem="y4F-la-z16" secondAttribute="bottom" id="Ms0-gc-wYU"/>
                             <constraint firstItem="UMX-ec-cGj" firstAttribute="top" secondItem="f9f-U1-c0o" secondAttribute="bottom" id="ND8-Dz-NZt"/>
+                            <constraint firstItem="Ivm-JK-J61" firstAttribute="trailing" secondItem="jyL-Wg-M4O" secondAttribute="trailing" id="Ncp-aC-uPb"/>
                             <constraint firstItem="y4F-la-z16" firstAttribute="leading" secondItem="jyL-Wg-M4O" secondAttribute="leading" id="PMc-mx-qSV"/>
-                            <constraint firstItem="UMX-ec-cGj" firstAttribute="leading" secondItem="jyL-Wg-M4O" secondAttribute="leading" id="T8a-gq-PfX"/>
+                            <constraint firstItem="UMX-ec-cGj" firstAttribute="leading" secondItem="9e5-uf-7bY" secondAttribute="leading" id="T8a-gq-PfX"/>
                             <constraint firstItem="mgp-4O-v5c" firstAttribute="top" secondItem="y4F-la-z16" secondAttribute="bottom" id="Udd-Py-Xlm"/>
-                            <constraint firstItem="Tfv-Yo-8ih" firstAttribute="top" secondItem="f9f-U1-c0o" secondAttribute="bottom" constant="50" id="YsL-Ab-QDg"/>
-                            <constraint firstItem="y4F-la-z16" firstAttribute="top" secondItem="jyL-Wg-M4O" secondAttribute="top" id="caE-jj-ZNr"/>
+                            <constraint firstItem="9e5-uf-7bY" firstAttribute="bottom" secondItem="f9f-U1-c0o" secondAttribute="bottom" constant="50" id="YsL-Ab-QDg"/>
+                            <constraint firstItem="Ivm-JK-J61" firstAttribute="leading" secondItem="jyL-Wg-M4O" secondAttribute="leading" id="Zt3-zz-lbU"/>
+                            <constraint firstItem="y4F-la-z16" firstAttribute="top" secondItem="9e5-uf-7bY" secondAttribute="top" id="caE-jj-ZNr"/>
                             <constraint firstAttribute="trailing" secondItem="y4F-la-z16" secondAttribute="trailing" id="ebt-Lw-HxM"/>
-                            <constraint firstAttribute="trailing" secondItem="f9f-U1-c0o" secondAttribute="trailing" id="ifA-7e-GcI"/>
-                            <constraint firstAttribute="trailing" secondItem="3rN-Yr-fUs" secondAttribute="trailing" constant="16" id="n4L-bi-Szj"/>
+                            <constraint firstItem="9e5-uf-7bY" firstAttribute="trailing" secondItem="f9f-U1-c0o" secondAttribute="trailing" id="ifA-7e-GcI"/>
+                            <constraint firstItem="Ivm-JK-J61" firstAttribute="top" secondItem="jyL-Wg-M4O" secondAttribute="top" id="lFs-Mi-dfa"/>
+                            <constraint firstItem="9e5-uf-7bY" firstAttribute="trailing" secondItem="3rN-Yr-fUs" secondAttribute="trailing" constant="16" id="n4L-bi-Szj"/>
                             <constraint firstItem="mgp-4O-v5c" firstAttribute="leading" secondItem="jyL-Wg-M4O" secondAttribute="leadingMargin" id="qvl-hv-ZGH"/>
-                            <constraint firstItem="Tfv-Yo-8ih" firstAttribute="top" secondItem="mgp-4O-v5c" secondAttribute="bottom" id="ylI-O6-DbD"/>
+                            <constraint firstItem="Ivm-JK-J61" firstAttribute="bottom" secondItem="9e5-uf-7bY" secondAttribute="top" id="sxd-h1-YRi"/>
+                            <constraint firstItem="9e5-uf-7bY" firstAttribute="bottom" secondItem="mgp-4O-v5c" secondAttribute="bottom" id="ylI-O6-DbD"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="9e5-uf-7bY"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="xss-yr-KoI" appends="YES" id="hWe-Lt-MEJ"/>
                             <outletCollection property="gestureRecognizers" destination="PH8-5l-Lli" appends="YES" id="3xy-zE-Yrh"/>
@@ -264,5 +271,8 @@
         <image name="background portrait" width="250" height="445"/>
         <image name="broadcast" width="27" height="27"/>
         <image name="settings" width="25" height="25"/>
+        <namedColor name="Banner">
+            <color red="0.33300000429153442" green="0.33300000429153442" blue="0.33300000429153442" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

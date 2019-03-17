@@ -42,6 +42,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // Component sizes
     private var viewWidth: CGFloat!
     private var viewHeight: CGFloat!
+    private var rightSafeAreaWidth: CGFloat!
     private var handViewHeight: CGFloat!
     private var handViewWidth: CGFloat!
     private var tabletopViewHeight: CGFloat!
@@ -84,7 +85,6 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet private weak var handHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var handTableViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var tabletopView: UIView!
-    @IBOutlet private weak var bidHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var statusWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bidView: UIView!
     @IBOutlet private weak var bidCollectionView: UICollectionView!
@@ -98,6 +98,9 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet private weak var statusPlayer4BidLabel: UILabel!
     @IBOutlet private weak var playedCardCollectionView: UICollectionView!
     @IBOutlet private weak var instructionView: UIView!
+    @IBOutlet private weak var bannerPaddingView: UIView!
+    @IBOutlet private weak var leftFooterPaddingView: UIView!
+    @IBOutlet private weak var leftPaddingView: UIView!
     @IBOutlet private weak var finishButton: UIButton!
     @IBOutlet private weak var lastHandButton: UIButton!
     @IBOutlet private weak var overUnderButton: UIButton!
@@ -171,8 +174,8 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         
-        viewHeight = view.frame.height
-        viewWidth = view.frame.width
+        viewHeight = view.safeAreaLayoutGuide.layoutFrame.height
+        viewWidth = view.safeAreaLayoutGuide.layoutFrame.width
         
         if self.scorecard.commsHandlerMode == .playHand {
             // Notify broadcast controller that hand display complete
@@ -193,8 +196,9 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        viewHeight = view.frame.height
-        viewWidth = view.frame.width
+        viewHeight = view.safeAreaLayoutGuide.layoutFrame.height
+        viewWidth = view.safeAreaLayoutGuide.layoutFrame.width
+        rightSafeAreaWidth = view.safeAreaInsets.right
         self.setButtonFormat()
         if self.resizing {
             self.bidMode = nil
@@ -425,7 +429,7 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
             if newBidMode == false && !firstBidRefresh {
                 // About to exit bid mode - delay 1 second
                 setupOverUnder()
-                self.instructionView.backgroundColor = UIColor.darkGray
+                self.setInstructionsColor(to: UIColor.darkGray)
                 self.instructionTextView.text = "Bidding Complete"
                 self.finishButton.isHidden = true
                 self.scorecard.commsHandlerMode = .viewTrick
@@ -449,13 +453,13 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 // Your bid
                 bidsEnable(true, blockRemaining: bids.count == self.scorecard.currentPlayers - 1)
                 self.instructionTextView.text = "You to bid \(self.scorecard.enteredPlayer(enteredPlayerNumber).playerMO!.name!)"
-                self.instructionView.backgroundColor = UIColor.blue
+                self.setInstructionsColor(to: UIColor.blue)
                 self.alertUser()
                 self.autoBid()
             } else {
                 bidsEnable(false)
                 self.instructionTextView.text = "\(self.scorecard.entryPlayer(bids.count + 1).playerMO!.name!) to bid"
-                self.instructionView.backgroundColor = UIColor.darkGray
+                self.setInstructionsColor(to: UIColor.darkGray)
                 // Get computer player to bid
                 self.computerPlayerDelegate?[self.scorecard.entryPlayer(bids.count + 1).playerNumber]??.autoBid()
             }
@@ -534,13 +538,13 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
             }
             self.instructionTextView.text = "You to play \(self.scorecard.enteredPlayer(self.enteredPlayerNumber).playerMO!.name!)"
-            self.instructionView.backgroundColor = UIColor.blue
+            self.setInstructionsColor(to: UIColor.blue)
             self.alertUser()
             self.autoPlay()
         } else {
             self.cardsEnable(false)
             self.instructionTextView.text = "\(self.scorecard.enteredPlayer(self.state.toPlay).playerMO!.name!) to play"
-            self.instructionView.backgroundColor = UIColor.darkGray
+            self.setInstructionsColor(to: UIColor.darkGray)
             // Get computer player to play
             self.computerPlayerDelegate?[self.state.toPlay]??.autoPlay()
         }
@@ -582,16 +586,22 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func setButtonFormat() {
-        if ScorecardUI.landscapePhone() {
-            buttonsAcross = 2
-            buttonsDown = 4
-            bidSeparator.isHidden = false
+      
+        buttonsAcross = max(2, min(3, Int(((viewWidth / (ScorecardUI.landscapePhone() ? 2.0 : 1.0) / 2.0) - 6.0) / 50.0)))
+        buttonsDown = max(3, min(4, Int((((viewHeight / (ScorecardUI.landscapePhone() ? 1.0 : 2.5)) - instructionHeight) * (4.0 / 5.0)) / 50.0)))
+        
+        bidSeparator.isHidden = (buttonsAcross > 2)
+        
+        let buttons = (buttonsAcross * buttonsDown)
+        
+        if buttons >= currentCards + 1 {
+            // All available bids fit
+            maxBidButton = currentCards
         } else {
-            buttonsAcross = 3
-            buttonsDown = 3
-            bidSeparator.isHidden = true
+            // Allow for more button
+            maxBidButton = buttons - 2
         }
-        maxBidButton = (buttonsAcross * buttonsDown) - 2
+
     }
 
     func bidMode(_ mode: Bool!) {
@@ -600,8 +610,8 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
             bidViewHeight = viewHeight - instructionHeight
             bidButtonSize = min(50.0, (((bidViewHeight * CGFloat(4.0/5.0)) - 8.0) / CGFloat(buttonsDown)) - 10.0)
         } else {
-            bidButtonSize = min(50.0, CGFloat(((viewWidth - 16.0) / 6.0) - 10.0))
             bidViewHeight = ((bidButtonSize + 10.0) * CGFloat(buttonsDown)) + 6.0
+            bidButtonSize = min(50.0, CGFloat(((viewWidth - 16.0) / 6.0) - 10.0))
         }
         bidViewWidth = ((bidButtonSize + 10.0) * CGFloat(buttonsAcross)) + 6.0
 
@@ -617,6 +627,8 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if bidMode {
             tabletopView.isHidden = true
             bidView.isHidden = false
+            leftFooterPaddingView.backgroundColor = UIColor.white
+            leftPaddingView.backgroundColor = UIColor.white
             
             setupBidSize()
             setupHandSize()
@@ -629,6 +641,9 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         } else {
             bidView.isHidden = true
             tabletopView.isHidden = false
+            leftFooterPaddingView.backgroundColor = ScorecardUI.tableTopColor
+            leftPaddingView.backgroundColor = ScorecardUI.tableTopColor
+            
             setupTabletopSize()
             setupHandSize()
             if self.firstHandRefresh {
@@ -727,14 +742,15 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func setupBidSize() {
-        // Set bid height
-        bidHeightConstraint.constant = bidViewHeight
+ 
+        let statusWidth = (viewWidth / (ScorecardUI.landscapePhone() ? 2 : 1)) - bidViewWidth - 16.0
+        
         if moreMode {
             statusWidthConstraint.constant = 0
         } else {
-            statusWidthConstraint.constant = (viewWidth / (ScorecardUI.landscapePhone() ? 2 : 1)) - bidViewWidth - 16.0
+            statusWidthConstraint.constant = statusWidth
         }
-        statusTextFontSize = min(24.0, (statusWidthConstraint.constant - 16.0) / 7.0)
+        statusTextFontSize = min(24.0, (statusWidth - 16.0) / 7.0)
         statusRoundLabel.font = UIFont.boldSystemFont(ofSize: statusTextFontSize)
         statusOverUnderLabel.font = UIFont.boldSystemFont(ofSize: statusTextFontSize)
         for playerNumber in 1...self.scorecard.currentPlayers {
@@ -987,6 +1003,11 @@ class HandViewController: UIViewController, UITableViewDataSource, UITableViewDe
         default:
             break
         }
+    }
+    
+    func setInstructionsColor(to color: UIColor) {
+        self.instructionView.backgroundColor = color
+        self.bannerPaddingView.backgroundColor = color
     }
 }
 

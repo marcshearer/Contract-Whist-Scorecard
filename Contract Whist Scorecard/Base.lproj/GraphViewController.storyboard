@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -13,14 +15,14 @@
         <scene sceneID="kQ9-Dy-feW">
             <objects>
                 <viewController storyboardIdentifier="GraphViewController" autoresizesArchivedViewToFullSize="NO" modalTransitionStyle="crossDissolve" modalPresentationStyle="overFullScreen" id="7b0-A7-L4e" customClass="GraphViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="XVe-pZ-WaG"/>
-                        <viewControllerLayoutGuide type="bottom" id="8mI-IT-Weg"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="LkB-Ed-8F9" customClass="GraphView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                    <view key="view" contentMode="scaleToFill" id="LkB-Ed-8F9" userLabel="View">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aF8-JM-lAM" customClass="GraphView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <color key="backgroundColor" name="Total"/>
+                            </view>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="top" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aph-ga-WxR" userLabel="Finish Button" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="8" y="28" width="30" height="30"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -36,15 +38,20 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" name="Total"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="aph-ga-WxR" firstAttribute="leading" secondItem="LkB-Ed-8F9" secondAttribute="leading" constant="8" id="DPF-4S-mMd"/>
-                            <constraint firstItem="aph-ga-WxR" firstAttribute="top" secondItem="XVe-pZ-WaG" secondAttribute="bottom" constant="8" id="UKi-ll-8JO"/>
+                            <constraint firstItem="usM-T4-d4I" firstAttribute="bottom" secondItem="aF8-JM-lAM" secondAttribute="bottom" id="0IC-FG-2sd"/>
+                            <constraint firstItem="aph-ga-WxR" firstAttribute="leading" secondItem="usM-T4-d4I" secondAttribute="leading" constant="8" id="DPF-4S-mMd"/>
+                            <constraint firstItem="aF8-JM-lAM" firstAttribute="top" secondItem="usM-T4-d4I" secondAttribute="top" id="KtL-cd-Gpn"/>
+                            <constraint firstItem="usM-T4-d4I" firstAttribute="trailing" secondItem="aF8-JM-lAM" secondAttribute="trailing" id="PJK-Fs-9oE"/>
+                            <constraint firstItem="aph-ga-WxR" firstAttribute="top" secondItem="usM-T4-d4I" secondAttribute="top" constant="8" id="UKi-ll-8JO"/>
+                            <constraint firstItem="aF8-JM-lAM" firstAttribute="leading" secondItem="usM-T4-d4I" secondAttribute="leading" id="yzx-D0-x9M"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="usM-T4-d4I"/>
                     </view>
                     <connections>
-                        <outlet property="graphView" destination="LkB-Ed-8F9" id="tsQ-VE-J4H"/>
+                        <outlet property="graphView" destination="aF8-JM-lAM" id="NqD-K0-gZa"/>
                         <segue destination="FxS-fb-6HK" kind="unwind" identifier="hideComparisonGraph" unwindAction="hideComparisonGraphWithSegue:" id="1nm-Cf-ab4"/>
                         <segue destination="OxF-eN-OAj" kind="presentation" identifier="showGraphHistoryDetail" id="7gO-bP-BPs"/>
                     </connections>
@@ -65,5 +72,8 @@
     </scenes>
     <resources>
         <image name="cross white" width="20" height="20"/>
+        <namedColor name="Total">
+            <color red="0.0" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

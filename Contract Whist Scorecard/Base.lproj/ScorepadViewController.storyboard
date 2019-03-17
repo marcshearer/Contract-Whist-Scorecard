@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -13,16 +15,27 @@
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController storyboardIdentifier="ScorepadViewController" title="Scorecard" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="ScorepadViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
-                    </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" userLabel="Scorepad View">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Jo-C4-vPV" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JrC-1V-hch" userLabel="Footer Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4mH-Ut-Ta9" userLabel="Left Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="20" width="0.0" height="647"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2V4-Rn-jn9" userLabel="Right Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="375" y="20" width="0.0" height="647"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
                             <navigationBar clipsSubviews="YES" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Skq-xy-HKr">
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <color key="barTintColor" name="Banner"/>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </textAttributes>
@@ -598,20 +611,38 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="uWQ-Kt-TjV" secondAttribute="trailing" id="FMv-g8-SMS"/>
+                            <constraint firstAttribute="trailing" secondItem="JrC-1V-hch" secondAttribute="trailing" id="6Ln-mk-q9e"/>
+                            <constraint firstItem="JrC-1V-hch" firstAttribute="top" secondItem="Qc8-yN-AYf" secondAttribute="top" id="DB7-31-vqH"/>
+                            <constraint firstItem="Qc8-yN-AYf" firstAttribute="bottom" secondItem="2V4-Rn-jn9" secondAttribute="bottom" id="FBy-g1-gBK"/>
+                            <constraint firstItem="Qc8-yN-AYf" firstAttribute="trailing" secondItem="uWQ-Kt-TjV" secondAttribute="trailing" id="FMv-g8-SMS"/>
+                            <constraint firstItem="7Jo-C4-vPV" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="H1Q-qc-CM2"/>
                             <constraint firstItem="CoM-o8-drH" firstAttribute="top" secondItem="Skq-xy-HKr" secondAttribute="bottom" id="I7X-kw-VrS"/>
-                            <constraint firstItem="CoM-o8-drH" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="LAQ-TR-UNl"/>
+                            <constraint firstItem="CoM-o8-drH" firstAttribute="leading" secondItem="Qc8-yN-AYf" secondAttribute="leading" id="LAQ-TR-UNl"/>
                             <constraint firstItem="Skq-xy-HKr" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Ojc-IW-vwW"/>
+                            <constraint firstAttribute="trailing" secondItem="2V4-Rn-jn9" secondAttribute="trailing" id="QsG-AD-V0A"/>
+                            <constraint firstItem="Qc8-yN-AYf" firstAttribute="bottom" secondItem="4mH-Ut-Ta9" secondAttribute="bottom" id="RLa-dJ-cNA"/>
+                            <constraint firstItem="Qc8-yN-AYf" firstAttribute="leading" secondItem="4mH-Ut-Ta9" secondAttribute="trailing" id="TUN-Wl-aGJ"/>
                             <constraint firstAttribute="trailing" secondItem="Skq-xy-HKr" secondAttribute="trailing" id="Tfe-KX-GZC"/>
-                            <constraint firstItem="Skq-xy-HKr" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="XEn-GS-6i4"/>
-                            <constraint firstItem="uWQ-Kt-TjV" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Z1z-d4-0wt"/>
+                            <constraint firstItem="JrC-1V-hch" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="UGH-wb-hiT"/>
+                            <constraint firstItem="2V4-Rn-jn9" firstAttribute="leading" secondItem="Qc8-yN-AYf" secondAttribute="trailing" id="VDa-Rv-cho"/>
+                            <constraint firstItem="7Jo-C4-vPV" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="VDg-bj-xlf"/>
+                            <constraint firstItem="Skq-xy-HKr" firstAttribute="top" secondItem="Qc8-yN-AYf" secondAttribute="top" id="XEn-GS-6i4"/>
+                            <constraint firstItem="uWQ-Kt-TjV" firstAttribute="leading" secondItem="Qc8-yN-AYf" secondAttribute="leading" id="Z1z-d4-0wt"/>
+                            <constraint firstItem="JrC-1V-hch" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="ZTn-3l-dI7"/>
+                            <constraint firstItem="7Jo-C4-vPV" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Zk7-qb-607"/>
                             <constraint firstItem="m5j-3V-hPG" firstAttribute="top" secondItem="CoM-o8-drH" secondAttribute="bottom" id="blC-pe-3M1"/>
-                            <constraint firstAttribute="trailing" secondItem="CoM-o8-drH" secondAttribute="trailing" id="dJj-0f-hw8"/>
+                            <constraint firstItem="4mH-Ut-Ta9" firstAttribute="top" secondItem="Qc8-yN-AYf" secondAttribute="top" id="bnX-ja-H4R"/>
+                            <constraint firstItem="Qc8-yN-AYf" firstAttribute="trailing" secondItem="CoM-o8-drH" secondAttribute="trailing" id="dJj-0f-hw8"/>
+                            <constraint firstItem="2V4-Rn-jn9" firstAttribute="top" secondItem="Qc8-yN-AYf" secondAttribute="top" id="fSb-zA-6n7"/>
+                            <constraint firstItem="Qc8-yN-AYf" firstAttribute="top" secondItem="7Jo-C4-vPV" secondAttribute="bottom" id="gsL-mt-MEL"/>
+                            <constraint firstItem="Qc8-yN-AYf" firstAttribute="leading" secondItem="4mH-Ut-Ta9" secondAttribute="trailing" id="kFo-dH-Ibu"/>
+                            <constraint firstItem="4mH-Ut-Ta9" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="lTg-GR-0aC"/>
                             <constraint firstItem="uWQ-Kt-TjV" firstAttribute="top" secondItem="m5j-3V-hPG" secondAttribute="bottom" id="oKi-Sk-mNO"/>
-                            <constraint firstAttribute="trailing" secondItem="m5j-3V-hPG" secondAttribute="trailing" id="p9y-wJ-ZBM"/>
-                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="uWQ-Kt-TjV" secondAttribute="bottom" id="q7V-na-oyS"/>
-                            <constraint firstItem="m5j-3V-hPG" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="v0n-ja-RWi"/>
+                            <constraint firstItem="Qc8-yN-AYf" firstAttribute="trailing" secondItem="m5j-3V-hPG" secondAttribute="trailing" id="p9y-wJ-ZBM"/>
+                            <constraint firstItem="Qc8-yN-AYf" firstAttribute="bottom" secondItem="uWQ-Kt-TjV" secondAttribute="bottom" id="q7V-na-oyS"/>
+                            <constraint firstItem="m5j-3V-hPG" firstAttribute="leading" secondItem="Qc8-yN-AYf" secondAttribute="leading" id="v0n-ja-RWi"/>
                         </constraints>
+                        <viewLayoutGuide key="safeArea" id="Qc8-yN-AYf"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="c9d-p5-1s2" appends="YES" id="oCO-3a-1z8"/>
                             <outletCollection property="gestureRecognizers" destination="92U-ay-Nuq" appends="YES" id="WTM-Ej-bbF"/>
@@ -712,5 +743,8 @@
     <resources>
         <image name="back" width="14" height="20"/>
         <image name="forward" width="14" height="20"/>
+        <namedColor name="Banner">
+            <color red="0.33300000429153442" green="0.33300000429153442" blue="0.33300000429153442" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

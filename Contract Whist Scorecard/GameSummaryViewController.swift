@@ -137,15 +137,14 @@ class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableV
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         scorecard.reCenterPopup(self)
-        // Calculate heights
-        calculateHeights(size: size)
+        self.view.setNeedsLayout()
     }
     
     override func viewWillLayoutSubviews() {
         
         if firstTime {
             // Calculate heights
-            calculateHeights(size: gameSummaryView.frame.size)
+            calculateHeights(size: gameSummaryView.safeAreaLayoutGuide.layoutFrame.size)
             firstTime = false
         }
     }

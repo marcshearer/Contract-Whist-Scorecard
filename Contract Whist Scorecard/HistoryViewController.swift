@@ -108,7 +108,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
         
     override func viewWillLayoutSubviews() {
         if firstTime {
-            checkFieldDisplay(to: historyView.frame.size)
+            checkFieldDisplay(to: historyView.safeAreaLayoutGuide.layoutFrame.size)
             firstTime = true
         }
     }
@@ -166,6 +166,7 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
     
     func checkFieldDisplay(to size: CGSize) {
         // Check how many fields we can display
+        var skipping = false
         var dateColumn = -1
         let availableWidth = size.width - (paddingWidth * 2) - (detailWidth * (Scorecard.adminMode ? 2 : 1)) // Allow for padding each end and detail button
         var widthRemaining = availableWidth
@@ -226,22 +227,26 @@ class HistoryViewController: UIViewController, UITableViewDataSource, UITableVie
                                                                width: paddingWidth + widthRemaining)
                     displayFieldCount += 1
                 default:
-                    // Normal fields - include if space
-                    switch availableFields[field].field {
-                    case "location":
-                        locationColumn = displayFieldCount
-                    case "date":
-                        dateColumn = displayFieldCount
-                    default:
-                        break
-                    }
-                    if availableFields[field].width <= widthRemaining {
-                        widthRemaining -= availableFields[field].width
-                        displayedFields[displayFieldCount] = Field(availableFields[field].field,
-                                                                   availableFields[field].title,
-                                                                   width: availableFields[field].width,
-                                                                   align: availableFields[field].align)
-                        displayFieldCount += 1
+                    // Normal fields - include if space and not already skipping
+                    if !skipping {
+                        switch availableFields[field].field {
+                        case "location":
+                            locationColumn = displayFieldCount
+                        case "date":
+                            dateColumn = displayFieldCount
+                        default:
+                            break
+                        }
+                        if availableFields[field].width <= widthRemaining {
+                            widthRemaining -= availableFields[field].width
+                            displayedFields[displayFieldCount] = Field(availableFields[field].field,
+                                                                       availableFields[field].title,
+                                                                       width: availableFields[field].width,
+                                                                       align: availableFields[field].align)
+                            displayFieldCount += 1
+                        } else {
+                            skipping = true
+                        }
                     }
                 }
             }

@@ -318,18 +318,21 @@ class EntryViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         for playerCell: EntryPlayerCell? in self.playerBidCell {
             
-            let player = playerCell!.tag
-            
-            switch mode {
-            case Mode.bid:
-                label = playerBidCell[player - 1]?.entryPlayerLabel
-            case Mode.made:
-                label = playerMadeCell[player - 1]?.entryPlayerLabel
-            case Mode.twos:
-                label = playerTwosCell[player - 1]?.entryPlayerLabel
+            if playerCell != nil {
+                
+                let player = playerCell!.tag
+                
+                switch mode {
+                case Mode.bid:
+                    label = playerBidCell[player - 1]?.entryPlayerLabel
+                case Mode.made:
+                    label = playerMadeCell[player - 1]?.entryPlayerLabel
+                case Mode.twos:
+                    label = playerTwosCell[player - 1]?.entryPlayerLabel
+                }
+                
+                ScorecardUI.errorStyle(label!, errorCondtion: highlight)
             }
-            
-            ScorecardUI.errorStyle(label!, errorCondtion: highlight)
         }
         
         return highlight
@@ -416,10 +419,12 @@ class EntryViewController: UIViewController, UITableViewDataSource, UITableViewD
                 label = playerTwosCell[selection.player-1]?.entryPlayerLabel
             }
             
-            if highlight {
-                ScorecardUI.darkHighlightStyle(label)
-            } else {
-                ScorecardUI.normalStyle(label)
+            if label != nil {
+                if highlight {
+                    ScorecardUI.darkHighlightStyle(label)
+                } else {
+                    ScorecardUI.normalStyle(label)
+                }
             }
         }
     }

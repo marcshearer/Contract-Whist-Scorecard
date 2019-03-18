@@ -18,8 +18,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="400" height="523"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vyU-iN-Rma" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="234" width="400" height="289"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vyU-iN-Rma" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="400" height="20"/>
                             </view>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pPE-oz-OCx">
                                 <rect key="frame" x="0.0" y="20" width="400" height="40"/>
@@ -106,7 +106,7 @@
                             <constraint firstItem="Ye1-Hk-Ldd" firstAttribute="bottom" secondItem="Y7G-kk-6TA" secondAttribute="bottom" constant="20" id="4Nq-40-LA2"/>
                             <constraint firstItem="Y7G-kk-6TA" firstAttribute="leading" secondItem="dRk-3e-k2c" secondAttribute="leading" id="69e-A7-IEa"/>
                             <constraint firstItem="vyU-iN-Rma" firstAttribute="leading" secondItem="dRk-3e-k2c" secondAttribute="leading" id="8wm-ca-rbb"/>
-                            <constraint firstItem="vyU-iN-Rma" firstAttribute="top" secondItem="dRk-3e-k2c" secondAttribute="bottom" id="Hoa-Af-ttO"/>
+                            <constraint firstItem="vyU-iN-Rma" firstAttribute="top" secondItem="dRk-3e-k2c" secondAttribute="top" id="Hoa-Af-ttO"/>
                             <constraint firstItem="Ye1-Hk-Ldd" firstAttribute="trailing" secondItem="965-CX-o1K" secondAttribute="trailing" constant="16" id="Lrk-yv-g9N"/>
                             <constraint firstItem="owS-TZ-KyE" firstAttribute="top" secondItem="965-CX-o1K" secondAttribute="bottom" constant="30" id="O8c-x2-XpK"/>
                             <constraint firstItem="Ye1-Hk-Ldd" firstAttribute="top" secondItem="vyU-iN-Rma" secondAttribute="bottom" id="aNb-WI-aQ2"/>

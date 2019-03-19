@@ -58,6 +58,10 @@ Avoid current trick being sorted and hence wrong player having wrong card after 
 6.2 (3) ----------
 Shake now sends refresh (or requests refresh) rather than resetting network
 
+6.6 (1-8) --------
+iPhone X support
+Setting to show status bar
+
 Bugs fix now
 ------------
 In search dialogue (on iPad) if filter search any users who don't have a picture sometimes get changed to squares

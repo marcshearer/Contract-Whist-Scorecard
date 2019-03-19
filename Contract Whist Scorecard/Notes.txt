@@ -27,38 +27,41 @@ Can choose bid which adds up to total - seemed to be when 1 less than <
 Add shake handler to review view controller
 Add connection info to nearby and change it from debug to and alertMessage in rabbit
 
-6.1(2) ---------
+4.1(2) ---------
 Better reconnection for online games including 10 second refresh in broadcast
 FaceTime call support
 
-6.1(3) ---------
+4.1(3) ---------
 Avoid blue lines in player search
 Leave selected invitees selected (and visible) when filtering
 
-6.1 (5) ---------
+4.1 (5) ---------
 Fixed crash when searching for players
 
-6.1 (7) ---------
+4.1 (7) ---------
 Reinstated version in settings
 Got simulated notifications working again (wait for RabbitMQUri to be set up)
 Connect correctly after accepting notification
 
-6.1 (8) ---------
+4.1 (8) ---------
 Avoid being locked in once accept notification for game
 Stop timer when exit broadcast
 Show players name rather than device for online games
 Avoid accessing AppDelegate not on main thread
 
-6.2 (1) ----------
+4.6 (1) ----------
 More reliable communication in internet game
 
-6.2 (2) ----------
+4.6 (2) ----------
 Avoid current trick being sorted and hence wrong player having wrong card after a resume
 
-6.2 (3) ----------
+4.6 (3) ----------
 Shake now sends refresh (or requests refresh) rather than resetting network
 
-6.6 (1-8) --------
+4.6 (4-5) ----------
+Fix missing watch icons and remember last hand over recovery
+
+4.6 (6-8) --------
 iPhone X support
 Setting to show status bar
 

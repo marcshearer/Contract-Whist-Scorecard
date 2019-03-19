@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ConfirmCountViewController : UIViewController, UIPopoverPresentationControllerDelegate {
+class ConfirmCountViewController : CustomViewController, UIPopoverPresentationControllerDelegate {
     
     var message: String!
     var formTitle: String!

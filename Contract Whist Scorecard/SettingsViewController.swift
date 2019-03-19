@@ -10,7 +10,7 @@ import UIKit
 import UserNotifications
 import GameKit
 
-class SettingsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SearchDelegate {
+class SettingsViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SearchDelegate {
     
     // MARK: - Class Properties ======================================================================== -
         
@@ -45,7 +45,8 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     private let trumpSequenceSection = 10
     private let     trumpSequenceNoTrumpRow = 0
     private let     trumpSequenceSuitRow = 1
-    private let aboutSection = 11
+    private let prefersStatusBarHiddenSection = 11
+    private let aboutSection = 12
     private let     aboutVersionRow = 0
     private let     aboutDatabaseRow = 1
     private let     aboutSubheadingRow = 2
@@ -71,6 +72,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     private var onlinePlayerLabel: UILabel!
     private var onlinePlayerChangeButton: UIButton!
     private var faceTimeAddressTextField: UITextField!
+    private var prefersStatusBarHiddenSelection: UISegmentedControl!
     
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet weak var finishButton: RoundedButton!
@@ -342,6 +344,19 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             default:
                 break
             }
+            
+        case prefersStatusBarHiddenSection:
+            cell = tableView.dequeueReusableCell(withIdentifier: "Prefers Status Bar Hidden Cell", for: indexPath) as? SettingsTableCell
+            prefersStatusBarHiddenSelection = cell.preferStatusBarHiddenSelection
+            prefersStatusBarHiddenSelection.addTarget(self, action: #selector(SettingsViewController.prefersStatusBarHiddenAction(_:)), for: UIControl.Event.valueChanged)
+            
+            // Set prefers status bar hidden selection
+            switch scorecard.settingPrefersStatusBarHidden {
+            case false:
+                prefersStatusBarHiddenSelection.selectedSegmentIndex = 1
+            default:
+                prefersStatusBarHiddenSelection.selectedSegmentIndex = 0
+            }
 
         case aboutSection:
             switch indexPath.row {
@@ -442,6 +457,8 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
             return "Bonus for winning a trick with a 2"
         case trumpSequenceSection:
             return "Trump suit sequence"
+        case prefersStatusBarHiddenSection:
+            return "Status bar preference"			
         case aboutSection:
             return "Contract Whist Scorecard"
         default:
@@ -673,6 +690,21 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     
     @objc internal func trumpSequenceInfoPressed(_ sender: UIButton) {
         trumpSequenceInfo()
+    }
+    
+    @objc internal func prefersStatusBarHiddenAction(_ sender: UISegmentedControl) {
+        switch prefersStatusBarHiddenSelection.selectedSegmentIndex {
+        case 1:
+            scorecard.settingPrefersStatusBarHidden = false
+        default:
+            scorecard.settingPrefersStatusBarHidden = true
+        }
+        
+        // Save it
+        UserDefaults.standard.set(scorecard.settingPrefersStatusBarHidden, forKey: "prefersStatusBarHidden")
+        
+        // Update status bar
+        scorecard.updatePrefersStatusBarHidden(from: self)
     }
     
     // MARK: - CollectionView Overrides ================================================================ -
@@ -1016,6 +1048,7 @@ class SettingsTableCell: UITableViewCell {
     @IBOutlet weak var aboutValue1: UILabel!
     @IBOutlet weak var aboutValue2: UILabel!
     @IBOutlet weak var aboutValue3: UILabel!
+    @IBOutlet weak var preferStatusBarHiddenSelection: UISegmentedControl!
 }
 
 class TrumpCollectionCell : UICollectionViewCell {

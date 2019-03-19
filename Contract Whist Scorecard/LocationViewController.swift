@@ -10,7 +10,7 @@ import UIKit
 import CoreLocation
 import MapKit
 
-class LocationViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, CLLocationManagerDelegate {
+class LocationViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, CLLocationManagerDelegate {
 
     // MARK: - Class Properties ======================================================================== -
 

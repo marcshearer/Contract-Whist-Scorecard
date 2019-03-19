@@ -12,7 +12,7 @@ protocol CutDelegate {
     func cutComplete()
 }
 
-class CutViewController: UIViewController {
+class CutViewController: CustomViewController {
 
     // MARK: - Class Properties ======================================================================== -
     // Main state properties
@@ -269,6 +269,7 @@ class CutViewController: UIViewController {
                                               width: cardWidth,
                                               height: cardHeight)
             playerCardView[3]!.isHidden = true
+            playerBackView[3]!.isHidden = true
             
         } else {
             
@@ -293,7 +294,7 @@ class CutViewController: UIViewController {
         
         // Card backs
         
-        for playerNumber in 1...playerBackView.count {
+        for playerNumber in 1...self.playerName.count {
             
             playerBackView[playerNumber - 1]!.frame = CGRect(x: playerCardView[playerNumber-1]!.frame.minX + 8,
                                                             y: playerCardView[playerNumber-1]!.frame.minY + 8,

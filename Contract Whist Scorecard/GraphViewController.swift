@@ -8,7 +8,7 @@
 
 import UIKit
 
-class GraphViewController: UIViewController, GraphDetailDelegate {
+class GraphViewController: CustomViewController, GraphDetailDelegate {
 
     // MARK: - Class Properties ======================================================================== -
     

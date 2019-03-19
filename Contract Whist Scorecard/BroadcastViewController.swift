@@ -20,7 +20,7 @@ enum AppState {
     case connected
 }
 
-class BroadcastViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate, SearchDelegate, CutDelegate, GameSetupDelegate, UIPopoverPresentationControllerDelegate {
+class BroadcastViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate, SearchDelegate, CutDelegate, GameSetupDelegate, UIPopoverPresentationControllerDelegate {
 
     // MARK: - Class Properties ======================================================================== -
     

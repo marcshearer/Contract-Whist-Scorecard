@@ -13,7 +13,7 @@ protocol GameSetupDelegate {
     func gameSetupComplete()
 }
 
-class GameSetupViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, CutDelegate, UIPopoverPresentationControllerDelegate {
+class GameSetupViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, CutDelegate, UIPopoverPresentationControllerDelegate {
     
     // MARK: - Class Properties ================================================================ -
     

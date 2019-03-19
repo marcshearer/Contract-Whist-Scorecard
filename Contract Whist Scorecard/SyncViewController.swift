@@ -9,7 +9,7 @@
 import UIKit
 import CloudKit
 
-class SyncViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SyncDelegate {
+class SyncViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, SyncDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     

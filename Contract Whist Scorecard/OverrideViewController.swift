@@ -8,7 +8,7 @@
 
 import UIKit
 
-class OverrideViewController : UIViewController, UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate {
+class OverrideViewController : CustomViewController, UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate {
     
     private var scorecard: Scorecard!
     

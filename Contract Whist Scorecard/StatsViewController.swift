@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class StatsViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class StatsViewController: CustomViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     // MARK: - Class Properties ======================================================================== -
     

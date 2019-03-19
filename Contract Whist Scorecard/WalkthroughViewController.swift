@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WalkthroughViewController: UIViewController {
+class WalkthroughViewController: CustomViewController {
     
     // MARK: - Class Properties ======================================================================== -
     

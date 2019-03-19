@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import MessageUI
 
-class WelcomeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ReconcileDelegate, SyncDelegate, MFMailComposeViewControllerDelegate, UIPopoverPresentationControllerDelegate {
+class WelcomeViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, ReconcileDelegate, SyncDelegate, MFMailComposeViewControllerDelegate, UIPopoverPresentationControllerDelegate {
 
     // MARK: - Class Properties ================================================================ -
     
@@ -189,7 +189,7 @@ class WelcomeViewController: UIViewController, UITableViewDataSource, UITableVie
         // Possible clear all data in test mode
         TestMode.resetApp()
         
-        scorecard.initialise(players: 4, maxRounds: 25, recovery: recovery)
+        scorecard.initialise(from: self, players: 4, maxRounds: 25, recovery: recovery)
         sync.initialise(scorecard: scorecard)
         
         if !recovery.checkRecovery() {

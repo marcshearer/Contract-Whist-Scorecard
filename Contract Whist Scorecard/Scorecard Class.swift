@@ -100,6 +100,7 @@ class Scorecard {
     public var settingNearbyPlaying = false
     public var settingOnlinePlayerEmail: String!
     public var settingFaceTimeAddress: String!
+    public var settingPrefersStatusBarHidden = true
     
     // Override Settings
     public var overrideCards: [Int]! = nil
@@ -130,7 +131,7 @@ class Scorecard {
     // Core data context - set up in initialise
     static var context: NSManagedObjectContext!
     
-    public func initialise(players: Int, maxRounds: Int, recovery: Recovery) {
+    public func initialise(from viewController: UIViewController? = nil, players: Int, maxRounds: Int, recovery: Recovery) {
         
         recovery.initialise(scorecard: self)
         self.recovery = recovery
@@ -158,6 +159,9 @@ class Scorecard {
         
         // Load defaults
         loadDefaults()
+        if viewController != nil {
+            self.updatePrefersStatusBarHidden(from: viewController!)
+        }
         
         self.maxRounds = (self.maxRounds == 0 ? maxRounds : self.maxRounds)
         
@@ -347,6 +351,9 @@ class Scorecard {
         if self.settingOnlinePlayerEmail != nil {
             self.settingFaceTimeAddress = UserDefaults.standard.string(forKey: "faceTimeAddress")
         }
+        
+        // Load status bar setting
+        self.settingPrefersStatusBarHidden = UserDefaults.standard.bool(forKey: "prefersStatusBarHidden")
         
         // Get previous version and build
         self.settingLastVersion = UserDefaults.standard.string(forKey: "version")!
@@ -1197,6 +1204,16 @@ class Scorecard {
     public static func defaultPlayerOnDevice() -> String? {
         let defaultPlayerEmail = UserDefaults.standard.string(forKey: "defaultPlayerOnDevice")
         return (defaultPlayerEmail == nil || defaultPlayerEmail == "" ? nil : defaultPlayerEmail)
+    }
+    
+    public func updatePrefersStatusBarHidden(from viewController : UIViewController) {
+        
+        if AppDelegate.applicationPrefersStatusBarHidden != self.settingPrefersStatusBarHidden {
+            
+            AppDelegate.applicationPrefersStatusBarHidden = self.settingPrefersStatusBarHidden
+            viewController.setNeedsStatusBarAppearanceUpdate()
+            
+        }
     }
 }
 

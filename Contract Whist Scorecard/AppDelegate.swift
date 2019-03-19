@@ -15,9 +15,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
+    // Status bar switch
+    public static var applicationPrefersStatusBarHidden: Bool?
     
     // Contract Whist state
-    var notificationSimulator: NotificationSimulator!
+    public var notificationSimulator: NotificationSimulator!
   
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -46,26 +48,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func registerDefaults() {
         UserDefaults.standard.register(defaults: [
-            "bonus2":               true,
-            "cards":                [13, 1],
-            "bounceNumberCards":    false,
-            "syncEnabled":          false,
-            "saveHistory":          true,
-            "saveLocation":         true,
-            "receiveNotifications": false,
-            "allowBroadcast":       true,
-            "nearbyPlaying":        true,
-            "version":              0.0,
-            "build":                0,
-            "versionBlockAccess":   false,
-            "versionBlockSync":     true,
-            "versionMessage":       "",
-            "database":             "",
-            "rabbitMQUri":          "",
-            "alertVibrate":         true,
-            "onlinePlayerEmail":    "",
-            "tempOnlineEmail":      false,
-            "trumpSequence":        ["♣︎", "♦︎", "♥︎" ,"♠︎", "NT"]
+            "bonus2":                   true,
+            "cards":                    [13, 1],
+            "bounceNumberCards":        false,
+            "syncEnabled":              false,
+            "saveHistory":              true,
+            "saveLocation":             true,
+            "receiveNotifications":     false,
+            "allowBroadcast":           true,
+            "nearbyPlaying":            true,
+            "version":                  0.0,
+            "build":                    0,
+            "versionBlockAccess":       false,
+            "versionBlockSync":         true,
+            "versionMessage":           "",
+            "database":                 "",
+            "rabbitMQUri":              "",
+            "alertVibrate":             true,
+            "onlinePlayerEmail":        "",
+            "tempOnlineEmail":          false,
+            "trumpSequence":            ["♣︎", "♦︎", "♥︎" ,"♠︎", "NT"],
+            "prefersStatusBarHidden":   true
         ])
     }
     

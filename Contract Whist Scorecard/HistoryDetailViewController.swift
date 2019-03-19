@@ -11,7 +11,7 @@ import MapKit
 import CoreLocation
 import CloudKit
 
-class HistoryDetailViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class HistoryDetailViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate {
 
     // MARK: - Class Properties ======================================================================== -
     

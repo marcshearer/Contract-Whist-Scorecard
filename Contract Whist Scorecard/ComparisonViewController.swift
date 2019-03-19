@@ -17,7 +17,7 @@ protocol ComparisonDelegate : class {
     
 }
 
-class ComparisonViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class ComparisonViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     

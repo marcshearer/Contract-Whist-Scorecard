@@ -152,11 +152,11 @@ class Notifications {
     public static func processOnlineGameNotification(message: String, args: [String], category: String, confirm: Bool = true) {
         var skipNotification = false
         let viewController = Utility.getActiveViewController()
-        if viewController is BroadcastViewController {
-            let broadcastViewController = viewController as! BroadcastViewController
+        if viewController is ClientViewController {
+            let clientViewController = viewController as! ClientViewController
             // Check that we're looking to play (rather than share) and emails match
-            if broadcastViewController.commsPurpose == .playing {
-                if broadcastViewController.thisPlayer == args[3] {
+            if clientViewController.commsPurpose == .playing {
+                if clientViewController.thisPlayer == args[3] {
                     // Already in the right place and right player - just send notification
                     NotificationCenter.default.post(name: .onlineInviteReceived, object: self, userInfo: nil)
                 }
@@ -190,9 +190,9 @@ class Notifications {
     }
     
     public static func launchOnlineGame(welcomeViewController: WelcomeViewController, matchDeviceName: String) {
-        welcomeViewController.broadcastTitle = "Join Online Game"
-        welcomeViewController.broadcastCommsPurpose = .playing
-        welcomeViewController.broadcastMatchDeviceName = matchDeviceName
-        welcomeViewController.performSegue(withIdentifier: "showBroadcast", sender: welcomeViewController)
+        welcomeViewController.clientTitle = "Join Online Game"
+        welcomeViewController.clientCommsPurpose = .playing
+        welcomeViewController.clientMatchDeviceName = matchDeviceName
+        welcomeViewController.performSegue(withIdentifier: "showClient", sender: welcomeViewController)
     }
 }

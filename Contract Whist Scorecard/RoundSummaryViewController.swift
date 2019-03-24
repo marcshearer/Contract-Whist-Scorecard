@@ -55,9 +55,9 @@ class RoundSummaryViewController: CustomViewController {
         super.viewDidAppear(animated)
         
         if self.scorecard.commsHandlerMode == .roundSummary {
-            // Notify broadcast controller that round summary display complete
+            // Notify client controller that round summary display complete
             self.scorecard.commsHandlerMode = .none
-            NotificationCenter.default.post(name: .broadcastHandlerCompleted, object: self, userInfo: nil)
+            NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
         }
     }
     

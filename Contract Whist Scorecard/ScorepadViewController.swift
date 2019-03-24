@@ -124,8 +124,8 @@ class ScorepadViewController: CustomViewController,
         returnEntry()
     }
     
-    @IBAction func hideBroadcastRoundSummary(segue:UIStoryboardSegue) {
-        // Only used in broadcast
+    @IBAction func hideClientRoundSummary(segue:UIStoryboardSegue) {
+        // Only used in client
         roundSummaryViewController = nil
         formatButtons()
     }
@@ -216,7 +216,7 @@ class ScorepadViewController: CustomViewController,
                 // Popup the round summary unless we have a made for the current round or we haven't got any bids yet
                 if self.scorecard.roundStarted(self.scorecard.maxEnteredRound) &&
                         !self.scorecard.roundMadeStarted(self.scorecard.maxEnteredRound) {
-                    self.performSegue(withIdentifier: "showBroadcastRoundSummary", sender: self)
+                    self.performSegue(withIdentifier: "showClientRoundSummary", sender: self)
                 } else if scorecard.gameComplete(rounds: self.rounds) {
                     self.performSegue(withIdentifier: "showGameSummary", sender: self)
                 }
@@ -293,9 +293,9 @@ class ScorepadViewController: CustomViewController,
         formatButtons()
         
         if self.scorecard.commsHandlerMode == .scorepad {
-            // Notify broadcast controller that scorepad display complete
+            // Notify client controller that scorepad display complete
             self.scorecard.commsHandlerMode = .none
-            NotificationCenter.default.post(name: .broadcastHandlerCompleted, object: self, userInfo: nil)
+            NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
         }
         self.view.setNeedsLayout()
     }
@@ -729,14 +729,14 @@ class ScorepadViewController: CustomViewController,
             destination.suits = self.suits
             destination.reeditMode = scorecard.roundPlayer(playerNumber: scorecard.currentPlayers, round: scorecard.selectedRound).score(scorecard.selectedRound) != nil ? true : false
             
-        case "showBroadcastRoundSummary":
+        case "showClientRoundSummary":
             
             roundSummaryViewController  = segue.destination as? RoundSummaryViewController
             roundSummaryViewController.modalPresentationStyle = UIModalPresentationStyle.popover
             roundSummaryViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             roundSummaryViewController.popoverPresentationController?.sourceView = scorepadView
             roundSummaryViewController.preferredContentSize = CGSize(width: 400, height: 554)
-            roundSummaryViewController.returnSegue = "hideBroadcastRoundSummary"
+            roundSummaryViewController.returnSegue = "hideClientRoundSummary"
             roundSummaryViewController.scorecard = self.scorecard
             roundSummaryViewController.rounds = self.rounds
             roundSummaryViewController.cards = self.cards

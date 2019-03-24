@@ -178,9 +178,9 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         viewWidth = view.safeAreaLayoutGuide.layoutFrame.width
         
         if self.scorecard.commsHandlerMode == .playHand {
-            // Notify broadcast controller that hand display complete
+            // Notify client controller that hand display complete
             self.scorecard.commsHandlerMode = .none
-            NotificationCenter.default.post(name: .broadcastHandlerCompleted, object: self, userInfo: nil)
+            NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
         }
         
         self.stateController()
@@ -436,7 +436,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
                 Utility.executeAfter("bidComplete", delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 1.0), completion: {
                     self.finishButton.isHidden = false
                     self.scorecard.commsHandlerMode = .none
-                    NotificationCenter.default.post(name: .broadcastHandlerCompleted, object: self, userInfo: nil)
+                    NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
                     self.bidMode(newBidMode)
                     self.stateController()
                 })
@@ -495,7 +495,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
                         Utility.executeAfter("trickComplete", delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 1.0), completion: {
                             self.finishButton.isHidden = false
                             self.scorecard.commsHandlerMode = .none
-                            NotificationCenter.default.post(name: .broadcastHandlerCompleted, object: self, userInfo: nil)
+                            NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
                         })
                     }	
                 } else {
@@ -952,7 +952,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             self.delegate?.handComplete()
             if self.scorecard.commsHandlerMode == .dismiss {
                 self.scorecard.commsHandlerMode = .none
-                NotificationCenter.default.post(name: .broadcastHandlerCompleted, object: self, userInfo: nil)
+                NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
             }
         })
     }

@@ -216,7 +216,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         // Return to main menu
         self.returnHome()
         
-        // Check that Broadcast button doesn't exist
+        // Check that View Broadcast button doesn't exist
         self.assertNotExists(app.navigationBars.buttons["broadcast"])
         
         // Go back into Settings
@@ -228,8 +228,8 @@ extension Contract_Whist_Scorecard_UI_Tests {
         // Return to home page
         self.returnHome()
         
-        // Go into Broadcast option
-        self.tap(app.navigationBars.buttons["broadcast"])
+        // Go into View Broadcast option
+        self.tap(app.navigationBars.buttons["view broadcast"])
         
         // Return to home page
         self.returnHome()

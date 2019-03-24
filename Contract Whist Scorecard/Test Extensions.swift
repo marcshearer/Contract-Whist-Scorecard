@@ -249,7 +249,7 @@ extension HandViewController {
     
     func setHandlerCompleteNotification() {
         // Set a notification for handler complete
-        self.handTestData.observer = NotificationCenter.default.addObserver(forName: .broadcastHandlerCompleted, object: nil, queue: nil) {
+        self.handTestData.observer = NotificationCenter.default.addObserver(forName: .clientHandlerCompleted, object: nil, queue: nil) {
             (notification) in
             NotificationCenter.default.removeObserver(self.handTestData.observer)
             self.checkTestWait()
@@ -257,7 +257,7 @@ extension HandViewController {
     }
 }
 
-extension BroadcastViewController {
+extension ClientViewController {
     
     @IBAction private func rotationGesture(recognizer:UIRotationGestureRecognizer) {
         

@@ -20,9 +20,9 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     private let sync = Sync()
     
     // Properties to pass state to / from segues
-    public var broadcastTitle: String!
-    public var broadcastMatchDeviceName: String!
-    public var broadcastCommsPurpose: CommsConnectionPurpose!
+    public var clientTitle: String!
+    public var clientMatchDeviceName: String!
+    public var clientCommsPurpose: CommsConnectionPurpose!
     public var playingComputer = false
 
     // Local state variables
@@ -84,7 +84,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         setupButtons()
     }
     
-    @IBAction func hideBroadcast(segue:UIStoryboardSegue) {
+    @IBAction func hideClient(segue:UIStoryboardSegue) {
         getCloudVersion(async: true)
         setupButtons()
         actionsTableView.reloadData()
@@ -482,9 +482,9 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     
     func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
         let viewController = popoverPresentationController.presentedViewController
-        if viewController is BroadcastViewController {
-            let broadcastViewController = viewController as! BroadcastViewController
-            broadcastViewController.finishBroadcast()
+        if viewController is ClientViewController {
+            let clientViewController = viewController as! ClientViewController
+            clientViewController.finishClient()
         } else if viewController is HostViewController {
             let hostViewController = viewController as! HostViewController
             hostViewController.finishHost()
@@ -630,9 +630,9 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     }
     
     private func joinGame() -> Void {
-        self.broadcastCommsPurpose = .playing
-        self.broadcastTitle = "Join a Game"
-        self.performSegue(withIdentifier: "showBroadcast", sender: self)
+        self.clientCommsPurpose = .playing
+        self.clientTitle = "Join a Game"
+        self.performSegue(withIdentifier: "showClient", sender: self)
     }
     
     private func computerGame() -> Void {
@@ -641,9 +641,9 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     }
     
     private func viewGame() {
-        self.broadcastCommsPurpose = .sharing
-           self.broadcastTitle = "View a Game"
-        self.performSegue(withIdentifier: "showBroadcast", sender: self)
+        self.clientCommsPurpose = .sharing
+           self.clientTitle = "View a Game"
+        self.performSegue(withIdentifier: "showClient", sender: self)
     }
 
     // MARK: - Segue Prepare Handler ================================================================ -
@@ -663,15 +663,15 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             destination.backImage = "home"
             destination.backText = ""
             
-        case "showBroadcast":
-            let destination = segue.destination as! BroadcastViewController
-            destination.returnSegue = "hideBroadcast"
+        case "showClient":
+            let destination = segue.destination as! ClientViewController
+            destination.returnSegue = "hideClient"
             destination.backImage = "home"
             destination.backText = ""
-            destination.formTitle = self.broadcastTitle
+            destination.formTitle = self.clientTitle
             destination.scorecard = self.scorecard
-            destination.commsPurpose = self.broadcastCommsPurpose
-            destination.matchDeviceName = self.broadcastMatchDeviceName
+            destination.commsPurpose = self.clientCommsPurpose
+            destination.matchDeviceName = self.clientMatchDeviceName
         
         case "showHost":
             let destination = segue.destination as! HostViewController

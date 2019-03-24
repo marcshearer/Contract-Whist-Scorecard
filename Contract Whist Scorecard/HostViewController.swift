@@ -988,7 +988,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     
     func handlerCompleteNotification() -> NSObjectProtocol? {
         // Set a notification for handler complete
-        let observer = NotificationCenter.default.addObserver(forName: .broadcastHandlerCompleted, object: nil, queue: nil) {
+        let observer = NotificationCenter.default.addObserver(forName: .clientHandlerCompleted, object: nil, queue: nil) {
             (notification) in
             // Flag not waiting and then process next entry in the queue
             self.scorecard.commsHandlerMode = .none

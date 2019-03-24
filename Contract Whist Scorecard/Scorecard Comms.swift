@@ -196,9 +196,9 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 })
                 self.handViewController = handViewController
             } else if self.commsHandlerMode == .playHand {
-                // Notify broadcast controller that hand display already complete
+                // Notify client controller that hand display already complete
                 self.commsHandlerMode = .none
-                NotificationCenter.default.post(name: .broadcastHandlerCompleted, object: self, userInfo: nil)
+                NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
             }
         } else if self.isSharing {
             self.sendPlayersOverrideSettings()

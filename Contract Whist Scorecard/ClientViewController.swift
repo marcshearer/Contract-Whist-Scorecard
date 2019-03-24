@@ -1,5 +1,5 @@
 //
-//  BroadcastViewController.swift
+//  ClientViewController.swift
 //  Contract Whist Scorecard
 //
 //  Created by Marc Shearer on 27/05/2017.
@@ -20,7 +20,7 @@ enum AppState {
     case connected
 }
 
-class BroadcastViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate, SearchDelegate, CutDelegate, GamePreviewDelegate, UIPopoverPresentationControllerDelegate {
+class ClientViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate, SearchDelegate, CutDelegate, GamePreviewDelegate, UIPopoverPresentationControllerDelegate {
 
     // MARK: - Class Properties ======================================================================== -
     
@@ -61,7 +61,7 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
     private var gameUUID: String!
     private var playerSection: Int!
     private var peerSection: Int!
-    private var broadcastHandlerObserver: NSObjectProtocol?
+    private var clientHandlerObserver: NSObjectProtocol?
     private var multipeerClient: MultipeerService?
     private var rabbitMQClient: RabbitMQService?
     private var appState: AppState!
@@ -73,12 +73,12 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
     
     @IBOutlet weak var titleBar: UINavigationItem!
     @IBOutlet weak var finishButton: RoundedButton!
-    @IBOutlet weak var broadcastTableView: UITableView!
+    @IBOutlet weak var clientTableView: UITableView!
     @IBOutlet weak var instructionLabel: UILabel!
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
 
-    @IBAction func hideBroadcastScorepad(segue:UIStoryboardSegue) {
+    @IBAction func hideClientScorepad(segue:UIStoryboardSegue) {
         // Manual return - disconnect and refresh
         self.restart()
     }
@@ -86,7 +86,7 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
     @IBAction private func linkFinishGame(segue:UIStoryboardSegue) {
         if let segue = segue as? UIStoryboardSegueWithCompletion {
             segue.completion = {
-                self.exitBroadcast()
+                self.exitClient()
             }
         }
     }
@@ -94,7 +94,7 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func finishPressed(_ sender: RoundedButton) {
-        exitBroadcast()
+        exitClient()
     }
     
     // MARK: - View Overrides ========================================================================== -
@@ -144,7 +144,7 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
                 if self.scorecard.recoveryOnlineMode == .invite {
                     if self.thisPlayer == nil {
                         self.alertMessage("Error recovering game", okHandler: {
-                            self.exitBroadcast()
+                            self.exitClient()
                         })
                         return
                     }
@@ -171,7 +171,7 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
                     self.thisPlayer = playerMO!.email
                 }
             }
-            self.broadcastTableView.reloadRows(at: [IndexPath(row: 0, section: playerSection)], with: .automatic)
+            self.clientTableView.reloadRows(at: [IndexPath(row: 0, section: playerSection)], with: .automatic)
         }
         
         self.createConnections()
@@ -184,7 +184,7 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
         self.scorecard.handState = nil
         
         // Set observer to detect UI handler completion
-        broadcastHandlerObserver = self.handlerCompleteNotification()
+        clientHandlerObserver = self.handlerCompleteNotification()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -497,7 +497,7 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
         self.scorecard.commsHandlerMode = mode
         self.scorecard.recoveryMode = false
         self.recoveryMode = true
-        self.performSegue(withIdentifier: "showBroadcastScorepad", sender: self)
+        self.performSegue(withIdentifier: "showClientScorepad", sender: self)
     }
     
     func peerFound(peer: CommsPeer) {
@@ -513,10 +513,10 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
                 
             } else {
                 // New peer - add to list
-                self.broadcastTableView.beginUpdates()
+                self.clientTableView.beginUpdates()
                 self.available.append(Available(peer: peer))
-                self.broadcastTableView.insertRows(at: [IndexPath(row: self.available.count - 1, section: self.peerSection)], with: .automatic)
-                self.broadcastTableView.endUpdates()
+                self.clientTableView.insertRows(at: [IndexPath(row: self.available.count - 1, section: self.peerSection)], with: .automatic)
+                self.clientTableView.endUpdates()
             }
             if self.matchDeviceName != nil && peer.deviceName == self.matchDeviceName {
                 // Recovering/reacting to notification and this is the device I'm waiting for!
@@ -578,7 +578,7 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
         self.scorecard.commsDelegate?.stop()
         self.scorecard.commsDelegate?.start(email: self.thisPlayer)
         self.available = []
-        self.broadcastTableView.reloadData()
+        self.clientTableView.reloadData()
         self.appStateChange(to: .notConnected)
         self.changePlayerAvailable()
         scorecard.reset()
@@ -588,12 +588,12 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
     @objc private func refreshInvites(_ sender: Any? = nil) {
         // Refresh online game invites
         if sender != nil {
-            Utility.debugMessage("broadcast", "Timer")
+            Utility.debugMessage("client", "Timer")
         }
         if self.scorecard.onlineEnabled && self.appState == .notConnected {
             self.rabbitMQClient?.stop()
             self.rabbitMQClient?.start(email: self.thisPlayer)
-            self.broadcastTableView.reloadRows(at: [IndexPath(row: 0, section: playerSection)], with: .automatic)
+            self.clientTableView.reloadRows(at: [IndexPath(row: 0, section: playerSection)], with: .automatic)
         }
     }
     
@@ -671,7 +671,7 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
 
     func error(_ message: String) {
         Utility.getActiveViewController()?.alertMessage(message, title: "Connected Devices", okHandler: {
-            self.exitBroadcast()
+            self.exitClient()
         })
     }
 
@@ -734,10 +734,10 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell: BroadcastTableCell!
+        var cell: ClientTableCell!
         if self.commsPurpose != .playing || indexPath.section == self.peerSection {
             // List of remote peers
-            cell = tableView.dequeueReusableCell(withIdentifier: "Service Cell", for: indexPath) as? BroadcastTableCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Service Cell", for: indexPath) as? ClientTableCell
             
             let availableFound = self.available[indexPath.row]
             let deviceName = availableFound.deviceName
@@ -795,11 +795,11 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
                 cell.disconnectButton.isHidden = true
             }
             
-            cell.disconnectButton.addTarget(self, action: #selector(BroadcastViewController.disconnectPressed(_:)), for: UIControl.Event.touchUpInside)
+            cell.disconnectButton.addTarget(self, action: #selector(ClientViewController.disconnectPressed(_:)), for: UIControl.Event.touchUpInside)
             
         } else {
             // My details when joining a game
-            cell = tableView.dequeueReusableCell(withIdentifier: "Player Cell", for: indexPath) as? BroadcastTableCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Player Cell", for: indexPath) as? ClientTableCell
             if self.thisPlayer != nil {
                 if let playerMO = self.scorecard.findPlayerByEmail(self.thisPlayer) {
                     cell.playerNameLabel.text = playerMO.name!
@@ -813,7 +813,7 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
             
             self.changePlayerButton = cell.changePlayerButton
             if !self.recoveryMode {
-                cell.changePlayerButton.addTarget(self, action: #selector(BroadcastViewController.changePlayerPressed(_:)), for: UIControl.Event.touchUpInside)
+                cell.changePlayerButton.addTarget(self, action: #selector(ClientViewController.changePlayerPressed(_:)), for: UIControl.Event.touchUpInside)
             }
             self.changePlayerAvailable()
         }
@@ -875,7 +875,7 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
         if !complete {
             // Cancel taken - exit if no player
             if thisPlayer == nil {
-                exitBroadcast()
+                exitClient()
             }
         } else {
             if let onlineEmail = self.scorecard.settingOnlinePlayerEmail {
@@ -908,7 +908,7 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
         self.timer = Timer.scheduledTimer(
             timeInterval: TimeInterval(10),
             target: self,
-            selector: #selector(BroadcastViewController.refreshInvites(_:)),
+            selector: #selector(ClientViewController.refreshInvites(_:)),
             userInfo: nil,
             repeats: true)
     }
@@ -919,7 +919,7 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
     
     private func handlerCompleteNotification() -> NSObjectProtocol? {
         // Set a notification for handler complete
-        let observer = NotificationCenter.default.addObserver(forName: .broadcastHandlerCompleted, object: nil, queue: nil) {
+        let observer = NotificationCenter.default.addObserver(forName: .clientHandlerCompleted, object: nil, queue: nil) {
             (notification) in
             // Flag not waiting and then process next entry in the queue
             self.scorecard.commsHandlerMode = .none
@@ -934,7 +934,7 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
     
     @objc private func disconnectPressed(_ button: UIButton) {
         if self.recoveryMode {
-            self.exitBroadcast(resetRecovery: false)
+            self.exitClient(resetRecovery: false)
         } else {
             self.scorecard.commsDelegate?.stop()
             self.matchDeviceName = nil
@@ -984,7 +984,7 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
     
     private func segueToRoundSummary() {
         self.scorecard.commsHandlerMode = .roundSummary
-        scorepadViewController.performSegue(withIdentifier: "showBroadcastRoundSummary", sender: scorepadViewController)
+        scorepadViewController.performSegue(withIdentifier: "showClientRoundSummary", sender: scorepadViewController)
     }
     
     private func showGameSummary() {
@@ -1013,7 +1013,7 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
         scorepadViewController.performSegue(withIdentifier: "showGameSummary", sender: scorepadViewController)
     }
     
-    public func finishBroadcast(resetRecovery: Bool = true) {
+    public func finishClient(resetRecovery: Bool = true) {
         self.clearSchedule()
         UIApplication.shared.isIdleTimerDisabled = false
         self.scorecard.commsDelegate?.stop()
@@ -1029,27 +1029,27 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
         }
         self.scorecard.resetSharing()
         Notifications.removeTemporaryOnlineGameSubscription()
-        self.clearHandlerCompleteNotification(observer: self.broadcastHandlerObserver)
+        self.clearHandlerCompleteNotification(observer: self.clientHandlerObserver)
     }
     
-    private func exitBroadcast(resetRecovery: Bool = true) {
-        self.finishBroadcast(resetRecovery: resetRecovery)
+    private func exitClient(resetRecovery: Bool = true) {
+        self.finishClient(resetRecovery: resetRecovery)
         self.performSegue(withIdentifier: self.returnSegue, sender: self)
     }
     
     private func removeEntry(peer: CommsPeer) {
         let index = available.index(where: {$0.deviceName == peer.deviceName && $0.framework == peer.framework})
         if index != nil {
-            self.broadcastTableView.beginUpdates()
+            self.clientTableView.beginUpdates()
             self.available.remove(at: index!)
-            self.broadcastTableView.deleteRows(at: [IndexPath(row: index!, section: peerSection)], with: .automatic)
-            self.broadcastTableView.endUpdates()
+            self.clientTableView.deleteRows(at: [IndexPath(row: index!, section: peerSection)], with: .automatic)
+            self.clientTableView.endUpdates()
         }
     }
     
     private func refreshStatus() {
         // Just refresh all
-        self.broadcastTableView.reloadData()
+        self.clientTableView.reloadData()
     }
     
     private func dismissAll(_ alert: Bool = false, reason: String = "", completion: (()->())? = nil) {
@@ -1202,7 +1202,7 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
     override internal func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         switch segue.identifier! {
-        case "showBroadcastScorepad":
+        case "showClientScorepad":
             scorepadViewController = segue.destination as? ScorepadViewController
             scorepadViewController.scorecard = self.scorecard
             scorepadViewController.scorepadMode = .display
@@ -1211,7 +1211,7 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
             scorepadViewController.bounce = self.bounce
             scorepadViewController.bonus2 = self.bonus2
             scorepadViewController.suits = self.suits
-            scorepadViewController.returnSegue = "hideBroadcastScorepad"
+            scorepadViewController.returnSegue = "hideClientScorepad"
             scorepadViewController.parentView = view
             scorepadViewController.rabbitMQService = self.rabbitMQClient
             
@@ -1253,7 +1253,7 @@ class Available {
     }
 }
     
-class BroadcastTableCell: UITableViewCell {
+class ClientTableCell: UITableViewCell {
     @IBOutlet weak var serviceLabel: UILabel!
     @IBOutlet weak var stateLabel: UILabel!
     @IBOutlet weak var playerNameLabel: UILabel!
@@ -1266,5 +1266,5 @@ class BroadcastTableCell: UITableViewCell {
 // MARK: - Utility Classes ======================================================================== -
 
 extension Notification.Name {
-    static let broadcastHandlerCompleted = Notification.Name("broadcastHandlerCompleted")
+    static let clientHandlerCompleted = Notification.Name("clientHandlerCompleted")
 }

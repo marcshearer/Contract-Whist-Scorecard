@@ -10,11 +10,11 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Broadcast-->
+        <!--Client-->
         <scene sceneID="fYe-Pl-Hjh">
             <objects>
-                <viewController storyboardIdentifier="BroadcastViewController" title="Broadcast" useStoryboardIdentifierAsRestorationIdentifier="YES" id="aZe-pG-rMs" userLabel="Broadcast" customClass="BroadcastViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="hFM-Q5-ViO" userLabel="Broadcast View">
+                <viewController storyboardIdentifier="ClientViewController" title="Client" useStoryboardIdentifierAsRestorationIdentifier="YES" id="aZe-pG-rMs" customClass="ClientViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="hFM-Q5-ViO" userLabel="Client View">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -65,7 +65,7 @@
                                 <rect key="frame" x="0.0" y="244" width="375" height="423"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Player Cell" id="DWM-b5-d8B" customClass="BroadcastTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Player Cell" id="DWM-b5-d8B" customClass="ClientTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="37" width="375" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" contentMode="center" tableViewCell="DWM-b5-d8B" id="Xe4-4Z-48C">
@@ -161,7 +161,7 @@
                                             <outlet property="playerNameLabel" destination="iMN-2e-x1S" id="dcf-sx-js1"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Service Cell" rowHeight="60" id="57Y-fT-rsC" userLabel="Broadcast Service Cell" customClass="BroadcastTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Service Cell" rowHeight="60" id="57Y-fT-rsC" userLabel="Client Service Cell" customClass="ClientTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="97" width="375" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="57Y-fT-rsC" id="ZcL-vg-Z6W">
@@ -255,12 +255,12 @@
                     </view>
                     <navigationItem key="navigationItem" id="K9H-Ar-v7H"/>
                     <connections>
-                        <outlet property="broadcastTableView" destination="dtV-HG-agM" id="aWT-jL-OBm"/>
+                        <outlet property="clientTableView" destination="dtV-HG-agM" id="ShH-Ew-7io"/>
                         <outlet property="finishButton" destination="0Si-5j-YyO" id="tNG-UY-Tpu"/>
                         <outlet property="instructionLabel" destination="9Kw-mc-Kjh" id="IHg-Bo-Qju"/>
                         <outlet property="titleBar" destination="9bb-Wg-XPQ" id="Iik-d7-aIX"/>
-                        <segue destination="xqo-YA-Qav" kind="unwind" identifier="hideBroadcast" unwindAction="hideBroadcastWithSegue:" id="fOe-cu-YCR"/>
-                        <segue destination="Plw-2P-Gw9" kind="show" identifier="showBroadcastScorepad" id="D9t-VC-kIf"/>
+                        <segue destination="xqo-YA-Qav" kind="unwind" identifier="hideClient" unwindAction="hideClientWithSegue:" id="fOe-cu-YCR"/>
+                        <segue destination="Plw-2P-Gw9" kind="show" identifier="showClientScorepad" id="D9t-VC-kIf"/>
                         <segue destination="xqo-YA-Qav" kind="unwind" identifier="linkFinishGame" customClass="UIStoryboardSegueWithCompletion" customModule="Contract_Whist_Scorecard" customModuleProvider="target" unwindAction="linkFinishGameWithSegue:" id="HUC-JM-W3W"/>
                     </connections>
                 </viewController>

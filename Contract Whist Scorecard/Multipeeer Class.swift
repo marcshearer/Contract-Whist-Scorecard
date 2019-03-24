@@ -278,7 +278,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCNearbyServiceBrowserDe
         if let device = device {
             outputMessage = outputMessage + " Device: \(device)"
         }
-        Utility.debugMessage("Multipeer", message, force: force)
+        Utility.debugMessage("multipeer", message, force: force)
     }
     
     private func commsConnectionState(_ state: MCSessionState) -> CommsConnectionState {

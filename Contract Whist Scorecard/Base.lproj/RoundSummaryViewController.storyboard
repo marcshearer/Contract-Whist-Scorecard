@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -15,11 +11,11 @@
             <objects>
                 <viewController storyboardIdentifier="RoundSummaryViewController" title="Round Summary" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FQp-co-xnK" customClass="RoundSummaryViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="eJU-jx-Ao1">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="♦︎" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="120" translatesAutoresizingMaskIntoConstraints="NO" id="r0e-On-sEv">
-                                <rect key="frame" x="37.5" y="33" width="300" height="219"/>
+                                <rect key="frame" x="150" y="33" width="300" height="219"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="eQ5-fh-Hkw"/>
                                     <constraint firstAttribute="height" constant="219" id="zlB-7T-kEM"/>
@@ -29,7 +25,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1 Under" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="40" translatesAutoresizingMaskIntoConstraints="NO" id="UAK-eu-59d">
-                                <rect key="frame" x="52.5" y="237" width="270" height="194.5"/>
+                                <rect key="frame" x="165" y="237" width="270" height="127.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="270" id="Vs7-P1-coH"/>
                                     <constraint firstAttribute="height" constant="96" id="ePW-W3-Xru"/>
@@ -39,7 +35,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player 1 bid x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="cld-jQ-HAn">
-                                <rect key="frame" x="67.5" y="439" width="240" height="36"/>
+                                <rect key="frame" x="180" y="372" width="240" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="fFp-Bi-8M5"/>
                                 </constraints>
@@ -48,7 +44,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player 2 bid x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="3wM-w4-4DI">
-                                <rect key="frame" x="67.5" y="483" width="240" height="36"/>
+                                <rect key="frame" x="180" y="416" width="240" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="FMl-43-FC4"/>
                                 </constraints>
@@ -57,7 +53,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player 3 bid x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="8aH-vc-6ie">
-                                <rect key="frame" x="67.5" y="527" width="240" height="36"/>
+                                <rect key="frame" x="180" y="460" width="240" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="rPz-oj-uoT"/>
                                 </constraints>
@@ -66,7 +62,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player 4 bid x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="p0z-M5-FE8">
-                                <rect key="frame" x="67.5" y="571" width="240" height="36"/>
+                                <rect key="frame" x="180" y="504" width="240" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="vra-Cb-QGn"/>
                                 </constraints>
@@ -126,6 +122,7 @@
                         </variation>
                         <variation key="heightClass=compact-widthClass=compact">
                             <mask key="constraints">
+                                <exclude reference="1dd-lf-s4G"/>
                                 <exclude reference="6iy-NE-rEH"/>
                                 <include reference="9F3-zC-tKI"/>
                                 <exclude reference="gB7-FO-AHy"/>
@@ -139,7 +136,6 @@
                                 <exclude reference="Vw4-lY-1sS"/>
                                 <exclude reference="SS5-7q-qXd"/>
                                 <include reference="c1e-S0-mvc"/>
-                                <exclude reference="1dd-lf-s4G"/>
                             </mask>
                         </variation>
                         <connections>
@@ -157,7 +153,7 @@
                         <outlet property="roundSummaryView" destination="eJU-jx-Ao1" id="Hld-BC-mvQ"/>
                         <outlet property="trumpSuit" destination="r0e-On-sEv" id="WLI-Ax-q80"/>
                         <segue destination="87s-SM-hFA" kind="unwind" identifier="hideRoundSummary" unwindAction="hideRoundSummaryWithSegue:" id="AE6-Pb-Vpx"/>
-                        <segue destination="87s-SM-hFA" kind="unwind" identifier="hideBroadcastRoundSummary" unwindAction="hideBroadcastRoundSummaryWithSegue:" id="7tj-4T-ue4"/>
+                        <segue destination="87s-SM-hFA" kind="unwind" identifier="hideClientRoundSummary" unwindAction="hideClientRoundSummaryWithSegue:" id="7tj-4T-ue4"/>
                         <segue destination="87s-SM-hFA" kind="unwind" identifier="hideHandRoundSummary" unwindAction="hideHandRoundSummaryWithSegue:" id="v8j-Hw-3zZ"/>
                     </connections>
                 </viewController>

@@ -67,7 +67,7 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
             UIApplication.shared.isIdleTimerDisabled = false
             var toSegue: String
             if self.scorecard.hasJoined {
-                // Link to home via broadcast (no sync)
+                // Link to home via client (no sync)
                 self.performSegue(withIdentifier: "linkFinishGame", sender: self)
             } else {
                 if self.scorecard.isHosting {
@@ -127,9 +127,9 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
         super.viewDidAppear(animated)
         
         if self.scorecard.commsHandlerMode == .gameSummary {
-            // Notify broadcast controller that game summary display complete
+            // Notify client controller that game summary display complete
             self.scorecard.commsHandlerMode = .none
-            NotificationCenter.default.post(name: .broadcastHandlerCompleted, object: self, userInfo: nil)
+            NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
         }
         self.autoNewGame()
     }

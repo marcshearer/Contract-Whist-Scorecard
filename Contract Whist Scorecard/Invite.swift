@@ -216,7 +216,7 @@ class Invite {
                 // Log invites received
                 if self.inviteEmails != nil {
                     for email in self.inviteEmails {
-                        Utility.debugMessage("Invite", "To \(email) - \(Utility.dateString(self.expiryDate, format: "dd/MM/yyyy HH:mm:ss.ff", localized: false)) - \(self.inviteUUID!)")
+                        Utility.debugMessage("invite", "To \(email) - \(Utility.dateString(self.expiryDate, format: "dd/MM/yyyy HH:mm:ss.ff", localized: false)) - \(self.inviteUUID!)")
                     }
                 }
                 
@@ -275,7 +275,7 @@ class Invite {
                                                email: hostEmail,
                                                name: hostName,
                                                inviteUUID: inviteUUID))
-            Utility.debugMessage("Invite", "From \(hostEmail) - \((!checkExpiry ? "no expiry" : Utility.dateString(expires as Date, format: "dd/MM/yyyy HH:mm:ss.ff", localized: false))) - \(inviteUUID)")
+            Utility.debugMessage("invite", "From \(hostEmail) - \((!checkExpiry ? "no expiry" : Utility.dateString(expires as Date, format: "dd/MM/yyyy HH:mm:ss.ff", localized: false))) - \(inviteUUID)")
         }
         
         queryOperation.queryCompletionBlock = { (cursor, error) -> Void in

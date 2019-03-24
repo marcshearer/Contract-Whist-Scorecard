@@ -35,10 +35,10 @@
                                     <color key="textColor" name="alternateSelectedControlTextColor" catalog="System" colorSpace="catalog"/>
                                 </textAttributes>
                                 <items>
-                                    <navigationItem title="Players" largeTitleDisplayMode="always" id="m6r-TL-1uc">
+                                    <navigationItem title="Select Players" largeTitleDisplayMode="always" id="m6r-TL-1uc">
                                         <barButtonItem key="leftBarButtonItem" id="oFN-gk-zJZ">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="c4B-zY-SXT" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="16" y="11" width="22" height="22"/>
+                                                <rect key="frame" x="16" y="11" width="100" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" image="home"/>
                                                 <connections>
@@ -46,66 +46,14 @@
                                                 </connections>
                                             </button>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" width="80" id="B99-s7-Is3" customClass="clearButton">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="IUQ-4A-4dU" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="259" y="11" width="100" height="22"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Select" image="forward"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="boolean" keyPath="sizeToFit" value="YES"/>
-                                                </userDefinedRuntimeAttributes>
-                                                <connections>
-                                                    <action selector="actionPressedWithSender:" destination="FdF-BR-2d1" eventType="touchUpInside" id="e9v-I3-QQa"/>
-                                                </connections>
-                                            </button>
-                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fkd-P2-7LD" userLabel="Heading View">
-                                <rect key="frame" x="0.0" y="64" width="375" height="0.0"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CLj-vz-qLy">
-                                        <rect key="frame" x="20" y="20" width="227" height="0.0"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" name="Message"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hbu-du-02f" customClass="DarkRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="267" y="-15" width="100" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="100" id="Hul-qg-6Rt"/>
-                                            <constraint firstAttribute="height" constant="30" id="mwj-9R-P8x"/>
-                                        </constraints>
-                                        <state key="normal" title="Other player"/>
-                                        <connections>
-                                            <action selector="otherPlayerPressed:" destination="FdF-BR-2d1" eventType="touchUpInside" id="WCb-W0-HWH"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="Hbu-du-02f" secondAttribute="trailing" constant="8" id="Hcc-vH-8ru"/>
-                                    <constraint firstAttribute="bottom" secondItem="CLj-vz-qLy" secondAttribute="bottom" constant="20" id="Hlq-JF-6M1"/>
-                                    <constraint firstItem="Hbu-du-02f" firstAttribute="leading" secondItem="CLj-vz-qLy" secondAttribute="trailing" constant="20" id="UT4-8d-w2e"/>
-                                    <constraint firstItem="CLj-vz-qLy" firstAttribute="leading" secondItem="Fkd-P2-7LD" secondAttribute="leading" constant="20" id="Zyf-5w-haG"/>
-                                    <constraint firstItem="Hbu-du-02f" firstAttribute="centerY" secondItem="Fkd-P2-7LD" secondAttribute="centerY" id="bmC-eW-ndg"/>
-                                    <constraint firstAttribute="height" id="cVH-ci-ddM"/>
-                                    <constraint firstItem="CLj-vz-qLy" firstAttribute="top" secondItem="Fkd-P2-7LD" secondAttribute="top" constant="20" id="vGH-D7-Ooa"/>
-                                </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FUI-fV-xDp" userLabel="Separator">
-                                <rect key="frame" x="0.0" y="64" width="375" height="1"/>
-                                <color key="backgroundColor" name="Message"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="1" id="q9g-6u-E8O"/>
-                                </constraints>
-                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5F0-qL-9mB">
-                                <rect key="frame" x="0.0" y="65" width="375" height="602"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Select Players Cell" rowHeight="70" id="tsN-dZ-Zmr" customClass="SelectPlayersCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Select Players Cell" rowHeight="70" id="tsN-dZ-Zmr" customClass="SelectPlayersCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tsN-dZ-Zmr" id="lKd-uw-dvN">
@@ -218,42 +166,30 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="SFv-D6-ZCK" secondAttribute="trailing" id="1Cl-wX-sTm"/>
                             <constraint firstItem="yjr-WB-jwA" firstAttribute="trailing" secondItem="8Be-gQ-047" secondAttribute="trailing" id="1F9-cZ-RwV"/>
-                            <constraint firstItem="Fkd-P2-7LD" firstAttribute="trailing" secondItem="8Be-gQ-047" secondAttribute="trailing" id="4aG-vX-ZYW"/>
                             <constraint firstItem="M8e-Hu-tx9" firstAttribute="trailing" secondItem="8Be-gQ-047" secondAttribute="trailing" id="89U-5d-tzb"/>
                             <constraint firstItem="veY-xK-eSr" firstAttribute="bottom" secondItem="QDd-v3-3U4" secondAttribute="top" id="8FH-1J-k3b"/>
                             <constraint firstAttribute="trailing" secondItem="veY-xK-eSr" secondAttribute="trailing" id="Bj4-Vf-MYn"/>
                             <constraint firstItem="SFv-D6-ZCK" firstAttribute="top" secondItem="QDd-v3-3U4" secondAttribute="bottom" id="EPW-h3-blQ"/>
-                            <constraint firstItem="FUI-fV-xDp" firstAttribute="leading" secondItem="8Be-gQ-047" secondAttribute="leading" id="F3u-K5-LmA"/>
-                            <constraint firstItem="Fkd-P2-7LD" firstAttribute="leading" secondItem="8Be-gQ-047" secondAttribute="leading" id="GG1-V1-4Mc"/>
                             <constraint firstItem="yjr-WB-jwA" firstAttribute="top" secondItem="5F0-qL-9mB" secondAttribute="bottom" id="Hgv-iI-CUH"/>
                             <constraint firstAttribute="bottom" secondItem="SFv-D6-ZCK" secondAttribute="bottom" id="JP8-Lm-ulc"/>
-                            <constraint firstItem="5F0-qL-9mB" firstAttribute="top" secondItem="FUI-fV-xDp" secondAttribute="bottom" id="LB4-Yb-GW2"/>
-                            <constraint firstItem="FUI-fV-xDp" firstAttribute="top" secondItem="Fkd-P2-7LD" secondAttribute="bottom" id="PuX-rs-BEB"/>
-                            <constraint firstAttribute="trailing" secondItem="FUI-fV-xDp" secondAttribute="trailing" id="TIy-kE-Akp"/>
+                            <constraint firstItem="5F0-qL-9mB" firstAttribute="top" secondItem="M8e-Hu-tx9" secondAttribute="bottom" id="PdI-PC-osX"/>
                             <constraint firstItem="veY-xK-eSr" firstAttribute="leading" secondItem="8Be-gQ-047" secondAttribute="leading" id="WVp-Ad-kAt"/>
                             <constraint firstItem="yjr-WB-jwA" firstAttribute="bottom" secondItem="8Be-gQ-047" secondAttribute="bottom" constant="44" id="bYF-oc-CHO"/>
-                            <constraint firstItem="5F0-qL-9mB" firstAttribute="leading" secondItem="QDd-v3-3U4" secondAttribute="leading" id="f9t-pe-Kzq"/>
+                            <constraint firstItem="5F0-qL-9mB" firstAttribute="leading" secondItem="8Be-gQ-047" secondAttribute="leading" id="f9t-pe-Kzq"/>
                             <constraint firstItem="yjr-WB-jwA" firstAttribute="leading" secondItem="8Be-gQ-047" secondAttribute="leading" id="hZg-bG-4M5"/>
                             <constraint firstItem="M8e-Hu-tx9" firstAttribute="leading" secondItem="8Be-gQ-047" secondAttribute="leading" id="hkh-fk-623"/>
                             <constraint firstItem="M8e-Hu-tx9" firstAttribute="top" secondItem="QDd-v3-3U4" secondAttribute="top" id="k8j-zU-8Fh"/>
                             <constraint firstItem="veY-xK-eSr" firstAttribute="top" secondItem="8Be-gQ-047" secondAttribute="top" id="nJk-uw-8z6"/>
                             <constraint firstItem="SFv-D6-ZCK" firstAttribute="leading" secondItem="8Be-gQ-047" secondAttribute="leading" id="sMO-64-rig"/>
-                            <constraint firstItem="Fkd-P2-7LD" firstAttribute="top" secondItem="M8e-Hu-tx9" secondAttribute="bottom" id="vOn-lD-ffd"/>
-                            <constraint firstItem="5F0-qL-9mB" firstAttribute="trailing" secondItem="QDd-v3-3U4" secondAttribute="trailing" id="wVX-GQ-Wx8"/>
+                            <constraint firstItem="5F0-qL-9mB" firstAttribute="trailing" secondItem="8Be-gQ-047" secondAttribute="trailing" id="wVX-GQ-Wx8"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="QDd-v3-3U4"/>
                     </view>
                     <connections>
-                        <outlet property="actionButton" destination="IUQ-4A-4dU" id="vOn-at-AUt"/>
                         <outlet property="backButton" destination="c4B-zY-SXT" id="K2K-7H-Ukb"/>
                         <outlet property="changeAllButton" destination="mFn-E2-icG" id="pB6-ka-IvU"/>
                         <outlet property="footerPaddingTopConstraint" destination="EPW-h3-blQ" id="liL-gP-rJx"/>
-                        <outlet property="headingViewHeightConstraint" destination="cVH-ci-ddM" id="LVq-dr-2ZW"/>
-                        <outlet property="helpLabel" destination="CLj-vz-qLy" id="yJK-Zn-lz9"/>
                         <outlet property="navigationBar" destination="M8e-Hu-tx9" id="NHh-T7-H0y"/>
-                        <outlet property="otherPlayerButton" destination="Hbu-du-02f" id="Da9-zn-UFH"/>
-                        <outlet property="otherPlayerButtonWidthConstraint" destination="Hul-qg-6Rt" id="puX-1a-wAv"/>
-                        <outlet property="separatorView" destination="FUI-fV-xDp" id="XKl-KS-VVK"/>
                         <outlet property="tableView" destination="5F0-qL-9mB" id="xiu-mw-YXs"/>
                         <outlet property="toolbarViewHeightConstraint" destination="4XP-4H-Aqj" id="92W-AA-IcL"/>
                         <segue destination="QyQ-Rg-qN6" kind="popoverPresentation" identifier="showPlayerDetail" popoverAnchorView="8Be-gQ-047" id="HMI-oF-Oax">
@@ -279,7 +215,6 @@
     </scenes>
     <resources>
         <image name="box" width="142" height="167"/>
-        <image name="forward" width="14" height="20"/>
         <image name="home" width="22" height="22"/>
         <namedColor name="Banner">
             <color red="0.33300000429153442" green="0.33300000429153442" blue="0.33300000429153442" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

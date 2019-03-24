@@ -719,7 +719,6 @@
 				B221EEEA210B1B0800F7FBA0 /* History */,
 				B221EEE9210B1AE800F7FBA0 /* History Detail */,
 				B221EEEE210B1B4400F7FBA0 /* High Scores */,
-				B211E1382241650800B48D64 /* Select Players */,
 			);
 			name = "Other Main Views";
 			sourceTree = "<group>";
@@ -732,6 +731,7 @@
 				B221EEE6210B1AB100F7FBA0 /* Search */,
 				B221EEE5210B1AA900F7FBA0 /* Hand */,
 				B2B18016211862FF008D3BAA /* Review */,
+				B211E1382241650800B48D64 /* Select Players */,
 			);
 			name = "Online Game Views";
 			sourceTree = "<group>";

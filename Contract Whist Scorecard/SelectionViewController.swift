@@ -655,22 +655,10 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     func addNewPlayer() {
         if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
-            // Either enter a new player or choose from cloud
-            let actionSheet = ActionSheet(view: availableCollectionView, direction: .left, x: width, y: width / 2)
-            actionSheet.add("Get existing player from Cloud", handler: self.selectCloudPlayers)
-            actionSheet.add("Create new player manually", handler: {
-                self.performSegue(withIdentifier: "showPlayerDetail", sender: self)
-            })
-            actionSheet.add("Cancel", style: .cancel)
-            actionSheet.present()
-            
+            self.performSegue(withIdentifier: "showSelectPlayers", sender: self)
         } else {
             self.performSegue(withIdentifier: "showPlayerDetail", sender: self)
         }
-    }
-    
-    private func selectCloudPlayers() {
-        self.performSegue(withIdentifier: "showSelectPlayers", sender: self)
     }
     
     // MARK: - Segue Prepare Handler =================================================================== -
@@ -704,9 +692,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             destination.returnSegue = "hideSelectionSelectPlayers"
             destination.backText = "Cancel"
             destination.actionText = "Download"
-            destination.actionSegue = "hideSelectionSelectPlayers"
-            destination.helpText = "Select from the list below or click 'Other player' to add a specific player using their Unique ID."
             destination.allowOtherPlayer = true
+            destination.allowNewPlayer = true
             
         default:
             break

@@ -298,9 +298,8 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
             destination.returnSegue = "hideGetStartedSelectPlayers"
             destination.backText = "Cancel"
             destination.actionText = "Download"
-            destination.actionSegue = "hideGetStartedSelectPlayers"
-            destination.helpText = "Select players to download to this device from the list below"
             destination.allowOtherPlayer = false
+            destination.allowNewPlayer = false
             
         default:
             break

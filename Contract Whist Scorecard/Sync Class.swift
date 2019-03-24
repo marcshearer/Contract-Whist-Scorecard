@@ -79,7 +79,7 @@ class Sync {
     weak public var delegate: SyncDelegate?
     
     // Main state properties
-    public var scorecard: Scorecard!
+    public weak var scorecard: Scorecard!
     
     // Local class variables
     private var errors = 0
@@ -127,6 +127,12 @@ class Sync {
         } else {
             return true
         }
+    }
+    
+    public func stop() {
+        self.syncPhaseCount = syncPhases.count
+        self.delegate = nil
+        self.scorecard = nil
     }
     
     public func synchronise(syncMode: SyncMode = .syncAll, specificEmail: [String] = [], specificExternalId: String! = nil, timeout: Double! = 30.0, waitFinish: Bool = true) {

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1FF83AD567C0F221FB2F142C /* Pods_Contract_Whist_Scorecard.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 728F0C12F548197273CE5846 /* Pods_Contract_Whist_Scorecard.framework */; };
-		49075FFC1E0E578E008E06FA /* StatsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49075FFB1E0E578E008E06FA /* StatsViewController.swift */; };
+		49075FFC1E0E578E008E06FA /* PlayersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49075FFB1E0E578E008E06FA /* PlayersViewController.swift */; };
 		493D3CD61DFC58730075D658 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493D3CD51DFC58730075D658 /* SettingsViewController.swift */; };
 		49410E4E1DF1A251000BDA6D /* Player Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49410E4D1DF1A251000BDA6D /* Player Class.swift */; };
 		49410E501DF1A712000BDA6D /* Scorecard Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49410E4F1DF1A712000BDA6D /* Scorecard Class.swift */; };
@@ -63,7 +63,7 @@
 		B227892D1FB88BDD009BABCA /* HistoryDetailViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B227892B1FB88BDD009BABCA /* HistoryDetailViewController.storyboard */; };
 		B22789301FB88D33009BABCA /* HistoryViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B227892E1FB88D33009BABCA /* HistoryViewController.storyboard */; };
 		B22789331FB88FA5009BABCA /* ComparisonViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789311FB88FA5009BABCA /* ComparisonViewController.storyboard */; };
-		B22789361FB8911F009BABCA /* StatsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789341FB8911F009BABCA /* StatsViewController.storyboard */; };
+		B22789361FB8911F009BABCA /* PlayersViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789341FB8911F009BABCA /* PlayersViewController.storyboard */; };
 		B22789391FB8924C009BABCA /* HighScoresViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789371FB8924C009BABCA /* HighScoresViewController.storyboard */; };
 		B227893C1FB8932A009BABCA /* SyncViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B227893A1FB8932A009BABCA /* SyncViewController.storyboard */; };
 		B227893F1FB893C9009BABCA /* SettingsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B227893D1FB893C9009BABCA /* SettingsViewController.storyboard */; };
@@ -184,7 +184,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		49075FFB1E0E578E008E06FA /* StatsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatsViewController.swift; sourceTree = "<group>"; };
+		49075FFB1E0E578E008E06FA /* PlayersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayersViewController.swift; sourceTree = "<group>"; };
 		493D3CD51DFC58730075D658 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		49410E4D1DF1A251000BDA6D /* Player Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Player Class.swift"; sourceTree = "<group>"; };
 		49410E4F1DF1A712000BDA6D /* Scorecard Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "Scorecard Class.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -242,7 +242,7 @@
 		B227892C1FB88BDD009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/HistoryDetailViewController.storyboard; sourceTree = "<group>"; };
 		B227892F1FB88D33009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/HistoryViewController.storyboard; sourceTree = "<group>"; };
 		B22789321FB88FA5009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ComparisonViewController.storyboard; sourceTree = "<group>"; };
-		B22789351FB8911F009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/StatsViewController.storyboard; sourceTree = "<group>"; };
+		B22789351FB8911F009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/PlayersViewController.storyboard; sourceTree = "<group>"; };
 		B22789381FB8924C009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/HighScoresViewController.storyboard; sourceTree = "<group>"; };
 		B227893B1FB8932A009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SyncViewController.storyboard; sourceTree = "<group>"; };
 		B227893E1FB893C9009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SettingsViewController.storyboard; sourceTree = "<group>"; };
@@ -618,8 +618,8 @@
 		B221EEED210B1B2000F7FBA0 /* Players */ = {
 			isa = PBXGroup;
 			children = (
-				B22789341FB8911F009BABCA /* StatsViewController.storyboard */,
-				49075FFB1E0E578E008E06FA /* StatsViewController.swift */,
+				B22789341FB8911F009BABCA /* PlayersViewController.storyboard */,
+				49075FFB1E0E578E008E06FA /* PlayersViewController.swift */,
 			);
 			name = Players;
 			sourceTree = "<group>";
@@ -1114,7 +1114,7 @@
 				B22789011FB83AA7009BABCA /* WelcomeViewController.storyboard in Resources */,
 				CCEA53E31DF3D19F0045292C /* Notes.txt in Resources */,
 				B22789241FB882F7009BABCA /* BroadcastViewController.storyboard in Resources */,
-				B22789361FB8911F009BABCA /* StatsViewController.storyboard in Resources */,
+				B22789361FB8911F009BABCA /* PlayersViewController.storyboard in Resources */,
 				B22789451FB8951A009BABCA /* GraphViewController.storyboard in Resources */,
 				B22789021FB83AA7009BABCA /* SelectionViewController.storyboard in Resources */,
 				B2B180232119610C008D3BAA /* ReviewViewController.storyboard in Resources */,
@@ -1247,7 +1247,7 @@
 				B20A66FE1E24002400E75190 /* GameSummaryViewController.swift in Sources */,
 				CC4CC0FB1DEADC32007FB24F /* ScorepadViewController.swift in Sources */,
 				B2B180142114AD92008D3BAA /* (null) in Sources */,
-				49075FFC1E0E578E008E06FA /* StatsViewController.swift in Sources */,
+				49075FFC1E0E578E008E06FA /* PlayersViewController.swift in Sources */,
 				CC395F4B1E063D9600165D1C /* CutViewController.swift in Sources */,
 				B250610020CD7F480030EE8F /* Recovery.swift in Sources */,
 				B267DF75211F41FC0086D521 /* Admin Menu.swift in Sources */,
@@ -1482,12 +1482,12 @@
 			name = ComparisonViewController.storyboard;
 			sourceTree = "<group>";
 		};
-		B22789341FB8911F009BABCA /* StatsViewController.storyboard */ = {
+		B22789341FB8911F009BABCA /* PlayersViewController.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				B22789351FB8911F009BABCA /* Base */,
 			);
-			name = StatsViewController.storyboard;
+			name = PlayersViewController.storyboard;
 			sourceTree = "<group>";
 		};
 		B22789371FB8924C009BABCA /* HighScoresViewController.storyboard */ = {

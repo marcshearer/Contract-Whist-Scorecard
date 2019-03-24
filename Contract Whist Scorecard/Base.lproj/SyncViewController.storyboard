@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -31,7 +27,7 @@
                                     <navigationItem title="Sync Players" id="QE3-YK-Vgx">
                                         <barButtonItem key="leftBarButtonItem" id="UWK-Lf-2VC">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="4KG-BW-XxS" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="11" width="54" height="22"/>
+                                                <rect key="frame" x="20" y="14" width="54" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Back" image="back"/>
                                                 <connections>
@@ -65,7 +61,7 @@
                                     <constraint firstAttribute="height" constant="240" id="pye-Qo-nQI"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Sync Table Cell" id="yzJ-ug-4qc" customClass="SyncTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Sync Table Cell" id="yzJ-ug-4qc" customClass="SyncTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="400" height="24"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="yzJ-ug-4qc" id="3A8-LK-MrF">
@@ -73,7 +69,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="WDk-9K-pR3">
-                                                    <rect key="frame" x="20" y="0.0" width="405" height="24"/>
+                                                    <rect key="frame" x="20" y="0.0" width="380" height="24"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -132,7 +128,7 @@
                         <outlet property="syncTableView" destination="Y7G-kk-6TA" id="5ea-gc-n0o"/>
                         <outlet property="syncView" destination="dRk-3e-k2c" id="CXZ-ZA-5Ye"/>
                         <segue destination="Jh3-Kw-C5Q" kind="unwind" identifier="hideSync" unwindAction="hideSyncWithSegue:" id="qVf-wd-GRw"/>
-                        <segue destination="Jh3-Kw-C5Q" kind="unwind" identifier="hideStatsSync" unwindAction="hideStatsSyncWithSegue:" id="V0T-vA-TfQ"/>
+                        <segue destination="Jh3-Kw-C5Q" kind="unwind" identifier="hidePlayersSync" unwindAction="hidePlayersSyncWithSegue:" id="V0T-vA-TfQ"/>
                         <segue destination="Jh3-Kw-C5Q" kind="unwind" identifier="hideComparisonSync" unwindAction="hideComparisonSyncWithSegue:" id="WTg-dv-w9S"/>
                         <segue destination="Jh3-Kw-C5Q" kind="unwind" identifier="hideHistorySync" unwindAction="hideHistorySyncWithSegue:" id="ZA3-ed-HIK"/>
                     </connections>

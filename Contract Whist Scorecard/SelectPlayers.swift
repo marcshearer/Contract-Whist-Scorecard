@@ -259,17 +259,17 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     func syncCompletion(_ errors: Int) {
     }
     
-    func syncReturnPlayers(_ playerList: [PlayerDetail]!) {
+    func syncReturnPlayers(_ returnedList: [PlayerDetail]!) {
         
         Utility.mainThread {
             self.cloudAlertController.dismiss(animated: true, completion: {
-                if playerList != nil {
-                    var playerList = playerList!
-                    playerList.sort(by: { $0.name < $1.name})
+                if returnedList != nil {
+                    var returnedList = returnedList!
+                    returnedList.sort(by: { $0.name < $1.name})
                     self.playerList = []
                     self.selection = []
                     self.selected = 0
-                    for playerDetail in playerList {
+                    for playerDetail in returnedList {
                         let index = self.scorecard.playerList.index(where: {($0.email == playerDetail.email)})
                         if index == nil {
                             self.playerList.append(playerDetail)

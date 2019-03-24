@@ -177,7 +177,7 @@
                         <segue destination="lvI-KL-xbx" kind="presentation" identifier="showGetStarted" id="zF4-ui-zT9"/>
                         <segue destination="aof-hj-4vM" kind="presentation" identifier="showBroadcast" id="Ueo-VZ-u5x"/>
                         <segue destination="zUj-ZD-lpe" kind="show" identifier="showHost" id="CD4-VA-JxI"/>
-                        <segue destination="gsX-G4-58w" kind="show" identifier="showStats" id="7ir-Fu-KYu"/>
+                        <segue destination="gsX-G4-58w" kind="show" identifier="showPlayers" id="7ir-Fu-KYu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UlI-9p-3xx" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -202,10 +202,10 @@
             </objects>
             <point key="canvasLocation" x="6978" y="350"/>
         </scene>
-        <!--Stats-->
+        <!--Players-->
         <scene sceneID="oYQ-Y3-jEL">
             <objects>
-                <viewControllerPlaceholder storyboardIdentifier="StatsViewController" storyboardName="StatsViewController" referencedIdentifier="StatsViewController" id="gsX-G4-58w" userLabel="Stats" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardIdentifier="PlayersViewController" storyboardName="PlayersViewController" referencedIdentifier="PlayersViewController" id="gsX-G4-58w" userLabel="Players" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c8P-0T-CAt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="6944" y="405"/>

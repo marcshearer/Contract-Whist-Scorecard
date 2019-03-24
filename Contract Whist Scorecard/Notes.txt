@@ -111,7 +111,7 @@ Default UserDefault settings are in AppDelegate
 You can make a controller a delegate for a child view and hence receive information on things changing back in the parent
 The parent or the child view can detect popover closure by adopting UIPopoverPresentationControllerDelegate and declaring popoverPresentationControllerShouldDismissPopover etc
 Swipes are associated with a specific control - look at the swipes right click - gesture recognizer in referencing outlet connections
-There is a problem in collection views when you delete or insert items. You have to do this in a batch update with the change to the counter - see deletePlayer() in StatsViewController
+There is a problem in collection views when you delete or insert items. You have to do this in a batch update with the change to the counter - see deletePlayer() in PlayersViewController
 Note that frame sizes are not correct yet until you get to viewDidAppear - you might have to avoid returning non-zero table view row count until you get to this point - see HandViewController
 Table views don't always scroll in Swift 4 - set   tableView.delaysContentTouches = TRUE (Best through User-Defined Runtime Attributes in Storyboard editor)
 To select a cell at initial display in a table view need to call cell.setSelected and tableView.selectRow from tableView.willDisplay (See SearchViewController)

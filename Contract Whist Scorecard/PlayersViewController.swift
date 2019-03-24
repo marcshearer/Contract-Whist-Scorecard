@@ -1,5 +1,5 @@
 //
-//  StatsViewController.swift
+//  PlayersViewController.swift
 //  Contract Whist Scorecard
 //
 //  Created by Marc Shearer on 24/12/2016.
@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class StatsViewController: CustomViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class PlayersViewController: CustomViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     // MARK: - Class Properties ======================================================================== -
     
@@ -44,11 +44,10 @@ class StatsViewController: CustomViewController, UICollectionViewDelegate, UICol
     private var observer: NSObjectProtocol?
 
     // UI component pointers
-    var collectionCell = [StatsCell?]()
+    var collectionCell = [PlayerCell?]()
     
     // MARK: - IB Outlets ============================================================================== -
-    @IBOutlet weak var statsView: UIView!
-    @IBOutlet weak var statsCollectionView: UICollectionView!
+    @IBOutlet weak var playersCollectionView: UICollectionView!
     @IBOutlet weak var selectButton: RoundedButton!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var finishButton: RoundedButton!
@@ -57,7 +56,7 @@ class StatsViewController: CustomViewController, UICollectionViewDelegate, UICol
     @IBOutlet weak var footerPaddingTopConstraint: NSLayoutConstraint!
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
-    @IBAction func statsHidePlayer(segue:UIStoryboardSegue) {
+    @IBAction func playersHidePlayerDetail(segue:UIStoryboardSegue) {
         
         if detailMode != .display {
             let source = segue.source as! PlayerDetailViewController
@@ -73,7 +72,7 @@ class StatsViewController: CustomViewController, UICollectionViewDelegate, UICol
                     // Update core data with any changes
                     playerDetail.deleteMO()
                     self.playerList.remove(at: selectedPlayer - 1)
-                    statsCollectionView.deleteItems(at: [IndexPath(row: selectedPlayer-1, section: 0)])
+                    playersCollectionView.deleteItems(at: [IndexPath(row: selectedPlayer-1, section: 0)])
                     // Remove this player from list of subscriptions
                     Notifications.updateHighScoreSubscriptions(scorecard: self.scorecard)
                     // Delete any detached games
@@ -95,13 +94,13 @@ class StatsViewController: CustomViewController, UICollectionViewDelegate, UICol
                         self.alertMessage("Error saving player")
                     }
                     
-                    statsCollectionView.reloadItems(at: [IndexPath(row: selectedPlayer-1, section: 0)])
+                    playersCollectionView.reloadItems(at: [IndexPath(row: selectedPlayer-1, section: 0)])
                 }
             }
         }
     }
     
-    @IBAction func hideStatsSync(segue:UIStoryboardSegue) {
+    @IBAction func hidePlayersSync(segue:UIStoryboardSegue) {
         // Refresh screen
         refreshView()
     }
@@ -120,7 +119,7 @@ class StatsViewController: CustomViewController, UICollectionViewDelegate, UICol
             }
         } else {
             // Select button is overloaded and is sync in this case
-            self.performSegue(withIdentifier: "showStatsSync", sender: self)
+            self.performSegue(withIdentifier: "showPlayersSync", sender: self)
         }
         
         formatButtons()
@@ -194,9 +193,9 @@ class StatsViewController: CustomViewController, UICollectionViewDelegate, UICol
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         layoutComplete = true
-        setWidth(frame: statsView.safeAreaLayoutGuide.layoutFrame)
+        setWidth(frame: self.view.safeAreaLayoutGuide.layoutFrame)
         self.formatButtons()
-        self.statsCollectionView.reloadData()
+        self.playersCollectionView.reloadData()
     }
     
     // MARK: - CollectionView Overrides ================================================================ -
@@ -215,11 +214,11 @@ class StatsViewController: CustomViewController, UICollectionViewDelegate, UICol
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        var cell: StatsCell
+        var cell: PlayerCell
         let playerNumber = indexPath.row + 1
         var dateLastPlayed = ""
         
-        cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Stats Cell", for: indexPath) as! StatsCell
+        cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Player Cell", for: indexPath) as! PlayerCell
         
         collectionCell[playerNumber-1] = cell
         
@@ -295,7 +294,7 @@ class StatsViewController: CustomViewController, UICollectionViewDelegate, UICol
             if index != nil {   
                 // Found it - update from managed object and reload the cell
                 self.playerList[index!].fromManagedObject(playerMO: self.playerList[index!].playerMO)
-                self.statsCollectionView.reloadItems(at: [IndexPath(row: index!, section: 0)])
+                self.playersCollectionView.reloadItems(at: [IndexPath(row: index!, section: 0)])
             }
         }
     }
@@ -373,7 +372,7 @@ class StatsViewController: CustomViewController, UICollectionViewDelegate, UICol
         }
     }
     
-    func formatCell(_ cell: StatsCell, to: Bool) {
+    func formatCell(_ cell: PlayerCell, to: Bool) {
         cell.playerTick.isHidden = !to
         cell.playerTick.superview!.bringSubviewToFront(cell.playerTick)
         let alpha: CGFloat = (to || !multiSelectMode ? 1.0 : 0.5)
@@ -387,7 +386,7 @@ class StatsViewController: CustomViewController, UICollectionViewDelegate, UICol
     func refreshView() {
         // Reset everything
         scorecard.refreshPlayerDetailList(playerList)
-        statsCollectionView.reloadData()
+        playersCollectionView.reloadData()
         selection.removeAll()
         collectionCell.removeAll()
         selected = 0
@@ -415,22 +414,22 @@ class StatsViewController: CustomViewController, UICollectionViewDelegate, UICol
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.isModalInPopover = true
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = statsView as UIView
+            destination.popoverPresentationController?.sourceView = self.view as UIView
             destination.preferredContentSize = CGSize(width: 400, height: 540)
             destination.playerDetail = self.playerList[selectedPlayer - 1]
-            destination.returnSegue = "statsHidePlayer"
+            destination.returnSegue = "playersHidePlayerDetail"
             destination.mode = detailMode
             destination.scorecard = self.scorecard
             destination.sourceView = view
             
-        case "showStatsSync":
+        case "showPlayersSync":
             let destination = segue.destination as! SyncViewController
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.isModalInPopover = true
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = statsView
+            destination.popoverPresentationController?.sourceView = self.view
             destination.preferredContentSize = CGSize(width: 400, height: 523)
-            destination.returnSegue = "hideStatsSync"
+            destination.returnSegue = "hidePlayersSync"
             destination.scorecard = self.scorecard
         default:
             break
@@ -440,7 +439,7 @@ class StatsViewController: CustomViewController, UICollectionViewDelegate, UICol
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
 
-class StatsCell: UICollectionViewCell {
+class PlayerCell: UICollectionViewCell {
     @IBOutlet weak var playerDetailsView: UIView!
     @IBOutlet weak var playerValuesView: UIView!
     @IBOutlet weak var playerThumbnail: UIImageView!

@@ -492,7 +492,7 @@
                         <outlet property="footerPaddingView" destination="cSS-DE-NVq" id="q3K-5z-xeV"/>
                         <outlet property="navigationBar" destination="gXs-Is-mIL" id="X6w-8A-xWS"/>
                         <outlet property="tableView" destination="3Pf-sG-Che" id="wgU-9V-DwZ"/>
-                        <segue destination="8b0-42-FMB" kind="unwind" identifier="statsHidePlayer" unwindAction="statsHidePlayerWithSegue:" id="N4J-HH-Iea"/>
+                        <segue destination="8b0-42-FMB" kind="unwind" identifier="playersHidePlayerDetail" unwindAction="playersHidePlayerDetailWithSegue:" id="N4J-HH-Iea"/>
                         <segue destination="8b0-42-FMB" kind="unwind" identifier="selectionHidePlayer" unwindAction="selectionHidePlayerWithSegue:" id="jie-bG-1kE"/>
                         <segue destination="8b0-42-FMB" kind="unwind" identifier="comparisonHidePlayer" unwindAction="comparisonHidePlayerWithSegue:" id="8RM-dL-h1d"/>
                         <segue destination="8b0-42-FMB" kind="unwind" identifier="selectPlayersHidePlayerDetail" customClass="UIStoryboardSegueWithCompletion" customModule="Contract_Whist_Scorecard" customModuleProvider="target" unwindAction="selectPlayersHidePlayerDetailWithSegue:" id="tOR-Y7-qdf"/>

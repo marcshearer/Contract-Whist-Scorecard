@@ -14,7 +14,7 @@
         <!--Stats-->
         <scene sceneID="4Dd-4x-fCp">
             <objects>
-                <viewController storyboardIdentifier="StatsViewController" title="Stats" useStoryboardIdentifierAsRestorationIdentifier="YES" id="aCF-cU-Oeh" userLabel="Stats" customClass="StatsViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PlayersViewController" title="Stats" useStoryboardIdentifierAsRestorationIdentifier="YES" id="aCF-cU-Oeh" userLabel="Stats" customClass="PlayersViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9pw-Pu-D89">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -70,7 +70,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Stats Cell" id="w75-e0-5WD" customClass="StatsCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Player Cell" id="w75-e0-5WD" customClass="PlayerCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="59.5" y="0.0" width="256" height="286"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -321,36 +321,36 @@
                                         </constraints>
                                         <size key="customSize" width="256" height="286"/>
                                         <connections>
-                                            <outlet property="playerAverageScore" destination="Zl4-0o-dKa" id="Dli-YN-rkP"/>
-                                            <outlet property="playerAverageScoreLabel" destination="x9u-VU-u0J" id="ULI-3v-uJ7"/>
-                                            <outlet property="playerAverageScoreLabelHeight" destination="N6n-g4-A5e" id="KS0-6G-aEG"/>
-                                            <outlet property="playerAverageScoreLabelWidth" destination="XfP-wA-Dsi" id="6Md-xc-dra"/>
-                                            <outlet property="playerDetailsView" destination="Tih-jI-qw2" id="aeN-n8-NMx"/>
-                                            <outlet property="playerDisc" destination="MJX-in-yWy" id="Yco-0a-I6M"/>
-                                            <outlet property="playerLastPlayed" destination="TLq-W4-lVs" id="pty-Oc-rxb"/>
-                                            <outlet property="playerLastPlayedLabel" destination="xmI-eS-IZU" id="f3D-Ci-jHi"/>
-                                            <outlet property="playerLastPlayedLabelHeight" destination="djU-7V-gxE" id="hIZ-MI-kU7"/>
-                                            <outlet property="playerLastPlayedLabelWidth" destination="kna-fB-pgM" id="Qlf-OC-mtI"/>
-                                            <outlet property="playerMade" destination="vgw-wZ-Xvl" id="wtv-do-MI1"/>
-                                            <outlet property="playerMadeLabel" destination="yje-JT-5I1" id="OYe-dQ-cHE"/>
-                                            <outlet property="playerMadeLabelHeight" destination="I65-9J-mJl" id="K2h-6p-UNd"/>
-                                            <outlet property="playerMadeLabelWidth" destination="C7c-Hq-CWQ" id="VZV-q3-QOG"/>
-                                            <outlet property="playerName" destination="If4-lC-OYx" id="9PS-EA-SJ2"/>
-                                            <outlet property="playerPlayed" destination="gW4-JU-Ory" id="bnT-Tp-7Sv"/>
-                                            <outlet property="playerPlayedLabel" destination="mhO-n6-9gs" id="jbh-Y3-hqK"/>
-                                            <outlet property="playerPlayedLabelHeight" destination="fWi-7p-3Xt" id="fWx-Ar-jN5"/>
-                                            <outlet property="playerPlayedLabelWidth" destination="fz1-yA-nzr" id="3gm-M3-8EL"/>
-                                            <outlet property="playerThumbnail" destination="vj7-qT-kMQ" id="TwO-4x-0aA"/>
-                                            <outlet property="playerTick" destination="GbN-mR-uHI" id="lwN-zf-Drg"/>
-                                            <outlet property="playerTwos" destination="DmO-RU-tNH" id="T7B-DE-7Zn"/>
-                                            <outlet property="playerTwosLabel" destination="uzV-47-otO" id="GoG-au-qxB"/>
-                                            <outlet property="playerTwosLabelHeight" destination="z4I-n2-g88" id="1E8-QE-rp3"/>
-                                            <outlet property="playerTwosLabelWidth" destination="GFd-Zk-NvU" id="UkQ-kQ-ouW"/>
-                                            <outlet property="playerValuesView" destination="oX8-Wh-dps" id="q1o-wU-qXf"/>
-                                            <outlet property="playerWon" destination="Jsd-u4-RI3" id="FbP-Tn-0dA"/>
-                                            <outlet property="playerWonLabel" destination="kGe-uu-8RM" id="Nb0-0d-Trt"/>
-                                            <outlet property="playerWonLabelHeight" destination="Enm-Lo-XsS" id="QVe-9z-VzX"/>
-                                            <outlet property="playerWonLabelWidth" destination="RLb-Bq-z0m" id="fx8-ZA-ZcZ"/>
+                                            <outlet property="playerAverageScore" destination="Zl4-0o-dKa" id="x8i-pj-DaT"/>
+                                            <outlet property="playerAverageScoreLabel" destination="x9u-VU-u0J" id="H1c-fe-IBE"/>
+                                            <outlet property="playerAverageScoreLabelHeight" destination="N6n-g4-A5e" id="pzq-wz-aMo"/>
+                                            <outlet property="playerAverageScoreLabelWidth" destination="XfP-wA-Dsi" id="k2Q-th-4lX"/>
+                                            <outlet property="playerDetailsView" destination="Tih-jI-qw2" id="GTD-0b-tch"/>
+                                            <outlet property="playerDisc" destination="MJX-in-yWy" id="ErH-El-mIb"/>
+                                            <outlet property="playerLastPlayed" destination="TLq-W4-lVs" id="qCk-Ov-Ie4"/>
+                                            <outlet property="playerLastPlayedLabel" destination="xmI-eS-IZU" id="ASo-PJ-WnZ"/>
+                                            <outlet property="playerLastPlayedLabelHeight" destination="djU-7V-gxE" id="HiV-pX-gKZ"/>
+                                            <outlet property="playerLastPlayedLabelWidth" destination="kna-fB-pgM" id="4z2-iB-Xvk"/>
+                                            <outlet property="playerMade" destination="vgw-wZ-Xvl" id="XMU-IR-zFh"/>
+                                            <outlet property="playerMadeLabel" destination="yje-JT-5I1" id="FKT-Pc-m54"/>
+                                            <outlet property="playerMadeLabelHeight" destination="C7c-Hq-CWQ" id="79x-5Y-zWk"/>
+                                            <outlet property="playerMadeLabelWidth" destination="I65-9J-mJl" id="FxB-Ai-se3"/>
+                                            <outlet property="playerName" destination="If4-lC-OYx" id="h8C-CW-gn4"/>
+                                            <outlet property="playerPlayed" destination="gW4-JU-Ory" id="Hbl-Af-pVY"/>
+                                            <outlet property="playerPlayedLabel" destination="mhO-n6-9gs" id="Tyy-hB-7aa"/>
+                                            <outlet property="playerPlayedLabelHeight" destination="fWi-7p-3Xt" id="xE0-C6-jYO"/>
+                                            <outlet property="playerPlayedLabelWidth" destination="fz1-yA-nzr" id="1zG-NB-LFe"/>
+                                            <outlet property="playerThumbnail" destination="vj7-qT-kMQ" id="uhX-VO-8bk"/>
+                                            <outlet property="playerTick" destination="GbN-mR-uHI" id="wTx-Tk-ZV8"/>
+                                            <outlet property="playerTwos" destination="DmO-RU-tNH" id="ZJZ-Yy-tzI"/>
+                                            <outlet property="playerTwosLabel" destination="uzV-47-otO" id="qQN-z0-laT"/>
+                                            <outlet property="playerTwosLabelHeight" destination="z4I-n2-g88" id="N7J-0Y-d6h"/>
+                                            <outlet property="playerTwosLabelWidth" destination="GFd-Zk-NvU" id="obh-Nv-dWm"/>
+                                            <outlet property="playerValuesView" destination="oX8-Wh-dps" id="WPK-5Q-5I8"/>
+                                            <outlet property="playerWon" destination="Jsd-u4-RI3" id="wBZ-Np-7gE"/>
+                                            <outlet property="playerWonLabel" destination="kGe-uu-8RM" id="aWH-ya-Zu8"/>
+                                            <outlet property="playerWonLabelHeight" destination="Enm-Lo-XsS" id="5Vc-9T-3VM"/>
+                                            <outlet property="playerWonLabelWidth" destination="RLb-Bq-z0m" id="xEb-Oj-Lgr"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -432,15 +432,15 @@
                         <outlet property="cancelButton" destination="ohY-Mq-YSP" id="Kar-F4-EVq"/>
                         <outlet property="finishButton" destination="KBX-t5-3kT" id="fKV-4q-82q"/>
                         <outlet property="footerPaddingTopConstraint" destination="0qe-7a-Tw1" id="yvr-hO-yeN"/>
+                        <outlet property="navigationBar" destination="CMD-pe-gDa" id="YJZ-oV-eHG"/>
+                        <outlet property="playersCollectionView" destination="FRm-Jv-6Gi" id="cdt-26-U0W"/>
                         <outlet property="selectButton" destination="ahW-El-tKK" id="hWo-5W-451"/>
-                        <outlet property="statsCollectionView" destination="FRm-Jv-6Gi" id="VJO-ih-VgK"/>
-                        <outlet property="statsView" destination="9pw-Pu-D89" id="AL5-dU-eaO"/>
                         <outlet property="toolbarViewHeightConstraint" destination="Bgn-fM-Xyy" id="dIi-eu-tzx"/>
                         <segue destination="hXi-5H-nxR" kind="popoverPresentation" identifier="showPlayerDetail" popoverAnchorView="9pw-Pu-D89" id="RdC-bI-G6q">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
-                        <segue destination="0aR-2H-gBg" kind="unwind" identifier="hidePlayerStats" unwindAction="hidePlayerStatsWithSegue:" id="vRw-rF-DmI"/>
-                        <segue destination="jyU-H0-0Mr" kind="popoverPresentation" identifier="showStatsSync" popoverAnchorView="FRm-Jv-6Gi" id="F1T-bt-b75">
+                        <segue destination="0aR-2H-gBg" kind="unwind" identifier="hidePlayers" unwindAction="hidePlayersWithSegue:" id="vRw-rF-DmI"/>
+                        <segue destination="jyU-H0-0Mr" kind="popoverPresentation" identifier="showPlayersSync" popoverAnchorView="FRm-Jv-6Gi" id="F1T-bt-b75">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
                         <segue destination="0aR-2H-gBg" kind="unwind" identifier="selectionHideCloudPlayers" unwindAction="selectionHideCloudPlayersWithSegue:" id="Gmx-Lv-AIj"/>

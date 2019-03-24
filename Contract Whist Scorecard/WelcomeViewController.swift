@@ -103,7 +103,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         setupButtons()
     }
     
-    @IBAction func hidePlayerStats(segue:UIStoryboardSegue) {
+    @IBAction func hidePlayers(segue:UIStoryboardSegue) {
         scorecard.checkNetworkConnection(button: nil, label: syncMessage)
         getCloudVersion(async: true)
         enableButtons() // In case removed all players
@@ -376,7 +376,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             resumeGame()
         case playerStatsButton:
             // Player Stats
-            self.performSegue(withIdentifier: "showStats", sender: self )
+            self.performSegue(withIdentifier: "showPlayers", sender: self )
         case comparisonButton:
             // Player Stats
             self.performSegue(withIdentifier: "showComparison", sender: self )
@@ -691,13 +691,13 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             destination.backText = ""
             destination.scorecard = self.scorecard
             
-        case "showStats":
-            let destination = segue.destination as! StatsViewController
+        case "showPlayers":
+            let destination = segue.destination as! PlayersViewController
             destination.scorecard = self.scorecard
             destination.playerList = scorecard.playerDetailList()
             destination.multiSelectMode = false
             destination.detailMode = .amend
-            destination.returnSegue = "hidePlayerStats"
+            destination.returnSegue = "hidePlayers"
             destination.backImage = "home"
             destination.backText = ""
             

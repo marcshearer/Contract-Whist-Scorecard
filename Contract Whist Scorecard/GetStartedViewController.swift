@@ -8,20 +8,12 @@
 
 import UIKit
 
-class GetStartedViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, SyncDelegate {
+class GetStartedViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource {
 
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
     public var scorecard: Scorecard!
-    private let sync = Sync()
-    
-    // Properties to pass state to / from segues
-    public var cloudPlayerList: [PlayerDetail]!
-    
-    // Alert controller while waiting for cloud download
-    var cloudAlertController: UIAlertController!
-    var cloudIndicatorView: UIActivityIndicatorView!
     
     // UI component pointers
     var syncEnabledSelection: UISegmentedControl!
@@ -49,7 +41,7 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     }
     
     @IBAction func hideGetStartedDownloadPlayers(segue:UIStoryboardSegue) {
-        let source = segue.source as! StatsViewController
+        let source = segue.source as! SelectPlayersViewController
         if source.selected > 0 {
             var createPlayerList: [PlayerDetail] = []
             for playerNumber in 1...source.playerList.count {
@@ -73,7 +65,6 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        sync.initialise(scorecard: scorecard)
         ScorecardUI.selectBackground(size: view.frame.size, backgroundImage: backgroundImage)
         scorecard.checkNetworkConnection(button: self.downloadPlayersButton, label: nil, disable: true)
         enableButtons()
@@ -262,7 +253,6 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     }
     
     func createPlayers(newPlayers: [PlayerDetail]) {
-        var imageList: [PlayerMO] = []
         var newPlayers = newPlayers
         
         // Move entered player to top of list
@@ -273,83 +263,15 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
             newPlayers.insert(playerMO, at: 0)
         }
         
-        for newPlayerDetail in newPlayers {
-            // Reset date created to put entered player first
-            newPlayerDetail.localDateCreated = Date()
-            let playerMO = newPlayerDetail.createMO()
-            if playerMO != nil && newPlayerDetail.thumbnailDate != nil {
-                imageList.append(playerMO!)
-            }
-        }
-        if imageList.count > 0 {
-            getImages(imageList)
-        }
-        
         // Add these players to list of subscriptions
         Notifications.updateHighScoreSubscriptions(scorecard: self.scorecard)
     }
-
     
     // MARK: - Sync routines including the delegate methods ======================================== -
     
-    func selectCloudPlayers() -> (){
-        self.cloudAlertController = UIAlertController(title: title, message: "Searching Cloud for Available Players\n\n\n\n", preferredStyle: .alert)
+    func selectCloudPlayers() -> () {
         
-        self.sync.delegate = self
-        if self.sync.connect() {
-            
-            //add the activity indicator as a subview of the alert controller's view
-            self.cloudIndicatorView =
-                UIActivityIndicatorView(frame: CGRect(x: 0, y: 100,
-                                                      width: self.cloudAlertController.view.frame.width,
-                                                      height: 100))
-            self.cloudIndicatorView.style = .whiteLarge
-            self.cloudIndicatorView.color = UIColor.black
-            self.cloudIndicatorView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            self.cloudAlertController.view.addSubview(self.cloudIndicatorView)
-            self.cloudIndicatorView.isUserInteractionEnabled = true
-            self.cloudIndicatorView.startAnimating()
-            
-            self.present(self.cloudAlertController, animated: true, completion: nil)
-            
-            self.syncEmailTextField.text! = self.syncEmailTextField.text!.trim()
-            self.sync.synchronise(syncMode: .syncGetPlayers, specificEmail: [self.syncEmailTextField.text!])
-        } else {
-            self.alertMessage("Error getting players from iCloud")
-        }
-    }
-    
-    func getImages(_ imageFromCloud: [PlayerMO]) {
-        self.sync.fetchPlayerImagesFromCloud(imageFromCloud)
-    }
-    
-    func syncMessage(_ message: String) {
-    }
-
-    func syncAlert(_ message: String, completion: @escaping ()->()) {
-        Utility.mainThread {
-            self.cloudAlertController.dismiss(animated: true, completion: {
-                self.alertMessage(message, title: "Contract Whist Scorecard", okHandler: {
-                    completion()
-                })
-            })
-        }
-    }
-    
-    func syncCompletion(_ errors: Int) {
-    }
-    
-    func syncReturnPlayers(_ playerList: [PlayerDetail]!) {
-        Utility.mainThread {
-            self.cloudAlertController.dismiss(animated: true, completion: {
-                if playerList != nil && playerList.count != 0 {
-                    self.cloudPlayerList = playerList
-                    self.performSegue(withIdentifier: "showGetStartedDownloadPlayers", sender: self)
-                } else {
-                    self.alertMessage("Unable to find any games in the Cloud that this player has taken part in. Please check that it is correct and try again.", title: "Download from Cloud", buttonText: "Continue")
-                }
-            })
-        }
+        self.performSegue(withIdentifier: "showGetStartedDownloadPlayers", sender: self)
     }
     
     // MARK: - Segue Prepare Handler =================================================================== -
@@ -369,16 +291,16 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
             destination.returnSegue = "hideGetStartedSettings"
             
         case "showGetStartedDownloadPlayers":
-            let destination = segue.destination as! StatsViewController
-            destination.playerList = self.cloudPlayerList
+            let destination = segue.destination as! SelectPlayersViewController
             destination.scorecard = self.scorecard
-            destination.multiSelectMode = true
-            destination.detailMode = .none
+            destination.specificEmail = self.syncEmailTextField.text!
+            destination.descriptionMode = .lastPlayed
             destination.returnSegue = "hideGetStartedDownloadPlayers"
             destination.backText = "Cancel"
             destination.actionText = "Download"
             destination.actionSegue = "hideGetStartedDownloadPlayers"
-            destination.allowSync = false
+            destination.helpText = "Select players to download to this device from the list below"
+            destination.allowOtherPlayer = false
             
         default:
             break

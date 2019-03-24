@@ -333,7 +333,6 @@ class ComparisonViewController: CustomViewController, UITableViewDataSource, UIT
             destination.preferredContentSize = CGSize(width: 400, height: 540)
             destination.playerDetail = selectedList[selectedPlayer - 1]
             destination.returnSegue = "comparisonHidePlayer"
-            destination.selectedPlayer = self.selectedPlayer
             destination.mode = .amend
             destination.scorecard = self.scorecard
         case "showComparisonSync":

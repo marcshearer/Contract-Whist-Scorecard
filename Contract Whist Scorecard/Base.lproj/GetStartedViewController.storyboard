@@ -222,7 +222,7 @@
         <!--Player Stats-->
         <scene sceneID="yeZ-NN-hHJ">
             <objects>
-                <viewControllerPlaceholder storyboardIdentifier="UIViewController-aCF-cU-Oeh" storyboardName="StatsViewController" referencedIdentifier="StatsViewController" id="YJh-1A-cUe" userLabel="Player Stats" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardIdentifier="UIViewController-aCF-cU-Oeh" storyboardName="SelectPlayersViewController" referencedIdentifier="SelectPlayersViewController" id="YJh-1A-cUe" userLabel="Player Stats" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DaE-D6-tSm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="6999" y="-500"/>

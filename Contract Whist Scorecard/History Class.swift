@@ -123,6 +123,52 @@ class History {
         return results
     }
     
+    static func findOpponentNames(playerEmail: String) -> [String] {
+        // Fetch a list of opponent names (not emails) for a specific player email
+        var results: [String] = []
+        var gameUUID: [String] = []
+        var lastGameUUID: String?
+        var lastPlayerName: String?
+        
+        let predicate = NSPredicate(format: "email = %@", playerEmail)
+        
+        // Get game list for this player from core data
+        let participantList: [ParticipantMO] = CoreData.fetch(from: "Participant",
+                                                              filter: predicate,
+                                                              sort: ("gameUUID", .ascending))
+        
+        if participantList.count > 0 {
+
+            // Append unique game IDs to results
+            for participantMO in participantList {
+                if participantMO.gameUUID != lastGameUUID {
+                    gameUUID.append(participantMO.gameUUID!)
+                    lastGameUUID = participantMO.gameUUID!
+                }
+            }
+            
+            // Now get a list of all other players who also took part in these games
+            let predicate = NSPredicate(format: "gameUUID IN %@ AND email != %@", gameUUID, playerEmail)
+            
+            let participantList: [ParticipantMO] = CoreData.fetch(from: "Participant",
+                                                                   filter: predicate,
+                                                                   sort: ("name", .ascending))
+            
+            if participantList.count > 0 {
+                
+                // Append unique game IDs to results
+                for participantMO in participantList {
+                    if participantMO.name != lastPlayerName {
+                        results.append(participantMO.name!)
+                        lastPlayerName = participantMO.name
+                    }
+                }
+            }
+        }
+            
+        return results
+    }
+    
     static func getHighScores(type: HighScoreType, limit: Int = 3, playerEmailList: [String]) -> [ParticipantMO] {
         // Setup query filters
         var sort: [(key: String, direction: SortDirection)]

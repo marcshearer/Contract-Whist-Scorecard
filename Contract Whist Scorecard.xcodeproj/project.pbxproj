@@ -30,6 +30,8 @@
 		B20DA04A1E164EE60040221D /* Section headings in Resources */ = {isa = PBXBuildFile; fileRef = B20DA0491E164EE60040221D /* Section headings */; };
 		B20DA04C1E179DC70040221D /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DA04B1E179DC70040221D /* WelcomeViewController.swift */; };
 		B20DA0521E1FED040040221D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B20DA0511E1FED040040221D /* CloudKit.framework */; };
+		B211E137224164FB00B48D64 /* SelectPlayers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211E136224164FB00B48D64 /* SelectPlayers.swift */; };
+		B211E13A2241791400B48D64 /* SelectPlayersViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B211E1392241791400B48D64 /* SelectPlayersViewController.storyboard */; };
 		B214FB8C1FCADC7B00F4F39B /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B214FB8A1FCADC7B00F4F39B /* Interface.storyboard */; };
 		B214FB8E1FCADC7B00F4F39B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B214FB8D1FCADC7B00F4F39B /* Assets.xcassets */; };
 		B214FB951FCADC7B00F4F39B /* Contract Whist Watch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B214FB941FCADC7B00F4F39B /* Contract Whist Watch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -206,6 +208,8 @@
 		B20DA04B1E179DC70040221D /* WelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		B20DA04F1E1FEC5F0040221D /* Contract Whist Scorecard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Contract Whist Scorecard.entitlements"; sourceTree = "<group>"; };
 		B20DA0511E1FED040040221D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		B211E136224164FB00B48D64 /* SelectPlayers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPlayers.swift; sourceTree = "<group>"; };
+		B211E1392241791400B48D64 /* SelectPlayersViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = SelectPlayersViewController.storyboard; sourceTree = "<group>"; };
 		B214FB881FCADC7B00F4F39B /* Contract Whist Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Contract Whist Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B214FB8B1FCADC7B00F4F39B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		B214FB8D1FCADC7B00F4F39B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -402,6 +406,15 @@
 				728F0C12F548197273CE5846 /* Pods_Contract_Whist_Scorecard.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B211E1382241650800B48D64 /* Select Players */ = {
+			isa = PBXGroup;
+			children = (
+				B211E1392241791400B48D64 /* SelectPlayersViewController.storyboard */,
+				B211E136224164FB00B48D64 /* SelectPlayers.swift */,
+			);
+			name = "Select Players";
 			sourceTree = "<group>";
 		};
 		B214FB891FCADC7B00F4F39B /* Contract Whist Watch */ = {
@@ -706,6 +719,7 @@
 				B221EEEA210B1B0800F7FBA0 /* History */,
 				B221EEE9210B1AE800F7FBA0 /* History Detail */,
 				B221EEEE210B1B4400F7FBA0 /* High Scores */,
+				B211E1382241650800B48D64 /* Select Players */,
 			);
 			name = "Other Main Views";
 			sourceTree = "<group>";
@@ -1108,6 +1122,7 @@
 				B22789211FB881B9009BABCA /* HostViewController.storyboard in Resources */,
 				B22788EA1FB827A7009BABCA /* SearchViewController.storyboard in Resources */,
 				B227891B1FB84BA2009BABCA /* GameSummaryViewController.storyboard in Resources */,
+				B211E13A2241791400B48D64 /* SelectPlayersViewController.storyboard in Resources */,
 				B227892D1FB88BDD009BABCA /* HistoryDetailViewController.storyboard in Resources */,
 				B22789151FB8490F009BABCA /* EntryViewController.storyboard in Resources */,
 				B221EED5210B0DFE00F7FBA0 /* HandViewController.storyboard in Resources */,
@@ -1243,6 +1258,7 @@
 				B206A1381E50526100E26E96 /* LocationViewController.swift in Sources */,
 				B2B1802821196166008D3BAA /* Contract_Whist_Scorecard.xcdatamodeld in Sources */,
 				B2DD5D7C1ED1A87600725B55 /* Graph View Class.swift in Sources */,
+				B211E137224164FB00B48D64 /* SelectPlayers.swift in Sources */,
 				B2DD5D7E1ED323F400725B55 /* GraphViewController.swift in Sources */,
 				B2B755091E5B363200B1313B /* History Class.swift in Sources */,
 				B2BC51C71F7B5E8C0065F07D /* String Extensions.swift in Sources */,

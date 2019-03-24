@@ -134,7 +134,7 @@ class Utility {
         formatter.dateFormat = format
         return formatter.date(from: dateString)
     }
-    
+
     // MARK: - Percentages and quotients (with rounding to integer and protection from divide by zero) =============== -
     
     class func percent(_ numerator: CGFloat, _ denominator: CGFloat) -> CGFloat {
@@ -204,6 +204,25 @@ class Utility {
     class func sum(_ array: [Int]) -> Int {
         return array.reduce(0) {$0 + $1}
     }
+    
+    class func toString(_ array: [String]) -> String {
+        var result = ""
+        
+        for (index, element) in array.enumerated() {
+            
+            if result == "" {
+                result = element
+            } else {
+                if index == array.count-1 {
+                    result = result + " and " + element
+                } else {
+                    result = result + ", " + element
+                }
+            }
+        }
+        return result
+    }
+    
     //MARK: Cloud functions - get field from cloud for various types =====================================
     
     class func objectString(cloudObject: CKRecord, forKey: String) -> String! {

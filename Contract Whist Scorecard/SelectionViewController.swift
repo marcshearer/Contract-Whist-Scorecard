@@ -9,17 +9,13 @@
 import UIKit
 import CoreData
 
-class SelectionViewController: CustomViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, SyncDelegate {
+class SelectionViewController: CustomViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
 
     // MARK: - Class Properties ======================================================================== -
 
     // Main state properties
-    var scorecard: Scorecard!
-    private let sync = Sync()
+    public var scorecard: Scorecard!
     
-    // Properties to pass state to / from segues
-    public var cloudPlayerList: [PlayerDetail]!
-
     // Local class variables
     private var width: CGFloat = 0
     private let selectedViewSpacing:CGFloat = 10.0
@@ -28,16 +24,13 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private var testMode = false
     
     // Main local state handlers
+    private var availableList: [PlayerMO] = []
     private var selectedList = [PlayerMO?]()
     private var observer: NSObjectProtocol?
     
     // UI component pointers
     private var availableCell = [SelectionCell?]()
     private var selectedCell = [SelectionCell?]()
-    
-    // Alert controller while waiting for cloud download
-    var cloudAlertController: UIAlertController!
-    var cloudIndicatorView: UIActivityIndicatorView!
 
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet weak var availableCollectionView: UICollectionView!
@@ -70,8 +63,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         // Returning from game setup
     }
     
-    @IBAction func selectionHideCloudPlayers(segue:UIStoryboardSegue) {
-        let source = segue.source as! StatsViewController
+    @IBAction func hideSelectPlayersFromCloud(segue:UIStoryboardSegue) {
+        let source = segue.source as! SelectPlayersViewController
         if source.selected > 0 {
             var createPlayerList: [PlayerDetail] = []
             for playerNumber in 1...source.playerList.count {
@@ -118,16 +111,23 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        sync.initialise(scorecard: scorecard)
-        
         if let testModeValue = ProcessInfo.processInfo.environment["TEST_MODE"] {
             if testModeValue.lowercased() == "true" {
                 self.testMode = true
             }
         }
+
+        // Cell for new player
+        availableCell.append(nil)
         
-         for _ in 1...scorecard.playerList.count+1 {
+        // Add other cells/players
+        for playerMO in scorecard.playerList {
+            availableList.append(playerMO)
             availableCell.append(nil)
+        }
+        
+        for _ in 1...availableList.count + 1 {
+
         }
         
         for _ in 1...scorecard.numberPlayers {
@@ -199,7 +199,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
         if collectionView.tag == 1 {
-            return scorecard.playerList.count + 1 // Extra one for new player
+            return availableList.count + 1 // Extra one for new player
         } else {
             return min(selectedList.count, scorecard.numberPlayers)
         }
@@ -241,14 +241,14 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             } else {
                 
                 // Create new thumbnail
-                Utility.setThumbnail(data: scorecard.playerList[playerNumber-1].thumbnail,
+                Utility.setThumbnail(data: availableList[playerNumber-1].thumbnail,
                                      imageView: cell.thumbnail,
-                                     initials: scorecard.playerList[playerNumber-1].name!,
+                                     initials: availableList[playerNumber-1].name!,
                                      label: cell.disc)
                 
-                cell.name.text = scorecard.playerList[playerNumber-1].name!
+                cell.name.text = availableList[playerNumber-1].name!
                 
-                let isSelected = (playerIsSelected(scorecard.playerList[playerNumber-1]) != 0)
+                let isSelected = (playerIsSelected(availableList[playerNumber-1]) != 0)
                 let newAlpha:CGFloat = (isSelected ? selectedAlpha : 1.0)
                 cell.thumbnailView.alpha = newAlpha
                 cell.name.alpha = newAlpha
@@ -304,7 +304,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 
             } else {
                 // Existing player
-                let selectionSlot = playerIsSelected(scorecard.playerList[playerNumber-1])
+                let selectionSlot = playerIsSelected(availableList[playerNumber-1])
                 if selectionSlot == 0 {
                     // Wasn't selected - add it
                     addSelection(playerNumber)
@@ -354,7 +354,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     func updateImage(objectID: NSManagedObjectID) {
         // Find any cells containing an image which has just been downloaded asynchronously
         Utility.mainThread {
-            let availableIndex = self.scorecard.playerList.index(where: {($0.objectID == objectID)})
+            let availableIndex = self.availableList.index(where: {($0.objectID == objectID)})
             if availableIndex != nil {
                 // Found it - reload the cell
                 self.availableCollectionView.reloadItems(at: [IndexPath(row: availableIndex! + 1, section: 0)])
@@ -433,80 +433,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         }
     }
     
-    // MARK: - Sync routines including the delegate methods ======================================== -
-    
-    func selectCloudPlayers() {
-        self.cloudAlertController = UIAlertController(title: title, message: "Searching Cloud for Available Players\n\n\n\n", preferredStyle: .alert)
-        
-        self.sync.delegate = self
-        if self.sync.connect() {
-            
-            //add the activity indicator as a subview of the alert controller's view
-            self.cloudIndicatorView =
-                UIActivityIndicatorView(frame: CGRect(x: 0, y: 100,
-                                                      width: self.cloudAlertController.view.frame.width,
-                                                      height: 100))
-            self.cloudIndicatorView.style = .whiteLarge
-            self.cloudIndicatorView.color = UIColor.black
-            self.cloudIndicatorView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            self.cloudAlertController.view.addSubview(self.cloudIndicatorView)
-            self.cloudIndicatorView.isUserInteractionEnabled = true
-            self.cloudIndicatorView.startAnimating()
-            
-            self.present(self.cloudAlertController, animated: true, completion: nil)
-            
-            // Sync
-            self.sync.synchronise(syncMode: .syncGetPlayers)
-        } else {
-            self.alertMessage("Error getting players from iCloud")
-        }
-    }
-    
-    func getImages(_ imageFromCloud: [PlayerMO]) {
-        self.sync.fetchPlayerImagesFromCloud(imageFromCloud)
-    }
-    
-    func syncMessage(_ message: String) {
-    }
-    
-    func syncAlert(_ message: String, completion: @escaping ()->()) {
-        Utility.mainThread {
-            self.cloudAlertController.dismiss(animated: true, completion: {
-                self.alertMessage(message, title: "Contract Whist Scorecard", okHandler: {
-                    completion()
-                })
-            })
-        }
-    }
-    
-    func syncCompletion(_ errors: Int) {
-    }
-    
-    func syncReturnPlayers(_ playerList: [PlayerDetail]!) {
-        Utility.mainThread {
-            self.cloudAlertController.dismiss(animated: true, completion: {
-                if playerList != nil {
-                    self.cloudPlayerList = []
-                    for playerDetail in playerList {
-                        let index = self.scorecard.playerList.index(where: {($0.email == playerDetail.email)})
-                        if index == nil {
-                            self.cloudPlayerList.append(playerDetail)
-                        }
-                    }
-                    
-                    if self.cloudPlayerList.count == 0 {
-                        self.alertMessage("No additional players have been found who have played a game with the players on your device",title: "Download from Cloud", buttonText: "Continue")
-                    } else {
-                        self.performSegue(withIdentifier: "selectionCloudPlayers", sender: self)
-                    }
-                    
-                } else {
-                    self.alertMessage("Unable to connect to Cloud", buttonText: "Continue")
-                }
-            })
-        }
-    }
-
     // MARK: - Utility Routines ======================================================================== -
     
     func playerIsSelected(_ checkPlayer: PlayerMO) -> Int {
@@ -532,9 +458,9 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             if playerURI != "" {
                 
                 playerListNumber = 1
-                while playerListNumber <= scorecard.playerList.count {
+                while playerListNumber <= availableList.count {
                     
-                    if playerURI == scorecard.playerURI(scorecard.playerList[playerListNumber-1]) {
+                    if playerURI == scorecard.playerURI(availableList[playerListNumber-1]) {
                         addSelection(playerListNumber, updateDisplay: false)
                         
                         break
@@ -550,8 +476,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     func removeSelection(_ playerNumber: Int) {
 
         // Remove selected indication in available
-        for playerNumberLoop in 1...scorecard.playerList.count {
-            if scorecard.playerList[playerNumberLoop-1] == selectedList[playerNumber-1] &&
+        for playerNumberLoop in 1...availableList.count {
+            if availableList[playerNumberLoop-1] == selectedList[playerNumber-1] &&
                     availableCell[playerNumberLoop] != nil {
                 availableCell[playerNumberLoop]?.thumbnailView.alpha = 1.0
                 availableCell[playerNumberLoop]?.name.alpha = 1.0
@@ -586,7 +512,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         
         if numberSelected < scorecard.numberPlayers {
             // There is a space 
-            selectedList.append(updateDisplay ? nil : self.scorecard.playerList[addPlayerNumber-1])
+            selectedList.append(updateDisplay ? nil : self.availableList[addPlayerNumber-1])
             numberSelected += 1
             
             formatButtons(updateDisplay)
@@ -616,12 +542,12 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 self.animationThumbnail.frame = CGRect(x: 0, y: 0, width: self.width, height: self.width)
                 self.animationDisc.frame = CGRect(x: 0, y: 0, width: self.width, height: self.width)
                 self.animationName.frame = CGRect(x: availableLabelPoint.x , y: availableLabelPoint.y, width: labelWidth, height: labelHeight)
-                Utility.setThumbnail(data: self.scorecard.playerList[addPlayerNumber-1].thumbnail,
+                Utility.setThumbnail(data: self.availableList[addPlayerNumber-1].thumbnail,
                                      imageView: self.animationThumbnail,
-                                     initials: self.scorecard.playerList[addPlayerNumber-1].name!,
+                                     initials: self.availableList[addPlayerNumber-1].name!,
                                      label: self.animationDisc)
                 self.animationThumbnailView.superview!.bringSubviewToFront(self.animationThumbnailView)
-                self.animationName.text = self.scorecard.playerList[addPlayerNumber-1].name
+                self.animationName.text = self.availableList[addPlayerNumber-1].name
                 self.animationThumbnailView.isHidden = false
                 self.animationName.isHidden = false
                 // Lock the views until animation completes
@@ -644,7 +570,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                     // Add a new blank cell to fill
                     self.selectedCollectionView.insertItems(at: [IndexPath(row: numberSelected-1, section: 0)])
                     // Can now fill in the player
-                    self.selectedList[numberSelected-1] = self.scorecard.playerList[addPlayerNumber-1]
+                    self.selectedList[numberSelected-1] = self.availableList[addPlayerNumber-1]
 
                 }
                 animation.addCompletion( {_ in
@@ -696,30 +622,31 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     }
     
     func createPlayers(newPlayers: [PlayerDetail]) {
-        var added = 0
-        var addedRow = 0
-        var imageList: [PlayerMO] = []
+        let add = (selectedList.count + newPlayers.count <= self.scorecard.numberPlayers)
         
         for newPlayerDetail in newPlayers {
             if newPlayerDetail.name == "" {
                 // Name not filled in - must have cancelled
             } else {
-                let playerMO = newPlayerDetail.createMO()
-                let createdIndexPath = IndexPath(row: newPlayerDetail.indexMO!+1, section: 0)
-                availableCell.insert(nil, at: createdIndexPath.row)
-                availableCollectionView.insertItems(at: [createdIndexPath])
-                added += 1
-                addedRow = createdIndexPath.row
-                if playerMO != nil && newPlayerDetail.thumbnailDate != nil {
-                    imageList.append(playerMO!)
+                var availableIndex: Int! = self.availableList.index(where: {($0.name! > newPlayerDetail.name)})
+                selectedCollectionView.performBatchUpdates({
+                    if availableIndex == nil {
+                        // Insert at end
+                        availableIndex = availableList.count
+                        availableList.append(newPlayerDetail.playerMO)
+                        availableCell.append(nil)
+                    } else {
+                        // Insert before
+                        availableList.insert(newPlayerDetail.playerMO, at: availableIndex)
+                        availableCell.insert(nil, at: availableIndex + 1)
+                    }
+                    availableCollectionView.insertItems(at: [IndexPath(row: availableIndex + 1, section: 0)])
+                })
+                if add {
+                    addSelection(availableIndex + 1)
                 }
+
             }
-        }
-        if added == 1 {
-            addSelection(addedRow)
-        }
-        if imageList.count > 0 {
-            getImages(imageList)
         }
         
         // Add these players to list of subscriptions
@@ -730,8 +657,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
             // Either enter a new player or choose from cloud
             let actionSheet = ActionSheet(view: availableCollectionView, direction: .left, x: width, y: width / 2)
-            actionSheet.add("Find existing player", handler: self.selectCloudPlayers)
-            actionSheet.add("Create player manually", handler: {
+            actionSheet.add("Get existing player from Cloud", handler: self.selectCloudPlayers)
+            actionSheet.add("Create new player manually", handler: {
                 self.performSegue(withIdentifier: "selectionNewPlayer", sender: self)
             })
             actionSheet.add("Cancel", style: .cancel)
@@ -740,6 +667,10 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         } else {
             self.performSegue(withIdentifier: "selectionNewPlayer", sender: self)
         }
+    }
+    
+    private func selectCloudPlayers() {
+        self.performSegue(withIdentifier: "showSelectPlayersFromCloud", sender: self)
     }
     
     // MARK: - Segue Prepare Handler =================================================================== -
@@ -755,7 +686,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             destination.popoverPresentationController?.sourceView = selectionView
             destination.preferredContentSize = CGSize(width: 400, height: 300)
             destination.playerDetail = PlayerDetail(scorecard, visibleLocally: true)
-            destination.selectedPlayer = 0
             destination.mode = .create
             destination.returnSegue = "selectionHidePlayer"
             destination.scorecard = self.scorecard
@@ -767,22 +697,22 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             destination.scorecard = self.scorecard
             destination.returnSegue = "hideGameSetup"
         
-        case "selectionCloudPlayers":
-            let destination = segue.destination as! StatsViewController
-            destination.playerList = self.cloudPlayerList
+        case "showSelectPlayersFromCloud":
+            let destination = segue.destination as! SelectPlayersViewController
             destination.scorecard = self.scorecard
-            destination.detailMode = .none
-            destination.multiSelectMode = true
-            destination.returnSegue = "selectionHideCloudPlayers"
+            destination.descriptionMode = .opponents
+            destination.returnSegue = "hideSelectPlayersFromCloud"
             destination.backText = "Cancel"
             destination.actionText = "Download"
-            destination.actionSegue = "selectionHideCloudPlayers"
-            destination.allowSync = false
-                
+            destination.actionSegue = "hideSelectPlayersFromCloud"
+            destination.helpText = "Select from the list below or click 'Other player' to add a specific player using their Unique ID."
+            destination.allowOtherPlayer = true
+            
         default:
             break
         }
     }
+    
 }
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -

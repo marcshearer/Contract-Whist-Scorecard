@@ -14,33 +14,33 @@ class StatsViewController: CustomViewController, UICollectionViewDelegate, UICol
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
-    var scorecard: Scorecard!
+    public var scorecard: Scorecard!
     
     // Properties to pass state to action segue
-    var selection = [Bool]()
+    public var selection = [Bool]()
     
     // Properties to pass state to detail segue
-    var multiSelectMode = false
-    var selectedPlayer = 0
-    var playerDetail: PlayerDetail!
+    public var multiSelectMode = false
     
     // Properties to get state from calling segue
-    var playerList: [PlayerDetail]!
-    var detailMode: DetailMode = .amend // Also passed on to detail segue
-    var returnSegue = ""
-    var backText = "Back"
-    var backImage = "back"
-    var actionText = "Compare"
-    var actionSegue = "showComparison"
-    var allowSync = true
-    var labelFontSize: CGFloat = 14.0
-    var labelWidth: CGFloat = 120.0
-    var labelHeight: CGFloat = 17.0
-    var layoutComplete = false
- 
+    public var playerList: [PlayerDetail]!
+    public var detailMode: DetailMode = .amend // Also passed on to detail segue
+    public var returnSegue = ""
+    public var backText = "Back"
+    public var backImage = "back"
+    public var actionText = "Compare"
+    public var actionSegue = "showComparison"
+    public var allowSync = true
+    public var layoutComplete = false
+    public var selected = 0
+
     // Local class variables
-    var width: CGFloat = 0
-    var selected = 0
+    private var selectedPlayer = 0
+    private var playerDetail: PlayerDetail!
+    private var labelFontSize: CGFloat = 14.0
+    private var labelWidth: CGFloat = 120.0
+    private var labelHeight: CGFloat = 17.0
+    private var width: CGFloat = 0
     private var observer: NSObjectProtocol?
 
     // UI component pointers
@@ -360,7 +360,6 @@ class StatsViewController: CustomViewController, UICollectionViewDelegate, UICol
         
         let newToolbarTop = (toolbarHeight == 0 ? 44 : 44 + view.safeAreaInsets.bottom + toolbarHeight)
         if newToolbarTop != self.toolbarViewHeightConstraint.constant {
-            // self.footerPaddingTopConstraint.constant = (toolbarHeight == 0 ? 0 : 44)
             Utility.animate {
                 self.toolbarViewHeightConstraint.constant = newToolbarTop
             }
@@ -420,7 +419,6 @@ class StatsViewController: CustomViewController, UICollectionViewDelegate, UICol
             destination.preferredContentSize = CGSize(width: 400, height: 540)
             destination.playerDetail = self.playerList[selectedPlayer - 1]
             destination.returnSegue = "statsHidePlayer"
-            destination.selectedPlayer = selectedPlayer
             destination.mode = detailMode
             destination.scorecard = self.scorecard
             destination.sourceView = view
@@ -438,8 +436,6 @@ class StatsViewController: CustomViewController, UICollectionViewDelegate, UICol
             break
         }
     }
-
-
 }
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -

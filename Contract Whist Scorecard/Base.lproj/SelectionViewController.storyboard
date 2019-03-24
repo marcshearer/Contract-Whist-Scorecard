@@ -370,9 +370,10 @@
                         <outlet property="toolbar" destination="Rkx-tt-68g" id="cfy-kh-frm"/>
                         <outlet property="toolbarBottomConstraint" destination="F3Z-rJ-Pcm" id="Zkm-Km-tnK"/>
                         <segue destination="cPJ-J5-mJc" kind="presentation" identifier="selectionNewPlayer" id="N9w-IV-lmX"/>
-                        <segue destination="Vxp-SW-x6a" kind="unwind" identifier="returnSelection" unwindAction="returnSelectionWithSegue:" id="UXW-YD-63I"/>
+                        <segue destination="Vxp-SW-x6a" kind="unwind" identifier="hideSelectPlayersFromCloud" unwindAction="hideSelectPlayersFromCloudWithSegue:" id="UXW-YD-63I"/>
                         <segue destination="wYy-Td-NIk" kind="show" identifier="showGameSetup" id="zvw-a4-7JA"/>
-                        <segue destination="Do4-Za-q4h" kind="show" identifier="selectionCloudPlayers" id="ewe-cV-U1p"/>
+                        <segue destination="Do4-Za-q4h" kind="show" identifier="showSelectPlayersFromCloud" id="ewe-cV-U1p"/>
+                        <segue destination="Vxp-SW-x6a" kind="unwind" identifier="returnSelection" unwindAction="returnSelectionWithSegue:" id="4tV-b5-uOW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pg0-6i-AIz" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -406,10 +407,10 @@
             </objects>
             <point key="canvasLocation" x="7802" y="134"/>
         </scene>
-        <!--Player Stats-->
+        <!--Select Players-->
         <scene sceneID="DJN-Pf-UfJ">
             <objects>
-                <viewControllerPlaceholder storyboardIdentifier="UIViewController-aCF-cU-Oeh" storyboardName="StatsViewController" referencedIdentifier="StatsViewController" id="Do4-Za-q4h" userLabel="Player Stats" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardIdentifier="UIViewController-aCF-cU-Oeh" storyboardName="SelectPlayersViewController" referencedIdentifier="SelectPlayersViewController" id="Do4-Za-q4h" userLabel="Select Players" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0Do-0e-mtE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="7791" y="268"/>

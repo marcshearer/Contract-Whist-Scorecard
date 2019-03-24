@@ -102,7 +102,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleAspectFit" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="E9w-Ac-PMU">
-                                                    <rect key="frame" x="0.0" y="0.0" width="352" height="44"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="644" height="44"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ERB-Qd-48A" userLabel="Thumbnail View">
                                                             <rect key="frame" x="0.0" y="0.0" width="44" height="44"/>
@@ -136,8 +136,8 @@
                                                                 <constraint firstAttribute="bottom" secondItem="AiE-oD-yKa" secondAttribute="bottom" constant="5" id="qK5-Lt-GJY"/>
                                                             </constraints>
                                                         </view>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="o2n-IA-teQ" userLabel="Player Name">
-                                                            <rect key="frame" x="54" y="0.0" width="298" height="44"/>
+                                                        <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="o2n-IA-teQ" userLabel="Player Name">
+                                                            <rect key="frame" x="54" y="0.0" width="590" height="44"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -150,7 +150,7 @@
                                                     </constraints>
                                                 </stackView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pK3-Zd-fcf" userLabel="Separator">
-                                                    <rect key="frame" x="0.0" y="43" width="375" height="1"/>
+                                                    <rect key="frame" x="0.0" y="43" width="667" height="1"/>
                                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="0hq-1A-3KI"/>

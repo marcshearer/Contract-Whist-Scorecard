@@ -65,6 +65,10 @@ Fix missing watch icons and remember last hand over recovery
 iPhone X support
 Setting to show status bar
 
+Next -------
+Enable user interaction on labels in search
+
+
 Bugs fix now
 ------------
 In search dialogue (on iPad) if filter search any users who don't have a picture sometimes get changed to squares
@@ -86,7 +90,6 @@ Medium-term
 Long-term
 ---------
 Sort out constraints when in landscape mode
-Would be better if host screen wasn't full screen on iPad
 
 Swift Gotchas / hints
 ---------------------
@@ -124,6 +127,7 @@ Error message '/Users/Home/Library/Developer/Xcode/DerivedData' - Go to Product 
 When Table View wasn't scrolling it was because "Delay Touch Down" wasn't checked
 Bot testing needs to have simulator set up sensibly - go into Xcode Server user to do this
 Commands to sort out firewall prompt
+Below in allowsim (in PATH)
     sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate off
     /usr/libexec/ApplicationFirewall/socketfilterfw --add /Applications/Xcode.app/Contents/MacOS/Xcode
     /usr/libexec/ApplicationFirewall/socketfilterfw --add /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/Contents/MacOS/Simulator

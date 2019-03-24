@@ -12,19 +12,20 @@ enum DetailMode {
     case create
     case amend
     case display
+    case download
     case none
 }
 
-class PlayerDetailViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class PlayerDetailViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, SyncDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     // Main state properties
     var scorecard: Scorecard!
     private var reconcile: Reconcile!
+    private let sync = Sync()
 
     // Properties to pass state to / from segues
     var playerDetail: PlayerDetail!
-    var selectedPlayer = 0
     var mode: DetailMode!
     var returnSegue = ""
     var deletePlayer = false
@@ -33,12 +34,22 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     // Local class variables
     var tableRows = 0
     var baseRows = 0
+    var nameTitleRow = 1
+    var nameRow = 2
+    var emailTitleRow = 3
+    var emailRow = 4
     var twosTitleRow = -1
     var twosValueRow = -1
     var imageRow = 6
     var emailOnEntry = ""
     var visibleOnEntry = false
     var actionSheet: ActionSheet!
+    let grayColor = UIColor(white: 0.9, alpha: 1.0)
+    var showEmail = false
+
+    // Alert controller while waiting for cloud download
+    private var cloudAlertController: UIAlertController!
+    private var cloudIndicatorView: UIActivityIndicatorView!
 
     // UI component pointers
     var textFieldList = [UITextField?](repeating: nil, count: 23)
@@ -49,14 +60,22 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
 
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet weak var navigationBar: UINavigationBar!
+    @IBOutlet weak var footerPaddingView: UIView!
     @IBOutlet weak var finishButton: UIButton!
-    @IBOutlet weak var deleteButton: UIButton!
+    @IBOutlet weak var actionButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
 
     // MARK: - IB Actions ============================================================================== -
     
-    @IBAction func deleteButtonPressed(_ sender: Any) {
-        checkDeletePlayer()
+    @IBAction func actionButtonPressed(_ sender: Any) {
+        switch self.mode! {
+        case .amend:
+            self.checkDeletePlayer()
+        case .download:
+            self.getCloudPlayerDetails()
+        default:
+            break
+        }
     }
     
     @IBAction func finishButtonPressed(_ sender: Any) {
@@ -77,24 +96,39 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if mode == .create {
+        baseRows = 13
+        if scorecard.settingBonus2 {
+            twosTitleRow = baseRows
+            twosValueRow = baseRows + 1
+            baseRows += 2
+        }
+        tableRows = baseRows + 8
+        navigationBar.topItem?.title = playerDetail.name
+        
+        switch self.mode! {
+        case .create:
+            // Smaller input
             tableRows = 7
             baseRows = 10
-        } else {
-            baseRows = 13
-            if scorecard.settingBonus2 {
-                twosTitleRow = baseRows
-                twosValueRow = baseRows + 1
-                baseRows += 2
-            }
-            tableRows = baseRows + 8
+            navigationBar.topItem?.title = "New Player"
+            
+        case .download:
+            // Switch name and email
+            emailTitleRow = 1
+            emailRow = 2
+            nameTitleRow = 3
+            nameRow = 4
+            navigationBar.topItem?.title = "Download Player"
+            footerPaddingView.backgroundColor = self.grayColor
+            showEmail = true
+
+        default:
+            break
         }
         
         if mode == .display {
             tableView.isUserInteractionEnabled = false
         }
-        
-        navigationBar.topItem?.title = (mode == .create ? "New Player" : playerDetail.name)
         
         // Store email on entry
         emailOnEntry = playerDetail.email
@@ -131,7 +165,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         case 0:
             // blank row at the top
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Padding", for: indexPath) as? PlayerDetailCell
-        case 1, 3, baseRows, baseRows+2, baseRows+4:
+        case nameTitleRow, emailTitleRow, baseRows, baseRows+2, baseRows+4:
             // Single input title
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Header Single", for: indexPath) as? PlayerDetailCell
         case 5:
@@ -140,7 +174,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         case 7, 9, 11, twosTitleRow:
             // Triple title
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Header Triple", for: indexPath) as? PlayerDetailCell
-        case 2, 4:
+        case nameRow, emailRow:
             // Single input value
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Body Single", for: indexPath) as? PlayerDetailCell
             cell?.playerDetailField.tag = indexPath.row
@@ -151,16 +185,17 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             cell?.playerDetailSecure.isHidden = true
             cell?.playerDetailSecureInfo.isHidden = true
             textFieldList[indexPath.row] = cell!.playerDetailField
-            
         case imageRow:
             // Image view
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Image", for: indexPath) as? PlayerDetailCell
             imageView = cell?.playerImage
             ScorecardUI.veryRoundCorners(imageView!)
-
         case 8, 10, 12, twosValueRow, baseRows+1, baseRows+3, baseRows+5, baseRows+6, baseRows+7:
             // Triple value
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Body Triple", for: indexPath) as? PlayerDetailCell
+            cell?.playerDetailLabel1.textColor = (mode == .download ? .lightGray : .black)
+            cell?.playerDetailLabel2.textColor = (mode == .download ? .lightGray : .black)
+            cell?.playerDetailLabel3.textColor = (mode == .download ? .lightGray : .black)
         default:
             cell = nil
         }
@@ -169,31 +204,45 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         case 0:
             // Blank row
             break
-        case 1:
+        case nameTitleRow:
             // Name title
             cell!.playerDetailLabel1.text = "Player name"
             nameErrorLabel = cell!.playerDetailLabel2
             ScorecardUI.errorStyle(nameErrorLabel!)
-           
-        case 2:
+        case nameRow:
             // Name value
             cell!.playerDetailField.text = playerDetail.name
-            cell!.playerDetailField.placeholder = "Player name - Must not be blank"
+            switch mode! {
+            case .create, .amend:
+                cell!.playerDetailField.placeholder = "Player name - Must not be blank"
+            default:
+                cell!.playerDetailField.placeholder = "Player name"
+            }
             cell!.playerDetailField.keyboardType = .default
             cell!.playerDetailField.autocapitalizationType = .words
             cell!.playerDetailField.returnKeyType = .next
             if mode == .create {
                 cell!.playerDetailField.becomeFirstResponder()
             }
-        case 3:
+        case emailTitleRow:
             // Email title
-            cell!.playerDetailLabel1.text = "Unique identifier - E.g. email address"
+            switch mode! {
+            case .download:
+                cell!.playerDetailLabel1.text = "Player to download"
+            default:
+                cell!.playerDetailLabel1.text = "Unique identifier - E.g. email address"
+            }
             emailErrorLabel = cell!.playerDetailLabel2
             ScorecardUI.errorStyle(emailErrorLabel!)
-        case 4:
+        case emailRow:
             // Email value
             cell!.playerDetailField.text = "\(playerDetail.email)"
-            cell!.playerDetailField.placeholder = "Unique identifier - Must not be blank"
+            switch mode! {
+            case .download:
+                cell!.playerDetailField.placeholder = "Unique identifier of player"
+            default:
+                cell!.playerDetailField.placeholder = "Unique identifier - Must not be blank"
+            }
             cell!.playerDetailField.keyboardType = .emailAddress
             cell!.playerDetailField.autocapitalizationType = .none
             cell!.playerDetailField.returnKeyType = .done
@@ -202,6 +251,10 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             emailCell = cell
             // Hidden entry if value already filled in
             setEmailVisible(self.playerDetail.visibleLocally)
+            if mode == .download {
+                cell!.playerDetailField.becomeFirstResponder()
+            }
+            cell!.separator.isHidden = (mode == .download)
         case 5:
             // Thumbnail title
             cell!.playerDetailLabel1.text = "Thumbnail image"
@@ -339,6 +392,21 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         let backgroundView = UIView()
         backgroundView.backgroundColor = UIColor.clear
         cell!.selectedBackgroundView = backgroundView
+        
+        if mode == .download {
+            // Gray out and disable all but email row
+            if indexPath.row == emailRow {
+                cell?.isUserInteractionEnabled = true
+                cell?.backgroundColor = .white
+            } else {
+                cell?.isUserInteractionEnabled = false
+                if indexPath.row > emailRow {
+                    cell?.backgroundColor = self.grayColor
+                }
+            }
+        } else {
+            cell?.backgroundColor = UIColor.white
+        }
 
         return cell!
     }
@@ -382,11 +450,11 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     
     @objc func textFieldDidChange(_ textField: UITextField) {
         switch textField.tag {
-        case 2:
+        case nameRow:
             playerDetail.name = textField.text!
             playerDetail.nameDate = Date()
             enableButtons()
-        case 4:
+        case emailRow:
             playerDetail.email = textField.text!
             playerDetail.emailDate = Date()
             enableButtons()
@@ -396,8 +464,11 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     }
     
     @objc func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField.tag == 2 && textField.text == "" {
+        if textField.tag == nameRow && textField.text == "" {
             // Don't allow blank name
+            return false
+        } else if mode == .download && textField.tag == emailRow && textField.text == "" {
+            // Don't allow blank email in download mode
             return false
         } else {
             // Try to move to next text field - resign if none found
@@ -419,13 +490,13 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     }
 
     @objc func secureButtonPressed(_ button: UIButton) {
-        alertDecision("Note that by default Unique IDs are only visible on a device where they are entered. Changing this setting will also make this Unique ID hidden on this device - i.e. you will not be able to see the value on this device although you will be able to change it. Once you select hidden mode, this is irreversible.\n\nYou can only make the Unique ID visible again by blanking it out and re-typing it.\n\nAre you sure you want to do this?", title: "Hidden Mode", okButtonText: "Confirm", okHandler: {
+        alertDecision("Note that by default Unique IDs are only visible on a device where they are created. Changing this setting will also make this Unique ID hidden on this device - i.e. you will not be able to see the value on this device although you will be able to change it. Once you select hidden mode, this is irreversible.\n\nYou can only make the Unique ID visible again by blanking it out and re-typing it.\n\nAre you sure you want to do this?", title: "Hidden Mode", okButtonText: "Confirm", okHandler: {
                 self.setEmailVisible(false)
         })
     }
     
     @objc func secureInfoButtonPressed(_ button: UIButton) {
-        alertMessage("Note that by default Unique IDs are only visible on a device where they are entered. \n\nYou can only make the Unique ID visible again by blanking it out and re-typing it.", title: "Hidden Entry")
+        alertMessage("Note that by default Unique IDs are only visible on a device where they are created. \n\nYou can only make the Unique ID visible again by blanking it out and re-typing it.", title: "Hidden Entry")
     }
 
    // MARK: - Image Picker Routines / Overrides ============================================================ -
@@ -493,6 +564,81 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
         imageView!.alpha = 0.5
     }
     
+    // MARK: - Sync routines including the delegate methods ======================================== -
+    
+    func getCloudPlayerDetails() {
+        
+        sync.initialise(scorecard: scorecard)
+        
+        self.cloudAlertController = UIAlertController(title: title, message: "Downloading player from Cloud\n\n\n\n", preferredStyle: .alert)
+        
+        self.sync.delegate = self
+        if self.sync.connect() {
+            
+            //add the activity indicator as a subview of the alert controller's view
+            self.cloudIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 0, y: 100,
+                                                                width: self.cloudAlertController.view.frame.width,
+                                                                height: 100))
+            self.cloudIndicatorView.style = .whiteLarge
+            self.cloudIndicatorView.color = UIColor.black
+            self.cloudIndicatorView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+            self.cloudAlertController.view.addSubview(self.cloudIndicatorView)
+            self.cloudIndicatorView.isUserInteractionEnabled = true
+            self.cloudIndicatorView.startAnimating()
+            
+            self.present(self.cloudAlertController, animated: true, completion: nil)
+            
+            self.sync.synchronise(syncMode: .syncGetPlayerDetails, specificEmail: [playerDetail.email])
+        } else {
+            self.alertMessage("Error getting player details from iCloud")
+            self.actionButton.isHidden = true
+        }
+    }
+    
+    func getImages(_ imageFromCloud: [PlayerMO]) {
+        self.sync.fetchPlayerImagesFromCloud(imageFromCloud)
+    }
+    
+    func syncMessage(_ message: String) {
+    }
+    
+    func syncAlert(_ message: String, completion: @escaping ()->()) {
+        Utility.mainThread {
+            self.cloudAlertController.dismiss(animated: true, completion: {
+                self.alertMessage(message, title: "Contract Whist Scorecard", okHandler: {
+                    self.actionButton.isHidden = true
+                    completion()
+                })
+            })
+        }
+    }
+    
+    func syncCompletion(_ errors: Int) {
+    }
+    
+    func syncReturnPlayers(_ playerList: [PlayerDetail]!) {
+        
+        Utility.mainThread {
+            self.cloudAlertController.dismiss(animated: true, completion: {
+                if playerList != nil && playerList.count > 0 {
+                    self.playerDetail = playerList[0]
+                    self.mode = .display
+                    self.navigationBar.topItem?.title = self.playerDetail.name
+                    self.footerPaddingView.backgroundColor = UIColor.white
+                    self.tableView.isUserInteractionEnabled = false
+                    self.enableButtons()
+                    self.tableView.reloadData()
+                    
+                } else {
+                    self.alertMessage("Unable to download player from Cloud", buttonText: "Continue", okHandler:
+                        {
+                            self.actionButton.isHidden = true
+                    })
+                }
+            })
+        }
+    }
+    
     // MARK: - Form Presentation / Handling Routines =================================================== -
     
     func enableButtons() {
@@ -514,12 +660,19 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
             nameErrorLabel!.text = (duplicateName ? "Duplicate not allowed" : "")
         }
         if emailErrorLabel != nil {
-            emailErrorLabel!.text = (duplicateEmail ? "Duplicate not allowed" : "")
+            emailErrorLabel!.text = (duplicateEmail ? (mode == .download ? "Already on device" : "Duplicate not allowed") : "")
         }
         finishButton.setTitle("\(finishTitle)", for: .normal)
         
-        if mode != .amend {
-            deleteButton.isHidden = true
+        switch mode! {
+        case .amend:
+            actionButton.isHidden = false
+            actionButton.setTitle("Delete", for: .normal)
+        case .download:
+            actionButton.isHidden = (playerDetail.email == "" || duplicateEmail)
+            actionButton.setTitle("Download", for: .normal)
+        default:
+            actionButton.isHidden = true
         }
         
         if playerDetail.email == "" {
@@ -569,7 +722,7 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
     
     func setEmailVisible(_ visible: Bool) {
         self.playerDetail.visibleLocally = visible
-        if self.emailCell != nil {
+        if self.emailCell != nil && !showEmail {
             self.emailCell.playerDetailField.isSecureTextEntry = !visible
             self.emailCell.playerDetailSecure.isHidden = !visible
             self.emailCell.playerDetailSecureInfo.isHidden = visible

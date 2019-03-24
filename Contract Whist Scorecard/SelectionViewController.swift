@@ -56,6 +56,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     @IBAction func hideSelectionPlayerDetail(segue:UIStoryboardSegue) {
         // Returning from new player
         let source = segue.source as! PlayerDetailViewController
+        _ = source.playerDetail.createMO()
         createPlayers(newPlayers: [source.playerDetail])
     }
 

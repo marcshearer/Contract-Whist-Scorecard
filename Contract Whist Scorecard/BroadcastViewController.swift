@@ -20,7 +20,7 @@ enum AppState {
     case connected
 }
 
-class BroadcastViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate, SearchDelegate, CutDelegate, GameSetupDelegate, UIPopoverPresentationControllerDelegate {
+class BroadcastViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate, SearchDelegate, CutDelegate, GamePreviewDelegate, UIPopoverPresentationControllerDelegate {
 
     // MARK: - Class Properties ======================================================================== -
     
@@ -29,7 +29,7 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
     private var recovery: Recovery!
     private var scorepadViewController: ScorepadViewController!
     private var cutViewController: CutViewController!
-    private var gameSetupViewController: GameSetupViewController!
+    private var gamePreviewViewController: GamePreviewViewController!
 
     // Properties to pass state to / from segues
     public var returnSegue = ""
@@ -267,8 +267,8 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
                     
                 case "dealer":
                     self.scorecard.dealerIs = data!["dealer"] as! Int
-                    if self.gameSetupViewController != nil {
-                        self.gameSetupViewController.cutComplete()
+                    if self.gamePreviewViewController != nil {
+                        self.gamePreviewViewController.cutComplete()
                     }
                     
                 case "play", "players":
@@ -296,14 +296,14 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
                             }
                         }
                     }
-                    if descriptor == "players" && self.gameSetupViewController == nil {
+                    if descriptor == "players" && self.gamePreviewViewController == nil {
                         var selectedPlayers: [PlayerMO] = []
                         for playerNumber in 1...self.scorecard.currentPlayers {
                             selectedPlayers.append(self.scorecard.enteredPlayer(playerNumber).playerMO!)
                         }
                         self.dismissAll {
-                            self.gameSetupViewController = GameSetupViewController.showGameSetup(viewController: self, scorecard: self.scorecard, selectedPlayers: selectedPlayers)
-                            self.gameSetupViewController.delegate = self
+                            self.gamePreviewViewController = GamePreviewViewController.showGamePreview(viewController: self, scorecard: self.scorecard, selectedPlayers: selectedPlayers)
+                            self.gamePreviewViewController.delegate = self
                         }
                     }
                     if descriptor == "play" {
@@ -325,9 +325,9 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
                     self.cutViewController?.delegate = nil
                     
                     var viewController: UIViewController
-                    if self.gameSetupViewController != nil {
-                        self.gameSetupViewController.cutDelegate = self
-                        viewController = self.gameSetupViewController
+                    if self.gamePreviewViewController != nil {
+                        self.gamePreviewViewController.cutDelegate = self
+                        viewController = self.gamePreviewViewController
                     } else {
                         viewController = self
                     }
@@ -678,8 +678,8 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
     // MARK: - Cut for dealer delegate routines ===================================================================== -
     
     func cutComplete() {
-        if self.gameSetupViewController != nil {
-            self.gameSetupViewController.cutDelegate = nil
+        if self.gamePreviewViewController != nil {
+            self.gamePreviewViewController.cutDelegate = nil
         }
         self.cutViewController.delegate = nil
         self.cutViewController = nil
@@ -687,9 +687,9 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
     
     // MARK: - Game Setup delegate routines ============================================================ -
     
-    func gameSetupComplete() {
-        self.gameSetupViewController?.delegate = nil
-        self.gameSetupViewController = nil
+    func gamePreviewComplete() {
+        self.gamePreviewViewController?.delegate = nil
+        self.gamePreviewViewController = nil
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -1058,7 +1058,7 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
             reason = "Connection with remote device lost"
         }
         
-        if self.scorepadViewController == nil && self.cutViewController == nil && self.gameSetupViewController == nil {
+        if self.scorepadViewController == nil && self.cutViewController == nil && self.gamePreviewViewController == nil {
             // Check alert controller
             if self.alertController != nil {
                 self.alertController.dismiss(animated: true, completion: {
@@ -1114,13 +1114,13 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
             })
         }
         
-        func dismissGameSetup() {
-            if self.gameSetupViewController != nil {
+        func dismissGamePreview() {
+            if self.gamePreviewViewController != nil {
                 Utility.debugMessage("dismiss", "Dismissing setup")
-                self.gameSetupViewController.delegate = nil
-                self.gameSetupViewController.dismiss(animated: true, completion: {
+                self.gamePreviewViewController.delegate = nil
+                self.gamePreviewViewController.dismiss(animated: true, completion: {
                     Utility.debugMessage("dismiss", "Setup dismissed")
-                    self.gameSetupViewController = nil
+                    self.gamePreviewViewController = nil
                     doCompletion()
                 })
             } else {
@@ -1132,20 +1132,20 @@ class BroadcastViewController: CustomViewController, UITableViewDelegate, UITabl
             self.scorecard.commsHandlerMode = .dismiss
         }
         
-        if self.scorepadViewController == nil && self.cutViewController == nil && self.gameSetupViewController == nil{
+        if self.scorepadViewController == nil && self.cutViewController == nil && self.gamePreviewViewController == nil{
             doCompletion()
         } else {
-            if self.cutViewController != nil  || self.gameSetupViewController != nil {
+            if self.cutViewController != nil  || self.gamePreviewViewController != nil {
                 if self.cutViewController != nil {
                     Utility.debugMessage("dismiss", "Dismissing cut")
                     self.cutViewController.dismiss(animated: true, completion: {
                         Utility.debugMessage("dismiss", "Cut dismissed")
                         self.cutViewController?.delegate = nil
                         self.cutViewController = nil
-                        dismissGameSetup()
+                        dismissGamePreview()
                     })
                 } else {
-                    dismissGameSetup()
+                    dismissGamePreview()
                 }
             } else if self.scorepadViewController.roundSummaryViewController != nil {
                 self.scorepadViewController.roundSummaryViewController.dismiss(animated: true, completion: dismissScorepad)

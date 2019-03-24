@@ -98,7 +98,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
 
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     
-    @IBAction func hideHostGameSetup(segue:UIStoryboardSegue) {
+    @IBAction func hideHostGamePreview(segue:UIStoryboardSegue) {
         gameInProgress = false
         if self.playingComputer {
             if let segue = segue as? UIStoryboardSegueWithCompletion {
@@ -127,7 +127,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         self.setupPlayers()
         gameInProgress = true
         self.scorecard.sendPlayers()
-        self.performSegue(withIdentifier: "showHostGameSetup", sender: self)
+        self.performSegue(withIdentifier: "showHostGamePreview", sender: self)
     }
     
     // MARK: - View Overrides ========================================================================== -
@@ -461,10 +461,10 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 self.setupPlayers()
                 if self.alertController != nil {
                     self.alertController.dismiss(animated: true, completion: {
-                        self.performSegue(withIdentifier: "showHostGameSetup", sender: self)
+                        self.performSegue(withIdentifier: "showHostGamePreview", sender: self)
                     })
                 } else {
-                    self.performSegue(withIdentifier: "showHostGameSetup", sender: self)
+                    self.performSegue(withIdentifier: "showHostGamePreview", sender: self)
                 }
             } else if self.connectionMode == .online && self.playerData.count >= 3 && self.connectedPlayers == self.playerData.count {
                 // Have connections from all invited players - press continue button
@@ -1109,12 +1109,12 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     override internal func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         switch segue.identifier! {
-        case "showHostGameSetup":
-            let destination = segue.destination as! GameSetupViewController
+        case "showHostGamePreview":
+            let destination = segue.destination as! GamePreviewViewController
             destination.selectedPlayers = self.selectedPlayers
             destination.faceTimeAddress = self.faceTimeAddress
             destination.scorecard = self.scorecard
-            destination.returnSegue = "hideHostGameSetup"
+            destination.returnSegue = "hideHostGamePreview"
             destination.rabbitMQService = self.rabbitMQHost
             destination.computerPlayerDelegate = self.computerPlayers
             

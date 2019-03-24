@@ -59,7 +59,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         createPlayers(newPlayers: [source.playerDetail])
     }
 
-    @IBAction func hideGameSetup(segue:UIStoryboardSegue) {
+    @IBAction func hideGamePreview(segue:UIStoryboardSegue) {
         // Returning from game setup
     }
     
@@ -145,7 +145,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         // Check if in recovery mode - if so (and found all players) go straight to game setup
         if scorecard.recoveryMode {
             if selectedList.count == scorecard.currentPlayers {
-                self.performSegue(withIdentifier: "showGameSetup", sender: self)
+                self.performSegue(withIdentifier: "showGamePreview", sender: self)
            } else {
                 scorecard.recoveryMode = false
             }
@@ -429,7 +429,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
 
     func continueAction() {
         if selectedList.count >= 3 {
-            self.performSegue(withIdentifier: "showGameSetup", sender: self)
+            self.performSegue(withIdentifier: "showGamePreview", sender: self)
         }
     }
     
@@ -691,11 +691,11 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             destination.scorecard = self.scorecard
             destination.sourceView = view
             
-        case "showGameSetup":
-            let destination = segue.destination as! GameSetupViewController
+        case "showGamePreview":
+            let destination = segue.destination as! GamePreviewViewController
             destination.selectedPlayers = selectedList
             destination.scorecard = self.scorecard
-            destination.returnSegue = "hideGameSetup"
+            destination.returnSegue = "hideGamePreview"
         
         case "showSelectPlayers":
             let destination = segue.destination as! SelectPlayersViewController

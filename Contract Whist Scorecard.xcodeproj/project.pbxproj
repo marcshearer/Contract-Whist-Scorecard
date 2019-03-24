@@ -51,7 +51,7 @@
 		B22789021FB83AA7009BABCA /* SelectionViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22788FE1FB83AA7009BABCA /* SelectionViewController.storyboard */; };
 		B22789071FB83AC4009BABCA /* WalkthroughViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789031FB83AC4009BABCA /* WalkthroughViewController.storyboard */; };
 		B22789081FB83AC4009BABCA /* WalkthroughPageViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789051FB83AC4009BABCA /* WalkthroughPageViewController.storyboard */; };
-		B227890D1FB83D49009BABCA /* GameSetupViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B227890B1FB83D48009BABCA /* GameSetupViewController.storyboard */; };
+		B227890D1FB83D49009BABCA /* GamePreviewViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B227890B1FB83D48009BABCA /* GamePreviewViewController.storyboard */; };
 		B22789121FB844CD009BABCA /* ScorepadViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789101FB844CC009BABCA /* ScorepadViewController.storyboard */; };
 		B22789151FB8490F009BABCA /* EntryViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789131FB8490F009BABCA /* EntryViewController.storyboard */; };
 		B22789181FB84A75009BABCA /* RoundSummaryViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789161FB84A75009BABCA /* RoundSummaryViewController.storyboard */; };
@@ -125,7 +125,7 @@
 		CC4CC0FB1DEADC32007FB24F /* ScorepadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4CC0FA1DEADC32007FB24F /* ScorepadViewController.swift */; };
 		CC4CC0FE1DEADC32007FB24F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC4CC0FC1DEADC32007FB24F /* Main.storyboard */; };
 		CC4CC1061DEADC32007FB24F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC4CC1041DEADC32007FB24F /* LaunchScreen.storyboard */; };
-		CC4CC1161DEAF0F9007FB24F /* GameSetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4CC1151DEAF0F9007FB24F /* GameSetupViewController.swift */; };
+		CC4CC1161DEAF0F9007FB24F /* GamePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4CC1151DEAF0F9007FB24F /* GamePreviewViewController.swift */; };
 		CC7A49081DF28BEB00703D38 /* Scorecard UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC7A49071DF28BEB00703D38 /* Scorecard UI.swift */; };
 		CC8655861E036432000AF391 /* Player Detail Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8655851E036432000AF391 /* Player Detail Class.swift */; };
 		CC9EF3F21DFEE54A006E8930 /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9EF3F11DFEE54A006E8930 /* StatisticsViewController.swift */; };
@@ -230,7 +230,7 @@
 		B22788FF1FB83AA7009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SelectionViewController.storyboard; sourceTree = "<group>"; };
 		B22789041FB83AC4009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/WalkthroughViewController.storyboard; sourceTree = "<group>"; };
 		B22789061FB83AC4009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/WalkthroughPageViewController.storyboard; sourceTree = "<group>"; };
-		B227890C1FB83D48009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/GameSetupViewController.storyboard; sourceTree = "<group>"; };
+		B227890C1FB83D48009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/GamePreviewViewController.storyboard; sourceTree = "<group>"; };
 		B22789111FB844CC009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ScorepadViewController.storyboard; sourceTree = "<group>"; };
 		B22789141FB8490F009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/EntryViewController.storyboard; sourceTree = "<group>"; };
 		B22789171FB84A75009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/RoundSummaryViewController.storyboard; sourceTree = "<group>"; };
@@ -307,7 +307,7 @@
 		CC4CC0FD1DEADC32007FB24F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CC4CC1051DEADC32007FB24F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CC4CC1071DEADC32007FB24F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CC4CC1151DEAF0F9007FB24F /* GameSetupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GameSetupViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		CC4CC1151DEAF0F9007FB24F /* GamePreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GamePreviewViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CC7A49071DF28BEB00703D38 /* Scorecard UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Scorecard UI.swift"; sourceTree = "<group>"; };
 		CC8655851E036432000AF391 /* Player Detail Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Player Detail Class.swift"; sourceTree = "<group>"; };
 		CC9EF3F11DFEE54A006E8930 /* StatisticsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = StatisticsViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -463,13 +463,13 @@
 			name = Selection;
 			sourceTree = "<group>";
 		};
-		B221EEDC210B194C00F7FBA0 /* Game Setup */ = {
+		B221EEDC210B194C00F7FBA0 /* Game Preview */ = {
 			isa = PBXGroup;
 			children = (
-				B227890B1FB83D48009BABCA /* GameSetupViewController.storyboard */,
-				CC4CC1151DEAF0F9007FB24F /* GameSetupViewController.swift */,
+				B227890B1FB83D48009BABCA /* GamePreviewViewController.storyboard */,
+				CC4CC1151DEAF0F9007FB24F /* GamePreviewViewController.swift */,
 			);
-			name = "Game Setup";
+			name = "Game Preview";
 			sourceTree = "<group>";
 		};
 		B221EEDD210B195E00F7FBA0 /* Scorepad */ = {
@@ -532,7 +532,7 @@
 				B221EED9210B191300F7FBA0 /* Welcome */,
 				B221EEDA210B192400F7FBA0 /* Get Started */,
 				B221EEDB210B194300F7FBA0 /* Selection */,
-				B221EEDC210B194C00F7FBA0 /* Game Setup */,
+				B221EEDC210B194C00F7FBA0 /* Game Preview */,
 				B221EEDD210B195E00F7FBA0 /* Scorepad */,
 				B221EEDE210B196700F7FBA0 /* Entry */,
 				B221EEDF210B197200F7FBA0 /* Round Summary */,
@@ -1108,7 +1108,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B227890D1FB83D49009BABCA /* GameSetupViewController.storyboard in Resources */,
+				B227890D1FB83D49009BABCA /* GamePreviewViewController.storyboard in Resources */,
 				B2B1802121195FFA008D3BAA /* Contract Whist Scorecard.pages in Resources */,
 				B22789081FB83AC4009BABCA /* WalkthroughPageViewController.storyboard in Resources */,
 				B22789011FB83AA7009BABCA /* WelcomeViewController.storyboard in Resources */,
@@ -1262,7 +1262,7 @@
 				B2DD5D7E1ED323F400725B55 /* GraphViewController.swift in Sources */,
 				B2B755091E5B363200B1313B /* History Class.swift in Sources */,
 				B2BC51C71F7B5E8C0065F07D /* String Extensions.swift in Sources */,
-				CC4CC1161DEAF0F9007FB24F /* GameSetupViewController.swift in Sources */,
+				CC4CC1161DEAF0F9007FB24F /* GamePreviewViewController.swift in Sources */,
 				B20DA04C1E179DC70040221D /* WelcomeViewController.swift in Sources */,
 				B2B180122110128C008D3BAA /* (null) in Sources */,
 				B2F7281B1F6D74F9006F0941 /* Invite.swift in Sources */,
@@ -1386,12 +1386,12 @@
 			name = WalkthroughPageViewController.storyboard;
 			sourceTree = "<group>";
 		};
-		B227890B1FB83D48009BABCA /* GameSetupViewController.storyboard */ = {
+		B227890B1FB83D48009BABCA /* GamePreviewViewController.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				B227890C1FB83D48009BABCA /* Base */,
 			);
-			name = GameSetupViewController.storyboard;
+			name = GamePreviewViewController.storyboard;
 			sourceTree = "<group>";
 		};
 		B22789101FB844CC009BABCA /* ScorepadViewController.storyboard */ = {

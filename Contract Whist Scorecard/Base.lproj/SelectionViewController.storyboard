@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,14 +15,14 @@
             <objects>
                 <viewController storyboardIdentifier="SelectionViewController" title="Selection" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zGV-gf-a3n" customClass="SelectionViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Whs-Ka-Uxd">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d37-kV-uuP" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="20"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
                             </view>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UgO-yy-CRO">
-                                <rect key="frame" x="0.0" y="20" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </textAttributes>
@@ -26,7 +30,7 @@
                                     <navigationItem title="Selection" id="sxd-YE-KrL">
                                         <barButtonItem key="leftBarButtonItem" id="t32-EF-2FA">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="eQy-4V-yYX">
-                                                <rect key="frame" x="20" y="11" width="60" height="22"/>
+                                                <rect key="frame" x="16" y="11" width="60" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" image="home"/>
                                                 <connections>
@@ -36,7 +40,7 @@
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" id="FL2-Z1-EDp">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Rmr-6u-jtL" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="493" y="11" width="87" height="22"/>
+                                                <rect key="frame" x="272" y="11" width="87" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Continue" image="forward"/>
                                                 <connections>
@@ -48,7 +52,7 @@
                                 </items>
                             </navigationBar>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="C6I-tL-iMh">
-                                <rect key="frame" x="20" y="20" width="560" height="580"/>
+                                <rect key="frame" x="16" y="20" width="343" height="647"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pcK-KT-7Oc">
                                 <rect key="frame" x="284" y="88" width="75" height="75"/>
@@ -79,7 +83,7 @@
                                 </variation>
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Tlx-l1-ig7" userLabel="Available Collection View">
-                                <rect key="frame" x="10" y="72" width="580" height="328"/>
+                                <rect key="frame" x="10" y="72" width="355" height="395"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="gIj-Vz-0t7">
                                     <size key="itemSize" width="75" height="100"/>
@@ -166,7 +170,7 @@
                                 </connections>
                             </collectionView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xg7-Lf-XRQ" userLabel="Selected Subheading">
-                                <rect key="frame" x="0.0" y="400" width="600" height="32"/>
+                                <rect key="frame" x="0.0" y="467" width="375" height="32"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Selected Players" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y7s-Vi-Z8I">
                                         <rect key="frame" x="16" y="0.0" width="127" height="32"/>
@@ -185,10 +189,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jtX-GA-7ms">
-                                <rect key="frame" x="0.0" y="432" width="600" height="212"/>
+                                <rect key="frame" x="0.0" y="499" width="375" height="212"/>
                                 <subviews>
                                     <toolbar clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rkx-tt-68g">
-                                        <rect key="frame" x="0.0" y="168" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="168" width="375" height="44"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="lx2-Xx-ht3"/>
@@ -197,7 +201,7 @@
                                             <barButtonItem style="plain" systemItem="flexibleSpace" id="ZBb-nx-uE1"/>
                                             <barButtonItem width="48" style="plain" id="Q5c-1T-Mzy">
                                                 <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="yT8-YW-vNq" customClass="OutlineButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="232" y="5" width="136" height="34"/>
+                                                    <rect key="frame" x="119.5" y="5" width="136" height="34"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <state key="normal" title="Clear Selection">
@@ -227,7 +231,7 @@
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" tag="2" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="bfj-Ah-ovh" userLabel="Selected Collection View">
-                                <rect key="frame" x="150" y="450" width="300" height="100"/>
+                                <rect key="frame" x="37.5" y="517" width="300" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="2hr-9o-10K"/>
@@ -367,7 +371,7 @@
                         <outlet property="toolbarBottomConstraint" destination="F3Z-rJ-Pcm" id="Zkm-Km-tnK"/>
                         <segue destination="cPJ-J5-mJc" kind="presentation" identifier="showPlayerDetail" id="N9w-IV-lmX"/>
                         <segue destination="Vxp-SW-x6a" kind="unwind" identifier="hideSelectionSelectPlayers" unwindAction="hideSelectionSelectPlayersWithSegue:" id="UXW-YD-63I"/>
-                        <segue destination="wYy-Td-NIk" kind="show" identifier="showGameSetup" id="zvw-a4-7JA"/>
+                        <segue destination="wYy-Td-NIk" kind="show" identifier="showGamePreview" id="zvw-a4-7JA"/>
                         <segue destination="Do4-Za-q4h" kind="show" identifier="showSelectPlayers" id="ewe-cV-U1p"/>
                         <segue destination="Vxp-SW-x6a" kind="unwind" identifier="hideSelection" unwindAction="hideSelectionWithSegue:" id="4tV-b5-uOW"/>
                     </connections>
@@ -398,7 +402,7 @@
         <!--Game Preview-->
         <scene sceneID="Sgh-Qv-hR8">
             <objects>
-                <viewControllerPlaceholder storyboardName="GameSetupViewController" referencedIdentifier="GameSetupViewController" id="wYy-Td-NIk" userLabel="Game Preview" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardName="GamePreviewViewController" referencedIdentifier="GamePreviewViewController" id="wYy-Td-NIk" userLabel="Game Preview" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="A0M-bA-MjT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="7802" y="134"/>

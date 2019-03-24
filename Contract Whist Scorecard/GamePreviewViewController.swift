@@ -9,11 +9,11 @@
 import UIKit
 import CoreData
 
-protocol GameSetupDelegate {
-    func gameSetupComplete()
+protocol GamePreviewDelegate {
+    func gamePreviewComplete()
 }
 
-class GameSetupViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, CutDelegate, UIPopoverPresentationControllerDelegate {
+class GamePreviewViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, CutDelegate, UIPopoverPresentationControllerDelegate {
     
     // MARK: - Class Properties ================================================================ -
     
@@ -22,7 +22,7 @@ class GameSetupViewController: CustomViewController, UITableViewDataSource, UITa
     private var recovery: Recovery!
 
     // Delegate
-    public var delegate: GameSetupDelegate!
+    public var delegate: GamePreviewDelegate!
     
     // Properties to pass state to / from segues
     public var selectedPlayers = [PlayerMO?]()          // Selected players passed in from player selection
@@ -41,12 +41,11 @@ class GameSetupViewController: CustomViewController, UITableViewDataSource, UITa
     private var faceTimeAvailable = false
     
     // UI component pointers
-    private var gameSetupNameCell = [GameSetupNameCell?]()
-    private var actionCell: GameSetupActionCell!
+    private var gamePreviewNameCell = [GamePreviewNameCell?]()
+    private var actionCell: GamePreviewActionCell!
     
     // MARK: - IB Outlets ================================================================ -
     
-    @IBOutlet weak var gameSetupView: UIView!
     @IBOutlet weak var playerTableView: UITableView!
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var continueButton: UIButton!
@@ -63,7 +62,7 @@ class GameSetupViewController: CustomViewController, UITableViewDataSource, UITa
     @IBAction func finishGamePressed(_ sender: Any) {
         // Link back to selection
         if self.readOnly {
-            self.delegate?.gameSetupComplete()
+            self.delegate?.gamePreviewComplete()
             self.dismiss(animated: true, completion: nil)
         } else {
             NotificationCenter.default.removeObserver(observer!)
@@ -110,7 +109,7 @@ class GameSetupViewController: CustomViewController, UITableViewDataSource, UITa
         recovery = scorecard.recovery
 
         for _ in 1...scorecard.numberPlayers {
-            gameSetupNameCell.append(nil)
+            gamePreviewNameCell.append(nil)
         }
         
         // Make sure dealer not too high
@@ -119,7 +118,7 @@ class GameSetupViewController: CustomViewController, UITableViewDataSource, UITa
         }
         
         updateSelectedPlayers(selectedPlayers)
-        setupScreen(size: gameSetupView.frame.size)
+        setupScreen(size: self.view.frame.size)
         scorecard.saveMaxScores()
         
         // Check if in recovery mode and if so go straight to scorecard
@@ -207,13 +206,13 @@ class GameSetupViewController: CustomViewController, UITableViewDataSource, UITa
             // Player names
                 let playerNumber = indexPath.row+1
                 
-                gameSetupNameCell[playerNumber-1] = tableView.dequeueReusableCell(withIdentifier: "Game Setup Name Cell", for: indexPath) as? GameSetupNameCell
+                gamePreviewNameCell[playerNumber-1] = tableView.dequeueReusableCell(withIdentifier: "Game Setup Name Cell", for: indexPath) as? GamePreviewNameCell
              
                 // Setup the text input field
-                gameSetupNameCell[playerNumber-1]!.playerName.text = "\(scorecard.enteredPlayer(playerNumber).playerMO!.name!)"
+                gamePreviewNameCell[playerNumber-1]!.playerName.text = "\(scorecard.enteredPlayer(playerNumber).playerMO!.name!)"
                 
                 // Setup the dealer button
-                gameSetupNameCell[playerNumber-1]!.playerButton.setTitle("Dealer", for: .normal)
+                gamePreviewNameCell[playerNumber-1]!.playerButton.setTitle("Dealer", for: .normal)
                 showDealer(playerNumber: playerNumber)
                 
                 // Setup the thumbnail picture
@@ -222,42 +221,42 @@ class GameSetupViewController: CustomViewController, UITableViewDataSource, UITa
                     thumbnail = playerDetail.thumbnail
                 }
                 Utility.setThumbnail(data: thumbnail,
-                                     imageView: gameSetupNameCell[playerNumber-1]!.playerImage,
+                                     imageView: gamePreviewNameCell[playerNumber-1]!.playerImage,
                                      initials: scorecard.enteredPlayer(playerNumber).playerMO!.name!,
-                                     label: gameSetupNameCell[playerNumber-1]!.playerDisc,
+                                     label: gamePreviewNameCell[playerNumber-1]!.playerDisc,
                                      size: playerRowHeight-4)
                 
                 // Make facetime button available
                 if self.faceTimeAvailable {
-                    gameSetupNameCell[playerNumber-1]!.faceTimeButtonWidth.constant = 40
-                    gameSetupNameCell[playerNumber-1]!.faceTimeButtonTrailing.constant = 8
+                    gamePreviewNameCell[playerNumber-1]!.faceTimeButtonWidth.constant = 40
+                    gamePreviewNameCell[playerNumber-1]!.faceTimeButtonTrailing.constant = 8
                     if playerNumber <= self.faceTimeAddress.count && self.faceTimeAddress[playerNumber - 1] != "" {
-                        gameSetupNameCell[playerNumber-1]!.faceTimeButton.isHidden = false
-                        gameSetupNameCell[playerNumber-1]!.faceTimeButton.tag = playerNumber
-                        gameSetupNameCell[playerNumber-1]!.faceTimeButton.addTarget(self, action: #selector(GameSetupViewController.faceTimePressed(_:)), for: UIControl.Event.touchUpInside)
+                        gamePreviewNameCell[playerNumber-1]!.faceTimeButton.isHidden = false
+                        gamePreviewNameCell[playerNumber-1]!.faceTimeButton.tag = playerNumber
+                        gamePreviewNameCell[playerNumber-1]!.faceTimeButton.addTarget(self, action: #selector(GamePreviewViewController.faceTimePressed(_:)), for: UIControl.Event.touchUpInside)
                     } else {
-                        gameSetupNameCell[playerNumber-1]!.faceTimeButton.isHidden = true
+                        gamePreviewNameCell[playerNumber-1]!.faceTimeButton.isHidden = true
                     }
                 } else {
-                    gameSetupNameCell[playerNumber-1]!.faceTimeButtonWidth.constant = 0
-                    gameSetupNameCell[playerNumber-1]!.faceTimeButtonTrailing.constant = 0
+                    gamePreviewNameCell[playerNumber-1]!.faceTimeButtonWidth.constant = 0
+                    gamePreviewNameCell[playerNumber-1]!.faceTimeButtonTrailing.constant = 0
                 }
                 
                 // Setup return value
-                cell = gameSetupNameCell[playerNumber-1]
+                cell = gamePreviewNameCell[playerNumber-1]
             
         case 1:
             // Action buttons
-            actionCell = tableView.dequeueReusableCell(withIdentifier: "Game Setup Action Cell " + buttonMode, for: indexPath) as? GameSetupActionCell
+            actionCell = tableView.dequeueReusableCell(withIdentifier: "Game Setup Action Cell " + buttonMode, for: indexPath) as? GamePreviewActionCell
             
             actionCell.cutForDealerButton.setTitle("Cut for Dealer")
-            actionCell.cutForDealerButton.addTarget(self, action: #selector(GameSetupViewController.actionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
+            actionCell.cutForDealerButton.addTarget(self, action: #selector(GamePreviewViewController.actionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
             
             actionCell.nextDealerButton.setTitle("Next Dealer")
-            actionCell.nextDealerButton.addTarget(self, action: #selector(GameSetupViewController.actionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
+            actionCell.nextDealerButton.addTarget(self, action: #selector(GamePreviewViewController.actionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
           
             actionCell.overrideSettingsButton.setTitle("Override Settings")
-            actionCell.overrideSettingsButton.addTarget(self, action: #selector(GameSetupViewController.actionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
+            actionCell.overrideSettingsButton.addTarget(self, action: #selector(GamePreviewViewController.actionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
             
             cell = actionCell
 
@@ -388,7 +387,7 @@ class GameSetupViewController: CustomViewController, UITableViewDataSource, UITa
     }
     
     public func showDealer(playerNumber: Int, forceHide: Bool = false) {
-        gameSetupNameCell[playerNumber-1]!.playerButton.isHidden =
+        gamePreviewNameCell[playerNumber-1]!.playerButton.isHidden =
             (playerNumber == scorecard.dealerIs && !playerTableView.isEditing && !forceHide ? false : true)
     }
     
@@ -454,23 +453,23 @@ class GameSetupViewController: CustomViewController, UITableViewDataSource, UITa
     
     // MARK: - Function to present this view ==============================================================
     
-    class func showGameSetup(viewController: UIViewController, scorecard: Scorecard, selectedPlayers: [PlayerMO]) -> GameSetupViewController {
-        let storyboard = UIStoryboard(name: "GameSetupViewController", bundle: nil)
-        let gameSetupViewController = storyboard.instantiateViewController(withIdentifier: "GameSetupViewController") as! GameSetupViewController
-        gameSetupViewController.modalPresentationStyle = UIModalPresentationStyle.fullScreen
+    class func showGamePreview(viewController: UIViewController, scorecard: Scorecard, selectedPlayers: [PlayerMO]) -> GamePreviewViewController {
+        let storyboard = UIStoryboard(name: "GamePreviewViewController", bundle: nil)
+        let gamePreviewViewController = storyboard.instantiateViewController(withIdentifier: "gamePreviewViewController") as! GamePreviewViewController
+        gamePreviewViewController.modalPresentationStyle = UIModalPresentationStyle.fullScreen
         
-        gameSetupViewController.scorecard = scorecard
-        gameSetupViewController.selectedPlayers = selectedPlayers
-        gameSetupViewController.readOnly = true
+        gamePreviewViewController.scorecard = scorecard
+        gamePreviewViewController.selectedPlayers = selectedPlayers
+        gamePreviewViewController.readOnly = true
         
-        viewController.present(gameSetupViewController, animated: true, completion: nil)
-        return gameSetupViewController
+        viewController.present(gamePreviewViewController, animated: true, completion: nil)
+        return gamePreviewViewController
     }
 }
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
 
-class GameSetupNameCell: UITableViewCell {
+class GamePreviewNameCell: UITableViewCell {
     @IBOutlet var playerName: UILabel!
     @IBOutlet var playerButton: UIButton!
     @IBOutlet weak var playerImage: UIImageView!
@@ -480,7 +479,7 @@ class GameSetupNameCell: UITableViewCell {
     @IBOutlet weak var faceTimeButtonTrailing: NSLayoutConstraint!
 }
 
-class GameSetupActionCell: UITableViewCell {
+class GamePreviewActionCell: UITableViewCell {
     @IBOutlet weak var cutForDealerButton: ImageButton!
     @IBOutlet weak var nextDealerButton: ImageButton!
     @IBOutlet weak var overrideSettingsButton: ImageButton!

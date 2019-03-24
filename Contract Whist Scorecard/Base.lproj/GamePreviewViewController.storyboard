@@ -13,7 +13,7 @@
         <!--Game Preview-->
         <scene sceneID="GD7-Uz-hLB">
             <objects>
-                <viewController storyboardIdentifier="GameSetupViewController" title="Game Preview" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="M5N-Yi-C04" userLabel="Game Preview" customClass="GameSetupViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="GamePreviewViewController" title="Game Preview" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="M5N-Yi-C04" userLabel="Game Preview" customClass="GamePreviewViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iUU-8s-ns4" userLabel="Game Preview View">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -37,7 +37,7 @@
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Back" image="back"/>
                                                 <connections>
-                                                    <action selector="finishGamePressed:" destination="M5N-Yi-C04" eventType="touchUpInside" id="mE5-l5-7Qc"/>
+                                                    <action selector="finishGamePressed:" destination="M5N-Yi-C04" eventType="touchUpInside" id="MNn-fw-ACp"/>
                                                 </connections>
                                             </button>
                                         </barButtonItem>
@@ -53,7 +53,7 @@
                                                     <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="continueButton"/>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="continuePressed:" destination="M5N-Yi-C04" eventType="touchUpInside" id="8cC-UA-mmq"/>
+                                                    <action selector="continuePressed:" destination="M5N-Yi-C04" eventType="touchUpInside" id="WyA-ib-MuU"/>
                                                 </connections>
                                             </button>
                                         </barButtonItem>
@@ -68,7 +68,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Game Setup Name Cell" id="qhF-D0-gxF" customClass="GameSetupNameCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Game Setup Name Cell" id="qhF-D0-gxF" customClass="GamePreviewNameCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qhF-D0-gxF" id="82X-px-Cl8">
@@ -109,14 +109,14 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="JJq-oJ-QJT">
-                                                    <rect key="frame" x="64" y="11" width="201" height="32"/>
+                                                    <rect key="frame" x="64" y="11" width="493" height="32"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bSJ-0W-aGl" userLabel="Dealer Button" customClass="TotalRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="273" y="15" width="44" height="13"/>
+                                                    <rect key="frame" x="565" y="15" width="44" height="13"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" relation="lessThanOrEqual" constant="44" id="8LB-9G-YsI"/>
@@ -125,7 +125,7 @@
                                                     <state key="normal" title="Button"/>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Dd-qR-woZ" userLabel="FaceTime">
-                                                    <rect key="frame" x="325" y="2" width="40" height="40"/>
+                                                    <rect key="frame" x="617" y="2" width="40" height="40"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="5Dd-qR-woZ" secondAttribute="height" multiplier="1:1" id="XFZ-CA-MVG"/>
                                                         <constraint firstAttribute="width" constant="40" id="osb-cr-gMo"/>
@@ -133,7 +133,7 @@
                                                     <state key="normal" image="phone"/>
                                                 </button>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="auR-9N-5f6" userLabel="Separator">
-                                                    <rect key="frame" x="10" y="43" width="365" height="1"/>
+                                                    <rect key="frame" x="10" y="43" width="657" height="1"/>
                                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="XeH-hy-439"/>
@@ -171,7 +171,7 @@
                                             <outlet property="playerName" destination="JJq-oJ-QJT" id="LdH-dj-UXJ"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Game Setup Action Cell Triangle" rowHeight="290" id="r5N-qG-hqd" customClass="GameSetupActionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Game Setup Action Cell Triangle" rowHeight="290" id="r5N-qG-hqd" customClass="GamePreviewActionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="99.5" width="375" height="290"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="r5N-qG-hqd" id="aov-Ia-Wcc">
@@ -234,7 +234,7 @@
                                             <outlet property="overrideSettingsButton" destination="5QR-vA-soU" id="Glb-cp-ltA"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="redraw" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Game Setup Action Cell Row" rowHeight="162" id="LNY-e4-JP7" customClass="GameSetupActionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell contentMode="redraw" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Game Setup Action Cell Row" rowHeight="162" id="LNY-e4-JP7" customClass="GamePreviewActionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="389.5" width="375" height="162"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="LNY-e4-JP7" id="nPY-38-Edr">
@@ -242,7 +242,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" tag="1" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wUt-jv-Pnx" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="-87.5" y="27" width="130" height="130"/>
+                                                    <rect key="frame" x="58.5" y="24" width="130" height="130"/>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="130" id="7Nj-S0-Lv1"/>
@@ -253,7 +253,7 @@
                                                     </state>
                                                 </button>
                                                 <button opaque="NO" tag="2" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DNt-CK-BEw" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="122.5" y="27" width="130" height="130"/>
+                                                    <rect key="frame" x="268.5" y="24" width="130" height="130"/>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="130" id="a8d-On-TYo"/>
@@ -264,7 +264,7 @@
                                                     </state>
                                                 </button>
                                                 <button opaque="NO" tag="3" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pet-Bb-pAU" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="332.5" y="27" width="130" height="130"/>
+                                                    <rect key="frame" x="478.5" y="24" width="130" height="130"/>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="130" id="N7D-Zt-865"/>
@@ -327,30 +327,29 @@
                     </view>
                     <toolbarItems/>
                     <connections>
-                        <outlet property="backgroundImage" destination="E7h-Ll-Qym" id="r8v-7c-12p"/>
-                        <outlet property="continueButton" destination="wbi-Gg-AL4" id="M3X-2e-kMw"/>
-                        <outlet property="gameSetupView" destination="iUU-8s-ns4" id="4uN-Fo-2Y7"/>
-                        <outlet property="playerTableView" destination="c5K-bm-x10" id="EVS-Gn-Umf"/>
+                        <outlet property="backgroundImage" destination="E7h-Ll-Qym" id="MU4-qc-Mf8"/>
+                        <outlet property="continueButton" destination="wbi-Gg-AL4" id="IWZ-mh-5PH"/>
+                        <outlet property="playerTableView" destination="c5K-bm-x10" id="z5W-B4-q4N"/>
                         <segue destination="6Hq-Pm-vP6" kind="show" identifier="showScorepad" id="OMl-3l-9zT"/>
-                        <segue destination="Zg2-0A-XQQ" kind="unwind" identifier="hideGameSetup" unwindAction="hideGameSetupWithSegue:" id="ENU-76-LlQ"/>
-                        <segue destination="Zg2-0A-XQQ" kind="unwind" identifier="hideHostGameSetup" customClass="UIStoryboardSegueWithCompletion" customModule="Contract_Whist_Scorecard" customModuleProvider="target" unwindAction="hideHostGameSetupWithSegue:" id="uHv-ar-5U8"/>
+                        <segue destination="Zg2-0A-XQQ" kind="unwind" identifier="hideGamePreview" unwindAction="hideGamePreviewWithSegue:" id="ENU-76-LlQ"/>
+                        <segue destination="Zg2-0A-XQQ" kind="unwind" identifier="hideHostGamePreview" customClass="UIStoryboardSegueWithCompletion" customModule="Contract_Whist_Scorecard" customModuleProvider="target" unwindAction="hideHostGamePreviewWithSegue:" id="uHv-ar-5U8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vNy-VM-1Ya" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <swipeGestureRecognizer direction="left" id="nmb-H1-Bc3" userLabel="Left Swipe Gesture Recognizer">
                     <connections>
-                        <action selector="leftSwipeWithRecognizer:" destination="M5N-Yi-C04" id="Ro2-ib-V8f"/>
+                        <action selector="leftSwipeWithRecognizer:" destination="M5N-Yi-C04" id="HRT-7L-PY4"/>
                     </connections>
                 </swipeGestureRecognizer>
                 <swipeGestureRecognizer direction="right" id="lM9-Xe-2y0" userLabel="Right Swipe Gesture Recognizer">
                     <connections>
-                        <action selector="rightSwipeWithRecognizer:" destination="M5N-Yi-C04" id="vwV-WJ-xa0"/>
+                        <action selector="rightSwipeWithRecognizer:" destination="M5N-Yi-C04" id="eSY-SQ-Tos"/>
                     </connections>
                 </swipeGestureRecognizer>
                 <exit id="Zg2-0A-XQQ" userLabel="Exit" sceneMemberID="exit"/>
                 <rotationGestureRecognizer rotation="90" id="bOf-Ep-qSS">
                     <connections>
-                        <action selector="rotationGestureWithRecognizer:" destination="M5N-Yi-C04" id="0Z2-0k-xHE"/>
+                        <action selector="rotationGestureWithRecognizer:" destination="M5N-Yi-C04" id="umN-HD-5uH"/>
                     </connections>
                 </rotationGestureRecognizer>
             </objects>

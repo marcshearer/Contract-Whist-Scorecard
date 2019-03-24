@@ -10,10 +10,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Comparison-->
+        <!--Statistics-->
         <scene sceneID="RZz-A7-732">
             <objects>
-                <viewController storyboardIdentifier="StatisticsViewController" title="Comparison" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FsR-Kn-dnU" customClass="StatisticsViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="StatisticsViewController" title="Comparison" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FsR-Kn-dnU" userLabel="Statistics" customClass="StatisticsViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5eb-gD-VJV">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="524"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

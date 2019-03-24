@@ -26,7 +26,7 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func finishPressed(_ sender: Any) {
-        self.performSegue(withIdentifier: "hideComparisonGraph", sender: self)
+        self.performSegue(withIdentifier: "hideStatisticsGraph", sender: self)
     }
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
@@ -68,7 +68,7 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
         
         if participantList.count == 0 {
             self.alertMessage("No games played since game history has been saved", okHandler: {
-                self.performSegue(withIdentifier: "hideComparisonGraph", sender: self)
+                self.performSegue(withIdentifier: "hideStatisticsGraph", sender: self)
             })
         } else {
         

@@ -27,7 +27,7 @@
                                     <navigationItem title="Sync Players" id="QE3-YK-Vgx">
                                         <barButtonItem key="leftBarButtonItem" id="UWK-Lf-2VC">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="4KG-BW-XxS" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="14" width="54" height="22"/>
+                                                <rect key="frame" x="20" y="11" width="54" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Back" image="back"/>
                                                 <connections>
@@ -129,7 +129,7 @@
                         <outlet property="syncView" destination="dRk-3e-k2c" id="CXZ-ZA-5Ye"/>
                         <segue destination="Jh3-Kw-C5Q" kind="unwind" identifier="hideSync" unwindAction="hideSyncWithSegue:" id="qVf-wd-GRw"/>
                         <segue destination="Jh3-Kw-C5Q" kind="unwind" identifier="hidePlayersSync" unwindAction="hidePlayersSyncWithSegue:" id="V0T-vA-TfQ"/>
-                        <segue destination="Jh3-Kw-C5Q" kind="unwind" identifier="hideComparisonSync" unwindAction="hideComparisonSyncWithSegue:" id="WTg-dv-w9S"/>
+                        <segue destination="Jh3-Kw-C5Q" kind="unwind" identifier="hideStatisticsSync" unwindAction="hideStatisticsSyncWithSegue:" id="WTg-dv-w9S"/>
                         <segue destination="Jh3-Kw-C5Q" kind="unwind" identifier="hideHistorySync" unwindAction="hideHistorySyncWithSegue:" id="ZA3-ed-HIK"/>
                     </connections>
                 </viewController>

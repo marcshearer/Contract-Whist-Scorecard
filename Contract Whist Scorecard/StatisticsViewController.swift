@@ -1,5 +1,5 @@
 //
-//  ComparisonViewController.swift
+//  StatisticsViewController.swift
 //  Contract Whist Scorecard
 //
 //  Created by Marc Shearer on 12/12/2016.
@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-protocol ComparisonDelegate : class {
+protocol StatisticsDelegate : class {
     
     func deletePlayer(_ playerDetail: PlayerDetail)
     
@@ -17,7 +17,7 @@ protocol ComparisonDelegate : class {
     
 }
 
-class ComparisonViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate {
+class StatisticsViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     
@@ -61,7 +61,7 @@ class ComparisonViewController: CustomViewController, UITableViewDataSource, UIT
     var playerDetail: PlayerDetail!
     var selectedPlayer: Int = 0
     var selectedList: [PlayerDetail]!
-    weak var delegate: ComparisonDelegate?
+    weak var delegate: StatisticsDelegate?
     var returnSegue = ""
     var backText = "Back"
     var backImage = "back"
@@ -73,14 +73,12 @@ class ComparisonViewController: CustomViewController, UITableViewDataSource, UIT
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet var headerView: UITableView!
     @IBOutlet var bodyView: UITableView!
-    @IBOutlet var comparisonView: UIView!
     @IBOutlet var syncButton: RoundedButton!
-    @IBOutlet var syncMessage: UILabel!
     @IBOutlet var finishButton: UIButton!
        
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     
-    @IBAction func comparisonHidePlayer(segue:UIStoryboardSegue) {
+    @IBAction func hideStatisticsPlayerDetail(segue:UIStoryboardSegue) {
         // Update core data with any changes
         
         let source = segue.source as! PlayerDetailViewController
@@ -131,13 +129,13 @@ class ComparisonViewController: CustomViewController, UITableViewDataSource, UIT
         }
     }
     
-    @IBAction func hideComparisonSync(segue:UIStoryboardSegue) {
+    @IBAction func hideStatisticsSync(segue:UIStoryboardSegue) {
         // Refresh screen
         scorecard.refreshPlayerDetailList(selectedList)
         bodyView.reloadData()
     }
 
-    @IBAction func hideComparisonGraph(segue:UIStoryboardSegue) {
+    @IBAction func hideStatisticsGraph(segue:UIStoryboardSegue) {
     }
 
     // MARK: - IB Actions ============================================================================== -
@@ -148,7 +146,7 @@ class ComparisonViewController: CustomViewController, UITableViewDataSource, UIT
     }
     
     @IBAction func syncPressed(_ sender: UIButton) {
-        self.performSegue(withIdentifier: "showComparisonSync", sender: self)
+        self.performSegue(withIdentifier: "showStatisticsSync", sender: self)
     }
     
     @IBAction func leftSwipe(recognizer:UISwipeGestureRecognizer) {
@@ -167,7 +165,7 @@ class ComparisonViewController: CustomViewController, UITableViewDataSource, UIT
         }
         
         // Check for network / iCloud login
-        scorecard.checkNetworkConnection(button: syncButton, label: syncMessage)
+        scorecard.checkNetworkConnection(button: syncButton, label: nil)
         
         // Set nofification for image download
         observer = setImageDownloadNotification()
@@ -180,7 +178,7 @@ class ComparisonViewController: CustomViewController, UITableViewDataSource, UIT
     
     override func viewWillLayoutSubviews() {
         if firstTime {
-            checkFieldDisplay(to: comparisonView.safeAreaLayoutGuide.layoutFrame.size)
+            checkFieldDisplay(to: self.view.safeAreaLayoutGuide.layoutFrame.size)
             firstTime = true
         }
     }
@@ -204,22 +202,22 @@ class ComparisonViewController: CustomViewController, UITableViewDataSource, UIT
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        var cell: ComparisonTableCell
+        var cell: StatisticsTableCell
         
         // Player names
     
         switch tableView.tag {
         case 1:
             // Header table view
-            cell = tableView.dequeueReusableCell(withIdentifier: "Comparison Header Table Cell", for: indexPath) as! ComparisonTableCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Statistics Header Table Cell", for: indexPath) as! StatisticsTableCell
             ScorecardUI.sectionHeadingStyle(cell)
             cell.setCollectionViewDataSourceDelegate(self, forRow: 1000000+indexPath.row)
         default:
             // Body table view
-            cell = tableView.dequeueReusableCell(withIdentifier: "Comparison Body Table Cell", for: indexPath) as! ComparisonTableCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Statistics Body Table Cell", for: indexPath) as! StatisticsTableCell
             ScorecardUI.normalStyle(cell)
             cell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row)
-            collectionView[indexPath.row] = cell.comparisonCollection
+            collectionView[indexPath.row] = cell.statisticsCollection
         }
 
         return cell
@@ -329,30 +327,30 @@ class ComparisonViewController: CustomViewController, UITableViewDataSource, UIT
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.isModalInPopover = true
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = comparisonView as UIView
+            destination.popoverPresentationController?.sourceView = self.view as UIView
             destination.preferredContentSize = CGSize(width: 400, height: 540)
             destination.playerDetail = selectedList[selectedPlayer - 1]
-            destination.returnSegue = "comparisonHidePlayer"
+            destination.returnSegue = "hideStatisticsPlayerDetail"
             destination.mode = .amend
             destination.scorecard = self.scorecard
-        case "showComparisonSync":
+        case "showStatisticsSync":
             let destination = segue.destination as! SyncViewController
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.isModalInPopover = true
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = comparisonView
+            destination.popoverPresentationController?.sourceView = self.view
             destination.preferredContentSize = CGSize(width: 400, height: 523)
-            destination.returnSegue = "hideComparisonSync"
+            destination.returnSegue = "hideStatisticsSync"
             destination.scorecard = self.scorecard
         case "showGraph":
             let destination = segue.destination as! GraphViewController
             let defaultRect = GraphView.defaultViewRect()
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = comparisonView as UIView
+            destination.popoverPresentationController?.sourceView = self.view as UIView
             destination.preferredContentSize = CGSize(width: defaultRect.width, height: defaultRect.height)
             destination.playerDetail = selectedList[selectedPlayer - 1]
-            destination.returnSegue = "comparisonHideGraph"
+            destination.returnSegue = "hideStatisticsGraph"
             destination.scorecard = self.scorecard
         default:
             break
@@ -362,7 +360,7 @@ class ComparisonViewController: CustomViewController, UITableViewDataSource, UIT
 
 // MARK: - Extension Override Handlers ============================================================= -
 
-extension ComparisonViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension StatisticsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     // MARK: - CollectionView Overrides ================================================================ -
     
@@ -393,17 +391,17 @@ extension ComparisonViewController: UICollectionViewDelegate, UICollectionViewDa
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        var cell: ComparisonCollectionCell
+        var cell: StatisticsCollectionCell
         
         if collectionView.tag >= 1000000 {
             
             // Header
-            cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Comparison Header Cell", for: indexPath) as! ComparisonCollectionCell
+            cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Statistics Header Cell", for: indexPath) as! StatisticsCollectionCell
             cell.sortArrowImage.image = nil
             
-            ScorecardUI.sectionHeadingStyle(cell.comparisonLabel)
-            cell.comparisonLabel.text = displayedFields[indexPath.row].title
-            cell.comparisonLabel.textAlignment = displayedFields[indexPath.row].align
+            ScorecardUI.sectionHeadingStyle(cell.statisticsLabel)
+            cell.statisticsLabel.text = displayedFields[indexPath.row].title
+            cell.statisticsLabel.textAlignment = displayedFields[indexPath.row].align
             if displayedFields[indexPath.row].field == "name" {
                 cell.sortArrowImage.image = UIImage(named: "up arrow")
                 lastColumn = indexPath.row
@@ -415,52 +413,52 @@ extension ComparisonViewController: UICollectionViewDelegate, UICollectionViewDa
             // Body
             switch displayedFields[indexPath.row].field {
             case "detail":
-                cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Comparison Detail Body Cell", for: indexPath) as! ComparisonCollectionCell
-                cell.comparisonButton.tag = collectionView.tag
-                cell.comparisonButton.addTarget(self, action: #selector(ComparisonViewController.comparisonDetailButtonPressed(_:)), for: UIControl.Event.touchUpInside)
-                cell.comparisonButton.isEnabled = true
+                cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Statistics Detail Body Cell", for: indexPath) as! StatisticsCollectionCell
+                cell.statisticsButton.tag = collectionView.tag
+                cell.statisticsButton.addTarget(self, action: #selector(StatisticsViewController.statisticsDetailButtonPressed(_:)), for: UIControl.Event.touchUpInside)
+                cell.statisticsButton.isEnabled = true
             case "graph":
-                cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Comparison Graph Body Cell", for: indexPath) as! ComparisonCollectionCell
-                cell.comparisonButton.tag = collectionView.tag
-                cell.comparisonButton.addTarget(self, action: #selector(ComparisonViewController.comparisonGraphButtonPressed(_:)), for: UIControl.Event.touchUpInside)
-                cell.comparisonButton.isEnabled = (selectedList[collectionView.tag].handsPlayed > 0 && selectedList[collectionView.tag].datePlayed >= Utility.dateFromString("01/04/2017")!)
+                cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Statistics Graph Body Cell", for: indexPath) as! StatisticsCollectionCell
+                cell.statisticsButton.tag = collectionView.tag
+                cell.statisticsButton.addTarget(self, action: #selector(StatisticsViewController.statisticsGraphButtonPressed(_:)), for: UIControl.Event.touchUpInside)
+                cell.statisticsButton.isEnabled = (selectedList[collectionView.tag].handsPlayed > 0 && selectedList[collectionView.tag].datePlayed >= Utility.dateFromString("01/04/2017")!)
             case "thumbnail":
-                cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Comparison Image Body Cell", for: indexPath) as! ComparisonCollectionCell
+                cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Statistics Image Body Cell", for: indexPath) as! StatisticsCollectionCell
                 Utility.setThumbnail(data: selectedList[collectionView.tag].thumbnail,
-                                     imageView: cell.comparisonImage,
+                                     imageView: cell.statisticsImage,
                                      initials: selectedList[collectionView.tag].name,
-                                     label: cell.comparisonDisc)
+                                     label: cell.statisticsDisc)
             default:
-                cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Comparison Body Cell", for: indexPath) as! ComparisonCollectionCell                
-                ScorecardUI.normalStyle(cell.comparisonLabel)
+                cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Statistics Body Cell", for: indexPath) as! StatisticsCollectionCell
+                ScorecardUI.normalStyle(cell.statisticsLabel)
                 switch displayedFields[indexPath.row].field {
                 case "name":
-                    cell.comparisonLabel.text = selectedList[collectionView.tag].name
+                    cell.statisticsLabel.text = selectedList[collectionView.tag].name
                     nameColumn = indexPath.row
                 case "gamesPlayed":
-                    cell.comparisonLabel.text = "\(Int(selectedList[collectionView.tag].gamesPlayed))"
+                    cell.statisticsLabel.text = "\(Int(selectedList[collectionView.tag].gamesPlayed))"
                 case "gamesWon":
-                    cell.comparisonLabel.text = "\(Int(selectedList[collectionView.tag].gamesWon))"
+                    cell.statisticsLabel.text = "\(Int(selectedList[collectionView.tag].gamesWon))"
                 case "gamesWon%":
-                    cell.comparisonLabel.text = "\(Utility.roundPercent(selectedList[collectionView.tag].gamesWon, selectedList[collectionView.tag].gamesPlayed)) %"
+                    cell.statisticsLabel.text = "\(Utility.roundPercent(selectedList[collectionView.tag].gamesWon, selectedList[collectionView.tag].gamesPlayed)) %"
                 case "totalScore":
-                    cell.comparisonLabel.text = "\(Int(selectedList[collectionView.tag].totalScore))"
+                    cell.statisticsLabel.text = "\(Int(selectedList[collectionView.tag].totalScore))"
                 case "averageScore":
-                    cell.comparisonLabel.text = "\(Utility.roundQuotient(selectedList[collectionView.tag].totalScore,selectedList[collectionView.tag].gamesPlayed))"
+                    cell.statisticsLabel.text = "\(Utility.roundQuotient(selectedList[collectionView.tag].totalScore,selectedList[collectionView.tag].gamesPlayed))"
                 case "handsPlayed":
-                    cell.comparisonLabel.text = "\(Int(selectedList[collectionView.tag].handsPlayed))"
+                    cell.statisticsLabel.text = "\(Int(selectedList[collectionView.tag].handsPlayed))"
                 case "handsMade":
-                    cell.comparisonLabel.text = "\(Int(selectedList[collectionView.tag].handsMade))"
+                    cell.statisticsLabel.text = "\(Int(selectedList[collectionView.tag].handsMade))"
                 case "handsMade%":
-                    cell.comparisonLabel.text = "\(Utility.roundPercent(selectedList[collectionView.tag].handsMade, selectedList[collectionView.tag].handsPlayed)) %"
+                    cell.statisticsLabel.text = "\(Utility.roundPercent(selectedList[collectionView.tag].handsMade, selectedList[collectionView.tag].handsPlayed)) %"
                 case "twosMade":
-                    cell.comparisonLabel.text = "\(Int(selectedList[collectionView.tag].twosMade))"
+                    cell.statisticsLabel.text = "\(Int(selectedList[collectionView.tag].twosMade))"
                 case "twosMade%":
-                    cell.comparisonLabel.text = "\(Utility.roundPercent(selectedList[collectionView.tag].twosMade,    selectedList[collectionView.tag].handsPlayed)) %"
+                    cell.statisticsLabel.text = "\(Utility.roundPercent(selectedList[collectionView.tag].twosMade,    selectedList[collectionView.tag].handsPlayed)) %"
                 default:
-                    cell.comparisonLabel.text = ""
+                    cell.statisticsLabel.text = ""
                 }
-                cell.comparisonLabel.textAlignment = displayedFields[indexPath.row].align
+                cell.statisticsLabel.textAlignment = displayedFields[indexPath.row].align
             }
         }
         
@@ -517,11 +515,11 @@ extension ComparisonViewController: UICollectionViewDelegate, UICollectionViewDa
     
     // MARK: - Collection View Action Handlers ========================================================== -
     
-    @objc func comparisonDetailButtonPressed(_ button: UIButton) {
+    @objc func statisticsDetailButtonPressed(_ button: UIButton) {
         showDetail(button.tag + 1)
     }
     
-    @objc func comparisonGraphButtonPressed(_ button: UIButton) {
+    @objc func statisticsGraphButtonPressed(_ button: UIButton) {
         drawGraph(button.tag + 1)
     }
     
@@ -537,14 +535,14 @@ extension ComparisonViewController: UICollectionViewDelegate, UICollectionViewDa
         // Presumably it will be recreated correctly when the cells are dequeued
         let tableRows = bodyView.numberOfRows(inSection: 0)
         for playerDetailLoop in 1...tableRows{
-            let tableCell = bodyView.cellForRow(at: IndexPath(row: playerDetailLoop-1, section: 0)) as! ComparisonTableCell?
+            let tableCell = bodyView.cellForRow(at: IndexPath(row: playerDetailLoop-1, section: 0)) as! StatisticsTableCell?
             if tableCell != nil {
-                let collectionView:UICollectionView? = tableCell!.comparisonCollection
+                let collectionView:UICollectionView? = tableCell!.statisticsCollection
                 if collectionView != nil {
                     collectionView!.tag = playerDetailLoop-1
-                    let collectionCell = collectionView!.cellForItem(at: IndexPath(row: buttonColumn, section: 0)) as! ComparisonCollectionCell?
+                    let collectionCell = collectionView!.cellForItem(at: IndexPath(row: buttonColumn, section: 0)) as! StatisticsCollectionCell?
                     if collectionCell != nil {
-                        collectionCell!.comparisonButton.tag = playerDetailLoop-1
+                        collectionCell!.statisticsButton.tag = playerDetailLoop-1
                     }
                 }
             }
@@ -596,26 +594,26 @@ extension ComparisonViewController: UICollectionViewDelegate, UICollectionViewDa
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
 
 
-class ComparisonTableCell: UITableViewCell {
+class StatisticsTableCell: UITableViewCell {
     
-    @IBOutlet weak var comparisonCollection: UICollectionView!
+    @IBOutlet weak var statisticsCollection: UICollectionView!
     
     func setCollectionViewDataSourceDelegate
         <D: UICollectionViewDataSource & UICollectionViewDelegate>
         (_ dataSourceDelegate: D, forRow row: Int) {
         
-        comparisonCollection.delegate = dataSourceDelegate
-        comparisonCollection.dataSource = dataSourceDelegate
-        comparisonCollection.tag = row
-        comparisonCollection.reloadData()
+        statisticsCollection.delegate = dataSourceDelegate
+        statisticsCollection.dataSource = dataSourceDelegate
+        statisticsCollection.tag = row
+        statisticsCollection.reloadData()
     }
 }
 
-class ComparisonCollectionCell: UICollectionViewCell {
-    @IBOutlet weak var comparisonLabel: UILabel!
-    @IBOutlet weak var comparisonButton: UIButton!
-    @IBOutlet weak var comparisonImage: UIImageView!
-    @IBOutlet weak var comparisonDisc: UILabel!
+class StatisticsCollectionCell: UICollectionViewCell {
+    @IBOutlet weak var statisticsLabel: UILabel!
+    @IBOutlet weak var statisticsButton: UIButton!
+    @IBOutlet weak var statisticsImage: UIImageView!
+    @IBOutlet weak var statisticsDisc: UILabel!
     @IBOutlet weak var sortArrowImage: UIImageView!
 }
 

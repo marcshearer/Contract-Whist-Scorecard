@@ -12,7 +12,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
     
     func testStats() {
         
-        // Select Player Stats
+        // Select Players
         self.selectOption("Players")
         
         // Select Becky
@@ -24,7 +24,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         // Clear popup
         self.tap(app.alerts["Hidden Entry"].buttons["OK"])
         
-        // Return to Player Stats
+        // Return to Players
         self.tap(app.navigationBars["Becky"].buttons["Back"])
         
         // Go back to home page
@@ -34,7 +34,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
     
     func testCompare() {
         
-        // Select Player Stats
+        // Select Players
         self.selectOption("Statistics")
         
         // Select player detail for Becky & then exit

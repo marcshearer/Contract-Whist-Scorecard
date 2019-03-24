@@ -13,7 +13,7 @@
         <!--Comparison-->
         <scene sceneID="RZz-A7-732">
             <objects>
-                <viewController storyboardIdentifier="ComparisonViewController" title="Comparison" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FsR-Kn-dnU" customClass="ComparisonViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="StatisticsViewController" title="Comparison" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FsR-Kn-dnU" customClass="StatisticsViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5eb-gD-VJV">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="524"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -59,7 +59,7 @@
                                     <constraint firstAttribute="height" constant="50" id="gBV-Gw-iBs"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Comparison Header Table Cell" id="9Y5-Jh-t1d" userLabel="Header Table View Cell" customClass="ComparisonTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Statistics Header Table Cell" id="9Y5-Jh-t1d" userLabel="Header Table View Cell" customClass="StatisticsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9Y5-Jh-t1d" id="6SL-4M-90t">
@@ -67,7 +67,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gXG-S6-tvf" userLabel="Header Collection View">
-                                                    <rect key="frame" x="10" y="0.0" width="355" height="43.5"/>
+                                                    <rect key="frame" x="10" y="0.0" width="580" height="43.5"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="MWO-G1-p4t">
                                                         <size key="itemSize" width="50" height="50"/>
@@ -76,7 +76,7 @@
                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" reuseIdentifier="Comparison Header Cell" id="1av-63-VO8" userLabel="Header Collection Cell" customClass="ComparisonCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" reuseIdentifier="Statistics Header Cell" id="1av-63-VO8" userLabel="Header Collection Cell" customClass="StatisticsCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="-3.5" width="50" height="50"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -107,8 +107,8 @@
                                                                 <constraint firstItem="CC4-IV-sdi" firstAttribute="leading" secondItem="1av-63-VO8" secondAttribute="leading" id="ym6-8g-5fa"/>
                                                             </constraints>
                                                             <connections>
-                                                                <outlet property="comparisonLabel" destination="CC4-IV-sdi" id="tMj-4G-Paj"/>
                                                                 <outlet property="sortArrowImage" destination="wG3-yd-ayp" id="ol5-4J-Eko"/>
+                                                                <outlet property="statisticsLabel" destination="CC4-IV-sdi" id="pKR-Ye-rfM"/>
                                                             </connections>
                                                         </collectionViewCell>
                                                     </cells>
@@ -122,7 +122,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="comparisonCollection" destination="gXG-S6-tvf" id="lIK-82-hRW"/>
+                                            <outlet property="statisticsCollection" destination="gXG-S6-tvf" id="lIK-82-hRW"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -135,7 +135,7 @@
                                 <rect key="frame" x="0.0" y="114" width="320" height="410"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Comparison Body Table Cell" id="t2h-Qy-aAO" userLabel="Body Table View Cell" customClass="ComparisonTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Statistics Body Table Cell" id="t2h-Qy-aAO" userLabel="Body Table View Cell" customClass="StatisticsTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="320" height="57"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="t2h-Qy-aAO" id="ggU-xh-ecH">
@@ -143,7 +143,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="QAO-tp-B8D" userLabel="Body Collection View">
-                                                    <rect key="frame" x="10" y="0.0" width="355" height="57"/>
+                                                    <rect key="frame" x="10" y="0.0" width="300" height="57"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="tHG-k8-yh7">
                                                         <size key="itemSize" width="57" height="57"/>
@@ -152,7 +152,7 @@
                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Comparison Body Cell" id="gRd-bz-jud" userLabel="Body Normal Cell" customClass="ComparisonCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Statistics Body Cell" id="gRd-bz-jud" userLabel="Body Normal Cell" customClass="StatisticsCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="57" height="57"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -174,10 +174,10 @@
                                                                 <constraint firstAttribute="trailing" secondItem="saY-dq-bW5" secondAttribute="trailing" id="g8Y-94-NaK"/>
                                                             </constraints>
                                                             <connections>
-                                                                <outlet property="comparisonLabel" destination="saY-dq-bW5" id="3mR-Ku-Crt"/>
+                                                                <outlet property="statisticsLabel" destination="saY-dq-bW5" id="3mR-Ku-Crt"/>
                                                             </connections>
                                                         </collectionViewCell>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Comparison Detail Body Cell" id="AKs-Dg-KQf" userLabel="Body Detail Cell" customClass="ComparisonCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Statistics Detail Body Cell" id="AKs-Dg-KQf" userLabel="Body Detail Cell" customClass="StatisticsCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                             <rect key="frame" x="57" y="0.0" width="57" height="57"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -198,10 +198,10 @@
                                                                 <constraint firstItem="SJN-3F-ieF" firstAttribute="top" secondItem="AKs-Dg-KQf" secondAttribute="top" id="mp1-fH-X0h"/>
                                                             </constraints>
                                                             <connections>
-                                                                <outlet property="comparisonButton" destination="SJN-3F-ieF" id="u9V-Vy-cPa"/>
+                                                                <outlet property="statisticsButton" destination="SJN-3F-ieF" id="u9V-Vy-cPa"/>
                                                             </connections>
                                                         </collectionViewCell>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Comparison Graph Body Cell" id="1Vj-9t-Vjc" userLabel="Body Graph Cell" customClass="ComparisonCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Statistics Graph Body Cell" id="1Vj-9t-Vjc" userLabel="Body Graph Cell" customClass="StatisticsCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                             <rect key="frame" x="114" y="0.0" width="57" height="57"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -223,10 +223,10 @@
                                                                 <constraint firstAttribute="trailingMargin" secondItem="Ceh-ei-v9a" secondAttribute="trailing" id="v11-MY-iHa"/>
                                                             </constraints>
                                                             <connections>
-                                                                <outlet property="comparisonButton" destination="Ceh-ei-v9a" id="GNO-wj-Sxf"/>
+                                                                <outlet property="statisticsButton" destination="Ceh-ei-v9a" id="GNO-wj-Sxf"/>
                                                             </connections>
                                                         </collectionViewCell>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Comparison Image Body Cell" id="OqO-Rh-cDg" userLabel="Body Thumbnail Cell" customClass="ComparisonCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Statistics Image Body Cell" id="OqO-Rh-cDg" userLabel="Body Thumbnail Cell" customClass="StatisticsCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                             <rect key="frame" x="171" y="0.0" width="57" height="57"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -329,14 +329,14 @@
                                                                 <constraint firstAttribute="trailing" secondItem="W86-P7-fmw" secondAttribute="trailing" id="ptm-N5-Nhh"/>
                                                             </constraints>
                                                             <connections>
-                                                                <outlet property="comparisonDisc" destination="iNT-wA-HGU" id="MHW-FN-qz0"/>
-                                                                <outlet property="comparisonImage" destination="aIh-3j-wpO" id="yiR-Y2-LvI"/>
+                                                                <outlet property="statisticsDisc" destination="iNT-wA-HGU" id="MHW-FN-qz0"/>
+                                                                <outlet property="statisticsImage" destination="aIh-3j-wpO" id="yiR-Y2-LvI"/>
                                                             </connections>
                                                         </collectionViewCell>
                                                     </cells>
                                                 </collectionView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ppf-Ml-K5S" userLabel="Separator">
-                                                    <rect key="frame" x="0.0" y="56" width="375" height="1"/>
+                                                    <rect key="frame" x="0.0" y="56" width="320" height="1"/>
                                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="aPQ-ro-IsC"/>
@@ -356,7 +356,7 @@
                                             <constraint firstItem="QAO-tp-B8D" firstAttribute="top" secondItem="t2h-Qy-aAO" secondAttribute="top" id="Uvw-aX-hZI"/>
                                         </constraints>
                                         <connections>
-                                            <outlet property="comparisonCollection" destination="QAO-tp-B8D" id="1KQ-QX-eUj"/>
+                                            <outlet property="statisticsCollection" destination="QAO-tp-B8D" id="1KQ-QX-eUj"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -396,13 +396,12 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="bodyView" destination="zs1-6Q-Kuk" id="Hq4-k9-amc"/>
-                        <outlet property="comparisonView" destination="5eb-gD-VJV" id="80s-PV-q1x"/>
                         <outlet property="finishButton" destination="aKf-ti-7PN" id="Og5-5E-Rc1"/>
                         <outlet property="headerView" destination="55F-UG-Ned" id="lRK-BV-Gdv"/>
                         <outlet property="syncButton" destination="6Q0-4S-yhc" id="yih-eF-ih2"/>
                         <segue destination="rjj-WY-EBV" kind="presentation" identifier="showPlayerDetail" modalPresentationStyle="formSheet" id="Ezf-Mc-9vR"/>
-                        <segue destination="uW6-bF-dyP" kind="unwind" identifier="hideComparison" unwindAction="hideComparisonWithSegue:" id="Z3v-65-cSr"/>
-                        <segue destination="ZMz-Qc-fxY" kind="popoverPresentation" identifier="showComparisonSync" popoverAnchorView="5eb-gD-VJV" id="4fS-Qv-DTV">
+                        <segue destination="uW6-bF-dyP" kind="unwind" identifier="hideStatistics" unwindAction="hideStatisticsWithSegue:" id="Z3v-65-cSr"/>
+                        <segue destination="ZMz-Qc-fxY" kind="popoverPresentation" identifier="showStatisticsSync" popoverAnchorView="5eb-gD-VJV" id="4fS-Qv-DTV">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
                         <segue destination="P1V-0U-hNO" kind="presentation" identifier="showGraph" id="BNr-vk-sFq"/>

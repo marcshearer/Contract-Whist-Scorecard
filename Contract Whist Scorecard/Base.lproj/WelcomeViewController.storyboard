@@ -94,7 +94,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="T3g-2O-4mb" customClass="DarkRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="37.5" y="21" width="300" height="32"/>
+                                                    <rect key="frame" x="150" y="21" width="300" height="32"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="ajz-rZ-uJe"/>
                                                     </constraints>
@@ -169,7 +169,7 @@
                         <outlet property="titleLabel" destination="3rN-Yr-fUs" id="x9k-x8-bmu"/>
                         <outlet property="viewOnlineButton" destination="fQ4-h7-vZR" id="u6i-Oh-3OV"/>
                         <outlet property="welcomeView" destination="jyL-Wg-M4O" id="Xlq-wg-uBg"/>
-                        <segue destination="Il1-k3-hb2" kind="show" identifier="showComparison" id="lyc-Es-Wpx"/>
+                        <segue destination="Il1-k3-hb2" kind="show" identifier="showStatistics" id="lyc-Es-Wpx"/>
                         <segue destination="Hux-pS-iTs" kind="show" identifier="showSelection" id="OXE-zE-cLH"/>
                         <segue destination="U6c-FM-uAn" kind="presentation" identifier="showHighScores" id="ZUv-5b-nth"/>
                         <segue destination="cf8-6q-OTz" kind="show" identifier="showHistory" id="UwE-Tw-BBo"/>
@@ -194,10 +194,10 @@
             </objects>
             <point key="canvasLocation" x="6334" y="132"/>
         </scene>
-        <!--Comparison-->
+        <!--Statistics-->
         <scene sceneID="1o4-k0-y7p">
             <objects>
-                <viewControllerPlaceholder storyboardIdentifier="ComparisonViewController" storyboardName="ComparisonViewController" referencedIdentifier="ComparisonViewController" id="Il1-k3-hb2" userLabel="Comparison" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardIdentifier="StatisticsViewController" storyboardName="StatisticsViewController" referencedIdentifier="StatisticsViewController" id="Il1-k3-hb2" userLabel="Statistics" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bg3-tU-1Nj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="6978" y="350"/>

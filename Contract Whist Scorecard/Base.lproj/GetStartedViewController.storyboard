@@ -203,7 +203,7 @@
                         <outlet property="finishButton" destination="mlL-xC-AG1" id="UAo-99-zHE"/>
                         <segue destination="mUh-dg-q1z" kind="unwind" identifier="hideGetStarted" unwindAction="hideGetStartedWithSegue:" id="IRM-kh-2LK"/>
                         <segue destination="qYQ-cc-0sq" kind="presentation" identifier="showGetStartedSettings" id="VgC-Jo-Lqa"/>
-                        <segue destination="YJh-1A-cUe" kind="show" identifier="showGetStartedDownloadPlayers" id="hos-9P-EFj"/>
+                        <segue destination="YJh-1A-cUe" kind="show" identifier="showGetStartedSelectPlayers" id="hos-9P-EFj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e9Q-MP-3gh" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -219,10 +219,10 @@
             </objects>
             <point key="canvasLocation" x="6982" y="-585"/>
         </scene>
-        <!--Player Stats-->
+        <!--Select Players-->
         <scene sceneID="yeZ-NN-hHJ">
             <objects>
-                <viewControllerPlaceholder storyboardIdentifier="UIViewController-aCF-cU-Oeh" storyboardName="SelectPlayersViewController" referencedIdentifier="SelectPlayersViewController" id="YJh-1A-cUe" userLabel="Player Stats" sceneMemberID="viewController"/>
+                <viewControllerPlaceholder storyboardIdentifier="UIViewController-aCF-cU-Oeh" storyboardName="SelectPlayersViewController" referencedIdentifier="SelectPlayersViewController" id="YJh-1A-cUe" userLabel="Select Players" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DaE-D6-tSm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="6999" y="-500"/>

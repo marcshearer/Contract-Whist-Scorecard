@@ -105,7 +105,7 @@
                                 <rect key="frame" x="0.0" y="65" width="375" height="602"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Select Players Cell" rowHeight="70" id="tsN-dZ-Zmr" customClass="SelectPlayersCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Select Players Cell" rowHeight="70" id="tsN-dZ-Zmr" customClass="SelectPlayersCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tsN-dZ-Zmr" id="lKd-uw-dvN">
@@ -259,8 +259,8 @@
                         <segue destination="QyQ-Rg-qN6" kind="popoverPresentation" identifier="showPlayerDetail" popoverAnchorView="8Be-gQ-047" id="HMI-oF-Oax">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
-                        <segue destination="DOb-ll-Ptr" kind="unwind" identifier="hideSelectPlayersFromCloud" unwindAction="hideSelectPlayersFromCloudWithSegue:" id="jwr-oI-SeD"/>
-                        <segue destination="DOb-ll-Ptr" kind="unwind" identifier="hideGetStartedDownloadPlayers" unwindAction="hideGetStartedDownloadPlayersWithSegue:" id="vEo-pM-s9i"/>
+                        <segue destination="DOb-ll-Ptr" kind="unwind" identifier="hideSelectionSelectPlayers" unwindAction="hideSelectionSelectPlayersWithSegue:" id="jwr-oI-SeD"/>
+                        <segue destination="DOb-ll-Ptr" kind="unwind" identifier="hideGetStartedSelectPlayers" unwindAction="hideGetStartedSelectPlayersWithSegue:" id="vEo-pM-s9i"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nr-7V-eKu" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -52,7 +52,7 @@
                     </view>
                     <connections>
                         <outlet property="graphView" destination="aF8-JM-lAM" id="NqD-K0-gZa"/>
-                        <segue destination="FxS-fb-6HK" kind="unwind" identifier="hideComparisonGraph" unwindAction="hideComparisonGraphWithSegue:" id="1nm-Cf-ab4"/>
+                        <segue destination="FxS-fb-6HK" kind="unwind" identifier="hideStatisticsGraph" unwindAction="hideStatisticsGraphWithSegue:" id="1nm-Cf-ab4"/>
                         <segue destination="OxF-eN-OAj" kind="presentation" identifier="showGraphHistoryDetail" id="7gO-bP-BPs"/>
                     </connections>
                 </viewController>

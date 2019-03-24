@@ -29,7 +29,7 @@ class PlayersViewController: CustomViewController, UICollectionViewDelegate, UIC
     public var backText = "Back"
     public var backImage = "back"
     public var actionText = "Compare"
-    public var actionSegue = "showComparison"
+    public var actionSegue = "showStatistics"
     public var allowSync = true
     public var layoutComplete = false
     public var selected = 0
@@ -56,7 +56,7 @@ class PlayersViewController: CustomViewController, UICollectionViewDelegate, UIC
     @IBOutlet weak var footerPaddingTopConstraint: NSLayoutConstraint!
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
-    @IBAction func playersHidePlayerDetail(segue:UIStoryboardSegue) {
+    @IBAction func hidePlayersPlayerDetail(segue:UIStoryboardSegue) {
         
         if detailMode != .display {
             let source = segue.source as! PlayerDetailViewController
@@ -417,7 +417,7 @@ class PlayersViewController: CustomViewController, UICollectionViewDelegate, UIC
             destination.popoverPresentationController?.sourceView = self.view as UIView
             destination.preferredContentSize = CGSize(width: 400, height: 540)
             destination.playerDetail = self.playerList[selectedPlayer - 1]
-            destination.returnSegue = "playersHidePlayerDetail"
+            destination.returnSegue = "hidePlayersPlayerDetail"
             destination.mode = detailMode
             destination.scorecard = self.scorecard
             destination.sourceView = view

@@ -53,7 +53,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     
-    @IBAction func selectionHidePlayer(segue:UIStoryboardSegue) {
+    @IBAction func hideSelectionPlayerDetail(segue:UIStoryboardSegue) {
         // Returning from new player
         let source = segue.source as! PlayerDetailViewController
         createPlayers(newPlayers: [source.playerDetail])
@@ -63,7 +63,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         // Returning from game setup
     }
     
-    @IBAction func hideSelectPlayersFromCloud(segue:UIStoryboardSegue) {
+    @IBAction func hideSelectionSelectPlayers(segue:UIStoryboardSegue) {
         let source = segue.source as! SelectPlayersViewController
         if source.selected > 0 {
             var createPlayerList: [PlayerDetail] = []
@@ -424,7 +424,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     func finishAction() {
         NotificationCenter.default.removeObserver(observer!)
-        self.performSegue(withIdentifier: "returnSelection", sender: self)
+        self.performSegue(withIdentifier: "hideSelection", sender: self)
     }
 
     func continueAction() {
@@ -659,18 +659,18 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             let actionSheet = ActionSheet(view: availableCollectionView, direction: .left, x: width, y: width / 2)
             actionSheet.add("Get existing player from Cloud", handler: self.selectCloudPlayers)
             actionSheet.add("Create new player manually", handler: {
-                self.performSegue(withIdentifier: "selectionNewPlayer", sender: self)
+                self.performSegue(withIdentifier: "showPlayerDetail", sender: self)
             })
             actionSheet.add("Cancel", style: .cancel)
             actionSheet.present()
             
         } else {
-            self.performSegue(withIdentifier: "selectionNewPlayer", sender: self)
+            self.performSegue(withIdentifier: "showPlayerDetail", sender: self)
         }
     }
     
     private func selectCloudPlayers() {
-        self.performSegue(withIdentifier: "showSelectPlayersFromCloud", sender: self)
+        self.performSegue(withIdentifier: "showSelectPlayers", sender: self)
     }
     
     // MARK: - Segue Prepare Handler =================================================================== -
@@ -679,7 +679,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         
         switch segue.identifier! {
             
-        case "selectionNewPlayer":
+        case "showPlayerDetail":
             let destination = segue.destination as! PlayerDetailViewController
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
@@ -687,7 +687,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             destination.preferredContentSize = CGSize(width: 400, height: 300)
             destination.playerDetail = PlayerDetail(scorecard, visibleLocally: true)
             destination.mode = .create
-            destination.returnSegue = "selectionHidePlayer"
+            destination.returnSegue = "hideSelectionPlayerDetail"
             destination.scorecard = self.scorecard
             destination.sourceView = view
             
@@ -697,14 +697,14 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             destination.scorecard = self.scorecard
             destination.returnSegue = "hideGameSetup"
         
-        case "showSelectPlayersFromCloud":
+        case "showSelectPlayers":
             let destination = segue.destination as! SelectPlayersViewController
             destination.scorecard = self.scorecard
             destination.descriptionMode = .opponents
-            destination.returnSegue = "hideSelectPlayersFromCloud"
+            destination.returnSegue = "hideSelectionSelectPlayers"
             destination.backText = "Cancel"
             destination.actionText = "Download"
-            destination.actionSegue = "hideSelectPlayersFromCloud"
+            destination.actionSegue = "hideSelectionSelectPlayers"
             destination.helpText = "Select from the list below or click 'Other player' to add a specific player using their Unique ID."
             destination.allowOtherPlayer = true
             

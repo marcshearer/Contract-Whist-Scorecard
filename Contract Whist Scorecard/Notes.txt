@@ -6,8 +6,8 @@ Fixed crash during sync (especially initial sync)
 Fixed problem if tried to view after game had started - did not receive scores
 Reinstated back button in score entry
 Resuming goes into scorecard rather than resuming online game
-Show average score in stats
-Show more info on iPad in stats
+Show average score in players
+Show more info on iPad in players
 Notification gives the wrong winner
 Avoid spurious Resume Online Game messages
 Last hand not shown when return from scorecard after its become your turn

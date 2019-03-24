@@ -12,7 +12,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
     
    func testSync() {
         
-        // Select Player Stats
+        // Select Players
         self.selectOption("Players")
         
         // Select sync
@@ -63,7 +63,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
     
     func testPlayerCreateDelete() {
         
-        // Select Player Stats
+        // Select Players
         self.selectOption("Players")
         
         // Delete Emma (and AAA Test) if exist
@@ -95,7 +95,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tap(app.navigationBars["Game Preview"].buttons["Back"])
         self.tap(app.navigationBars["Selection"].buttons["home"])
         
-        // Go into player stats and delete AAA Test player
+        // Go into Players and delete AAA Test player
         self.selectOption("Players")
         self.deletePlayer("AAA Test")
         

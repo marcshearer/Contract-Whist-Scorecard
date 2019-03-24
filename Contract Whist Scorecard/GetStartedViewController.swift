@@ -40,7 +40,7 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
         enableButtons()
     }
     
-    @IBAction func hideGetStartedDownloadPlayers(segue:UIStoryboardSegue) {
+    @IBAction func hideGetStartedSelectPlayers(segue:UIStoryboardSegue) {
         let source = segue.source as! SelectPlayersViewController
         if source.selected > 0 {
             var createPlayerList: [PlayerDetail] = []
@@ -271,7 +271,7 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     
     func selectCloudPlayers() -> () {
         
-        self.performSegue(withIdentifier: "showGetStartedDownloadPlayers", sender: self)
+        self.performSegue(withIdentifier: "showGetStartedSelectPlayers", sender: self)
     }
     
     // MARK: - Segue Prepare Handler =================================================================== -
@@ -290,15 +290,15 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
             destination.scorecard = self.scorecard
             destination.returnSegue = "hideGetStartedSettings"
             
-        case "showGetStartedDownloadPlayers":
+        case "showGetStartedSelectPlayers":
             let destination = segue.destination as! SelectPlayersViewController
             destination.scorecard = self.scorecard
             destination.specificEmail = self.syncEmailTextField.text!
             destination.descriptionMode = .lastPlayed
-            destination.returnSegue = "hideGetStartedDownloadPlayers"
+            destination.returnSegue = "hideGetStartedSelectPlayers"
             destination.backText = "Cancel"
             destination.actionText = "Download"
-            destination.actionSegue = "hideGetStartedDownloadPlayers"
+            destination.actionSegue = "hideGetStartedSelectPlayers"
             destination.helpText = "Select players to download to this device from the list below"
             destination.allowOtherPlayer = false
             

@@ -41,7 +41,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
     }
     
     func deletePlayer(_ name: String) {
-        // Assumes you are already in Player Stats and player cell exists
+        // Assumes you are already in Players and player cell exists
         let playerLabel = app.collectionViews.staticTexts[name]
         if playerLabel.exists {
             self.tap(playerLabel)
@@ -75,7 +75,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
     }
     
     func selectPlayer(_ name: String) {
-        // Assumes you are in the Player Stats screen and player cell exists
+        // Assumes you are in the Players screen and player cell exists
         let playerLabel = app.collectionViews.staticTexts[name]
         self.tap(playerLabel)
     }

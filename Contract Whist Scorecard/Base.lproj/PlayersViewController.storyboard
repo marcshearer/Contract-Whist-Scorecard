@@ -11,10 +11,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Stats-->
+        <!--Players-->
         <scene sceneID="4Dd-4x-fCp">
             <objects>
-                <viewController storyboardIdentifier="PlayersViewController" title="Stats" useStoryboardIdentifierAsRestorationIdentifier="YES" id="aCF-cU-Oeh" userLabel="Stats" customClass="PlayersViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PlayersViewController" title="Players" useStoryboardIdentifierAsRestorationIdentifier="YES" id="aCF-cU-Oeh" userLabel="Players" customClass="PlayersViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9pw-Pu-D89">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -444,7 +444,7 @@
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
                         <segue destination="0aR-2H-gBg" kind="unwind" identifier="selectionHideCloudPlayers" unwindAction="selectionHideCloudPlayersWithSegue:" id="Gmx-Lv-AIj"/>
-                        <segue destination="0aR-2H-gBg" kind="unwind" identifier="hideGetStartedDownloadPlayers" unwindAction="hideGetStartedDownloadPlayersWithSegue:" id="9bK-Pz-fzp"/>
+                        <segue destination="0aR-2H-gBg" kind="unwind" identifier="hideGetStartedSelectPlayers" unwindAction="hideGetStartedSelectPlayersWithSegue:" id="9bK-Pz-fzp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pQb-Du-Rpn" userLabel="First Responder" sceneMemberID="firstResponder"/>

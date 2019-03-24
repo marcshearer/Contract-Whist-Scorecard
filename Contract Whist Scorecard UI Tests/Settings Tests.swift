@@ -35,7 +35,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.assertNotExists(app.tables.buttons["Online Game"])
         self.assertNotExists(app.navigationBars["Contract Whist"].buttons["broadcast"])
         
-        // Go into Player Stats and check Sync not available
+        // Go into Players and check Sync not available
         self.selectOption("Players")
         self.assertNotExists(app.toolbars.buttons["Sync..."])
         
@@ -85,7 +85,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.assertEnabled(app.tables.buttons["Online Game"])
         self.assertEnabled(app.navigationBars["Contract Whist"].buttons["broadcast"])
         
-        // Go into Player Stats and check Sync available
+        // Go into Players and check Sync available
         self.selectOption("Players")
         self.assertEnabled(app.toolbars.buttons["Sync..."])
         self.returnHome()
@@ -370,7 +370,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         // Return to main menu
         self.returnHome(timeout: 60)
         
-        // Go into Player Stats and check no Twos shown
+        // Go into Players and check no Twos shown
         self.selectOption("Players")
         self.assertNotExists(app.tables.staticTexts["Twos made %"])
         
@@ -378,7 +378,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.selectPlayer("Becky")
         self.assertNotExists(app.tables.staticTexts["Twos made %"])
         
-        // Return to Player Stats
+        // Return to Players
         self.tap(app.navigationBars["Becky"].buttons["Back"])
         
         // Return to home page
@@ -449,7 +449,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         // Return to main menu
         self.returnHome(timeout: 60)
         
-        // Go into Player Stats
+        // Go into Players
         self.selectOption("Players")
         // No longer visible on iPhone
         // self.assertExists(app.collectionViews.staticTexts["Twos made %"])
@@ -458,7 +458,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.selectPlayer("Becky")
         self.assertExists(app.tables.staticTexts["Twos made %"])
         
-        // Return to Player Stats
+        // Return to Players
         self.tap(app.navigationBars.buttons["Back"])
         
         // Return to home page

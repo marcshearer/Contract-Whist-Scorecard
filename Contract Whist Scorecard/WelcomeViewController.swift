@@ -35,8 +35,8 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     private var onlineGameButton = -1
     private var getStartedButton = -1
     private var resumeGameButton = -1
-    private var playerStatsButton = -1
-    private var comparisonButton = -1
+    private var playersButton = -1
+    private var statisticsButton = -1
     private var highScoresButton = -1
     private var historyButton = -1
     private var deleteCloudButton = -1
@@ -55,8 +55,8 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     private var onlineGameCell: WelcomeActionCell!
     private var getStartedCell: WelcomeActionCell!
     private var resumeGameCell: WelcomeActionCell!
-    private var statsCell: WelcomeActionCell!
-    private var comparisonCell: WelcomeActionCell!
+    private var playersCell: WelcomeActionCell!
+    private var statisticsCell: WelcomeActionCell!
     private var highScoresCell: WelcomeActionCell!
     private var historyCell: WelcomeActionCell!
     private var deleteCloudCell: WelcomeActionCell!
@@ -109,7 +109,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         enableButtons() // In case removed all players
     }
     
-    @IBAction func hideComparison(segue:UIStoryboardSegue) {
+    @IBAction func hideStatistics(segue:UIStoryboardSegue) {
         scorecard.checkNetworkConnection(button: nil, label: syncMessage)
         getCloudVersion(async: true)
     }
@@ -124,7 +124,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         getCloudVersion(async: true)
     }
     
-    @IBAction func returnSelection(segue:UIStoryboardSegue) {
+    @IBAction func hideSelection(segue:UIStoryboardSegue) {
         // Clear recovery flag
         scorecard.checkNetworkConnection(button: nil, label: syncMessage)
         scorecard.recoveryMode = false
@@ -319,12 +319,12 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         case resumeGameButton:
             welcomeActionCell.actionButton.setTitle("Resume Game", for: .normal)
             resumeGameCell = welcomeActionCell
-        case playerStatsButton:
+        case playersButton:
             welcomeActionCell.actionButton.setTitle("Players", for: .normal)
-            statsCell = welcomeActionCell
-        case comparisonButton:
+            playersCell = welcomeActionCell
+        case statisticsButton:
             welcomeActionCell.actionButton.setTitle("Statistics", for: .normal)
-            comparisonCell = welcomeActionCell
+            statisticsCell = welcomeActionCell
         case highScoresButton:
             welcomeActionCell.actionButton.setTitle("High Scores", for: .normal)
             highScoresCell = welcomeActionCell
@@ -374,12 +374,12 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         case resumeGameButton:
             // Resume game
             resumeGame()
-        case playerStatsButton:
-            // Player Stats
+        case playersButton:
+            // Players
             self.performSegue(withIdentifier: "showPlayers", sender: self )
-        case comparisonButton:
-            // Player Stats
-            self.performSegue(withIdentifier: "showComparison", sender: self )
+        case statisticsButton:
+            // Players
+            self.performSegue(withIdentifier: "showStatistics", sender: self )
         case highScoresButton:
             // High Scores
             self.performSegue(withIdentifier: "showHighScores", sender: self )
@@ -429,10 +429,10 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         } // TODO Reinstate (remove
             
         buttons += 1
-        playerStatsButton = buttons
+        playersButton = buttons
         
         buttons += 1
-        comparisonButton = buttons
+        statisticsButton = buttons
         
         if scorecard.settingSaveHistory {
             buttons += 1
@@ -519,15 +519,15 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             }
         }
         
-        if button == 0 || button == playerStatsButton {
-            if statsCell != nil {
-                statsCell.actionButton.isEnabled(scorecard.playerList.count > 0)
+        if button == 0 || button == playersButton {
+            if playersCell != nil {
+                playersCell.actionButton.isEnabled(scorecard.playerList.count > 0)
             }
         }
         
-        if button == 0 || button == comparisonButton {
-            if comparisonCell != nil {
-                comparisonCell.actionButton.isEnabled(scorecard.playerList.count > 0)
+        if button == 0 || button == statisticsButton {
+            if statisticsCell != nil {
+                statisticsCell.actionButton.isEnabled(scorecard.playerList.count > 0)
             }
         }
         
@@ -701,11 +701,11 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             destination.backImage = "home"
             destination.backText = ""
             
-        case "showComparison":
-            let destination = segue.destination as! ComparisonViewController
+        case "showStatistics":
+            let destination = segue.destination as! StatisticsViewController
             destination.scorecard = self.scorecard
             destination.selectedList = scorecard.playerDetailList()
-            destination.returnSegue = "hideComparison"
+            destination.returnSegue = "hideStatistics"
             destination.backImage = "home"
             destination.backText = ""
             

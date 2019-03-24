@@ -331,10 +331,10 @@
                                             <outlet property="playerLastPlayedLabel" destination="xmI-eS-IZU" id="ASo-PJ-WnZ"/>
                                             <outlet property="playerLastPlayedLabelHeight" destination="djU-7V-gxE" id="HiV-pX-gKZ"/>
                                             <outlet property="playerLastPlayedLabelWidth" destination="kna-fB-pgM" id="4z2-iB-Xvk"/>
-                                            <outlet property="playerMade" destination="vgw-wZ-Xvl" id="XMU-IR-zFh"/>
-                                            <outlet property="playerMadeLabel" destination="yje-JT-5I1" id="FKT-Pc-m54"/>
-                                            <outlet property="playerMadeLabelHeight" destination="C7c-Hq-CWQ" id="79x-5Y-zWk"/>
-                                            <outlet property="playerMadeLabelWidth" destination="I65-9J-mJl" id="FxB-Ai-se3"/>
+                                            <outlet property="playerMade" destination="vgw-wZ-Xvl" id="x0a-Od-t93"/>
+                                            <outlet property="playerMadeLabel" destination="yje-JT-5I1" id="2s5-J2-WtB"/>
+                                            <outlet property="playerMadeLabelHeight" destination="I65-9J-mJl" id="o5r-6h-eVs"/>
+                                            <outlet property="playerMadeLabelWidth" destination="C7c-Hq-CWQ" id="eRg-Iu-O9e"/>
                                             <outlet property="playerName" destination="If4-lC-OYx" id="h8C-CW-gn4"/>
                                             <outlet property="playerPlayed" destination="gW4-JU-Ory" id="Hbl-Af-pVY"/>
                                             <outlet property="playerPlayedLabel" destination="mhO-n6-9gs" id="Tyy-hB-7aa"/>

@@ -189,7 +189,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-         scorecard.reCenterPopup(self)
+        scorecard.reCenterPopup(self)
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {

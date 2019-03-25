@@ -455,7 +455,7 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
     
     class func showGamePreview(viewController: UIViewController, scorecard: Scorecard, selectedPlayers: [PlayerMO]) -> GamePreviewViewController {
         let storyboard = UIStoryboard(name: "GamePreviewViewController", bundle: nil)
-        let gamePreviewViewController = storyboard.instantiateViewController(withIdentifier: "gamePreviewViewController") as! GamePreviewViewController
+        let gamePreviewViewController = storyboard.instantiateViewController(withIdentifier: "GamePreviewViewController") as! GamePreviewViewController
         gamePreviewViewController.modalPresentationStyle = UIModalPresentationStyle.fullScreen
         
         gamePreviewViewController.scorecard = scorecard

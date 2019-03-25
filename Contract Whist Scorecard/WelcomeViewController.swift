@@ -665,6 +665,12 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             
         case "showClient":
             let destination = segue.destination as! ClientViewController
+            
+            destination.modalPresentationStyle = UIModalPresentationStyle.popover
+            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+            destination.popoverPresentationController?.sourceView = welcomeView
+            destination.preferredContentSize = CGSize(width: 400, height: 600)
+            
             destination.returnSegue = "hideClient"
             destination.backImage = "home"
             destination.backText = ""
@@ -682,10 +688,12 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             
         case "showHighScores":
             let destination = segue.destination as! HighScoresViewController
+            
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = welcomeView
             destination.preferredContentSize = CGSize(width: 400, height: 523)
+            
             destination.returnSegue = "hideHighScores"
             destination.backImage = "home"
             destination.backText = ""

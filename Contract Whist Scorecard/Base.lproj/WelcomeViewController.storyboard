@@ -177,7 +177,9 @@
                         <segue destination="lvI-KL-xbx" kind="popoverPresentation" identifier="showGetStarted" popoverAnchorView="jyL-Wg-M4O" id="zF4-ui-zT9">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
-                        <segue destination="aof-hj-4vM" kind="presentation" identifier="showClient" id="Ueo-VZ-u5x"/>
+                        <segue destination="aof-hj-4vM" kind="popoverPresentation" identifier="showClient" popoverAnchorView="jyL-Wg-M4O" id="Ueo-VZ-u5x">
+                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                        </segue>
                         <segue destination="zUj-ZD-lpe" kind="show" identifier="showHost" id="CD4-VA-JxI"/>
                         <segue destination="gsX-G4-58w" kind="show" identifier="showPlayers" id="7ir-Fu-KYu"/>
                     </connections>

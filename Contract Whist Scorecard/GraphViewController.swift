@@ -140,11 +140,13 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
         switch segue.identifier! {
         case "showGraphHistoryDetail":
             let destination = segue.destination as! HistoryDetailViewController
+
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
             destination.preferredContentSize = CGSize(width: 400, height: (scorecard.settingSaveLocation ? 530 :
                 262) - (44 * (scorecard.numberPlayers - gameDetail.participant.count)))
+
             destination.gameDetail = gameDetail
             destination.scorecard = self.scorecard
             destination.returnSegue = "hideGraphHistoryDetail"

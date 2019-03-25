@@ -232,10 +232,12 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
         switch segue.identifier! {
         case "showHighScoresHistoryDetail":
             let destination = segue.destination as! HistoryDetailViewController
+
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
             destination.preferredContentSize = CGSize(width: 400, height: 554)
+
             destination.gameDetail = detailGame
             destination.locationLabel = nil
             destination.scorecard = self.scorecard

@@ -716,10 +716,12 @@ class ScorepadViewController: CustomViewController,
             
             notAllowedInDisplay()
             let destination = segue.destination as! EntryViewController
+
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = scorepadView
             destination.preferredContentSize = CGSize(width: 400, height: 554)
+
             destination.scorecard = self.scorecard
             destination.rounds = self.rounds
             destination.cards = self.cards
@@ -731,10 +733,12 @@ class ScorepadViewController: CustomViewController,
         case "showClientRoundSummary":
             
             roundSummaryViewController  = segue.destination as? RoundSummaryViewController
+
             roundSummaryViewController.modalPresentationStyle = UIModalPresentationStyle.popover
             roundSummaryViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             roundSummaryViewController.popoverPresentationController?.sourceView = scorepadView
             roundSummaryViewController.preferredContentSize = CGSize(width: 400, height: 554)
+
             roundSummaryViewController.returnSegue = "hideClientRoundSummary"
             roundSummaryViewController.scorecard = self.scorecard
             roundSummaryViewController.rounds = self.rounds
@@ -745,9 +749,11 @@ class ScorepadViewController: CustomViewController,
         case "showGameSummary":
             
             gameSummaryViewController = segue.destination as? GameSummaryViewController
+
             gameSummaryViewController.modalPresentationStyle = UIModalPresentationStyle.popover
             gameSummaryViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             gameSummaryViewController.popoverPresentationController?.sourceView = scorepadView
+
             gameSummaryViewController.preferredContentSize = CGSize(width: 400, height: 554)
             gameSummaryViewController.scorecard = self.scorecard
             gameSummaryViewController.firstGameSummary = self.firstGameSummary
@@ -758,11 +764,13 @@ class ScorepadViewController: CustomViewController,
         case "showLocation":
             
             let destination = segue.destination as! LocationViewController
+
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.isModalInPopover = true
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = scorepadView
             destination.preferredContentSize = CGSize(width: 400, height: 600)
+
             destination.gameLocation = self.scorecard.gameLocation
             destination.scorecard = self.scorecard
             destination.returnSegue = "hideLocation"
@@ -771,10 +779,12 @@ class ScorepadViewController: CustomViewController,
         case "showReview":
             
             let destination = segue.destination as! ReviewViewController
+  
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = scorepadView
             destination.preferredContentSize = CGSize(width: 400, height: 554)
+  
             destination.scorecard = self.scorecard
             destination.round = self.reviewRound
             destination.thisPlayer = self.scorecard.handState.enteredPlayerNumber

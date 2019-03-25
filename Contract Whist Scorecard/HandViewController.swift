@@ -977,10 +977,12 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         case "showHandRoundSummary":
             
             let destination  = segue.destination as! RoundSummaryViewController
+ 
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
             destination.preferredContentSize = CGSize(width: 400, height: 554)
+            
             destination.returnSegue = "hideHandRoundSummary"
             destination.scorecard = self.scorecard
             destination.rounds = self.state.rounds
@@ -991,10 +993,12 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         case "showHandGameSummary":
             
             let destination = segue.destination as! GameSummaryViewController
+            
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
             destination.preferredContentSize = CGSize(width: 400, height: 554)
+            
             destination.scorecard = self.scorecard
             destination.firstGameSummary = false
             destination.gameSummaryMode = .display

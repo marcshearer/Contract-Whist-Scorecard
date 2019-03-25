@@ -35,7 +35,7 @@
                                     <navigationItem title="Players" largeTitleDisplayMode="always" id="tiP-qu-fbf">
                                         <barButtonItem key="leftBarButtonItem" id="0lq-Kn-ItV">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="KBX-t5-3kT" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="16" y="11" width="22" height="22"/>
+                                                <rect key="frame" x="16" y="11" width="40" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" image="home"/>
                                                 <connections>
@@ -44,16 +44,18 @@
                                             </button>
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" width="80" id="4DW-e7-DWe">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="ahW-El-tKK" customClass="LightRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="ahW-El-tKK" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                 <rect key="frame" x="279" y="5" width="80" height="34"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                <state key="normal" title="Select"/>
+                                                <state key="normal" title="Sync...">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="sizeToFit" value="YES"/>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="selectPressedWithSender:" destination="aCF-cU-Oeh" eventType="touchUpInside" id="onE-7A-wCp"/>
+                                                    <action selector="syncPressedWithSender:" destination="aCF-cU-Oeh" eventType="touchUpInside" id="yEH-WS-qz3"/>
                                                 </connections>
                                             </button>
                                         </barButtonItem>
@@ -92,14 +94,6 @@
                                                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                             </variation>
                                                         </label>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tick" translatesAutoresizingMaskIntoConstraints="NO" id="GbN-mR-uHI">
-                                                            <rect key="frame" x="216" y="4" width="20" height="20"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="20" id="6wl-P1-8X6"/>
-                                                                <constraint firstAttribute="width" constant="20" id="hnN-84-FTh"/>
-                                                            </constraints>
-                                                        </imageView>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oX8-Wh-dps">
                                                             <rect key="frame" x="0.0" y="87" width="240" height="125"/>
                                                             <subviews>
@@ -267,10 +261,8 @@
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.39215686274509803" green="0.43137254901960786" blue="0.43137254901960786" alpha="1" colorSpace="calibratedRGB"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="trailing" secondItem="GbN-mR-uHI" secondAttribute="trailing" constant="4" id="9vL-eT-HV3"/>
                                                         <constraint firstItem="oX8-Wh-dps" firstAttribute="top" secondItem="If4-lC-OYx" secondAttribute="bottom" id="9xw-Wu-Sjl"/>
                                                         <constraint firstItem="If4-lC-OYx" firstAttribute="top" secondItem="Tih-jI-qw2" secondAttribute="top" constant="55" id="Aes-Is-mTg"/>
-                                                        <constraint firstItem="GbN-mR-uHI" firstAttribute="top" secondItem="Tih-jI-qw2" secondAttribute="top" constant="4" id="FFE-9e-hUA"/>
                                                         <constraint firstAttribute="trailing" secondItem="oX8-Wh-dps" secondAttribute="trailing" id="Qa9-7o-pQR"/>
                                                         <constraint firstAttribute="trailing" secondItem="If4-lC-OYx" secondAttribute="trailing" constant="8" id="Xyy-zS-0Gf"/>
                                                         <constraint firstItem="oX8-Wh-dps" firstAttribute="leading" secondItem="Tih-jI-qw2" secondAttribute="leading" id="gKb-us-Opd"/>
@@ -341,7 +333,6 @@
                                             <outlet property="playerPlayedLabelHeight" destination="fWi-7p-3Xt" id="xE0-C6-jYO"/>
                                             <outlet property="playerPlayedLabelWidth" destination="fz1-yA-nzr" id="1zG-NB-LFe"/>
                                             <outlet property="playerThumbnail" destination="vj7-qT-kMQ" id="uhX-VO-8bk"/>
-                                            <outlet property="playerTick" destination="GbN-mR-uHI" id="wTx-Tk-ZV8"/>
                                             <outlet property="playerTwos" destination="DmO-RU-tNH" id="ZJZ-Yy-tzI"/>
                                             <outlet property="playerTwosLabel" destination="uzV-47-otO" id="qQN-z0-laT"/>
                                             <outlet property="playerTwosLabelHeight" destination="z4I-n2-g88" id="N7J-0Y-d6h"/>
@@ -360,21 +351,20 @@
                                 </connections>
                             </collectionView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SGf-z8-ZO2" userLabel="Toolbar View">
-                                <rect key="frame" x="0.0" y="667" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="637" width="375" height="74"/>
                                 <subviews>
                                     <toolbar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NUP-2y-buM">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="30"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="44" id="45p-QB-hhi"/>
+                                            <constraint firstAttribute="height" constant="30" id="45p-QB-hhi"/>
                                         </constraints>
                                         <items>
-                                            <barButtonItem style="plain" systemItem="flexibleSpace" id="T7q-AX-gNr"/>
-                                            <barButtonItem width="48" style="plain" id="qIh-qi-Xh1">
-                                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="ohY-Mq-YSP" customClass="OutlineButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="119.5" y="5" width="136" height="34"/>
+                                            <barButtonItem style="plain" id="qIh-qi-Xh1">
+                                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" id="ohY-Mq-YSP" userLabel="New Player Button" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                    <rect key="frame" x="16" y="0.0" width="30" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                    <state key="normal" title="Clear Selection">
+                                                    <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                                    <state key="normal" title="+">
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     </state>
                                                     <userDefinedRuntimeAttributes>
@@ -383,7 +373,7 @@
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
                                                     <connections>
-                                                        <action selector="cancelPressedWithSender:" destination="aCF-cU-Oeh" eventType="touchUpInside" id="bhe-8V-Jby"/>
+                                                        <action selector="newPlayerPressed:" destination="aCF-cU-Oeh" eventType="touchUpInside" id="y2Y-ad-5du"/>
                                                     </connections>
                                                 </button>
                                             </barButtonItem>
@@ -394,7 +384,7 @@
                                 </subviews>
                                 <color key="backgroundColor" name="Banner"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="Bgn-fM-Xyy"/>
+                                    <constraint firstAttribute="height" constant="74" id="Bgn-fM-Xyy"/>
                                     <constraint firstItem="NUP-2y-buM" firstAttribute="leading" secondItem="SGf-z8-ZO2" secondAttribute="leading" id="Lu9-qs-TAi"/>
                                     <constraint firstAttribute="trailing" secondItem="NUP-2y-buM" secondAttribute="trailing" id="a3q-7j-LOb"/>
                                 </constraints>
@@ -429,22 +419,24 @@
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <connections>
-                        <outlet property="cancelButton" destination="ohY-Mq-YSP" id="Kar-F4-EVq"/>
                         <outlet property="finishButton" destination="KBX-t5-3kT" id="fKV-4q-82q"/>
                         <outlet property="footerPaddingTopConstraint" destination="0qe-7a-Tw1" id="yvr-hO-yeN"/>
                         <outlet property="navigationBar" destination="CMD-pe-gDa" id="YJZ-oV-eHG"/>
                         <outlet property="playersCollectionView" destination="FRm-Jv-6Gi" id="cdt-26-U0W"/>
-                        <outlet property="selectButton" destination="ahW-El-tKK" id="hWo-5W-451"/>
+                        <outlet property="syncButton" destination="ahW-El-tKK" id="1My-ez-Cyb"/>
                         <outlet property="toolbarViewHeightConstraint" destination="Bgn-fM-Xyy" id="dIi-eu-tzx"/>
                         <segue destination="hXi-5H-nxR" kind="popoverPresentation" identifier="showPlayerDetail" popoverAnchorView="9pw-Pu-D89" id="RdC-bI-G6q">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
                         <segue destination="0aR-2H-gBg" kind="unwind" identifier="hidePlayers" unwindAction="hidePlayersWithSegue:" id="vRw-rF-DmI"/>
-                        <segue destination="jyU-H0-0Mr" kind="popoverPresentation" identifier="showPlayersSync" popoverAnchorView="FRm-Jv-6Gi" id="F1T-bt-b75">
+                        <segue destination="jyU-H0-0Mr" kind="popoverPresentation" identifier="showSync" popoverAnchorView="FRm-Jv-6Gi" id="F1T-bt-b75">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
                         <segue destination="0aR-2H-gBg" kind="unwind" identifier="selectionHideCloudPlayers" unwindAction="selectionHideCloudPlayersWithSegue:" id="Gmx-Lv-AIj"/>
                         <segue destination="0aR-2H-gBg" kind="unwind" identifier="hideGetStartedSelectPlayers" unwindAction="hideGetStartedSelectPlayersWithSegue:" id="9bK-Pz-fzp"/>
+                        <segue destination="tfJ-Cu-5UF" kind="popoverPresentation" identifier="showSelectPlayers" popoverAnchorView="9pw-Pu-D89" id="1Mf-P3-stK">
+                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                        </segue>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pQb-Du-Rpn" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -456,6 +448,14 @@
                 <exit id="0aR-2H-gBg" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="4725.6000000000004" y="1000.7496251874064"/>
+        </scene>
+        <!--SelectPlayersViewController-->
+        <scene sceneID="QsS-eg-dVh">
+            <objects>
+                <viewControllerPlaceholder storyboardName="SelectPlayersViewController" referencedIdentifier="SelectPlayersViewController" id="tfJ-Cu-5UF" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oVx-Mj-kmu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5446" y="940"/>
         </scene>
         <!--Player Detail-->
         <scene sceneID="gyh-Bq-tGP">
@@ -476,7 +476,6 @@
     </scenes>
     <resources>
         <image name="home" width="22" height="22"/>
-        <image name="tick" width="17" height="20"/>
         <namedColor name="Banner">
             <color red="0.33300000429153442" green="0.33300000429153442" blue="0.33300000429153442" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

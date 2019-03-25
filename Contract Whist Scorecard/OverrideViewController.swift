@@ -281,12 +281,14 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
         viewController.formTitle = title
         viewController.message = message
         viewController.backColor = backColor
+
         viewController.modalPresentationStyle = UIModalPresentationStyle.popover
         viewController.popoverPresentationController?.delegate = self
         viewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
         viewController.popoverPresentationController?.sourceView = parentViewController.view
         viewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.size.width/2, y: UIScreen.main.bounds.size.height/2, width: 0 ,height: 0)
         viewController.preferredContentSize = CGSize(width: 400, height: 500)
+
         parentViewController.present(viewController, animated: true, completion: nil)
     }
 }

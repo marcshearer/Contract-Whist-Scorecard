@@ -387,10 +387,12 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
         case "updateLocation":
             
             let destination = segue.destination as! LocationViewController
+
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
             destination.preferredContentSize = CGSize(width: 400, height: 554)
+
             destination.gameLocation = self.gameDetail.gameLocation
             destination.scorecard = self.scorecard
             destination.returnSegue = "hideUpdateLocation"

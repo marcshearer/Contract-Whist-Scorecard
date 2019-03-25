@@ -669,6 +669,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             let destination = segue.destination as! ClientViewController
             
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
+            destination.isModalInPopover = true
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = welcomeView
             destination.preferredContentSize = CGSize(width: 400, height: 600)
@@ -685,6 +686,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             let destination = segue.destination as! HostViewController
             
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
+            destination.isModalInPopover = true
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = welcomeView
             destination.preferredContentSize = CGSize(width: 400, height: 600)
@@ -710,8 +712,6 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         case "showPlayers":
             let destination = segue.destination as! PlayersViewController
             destination.scorecard = self.scorecard
-            destination.playerList = scorecard.playerDetailList()
-            destination.multiSelectMode = false
             destination.detailMode = .amend
             destination.returnSegue = "hidePlayers"
             destination.backImage = "home"

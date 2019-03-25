@@ -280,11 +280,13 @@ class HistoryViewController: CustomViewController, UITableViewDataSource, UITabl
         switch segue.identifier! {
         case "showHistoryDetail":
             let destination = segue.destination as! HistoryDetailViewController
+
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = historyView
             destination.preferredContentSize = CGSize(width: 400, height: (scorecard.settingSaveLocation ? 530 :
                 262) - (44 * (scorecard.numberPlayers - history.games[selectedGame-1].participant.count)))
+
             destination.gameDetail = history.games[selectedGame - 1]
             destination.locationLabel = locationLabel[selectedGame-1]
             destination.scorecard = self.scorecard
@@ -292,11 +294,13 @@ class HistoryViewController: CustomViewController, UITableViewDataSource, UITabl
             
         case "showHistorySync":
             let destination = segue.destination as! SyncViewController
+
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.isModalInPopover = true
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = historyView
             destination.preferredContentSize = CGSize(width: 400, height: 523)
+
             destination.returnSegue = "hideHistorySync"
             destination.scorecard = self.scorecard
         

@@ -558,10 +558,12 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
         case "showHighScores":
             
             let destination = segue.destination as! HighScoresViewController
+
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
             destination.preferredContentSize = CGSize(width: 400, height: 554)
+
             destination.returnSegue = "returnGameSummary"
             destination.scorecard = self.scorecard
             

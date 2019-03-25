@@ -79,54 +79,6 @@ class StatisticsViewController: CustomViewController, UITableViewDataSource, UIT
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     
     @IBAction func hideStatisticsPlayerDetail(segue:UIStoryboardSegue) {
-        // Update core data with any changes
-        
-        let source = segue.source as! PlayerDetailViewController
-        
-        if source.playerDetail.name != ""  {
-
-            playerDetail = source.playerDetail
-            
-            if source.playerDetail.name == "" {
-                // Cancelled need to restore from Managed Object
-                source.playerDetail.restoreMO()
-                
-            } else {
-                // Confirmed - need to delete or update
-                if source.deletePlayer {
-                    // Update core data with any changes
-                    playerDetail.deleteMO()
-                    self.selectedList.remove(at: selectedPlayer - 1)
-                    bodyView.deleteRows(at: [IndexPath(row: selectedPlayer-1, section: 0)], with: .fade)
-                    // Delete in any delegates
-                    delegate?.deletePlayer(playerDetail)
-                    // Update tags
-                    updateTags()
-                    // Remove this player from list of subscriptions
-                    Notifications.updateHighScoreSubscriptions(scorecard: self.scorecard)
-                    // Delete any detached games
-                    History.deleteDetachedGames(scorecard: self.scorecard)
-                } else if playerDetail.name != "" {
-                    // Update core data with any changes
-                    if !CoreData.update(updateLogic: {
-                        let playerMO = playerDetail.playerMO!
-                        if playerMO.email != playerDetail.email {
-                            // Need to rebuild as email changed
-                            playerDetail.toManagedObject(playerMO: playerMO)
-                            if Reconcile.rebuildLocalPlayer(playerMO: playerDetail.playerMO) {
-                                playerDetail.fromManagedObject(playerMO: playerMO)
-                            }
-                        } else {
-                            playerDetail.toManagedObject(playerMO: playerMO)
-                        }
-                    }) {
-                        self.alertMessage("Error saving player")
-                    }
-                    bodyView.reloadRows(at: [IndexPath(row: selectedPlayer-1, section: 0)], with: .fade)
-                    delegate?.updatePlayer(playerDetail)
-                }
-            }
-        }
     }
     
     @IBAction func hideStatisticsSync(segue:UIStoryboardSegue) {
@@ -324,34 +276,43 @@ class StatisticsViewController: CustomViewController, UITableViewDataSource, UIT
         switch segue.identifier! {
         case "showPlayerDetail":
             let destination = segue.destination as! PlayerDetailViewController
+
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.isModalInPopover = true
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = self.view as UIView
             destination.preferredContentSize = CGSize(width: 400, height: 540)
+
             destination.playerDetail = selectedList[selectedPlayer - 1]
             destination.returnSegue = "hideStatisticsPlayerDetail"
-            destination.mode = .amend
+            destination.mode = .display
             destination.scorecard = self.scorecard
+
         case "showStatisticsSync":
             let destination = segue.destination as! SyncViewController
+
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.isModalInPopover = true
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = self.view
             destination.preferredContentSize = CGSize(width: 400, height: 523)
+
             destination.returnSegue = "hideStatisticsSync"
             destination.scorecard = self.scorecard
+
         case "showGraph":
             let destination = segue.destination as! GraphViewController
             let defaultRect = GraphView.defaultViewRect()
+
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = self.view as UIView
             destination.preferredContentSize = CGSize(width: defaultRect.width, height: defaultRect.height)
+
             destination.playerDetail = selectedList[selectedPlayer - 1]
             destination.returnSegue = "hideStatisticsGraph"
             destination.scorecard = self.scorecard
+
         default:
             break
         }

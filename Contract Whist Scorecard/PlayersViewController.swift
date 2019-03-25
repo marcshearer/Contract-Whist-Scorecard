@@ -16,14 +16,7 @@ class PlayersViewController: CustomViewController, UICollectionViewDelegate, UIC
     // Main state properties
     public var scorecard: Scorecard!
     
-    // Properties to pass state to action segue
-    public var selection = [Bool]()
-    
-    // Properties to pass state to detail segue
-    public var multiSelectMode = false
-    
     // Properties to get state from calling segue
-    public var playerList: [PlayerDetail]!
     public var detailMode: DetailMode = .amend // Also passed on to detail segue
     public var returnSegue = ""
     public var backText = "Back"
@@ -32,9 +25,9 @@ class PlayersViewController: CustomViewController, UICollectionViewDelegate, UIC
     public var actionSegue = "showStatistics"
     public var allowSync = true
     public var layoutComplete = false
-    public var selected = 0
 
     // Local class variables
+    private var playerList: [PlayerDetail]!
     private var selectedPlayer = 0
     private var playerDetail: PlayerDetail!
     private var labelFontSize: CGFloat = 14.0
@@ -43,60 +36,30 @@ class PlayersViewController: CustomViewController, UICollectionViewDelegate, UIC
     private var width: CGFloat = 0
     private var observer: NSObjectProtocol?
 
-    // UI component pointers
-    var collectionCell = [PlayerCell?]()
-    
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet weak var playersCollectionView: UICollectionView!
-    @IBOutlet weak var selectButton: RoundedButton!
-    @IBOutlet weak var cancelButton: UIButton!
+    @IBOutlet weak var syncButton: RoundedButton!
     @IBOutlet weak var finishButton: RoundedButton!
     @IBOutlet weak var navigationBar: UINavigationBar!
     @IBOutlet weak var toolbarViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var footerPaddingTopConstraint: NSLayoutConstraint!
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
+  
     @IBAction func hidePlayersPlayerDetail(segue:UIStoryboardSegue) {
         
-        if detailMode != .display {
-            let source = segue.source as! PlayerDetailViewController
-            playerDetail = source.playerDetail
-            
-            if source.playerDetail.name == "" {
-                // Cancelled need to restore from Managed Object
-                source.playerDetail.restoreMO()
-                
-            } else {
-                // Confirmed - need to delete or update
-                if source.deletePlayer {
-                    // Update core data with any changes
-                    playerDetail.deleteMO()
-                    self.playerList.remove(at: selectedPlayer - 1)
-                    playersCollectionView.deleteItems(at: [IndexPath(row: selectedPlayer-1, section: 0)])
-                    // Remove this player from list of subscriptions
-                    Notifications.updateHighScoreSubscriptions(scorecard: self.scorecard)
-                    // Delete any detached games
-                    History.deleteDetachedGames(scorecard: self.scorecard)
-                } else {
-                    // Update core data with any changes
-                    if !CoreData.update(updateLogic: {
-                        let playerMO = playerDetail.playerMO!
-                        if playerMO.email != playerDetail.email {
-                            // Need to rebuild as email changed
-                            playerDetail.toManagedObject(playerMO: playerMO)
-                            if Reconcile.rebuildLocalPlayer(playerMO: playerDetail.playerMO) {
-                                playerDetail.fromManagedObject(playerMO: playerMO)
-                            }
-                        } else {
-                            playerDetail.toManagedObject(playerMO: playerMO)
-                        }
-                    }) {
-                        self.alertMessage("Error saving player")
-                    }
-                    
-                    playersCollectionView.reloadItems(at: [IndexPath(row: selectedPlayer-1, section: 0)])
-                }
-            }
+        let source = segue.source as! PlayerDetailViewController
+        if detailMode != .display && source.playerDetail.name != "" {
+            // Restore list to core data and refresh
+            self.refreshView()
+        }
+    }
+
+    @IBAction func hidePlayersSelectPlayers(segue:UIStoryboardSegue) {
+        // Restore list to core data and refresh
+        let source = segue.source as! SelectPlayersViewController
+        if source.playerList.count != 0 {
+            self.refreshView()
         }
     }
     
@@ -106,41 +69,16 @@ class PlayersViewController: CustomViewController, UICollectionViewDelegate, UIC
     }
 
     // MARK: - IB Actions ============================================================================== -
-    @IBAction func selectPressed(sender: UIButton) {
-        
-        if multiSelectMode {
-            if selected > 0 {
-                // Go compare
-                 NotificationCenter.default.removeObserver(observer!)
-                self.performSegue(withIdentifier: actionSegue, sender: self)
-            } else {
-                // Select all
-                selectAll(true)
-            }
-        } else {
-            // Select button is overloaded and is sync in this case
-            self.performSegue(withIdentifier: "showPlayersSync", sender: self)
-        }
-        
-        formatButtons()
+    @IBAction func syncPressed(sender: UIButton) {
+        self.performSegue(withIdentifier: "showSync", sender: self)
     }
     
-    @IBAction func cancelPressed(sender: UIButton) {
-        for playerNumber in 1...selection.count {
-            setSelection(playerNumber, false)
-        }
-        selected = 0
-        selectAll(false)
-        formatButtons()
+    @IBAction func newPlayerPressed(_ sender: UIButton) {
+        self.performSegue(withIdentifier: "showSelectPlayers", sender: self)
     }
 
     @IBAction func finishPressed(sender: UIButton) {
         
-         // Undo any selection
-        for playerNumber in 1...selection.count {
-            setSelection(playerNumber, false)
-        }
-        selected = 0
         NotificationCenter.default.removeObserver(observer!)
         self.performSegue(withIdentifier: returnSegue, sender: self)
     }
@@ -155,24 +93,16 @@ class PlayersViewController: CustomViewController, UICollectionViewDelegate, UIC
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        for _ in 1...self.playerList.count {
-            selection.append(false)
-            collectionCell.append(nil)
-        }
+        // Get player list
+        self.playerList = self.scorecard.playerDetailList()
         
         formatButtons()
         
-        if !multiSelectMode {
-            if allowSync {
-                // Check for network / iCloud login
-                scorecard.checkNetworkConnection(button: selectButton, label: nil)
-                selectButton.backgroundColor = .clear
-                selectButton.setTitle("Sync...")
-                selectButton.setTitleColor(UIColor.white, for: .normal)
-                selectButton.contentHorizontalAlignment = .right
-            } else {
-                selectButton.isHidden = true
-            }
+        if allowSync {
+            // Check for network / iCloud login
+            scorecard.checkNetworkConnection(button: syncButton, label: nil)
+        } else {
+            syncButton.isHidden = true
         }
         
         // Set nofification for image download
@@ -220,8 +150,6 @@ class PlayersViewController: CustomViewController, UICollectionViewDelegate, UIC
         
         cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Player Cell", for: indexPath) as! PlayerCell
         
-        collectionCell[playerNumber-1] = cell
-        
         // Create new thumbnail
         Utility.setThumbnail(data: self.playerList[playerNumber-1].thumbnail,
                              imageView: cell.playerThumbnail,
@@ -254,26 +182,14 @@ class PlayersViewController: CustomViewController, UICollectionViewDelegate, UIC
         setHidden(available: cell.playerValuesView.frame.height - 6, label: cell.playerPlayedLabel, cell.playerPlayed, cell.playerWonLabel, cell.playerWon, cell.playerAverageScoreLabel,cell.playerAverageScore, cell.playerMadeLabel, cell.playerMade, cell.playerTwosLabel, cell.playerTwos, cell.playerLastPlayedLabel, cell.playerLastPlayed)
         ScorecardUI.veryRoundCorners(cell.playerThumbnail)
         ScorecardUI.roundCorners(cell.playerDetailsView)
-        
-        formatCell(cell, to: selection[playerNumber-1])
+  
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let playerNumber = indexPath.row+1
-        if multiSelectMode {
-            let newValue = !selection[playerNumber-1]
-            setSelection(playerNumber, newValue)
-            if newValue {
-                selected += 1
-            } else {
-                selected -= 1
-            }
-            formatButtons()
-        } else {
-            selectedPlayer = playerNumber
-            self.performSegue(withIdentifier: "showPlayerDetail", sender: self)
-        }
+        selectedPlayer = playerNumber
+        self.performSegue(withIdentifier: "showPlayerDetail", sender: self)
     }
     
     // MARK: - Image download handlers =================================================== -
@@ -338,71 +254,25 @@ class PlayersViewController: CustomViewController, UICollectionViewDelegate, UIC
     func formatButtons() {
         var toolbarHeight:CGFloat
         
-        if multiSelectMode {
-            // In multi-select mode
-            if selected == 0 {
-                selectButton.setTitle("All", for: .normal)
-                toolbarHeight = 0
-            } else {
-                selectButton.setTitle(actionText, for: .normal)
-                toolbarHeight = 44
-            }
-        } else {
-            if !allowSync {
-                selectButton.isHidden = true
-            }
-            toolbarHeight = 0
+        if !allowSync {
+            syncButton.isHidden = true
         }
+        toolbarHeight = 30
         
         finishButton.setImage(UIImage(named: self.backImage), for: .normal)
         finishButton.setTitle(self.backText)
         
         let newToolbarTop = (toolbarHeight == 0 ? 44 : 44 + view.safeAreaInsets.bottom + toolbarHeight)
         if newToolbarTop != self.toolbarViewHeightConstraint.constant {
-            Utility.animate {
-                self.toolbarViewHeightConstraint.constant = newToolbarTop
-            }
+            self.toolbarViewHeightConstraint.constant = newToolbarTop
         }
-    }
-    
-    func setSelection(_ playerNumber: Int, _ to: Bool) {
-        selection[playerNumber-1] = to
-        if collectionCell[playerNumber-1] != nil {
-            formatCell(collectionCell[playerNumber-1]!, to: to)
-        }
-    }
-    
-    func formatCell(_ cell: PlayerCell, to: Bool) {
-        cell.playerTick.isHidden = !to
-        cell.playerTick.superview!.bringSubviewToFront(cell.playerTick)
-        let alpha: CGFloat = (to || !multiSelectMode ? 1.0 : 0.5)
-        cell.playerDetailsView.alpha = alpha
-        cell.playerValuesView.alpha = alpha
-        cell.playerDisc.alpha = alpha
-        cell.playerThumbnail.alpha = alpha
-        cell.playerTick.alpha = 1.0
     }
     
     func refreshView() {
         // Reset everything
-        scorecard.refreshPlayerDetailList(playerList)
-        playersCollectionView.reloadData()
-        selection.removeAll()
-        collectionCell.removeAll()
-        selected = 0
-        for _ in 1...self.playerList.count {
-            selection.append(false)
-            collectionCell.append(nil)
-        }
+        self.playerList = scorecard.playerDetailList()
+        self.playersCollectionView.reloadData()
         formatButtons()
-    }
-    
-    func selectAll(_ to: Bool) {
-        // Select all
-        for playerNumber in 1...selection.count {
-            setSelection(playerNumber, to)
-        }
-        selected = (to ? selection.count : 0)
     }
     
     // MARK: - Segue Prepare Handler =================================================================== -
@@ -411,26 +281,47 @@ class PlayersViewController: CustomViewController, UICollectionViewDelegate, UIC
         switch segue.identifier! {
         case "showPlayerDetail":
             let destination = segue.destination as! PlayerDetailViewController
+          
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.isModalInPopover = true
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = self.view as UIView
+            destination.popoverPresentationController?.sourceView = self.view
             destination.preferredContentSize = CGSize(width: 400, height: 540)
+            
             destination.playerDetail = self.playerList[selectedPlayer - 1]
             destination.returnSegue = "hidePlayersPlayerDetail"
             destination.mode = detailMode
             destination.scorecard = self.scorecard
-            destination.sourceView = view
             
-        case "showPlayersSync":
+        case "showSelectPlayers":
+            let destination = segue.destination as! SelectPlayersViewController
+            
+            destination.modalPresentationStyle = UIModalPresentationStyle.popover
+            destination.isModalInPopover = true
+            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+            destination.popoverPresentationController?.sourceView = self.view
+            destination.preferredContentSize = CGSize(width: 400, height: 600)
+            
+            destination.scorecard = self.scorecard
+            destination.descriptionMode = .opponents
+            destination.returnSegue = "hidePlayersSelectPlayers"
+            destination.backText = "Cancel"
+            destination.actionText = "Download"
+            destination.allowOtherPlayer = true
+            destination.allowNewPlayer = true
+            
+        case "showSync":
             let destination = segue.destination as! SyncViewController
+            
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.isModalInPopover = true
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = self.view
             destination.preferredContentSize = CGSize(width: 400, height: 523)
+            
             destination.returnSegue = "hidePlayersSync"
             destination.scorecard = self.scorecard
+            
         default:
             break
         }
@@ -469,5 +360,4 @@ class PlayerCell: UICollectionViewCell {
     @IBOutlet weak var playerMadeLabelHeight: NSLayoutConstraint!
     @IBOutlet weak var playerTwosLabelHeight: NSLayoutConstraint!
     @IBOutlet weak var playerLastPlayedLabelHeight: NSLayoutConstraint!
-    @IBOutlet weak var playerTick: UIImageView!
 }

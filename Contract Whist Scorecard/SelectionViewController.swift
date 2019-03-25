@@ -56,7 +56,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     @IBAction func hideSelectionPlayerDetail(segue:UIStoryboardSegue) {
         // Returning from new player
         let source = segue.source as! PlayerDetailViewController
-        _ = source.playerDetail.createMO()
         createPlayers(newPlayers: [source.playerDetail])
     }
 
@@ -662,10 +661,13 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             
         case "showPlayerDetail":
             let destination = segue.destination as! PlayerDetailViewController
+
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
+            destination.isModalInPopover = true
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = selectionView
             destination.preferredContentSize = CGSize(width: 400, height: 300)
+
             destination.playerDetail = PlayerDetail(scorecard, visibleLocally: true)
             destination.mode = .create
             destination.returnSegue = "hideSelectionPlayerDetail"
@@ -682,6 +684,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             let destination = segue.destination as! SelectPlayersViewController
 
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
+            destination.isModalInPopover = true
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = self.view
             destination.preferredContentSize = CGSize(width: 400, height: 600)

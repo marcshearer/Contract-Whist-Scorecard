@@ -182,13 +182,15 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             if self.handState.hand != nil && (self.handState.hand.cards.count > 0 || self.handState.trickCards.count != 0) {
                 let storyboard = UIStoryboard(name: "HandViewController", bundle: nil)
                 let handViewController = storyboard.instantiateViewController(withIdentifier: "HandViewController") as! HandViewController
-                handViewController.scorecard = self
-                handViewController.delegate = viewController as? HandStatusDelegate
+
                 handViewController.modalPresentationStyle = UIModalPresentationStyle.popover
                 handViewController.isModalInPopover = true
                 handViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
                 handViewController.popoverPresentationController?.sourceView = sourceView
                 handViewController.preferredContentSize = CGSize(width: 400, height: 554)
+                
+                handViewController.scorecard = self
+                handViewController.delegate = viewController as? HandStatusDelegate
                 handViewController.computerPlayerDelegate = computerPlayerDelegate
                 
                 Utility.mainThread("playHand", execute: {
@@ -645,16 +647,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     public func identifyPlayers(from viewController: UIViewController, title: String = "Player for Device", disableOption: String! = nil, instructions: String! = nil, minPlayers: Int = 1, maxPlayers: Int = 1, insufficientMessage: String! = nil, info: [String : Any]? = nil, filter: ((PlayerMO)->Bool)! = nil) {
         let storyboard = UIStoryboard(name: "SearchViewController", bundle: nil)
         let searchViewController = storyboard.instantiateViewController(withIdentifier: "SearchViewController") as! SearchViewController
-        searchViewController.scorecard = self
-        searchViewController.formTitle = title
-        searchViewController.instructions = instructions
-        searchViewController.disableOption = disableOption
-        searchViewController.minPlayers = minPlayers
-        searchViewController.maxPlayers = maxPlayers
-        searchViewController.filter = filter
-        searchViewController.info = info
-        searchViewController.insufficientMessage = insufficientMessage
-        searchViewController.delegate = viewController as? SearchDelegate
+
         searchViewController.modalPresentationStyle = UIModalPresentationStyle.popover
         searchViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
         if let sourceView = viewController.popoverPresentationController?.sourceView {
@@ -665,6 +658,18 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         searchViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.size.width/2, y: UIScreen.main.bounds.size.height/2, width: 0 ,height: 0)
         searchViewController.preferredContentSize = CGSize(width: 400, height: 600)
         searchViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
+        
+        searchViewController.scorecard = self
+        searchViewController.formTitle = title
+        searchViewController.instructions = instructions
+        searchViewController.disableOption = disableOption
+        searchViewController.minPlayers = minPlayers
+        searchViewController.maxPlayers = maxPlayers
+        searchViewController.filter = filter
+        searchViewController.info = info
+        searchViewController.insufficientMessage = insufficientMessage
+        searchViewController.delegate = viewController as? SearchDelegate
+
         viewController.present(searchViewController, animated: true, completion: nil)
     }
     

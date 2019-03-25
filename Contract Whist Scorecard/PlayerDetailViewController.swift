@@ -79,9 +79,36 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     }
     
     @IBAction func finishButtonPressed(_ sender: Any) {
+
         if scorecard.isDuplicateName(playerDetail) || scorecard.isDuplicateEmail(playerDetail) || playerDetail.email == "" {
             // Taking cancel option
             playerDetail.name = ""
+        }
+        
+        if playerDetail.name != ""  {
+            switch self.mode! {
+            case .amend:
+                // Update core data with any changes
+                if !CoreData.update(updateLogic: {
+                    let playerMO = playerDetail.playerMO!
+                    if playerMO.email != playerDetail.email {
+                        // Need to rebuild as email changed
+                        playerDetail.toManagedObject(playerMO: playerMO)
+                        if Reconcile.rebuildLocalPlayer(playerMO: playerDetail.playerMO) {
+                            playerDetail.fromManagedObject(playerMO: playerMO)
+                        }
+                    } else {
+                        playerDetail.toManagedObject(playerMO: playerMO)
+                    }
+                }) {
+                    self.alertMessage("Error saving player")
+                }
+            case .create:
+                // Player will be created in calling controller (selectPlayers)
+                break
+            default:
+                break
+            }
         }
         deletePlayer = false
         warnEmailChanged()
@@ -690,11 +717,22 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
     func checkDeletePlayer() {
         var alertController: UIAlertController
         alertController = UIAlertController(title: "Warning", message: "This will remove the player \n'\(playerDetail.name)'\nfrom this device.\n\nIf you are synchronising with iCloud the player will still be available to download in future.\n Otherwise this will remove their details permanently.\n\n Are you sure you want to do this?", preferredStyle: UIAlertController.Style.alert)
+        
         alertController.addAction(UIAlertAction(title: "Confirm", style: UIAlertAction.Style.default,
                                                 handler: { (action:UIAlertAction!) -> Void in
             
+            // Update core data with any changes
+            self.playerDetail.deleteMO()
+
+            // Remove this player from list of subscriptions
+            Notifications.updateHighScoreSubscriptions(scorecard: self.scorecard)
+
+            // Delete any detached games
+            History.deleteDetachedGames(scorecard: self.scorecard)
+
+            // Flag as deleted and return
             self.deletePlayer = true
-            self.performSegue(withIdentifier: self.returnSegue, sender: self )
+            self.performSegue(withIdentifier: self.returnSegue, sender: self)
                                                     
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler:nil))

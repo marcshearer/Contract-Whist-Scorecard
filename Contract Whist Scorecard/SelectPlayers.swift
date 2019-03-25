@@ -62,7 +62,8 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     @IBOutlet private weak var footerPaddingTopConstraint: NSLayoutConstraint!
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
-    @IBAction private func hideSelectPlayersPlayerDetail(segue:UIStoryboardSegue) {
+    
+@IBAction private func hideSelectPlayersPlayerDetail(segue:UIStoryboardSegue) {
         let source = segue.source as! PlayerDetailViewController
         
         switch self.selectedMode! {

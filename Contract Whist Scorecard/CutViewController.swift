@@ -445,6 +445,7 @@ class CutViewController: CustomViewController {
         }
         let storyboard = UIStoryboard(name: "CutViewController", bundle: nil)
         let cutViewController = storyboard.instantiateViewController(withIdentifier: "CutViewController") as! CutViewController
+        
         let preferredSize:CGFloat = 640.0
         if min(UIScreen.main.bounds.size.height,UIScreen.main.bounds.size.width) < preferredSize {
             cutViewController.modalPresentationStyle = UIModalPresentationStyle.fullScreen
@@ -454,6 +455,7 @@ class CutViewController: CustomViewController {
             cutViewController.popoverPresentationController?.sourceView = view as UIView
             cutViewController.preferredContentSize = CGSize(width: preferredSize, height: preferredSize)
         }
+        
         cutViewController.scorecard = scorecard
         cutViewController.preCutCards = preCutCards
         cutViewController.playerName = playerName

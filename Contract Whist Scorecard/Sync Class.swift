@@ -76,10 +76,10 @@ class Sync {
     // MARK: - Class Properties ======================================================================== -
     
     // Delegate for callback protocol
-    weak public var delegate: SyncDelegate?
+    public weak var delegate: SyncDelegate?
     
     // Main state properties
-    public weak var scorecard: Scorecard!
+    public var scorecard: Scorecard!
     
     // Local class variables
     private var errors = 0
@@ -132,7 +132,6 @@ class Sync {
     public func stop() {
         self.syncPhaseCount = syncPhases.count
         self.delegate = nil
-        self.scorecard = nil
     }
     
     public func synchronise(syncMode: SyncMode = .syncAll, specificEmail: [String] = [], specificExternalId: String! = nil, timeout: Double! = 30.0, waitFinish: Bool = true) {
@@ -1368,15 +1367,16 @@ class Sync {
             fetchOperation.fetchRecordsCompletionBlock = { (records, error) in
                 var playerObjectId: [NSManagedObjectID] = []
                 for cloudObject in self.cloudObjectList {
-                    let playerMO = self.scorecard.findPlayerByEmail(Utility.objectString(cloudObject: cloudObject, forKey: "email"))
-                    if playerMO != nil {
-                        if CoreData.update(updateLogic: {
-                            var thumbnail: Data?
-                            thumbnail = Utility.objectImage(cloudObject: cloudObject, forKey: "thumbnail") as Data?
-                            playerMO!.thumbnail = thumbnail
-                            playerMO!.thumbnailDate = Utility.objectDate(cloudObject: cloudObject, forKey: "thumbnailDate")
-                        }) {
-                            playerObjectId.append(playerMO!.objectID)
+                    if let email = Utility.objectString(cloudObject: cloudObject, forKey: "email") {
+                        if let playerMO = self.scorecard.findPlayerByEmail(email){
+                            if CoreData.update(updateLogic: {
+                                var thumbnail: Data?
+                                thumbnail = Utility.objectImage(cloudObject: cloudObject, forKey: "thumbnail") as Data?
+                                playerMO.thumbnail = thumbnail
+                                playerMO.thumbnailDate = Utility.objectDate(cloudObject: cloudObject, forKey: "thumbnailDate")
+                            }) {
+                                playerObjectId.append(playerMO.objectID)
+                            }
                         }
                     }
                 }

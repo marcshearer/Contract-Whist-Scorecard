@@ -99,8 +99,13 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)        
+        super.viewWillTransition(to: size, with: coordinator)
         scorecard.reCenterPopup(self)
+        self.view.setNeedsLayout()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
     }
     
     // MARK: - TableView Overrides ===================================================================== -

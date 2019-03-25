@@ -527,16 +527,18 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 default:
                      break
                 }
-                for playerNumber in 2...playerData.count {
-                    let playerData = self.playerData[playerNumber - 1]
-                    if playerData.peer == nil {
-                        playerData.peer = CommsPeer(parent: self.scorecard.commsDelegate!,
-                                                    deviceName: "",
-                                                    playerEmail: playerData.email,
-                                                    playerName: playerData.name)
+                if playerData.count >= 2 {
+                    for playerNumber in 2...playerData.count {
+                        let playerData = self.playerData[playerNumber - 1]
+                        if playerData.peer == nil {
+                            playerData.peer = CommsPeer(parent: self.scorecard.commsDelegate!,
+                                                        deviceName: "",
+                                                        playerEmail: playerData.email,
+                                                        playerName: playerData.name)
+                        }
+                        playerData.inviteStatus = inviteStatus
+                        self.updateCell(playerData: playerData, hostMode: false)
                     }
-                    playerData.inviteStatus = inviteStatus
-                    self.updateCell(playerData: playerData, hostMode: false)
                 }
             }
             currentState = state

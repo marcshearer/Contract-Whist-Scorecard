@@ -99,7 +99,6 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         
         // Abandon any sync in progress
         self.sync?.stop()
-        self.sync?.delegate = nil
         self.sync = nil
         
         // Return to calling program
@@ -122,6 +121,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
+        scorecard.reCenterPopup(self)
         view.setNeedsLayout()
     }
     
@@ -378,22 +378,22 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
                     if index == nil {
                         if self.playerList.count == 0 {
                             // Replace status entry
-                            self.tableView.beginUpdates()
-                            self.playerList.append(playerDetail)
-                            self.selection.append(false)
-                            self.tableView.reloadRows(at: [IndexPath(row: 0, section: self.connectedPlayerSection)], with: .automatic)
-                            self.tableView.endUpdates()
+                            self.tableView.performBatchUpdates({
+                                self.playerList.append(playerDetail)
+                                self.selection.append(false)
+                                self.tableView.reloadRows(at: [IndexPath(row: 0, section: self.connectedPlayerSection)], with: .automatic)
+                            })
                         } else {
                             // Insert in order
                             index = self.playerList.index(where: { $0.name > playerDetail.name})
                             if index == nil {
                                 index = self.playerList.count
                             }
-                            self.tableView.beginUpdates()
-                            self.playerList.insert(playerDetail, at: index!)
-                            self.selection.insert(false, at: index!)
-                            self.tableView.insertRows(at: [IndexPath(row: index!, section: self.connectedPlayerSection)], with: .automatic)
-                            self.tableView.endUpdates()
+                            self.tableView.performBatchUpdates({
+                                self.playerList.insert(playerDetail, at: index!)
+                                self.selection.insert(false, at: index!)
+                                self.tableView.insertRows(at: [IndexPath(row: index!, section: self.connectedPlayerSection)], with: .automatic)
+                            })
                         }
                     }
                 }
@@ -511,6 +511,9 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         if imageList.count > 0 {
             self.getImages(imageList)
         }
+
+        // Add these players to list of subscriptions
+        Notifications.updateHighScoreSubscriptions(scorecard: self.scorecard)
         
     }
     
@@ -574,11 +577,13 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         switch segue.identifier! {
         case "showPlayerDetail":
             let destination = segue.destination as! PlayerDetailViewController
+            
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.isModalInPopover = true
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = self.view as UIView
-            destination.preferredContentSize = CGSize(width: 400, height: 540)
+            destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
+            destination.preferredContentSize = CGSize(width: 400, height: 600)
+            
             switch selectedMode! {
             case .download, .create:
                 // Blank player to download/create into

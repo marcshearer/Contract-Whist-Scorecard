@@ -622,7 +622,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         }
     }
     
-    func createPlayers(newPlayers: [PlayerDetail]) {
+    private func createPlayers(newPlayers: [PlayerDetail]) {
         let add = (selectedList.count + newPlayers.count <= self.scorecard.numberPlayers)
         
         for newPlayerDetail in newPlayers {
@@ -634,24 +634,16 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                     if availableIndex == nil {
                         // Insert at end
                         availableIndex = availableList.count
-                        availableList.append(newPlayerDetail.playerMO)
-                        availableCell.append(nil)
-                    } else {
-                        // Insert before
-                        availableList.insert(newPlayerDetail.playerMO, at: availableIndex)
-                        availableCell.insert(nil, at: availableIndex + 1)
                     }
+                    availableList.insert(newPlayerDetail.playerMO, at: availableIndex)
+                    availableCell.insert(nil, at: availableIndex + 1)
                     availableCollectionView.insertItems(at: [IndexPath(row: availableIndex + 1, section: 0)])
                 })
                 if add {
                     addSelection(availableIndex + 1)
                 }
-
             }
         }
-        
-        // Add these players to list of subscriptions
-        Notifications.updateHighScoreSubscriptions(scorecard: self.scorecard)
     }
     
     func addNewPlayer() {
@@ -688,6 +680,12 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         
         case "showSelectPlayers":
             let destination = segue.destination as! SelectPlayersViewController
+
+            destination.modalPresentationStyle = UIModalPresentationStyle.popover
+            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+            destination.popoverPresentationController?.sourceView = self.view
+            destination.preferredContentSize = CGSize(width: 400, height: 600)
+            
             destination.scorecard = self.scorecard
             destination.descriptionMode = .opponents
             destination.returnSegue = "hideSelectionSelectPlayers"

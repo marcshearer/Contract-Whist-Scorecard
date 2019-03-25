@@ -71,8 +71,14 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
         scorecard.reCenterPopup(self)
-        ScorecardUI.selectBackground(size: size, backgroundImage: backgroundImage)
+        self.view.setNeedsLayout()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        ScorecardUI.selectBackground(size: self.view.safeAreaLayoutGuide.layoutFrame.size, backgroundImage: backgroundImage)
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -252,15 +258,16 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
         })
     }
     
-    func createPlayers(newPlayers: [PlayerDetail]) {
+    private func createPlayers(newPlayers: [PlayerDetail]) {
         var newPlayers = newPlayers
         
         // Move entered player to top of list
-        let index = newPlayers.index(where: {$0.email == self.syncEmailTextField.text})
-        if index != nil && index != 0 {
-            let playerMO = newPlayers[index!]
-            newPlayers.remove(at: index!)
-            newPlayers.insert(playerMO, at: 0)
+        if let index = newPlayers.index(where: {$0.email == self.syncEmailTextField.text}) {
+            if index != 0 {
+                let playerMO = newPlayers[index]
+                newPlayers.remove(at: index)
+                newPlayers.insert(playerMO, at: 0)
+            }
         }
         
         // Add these players to list of subscriptions
@@ -282,16 +289,23 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
             
         case "showGetStartedSettings":
             let destination = segue.destination as! SettingsViewController
+
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.isModalInPopover = true
             destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
             destination.preferredContentSize = CGSize(width: 400, height: 600)
+
             destination.scorecard = self.scorecard
             destination.returnSegue = "hideGetStartedSettings"
             
         case "showGetStartedSelectPlayers":
             let destination = segue.destination as! SelectPlayersViewController
+            
+            destination.modalPresentationStyle = UIModalPresentationStyle.popover
+            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+            destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
+            destination.preferredContentSize = CGSize(width: 400, height: 600)
+            
             destination.scorecard = self.scorecard
             destination.specificEmail = self.syncEmailTextField.text!
             destination.descriptionMode = .lastPlayed

@@ -372,7 +372,9 @@
                         <segue destination="cPJ-J5-mJc" kind="presentation" identifier="showPlayerDetail" id="N9w-IV-lmX"/>
                         <segue destination="Vxp-SW-x6a" kind="unwind" identifier="hideSelectionSelectPlayers" unwindAction="hideSelectionSelectPlayersWithSegue:" id="UXW-YD-63I"/>
                         <segue destination="wYy-Td-NIk" kind="show" identifier="showGamePreview" id="zvw-a4-7JA"/>
-                        <segue destination="Do4-Za-q4h" kind="show" identifier="showSelectPlayers" id="ewe-cV-U1p"/>
+                        <segue destination="Do4-Za-q4h" kind="popoverPresentation" identifier="showSelectPlayers" popoverAnchorView="Whs-Ka-Uxd" id="ewe-cV-U1p">
+                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                        </segue>
                         <segue destination="Vxp-SW-x6a" kind="unwind" identifier="hideSelection" unwindAction="hideSelectionWithSegue:" id="4tV-b5-uOW"/>
                     </connections>
                 </viewController>

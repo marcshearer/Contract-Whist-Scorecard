@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 protocol SearchDelegate : class {
     
@@ -33,6 +34,7 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
     public weak var delegate: SearchDelegate?
     
     // Local class variables
+    private var observer: NSObjectProtocol?
     private var results: [PlayerMO?] = []
     private var selected: [Bool] = []
     private var selectedCount: Int {
@@ -47,24 +49,40 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
         }
     }
     
-    
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet weak var instructionsLabel: UILabel!
     @IBOutlet weak var instructionsHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var searchTableView: UITableView!
     @IBOutlet weak var finishButton: UIButton!
-    @IBOutlet weak var selectButton: UIButton!
     @IBOutlet weak var navigationTitle: UINavigationItem!
     
-    // MARK: - IB Actions ============================================================================== -
+    // MARK: - IB Unwind Segue Handlers ================================================================ -
+    
+    @IBAction func hideSearchSelectPlayers(segue:UIStoryboardSegue) {
+        let source = segue.source as! SelectPlayersViewController
+        if source.selected > 0 {
+            var createPlayerList: [PlayerDetail] = []
+            for playerNumber in 1...source.playerList.count {
+                if source.selection[playerNumber-1] {
+                    createPlayerList.append(source.playerList[playerNumber-1])
+                }
+            }
+            createPlayers(newPlayers: createPlayerList)
+        }
+    }// MARK: - IB Actions ============================================================================== -
     
     @IBAction func finishPressed(_ sender: UIButton) {
-        self.returnPlayers(complete: false)
+        NotificationCenter.default.removeObserver(observer!)
+        if self.selectedCount < self.minPlayers {
+            self.returnPlayers(complete: true, selected: self.selected)
+        } else {
+            self.returnPlayers(complete: false)
+        }
     }
     
-    @IBAction func selectPressed(_ sender: UIButton) {
-        self.returnPlayers(complete: true, selected: self.selected)
+    @IBAction func addPressed(_ sender: UIButton) {
+        self.performSegue(withIdentifier: "showSelectPlayers", sender: self)
     }
     
     // MARK: - View Overrides ========================================================================== -
@@ -94,6 +112,9 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
         }
         
         self.enableSelectButton()
+        
+        // Set nofification for image download
+        observer = setImageDownloadNotification()
         
     }
     
@@ -182,6 +203,27 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
         getSearchList()
     }
     
+    // MARK: - Image download handlers =================================================== -
+    
+    func setImageDownloadNotification() -> NSObjectProtocol? {
+        // Set a notification for images downloaded
+        let observer = NotificationCenter.default.addObserver(forName: .playerImageDownloaded, object: nil, queue: nil) {
+            (notification) in
+            self.updateImage(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
+        }
+        return observer
+    }
+    
+    func updateImage(objectID: NSManagedObjectID) {
+        // Find any cells containing an image which has just been downloaded asynchronously
+        Utility.mainThread {
+            if let index = self.results.index(where: { ($0?.objectID)! == objectID }) {
+                // Found it - reload the cell
+                self.searchTableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+            }
+        }
+    }
+    
     // MARK: - Utility Routines ======================================================================== -
     
     func getSearchList() {
@@ -217,7 +259,7 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
     }
     
     func enableSelectButton() {
-        selectButton.isHidden = self.selectedCount < self.minPlayers
+        finishButton.setTitle((self.selectedCount < self.minPlayers ? "Cancel" : "Continue"), for: .normal )
     }
     
     func returnPlayers(complete: Bool, selected: [Bool]! = nil) {
@@ -235,6 +277,45 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
             }
             self.delegate?.returnPlayers(complete: complete, playerMO: playerMO, info: self.info)
         })
+    }
+    
+    private func createPlayers(newPlayers: [PlayerDetail]) {
+        let select = (selectedCount + newPlayers.count < self.scorecard.numberPlayers)
+        
+        for newPlayerDetail in newPlayers {
+            if newPlayerDetail.name == "" {
+                // Name not filled in - must have cancelled
+            } else {
+                var index: Int! = self.results.index(where: {($0?.name)! > newPlayerDetail.name})
+                searchTableView.performBatchUpdates({
+                    if index == nil {
+                        // Insert at end
+                        index = newPlayers.count
+                    }
+                    results.insert(newPlayerDetail.playerMO, at: index)
+                    selected.insert(select, at: index)
+                    searchTableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                })
+            }
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        switch segue.identifier! {
+            
+        case "showSelectPlayers":
+            let destination = segue.destination as! SelectPlayersViewController
+            destination.scorecard = self.scorecard
+            destination.descriptionMode = .opponents
+            destination.returnSegue = "hideSearchSelectPlayers"
+            destination.backText = "Cancel"
+            destination.actionText = "Download"
+            destination.allowOtherPlayer = true
+            
+        default:
+            break
+        }
     }
 }
 

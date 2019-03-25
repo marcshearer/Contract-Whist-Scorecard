@@ -32,7 +32,7 @@
                                     <navigationItem title="Search" id="aj7-go-SOW">
                                         <barButtonItem key="leftBarButtonItem" id="dj8-cd-3dN">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="y7I-Zm-cNu" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="5" width="54" height="22"/>
+                                                <rect key="frame" x="20" y="5" width="100" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Back" image="back">
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -42,13 +42,14 @@
                                                 </connections>
                                             </button>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" id="l9A-Pe-7KF">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="YcS-ux-M1m" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="582" y="5" width="65" height="22"/>
+                                        <barButtonItem key="rightBarButtonItem" style="plain" id="G1d-Sf-ts3">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="pHp-od-Ohy" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <rect key="frame" x="547" y="0.0" width="100" height="32"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Select" image="forward"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                                <state key="normal" title="+"/>
                                                 <connections>
-                                                    <action selector="selectPressed:" destination="qmE-4Z-KTg" eventType="touchUpInside" id="0x1-OL-Xwl"/>
+                                                    <action selector="addPressed:" destination="qmE-4Z-KTg" eventType="touchUpInside" id="hGL-XO-Ezy"/>
                                                 </connections>
                                             </button>
                                         </barButtonItem>
@@ -94,13 +95,20 @@
                                 <rect key="frame" x="0.0" y="111" width="667" height="264"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Player Cell" id="BYL-uh-znU" customClass="SearchTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="gray" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Player Cell" id="BYL-uh-znU" customClass="SearchTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="667" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="BYL-uh-znU" id="8qi-PF-nO8">
                                             <rect key="frame" x="0.0" y="0.0" width="667" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pK3-Zd-fcf" userLabel="Separator">
+                                                    <rect key="frame" x="0.0" y="43" width="667" height="1"/>
+                                                    <color key="backgroundColor" name="Dark Highlight"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="1" id="0hq-1A-3KI"/>
+                                                    </constraints>
+                                                </view>
                                                 <stackView opaque="NO" contentMode="scaleAspectFit" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="E9w-Ac-PMU">
                                                     <rect key="frame" x="0.0" y="0.0" width="644" height="44"/>
                                                     <subviews>
@@ -149,13 +157,6 @@
                                                         <constraint firstItem="o2n-IA-teQ" firstAttribute="top" secondItem="E9w-Ac-PMU" secondAttribute="top" id="u7Y-cN-5VW"/>
                                                     </constraints>
                                                 </stackView>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pK3-Zd-fcf" userLabel="Separator">
-                                                    <rect key="frame" x="0.0" y="43" width="667" height="1"/>
-                                                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="1" id="0hq-1A-3KI"/>
-                                                    </constraints>
-                                                </view>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="E9w-Ac-PMU" secondAttribute="bottom" id="0vc-fp-GvU"/>
@@ -216,19 +217,29 @@
                         <outlet property="navigationTitle" destination="aj7-go-SOW" id="nnR-Mx-9Uu"/>
                         <outlet property="searchBar" destination="Rfb-9f-KJK" id="lFq-cN-vRl"/>
                         <outlet property="searchTableView" destination="RFU-ae-J30" id="82G-hr-YOj"/>
-                        <outlet property="selectButton" destination="YcS-ux-M1m" id="CEi-dD-iZO"/>
+                        <segue destination="s24-ky-ZXx" kind="show" identifier="showSelectPlayers" id="leY-xF-RUW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4SM-0w-Rjb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="11359" y="205"/>
         </scene>
+        <!--SelectPlayersViewController-->
+        <scene sceneID="esv-fj-ZEP">
+            <objects>
+                <viewControllerPlaceholder storyboardName="SelectPlayersViewController" referencedIdentifier="SelectPlayersViewController" id="s24-ky-ZXx" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="G7I-08-YeX" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="11831" y="203"/>
+        </scene>
     </scenes>
     <resources>
         <image name="back" width="14" height="20"/>
-        <image name="forward" width="14" height="20"/>
         <namedColor name="Banner">
             <color red="0.33300000429153442" green="0.33300000429153442" blue="0.33300000429153442" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Dark Highlight">
+            <color red="0.85100001096725464" green="0.85100001096725464" blue="0.85100001096725464" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

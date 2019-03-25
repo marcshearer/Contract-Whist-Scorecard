@@ -202,8 +202,12 @@
                         <outlet property="backgroundImage" destination="usQ-QH-4BG" id="al5-S6-vAk"/>
                         <outlet property="finishButton" destination="mlL-xC-AG1" id="UAo-99-zHE"/>
                         <segue destination="mUh-dg-q1z" kind="unwind" identifier="hideGetStarted" unwindAction="hideGetStartedWithSegue:" id="IRM-kh-2LK"/>
-                        <segue destination="qYQ-cc-0sq" kind="presentation" identifier="showGetStartedSettings" id="VgC-Jo-Lqa"/>
-                        <segue destination="YJh-1A-cUe" kind="show" identifier="showGetStartedSelectPlayers" id="hos-9P-EFj"/>
+                        <segue destination="qYQ-cc-0sq" kind="popoverPresentation" identifier="showGetStartedSettings" animates="NO" popoverAnchorView="gBX-K1-URm" id="VgC-Jo-Lqa">
+                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                        </segue>
+                        <segue destination="YJh-1A-cUe" kind="popoverPresentation" identifier="showGetStartedSelectPlayers" popoverAnchorView="gBX-K1-URm" id="hos-9P-EFj">
+                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                        </segue>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e9Q-MP-3gh" userLabel="First Responder" sceneMemberID="firstResponder"/>

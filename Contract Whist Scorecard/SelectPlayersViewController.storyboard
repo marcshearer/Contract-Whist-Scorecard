@@ -197,6 +197,7 @@
                         </segue>
                         <segue destination="DOb-ll-Ptr" kind="unwind" identifier="hideSelectionSelectPlayers" unwindAction="hideSelectionSelectPlayersWithSegue:" id="jwr-oI-SeD"/>
                         <segue destination="DOb-ll-Ptr" kind="unwind" identifier="hideGetStartedSelectPlayers" unwindAction="hideGetStartedSelectPlayersWithSegue:" id="vEo-pM-s9i"/>
+                        <segue destination="DOb-ll-Ptr" kind="unwind" identifier="hideSearchSelectPlayers" unwindAction="hideSearchSelectPlayersWithSegue:" id="uff-El-LiS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nr-7V-eKu" userLabel="First Responder" sceneMemberID="firstResponder"/>

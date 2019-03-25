@@ -762,7 +762,7 @@ class ScorepadViewController: CustomViewController,
             destination.isModalInPopover = true
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = scorepadView
-            destination.preferredContentSize = CGSize(width: 400, height: 554)
+            destination.preferredContentSize = CGSize(width: 400, height: 600)
             destination.gameLocation = self.scorecard.gameLocation
             destination.scorecard = self.scorecard
             destination.returnSegue = "hideLocation"

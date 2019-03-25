@@ -653,11 +653,13 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         switch segue.identifier! {
         case "showSettings":
             let destination = segue.destination as! SettingsViewController
+            
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.isModalInPopover = true
             destination.popoverPresentationController?.sourceView = welcomeView
             destination.preferredContentSize = CGSize(width: 400, height: 600)
+            
             destination.scorecard = self.scorecard
             destination.returnSegue = "hideSettings"
             destination.backImage = "home"
@@ -681,6 +683,12 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         
         case "showHost":
             let destination = segue.destination as! HostViewController
+            
+            destination.modalPresentationStyle = UIModalPresentationStyle.popover
+            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+            destination.popoverPresentationController?.sourceView = welcomeView
+            destination.preferredContentSize = CGSize(width: 400, height: 600)
+            
             destination.backImage = "home"
             destination.backText = ""
             destination.playingComputer = self.playingComputer
@@ -727,10 +735,12 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
 
         case "showGetStarted":
             let destination = segue.destination as! GetStartedViewController
+            
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = welcomeView
             destination.preferredContentSize = CGSize(width: 400, height: 600)
+            
             destination.scorecard = self.scorecard
             
         default:

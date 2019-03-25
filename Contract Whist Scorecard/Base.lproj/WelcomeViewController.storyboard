@@ -180,7 +180,9 @@
                         <segue destination="aof-hj-4vM" kind="popoverPresentation" identifier="showClient" popoverAnchorView="jyL-Wg-M4O" id="Ueo-VZ-u5x">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
-                        <segue destination="zUj-ZD-lpe" kind="show" identifier="showHost" id="CD4-VA-JxI"/>
+                        <segue destination="zUj-ZD-lpe" kind="popoverPresentation" identifier="showHost" popoverAnchorView="jyL-Wg-M4O" id="CD4-VA-JxI">
+                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                        </segue>
                         <segue destination="gsX-G4-58w" kind="show" identifier="showPlayers" id="7ir-Fu-KYu"/>
                     </connections>
                 </viewController>

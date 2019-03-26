@@ -70,6 +70,8 @@ Enable user interaction on labels in search
 Change the way downloading of users works
 Access to download/add users in Players and online game
 Change color of online image to match bluetooth
+Make host and client controllers popups
+Renamed various components
 
 Bugs fix now
 ------------

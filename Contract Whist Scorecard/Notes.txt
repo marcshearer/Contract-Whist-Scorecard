@@ -65,11 +65,11 @@ Fix missing watch icons and remember last hand over recovery
 iPhone X support
 Setting to show status bar
 
-Next -------
+4.6 (9) -----------
 Enable user interaction on labels in search
 Change the way downloading of users works
 Access to download/add users in Players and online game
-
+Change color of online image to match bluetooth
 
 Bugs fix now
 ------------

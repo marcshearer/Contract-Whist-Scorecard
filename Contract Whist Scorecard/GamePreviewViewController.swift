@@ -149,8 +149,6 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
     
     override internal func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        // Hide duplicate navigation bar
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {

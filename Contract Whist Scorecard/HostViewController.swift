@@ -56,6 +56,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     private var currentState: CommsHandlerState = .notStarted
     private var exiting = false
     private var computerPlayers: [Int : ComputerPlayerDelegate]?
+    private var firstTime = true
     
     private var connectedPlayers: Int {
         get {
@@ -223,32 +224,43 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         }
         self.setInstructions()
         
-        // Check if in recovery mode or playing computer - if so go straight to game setup
-        if self.playingComputer || self.scorecard.recoveryMode {
-            self.waitOtherPlayers(showDialog: !self.playingComputer, completion: {
-                self.gameInProgress = true
-                if self.scorecard.recoveryOnlineMode == .invite {
-                    // Simulate return from invitee search
-                    if let selectedPlayers = self.selectedPlayers {
-                        let invitees = selectedPlayers.count - 1
-                        if invitees > 0 {
-                            let playerMO = Array(selectedPlayers[1...invitees])
-                            self.returnPlayers(complete: true, playerMO: playerMO, info: ["invitees" : true])
-                        }
-                    }
-                }
-            })
-
-        }
-        
         // Allow resequencing of participants
         guestPlayerTableView.isEditing = true
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if firstTime {
+            // Check if in recovery mode or playing computer - if so go straight to game setup
+            if self.playingComputer || self.scorecard.recoveryMode {
+                self.waitOtherPlayers(showDialog: !self.playingComputer, completion: {
+                    self.gameInProgress = true
+                    if self.scorecard.recoveryOnlineMode == .invite {
+                        // Simulate return from invitee search
+                        if let selectedPlayers = self.selectedPlayers {
+                            let invitees = selectedPlayers.count - 1
+                            if invitees > 0 {
+                                let playerMO = Array(selectedPlayers[1...invitees])
+                                self.returnPlayers(complete: true, playerMO: playerMO, info: ["invitees" : true])
+                            }
+                        }
+                    }
+                })
+                
+            }
+            firstTime = false
+        }
+    }
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         scorecard.reCenterPopup(self)
+        self.view.setNeedsLayout()
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
@@ -456,6 +468,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             self.scorecardButton.isHidden = !ready
             self.continueButton.isHidden = !ready
             self.setInstructions()
+            Utility.debugMessage("host", "recovery: \(self.scorecard.recoveryMode), connected: \(self.connectedPlayers)")
             if (self.scorecard.recoveryMode || self.playingComputer) && self.connectedPlayers == self.scorecard.currentPlayers {
                 // Recovering or playing computer  - go straight to game setup
                 self.setupPlayers()

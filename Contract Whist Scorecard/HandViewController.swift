@@ -42,7 +42,6 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     // Component sizes
     private var viewWidth: CGFloat!
     private var viewHeight: CGFloat!
-    private var rightSafeAreaWidth: CGFloat!
     private var handViewHeight: CGFloat!
     private var handViewWidth: CGFloat!
     private var tabletopViewHeight: CGFloat!
@@ -89,6 +88,9 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     @IBOutlet private weak var bidView: UIView!
     @IBOutlet private weak var bidCollectionView: UICollectionView!
     @IBOutlet private weak var bidSeparator: UIView!
+    @IBOutlet private weak var instructionView: UIView!
+    @IBOutlet private weak var instructionViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var instructionViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var instructionTextView: UITextView!
     @IBOutlet private weak var statusRoundLabel: UILabel!
     @IBOutlet private weak var statusOverUnderLabel: UILabel!
@@ -97,7 +99,6 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     @IBOutlet private weak var statusPlayer3BidLabel: UILabel!
     @IBOutlet private weak var statusPlayer4BidLabel: UILabel!
     @IBOutlet private weak var playedCardCollectionView: UICollectionView!
-    @IBOutlet private weak var instructionView: UIView!
     @IBOutlet private weak var bannerPaddingView: UIView!
     @IBOutlet private weak var leftFooterPaddingView: UIView!
     @IBOutlet private weak var leftPaddingView: UIView!
@@ -198,7 +199,8 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         super.viewDidLayoutSubviews()
         viewHeight = view.safeAreaLayoutGuide.layoutFrame.height
         viewWidth = view.safeAreaLayoutGuide.layoutFrame.width
-        rightSafeAreaWidth = view.safeAreaInsets.right
+        self.instructionViewLeadingConstraint.constant = self.view.safeAreaInsets.left
+        self.instructionViewTrailingConstraint.constant = self.view.safeAreaInsets.right
         self.setButtonFormat()
         if self.resizing {
             self.bidMode = nil

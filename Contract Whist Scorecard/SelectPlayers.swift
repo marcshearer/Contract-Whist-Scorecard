@@ -147,7 +147,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
             case specificPlayerSection:
                 return "Add Specific Players"
             case connectedPlayerSection:
-                return "Add Connected Players"
+                return "Download Connected Players"
             default:
                 return ""
             }
@@ -193,7 +193,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
                 cell.playerName.text = "Create new player"
                 cell.playerDescription.text = "Enter details manually"
             case otherPlayerRow:
-                cell.playerName.text = "Add existing player"
+                cell.playerName.text = "Download player"
                 cell.playerDescription.text = "Download player using Unique ID"
             default:
                 break

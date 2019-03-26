@@ -74,9 +74,9 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="e2W-a7-D1X" userLabel="Player Description">
-                                                    <rect key="frame" x="54" y="44" width="265" height="11"/>
+                                                    <rect key="frame" x="54" y="43" width="265" height="12"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="11" id="22l-fx-DXO"/>
+                                                        <constraint firstAttribute="height" constant="12" id="22l-fx-DXO"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" name="Message"/>
@@ -97,7 +97,7 @@
                                                 <constraint firstAttribute="trailing" secondItem="Z5D-5e-drn" secondAttribute="trailing" constant="8" id="Utm-LC-Jjk"/>
                                                 <constraint firstItem="V1A-Rk-mwU" firstAttribute="top" secondItem="lKd-uw-dvN" secondAttribute="top" constant="4" id="ZYz-dm-UMO"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="e2W-a7-D1X" secondAttribute="bottom" constant="4" id="cOJ-4H-EOO"/>
-                                                <constraint firstItem="e2W-a7-D1X" firstAttribute="top" secondItem="V1A-Rk-mwU" secondAttribute="bottom" constant="8" id="dxW-Lz-sqL"/>
+                                                <constraint firstItem="e2W-a7-D1X" firstAttribute="top" secondItem="V1A-Rk-mwU" secondAttribute="bottom" constant="7" id="dxW-Lz-sqL"/>
                                                 <constraint firstItem="e2W-a7-D1X" firstAttribute="leading" secondItem="Fij-jJ-KDu" secondAttribute="trailing" constant="16" id="gMr-E9-k9k"/>
                                                 <constraint firstItem="V1A-Rk-mwU" firstAttribute="leading" secondItem="Fij-jJ-KDu" secondAttribute="trailing" constant="16" id="wYe-wq-J0y"/>
                                                 <constraint firstItem="Z5D-5e-drn" firstAttribute="leading" secondItem="V1A-Rk-mwU" secondAttribute="trailing" constant="8" id="xxS-k5-Uvg"/>

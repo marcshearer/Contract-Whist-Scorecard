@@ -67,13 +67,15 @@ Setting to show status bar
 
 Next -------
 Enable user interaction on labels in search
+Change the way downloading of users works
+Access to download/add users in Players and online game
 
 
 Bugs fix now
 ------------
 In search dialogue (on iPad) if filter search any users who don't have a picture sometimes get changed to squares
 Refresh always leaves "last trick" disabled
-Move buttons in title bar into safe area in hand controller
+Resume game doesn't seem to work during bidding phase
 
 Short-term
 ----------

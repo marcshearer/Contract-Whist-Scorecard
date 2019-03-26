@@ -100,7 +100,6 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         
         // Abandon any sync in progress
         self.sync?.stop()
-        self.sync = nil
         
         // Return to calling program
         self.performSegue(withIdentifier: returnSegue, sender: self)
@@ -209,10 +208,12 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
                 // No connected players found
                 if syncFinished {
                     cell.playerName.text = "No connected players found"
+                    cell.playerDescription.text = ""
                 } else {
                     cell.playerName.text = "Downloading connected players..."
+                    cell.playerDescription.text = "Please wait..."
                 }
-                cell.playerDescription.text = ""
+                
                 cell.playerTick.isHidden = true
                 cell.playerDetail.isHidden = true
                 cell.playerName.textColor = .lightGray
@@ -399,6 +400,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
                     }
                 }
             }
+            self.tableView.reloadData()
             self.formatButtons()
         }
     }

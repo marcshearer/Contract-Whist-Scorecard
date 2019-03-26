@@ -81,7 +81,7 @@ extension UIViewController {
     }
     
     public func alertWait(_ message: String, title: String = "", completion: (()->())? = nil) -> UIAlertController {
-        let alertController = UIAlertController(title: title, message: message + "\n\n\n\n", preferredStyle: .alert)
+        let alertController = UIAlertController(title: title, message: message + "\n\n\n\n\n", preferredStyle: .alert)
     
         // Add the activity indicator as a subview of the alert controller's view
         let indicatorView =

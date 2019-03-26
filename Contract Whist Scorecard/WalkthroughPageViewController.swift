@@ -82,6 +82,12 @@ class WalkthroughPageViewController: UIPageViewController, UIPageViewControllerD
     
     // MARK: - PageView Overrides ===================================================================== -
 
+    override var prefersStatusBarHidden: Bool {
+        get {
+            return AppDelegate.applicationPrefersStatusBarHidden ?? true
+        }
+    }
+    
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         
         var index = (viewController as! WalkthroughViewController).index

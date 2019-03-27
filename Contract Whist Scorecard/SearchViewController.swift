@@ -74,7 +74,7 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
     
     @IBAction func finishPressed(_ sender: UIButton) {
         NotificationCenter.default.removeObserver(observer!)
-        if self.selectedCount < self.minPlayers {
+        if self.selectedCount >= self.minPlayers {
             self.returnPlayers(complete: true, selected: self.selected)
         } else {
             self.returnPlayers(complete: false)

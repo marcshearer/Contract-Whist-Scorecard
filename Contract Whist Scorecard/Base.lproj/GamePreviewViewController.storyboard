@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -33,7 +33,7 @@
                                     <navigationItem title="Game Preview" id="wLJ-Vj-HuD">
                                         <barButtonItem key="leftBarButtonItem" id="oX5-VT-Cds">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="GbG-JI-mmO">
-                                                <rect key="frame" x="16" y="11" width="54" height="22"/>
+                                                <rect key="frame" x="16" y="11" width="56" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Back" image="back"/>
                                                 <connections>
@@ -109,14 +109,14 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="JJq-oJ-QJT">
-                                                    <rect key="frame" x="64" y="11" width="493" height="32"/>
+                                                    <rect key="frame" x="64" y="11" width="201" height="32"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bSJ-0W-aGl" userLabel="Dealer Button" customClass="TotalRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="565" y="15" width="44" height="13"/>
+                                                    <rect key="frame" x="273" y="15" width="44" height="13"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" relation="lessThanOrEqual" constant="44" id="8LB-9G-YsI"/>
@@ -125,7 +125,7 @@
                                                     <state key="normal" title="Button"/>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Dd-qR-woZ" userLabel="FaceTime">
-                                                    <rect key="frame" x="617" y="2" width="40" height="40"/>
+                                                    <rect key="frame" x="325" y="2" width="40" height="40"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="5Dd-qR-woZ" secondAttribute="height" multiplier="1:1" id="XFZ-CA-MVG"/>
                                                         <constraint firstAttribute="width" constant="40" id="osb-cr-gMo"/>
@@ -133,7 +133,7 @@
                                                     <state key="normal" image="phone"/>
                                                 </button>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="auR-9N-5f6" userLabel="Separator">
-                                                    <rect key="frame" x="10" y="43" width="657" height="1"/>
+                                                    <rect key="frame" x="10" y="43" width="365" height="1"/>
                                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="XeH-hy-439"/>
@@ -242,7 +242,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" tag="1" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wUt-jv-Pnx" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="58.5" y="24" width="130" height="130"/>
+                                                    <rect key="frame" x="-87.5" y="27" width="130" height="130"/>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="130" id="7Nj-S0-Lv1"/>
@@ -253,7 +253,7 @@
                                                     </state>
                                                 </button>
                                                 <button opaque="NO" tag="2" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DNt-CK-BEw" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="268.5" y="24" width="130" height="130"/>
+                                                    <rect key="frame" x="122.5" y="27" width="130" height="130"/>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="130" id="a8d-On-TYo"/>
@@ -264,7 +264,7 @@
                                                     </state>
                                                 </button>
                                                 <button opaque="NO" tag="3" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pet-Bb-pAU" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="478.5" y="24" width="130" height="130"/>
+                                                    <rect key="frame" x="332.5" y="27" width="130" height="130"/>
                                                     <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="130" id="N7D-Zt-865"/>

@@ -588,14 +588,53 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     }
     
     func setButtonFormat() {
-      
-        buttonsAcross = max(2, min(3, Int(((viewWidth / (ScorecardUI.landscapePhone() ? 2.0 : 1.0) / 2.0) - 6.0) / 50.0)))
-        buttonsDown = max(3, min(4, Int((((viewHeight / (ScorecardUI.landscapePhone() ? 1.0 : 2.5)) - instructionHeight) * (4.0 / 5.0)) / 50.0)))
+        // Work out how many buttons across and down and how large buttons must be
+        var bidWidthProportion: CGFloat
+        var bidHeightProportion: CGFloat
+        var extraRow: Int
+        let startButtonSize: CGFloat = 50.0
+        let minButtonSize: CGFloat = 42.0
+        let maxButtonSize: CGFloat = 55.0
         
+        if ScorecardUI.landscapePhone() {
+            // Assume using all the height and approx 1/4 of the width - need to allow for an extra row for bid title
+            bidWidthProportion = 0.25
+            bidHeightProportion = 1.0
+            extraRow = 1
+        } else {
+            // Assume using about 1/2 the width and 30% of the height - bid title is above the bid summary in this mode
+            bidWidthProportion = 0.5
+            bidHeightProportion = 0.30
+            extraRow=0
+        }
+        
+        // Work out the number of buttons that will fit across
+        let bidWidthMax = ((viewHeight * bidWidthProportion) - 6.0)
+        buttonsAcross = max(2, min(3, Int(bidWidthMax / startButtonSize)))
+        
+        // Work out the number of buttons that will fit down
+        let bidHeightMax = (viewHeight * bidHeightProportion) - instructionHeight
+        buttonsDown = max(3, min(4, Int(bidHeightMax / startButtonSize) - extraRow))
+        
+        // Calculate optimum button size
+        bidButtonSize = max(minButtonSize, min(maxButtonSize, (bidHeightMax / CGFloat(buttonsDown + extraRow)) - 10.0))
+        
+        // Calculate width from button size and bumber of buttons
+        bidViewWidth = ((bidButtonSize + 10.0) * CGFloat(buttonsAcross)) + 6.0
+        
+        if ScorecardUI.landscapePhone() {
+            // Still need to use all the height
+            bidViewHeight = bidHeightMax
+        } else {
+            // Calculate so that buttons only just fit in
+            bidViewHeight = ((bidButtonSize + 10.0) * CGFloat(buttonsDown)) + 6.0
+        }
+        
+        // Hide vertical separator if there are3 rows of buttons across
         bidSeparator.isHidden = (buttonsAcross > 2)
         
+        // Calculate total buttons and max bid coped with
         let buttons = (buttonsAcross * buttonsDown)
-        
         if buttons >= currentCards + 1 {
             // All available bids fit
             maxBidButton = currentCards
@@ -603,19 +642,11 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             // Allow for more button
             maxBidButton = buttons - 2
         }
-
     }
 
     func bidMode(_ mode: Bool!) {
+        
         self.bidMode = mode
-        if ScorecardUI.landscapePhone() {
-            bidViewHeight = viewHeight - instructionHeight
-            bidButtonSize = min(50.0, (((bidViewHeight * CGFloat(4.0/5.0)) - 8.0) / CGFloat(buttonsDown)) - 10.0)
-        } else {
-            bidViewHeight = ((bidButtonSize + 10.0) * CGFloat(buttonsDown)) + 6.0
-            bidButtonSize = min(50.0, CGFloat(((viewWidth - 16.0) / 6.0) - 10.0))
-        }
-        bidViewWidth = ((bidButtonSize + 10.0) * CGFloat(buttonsAcross)) + 6.0
 
         handViewWidth = (self.viewWidth / (ScorecardUI.landscapePhone() ? 2 : 1))
         if ScorecardUI.landscapePhone() {
@@ -879,7 +910,6 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     }
     
     func makeBid(_ bid: Int) {
-        self.isModalInPopover = true
         self.scorecard.enteredPlayer(enteredPlayerNumber).setBid(round, bid)
         let entryPlayerNumber = self.scorecard.entryPlayerNumber(enteredPlayerNumber, round: self.round)
         setupPlayerBidText(entryPlayerNumber: entryPlayerNumber, animate: true)

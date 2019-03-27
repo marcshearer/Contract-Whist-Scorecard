@@ -177,9 +177,9 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         observer = self.handlerCompleteNotification()
         
         // Setup player and start broadcasting
+        self.scorecard.loadGameDefaults()
         if scorecard.recoveryMode {
             // Recovering - use same player
-            self.scorecard.loadGameDefaults()
             self.resetResumedPlayers()
             let playerMO = self.selectedPlayers[0]
             _ = self.addPlayer(name: playerMO.name!, email: playerMO.email!, playerMO: playerMO, peer: nil)
@@ -247,7 +247,6 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                         }
                     }
                 })
-                
             }
             firstTime = false
         }
@@ -456,7 +455,12 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 case .notConnected:
                     // Remove from display
                     if peer.mode == .broadcast {
-                        self.removePlayer(playerNumber: playerNumber)
+                        if self.scorecard.recoveryMode {
+                            self.playerData[playerNumber - 1].peer = nil
+                            self.updateCell(playerData: self.playerData[playerNumber - 1], hostMode: false)
+                        } else {
+                            self.removePlayer(playerNumber: playerNumber)
+                        }
                     } else {
                         self.reflectState(peer: peer)
                     }
@@ -1034,11 +1038,24 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     }
         
     private func setupPlayers() {
+        var xref: [Int] = []
+
+        for playerNumber in 1...playerData.count {
+            if self.scorecard.recoveryMode {
+                // Ensure players are in same order as before
+                let index = self.playerData.index(where: {$0.email == self.selectedPlayers[playerNumber - 1].email})
+                xref.append(index!)
+            } else {
+                xref.append(playerNumber - 1)
+            }
+        }
+        
         var playerNumber = 0
         self.selectedPlayers = []
         self.faceTimeAddress = []
         
-        for playerData in self.playerData {
+        for index in xref {
+            let playerData = self.playerData[index]
             var playerMO = playerData.playerMO
             if playerMO == nil {
                 // Not found - need to create the player locally

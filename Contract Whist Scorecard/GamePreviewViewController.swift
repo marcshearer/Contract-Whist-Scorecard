@@ -39,6 +39,7 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
     private var playerRowHeight:CGFloat = 0.0
     private var observer: NSObjectProtocol?
     private var faceTimeAvailable = false
+    private var firstTime = true
     
     // UI component pointers
     private var gamePreviewNameCell = [GamePreviewNameCell?]()
@@ -121,11 +122,6 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
         setupScreen(size: self.view.frame.size)
         scorecard.saveMaxScores()
         
-        // Check if in recovery mode and if so go straight to scorecard
-        if scorecard.recoveryMode {
-            self.recoveryScorepad()
-        }
-        
         // Set nofification for image download
         observer = setImageDownloadNotification()
 
@@ -139,6 +135,16 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
             self.checkFaceTimeAvailable()
         }
         
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // Check if in recovery mode and if so go straight to scorecard
+        if firstTime && scorecard.recoveryMode {
+            firstTime = false
+            self.recoveryScorepad()
+        }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -280,7 +286,6 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
             showDealer(playerNumber: scorecard.dealerIs, forceHide: true)
             scorecard.nextDealer()
             showCurrentDealer()
-            UserDefaults.standard.set(scorecard.dealerIs, forKey: "dealerIs")
        default:
             // Link to override selection
             let overrideViewController = OverrideViewController()

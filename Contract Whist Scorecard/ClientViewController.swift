@@ -1016,10 +1016,10 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     public func finishClient(resetRecovery: Bool = true) {
         self.clearSchedule()
         UIApplication.shared.isIdleTimerDisabled = false
-        self.scorecard.commsDelegate?.stop()
-        self.scorecard.commsDelegate?.browserDelegate = nil
-        self.scorecard.commsDelegate?.dataDelegate = self.scorecard
-        self.scorecard.commsDelegate?.stateDelegate = self.scorecard
+        self.finishConnection(self.multipeerClient)
+        self.multipeerClient = nil
+        self.finishConnection(self.rabbitMQClient)
+        self.rabbitMQClient = nil
         self.scorecard.commsDelegate = nil
         self.scorecard.sendScores = false
         self.scorecard.reset()
@@ -1030,6 +1030,13 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         self.scorecard.resetSharing()
         Notifications.removeTemporaryOnlineGameSubscription()
         self.clearHandlerCompleteNotification(observer: self.clientHandlerObserver)
+    }
+    
+    public func finishConnection(_ commsDelegate: CommsHandlerDelegate?) {
+        commsDelegate?.stop()
+        commsDelegate?.browserDelegate = nil
+        commsDelegate?.dataDelegate = self.scorecard
+        commsDelegate?.stateDelegate = self.scorecard
     }
     
     private func exitClient(resetRecovery: Bool = true) {

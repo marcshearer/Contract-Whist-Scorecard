@@ -77,7 +77,7 @@ Bugs fix now
 ------------
 In search dialogue (on iPad) if filter search any users who don't have a picture sometimes get changed to squares
 Refresh always leaves "last trick" disabled
-Resume game doesn't seem to work during bidding phase
+Resume game doesn't seem to work during bidding phase - dealer gets out of line
 
 Short-term
 ----------

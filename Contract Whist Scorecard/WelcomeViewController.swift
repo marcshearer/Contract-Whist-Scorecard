@@ -567,6 +567,9 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     }
     
     private func startNewGame() {
+        let whisper = Whisper()
+        whisper.show("Testing")
+        return
         resumeGameCell.actionButton.isEnabled(false)
         self.scorecard.setGameInProgress(false)
         self.scorecard.reset()

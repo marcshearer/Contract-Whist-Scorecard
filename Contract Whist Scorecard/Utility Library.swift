@@ -9,6 +9,14 @@
 import UIKit
 import CoreData
 import CloudKit
+import os.log
+
+extension OSLog {
+    private static var subsystem = Bundle.main.bundleIdentifier!
+    
+    /// Logs the view cycles like viewDidLoad.
+    static let debugInfo = OSLog(subsystem: subsystem, category: "debug")
+}
 
 class Utility {
     
@@ -378,7 +386,7 @@ class Utility {
     
     // MARK: - Animate ============================================================================== -
     
-    public class func animate(view: UIView? = nil, duration: TimeInterval = 0.5, curve: UIView.AnimationCurve = .linear, afterDelay: TimeInterval = 0.0, animations: @escaping ()->()) {
+    public class func animate(view: UIView? = nil, duration: TimeInterval = 0.5, curve: UIView.AnimationCurve = .linear, afterDelay: TimeInterval? = 0.0, animations: @escaping ()->()) {
         var view = view
         if view == nil {
             view = Utility.getActiveViewController()!.view!
@@ -388,7 +396,7 @@ class Utility {
             animations()
             view!.layoutIfNeeded()
         }
-        animation.startAnimation(afterDelay: afterDelay)
+        animation.startAnimation(afterDelay: afterDelay ?? 0.01)
     }
     
     // MARK: - Functions to get view controllers, use main thread and wrapper system level stuff ==============
@@ -403,21 +411,30 @@ class Utility {
         }
     }
 
-    public class func getActiveViewController() -> UIViewController? {
-        var activeViewController = UIApplication.shared.keyWindow?.rootViewController
+    public class func getActiveViewController(fullScreenOnly: Bool = false) -> UIViewController? {
+        var viewController = UIApplication.shared.keyWindow?.rootViewController
+        let fullHeight = viewController?.view.frame.height
+        var activeViewController = viewController
+        
         // Work down through any child view controllers
         while true {
-            if activeViewController?.children == nil || activeViewController?.children.count == 0 {
+            if viewController?.children == nil || viewController?.children.count == 0 {
                 break
             }
-            activeViewController = activeViewController?.children[(activeViewController?.children.count)!-1]
+            viewController = viewController?.children[(viewController?.children.count)!-1]
+            if !fullScreenOnly || viewController?.view.frame.height == fullHeight {
+                activeViewController = viewController
+            }
         }
         // Now work down through any presented controllers
         while true {
-            if activeViewController?.presentedViewController == nil {
+            if viewController?.presentedViewController == nil {
                 break
             }
-            activeViewController = activeViewController?.presentedViewController
+            viewController = viewController?.presentedViewController
+            if !fullScreenOnly || viewController?.view.frame.height == fullHeight {
+                activeViewController = viewController
+            }
         }
         
         return activeViewController
@@ -437,8 +454,13 @@ class Utility {
                 #endif
             }
             outputMessage = outputMessage + " - \(message)"
-            print(outputMessage)
-            fflush(stdout)
+            if ProcessInfo.processInfo.environment["MULTISIM"] == "TRUE" {
+                // Running multiple simulators - output to system console
+                os_log("%{PUBLIC}@", log:OSLog.debugInfo, type:.info, outputMessage)
+            } else {
+                print(outputMessage)
+                fflush(stdout)
+            }
             #if ContractWhist
             if (Config.rabbitMQUri_DevMode != .amqpServer || Scorecard.adminMode || force) && Config.rabbitMQLogQueue != "" && Config.rabbitMQUri != "" {
                 let scorecard = Scorecard.getScorecard()!
@@ -461,6 +483,14 @@ class Utility {
                 closure()
             }
         }
+    }
+    
+    public static func deviceName() -> String {
+        var result = UIDevice.current.name
+        if result.left(7) == "Custom-" {
+            result = result.mid(8,result.length-7)
+        }
+        return result
     }
     
     public static func getCloudRecordCount(_ table: String, predicate: NSPredicate? = nil, cursor: CKQueryOperation.Cursor? = nil, runningTotal: Int! = nil, completion: ((Int?)->())? = nil) {

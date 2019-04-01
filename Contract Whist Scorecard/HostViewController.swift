@@ -23,7 +23,7 @@ enum InviteStatus {
 }
 
 class HostViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate,
-CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStateDelegate, SearchDelegate {
+CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStateDelegate, CommsRecoveryStateDelegate, SearchDelegate {
 
     // MARK: - Class Properties ======================================================================== -
     
@@ -57,6 +57,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     private var exiting = false
     private var computerPlayers: [Int : ComputerPlayerDelegate]?
     private var firstTime = true
+    private let whisper = Whisper()
     
     private var connectedPlayers: Int {
         get {
@@ -304,9 +305,9 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         }
     }
     
-    // MARK: - Broadcast Service Delegate Overrides ==================================================== -
+    // MARK: - Data Delegate Overrides ==================================================== -
     
-    func didReceiveData(descriptor: String, data: [String : Any?]?, from peer: CommsPeer) {
+    internal func didReceiveData(descriptor: String, data: [String : Any?]?, from peer: CommsPeer) {
         
         Utility.mainThread { [unowned self] in
             self.queue.append(QueueEntry(descriptor: descriptor, data: data, peer: peer))
@@ -314,7 +315,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         self.processQueue()
     }
     
-    func processQueue() {
+    private func processQueue() {
         
         Utility.mainThread { [unowned self] in
             
@@ -342,7 +343,9 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         }
     }
     
-    func connectionReceived(from peer: CommsPeer, info: [String : Any?]?) -> Bool {
+    // MARK: - Connection Delegate handlers ===================================================================== -
+
+    internal func connectionReceived(from peer: CommsPeer, info: [String : Any?]?) -> Bool {
         // Will accept all connections, but some will automatically disconnect with a relevant error message once connection complete
         var playerMO: PlayerMO! = nil
         var name = peer.playerName!
@@ -377,7 +380,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         return true
     }
     
-    func updateFaceTimeAddress(info: [String : Any?]?, playerData: PlayerData) {
+    private func updateFaceTimeAddress(info: [String : Any?]?, playerData: PlayerData) {
         if let address = info?["faceTimeAddress"] {
             playerData.faceTimeAddress = address as! String?
         } else {
@@ -385,7 +388,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         }
     }
     
-    func addPlayer(name: String, email: String, playerMO: PlayerMO?, peer: CommsPeer?, inviteStatus: InviteStatus! = nil, disconnectReason: String? = nil) {
+    private func addPlayer(name: String, email: String, playerMO: PlayerMO?, peer: CommsPeer?, inviteStatus: InviteStatus! = nil, disconnectReason: String? = nil) {
         var disconnectReason = disconnectReason
         
         if disconnectReason == nil {
@@ -413,8 +416,11 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         
     }
     
-    func stateChange(for peer: CommsPeer, reason: String?) {
+    // MARK: - State Delegate handlers ===================================================================== -
+    
+    internal func stateChange(for peer: CommsPeer, reason: String?) {
         Utility.mainThread { [unowned self] in
+            Utility.debugMessage("host", "State change from \(self.currentState(peer: peer)) to \(peer.state)") // TODO Remove
             var row: Int!
             var playerNumber: Int!
             row = self.playerData.index(where: {$0.peer != nil && $0.peer.deviceName == peer.deviceName})
@@ -441,15 +447,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                             }
                         }
                         if !error {
-                            if !self.gameInProgress || self.scorecard.handState == nil {
-                                // Game not started yet - wait
-                                self.scorecard.sendInstruction("wait", to: peer)
-                            } else {
-                                // Game in progress - need to resend state - luckily have what we need in handState
-                                self.scorecard.sendPlay(rounds: self.scorecard.handState.rounds, cards: self.scorecard.handState.cards, bounce: self.scorecard.handState.bounce, bonus2: self.scorecard.handState.bonus2, suits: self.scorecard.handState.suits, to: peer)
-                                self.scorecard.sendScores(to: peer)
-                                self.scorecard.sendHandState(to: peer)
-                            }
+                            self.scorecard.refreshState(to: peer)
                         }
                     }
                 case .notConnected:
@@ -472,7 +470,6 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             self.scorecardButton.isHidden = !ready
             self.continueButton.isHidden = !ready
             self.setInstructions()
-            Utility.debugMessage("host", "recovery: \(self.scorecard.recoveryMode), connected: \(self.connectedPlayers)")
             if (self.scorecard.recoveryMode || self.playingComputer) && self.connectedPlayers == self.scorecard.currentPlayers {
                 // Recovering or playing computer  - go straight to game setup
                 self.setupPlayers()
@@ -492,7 +489,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         }
     }
     
-    func setInstructions() {
+    private func setInstructions() {
         if self.connectionMode == .unknown {
             self.instructionLabel.text = "Choose whether you want to conect with nearby players (same room) or over the internet"
         } else if self.connectedPlayers == scorecard.numberPlayers {
@@ -504,7 +501,18 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         }
     }
     
-    func reflectState(peer: CommsPeer) {
+    private func currentState(peer: CommsPeer) -> CommsConnectionState {
+        // Get current state of a player associated with a device
+        let playerNumber = playerData.index(where: {$0.peer != nil && $0.peer.deviceName == peer.deviceName})
+        if playerNumber != nil {
+            let playerData = self.playerData[playerNumber!]
+            return playerData.peer.state
+        } else {
+            return .notConnected
+        }
+    }
+    
+    private func reflectState(peer: CommsPeer) {
         let playerNumber = playerData.index(where: {$0.peer != nil && $0.peer.deviceName == peer.deviceName})
         if playerNumber != nil {
             let playerData = self.playerData[playerNumber!]
@@ -513,11 +521,13 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         }
     }
     
-    func refreshHostView() {
+    private func refreshHostView() {
         self.hostPlayerTableView.reloadData()
     }
     
-    func handlerStateChange(to state: CommsHandlerState) {
+    // MARK: - Handler State Overrides ===================================================================== -
+    
+    internal func handlerStateChange(to state: CommsHandlerState) {
         if state != self.currentState {
             switch state {
             case .notStarted:
@@ -561,6 +571,17 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             currentState = state
         }
     }
+    
+    // MARK: - Recovery State overrides ===================================================================== -
+
+    func recoveryInProgress(_ recovering: Bool, message: String?) {
+        if recovering {
+            self.whisper.show(message ?? "")
+        } else {
+            self.whisper.hide(message, after: 2.0)
+        }
+    }
+    
     
     // MARK: - TableView Overrides ===================================================================== -
 
@@ -976,6 +997,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         self.scorecard.commsDelegate?.dataDelegate = delegate as! CommsDataDelegate?
         self.scorecard.commsDelegate?.connectionDelegate = delegate as! CommsConnectionDelegate?
         self.scorecard.commsDelegate?.handlerStateDelegate = delegate as! CommsHandlerStateDelegate?
+        self.scorecard.commsDelegate?.recoveryStateDelegate = delegate as! CommsRecoveryStateDelegate?
     }
     
     private func chooseOnlineInvitees() {

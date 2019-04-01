@@ -98,9 +98,9 @@ class Recovery {
     
     func saveLocationAndDate() {
         UserDefaults.standard.set(scorecard.gameLocation.description, forKey: "recoveryLocationText")
-        if scorecard.gameLocation.location != nil {
-            UserDefaults.standard.set(scorecard.gameLocation.location.coordinate.latitude, forKey: "recoveryLocationLatitude")
-            UserDefaults.standard.set(scorecard.gameLocation.location.coordinate.longitude, forKey: "recoveryLocationLongitude")
+        if scorecard.gameLocation.locationSet {
+            UserDefaults.standard.set(scorecard.gameLocation.latitude, forKey: "recoveryLocationLatitude")
+            UserDefaults.standard.set(scorecard.gameLocation.longitude, forKey: "recoveryLocationLongitude")
         }
         UserDefaults.standard.set(scorecard.gameDatePlayed, forKey: "recoveryDatePlayed")
         UserDefaults.standard.set(scorecard.gameUUID, forKey: "recoveryGameUUID")
@@ -190,7 +190,7 @@ class Recovery {
         let latitude = UserDefaults.standard.double(forKey: "recoveryLocationLatitude")
         let longitude = UserDefaults.standard.double(forKey: "recoveryLocationLongitude")
         if latitude != 0 || longitude != 0 {
-            scorecard.gameLocation.location = CLLocation(latitude: latitude, longitude: longitude)
+            scorecard.gameLocation.setLocation(latitude: latitude, longitude: longitude)
         }
         
         // Reload game unique key / date

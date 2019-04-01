@@ -68,9 +68,9 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
         
         self.gameLocation.copy(to: self.newLocation)
         
-        if self.newLocation.description != nil && self.newLocation.location != nil && self.newLocation.description != "" && self.newLocation.description != "Online" {
+        if self.newLocation.description != nil && self.newLocation.locationSet && self.newLocation.description != "" && self.newLocation.description != "Online" {
             // Save last location
-            self.lastLocation = GameLocation(location: self.newLocation.location!, description: self.newLocation.description)
+            self.lastLocation = GameLocation(latitude: self.newLocation.latitude, longitude: self.newLocation.longitude, description: self.newLocation.description)
         }
         
         if self.newLocation.description != "" {
@@ -230,8 +230,8 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         var nearby = false
         // Check this isn't the same location as last time
-        if self.newLocation.location != nil {
-            let distanceInMeters = self.newLocation.location.distance(from: locations[0])
+        if self.newLocation.locationSet {
+            let distanceInMeters = self.newLocation.distance(from: locations[0])
             nearby = (distanceInMeters <= 3000)
         }
         // Update the current location
@@ -248,8 +248,8 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
                     self.historyMode = true
                     self.hideFinishButtons()
                 } else {
-                    if self.historyLocations.count != 0 && self.currentLocation == nil {
-                        self.currentLocation = GameLocation(location: locations[0], description: (placemarks?[0].locality)!)
+                    if self.historyLocations != nil && self.historyLocations.count != 0 && self.currentLocation == nil {
+                        self.currentLocation = GameLocation(latitude: locations[0].coordinate.latitude, longitude: locations[0].coordinate.longitude, description: (placemarks?[0].locality)!)
                         self.currentLocation.subDescription = "Current location"
                         // Add it to the history list
                         Utility.debugMessage("locationManager", "Inserting current location")
@@ -258,7 +258,7 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
                             self.updateSearch()
                         }
                     } else {
-                        self.newLocation = GameLocation(location: locations[0], description: (placemarks?[0].locality)!)
+                        self.newLocation = GameLocation(latitude: locations[0].coordinate.latitude, longitude: locations[0].coordinate.longitude, description: (placemarks?[0].locality)!)
                         self.searchBar.text = placemarks?[0].locality
                         self.dropPin()
                         self.showFinishButtons()
@@ -356,9 +356,9 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
         if self.historyLocations == nil {
             var latitude: CLLocationDegrees = 0.0
             var longitude: CLLocationDegrees = 0.0
-            if self.newLocation.location != nil {
-                latitude = self.newLocation.location.coordinate.latitude
-                longitude = self.newLocation.location.coordinate.longitude
+            if self.newLocation.locationSet {
+                latitude = self.newLocation.latitude
+                longitude = self.newLocation.longitude
             }
             // Load the full list since not got it already
             self.historyLocations = History.getGameLocations(latitude: latitude,
@@ -440,21 +440,20 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
             autoSelect = true
         } else if row < standard {
             // Last location
-            self.newLocation.description = self.lastLocation.description
-            self.newLocation.location = self.lastLocation.location
+            self.newLocation.copy(to: self.lastLocation)
             searchBar.text = self.lastLocation.description
         } else if !historyMode {
             // Searched geocoder location selected
             if geocoderLocations != nil {
                 let locationDescription = getLocationDescription(placemark: geocoderLocations![row-standard])
                 searchBar.text = locationDescription.topRow
-                self.newLocation.location = geocoderLocations![row-standard].location
+                self.newLocation.setLocation(geocoderLocations![row-standard].location!)
                 self.newLocation.description = searchBar.text
             }
         } else {
             // Searched history location selected
             searchBar.text = filteredHistoryLocations[row-standard].description
-            self.newLocation.location = filteredHistoryLocations[row-standard].location
+            filteredHistoryLocations[row-standard].copy(to: self.newLocation)
             self.newLocation.description = searchBar.text
         }
         historyMode = (self.searchBar.text == "")
@@ -466,7 +465,7 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     
     private func dropPin() {
         // Create map annotation - don't do it in test mode since upsets tests
-        if self.newLocation.location != nil {
+        if self.newLocation.locationSet {
             
             let annotation = MKPointAnnotation()
             
@@ -474,7 +473,7 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
             let allAnnotations = self.locationMapView.annotations
             self.locationMapView.removeAnnotations(allAnnotations)
             
-            annotation.coordinate = self.newLocation.location.coordinate
+            annotation.coordinate = CLLocationCoordinate2D(latitude: self.newLocation.latitude, longitude: self.newLocation.longitude)
             self.locationMapView.addAnnotation(annotation)
             
             // Set the zoom level

@@ -20,7 +20,7 @@ enum AppState {
     case connected
 }
 
-class ClientViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate, SearchDelegate, CutDelegate, GamePreviewDelegate, UIPopoverPresentationControllerDelegate {
+class ClientViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate, CommsRecoveryStateDelegate, SearchDelegate, CutDelegate, GamePreviewDelegate, UIPopoverPresentationControllerDelegate {
 
     // MARK: - Class Properties ======================================================================== -
     
@@ -68,6 +68,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     private var invite: Invite!
     private var recoveryMode = false
     private var changePlayerButton: UIButton!
+    private let whisper = Whisper()
     
     // MARK: - IB Outlets ============================================================================== -
     
@@ -205,9 +206,9 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         self.createConnections()
     }
 
-    // MARK: - Comms Delegate Overrides ==================================================== -
+    // MARK: - Data Delegate Handlers ==================================================== -
     
-    func didReceiveData(descriptor: String, data: [String : Any?]?, from peer: CommsPeer) {
+    internal func didReceiveData(descriptor: String, data: [String : Any?]?, from peer: CommsPeer) {
         Utility.mainThread { [unowned self] in
             self.scorecard.commsDelegate?.debugMessage("\(descriptor) received from \(peer.deviceName)")
             self.queue.append(QueueEntry(descriptor: descriptor, data: data, peer: peer))
@@ -215,7 +216,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         self.processQueue()
     }
     
-    func processQueue() {
+    private func processQueue() {
         
         Utility.mainThread { [unowned self] in
             var queueText = ""
@@ -417,24 +418,26 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                     
                 case "handState":
                     // Updated state to re-sync after a disconnect - should already have a scorepad view controller so just fill in state
-                    var lastCards: [Card]!
-                    var lastToLead: Int!
-                    let cardNumbers = data!["cards"] as! [Int]
-                    let hand = Hand(fromNumbers: cardNumbers, sorted: true)
-                    let trick = data!["trick"] as! Int
-                    let made = data!["made"] as! [Int]
-                    let twos = data!["twos"] as! [Int]
-                    let trickCards = Hand(fromNumbers: data!["trickCards"] as! [Int]).cards
-                    if data!["lastCards"] != nil {
-                        lastCards = Hand(fromNumbers: data!["lastCards"] as! [Int]).cards
+                    if self.commsPurpose == .playing {
+                        var lastCards: [Card]!
+                        var lastToLead: Int!
+                        let cardNumbers = data!["cards"] as! [Int]
+                        let hand = Hand(fromNumbers: cardNumbers, sorted: true)
+                        let trick = data!["trick"] as! Int
+                        let made = data!["made"] as! [Int]
+                        let twos = data!["twos"] as! [Int]
+                        let trickCards = Hand(fromNumbers: data!["trickCards"] as! [Int]).cards
+                        if data!["lastCards"] != nil {
+                            lastCards = Hand(fromNumbers: data!["lastCards"] as! [Int]).cards
+                        }
+                        let toLead = data!["toLead"] as! Int
+                        if data!["lastToLead"] != nil && data!["lastToLead"] as! Int >= 0 {
+                            lastToLead = data!["lastToLead"] as? Int
+                        }
+                        let round = data!["round"] as! Int
+                        
+                        self.playHand(peer: peer, dismiss: true, hand: hand, round: round, trick: trick, made: made, twos: twos, trickCards: trickCards, toLead: toLead, lastCards: lastCards, lastToLead: lastToLead)
                     }
-                    let toLead = data!["toLead"] as! Int
-                    if data!["lastToLead"] != nil && data!["lastToLead"] as! Int >= 0 {
-                        lastToLead = data!["lastToLead"] as? Int
-                    }
-                    let round = data!["round"] as! Int
-                    
-                    self.playHand(peer: peer, dismiss: true, hand: hand, round: round, trick: trick, made: made, twos: twos, trickCards: trickCards, toLead: toLead, lastCards: lastCards, lastToLead: lastToLead)
                     
                 // Special cases which are not transmitted but added to queue locally
                     
@@ -500,7 +503,9 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         self.performSegue(withIdentifier: "showClientScorepad", sender: self)
     }
     
-    func peerFound(peer: CommsPeer) {
+    // MARK: - Browser Delegate handlers ===================================================================== -
+    
+    internal func peerFound(peer: CommsPeer) {
         Utility.mainThread { [unowned self] in
             // Check if already got this device - if so disconnect it and replace it
 
@@ -529,34 +534,33 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    func peerLost(peer: CommsPeer) {
+    internal func peerLost(peer: CommsPeer) {
         Utility.mainThread { [unowned self] in
             self.removeEntry(peer: peer)
             self.setInstructions()
         }
     }
     
-    func appStateChange(to newState: AppState) {
-        if newState != self.appState {
-            self.appState = newState
-            if newState == .notConnected {
-                self.scheduleRefresh()
-            } else {
-                self.clearSchedule()
-            }
-        }
+    internal func error(_ message: String) {
+       // Ignore - should reconnect anyway
     }
     
-    func stateChange(for peer: CommsPeer, reason: String?) {
+    // MARK: - State Delegate handlers ===================================================================== -
+    
+    internal func stateChange(for peer: CommsPeer, reason: String?) {
         Utility.mainThread { [unowned self] in
+            let currentState = self.currentState(peer: peer)
+            Utility.debugMessage("host", "State change from \(self.currentState(peer: peer)) to \(peer.state)") // TODO Remove
             if peer.state == .notConnected {
                 self.appStateChange(to: .notConnected)
                 self.changePlayerAvailable()
-                self.dismissAll(reason != nil, reason: reason ?? "", completion: {
+                self.dismissAll(reason: reason ?? "", completion: {
                     self.scorecard.commsDelegate?.start(email: self.thisPlayer)
                     self.reflectState(peer: peer)
                     UIApplication.shared.isIdleTimerDisabled = false
                 })
+                Utility.debugMessage("client", "Showing whisper")
+                self.whisper.show("Connection lost\nRestoring...")
             } else {
                 self.changePlayerAvailable()
                 if peer.state == .connected && self.alertController != nil {
@@ -569,9 +573,25 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                 self.selectFramework(framework: peer.framework)
                 self.reflectState(peer: peer)
                 UIApplication.shared.isIdleTimerDisabled = true
+                if peer.state == .connected && currentState != .connected {
+                    Utility.debugMessage("client", "Hiding whisper")
+                    self.whisper.hide("Connection restored", after: 2.0)
+                }
             }
         }
     }
+   
+    // MARK: - Recovery State overrides ===================================================================== -
+    
+    func recoveryInProgress(_ recovering: Bool, message: String?) {
+        if recovering {
+            self.whisper.show(message ?? "")
+        } else {
+            self.whisper.hide(message, after: 2.0)
+        }
+    }
+    
+    // MARK: - Helper routines ===================================================================== -
     
     private func restart() {
         self.scorepadViewController = nil
@@ -592,7 +612,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
         if self.scorecard.onlineEnabled && self.appState == .notConnected {
             self.rabbitMQClient?.stop()
-            self.rabbitMQClient?.start(email: self.thisPlayer)
+            self.rabbitMQClient?.start(email: self.thisPlayer, recoveryMode: self.recoveryMode)
             self.clientTableView.reloadRows(at: [IndexPath(row: 0, section: playerSection)], with: .automatic)
         }
     }
@@ -609,6 +629,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             self.multipeerClient?.stateDelegate = self
             self.multipeerClient?.dataDelegate = self
             self.multipeerClient?.browserDelegate = self
+            self.multipeerClient?.recoveryStateDelegate = self
             self.multipeerClient?.start(email: self.thisPlayer, recoveryMode: self.recoveryMode, matchDeviceName: self.matchDeviceName)
         }
         
@@ -618,11 +639,12 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             self.rabbitMQClient?.stateDelegate = self
             self.rabbitMQClient?.dataDelegate = self
             self.rabbitMQClient?.browserDelegate = self
+            self.rabbitMQClient?.recoveryStateDelegate = self
             self.rabbitMQClient?.start(email: self.thisPlayer, recoveryMode: self.recoveryMode, matchDeviceName: self.matchDeviceName)
         }
     }
     
-    func connect(peer: CommsPeer, faceTimeAddress: String?) -> Bool {
+    private func connect(peer: CommsPeer, faceTimeAddress: String?) -> Bool {
         var playerName: String!
         var context: [String : String]? = [:]
         
@@ -646,7 +668,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         return true
     }
     
-    func selectFramework(framework: CommsConnectionFramework) {
+    private func selectFramework(framework: CommsConnectionFramework) {
         // Wire up the selected connection
         switch framework {
         case .multipeer:
@@ -658,7 +680,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    func reflectState(peer: CommsPeer) {
+    private func reflectState(peer: CommsPeer) {
         if let combinedIndex = available.index(where: {$0.deviceName == peer.deviceName && $0.framework == peer.framework}) {
             let availableFound = self.available[combinedIndex]
             availableFound.connecting = false
@@ -669,15 +691,19 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
     }
 
-    func error(_ message: String) {
-        Utility.getActiveViewController()?.alertMessage(message, title: "Connected Devices", okHandler: {
-            self.exitClient()
-        })
+    private func currentState(peer: CommsPeer) -> CommsConnectionState {
+        // Get current state of a player associated with a device
+        if let combinedIndex = available.index(where: {$0.deviceName == peer.deviceName && $0.framework == peer.framework}) {
+            return self.available[combinedIndex].peer.state
+        } else {
+            return .notConnected
+        }
     }
-
+    
+    
     // MARK: - Cut for dealer delegate routines ===================================================================== -
     
-    func cutComplete() {
+    internal func cutComplete() {
         if self.gamePreviewViewController != nil {
             self.gamePreviewViewController.cutDelegate = nil
         }
@@ -687,14 +713,14 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     // MARK: - Game Setup delegate routines ============================================================ -
     
-    func gamePreviewComplete() {
+    internal func gamePreviewComplete() {
         self.gamePreviewViewController?.delegate = nil
         self.gamePreviewViewController = nil
     }
     
     // MARK: - TableView Overrides ===================================================================== -
     
-    func numberOfSections(in tableView: UITableView) -> Int {
+    internal func numberOfSections(in tableView: UITableView) -> Int {
         if commsPurpose == .playing {
             return 2
         } else {
@@ -702,7 +728,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    func tableView(_ tableView: UITableView,
+    internal func tableView(_ tableView: UITableView,
                    titleForHeaderInSection section: Int) -> String? {
         if section == peerSection {
             return "Select a device from the list below"
@@ -711,7 +737,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == peerSection {
             return available.count
         } else {
@@ -719,21 +745,21 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    internal func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 40
     }
     
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+    internal func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let header = view as! UITableViewHeaderFooterView
         ScorecardUI.sectionHeaderStyleView(header.backgroundView!)
         header.textLabel!.font = UIFont.boldSystemFont(ofSize: 18.0)
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    internal func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: ClientTableCell!
         if self.commsPurpose != .playing || indexPath.section == self.peerSection {
             // List of remote peers
@@ -766,7 +792,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                         cell.stateLabel.text = "Offering to host a nearby game"
                     }
                 }
-            case .connected:
+            case .connected, .recovering:
                 var message: String
                 message = "Connected"
                 if self.appState == .waiting {
@@ -825,7 +851,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         return cell!
     }
     
-    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+    internal func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         let availableFound = self.available[indexPath.row]
         if (appState == .notConnected && availableFound.state == .notConnected) && indexPath.section == self.peerSection {
             return indexPath
@@ -834,7 +860,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    internal func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if indexPath.section == self.peerSection {
             let availableFound = available[indexPath.row]
@@ -851,7 +877,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    func checkFaceTime(peer: CommsPeer, completion: @escaping (String?)->()) {
+    private func checkFaceTime(peer: CommsPeer, completion: @escaping (String?)->()) {
         if peer.proximity == .online && (self.scorecard.settingFaceTimeAddress ?? "") != "" && Utility.faceTimeAvailable() {
             self.alertDecision("\nWould you like the host to call you back on FaceTime at '\(self.scorecard.settingFaceTimeAddress!)'?\n\nNote that this will make this address visible to the host",
                 title: "FaceTime",
@@ -870,7 +896,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     // MARK: - Search delegate handlers ================================================================ -
     
-    func returnPlayers(complete: Bool, playerMO: [PlayerMO]?, info: [String : Any?]?) {
+    internal func returnPlayers(complete: Bool, playerMO: [PlayerMO]?, info: [String : Any?]?) {
         // Save player as default for device
         if !complete {
             // Cancel taken - exit if no player
@@ -895,7 +921,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     // MARK: - Popover Overrides ================================================================ -
     
-    func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
+    internal func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
         let viewController = popoverPresentationController.presentedViewController
         if viewController is SearchViewController {
             self.returnPlayers(complete: false, playerMO: nil, info: nil)
@@ -904,6 +930,17 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     // MARK: - Utility Routines ======================================================================== -
 
+    private func appStateChange(to newState: AppState) {
+        if newState != self.appState {
+            self.appState = newState
+            if newState == .notConnected {
+                self.scheduleRefresh()
+            } else {
+                self.clearSchedule()
+            }
+        }
+    }
+    
     private func scheduleRefresh() {
         self.timer = Timer.scheduledTimer(
             timeInterval: TimeInterval(10),
@@ -1032,11 +1069,12 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         self.clearHandlerCompleteNotification(observer: self.clientHandlerObserver)
     }
     
-    public func finishConnection(_ commsDelegate: CommsHandlerDelegate?) {
+    private func finishConnection(_ commsDelegate: CommsHandlerDelegate?) {
         commsDelegate?.stop()
         commsDelegate?.browserDelegate = nil
         commsDelegate?.dataDelegate = self.scorecard
         commsDelegate?.stateDelegate = self.scorecard
+        commsDelegate?.recoveryStateDelegate = nil
     }
     
     private func exitClient(resetRecovery: Bool = true) {

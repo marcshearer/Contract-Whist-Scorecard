@@ -410,14 +410,23 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     
     public func refreshState(to commsPeer: CommsPeer! = nil) {
         
-        if self.gameInProgress && self.handState != nil {
-            // Game in progress - need to resend state - luckily have what we need in handState
-            self.sendPlay(rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce, bonus2: self.handState.bonus2, suits: self.handState.suits, to: commsPeer)
-            if self.isHosting {
+        if self.isHosting {
+            // Hosting online game
+            
+            if !self.gameInProgress || self.handState == nil {
+                // Game not started yet - wait
+                self.sendInstruction("wait", to: commsPeer)
+            } else {
+                // Game in progress - need to resend state - luckily have what we need in handState
+                self.sendPlay(rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce, bonus2: self.handState.bonus2, suits: self.handState.suits, to: commsPeer)
                 self.sendScores(to: commsPeer)
                 self.sendHandState(to: commsPeer)
             }
+        } else if self.isSharing {
+            // Sharing
+            self.sendScores(to: commsPeer)
         }
+
     }
     
     public func processScores(descriptor: String, data: [String : Any?], bonus2: Bool) -> Int {

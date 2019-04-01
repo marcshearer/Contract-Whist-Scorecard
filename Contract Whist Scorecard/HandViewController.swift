@@ -333,7 +333,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             // Format card
             cell.playedCardWidthConstraint.constant = tabletopCardWidth
             cell.playedCardHeightConstraint.constant = tabletopCardHeight
-            ScorecardUI.moreRoundCorners(cell.cardView)
+            ScorecardUI.roundCorners(cell.cardView, percent: 10)
             cell.cardLabel.font = UIFont.systemFont(ofSize: self.playedCardFontSize)
             
             // Show card
@@ -366,7 +366,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             
             cell.cardLabel.attributedText = self.collectionHand.handSuits[suit-1].cards[card - 1].toAttributedString()
             cell.cardLabel.font = UIFont.systemFont(ofSize: self.handCardFontSize)
-            ScorecardUI.moreRoundCorners(cell.cardView)
+            ScorecardUI.roundCorners(cell.cardView, percent: 10)
             cell.tag = self.collectionHand.handSuits[suit-1].cards[card - 1].toNumber()
             
             return cell

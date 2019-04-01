@@ -84,6 +84,7 @@
 		B288FAC21FB80A0900633FD7 /* Test Utility Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B288FAC11FB80A0900633FD7 /* Test Utility Class.swift */; };
 		B288FAC41FB80A4F00633FD7 /* Whist Test Utility Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B288FAC31FB80A4F00633FD7 /* Whist Test Utility Class.swift */; };
 		B28DFC2D1F79618700E991E4 /* Config Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28DFC2C1F79618700E991E4 /* Config Class.swift */; };
+		B29AD706224F88060087160B /* Whisper Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29AD705224F88060087160B /* Whisper Class.swift */; };
 		B29FFF31223BA302002C01FE /* Inset Padding.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29FFF30223BA302002C01FE /* Inset Padding.swift */; };
 		B2B180122110128C008D3BAA /* (null) in Sources */ = {isa = PBXBuildFile; };
 		B2B180142114AD92008D3BAA /* (null) in Sources */ = {isa = PBXBuildFile; };
@@ -99,6 +100,8 @@
 		B2B7550B1E5DEA6A00B1313B /* Reconcile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B7550A1E5DEA6A00B1313B /* Reconcile.swift */; };
 		B2B7550D1E619A3F00B1313B /* DataAdmin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B7550C1E619A3F00B1313B /* DataAdmin.swift */; };
 		B2BC51C71F7B5E8C0065F07D /* String Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BC51C61F7B5E8C0065F07D /* String Extensions.swift */; };
+		B2BD3EB2224D101500697656 /* launch_multiple_simulators.sh in Resources */ = {isa = PBXBuildFile; fileRef = B2BD3EB0224D101400697656 /* launch_multiple_simulators.sh */; };
+		B2BD3EB5224D1A0F00697656 /* MyDevices.sh in Resources */ = {isa = PBXBuildFile; fileRef = B2BD3EB4224D1A0F00697656 /* MyDevices.sh */; };
 		B2C051041EDF194C009DE37F /* Multipeeer Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C051031EDF194C009DE37F /* Multipeeer Class.swift */; };
 		B2C054781FB8B55700846F6E /* ConfirmCountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */; };
 		B2D2AAB01E1FF8A600E211A9 /* SyncViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D2AAAF1E1FF8A600E211A9 /* SyncViewController.swift */; };
@@ -265,6 +268,7 @@
 		B288FAC11FB80A0900633FD7 /* Test Utility Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Test Utility Class.swift"; sourceTree = "<group>"; };
 		B288FAC31FB80A4F00633FD7 /* Whist Test Utility Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Whist Test Utility Class.swift"; sourceTree = "<group>"; };
 		B28DFC2C1F79618700E991E4 /* Config Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Config Class.swift"; sourceTree = "<group>"; };
+		B29AD705224F88060087160B /* Whisper Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Whisper Class.swift"; sourceTree = "<group>"; };
 		B29FFF30223BA302002C01FE /* Inset Padding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Inset Padding.swift"; sourceTree = "<group>"; };
 		B2B1801C21195FB0008D3BAA /* Computer Bidding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Computer Bidding.swift"; sourceTree = "<group>"; };
 		B2B1801E21195FBC008D3BAA /* Computer Player Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Computer Player Class.swift"; sourceTree = "<group>"; };
@@ -278,6 +282,8 @@
 		B2B7550A1E5DEA6A00B1313B /* Reconcile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reconcile.swift; sourceTree = "<group>"; };
 		B2B7550C1E619A3F00B1313B /* DataAdmin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataAdmin.swift; sourceTree = "<group>"; };
 		B2BC51C61F7B5E8C0065F07D /* String Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String Extensions.swift"; sourceTree = "<group>"; };
+		B2BD3EB0224D101400697656 /* launch_multiple_simulators.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = launch_multiple_simulators.sh; sourceTree = "<group>"; };
+		B2BD3EB4224D1A0F00697656 /* MyDevices.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = MyDevices.sh; sourceTree = "<group>"; };
 		B2C051031EDF194C009DE37F /* Multipeeer Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Multipeeer Class.swift"; sourceTree = "<group>"; };
 		B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmCountViewController.swift; sourceTree = "<group>"; };
 		B2D2AAAF1E1FF8A600E211A9 /* SyncViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncViewController.swift; sourceTree = "<group>"; };
@@ -696,6 +702,15 @@
 			name = Graph;
 			sourceTree = "<group>";
 		};
+		B23BE1C42251AC4C007E909C /* Launch Multiple Simulators */ = {
+			isa = PBXGroup;
+			children = (
+				B2BD3EB0224D101400697656 /* launch_multiple_simulators.sh */,
+				B2BD3EB4224D1A0F00697656 /* MyDevices.sh */,
+			);
+			path = "Launch Multiple Simulators";
+			sourceTree = "<group>";
+		};
 		B27B1FE81F9B55ED00ED6FFF /* Contract Whist Scorecard UI Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -770,6 +785,7 @@
 				B20A66F91E2385B500E75190 /* Reachability.swift */,
 				B2DD5D7B1ED1A87600725B55 /* Graph View Class.swift */,
 				B24AABE31EC4DC5F000D34B0 /* Core Data Class.swift */,
+				B29AD705224F88060087160B /* Whisper Class.swift */,
 			);
 			name = "Utility Classes";
 			sourceTree = "<group>";
@@ -850,6 +866,7 @@
 				B214FB891FCADC7B00F4F39B /* Contract Whist Watch */,
 				B214FB981FCADC7B00F4F39B /* Contract Whist Watch Extension */,
 				B27B1FE81F9B55ED00ED6FFF /* Contract Whist Scorecard UI Tests */,
+				B23BE1C42251AC4C007E909C /* Launch Multiple Simulators */,
 				B20DA0501E1FED040040221D /* Frameworks */,
 				F45B91F5DB62D9096E241C8F /* Pods */,
 			);
@@ -996,6 +1013,7 @@
 				CC4CC0F31DEADC32007FB24F /* Resources */,
 				07C8E067D608DAF72309C445 /* [CP] Embed Pods Frameworks */,
 				B214FBAD1FCADC7B00F4F39B /* Embed Watch Content */,
+				B2BD3EAF224D09C600697656 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1061,6 +1079,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -1130,6 +1149,7 @@
 				B227892A1FB885AC009BABCA /* ConfirmCountViewController.storyboard in Resources */,
 				CC4CC1061DEADC32007FB24F /* LaunchScreen.storyboard in Resources */,
 				B22789071FB83AC4009BABCA /* WalkthroughViewController.storyboard in Resources */,
+				B2BD3EB2224D101500697656 /* launch_multiple_simulators.sh in Resources */,
 				B20DA04A1E164EE60040221D /* Section headings in Resources */,
 				B2DD5D7A1ECE3C8800725B55 /* Assets.xcassets in Resources */,
 				B227891E1FB84F66009BABCA /* LocationViewController.storyboard in Resources */,
@@ -1140,6 +1160,7 @@
 				B227893C1FB8932A009BABCA /* SyncViewController.storyboard in Resources */,
 				B22789391FB8924C009BABCA /* HighScoresViewController.storyboard in Resources */,
 				B22789181FB84A75009BABCA /* RoundSummaryViewController.storyboard in Resources */,
+				B2BD3EB5224D1A0F00697656 /* MyDevices.sh in Resources */,
 				CC4CC0FE1DEADC32007FB24F /* Main.storyboard in Resources */,
 				B202A06A1FD119BF0070D5DC /* OverrideViewController.storyboard in Resources */,
 				B22789121FB844CD009BABCA /* ScorepadViewController.storyboard in Resources */,
@@ -1189,6 +1210,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		B2BD3EAF224D09C600697656 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "custom_sim=`xcrun simctl list | grep 'Custom Simulators' | awk -F'[()]' '{print $2}'`\nif [ ! -z \"${custom_sim}\" ] && [ \"${TARGET_DEVICE_IDENTIFIER}\" = \"${custom_sim}\" ]; then\n/bin/sh launch_multiple_simulators.sh\nfi\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1235,6 +1273,7 @@
 				B28033341F7E046B00CF4696 /* Sync Class.swift in Sources */,
 				B24AABE21EC0BC08000D34B0 /* Upgrade.swift in Sources */,
 				B2EA98E51E28609A000B7E54 /* WalkthroughPageViewController.swift in Sources */,
+				B29AD706224F88060087160B /* Whisper Class.swift in Sources */,
 				B24AABE01EC07274000D34B0 /* Backup.swift in Sources */,
 				493D3CD61DFC58730075D658 /* SettingsViewController.swift in Sources */,
 				B28DFC2D1F79618700E991E4 /* Config Class.swift in Sources */,

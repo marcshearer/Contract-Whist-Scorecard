@@ -27,19 +27,17 @@ class ScorecardUI {
     static let bannerColor = emphasisColor
     static let tableTopColor = UIColor(red: 0.0, green: 0.635, blue: 0.0, alpha: 1.0)
 
-    class func roundCorners(_ view: UIView) {
-        view.layer.cornerRadius = 5
+    class func roundCorners(_ view: UIView, percent: CGFloat = 0.0) {
+        if percent == 0.0 {
+            view.layer.cornerRadius = 5
+        } else {
+            view.layer.cornerRadius = view.layer.bounds.height * (percent/100.0)
+        }
         view.layer.masksToBounds = true
     }
     
-    class func moreRoundCorners(_ view: UIView) {
-        view.layer.cornerRadius = view.layer.bounds.height / 10
-        view.layer.masksToBounds = true
-    }
- 
     class func veryRoundCorners(_ view: UIView, radius: CGFloat = 0.0) {
-        view.layer.cornerRadius = (radius == 0.0 ? view.layer.bounds.height / 2 : radius)
-        view.layer.masksToBounds = true
+        ScorecardUI.roundCorners(view, percent: 50.0)
     }
     
     class func sectionHeadingStyle(_ cell: UITableViewCell) {

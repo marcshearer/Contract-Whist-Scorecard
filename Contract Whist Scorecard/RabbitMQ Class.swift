@@ -5,12 +5,12 @@
 //  Created by Marc Shearer on 19/09/2017.
 //  Copyright © 2017 Marc Shearer. All rights reserved.
 //
-//  Class to implement gaming/sharing between devices using Multipeer connectivity
+//  Class to implement gaming/sharing between devices using RabbitMQ connectivity
 
 import Foundation
 import RMQClient
 
-class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsStateDelegate, RabbitMQBroadcastDelegate {
+class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsStateDelegate, CommsHandlerStateDelegate, CommsRecoveryStateDelegate, RabbitMQBroadcastDelegate {
     
     // Main class variables
     public let connectionMode: CommsConnectionMode = .invite
@@ -59,6 +59,7 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
     public weak var dataDelegate: CommsDataDelegate!
     public weak var connectionDelegate: CommsConnectionDelegate!
     public weak var handlerStateDelegate: CommsHandlerStateDelegate!
+    public weak var recoveryStateDelegate: CommsRecoveryStateDelegate!
     
     // Other state variables
     private var rabbitMQQueueList: [String : RabbitMQQueue] = [:]           // [ queueUUID : rabbitMQQueue ]
@@ -103,16 +104,16 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
     }
     
     public func reset() {
-        if self.connectionType == .server || self.connectionType == .client {
+        // Used by server to reset all queues
+        if self.connectionType == .server {
             self.debugMessage("Resetting RabbitMQ")
             // Disconnect from any existing peers - they should reconnect
             self.sendReset(mode: "reset")
         }
     }
-            
-
     
     public func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, context: [String : String]? = nil, reconnect: Bool = true) -> Bool{
+        // Used by client to connect to a queue
         var connectSuccess = false
         self.debugMessage("Connect to \(commsPeer.deviceName)")
         let deviceName = commsPeer.deviceName
@@ -121,13 +122,12 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
         }
         if connectSuccess {
             self._connectionDevice = commsPeer.deviceName
-        } else {
-            Utility.getActiveViewController()?.alertMessage("Error connecting to device", title: "Error")
         }
         return connectSuccess
     }
     
     internal func handlerStateChange(to state: CommsHandlerState) {
+        // Record state and pass it up
         self._handlerState = state
         self.handlerStateDelegate?.handlerStateChange(to: state)
     }
@@ -160,6 +160,7 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
     }
     
     func stateChange(for peer: CommsPeer, reason: String?) {
+        Utility.debugMessage("rabbitMQService", "State change to \(peer.state)") // TODO Remove
         self.stateDelegate?.stateChange(for: peer, reason: reason)
     }
     
@@ -175,12 +176,12 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
             }
             if !connected {
                 // Wasn't connected so reload invites
-                self.checkOnlineInvites(email: self.inviteEmail, checkExpiry: !self.recoveryMode)
+                self.clientCheckOnlineInvites(email: self.inviteEmail, checkExpiry: !self.recoveryMode)
             }
             if let mode = data as? String {
                 if mode != "stop" {
                     queue.forEachPeer { (rabbitMQPeer) in
-                        if rabbitMQPeer.reconnect {
+                        if rabbitMQPeer.currentReconnect {
                             let playerName = Scorecard.nameFromEmail(self.inviteEmail)
                             _ = rabbitMQPeer.connect(to: rabbitMQPeer.commsPeer,
                                                  playerEmail: self.inviteEmail,
@@ -221,6 +222,10 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
             outputMessage = outputMessage + " Device: \(device)"
         }
         Utility.debugMessage("rabbitMQ", outputMessage, force: force)
+    }
+    
+    internal func recoveryInProgress(_ recovering: Bool, message: String?) {
+        self.recoveryStateDelegate?.recoveryInProgress(recovering, message: message)
     }
     
     // MARK: - Queue Reset Routines ================================================================= -
@@ -305,10 +310,10 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
     private func startClient(email: String! = nil) {
         self.debugMessage("Start Client \(self.connectionPurpose)")
         // Set observer to handle online invitation notification
-        self.clearOnlineInviteNotifications(observer: self.onlineInviteObserver)
-        self.onlineInviteObserver = self.onlineInviteNotification()
+        self.clientClearOnlineInviteNotifications(observer: self.onlineInviteObserver)
+        self.onlineInviteObserver = self.clientOnlineInviteNotification()
         // Check current invites
-        self.checkOnlineInvites(email: email, checkExpiry: !self.recoveryMode)
+        self.clientCheckOnlineInvites(email: email, checkExpiry: !self.recoveryMode)
         // Notify state change
         self.handlerStateChange(to: .browsing)
     }
@@ -317,7 +322,7 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
         // Disconnecting queues will disconnect all peers
         self.debugMessage("Stop Client \(self.connectionPurpose)")
         // Disable observer
-        self.clearOnlineInviteNotifications(observer: self.onlineInviteObserver)
+        self.clientClearOnlineInviteNotifications(observer: self.onlineInviteObserver)
         // Disconnect peers
         for (deviceName, queue) in self.rabbitMQQueueList {
             queue.disconnect()
@@ -342,15 +347,15 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
         self.rabbitMQQueueList = [:]
     }
     
-    // MARK: - Online Invites ========================================================================== -
+    // MARK: - Online Invites - Client checking for current invites ========================================= -
     
-    private func checkOnlineInvites(email: String, checkExpiry: Bool = true) {
+    private func clientCheckOnlineInvites(email: String, checkExpiry: Bool = true) {
         self.inviteEmail = email
         self.invite = Invite()
-        self.invite.checkInvitations(to: self.inviteEmail, checkExpiry: checkExpiry, completion: self.checkInvitationsCompletion)
+        self.invite.checkInvitations(to: self.inviteEmail, checkExpiry: checkExpiry, completion: self.clientCheckInvitationsCompletion)
     }
     
-    internal func checkInvitationsCompletion(_ success: Bool, _ message: String?, _ invited: [InviteReceived]?) {
+    internal func clientCheckInvitationsCompletion(_ success: Bool, _ message: String?, _ invited: [InviteReceived]?) {
         // Response to check for invitations in client
         if !success {
             // Error - need to remove all peers
@@ -390,7 +395,7 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
                             // Notify delegate
                             self.browserDelegate?.peerFound(peer: rabbitMQPeer.commsPeer)
                             // Auto-reconnect if reconnect flag is set or recovering
-                            if rabbitMQPeer.reconnect || self.recoveryMode {
+                            if rabbitMQPeer.currentReconnect || self.recoveryMode {
                                 let playerName = Scorecard.nameFromEmail(self.inviteEmail)
                                 _ = self.connect(to: rabbitMQPeer.commsPeer,
                                                  playerEmail: self.inviteEmail,
@@ -414,20 +419,20 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
         }
     }
     
-    private func onlineInviteNotification() -> NSObjectProtocol? {
+    private func clientOnlineInviteNotification() -> NSObjectProtocol? {
         // Add new observer
         let observer = NotificationCenter.default.addObserver(forName: .onlineInviteReceived, object: nil, queue: nil) {
             (notification) in
             // Refresh online games - give iCloud a second to catch up!
             Utility.executeAfter(delay: 2, completion: { [unowned self] in
                 self.debugMessage("Notification received")
-                self.checkOnlineInvites(email: self.inviteEmail)
+                self.clientCheckOnlineInvites(email: self.inviteEmail)
             })
         }
         return observer
     }
     
-    private func clearOnlineInviteNotifications(observer: NSObjectProtocol?) {
+    private func clientClearOnlineInviteNotifications(observer: NSObjectProtocol?) {
         if observer != nil {
             // Remove any previous notification handler
             NotificationCenter.default.removeObserver(observer!)
@@ -454,9 +459,15 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
         return rabbitMQPeer
     }
     
+    public func forEachQueue(do execute: (RabbitMQQueue)->()) {
+        for (_, rabbitMQQueue) in rabbitMQQueueList {
+            execute(rabbitMQQueue)
+        }
+    }
+    
     private func forEachPeer(do execute: (RabbitMQPeer)->()) {
-        for (_, queue) in rabbitMQQueueList {
-            queue.forEachPeer { (rabbitMQPeer) in
+        forEachQueue { (rabbitMQQueue) in
+            rabbitMQQueue.forEachPeer { (rabbitMQPeer) in
                 execute(rabbitMQPeer)
             }
         }
@@ -483,6 +494,8 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
 
 // MARK: RabbitMQQueue Class ==========================================================
 
+// Note queues are only created on the server - clients connect remotely to them
+
 public protocol RabbitMQBroadcastDelegate : class {
     func didReceiveBroadcast(descriptor: String, data: Any?, from queue: RabbitMQQueue)
 }
@@ -501,8 +514,9 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
     private var rabbitMQPeerList: [String: RabbitMQPeer] = [:]               // [deviceName: RabbitMQPeer]
     private var connectionDelegate: [String : CommsConnectionDelegate] = [:] // [deviceName : CommsConnectionDelegate]
     private var dataDelegate: [String : CommsDataDelegate?] = [:]            // [deviceName : CommsDataDelegate]
+    public weak var recoveryStateDelegate: CommsRecoveryStateDelegate?
     public weak var messageDelegate: RabbitMQBroadcastDelegate?
- 
+    
     private var _queueUUID: String!
     public var queueUUID: String! {
         get {
@@ -512,20 +526,27 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
     
     init(from parent: RabbitMQService, queueUUID: String, filterBroadcast: String! = nil) {
         self.parent = parent
+        self.recoveryStateDelegate = parent
         self.filterBroadcast = filterBroadcast
         self._queueUUID = queueUUID
         super.init()
-        self.connection = RMQConnection(uri: self.rabbitMQUri, delegate: self)
+        self.connection = RMQConnection(uri: self.rabbitMQUri, delegate: self, recoverAfter: 2.0)
         connection.start()
-        self.channel = self.connection.createChannel()
-        self.queue = self.channel.queue("", options: .exclusive)
-        self.exchange = self.channel.fanout(queueUUID)
-        self.queue.bind(self.exchange)
-        self.queue.subscribe({ [weak self] (_ message: RMQMessage) -> Void in
-            Utility.mainThread {
-                self?.didReceiveData(message.body)
-            }
-        })
+        self.createChannel()
+    }
+    
+    private func createChannel() {
+        if let connection = self.connection {
+            self.channel = connection.createChannel()
+            self.queue = self.channel.queue("")
+            self.exchange = self.channel.fanout(queueUUID)
+            self.queue.bind(self.exchange)
+            self.queue.subscribe({ [weak self] (_ message: RMQMessage) -> Void in
+                Utility.mainThread {
+                    self?.didReceiveData(message.body)
+                }
+            })
+        }
     }
     
     public func disconnect() {
@@ -547,7 +568,7 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
         self.rabbitMQPeerList = [:]
     }
     
-    public func attach(from rabbitMQPeer: RabbitMQPeer) {
+    fileprivate func attach(from rabbitMQPeer: RabbitMQPeer) {
         // Set up delegates
         self.dataDelegate[rabbitMQPeer.deviceName] = rabbitMQPeer
         self.connectionDelegate[rabbitMQPeer.deviceName] = rabbitMQPeer
@@ -555,7 +576,7 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
         self.rabbitMQPeerList[rabbitMQPeer.deviceName] = rabbitMQPeer
     }
     
-    public func detach(from rabbitMQPeer: RabbitMQPeer) {
+    fileprivate func detach(from rabbitMQPeer: RabbitMQPeer) {
         self.dataDelegate[rabbitMQPeer.deviceName] = nil
         self.connectionDelegate[rabbitMQPeer.deviceName] = nil
         self.rabbitMQPeerList[rabbitMQPeer.deviceName] = nil
@@ -635,62 +656,116 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
         }
     }
     
-    public func forEachPeer(do execute: (RabbitMQPeer)->()) {
+    fileprivate func forEachPeer(do execute: (RabbitMQPeer)->()) {
         for (_, rabbitMQPeer) in rabbitMQPeerList {
             execute(rabbitMQPeer)
         }
     }
     
-    public func findPeer(deviceName: String) -> RabbitMQPeer? {
+    fileprivate func findPeer(deviceName: String) -> RabbitMQPeer? {
         return self.rabbitMQPeerList[deviceName]
     }
     
     // MARK: - RMQConnectionDelegate Handlers ========================================================================== -
 
     public func connection(_ connection: RMQConnection!, failedToConnectWithError error: Error!) {
-        self.parent?.debugMessage("Failed to connect with error - \(error.localizedDescription)")
+        self.parent?.debugMessage("Failed to connect with error - \(error.localizedDescription) (\(self.rabbitMQPeerList.count) peers)")
+        self.recoverDisconnect(reason: error?.localizedDescription)
     }
     
     public func connection(_ connection: RMQConnection!, disconnectedWithError error: Error!) {
-        self.parent?.debugMessage("Disconnected with error - \(error.localizedDescription)")
+        self.parent?.debugMessage("Disconnected with error - \(error.localizedDescription) (\(self.rabbitMQPeerList.count) peers)")
+        self.recoverDisconnect(reason: error?.localizedDescription)
+    }
+    
+    private func recoverDisconnect(reason: String?) {
+        forEachPeer { (rabbitMQPeer) in
+            if rabbitMQPeer.currentReconnect {
+                // Pass a recovering state change back up
+                rabbitMQPeer.stateChange(state: .recovering, reason: reason)
+                if !rabbitMQPeer.reconnect() {
+                    // Pass a notConnected state change back up
+                    rabbitMQPeer.stateChange(state: .notConnected, reason: "Reconnection failed")
+                }
+            } else {
+                if rabbitMQPeer.state != .notConnected {
+                    // Pass the notConnected state change back up
+                    rabbitMQPeer.stateChange(state: .notConnected, reason: reason)
+                }
+            }
+        }
+        self.recoveryInProgress(true, message: "Connection lost. Recovering")
     }
     
     public func channel(_ channel: RMQChannel!, error: Error!) {
         if error != nil {
-            self.parent?.debugMessage("Channel with error - \(error.localizedDescription)")
+            self.parent?.debugMessage("Channel with error - \(error.localizedDescription) (\(self.rabbitMQPeerList.count) peers)")
+            
+            self.recoverStateChange(to: .recovering, message: error?.localizedDescription ?? "", disconnectRemote: true)
+            
+            // Channel has probaby gone - create a new one
+            self.createChannel()
         }
     }
     
-    
     public func willStartRecovery(with connection: RMQConnection!) {
-        self.parent?.debugMessage("Will start recovery")
+        self.parent?.debugMessage("Will start recovery (\(self.rabbitMQPeerList.count) peers)")
+        
+        self.recoverStateChange(to: .recovering, message: "Will start recovery")
     }
     
     public func startingRecovery(with connection: RMQConnection!) {
-        self.parent?.debugMessage("Starting recovery")
+        self.parent?.debugMessage("Starting recovery (\(self.rabbitMQPeerList.count) peers)")
+        self.recoverStateChange(to: .recovering, message: "Starting recovery")
     }
     
     public func recoveredConnection(_ connection: RMQConnection!) {
-        self.parent?.debugMessage("Recovered")
-        // Disconnect any remotes and let them reconnect to get things back in sync?
+        self.parent?.debugMessage("Recovered (\(self.rabbitMQPeerList.count) peers)")
+        self.recoverStateChange(to: .connected, message: "Recovered")
     }
     
+    private func recoverStateChange(to state: CommsConnectionState, message: String, disconnectRemote: Bool = false) {
+        forEachPeer { (rabbitMQPeer) in
+            if rabbitMQPeer.state != state {
+                // Pass the notConnected state change back up
+                rabbitMQPeer.stateChange(state: state, reason: message)
+                if disconnectRemote {
+                    // Send disconnect (with retry to remote)
+                    rabbitMQPeer.disconnect(reason: message, reconnect: true)
+                }
+            }
+        }
+        switch state {
+        case .recovering:
+            self.recoveryInProgress(true, message: "Connection lost. Recovering...")
+        case .connected:
+            self.recoveryInProgress(false, message: "Connection restored")
+        default:
+            break
+        }
+    }
+    
+    internal func recoveryInProgress(_ recovering: Bool, message: String? = nil) {
+        self.recoveryStateDelegate?.recoveryInProgress(recovering, message: message)
+    }
 }
 
 // MARK: RabbitMQPeer Class ==========================================================
 
-public class RabbitMQPeer: NSObject, CommsDataDelegate, CommsConnectionDelegate {
+fileprivate class RabbitMQPeer: NSObject, CommsDataDelegate, CommsConnectionDelegate {
     private weak var parent: RabbitMQService!
     public var playerEmail: String?
     public var playerName: String?
     public var state: CommsConnectionState
     public var reason: String?
-    public var reconnect = false
-    public var shouldReconnect = false
+    public var currentReconnect = false // Is the current connection reconnectable
+    private var shouldReconnect = false // When we receive a connection should it be reconnectable
     public var deviceName: String
-    public weak var queue: RabbitMQQueue!
+    private weak var queue: RabbitMQQueue!
     public var sessionUUID: String!
     private let myDeviceName = Scorecard.deviceName
+    private var reconnectPeer: CommsPeer?
+    private var reconnectContext: [String : String]?
     
     public weak var connectionDelegate: CommsConnectionDelegate!
     public weak var stateDelegate: CommsStateDelegate!
@@ -753,7 +828,28 @@ public class RabbitMQPeer: NSObject, CommsDataDelegate, CommsConnectionDelegate 
         self.playerEmail = playerEmail
         self.playerName = playerName
         self.shouldReconnect = reconnect
-        self.reconnect = false
+        self.currentReconnect = false
+        if reconnect {
+            self.reconnectPeer = peer
+            self.reconnectContext = context
+        }
+        connectSuccess = self.connectInternal(to: peer, playerEmail: playerEmail, playerName: playerName, context: context)
+        
+        return connectSuccess
+    }
+    
+    public func reconnect() -> Bool{
+        var connectSuccess = false
+        // Clear any existing connections
+        self.disconnect(reason: "Re-connecting")
+        connectSuccess = self.connectInternal(to: self.reconnectPeer!, playerEmail: self.playerEmail, playerName: self.playerName, context: self.reconnectContext!)
+        
+        return connectSuccess
+    }
+    
+    private func connectInternal(to peer: CommsPeer, playerEmail: String?, playerName: String?, context: [String : String]? = nil) -> Bool {
+        var connectSuccess = false
+        
         if let playerName = playerName {
             var dictionary = context
             if dictionary == nil {
@@ -795,7 +891,7 @@ public class RabbitMQPeer: NSObject, CommsDataDelegate, CommsConnectionDelegate 
                     self.sessionUUID = sessionUUID
                     self.playerEmail = content["playerEmail"] as? String
                     self.playerName = content["playerName"] as? String
-                    self.reconnect = self.shouldReconnect
+                    self.currentReconnect = self.shouldReconnect
                     
                     // Call connection delegate if it exists - otherwise OK
                     if let connectionDelegate = self.connectionDelegate {
@@ -826,7 +922,7 @@ public class RabbitMQPeer: NSObject, CommsDataDelegate, CommsConnectionDelegate 
     
     public func disconnect(reason: String = "", reconnect: Bool = false) {
         if self.state == .connected {
-            self.reconnect = reconnect
+            self.currentReconnect = reconnect
             self.shouldReconnect = reconnect
             _ = self.send(descriptor:"disconnect", dictionary: ["reason" : reason], to: self.commsPeer)
         }
@@ -899,7 +995,16 @@ public class RabbitMQPeer: NSObject, CommsDataDelegate, CommsConnectionDelegate 
         }
         if self.state != oldState {
             // Pass up any state change
-            stateDelegate?.stateChange(for: self.commsPeer, reason: reason)
+            self.stateDelegate?.stateChange(for: self.commsPeer, reason: reason)
+        }
+    }
+    
+    public func stateChange(state: CommsConnectionState, reason: String?) {
+        Utility.debugMessage("rabbitMQPeer", "State change from \(self.state) to \(state)") // TODO Remove
+        if state != self.state {
+            // Pass up any state change
+            self.state = state
+            self.stateDelegate?.stateChange(for: self.commsPeer, reason: reason)
         }
     }
     
@@ -909,7 +1014,6 @@ public class RabbitMQPeer: NSObject, CommsDataDelegate, CommsConnectionDelegate 
         }
     }
 }
-
 // MARK: - Utility Classes ======================================================================== -
 
 extension Notification.Name {

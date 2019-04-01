@@ -598,7 +598,7 @@ class ScorepadViewController: CustomViewController,
         if self.scorecard.isHosting && self.scorecard.commsDelegate?.connectionProximity == .online {
             // Online - location not appropriate
             self.scorecard.gameLocation.description = "Online"
-            self.scorecard.gameLocation.location = nil
+            self.scorecard.gameLocation = GameLocation()
             self.saveNewGame()
             self.playHand(setState: true)
         } else {

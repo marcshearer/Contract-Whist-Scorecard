@@ -34,6 +34,7 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
     public var dataDelegate: CommsDataDelegate!
     public var connectionDelegate: CommsConnectionDelegate!
     public var handlerStateDelegate: CommsHandlerStateDelegate!
+    public var recoveryStateDelegate: CommsRecoveryStateDelegate! // TODO Not implemented
     public var loopbackServiceDelegate: LoopbackServiceDelegate!
     
     // Internal state

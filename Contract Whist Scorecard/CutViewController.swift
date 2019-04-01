@@ -80,7 +80,7 @@ class CutViewController: CustomViewController {
                 
         setupArrays()
         for playerNumber in 1...playerName.count {
-            ScorecardUI.moreRoundCorners(playerCardView[playerNumber-1]!)
+            ScorecardUI.roundCorners(playerCardView[playerNumber-1]!, percent:10)
             playerNameLabel[playerNumber-1]?.text = playerName[playerNumber - 1]
             if self.playerName.count == 4  && (playerNumber == 2 || playerNumber == 4) {
                 playerNameLabel[playerNumber-1]?.transform =

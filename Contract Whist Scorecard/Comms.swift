@@ -21,7 +21,8 @@ public enum CommsConnectionState: String {
     case notConnected = "Not connected"
     case connecting = "Connecting"
     case connected = "Connected"
-    case reconnecting = "Re-connecting"
+    case reconnecting = "Re-connecting" // After a failure
+    case recovering = "Recovering"      // Error encountered - recovering
 }
 
 public enum CommsConnectionMode: String {
@@ -159,6 +160,18 @@ public protocol CommsHandlerStateDelegate : class {
     func handlerStateChange(to state: CommsHandlerState)
 }
 
+public protocol CommsRecoveryStateDelegate : class {
+    
+    func recoveryInProgress(_ recovering: Bool, message: String?)
+}
+
+extension CommsRecoveryStateDelegate {
+    
+    func recoveryInProgress(_ recovering: Bool) {
+        recoveryInProgress(recovering, message: nil)
+    }
+}
+
 // MARK: - Protocols from views to communication handlers ==================================== -
 
 protocol CommsHandlerDelegate : class {
@@ -179,6 +192,7 @@ protocol CommsHandlerDelegate : class {
     var dataDelegate: CommsDataDelegate! { get set }
     var connectionDelegate: CommsConnectionDelegate! { get set }
     var handlerStateDelegate: CommsHandlerStateDelegate! { get set }
+    var recoveryStateDelegate: CommsRecoveryStateDelegate! { get set }
     
     init(purpose: CommsConnectionPurpose, type: CommsConnectionType, serviceID: String?, deviceName: String)
     
@@ -215,6 +229,10 @@ extension CommsHandlerDelegate {
     
     func start(email: String!, name: String!) {
         start(email: email, queueUUID: nil, name: name, invite: nil, recoveryMode: false, matchDeviceName: nil)
+    }
+    
+    func start(email: String!, recoveryMode: Bool) {
+        start(email: email, queueUUID: nil, name: nil, invite: nil, recoveryMode: recoveryMode, matchDeviceName: nil)
     }
     
     func start(email: String!, recoveryMode: Bool, matchDeviceName: String!) {

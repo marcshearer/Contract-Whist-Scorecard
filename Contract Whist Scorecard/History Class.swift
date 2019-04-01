@@ -292,8 +292,8 @@ class History {
                     let index = gameLocations.index(where: {$0.description == gameList[game-1].location!})
                     if index == nil {
                         gameLocations.append(GameLocation(
-                            location: CLLocation(latitude: gameList[game-1].latitude,
-                                                 longitude: gameList[game-1].longitude),
+                            latitude: gameList[game-1].latitude,
+                            longitude: gameList[game-1].longitude,
                             description: gameList[game-1].location!,
                             subDescription: "Last played \(Utility.dateString(gameList[game-1].datePlayed!, format: "MMMM yyyy"))")
                         )
@@ -449,7 +449,7 @@ public class HistoryGame {
         self.datePlayed = gameMO.datePlayed! as Date
         self.deviceName = gameMO.deviceName
         let description = (gameMO.location == nil || gameMO.location == "" ? "Unknown" : gameMO.location!)
-        self.gameLocation = GameLocation(location: CLLocation(latitude: gameMO.latitude, longitude: gameMO.longitude), description: description)
+        self.gameLocation = GameLocation(latitude: gameMO.latitude, longitude: gameMO.longitude, description: description)
         self.localDateCreated = (gameMO.localDateCreated == nil ? Date() : gameMO.localDateCreated! as Date)
         self.gameMO = gameMO
         self.duplicate = duplicate

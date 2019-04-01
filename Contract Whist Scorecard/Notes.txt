@@ -139,3 +139,6 @@ Below in allowsim (in PATH)
     sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
 Remapped home and end etc using ~/Library/KeyBindings/DefaultKeyBinding.dict - Did Ctrl-C etc in the keyboard settings app shortcuts but then reversed it
 To get rid of insets in a table view need to include willDisplayCell delegate routine and set content to be fixed insets of zero. See ReviewViewController
+To see logs in the system log you need to take Action/Include Debug Messages. Click on Activities. You can then filter type by entering debug in search and then changing Any to Category (or paste category:debug)
+
+

@@ -34,8 +34,10 @@ class NotificationSimulator: RabbitMQBroadcastDelegate {
     
     public class func sendNotifications(hostEmail: String, hostName: String, inviteEmails: [String]) {
         if Config.pushNotifications_rabbitMQ {
-            for email in inviteEmails {
-                Utility.appDelegate?.notificationSimulator.sendNotification(email: email, category: "onlineGame", key: "%1$@ has invited you to play online. Go to 'Online Game' and select 'Join a Game' to see the invitation", args: [hostName, hostEmail, Scorecard.deviceName, email])
+            if let simulator = Utility.appDelegate?.notificationSimulator {
+                for email in inviteEmails {
+                    simulator.sendNotification(email: email, category: "onlineGame", key: "%1$@ has invited you to play online. Go to 'Online Game' and select 'Join a Game' to see the invitation", args: [hostName, hostEmail, Scorecard.deviceName, email])
+                }
             }
         }
     }

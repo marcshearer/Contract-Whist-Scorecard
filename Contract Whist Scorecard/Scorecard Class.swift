@@ -172,7 +172,7 @@ class Scorecard {
         self.setupSuits()
                 
         // Set up game location class
-        self.gameLocation = GameLocation(location: nil, description: "")
+        self.gameLocation = GameLocation()
         
         // Setup sharing object and take broadcast delegates
         self.setupSharing()
@@ -906,12 +906,12 @@ class Scorecard {
                 self.gameMO.datePlayed = self.gameDatePlayed
                 self.gameMO.deviceUUID = UIDevice.current.identifierForVendor?.uuidString
                 self.gameMO.deviceName = Scorecard.deviceName
-                if !self.settingSaveLocation || self.gameLocation.location == nil {
+                if !self.settingSaveLocation || !self.gameLocation.locationSet {
                     self.gameMO.latitude = 0
                     self.gameMO.longitude = 0
                 } else {
-                    self.gameMO.latitude = self.gameLocation.location.coordinate.latitude
-                    self.gameMO.longitude = self.gameLocation.location.coordinate.longitude
+                    self.gameMO.latitude = self.gameLocation.latitude
+                    self.gameMO.longitude = self.gameLocation.longitude
                 }
                 if self.settingSaveLocation {
                     self.gameMO.location = self.gameLocation.description
@@ -1220,21 +1220,47 @@ class Scorecard {
 // MARK: - Scorecard component classes ============================================================================ -
 
 class GameLocation {
-    var location: CLLocation!
+    var latitude: CLLocationDegrees!
+    var longitude: CLLocationDegrees!
     var description: String!
     var subDescription: String!
     
     init() {
     }
     
-    init(location: CLLocation!, description: String, subDescription: String = "") {
-        self.location = location
+    init(latitude: CLLocationDegrees!, longitude: CLLocationDegrees, description: String, subDescription: String = "") {
+        self.latitude = latitude
+        self.longitude = longitude
         self.description = description
         self.subDescription = subDescription
     }
     
-    func copy(to gameLocation: GameLocation!) {
-        gameLocation.location = self.location
-        gameLocation.description = self.description
+    public func setLocation(latitude: CLLocationDegrees!, longitude: CLLocationDegrees) {
+        self.latitude = latitude
+        self.longitude = longitude
     }
+    
+    public func setLocation(_ location: CLLocation) {
+        self.latitude = location.coordinate.latitude
+        self.longitude = location.coordinate.longitude
+    }
+    
+    public func copy(to gameLocation: GameLocation!) {
+        gameLocation.latitude = self.latitude
+        gameLocation.longitude = self.longitude
+        gameLocation.description = self.description
+        gameLocation.subDescription = self.subDescription
+    }
+    
+    public var locationSet: Bool {
+        get {
+            return (self.latitude != nil && self.longitude != nil)
+        }
+    }
+    
+    public func distance(from location: CLLocation) -> CLLocationDistance {
+        let thisLocation = CLLocation(latitude: self.latitude, longitude: self.longitude)
+        return thisLocation.distance(from: location)
+    }
+    
 }

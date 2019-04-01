@@ -203,19 +203,16 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
         let allAnnotations = self.mapView.annotations
         self.mapView.removeAnnotations(allAnnotations)
         
-        if gameDetail.gameLocation.location != nil {
+        if gameDetail.gameLocation.locationSet {
             
-            let coordinate = gameDetail.gameLocation.location.coordinate
+            let gameLocation = gameDetail.gameLocation
+        
+            annotation.coordinate = CLLocationCoordinate2D(latitude: gameLocation.latitude, longitude: gameLocation.longitude)
+            self.mapView.addAnnotation(annotation)
             
-            if coordinate.latitude != 0 || coordinate.longitude != 0 {
-            
-                annotation.coordinate = coordinate
-                self.mapView.addAnnotation(annotation)
-                
-                // Set the zoom level
-                let region = MKCoordinateRegion.init(center: annotation.coordinate, latitudinalMeters: 2e5, longitudinalMeters: 2e5)
-                self.mapView.setRegion(region, animated: false)
-            }
+            // Set the zoom level
+            let region = MKCoordinateRegion.init(center: annotation.coordinate, latitudinalMeters: 2e5, longitudinalMeters: 2e5)
+            self.mapView.setRegion(region, animated: false)
         }
     }
     
@@ -246,10 +243,9 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
                         if Utility.objectDate(cloudObject: cloudObject, forKey: "syncDate") < syncDate {
                             // Update to cloud
                             cloudObject.setValue((self.gameDetail.gameLocation.description == "Unknown" ? "" : self.gameDetail.gameLocation.description), forKey: "location")
-                            if self.gameDetail.gameLocation.location != nil {
-                                let coordinate = self.gameDetail.gameLocation.location.coordinate
-                                cloudObject.setValue(coordinate.latitude, forKey: "latitude")
-                                cloudObject.setValue(coordinate.longitude, forKey: "longitude")
+                            if self.gameDetail.gameLocation.locationSet {
+                                cloudObject.setValue(self.gameDetail.gameLocation.latitude, forKey: "latitude")
+                                cloudObject.setValue(self.gameDetail.gameLocation.longitude, forKey: "longitude")
                             }
                             cloudObject.setValue(syncDate, forKey: "syncDate")
                             publicDatabase.save(cloudObject, completionHandler: { (cloudObject, error) in
@@ -312,10 +308,9 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
             // Copy back updated location
             let gameMO = self.gameDetail.gameMO!
             gameMO.location = (self.gameDetail.gameLocation.description == "Unknown" ? "" : self.gameDetail.gameLocation.description)
-            if self.gameDetail.gameLocation.location != nil {
-                let coordinate = self.gameDetail.gameLocation.location.coordinate
-                gameMO.latitude = coordinate.latitude
-                gameMO.longitude = coordinate.longitude
+            if self.gameDetail.gameLocation.locationSet {
+                gameMO.latitude = self.gameDetail.gameLocation.latitude
+                gameMO.longitude = self.gameDetail.gameLocation.longitude
             }
         }) {
             // Ignore errors - should come back down again anyway with new sync date

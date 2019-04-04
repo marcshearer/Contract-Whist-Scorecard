@@ -37,7 +37,15 @@ class ScorecardUI {
     }
     
     class func veryRoundCorners(_ view: UIView, radius: CGFloat = 0.0) {
-        ScorecardUI.roundCorners(view, percent: 50.0)
+        var percent: CGFloat
+        if radius == 0.0 {
+            percent = 50.0
+        } else if view.layer.bounds.height == 0 {
+            percent = 0.0
+        } else {
+            percent = radius / view.layer.bounds.height * 100.0
+        }
+        ScorecardUI.roundCorners(view, percent: percent)
     }
     
     class func sectionHeadingStyle(_ cell: UITableViewCell) {

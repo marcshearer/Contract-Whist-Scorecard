@@ -63,6 +63,12 @@ public class CommsPeer {
     public let state: CommsConnectionState
     public let reason: String?
     private var parent: CommsHandlerDelegate
+    private var _autoReconnect: Bool
+    public var autoReconnect: Bool {
+        get {
+            return _autoReconnect
+        }
+    }
     
     public var mode: CommsConnectionMode {
         get {
@@ -96,13 +102,14 @@ public class CommsPeer {
         }
     }
 
-    init(parent: CommsHandlerDelegate, deviceName: String, playerEmail: String? = "", playerName: String? = "", state: CommsConnectionState = .notConnected, reason: String? = nil) {
+    init(parent: CommsHandlerDelegate, deviceName: String, playerEmail: String? = "", playerName: String? = "", state: CommsConnectionState = .notConnected, reason: String? = nil, autoReconnect: Bool = false) {
         self.parent = parent
         self.deviceName = deviceName
         self.playerEmail = playerEmail
         self.playerName = playerName
         self.state = state
         self.reason = reason
+        self._autoReconnect = autoReconnect
     }
     
     func setParent(to parent: CommsHandlerDelegate) {
@@ -160,95 +167,33 @@ public protocol CommsHandlerStateDelegate : class {
     func handlerStateChange(to state: CommsHandlerState)
 }
 
-public protocol CommsRecoveryStateDelegate : class {
-    
-    func recoveryInProgress(_ recovering: Bool, message: String?)
-}
-
-extension CommsRecoveryStateDelegate {
-    
-    func recoveryInProgress(_ recovering: Bool) {
-        recoveryInProgress(recovering, message: nil)
-    }
-}
-
 // MARK: - Protocols from views to communication handlers ==================================== -
 
 protocol CommsHandlerDelegate : class {
-    
+
     var connectionMode: CommsConnectionMode { get }
     var connectionFramework: CommsConnectionFramework { get }
     var connectionProximity: CommsConnectionProximity { get }
     var connectionType: CommsConnectionType { get }
     var connectionPurpose: CommsConnectionPurpose { get }
-    var handlerState: CommsHandlerState { get }
     var connections: Int { get }
     var connectionUUID: String? { get }
     var connectionEmail: String? { get }
     var connectionDevice: String? { get }
-    
-    var browserDelegate: CommsBrowserDelegate! { get set }
+
     var stateDelegate: CommsStateDelegate! { get set }
     var dataDelegate: CommsDataDelegate! { get set }
-    var connectionDelegate: CommsConnectionDelegate! { get set }
-    var handlerStateDelegate: CommsHandlerStateDelegate! { get set }
-    var recoveryStateDelegate: CommsRecoveryStateDelegate! { get set }
-    
-    init(purpose: CommsConnectionPurpose, type: CommsConnectionType, serviceID: String?, deviceName: String)
-    
-    func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool, matchDeviceName: String!)
-    
-    func stop()
-    
-    func reset()
-    
-    func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, context: [String : String]?, reconnect: Bool) -> Bool
+
+    func send(_ descriptor: String, _ dictionary: Dictionary<String, Any?>!, to commsPeer: CommsPeer?, matchEmail: String?)
 
     func disconnect(from commsPeer: CommsPeer, reason: String, reconnect: Bool)
-    
-    func send(_ descriptor: String, _ dictionary: Dictionary<String, Any?>!, to commsPeer: CommsPeer?, matchEmail: String?)
-    
+
     func connectionInfo()
     
     func debugMessage(_ message: String, device: String?, force: Bool)
 }
 
 extension CommsHandlerDelegate {
-    
-    init(purpose: CommsConnectionPurpose, type: CommsConnectionType, serviceID: String?) {
-        self.init(purpose: purpose, type: type, serviceID: serviceID, deviceName: "")
-    }
-    
-    func start() {
-        start(email: nil, queueUUID: nil, name: nil, invite: nil, recoveryMode: false, matchDeviceName: nil)
-    }
-    
-    func start(email: String!) {
-        start(email: email, queueUUID: nil, name: nil, invite: nil, recoveryMode: false, matchDeviceName: nil)
-    }
-    
-    func start(email: String!, name: String!) {
-        start(email: email, queueUUID: nil, name: name, invite: nil, recoveryMode: false, matchDeviceName: nil)
-    }
-    
-    func start(email: String!, recoveryMode: Bool) {
-        start(email: email, queueUUID: nil, name: nil, invite: nil, recoveryMode: recoveryMode, matchDeviceName: nil)
-    }
-    
-    func start(email: String!, recoveryMode: Bool, matchDeviceName: String!) {
-        start(email: email, queueUUID: nil, name: nil, invite: nil, recoveryMode: recoveryMode, matchDeviceName: matchDeviceName)
-    }
-    func start(email: String!, name: String!, invite: [String]!) {
-        start(email: email, queueUUID: nil, name: name, invite: invite, recoveryMode: false, matchDeviceName: nil)
-    }
-    
-    func start(email: String!, queueUUID: String!, recoveryMode: Bool) {
-        start(email: email, queueUUID: queueUUID, name: nil, invite: nil, recoveryMode: recoveryMode, matchDeviceName : nil)
-    }
-    
-    func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, reconnect: Bool) -> Bool {
-        return connect(to: commsPeer, playerEmail: playerEmail, playerName: playerName, context: nil, reconnect: reconnect)
-    }
     
     func send(_ descriptor: String, _ dictionary: Dictionary<String, Any?>!, to commsPeer: CommsPeer?) {
         send(descriptor, dictionary, to: commsPeer, matchEmail: nil)
@@ -268,5 +213,93 @@ extension CommsHandlerDelegate {
     
     func debugMessage(_ message: String) {
         debugMessage(message, device: nil, force: false)
+    }   
+}
+
+protocol CommsServerHandlerDelegate : CommsHandlerDelegate {
+    
+    var handlerState: CommsHandlerState { get }
+    var connectionDelegate: CommsConnectionDelegate! { get set }
+    var handlerStateDelegate: CommsHandlerStateDelegate! { get set }
+    
+    init(purpose: CommsConnectionPurpose, serviceID: String?, deviceName: String)
+    
+    func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool)
+    
+    func stop()
+    
+    func reset()
+}
+
+extension CommsServerHandlerDelegate {
+    
+    init(purpose: CommsConnectionPurpose, serviceID: String?) {
+        self.init(purpose: purpose, serviceID: serviceID, deviceName: "")
+    }
+    
+    func start() {
+        start(email: nil, queueUUID: nil, name: nil, invite: nil, recoveryMode: false)
+    }
+    
+    func start(email: String!) {
+        start(email: email, queueUUID: nil, name: nil, invite: nil, recoveryMode: false)
+    }
+    
+    func start(email: String!, name: String!) {
+        start(email: email, queueUUID: nil, name: name, invite: nil, recoveryMode: false)
+    }
+    
+    func start(email: String!, recoveryMode: Bool) {
+        start(email: email, queueUUID: nil, name: nil, invite: nil, recoveryMode: recoveryMode)
+    }
+    
+    func start(email: String!, name: String!, invite: [String]!) {
+        start(email: email, queueUUID: nil, name: name, invite: invite, recoveryMode: false)
+    }
+    
+    func start(email: String!, queueUUID: String!, recoveryMode: Bool) {
+        start(email: email, queueUUID: queueUUID, name: nil, invite: nil, recoveryMode: recoveryMode)
+    }
+
+}
+
+protocol CommsClientHandlerDelegate : CommsHandlerDelegate {
+    
+    var browserDelegate: CommsBrowserDelegate! { get set }
+    
+    init(purpose: CommsConnectionPurpose, serviceID: String?, deviceName: String)
+    
+    func start(email: String!, name: String!, recoveryMode: Bool, matchDeviceName: String!)
+    
+    func stop()
+    
+    func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, context: [String : String]?, reconnect: Bool) -> Bool
+    
+}
+
+extension CommsClientHandlerDelegate {
+    
+  func start() {
+        start(email: nil, name: nil, recoveryMode: false, matchDeviceName: nil)
+    }
+    
+    func start(email: String!) {
+        start(email: email, name: nil, recoveryMode: false, matchDeviceName: nil)
+    }
+    
+    func start(email: String!, name: String!) {
+        start(email: email, name: name, recoveryMode: false, matchDeviceName: nil)
+    }
+    
+    func start(email: String!, recoveryMode: Bool) {
+        start(email: email, name: nil, recoveryMode: recoveryMode, matchDeviceName: nil)
+    }
+    
+    func start(email: String!, recoveryMode: Bool, matchDeviceName: String!) {
+        start(email: email, name: nil, recoveryMode: recoveryMode, matchDeviceName: matchDeviceName)
+    }
+    
+    func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, reconnect: Bool) -> Bool {
+        return connect(to: commsPeer, playerEmail: playerEmail, playerName: playerName, context: nil, reconnect: reconnect)
     }
 }

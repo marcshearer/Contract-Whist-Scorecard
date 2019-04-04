@@ -14,7 +14,7 @@ protocol LoopbackServiceDelegate {
 
 }
 
-class LoopbackService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsStateDelegate, LoopbackServiceDelegate {
+class LoopbackService: NSObject, CommsHandlerDelegate, CommsServerHandlerDelegate, CommsConnectionDelegate, LoopbackServiceDelegate {
     
     // Delegate properties
     public let connectionMode: CommsConnectionMode = .loopback
@@ -34,7 +34,6 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
     public var dataDelegate: CommsDataDelegate!
     public var connectionDelegate: CommsConnectionDelegate!
     public var handlerStateDelegate: CommsHandlerStateDelegate!
-    public var recoveryStateDelegate: CommsRecoveryStateDelegate! // TODO Not implemented
     public var loopbackServiceDelegate: LoopbackServiceDelegate!
     
     // Internal state
@@ -51,7 +50,14 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
         super.init()
     }
     
-    public func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool, matchDeviceName: String!) {
+    required init(purpose: CommsConnectionPurpose, serviceID: String?, deviceName: String) {
+        self.connectionPurpose = purpose
+        self.connectionType = .server
+        self.connectionDevice = deviceName
+        super.init()
+    }
+    
+    public func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool) {
         self.myPeer = LoopbackPeer(parent: self, deviceName: self.connectionDevice!, playerEmail: email, playerName: name)
         
         // Add myself to the shared peer list
@@ -124,6 +130,9 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsC
             outputMessage = outputMessage + " Device: \(device)"
         }
         Utility.debugMessage("loopback", outputMessage, force: force)
+    }
+    
+    func recoveryInProgress(_ recovering: Bool, message: String?) {
     }
     
     private func remotePeer(of peer: CommsPeer, as newState: CommsConnectionState? = nil) -> CommsPeer? {

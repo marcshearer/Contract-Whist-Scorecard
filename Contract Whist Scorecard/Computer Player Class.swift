@@ -35,8 +35,7 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
     private var thisPlayer: String
     private var thisPlayerName: String
     private var thisPlayerNumber: Int!
-    private var loopbackClient: LoopbackService
-    private var commsDelegate: CommsHandlerDelegate!
+    private var loopbackService: LoopbackService
     private var hostPeer: CommsPeer
     private var hand: Hand!
     private let autoPlayTimeUnit = 0.05 // TODO Should be 1.0
@@ -53,17 +52,16 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
         self.hostPeer = hostPeer
         
         // Create loopback client service
-        self.loopbackClient = LoopbackService(purpose: .playing, type: .client, serviceID: nil, deviceName: deviceName)
+        self.loopbackService = LoopbackService(purpose: .playing, type: .server, serviceID: nil, deviceName: deviceName)
         
         // Initialise super-class
         super.init()
         
         // Start the service
-        self.commsDelegate = self.loopbackClient
-        self.commsDelegate.start(email: email, name: name)
+        self.loopbackService.start(email: email, name: name)
         
         // Connect back to the host
-        _ = self.commsDelegate.connect(to: hostPeer, playerEmail: email, playerName: name, reconnect: false)
+        _ = self.loopbackService.connect(to: hostPeer, playerEmail: email, playerName: name, reconnect: false)
     }
     
     internal func autoBid(completion: (()->())?) {
@@ -85,7 +83,7 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
                 
                 let bid = computerBidding.bid()
                 
-                self.scorecard.sendScores(playerNumber: self.thisPlayerNumber, round: round, mode: .bid, overrideBid: bid, to: self.hostPeer, using: self.loopbackClient)
+                self.scorecard.sendScores(playerNumber: self.thisPlayerNumber, round: round, mode: .bid, overrideBid: bid, to: self.hostPeer, using: self.loopbackService)
                 
                 completion?()
             })
@@ -126,7 +124,7 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
                     trySuitLed = false
                 }
                 
-                self.scorecard.sendCardPlayed(round: round, trick: trick, playerNumber: self.thisPlayerNumber, card: cardPlayed, using: self.loopbackClient)
+                self.scorecard.sendCardPlayed(round: round, trick: trick, playerNumber: self.thisPlayerNumber, card: cardPlayed, using: self.loopbackService)
                 
                 completion?()
             })

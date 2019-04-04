@@ -504,7 +504,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         if button == 0 || button == resumeGameButton {
             if resumeGameCell != nil {
                 let (recoveryEnabled, online) = self.recovery.checkOnlineRecovery()
-                resumeGameCell.actionButton.isEnabled(recoveryEnabled)
+                resumeGameCell.actionButton.isEnabled(recoveryEnabled || Scorecard.adminMode)
                 if recoveryEnabled && !online {
                     resumeGameCell.actionButton.setTitle("Resume Scoring")
                 } else {
@@ -567,9 +567,6 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     }
     
     private func startNewGame() {
-        let whisper = Whisper()
-        whisper.show("Testing")
-        return
         resumeGameCell.actionButton.isEnabled(false)
         self.scorecard.setGameInProgress(false)
         self.scorecard.reset()

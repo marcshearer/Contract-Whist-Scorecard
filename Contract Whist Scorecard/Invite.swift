@@ -213,26 +213,11 @@ class Invite {
                     NotificationSimulator.sendNotifications(hostEmail: self.hostEmail, hostName: self.hostName, inviteEmails: self.inviteEmails)
                 }
                 
-                // Log invites received
+                // Log invites sent
                 if self.inviteEmails != nil {
                     for email in self.inviteEmails {
                         Utility.debugMessage("invite", "To \(email) - \(Utility.dateString(self.expiryDate, format: "dd/MM/yyyy HH:mm:ss.ff", localized: false)) - \(self.inviteUUID!)")
                     }
-                }
-                
-                // Reset all deleted queues
-                if deleteUUIDs != nil {
-                    var resetUUIDs: [String] = []
-                    for deleteUUID in deleteUUIDs {
-                        if deleteUUID != self.inviteUUID {
-                            // Not an old invite for the queue we are inviting on
-                            if resetUUIDs.index(where: {$0 == deleteUUID}) == nil {
-                                // Not already in list
-                                resetUUIDs.append(deleteUUID)
-                            }
-                        }
-                    }
-                    RabbitMQService.reset(queueUUIDs: resetUUIDs)
                 }
                 
                 // Link back to controller for next phase

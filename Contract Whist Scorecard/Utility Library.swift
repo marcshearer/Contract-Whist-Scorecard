@@ -465,7 +465,7 @@ class Utility {
             if (Config.rabbitMQUri_DevMode != .amqpServer || Scorecard.adminMode || force) && Config.rabbitMQLogQueue != "" && Config.rabbitMQUri != "" {
                 let scorecard = Scorecard.getScorecard()!
                 if scorecard.logService == nil {
-                    scorecard.logService = RabbitMQService(purpose: .other, type: .queue, serviceID: Config.rabbitMQUri)
+                    scorecard.logService = RabbitMQClientService(purpose: .other, serviceID: Config.rabbitMQUri, deviceName: Scorecard.deviceName)
                     scorecard.logQueue = scorecard.logService.startQueue(delegate: scorecard.logService, queueUUID: Config.rabbitMQLogQueue)
                 }
                 scorecard.logQueue.sendBroadcast(data: ["message" : outputMessage,

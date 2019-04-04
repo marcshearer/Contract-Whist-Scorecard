@@ -23,7 +23,7 @@ enum InviteStatus {
 }
 
 class HostViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate,
-CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStateDelegate, CommsRecoveryStateDelegate, SearchDelegate {
+CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStateDelegate, SearchDelegate {
 
     // MARK: - Class Properties ======================================================================== -
     
@@ -50,9 +50,10 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     private var alertController: UIAlertController!
     private var connectionMode: ConnectionMode!
     private var defaultConnectionMode: ConnectionMode!
-    private var multipeerHost: MultipeerService!
-    private var rabbitMQHost: RabbitMQService!
+    private var multipeerHost: MultipeerServerService!
+    private var rabbitMQHost: RabbitMQServerService!
     private var loopbackHost: LoopbackService!
+    private var hostService: CommsServerHandlerDelegate!
     private var currentState: CommsHandlerState = .notStarted
     private var exiting = false
     private var computerPlayers: [Int : ComputerPlayerDelegate]?
@@ -140,9 +141,6 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         var loopback = false
         
         super.viewDidLoad()
-        
-        // Stop existing server service (sharing)
-        self.scorecard.commsDelegate?.stop()
         
         // Stop any existing sharing activity
         self.scorecard.stopSharing()
@@ -360,7 +358,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             // A player returning from the same device - probably a reconnect - just update the details
             self.playerData[index].peer = peer
             self.updateFaceTimeAddress(info: info, playerData: self.playerData[index])
-        } else if self.connectionMode == .online {
+         } else if self.connectionMode == .online {
             // Should already be in list
             if let index = self.playerData.index(where: {$0.email == peer.playerEmail}) {
                 if self.playerData[index].peer != nil && self.playerData[index].peer.deviceName != peer.deviceName && self.playerData[index].peer.state != .notConnected {
@@ -420,11 +418,12 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     
     internal func stateChange(for peer: CommsPeer, reason: String?) {
         Utility.mainThread { [unowned self] in
-            Utility.debugMessage("host", "State change from \(self.currentState(peer: peer)) to \(peer.state)") // TODO Remove
             var row: Int!
             var playerNumber: Int!
             row = self.playerData.index(where: {$0.peer != nil && $0.peer.deviceName == peer.deviceName})
             if row != nil {
+                let currentState = self.playerData[row].peer.state
+                Utility.debugMessage("host", "State change from \(currentState) to \(peer.state)") // TODO Remove
                 playerNumber = row! + 1
                 switch peer.state {
                 case .connected:
@@ -465,6 +464,15 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 default:
                     break
                 }
+                // Update whisper
+                if currentState != peer.state {
+                    if (peer.state == .notConnected && peer.autoReconnect) || peer.state == .recovering {
+                        self.whisper.show("Connection lost. Recovering...")
+                    }
+                }
+                if peer.state == .connected {
+                    self.whisper.hide("Connection restored")
+                }
             }
             let ready = (self.connectedPlayers >= 3)
             self.scorecardButton.isHidden = !ready
@@ -498,17 +506,6 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             self.instructionLabel.text = "Sufficient players are now connected. Press the continue button to start the game, or wait for another player to join"
         } else {
             self.instructionLabel.text = "Wait for all other players to connect and then you will be able to start the game"
-        }
-    }
-    
-    private func currentState(peer: CommsPeer) -> CommsConnectionState {
-        // Get current state of a player associated with a device
-        let playerNumber = playerData.index(where: {$0.peer != nil && $0.peer.deviceName == peer.deviceName})
-        if playerNumber != nil {
-            let playerData = self.playerData[playerNumber!]
-            return playerData.peer.state
-        } else {
-            return .notConnected
         }
     }
     
@@ -558,7 +555,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                     for playerNumber in 2...playerData.count {
                         let playerData = self.playerData[playerNumber - 1]
                         if playerData.peer == nil {
-                            playerData.peer = CommsPeer(parent: self.scorecard.commsDelegate!,
+                            playerData.peer = CommsPeer(parent: self.hostService!,
                                                         deviceName: "",
                                                         playerEmail: playerData.email,
                                                         playerName: playerData.name)
@@ -956,8 +953,9 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     
     private func startNearbyConnection() {
         // Create comms service and take hosting delegate
-        multipeerHost = MultipeerService(purpose: .playing, type: .server, serviceID: self.scorecard.serviceID(.playing))
+        multipeerHost = MultipeerServerService(purpose: .playing, serviceID: self.scorecard.serviceID(.playing))
         self.scorecard.commsDelegate = multipeerHost
+        self.hostService = multipeerHost
         self.takeDelegates(self)
         if self.playerData.count > 0 {
             self.startHostBroadcast(email: playerData[0].email, name: playerData[0].email)
@@ -966,8 +964,9 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
 
     private func startOnlineConnection() {
         // Create comms service and take hosting delegate
-        rabbitMQHost = RabbitMQService(purpose: .playing, type: .server, serviceID: nil)
+        rabbitMQHost = RabbitMQServerService(purpose: .playing, serviceID: nil)
         self.scorecard.commsDelegate = rabbitMQHost
+        self.hostService = rabbitMQHost
         self.takeDelegates(self)
     }
     
@@ -975,6 +974,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         // Create loopback service, take delegate and then start loopback service
         loopbackHost = LoopbackService(purpose: .playing, type: .server, serviceID: nil, deviceName: Scorecard.deviceName)
         self.scorecard.commsDelegate = loopbackHost
+        self.hostService = loopbackHost
         self.takeDelegates(self)
         self.loopbackHost.start(email: playerData[0].email, name: playerData[0].name)
         
@@ -993,11 +993,10 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
    }
 
     private func takeDelegates(_ delegate: Any?) {
-        self.scorecard.commsDelegate?.stateDelegate = delegate as! CommsStateDelegate?
-        self.scorecard.commsDelegate?.dataDelegate = delegate as! CommsDataDelegate?
-        self.scorecard.commsDelegate?.connectionDelegate = delegate as! CommsConnectionDelegate?
-        self.scorecard.commsDelegate?.handlerStateDelegate = delegate as! CommsHandlerStateDelegate?
-        self.scorecard.commsDelegate?.recoveryStateDelegate = delegate as! CommsRecoveryStateDelegate?
+        self.hostService?.stateDelegate = delegate as! CommsStateDelegate?
+        self.hostService?.dataDelegate = delegate as! CommsDataDelegate?
+        self.hostService?.connectionDelegate = delegate as! CommsConnectionDelegate?
+        self.hostService?.handlerStateDelegate = delegate as! CommsHandlerStateDelegate?
     }
     
     private func chooseOnlineInvitees() {
@@ -1044,7 +1043,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     
     private func disconnectPlayer(playerNumber: Int, reason: String) {
         if playerData[playerNumber - 1].peer != nil {
-            self.scorecard.commsDelegate?.disconnect(from: playerData[playerNumber - 1].peer, reason: reason)
+            self.hostService?.disconnect(from: playerData[playerNumber - 1].peer, reason: reason)
         }
         removePlayer(playerNumber: playerNumber)
     }
@@ -1122,20 +1121,14 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     
     private func waitOtherPlayers(showDialog: Bool = true, completion: (()->())? = nil) {
         if showDialog {
-            self.alertController = UIAlertController(title: "Ready", message: "Waiting for other players to rejoin...", preferredStyle: .alert)
-            self.alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { UIAlertAction -> () in
-                self.exitHost()
-                self.alertController = nil
-            }))
-            self.present(self.alertController, animated: true, completion: completion)
-        } else {
-            completion?()
+            self.whisper.show("Waiting for other players to rejoin...")
         }
+        completion?()
     }
     
     private func startHostBroadcast(email: String!, name: String!, invite: [String]? = nil, queueUUID: String! = nil) {
         // Start host broadcast
-        self.scorecard.commsDelegate?.start(email: email, queueUUID: queueUUID, name: name, invite: invite, recoveryMode: self.scorecard.recoveryMode, matchDeviceName: nil)
+        self.hostService?.start(email: email, queueUUID: queueUUID, name: name, invite: invite, recoveryMode: self.scorecard.recoveryMode)
     }
     
     public func finishHost() {
@@ -1143,6 +1136,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         self.stopHostBroadcast()
         self.takeDelegates(nil)
         self.scorecard.commsDelegate = nil
+        self.hostService = nil
         self.scorecard.resetSharing()
         self.clearHandlerCompleteNotification(observer: self.observer)
         self.scorecard.resetOverrideSettings()
@@ -1156,7 +1150,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     
     private func stopHostBroadcast() {
         // Revert to normal sharing (if enabled)
-        self.scorecard.commsDelegate?.stop()
+        self.hostService?.stop()
     }
     // MARK: - Segue Prepare Handler ================================================================ -
     
@@ -1190,6 +1184,7 @@ class PlayerData {
     var disconnectReason: String! // Have only accepted connection to be able to pass this message when disconnect
     var inviteStatus: InviteStatus!
     var faceTimeAddress: String!
+    var oldState: CommsConnectionState!
     
     init(name: String, email: String, playerMO: PlayerMO!, peer: CommsPeer!, unique: Int,  disconnectReason: String!, inviteStatus: InviteStatus!) {
         self.name = name

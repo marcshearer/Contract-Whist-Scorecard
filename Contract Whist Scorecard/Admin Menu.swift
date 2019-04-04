@@ -44,9 +44,6 @@ class AdminMenu {
             
             // Generic options - connections
             if scorecard.commsDelegate != nil && scorecard.commsDelegate!.connectionFramework != .loopback {
-                actionSheet.add("Reset connection", handler: {
-                    scorecard.commsDelegate?.reset()
-                })
                 actionSheet.add("Show connections", handler: {
                     scorecard.commsDelegate?.connectionInfo()
                 })

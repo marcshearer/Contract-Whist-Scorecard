@@ -64,7 +64,7 @@ class Scorecard {
     public var notificationSimulator: NotificationSimulator!
     
     // Remote logging
-    public var logService: RabbitMQService!
+    public var logService: RabbitMQClientService!
     public var logQueue: RabbitMQQueue!
     
     // Variables for test extensions
@@ -122,7 +122,7 @@ class Scorecard {
     public var iCloudUserIsMe = false
     
     // Comms services
-    public var sharingService: MultipeerService!
+    public var sharingService: MultipeerServerService!
     public var commsDelegate: CommsHandlerDelegate?
     
     // Admin mode

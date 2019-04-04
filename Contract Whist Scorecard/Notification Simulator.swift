@@ -25,7 +25,7 @@ class NotificationSimulator: RabbitMQBroadcastDelegate {
     public func start() {
         if Config.rabbitMQUri != "" {
             let email = Scorecard.onlineEmail()
-            self.rabbitMQService = RabbitMQService(purpose: .other, type: .queue, serviceID: Config.rabbitMQUri)
+            self.rabbitMQService = RabbitMQService(purpose: .other, type: .queue, serviceID: Config.rabbitMQUri, deviceName: Scorecard.deviceName)
             self.queue = self.rabbitMQService.startQueue(delegate: self, queueUUID: "notifications", email: email)
         } else {
             self.queue = nil

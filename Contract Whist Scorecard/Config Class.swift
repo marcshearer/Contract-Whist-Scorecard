@@ -20,7 +20,7 @@ class Config {
     public static let rabbitMQ_DescriptiveIDs = false
     
     // Use rabbitMQ instead of/as well as push notifications - best not to do this if connected to network as will double up
-    public static let pushNotifications_rabbitMQ = Utility.isDevelopment
+    public static let pushNotifications_rabbitMQ = true
     
     // Queue for log messages - blank to disable
     public static let rabbitMQLogQueue = "WhistLogger"

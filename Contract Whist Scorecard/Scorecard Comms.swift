@@ -52,7 +52,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     
     public func setupSharing() {
         if self.settingAllowBroadcast {
-            self.sharingService = MultipeerService(purpose: .sharing, type: .server, serviceID: self.serviceID(.sharing))
+            self.sharingService = MultipeerServerService(purpose: .sharing, serviceID: self.serviceID(.sharing))
             self.resetSharing()
         }
     }
@@ -60,7 +60,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     public func stopSharing() {
         if let delegate = self.commsDelegate {
             if delegate.connectionPurpose == .sharing {
-                self.commsDelegate?.stop()
+                self.sharingService?.stop()
                 self.commsDelegate = nil
             }
         }
@@ -68,17 +68,15 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     
     public func resetSharing() {
         // Make sure current delegate is cleared
-        if let delegate = self.commsDelegate {
-            delegate.stop()
-        }
+        sharingService?.stop()
         self.commsDelegate = nil
             
         if self.settingAllowBroadcast {
             // Restore server delegate
             self.commsDelegate = self.sharingService
-            self.commsDelegate!.dataDelegate = self
-            self.commsDelegate!.stateDelegate = self
-            self.commsDelegate!.start()
+            self.sharingService?.dataDelegate = self
+            self.sharingService?.stateDelegate = self
+            self.sharingService?.start()
         }
     }
     

@@ -176,7 +176,7 @@ class DataAdmin {
     }
     
     class func resetCoreDataEntity(entityName: String) {
-        if let context = Scorecard.context {
+        if let context = CoreData.context {
             
             let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
             let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)

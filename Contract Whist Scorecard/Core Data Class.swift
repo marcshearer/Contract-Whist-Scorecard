@@ -18,6 +18,9 @@ public enum SortDirection {
 
 class CoreData {
     
+    // Core data context - set up in initialise
+    static var context: NSManagedObjectContext!
+
     class func fetch<MO: NSManagedObject>(from entityName: String, filter: NSPredicate! = nil, filter2: NSPredicate! = nil, limit: Int = 0,
                                           sort: (key: String, direction: SortDirection)...) -> [MO] {
         return CoreData.fetch(from: entityName, filter: filter, filter2: filter2, limit:limit, sort: sort)
@@ -32,7 +35,7 @@ class CoreData {
         var finished = false
         var requestOffset: Int!
         
-        if let context = Scorecard.context {
+        if let context = CoreData.context {
             // Create fetch request
             
             let request = NSFetchRequest<MO>(entityName: entityName)
@@ -93,7 +96,7 @@ class CoreData {
     
     class func update(errorHandler: (() -> ())! = nil, updateLogic: () -> ()) -> Bool {
         
-        if let context = Scorecard.context {
+        if let context = CoreData.context {
 
             updateLogic()
             
@@ -124,7 +127,7 @@ class CoreData {
     
     class func create<MO: NSManagedObject>(from entityName: String) -> MO {
         var result: MO!
-        if let context = Scorecard.context {
+        if let context = CoreData.context {
             if let entityDescription = NSEntityDescription.entity(forEntityName: entityName, in: context) {
                 result =  MO(entity: entityDescription, insertInto: context) as MO
             }
@@ -133,7 +136,7 @@ class CoreData {
     }
     
     class func delete<MO: NSManagedObject>(record: MO, specialContext: NSManagedObjectContext! = nil) {
-        if let context = Scorecard.context {
+        if let context = CoreData.context {
             context.delete(record)
         }
     }

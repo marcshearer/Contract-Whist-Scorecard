@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         registerDefaults()
         
         // Cache main context for core data
-        Scorecard.context = self.persistentContainer.viewContext
+        CoreData.context = self.persistentContainer.viewContext
 
         // Check if lauchned from notification
         if let options = launchOptions {

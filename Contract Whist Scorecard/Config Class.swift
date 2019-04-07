@@ -25,6 +25,9 @@ class Config {
     // Queue for log messages - blank to disable
     public static let rabbitMQLogQueue = "WhistLogger"
     
+    // Service for log messages - blank to disable
+    public static let multiPeerLogService = "whist-logger"
+    
     // Time unit for auto-play testing (in seconds) - card is played every unit
     public static var autoPlayTimeUnit = 0.05
     

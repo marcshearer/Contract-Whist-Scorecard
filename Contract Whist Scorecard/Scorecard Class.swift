@@ -129,10 +129,7 @@ class Scorecard {
     
     // Admin mode
     static var adminMode = false
-    
-    // Core data context - set up in initialise
-    static var context: NSManagedObjectContext!
-    
+        
     public func initialise(from viewController: UIViewController? = nil, players: Int, maxRounds: Int, recovery: Recovery) {
         
         recovery.initialise(scorecard: self)

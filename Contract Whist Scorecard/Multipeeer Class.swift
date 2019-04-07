@@ -45,12 +45,23 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
     internal var serviceID: String
     internal var sessionList: [String : MCSession] = [:]
     internal var broadcastPeerList: [String: BroadcastPeer] = [:]
-    internal let myPeerID = MCPeerID(displayName: Scorecard.deviceName)
+    internal var myPeerID: MCPeerID
     
     init(purpose: CommsConnectionPurpose, type: CommsConnectionType, serviceID: String?, deviceName: String) {
         self.connectionPurpose = purpose
         self.connectionType = type
         self.serviceID = serviceID!
+        
+        // Create my peer ID to be consistent over time - apparently helps stability!
+        var archivedPeerID = UserDefaults.standard.data(forKey: "MCPeerID")
+        if archivedPeerID == nil {
+            myPeerID = MCPeerID(displayName: Scorecard.deviceName)
+            archivedPeerID = NSKeyedArchiver.archivedData(withRootObject: myPeerID)
+            UserDefaults.standard.set(archivedPeerID, forKey: "MCPeerID")
+            UserDefaults.standard.synchronize()
+        } else {
+            myPeerID = NSKeyedUnarchiver.unarchiveObject(with: archivedPeerID!) as! MCPeerID
+        }
     }
     
     internal func startService(email: String!, recoveryMode: Bool, matchDeviceName: String! = nil) {
@@ -82,6 +93,8 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
         if let broadcastPeer = broadcastPeerList[deviceName] {
             broadcastPeer.shouldReconnect = reconnect
             broadcastPeer.reconnect = reconnect
+            broadcastPeer.state = .notConnected
+            self.stateDelegate?.stateChange(for: commsPeer, reason: reason)
         }
         self.send("disconnect", ["reason" : reason], to: commsPeer)
     }
@@ -127,6 +140,10 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
         return data
     }
     	
+    internal func reset() {
+        // Over-ridden in client
+    }
+
     internal func connectionInfo() {
         var message = "\nPeers"
         for (deviceName, peer) in self.broadcastPeerList {
@@ -148,7 +165,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
         }
         Utility.debugMessage("multipeer", message, force: force)
     }
-    
+
     // MARK: - Session delegate handlers ========================================================== -
     
     internal func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
@@ -156,8 +173,13 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
         
         let deviceName = peerID.displayName
         if let broadcastPeer = broadcastPeerList[deviceName] {
+            let currentState = broadcastPeer.state
             broadcastPeer.state = commsConnectionState(state)
             if broadcastPeer.state == .notConnected{
+                if currentState == .reconnecting {
+                    // Have done a reconnfect and it has now failed - reset connection
+                    self.reset()
+                }
                 if broadcastPeer.reconnect {
                     // Reconnect
                     broadcastPeer.state = .reconnecting
@@ -298,19 +320,6 @@ class MultipeerServerService : MultipeerService, CommsServerHandlerDelegate, MCN
         self.endSessions()
         changeState(to: .notStarted)
     }
-
-    internal func reset() {
-        switch self.connectionType {
-        case .server:
-            // Disconnect - remote connections should reconnect
-            self.endSessions()
-        case .client:
-            // Disconnect any connections and then reconnect
-            self.endSessions()
-        default:
-            break
-        }
-    }
     
     // MARK: - Comms Handler State handler =================================================================== -
 
@@ -364,7 +373,7 @@ class MultipeerServerService : MultipeerService, CommsServerHandlerDelegate, MCN
 }
 
 
-// RabbitMQ Client Service Class ========================================================================= -
+// Multipeer Client Service Class ========================================================================= -
 
 class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCNearbyServiceBrowserDelegate {
     
@@ -403,6 +412,9 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
         
         super.stopService()
         
+        self.endSessions()
+        self.endConnections()
+        
         self.broadcastPeerList = [:]
         if self.client != nil {
             if self.client.browser != nil {
@@ -412,7 +424,6 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
             }
             self.client  = nil
         }
-        self.endSessions()
     }
     
     internal func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, context: [String : String]?, reconnect: Bool = true) -> Bool{
@@ -450,10 +461,16 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
         }
     }
     
+    internal override func reset() {
+        self.debugMessage("Restart browsing")
+        self.client.browser.stopBrowsingForPeers()
+        self.client.browser.startBrowsingForPeers()
+    }
+    
     // MARK: - Browser delegate handlers ===================================================== -
     
     internal func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: Error) {
-        browserDelegate?.error("Unable to start browsing for devices to connect to. Check that wireless and/or bluetooth are enabled")
+        browserDelegate?.error("Unable to connect. Check that wifi is enabled")
     }
     
     internal func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
@@ -520,14 +537,32 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
         if self.client != nil && self.client.browser != nil {
             if state == .notConnected {
                 // Lost connection - need to start browsing for another one
+                self.debugMessage("Start browsing")
                 self.client.browser.startBrowsingForPeers()
             } else if state == .connected {
                 // Connected - stop browsing
+                self.debugMessage("Stop browsing")
                 self.client.browser.stopBrowsingForPeers()
             }
         }
     }
+    
+    // MARK: - Utility Methods ======================================================================== -
+    
+    private func endConnections(matchDeviceName: String! = nil) {
+        Utility.debugMessage("multipeer", "End connections (\(broadcastPeerList.count))")
+        for (deviceName, broadcastPeer) in broadcastPeerList {
+            if matchDeviceName == nil || matchDeviceName == deviceName {
+                if broadcastPeer.state == .connecting {
+                    // Change back to not connected and notify
+                    broadcastPeer.state = .notConnected
+                    self.stateDelegate?.stateChange(for: broadcastPeer.commsPeer)
+                }
+            }
+        }
+    }
 }
+
 
 
 // Broadcast Peer Class ========================================================================= -

@@ -89,7 +89,7 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsS
     
     public func disconnect(from commsPeer: CommsPeer, reason: String = "", reconnect: Bool) {
         if let rabbitMQPeer = findRabbitMQPeer(deviceName: commsPeer.deviceName) {
-            rabbitMQPeer.disconnect(reason: reason, reconnect: reconnect)
+            rabbitMQPeer.disconnect(reason: reason, reconnect: reconnect, reflectStateChange: true)
         }
     }
    
@@ -119,6 +119,9 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsS
         }
     }
     
+    internal func reset() {
+    }
+    
     internal func connectionInfo() {
         var message = "Peers"
         self.forEachPeer { (rabbitMQPeer) in
@@ -139,6 +142,10 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsS
             outputMessage = outputMessage + " Device: \(device)"
         }
         Utility.debugMessage("rabbitMQ", outputMessage, force: force)
+    }
+    
+    internal func restartBrowser() {
+        // Dummy routine which isn't relevant in invite mode
     }
     
     // MARK: - Queue Start/Stop Routines ================================================================= -
@@ -304,13 +311,6 @@ class RabbitMQServerService : RabbitMQService, CommsServerHandlerDelegate, Comms
     internal func cancelInvitationCompletion(_ success: Bool, _ message: String?, _ invited: [InviteReceived]?) {
         self.stopServerEnd()
     }
-
-    internal func reset() {
-        // Used by server to reset all queues
-        self.debugMessage("Resetting RabbitMQ")
-        // Disconnect from any existing peers - they should reconnect
-        self.sendReset(mode: "reset")
-    }
     
     // MARK: - Comms Connection handlers ===================================================================== -
     
@@ -358,7 +358,7 @@ class RabbitMQServerService : RabbitMQService, CommsServerHandlerDelegate, Comms
     private func sendReset(mode: String) {
         for (_, queue) in self.rabbitMQQueueList {
             self.debugMessage("Resetting queue \(queue.queueUUID!)")
-            queue.sendBroadcast(data: ["reset" : mode])
+            queue.sendReset(mode: mode)
         }
     }
 }
@@ -592,8 +592,7 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
     }
     
     internal func connect() {
-        // self.connection = RMQConnection(uri: self.rabbitMQUri, delegate: self, recoverAfter: 2.0)
-        self.connection = RMQConnection(uri: self.rabbitMQUri, tlsOptions: RMQTLSOptions(), channelMax: 0.0, frameMax: 0.0, heartbeat: 5.0, syncTimeout: 20.0, delegate: self, delegateQueue: DispatchQueue.main, recoverAfter: 10.0, recoveryAttempts: 20.0, recoverFromConnectionClose: false)
+        self.connection = RMQConnection(uri: self.rabbitMQUri, delegate: self, recoverAfter: 2.0)
         self.connection.start()
         self.createChannel()
     }
@@ -753,6 +752,10 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
         return self.rabbitMQPeerList[deviceName]
     }
     
+    fileprivate func sendReset(mode: String) {
+        self.sendBroadcast(data: ["reset" : mode])
+    }
+    
     // MARK: - RMQConnectionDelegate Handlers ========================================================================== -
 
     public func connection(_ connection: RMQConnection!, failedToConnectWithError error: Error!) {
@@ -774,12 +777,10 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
             self.recoverStateChange(to: .recovering, message: error?.localizedDescription ?? "")
             
             // Channel has probaby gone - restart connection to rabbitMQ
-            if self.connection == nil {
+            self.disconnect()
+            Utility.executeAfter(delay: 2.0, completion: {
                 self.connect()
-            } else {
-                self.connection?.close()
-                self.connection?.start()
-            }
+            })
         }
     }
     

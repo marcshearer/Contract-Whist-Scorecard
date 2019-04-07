@@ -62,6 +62,8 @@ class Scorecard {
     public var commsHandlerMode: CommsHandlerMode = .none
     public var sendScores = false
     public var notificationSimulator: NotificationSimulator!
+    internal var lastRefresh: Date?
+    internal var lastPeerRefresh: [String : Date] = [:]
     
     // Remote logging
     public var logService: RabbitMQClientService!

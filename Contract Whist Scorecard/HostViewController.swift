@@ -58,7 +58,6 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     private var exiting = false
     private var computerPlayers: [Int : ComputerPlayerDelegate]?
     private var firstTime = true
-    private let whisper = Whisper()
     
     private var connectedPlayers: Int {
         get {
@@ -331,7 +330,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 case "played":
                     _ = self.scorecard.processCardPlayed(data: data! as Any as! [String : Any])
                     self.removeCardPlayed(data: data! as Any as! [String : Any])
-                case "refresh":
+                case "refreshRequest":
                     // Remote device wants a refresh of the currentstate
                     self.scorecard.refreshState(to: peer)
                 default:
@@ -339,6 +338,11 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 }
             }
         }
+    }
+    
+    private func refreshState(playerData : PlayerData) {
+        
+        
     }
     
     // MARK: - Connection Delegate handlers ===================================================================== -
@@ -467,11 +471,11 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 // Update whisper
                 if currentState != peer.state {
                     if (peer.state == .notConnected && peer.autoReconnect) || peer.state == .recovering {
-                        self.whisper.show("Connection lost. Recovering...")
+                        self.playerData[playerNumber - 1].whisper.show("Connection to \(peer.playerName!) lost. Recovering...")
                     }
                 }
                 if peer.state == .connected {
-                    self.whisper.hide("Connection restored")
+                    self.playerData[playerNumber - 1].whisper.hide("Connection to \(peer.playerName!) restored")
                 }
             }
             let ready = (self.connectedPlayers >= 3)
@@ -568,17 +572,6 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             currentState = state
         }
     }
-    
-    // MARK: - Recovery State overrides ===================================================================== -
-
-    func recoveryInProgress(_ recovering: Bool, message: String?) {
-        if recovering {
-            self.whisper.show(message ?? "")
-        } else {
-            self.whisper.hide(message, after: 2.0)
-        }
-    }
-    
     
     // MARK: - TableView Overrides ===================================================================== -
 
@@ -1121,7 +1114,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     
     private func waitOtherPlayers(showDialog: Bool = true, completion: (()->())? = nil) {
         if showDialog {
-            self.whisper.show("Waiting for other players to rejoin...")
+            self.playerData[0].whisper.show("Waiting for other players to rejoin...")
         }
         completion?()
     }
@@ -1175,16 +1168,18 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
 // MARK: - Utility classes ========================================================================= -
 
 class PlayerData {
-    var cell: HostPlayerTableCell!
-    var name: String
-    var email: String
-    var playerMO: PlayerMO!
-    var peer: CommsPeer!
-    var unique: Int
-    var disconnectReason: String! // Have only accepted connection to be able to pass this message when disconnect
-    var inviteStatus: InviteStatus!
-    var faceTimeAddress: String!
-    var oldState: CommsConnectionState!
+    public var cell: HostPlayerTableCell!
+    public var name: String
+    public var email: String
+    public var playerMO: PlayerMO!
+    public var peer: CommsPeer!
+    public var unique: Int
+    public var disconnectReason: String! // Have only accepted connection to be able to pass this message when disconnect
+    public var inviteStatus: InviteStatus!
+    public var faceTimeAddress: String!
+    public var oldState: CommsConnectionState!
+    public var whisper = Whisper()
+    public var lastRefreshSent: Date?
     
     init(name: String, email: String, playerMO: PlayerMO!, peer: CommsPeer!, unique: Int,  disconnectReason: String!, inviteStatus: InviteStatus!) {
         self.name = name

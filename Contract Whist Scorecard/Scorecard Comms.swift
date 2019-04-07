@@ -403,28 +403,52 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     }
     
     public func sendRefreshRequest() {
-         self.sendInstruction("refresh")
+         self.sendInstruction("refreshRequest")
     }
     
     public func refreshState(to commsPeer: CommsPeer! = nil) {
         
-        if self.isHosting {
-            // Hosting online game
-            
-            if !self.gameInProgress || self.handState == nil {
-                // Game not started yet - wait
-                self.sendInstruction("wait", to: commsPeer)
-            } else {
-                // Game in progress - need to resend state - luckily have what we need in handState
-                self.sendPlay(rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce, bonus2: self.handState.bonus2, suits: self.handState.suits, to: commsPeer)
-                self.sendScores(to: commsPeer)
-                self.sendHandState(to: commsPeer)
+        var lastRefresh = self.lastRefresh
+        if commsPeer != nil {
+            if let lastPeerRefresh = self.lastPeerRefresh[commsPeer.deviceName] {
+                if lastRefresh == nil || lastPeerRefresh > lastRefresh! {
+                    lastRefresh = lastPeerRefresh
+                }
             }
-        } else if self.isSharing {
-            // Sharing
-            self.sendScores(to: commsPeer)
         }
-
+        
+        // Only send 1 refresh a second!
+        if lastRefresh?.timeIntervalSinceNow ?? TimeInterval(-2.0) < TimeInterval(-1.0) {
+        
+            if self.isHosting {
+                // Hosting online game
+                
+                if !self.gameInProgress || self.handState == nil {
+                    // Game not started yet - wait
+                    self.sendInstruction("wait", to: commsPeer)
+                    self.sendAutoPlay()
+                } else {
+                    // Game in progress - need to resend state - luckily have what we need in handState
+                    self.sendPlay(rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce, bonus2: self.handState.bonus2, suits: self.handState.suits, to: commsPeer)
+                    self.sendScores(to: commsPeer)
+                    self.sendHandState(to: commsPeer)
+                }
+                
+            } else if self.isSharing {
+                // Sharing
+            
+                self.sendScores(to: commsPeer)
+            }
+            
+            // Update last refresh
+            if commsPeer == nil {
+                // Have updated all peers
+                self.lastRefresh = Date()
+                self.lastPeerRefresh = [:]
+            } else {
+                self.lastPeerRefresh[commsPeer.deviceName] = Date()
+            }
+        }
     }
     
     public func processScores(descriptor: String, data: [String : Any?], bonus2: Bool) -> Int {
@@ -435,7 +459,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             if descriptor == "allscores" {
                 self.enteredPlayer(playerNumber).reset()
             }
-            for (roundNumberData, roundData) in (playerData as! [String : [String : Any]]).sorted(by: {$0.key < $1.key}) {
+            for (roundNumberData, roundData) in (playerData as! [String : [String : Any]]).sorted(by: {Int($0.key)! < Int($1.key)!}) {
                 let roundNumber = Int(roundNumberData)!
                 maxRound = max(maxRound, roundNumber)
                 

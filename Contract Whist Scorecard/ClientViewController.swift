@@ -16,8 +16,9 @@ struct QueueEntry {
 
 enum AppState {
     case notConnected
-    case waiting
+    case connecting
     case connected
+    case waiting
 }
 
 class ClientViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate, SearchDelegate, CutDelegate, GamePreviewDelegate, UIPopoverPresentationControllerDelegate {
@@ -54,7 +55,8 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     public var thisPlayer: String!
     private var thisPlayerNumber: Int!
 
-    private var timer: Timer!
+    private var idleTimer: Timer!
+    private var connectingTimer: Timer!
 
     private var newGame: Bool!
     private var gameOver = false
@@ -279,6 +281,9 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                     
                 case "play", "players":
                     self.scorecard.setCurrentPlayers(players: data!.count)
+                    for playerNumber in 1...self.scorecard.currentPlayers {
+                        self.scorecard.enteredPlayer(playerNumber).reset()
+                    }
                     for (playerNumberData, playerData) in data as! [String : [String : Any]] {
                         let playerNumber = Int(playerNumberData)!
                         let playerName = playerData["name"] as! String
@@ -512,7 +517,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     internal func peerFound(peer: CommsPeer) {
         Utility.mainThread { [unowned self] in
-            Utility.debugMessage("client", "Peer found for \(peer.playerName ?? "unknown player")")
+            Utility.debugMessage("client", "Peer found for \(peer.deviceName)")
             // Check if already got this device - if so disconnect it and replace it
 
             if let index = self.available.index(where: { $0.deviceName == peer.deviceName && $0.peer.framework == peer.framework }) {
@@ -551,7 +556,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     internal func error(_ message: String) {
-       // Ignore - should reconnect anyway
+       self.whisper.show(message, hideAfter: 10.0)
     }
     
     // MARK: - State Delegate handlers ===================================================================== -
@@ -654,6 +659,9 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         var playerName: String!
         var context: [String : String]? = [:]
         
+        // Change to connecting (disables timer)
+        self.appStateChange(to: .connecting)
+        
         if self.thisPlayer != nil {
             let playerMO = scorecard.findPlayerByEmail(self.thisPlayer)
             playerName = playerMO?.name
@@ -666,7 +674,11 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             context?["faceTimeAddress"] = faceTimeAddress!
         }
         
-        if !self.clientService!.connect(to: peer, playerEmail: self.thisPlayer, playerName: playerName, context: context, reconnect: true) {
+        if self.clientService!.connect(to: peer, playerEmail: self.thisPlayer, playerName: playerName, context: context, reconnect: true) {
+            if let index = self.available.index(where: { $0.deviceName == peer.deviceName && $0.peer.framework == peer.framework }) {
+                available[index].lastConnect = Date()
+            }
+        } else {
             self.whisper.show("Error connecting to device", hideAfter: 3.0)
             return false
         }
@@ -690,7 +702,9 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     private func reflectState(peer: CommsPeer) {
         if let combinedIndex = available.index(where: {$0.deviceName == peer.deviceName && $0.framework == peer.framework}) {
             let availableFound = self.available[combinedIndex]
-            availableFound.connecting = false
+            if peer.state != .connecting {
+                availableFound.connecting = false
+            }
             availableFound.oldState = availableFound.peer.state
             availableFound.peer = peer
             self.refreshStatus()
@@ -707,6 +721,19 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
+    @objc private func checkConnecting(_ sender: Any? = nil) {
+        // Periodically check that a peer that thinks it is connecting has not gone quiescent for more than 10 secs
+        
+        for available in self.available {
+            if available.connecting {
+                if available.lastConnect?.timeIntervalSinceNow ?? TimeInterval(-11.0) < TimeInterval(-10.0) {
+                    Utility.mainThread {
+                        self.clientService?.reset()
+                    }
+                }
+            }
+        }
+    }
     
     // MARK: - Cut for dealer delegate routines ===================================================================== -
     
@@ -816,7 +843,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                 cell.stateLabel.text = "Trying to reconnect"
             }
             
-            if self.appState == .notConnected || state != .notConnected {
+            if self.appState == .notConnected || self.appState == .connecting || state != .notConnected {
                 cell.isUserInteractionEnabled = true
                 cell.isEditing = false
                 cell.serviceLabel.textColor = UIColor.black
@@ -829,6 +856,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             }
             
             cell.disconnectButton.addTarget(self, action: #selector(ClientViewController.disconnectPressed(_:)), for: UIControl.Event.touchUpInside)
+            cell.disconnectButton.tag = indexPath.row
             
         } else {
             // My details when joining a game
@@ -851,19 +879,19 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             self.changePlayerAvailable()
         }
         
-        // let backgroundView = UIView()
-        // backgroundView.backgroundColor = UIColor.clear
-        //  cell.selectedBackgroundView = backgroundView
-        
-        return cell!
+       return cell!
     }
     
     internal func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        let availableFound = self.available[indexPath.row]
-        if (appState == .notConnected && availableFound.state == .notConnected) && indexPath.section == self.peerSection {
-            return indexPath
-        } else {
+        if indexPath.section != 1 {
             return nil
+        } else {
+            let availableFound = self.available[indexPath.row]
+            if (appState == .notConnected && availableFound.state == .notConnected) && indexPath.section == self.peerSection {
+                return indexPath
+            } else {
+                return nil
+            }
         }
     }
     
@@ -939,17 +967,24 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
 
     private func appStateChange(to newState: AppState) {
         if newState != self.appState {
+            Utility.debugMessage("client", "Application state \(newState)")
+            
             self.appState = newState
             if newState == .notConnected {
-                self.scheduleRefresh()
+                self.startIdleTimer()
             } else {
-                self.clearSchedule()
+                self.stopIdleTimer()
+            }
+            if newState == .connecting {
+                self.startConnectingTimer()
+            } else {
+                self.stopConnectingTimer()
             }
         }
     }
     
-    private func scheduleRefresh() {
-        self.timer = Timer.scheduledTimer(
+    private func startIdleTimer() {
+        self.idleTimer = Timer.scheduledTimer(
             timeInterval: TimeInterval(10),
             target: self,
             selector: #selector(ClientViewController.refreshInvites(_:)),
@@ -957,9 +992,23 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             repeats: true)
     }
     
-    private func clearSchedule() {
-        self.timer.invalidate()
+    private func stopIdleTimer() {
+        self.idleTimer?.invalidate()
     }
+    
+    private func startConnectingTimer() {
+        self.connectingTimer = Timer.scheduledTimer(
+            timeInterval: TimeInterval(2),
+            target: self,
+            selector: #selector(ClientViewController.checkConnecting(_:)),
+            userInfo: nil,
+            repeats: true)
+    }
+    
+    private func stopConnectingTimer() {
+        self.connectingTimer?.invalidate()
+    }
+
     
     private func handlerCompleteNotification() -> NSObjectProtocol? {
         // Set a notification for handler complete
@@ -980,6 +1029,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         if self.recoveryMode {
             self.exitClient(resetRecovery: false)
         } else {
+            self.clientService?.disconnect(from: self.available[button.tag].peer, reason: "Disconnect pressed")
             self.clientService?.stop()
             self.matchDeviceName = nil
             self.clientService?.start(email: self.thisPlayer)
@@ -1058,7 +1108,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     public func finishClient(resetRecovery: Bool = true) {
-        self.clearSchedule()
+        self.stopIdleTimer()
         UIApplication.shared.isIdleTimerDisabled = false
         self.finishConnection(self.multipeerClient)
         self.multipeerClient = nil
@@ -1273,24 +1323,25 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
 
-class Available {
-    var peer: CommsPeer
-    var oldState: CommsConnectionState = .notConnected
-    var connecting = false
-    var expires: Date?
-    var inviteUUID: String?
+fileprivate class Available {
+    fileprivate var peer: CommsPeer
+    fileprivate var oldState: CommsConnectionState = .notConnected
+    fileprivate var connecting = false
+    fileprivate var expires: Date?
+    fileprivate var inviteUUID: String?
+    fileprivate var lastConnect: Date?
     
-    var state: CommsConnectionState {
+    fileprivate var state: CommsConnectionState {
         get {
             return self.peer.state
         }
     }
-    var deviceName: String {
+    fileprivate var deviceName: String {
         get {
             return self.peer.deviceName
         }
     }
-    var framework: CommsConnectionFramework {
+    fileprivate var framework: CommsConnectionFramework {
         get {
             return self.peer.framework
         }

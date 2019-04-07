@@ -739,9 +739,9 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         // configure the hand section
         
         var maxSuitCards = 0
-        handCardsPerRow = 6
         let handTableViewHeight = handViewHeight - 16
         let handTableViewWidth = handViewWidth! - 16
+        handCardsPerRow = (handTableViewWidth >= 350 ? 6 : 5)
         // Set hand height
         self.handHeightConstraint.constant = handViewHeight
         

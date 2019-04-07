@@ -187,6 +187,8 @@ protocol CommsHandlerDelegate : class {
     func send(_ descriptor: String, _ dictionary: Dictionary<String, Any?>!, to commsPeer: CommsPeer?, matchEmail: String?)
 
     func disconnect(from commsPeer: CommsPeer, reason: String, reconnect: Bool)
+    
+    func reset()
 
     func connectionInfo()
     
@@ -227,8 +229,6 @@ protocol CommsServerHandlerDelegate : CommsHandlerDelegate {
     func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool)
     
     func stop()
-    
-    func reset()
 }
 
 extension CommsServerHandlerDelegate {

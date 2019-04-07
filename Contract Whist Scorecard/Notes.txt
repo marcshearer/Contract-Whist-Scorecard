@@ -73,6 +73,11 @@ Change color of online image to match bluetooth
 Make host and client controllers popups
 Renamed various components
 
+Next version -------
+Restructured client/server
+Introduced whispers for network errors
+Better error handling for rabbitMQ
+
 Bugs fix now
 ------------
 In search dialogue (on iPad) if filter search any users who don't have a picture sometimes get changed to squares
@@ -81,6 +86,8 @@ Resume game doesn't seem to work during bidding phase - dealer gets out of line
 
 Short-term
 ----------
+Think about using nearby service for a logger - apparently it works in MacOS
+Think about making sync class a singleton with a queue
 Make admin rotate options less available
 Add tests for temporary settings
 Add tests for history / location to check they're not saved if play a game

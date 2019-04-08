@@ -27,7 +27,6 @@
 		B20A66FE1E24002400E75190 /* GameSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20A66FD1E24002300E75190 /* GameSummaryViewController.swift */; };
 		B20DA0401E139C450040221D /* HighScoresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DA03F1E139C450040221D /* HighScoresViewController.swift */; };
 		B20DA0441E142D1E0040221D /* SelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DA0431E142D1E0040221D /* SelectionViewController.swift */; };
-		B20DA04A1E164EE60040221D /* Section headings in Resources */ = {isa = PBXBuildFile; fileRef = B20DA0491E164EE60040221D /* Section headings */; };
 		B20DA04C1E179DC70040221D /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DA04B1E179DC70040221D /* WelcomeViewController.swift */; };
 		B20DA0521E1FED040040221D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B20DA0511E1FED040040221D /* CloudKit.framework */; };
 		B211E137224164FB00B48D64 /* SelectPlayers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211E136224164FB00B48D64 /* SelectPlayers.swift */; };
@@ -207,7 +206,6 @@
 		B20A66FD1E24002300E75190 /* GameSummaryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameSummaryViewController.swift; sourceTree = "<group>"; };
 		B20DA03F1E139C450040221D /* HighScoresViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HighScoresViewController.swift; sourceTree = "<group>"; };
 		B20DA0431E142D1E0040221D /* SelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SelectionViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		B20DA0491E164EE60040221D /* Section headings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "Section headings"; sourceTree = "<group>"; };
 		B20DA04B1E179DC70040221D /* WelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		B20DA04F1E1FEC5F0040221D /* Contract Whist Scorecard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Contract Whist Scorecard.entitlements"; sourceTree = "<group>"; };
 		B20DA0511E1FED040040221D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -890,8 +888,6 @@
 				CCEA53E21DF3D19F0045292C /* Notes.txt */,
 				B2B1802021195FFA008D3BAA /* Contract Whist Scorecard.pages */,
 				CC4CC0F61DEADC32007FB24F /* Products */,
-				B20DA04F1E1FEC5F0040221D /* Contract Whist Scorecard.entitlements */,
-				B20DA0491E164EE60040221D /* Section headings */,
 				CC86557B1E021518000AF391 /* Standard Components */,
 				CC86557A1E021503000AF391 /* View Controllers */,
 				CC8655831E0216B6000AF391 /* Data & Utility Classes */,
@@ -919,6 +915,7 @@
 				CC4CC1041DEADC32007FB24F /* LaunchScreen.storyboard */,
 				CC4CC1071DEADC32007FB24F /* Info.plist */,
 				B2B1802621196166008D3BAA /* Contract_Whist_Scorecard.xcdatamodeld */,
+				B20DA04F1E1FEC5F0040221D /* Contract Whist Scorecard.entitlements */,
 			);
 			name = "Standard Components";
 			sourceTree = "<group>";
@@ -1151,7 +1148,6 @@
 				CC4CC1061DEADC32007FB24F /* LaunchScreen.storyboard in Resources */,
 				B22789071FB83AC4009BABCA /* WalkthroughViewController.storyboard in Resources */,
 				B2594E852251FEB2004398FB /* launch_multiple_simulators.sh in Resources */,
-				B20DA04A1E164EE60040221D /* Section headings in Resources */,
 				B2DD5D7A1ECE3C8800725B55 /* Assets.xcassets in Resources */,
 				B227891E1FB84F66009BABCA /* LocationViewController.storyboard in Resources */,
 				B22789001FB83AA7009BABCA /* GetStartedViewController.storyboard in Resources */,

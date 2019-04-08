@@ -20,7 +20,6 @@ extension OSLog {
 
 class Utility {
     
-    static private var isLogging = false
     static private var _isDevelopment: Bool!
     static private var _isSimulator: Bool!
     
@@ -444,29 +443,26 @@ class Utility {
     class func debugMessage(_ from: String, _ message: String, showDevice: Bool = false, force: Bool = false, mainThread: Bool = true) {
         
         func closure() {
-            if !Utility.isLogging {
-                // Don't log anything if already in a log
-                Utility.isLogging = true
-                
-                var outputMessage: String
-                let timestamp = Utility.dateString(Date(), format: "HH:mm:ss.SS", localized: false)
-                outputMessage = "DEBUG(\(from)): \(timestamp)"
-                if showDevice {
-                    #if ContractWhist
-                    outputMessage = outputMessage + " - Device:\(Scorecard.deviceName)"
-                    #else
-                    outputMessage = outputMessage + UIDevice.current.name
-                    #endif
-                }
-                outputMessage = outputMessage + " - \(message)"
-                if ProcessInfo.processInfo.environment["MULTISIM"] == "TRUE" {
-                    // Running multiple simulators - output to system console
-                    os_log("%{PUBLIC}@", log:OSLog.debugInfo, type:.info, outputMessage)
-                } else {
-                    print(outputMessage)
-                    fflush(stdout)
-                }
+            var outputMessage: String
+            let timestamp = Utility.dateString(Date(), format: "HH:mm:ss.SS", localized: false)
+            outputMessage = "DEBUG(\(from)): \(timestamp)"
+            if showDevice {
                 #if ContractWhist
+                    outputMessage = outputMessage + " - Device:\(Scorecard.deviceName)"
+                #else
+                    outputMessage = outputMessage + UIDevice.current.name
+                #endif
+            }
+            outputMessage = outputMessage + " - \(message)"
+            if ProcessInfo.processInfo.environment["MULTISIM"] == "TRUE" {
+                // Running multiple simulators - output to system console
+                os_log("%{PUBLIC}@", log:OSLog.debugInfo, type:.info, outputMessage)
+            } else {
+                print(outputMessage)
+                fflush(stdout)
+            }
+            #if ContractWhist
+                // Write to rabbitMQ logs
                 if (Config.rabbitMQUri_DevMode != .amqpServer || Scorecard.adminMode || force) && Config.rabbitMQLogQueue != "" && Config.rabbitMQUri != "" {
                     let scorecard = Scorecard.getScorecard()!
                     if scorecard.logService == nil {
@@ -476,16 +472,15 @@ class Utility {
                     scorecard.logQueue.sendBroadcast(data: ["message" : outputMessage,
                                                             "timestamp" : timestamp])
                 }
-                
-                if (Scorecard.adminMode || force) && Config.multiPeerLogService != "" {
+            
+                // Write to multi-peer logs
+                if Config.multiPeerLogService != "" {
                     MultipeerLogger.logger.write(timestamp: timestamp, message: outputMessage)
                 }
-                
-                #endif
-            }
-            Utility.isLogging = false
-        }
             
+            #endif
+        }
+        
         if Utility.isDevelopment || Scorecard.adminMode || force {
             if mainThread {
                 Utility.mainThread(suppressDebug: true, execute: {

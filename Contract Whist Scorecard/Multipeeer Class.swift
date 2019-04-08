@@ -104,7 +104,9 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
         if let commsPeer = commsPeer {
             toDeviceName = commsPeer.deviceName
         }
-        self.debugMessage("Sending \(descriptor)", device: toDeviceName)
+        if descriptor != "log" {
+            self.debugMessage("Sending \(descriptor)", device: toDeviceName)
+        }
         
         let data = prepareData(descriptor, dictionary)
         if data != nil {
@@ -177,7 +179,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
             broadcastPeer.state = commsConnectionState(state)
             if broadcastPeer.state == .notConnected{
                 if currentState == .reconnecting {
-                    // Have done a reconnfect and it has now failed - reset connection
+                    // Have done a reconnect and it has now failed - reset connection
                     self.reset()
                 }
                 if broadcastPeer.reconnect {

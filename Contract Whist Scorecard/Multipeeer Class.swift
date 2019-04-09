@@ -165,7 +165,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
         if let device = device {
             outputMessage = outputMessage + " Device: \(device)"
         }
-        Utility.debugMessage("multipeer", message, force: force)
+        Utility.debugMessage((self.serviceID == "whist-logger" ? "logger" : "multipeer"), message, force: force)
     }
 
     // MARK: - Session delegate handlers ========================================================== -

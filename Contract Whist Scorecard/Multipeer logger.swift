@@ -8,26 +8,23 @@
 
 import Foundation
 
-class MultipeerLogger : CommsBrowserDelegate, CommsStateDelegate, CommsConnectionDelegate, CommsDataDelegate {
-    func didReceiveData(descriptor: String, data: [String : Any?]?, from peer: CommsPeer) {
-        
-    }
-    
-    func connectionReceived(from peer: CommsPeer, info: [String : Any?]?) -> Bool {
-        return true
-    }
-    
+class MultipeerLogger : CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate {
     
     static let logger = MultipeerLogger()
     private var service: CommsClientHandlerDelegate?
     private var loggerList: [String : MultipeerLoggerEntry] = [:]
+    private var logHistory: [LogEntry] = []
+    private var historyElement = 0
+    private var logUUID: String?
     
     init() {
         
         self.service = MultipeerClientService(purpose: .other, serviceID: Config.multiPeerLogService, deviceName: Scorecard.deviceName)
         self.service?.browserDelegate = self
         self.service?.stateDelegate = self
+        self.service?.dataDelegate = self
         self.service?.start()
+        self.logUUID = UUID().uuidString
     }
     
     func peerFound(peer: CommsPeer) {
@@ -65,10 +62,15 @@ class MultipeerLogger : CommsBrowserDelegate, CommsStateDelegate, CommsConnectio
     func error(_ message: String) {
     }
     
-    func write(timestamp: String, message: String) {
+    func write(timestamp: String, source: String, message: String) {
+        logHistory.append(LogEntry(timestamp: timestamp, source: source, message: message))
         if loggerList.count > 0 {
-            let data = ["timestamp" : timestamp,
-                        "message"   : message   ]
+            let data: [String : [String : String]] =
+                ["\(historyElement)" : [ "uuid"      : self.logUUID!,
+                                         "timestamp" : timestamp,
+                                         "source"    : source   ,
+                                         "message"   : message   ]]
+            historyElement += 1
             for (_, logger) in loggerList {
                 if logger.peer.state == .connected && logger.accepted {
                     self.service?.send("log", data, to: logger.peer)
@@ -78,7 +80,31 @@ class MultipeerLogger : CommsBrowserDelegate, CommsStateDelegate, CommsConnectio
     }
     
     func stateChange(for peer: CommsPeer, reason: String?) {
+        // Update peer
         self.loggerList[peer.deviceName]?.peer = peer
+    }
+
+    func didReceiveData(descriptor: String, data: [String : Any?]?, from peer: CommsPeer) {
+        if descriptor == "lastSequence" {
+            if let lastSequence = data?["sequence"] as! Int?, let logUUID = data?["uuid"] as! String? {
+                if let logger = self.loggerList[peer.deviceName] {
+                    if peer.state == .connected && logger.accepted {
+                        var data : [String : [String : String]] = [:]
+                        for entry in logHistory {
+                            if historyElement > lastSequence || logUUID != self.logUUID {
+                                data["\(historyElement)"] =
+                                    [ "uuid" : self.logUUID!,
+                                      "timestamp" : (entry.timestamp ?? ""),
+                                      "source"    : (entry.source    ?? ""),
+                                      "message"   : (entry.message   ?? "")]
+                            }
+                            historyElement += 1
+                        }
+                        self.service?.send("log", data, to: peer)
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -88,5 +114,17 @@ fileprivate class MultipeerLoggerEntry {
     
     init(peer: CommsPeer) {
         self.peer = peer
+    }
+}
+
+fileprivate class LogEntry {
+    public var timestamp: String?
+    public var source: String?
+    public var message: String?
+    
+    init(timestamp: String?, source: String?, message:String?) {
+        self.timestamp = timestamp
+        self.source = source
+        self.message = message
     }
 }

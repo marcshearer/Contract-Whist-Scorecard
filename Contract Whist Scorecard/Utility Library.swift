@@ -469,13 +469,14 @@ class Utility {
                         scorecard.logService = RabbitMQClientService(purpose: .other, serviceID: Config.rabbitMQUri, deviceName: Scorecard.deviceName)
                         scorecard.logQueue = scorecard.logService.startQueue(delegate: scorecard.logService, queueUUID: Config.rabbitMQLogQueue)
                     }
-                    scorecard.logQueue.sendBroadcast(data: ["message" : outputMessage,
-                                                            "timestamp" : timestamp])
+                    scorecard.logQueue.sendBroadcast(data: ["0" : ["from"      : from,
+                                                                   "message"   : message,
+                                                                   "timestamp" : timestamp]])
                 }
             
                 // Write to multi-peer logs
                 if Config.multiPeerLogService != "" {
-                    MultipeerLogger.logger.write(timestamp: timestamp, message: outputMessage)
+                    MultipeerLogger.logger.write(timestamp: timestamp, source: from, message: message)
                 }
             
             #endif

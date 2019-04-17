@@ -566,7 +566,7 @@ public protocol RabbitMQBroadcastDelegate : class {
 
 public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
     
-    private weak var connection: RMQConnection!
+    private var connection: RMQConnection!
     private weak var channel: RMQChannel!
     private weak var queue: RMQQueue!
     private weak var exchange: RMQExchange!

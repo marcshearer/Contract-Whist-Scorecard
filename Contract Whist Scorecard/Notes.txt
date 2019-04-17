@@ -88,7 +88,8 @@ Resume game doesn't seem to work during bidding phase - dealer gets out of line
 
 Short-term
 ----------
-∫Think about making sync class a singleton with a queue
+Should re-send invitation from host
+Think about making sync class a singleton with a queue
 Make admin rotate options less available
 Add tests for temporary settings
 Add tests for history / location to check they're not saved if play a game

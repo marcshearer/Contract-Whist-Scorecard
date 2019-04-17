@@ -16,6 +16,19 @@ class MultipeerLogger : CommsBrowserDelegate, CommsStateDelegate, CommsDataDeleg
     private var logHistory: [LogEntry] = []
     private var historyElement = 0
     private var logUUID: String?
+    public  var connected: Bool {
+        // Check if any connections open
+        get {
+            var result = false
+            for (_, logger) in self.loggerList {
+                if logger.peer.state == .connected {
+                    result = true
+                    break
+                }
+            }
+            return result
+        }
+    }
     
     init() {
         

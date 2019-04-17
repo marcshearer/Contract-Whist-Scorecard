@@ -17,7 +17,7 @@ protocol StatisticsDelegate : class {
     
 }
 
-class StatisticsViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate {
+class StatisticsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     

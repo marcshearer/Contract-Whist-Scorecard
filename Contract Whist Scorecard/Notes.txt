@@ -69,14 +69,16 @@ Setting to show status bar
 Enable user interaction on labels in search
 Change the way downloading of users works
 Access to download/add users in Players and online game
-Change color of online image to match bluetooth
-Make host and client controllers popups
+Change color of online image to match bluetooth	
 Renamed various components
-
+∫∫
 4.6 (10-11) -------
 Restructured client/server
 Introduced whispers for network errors
 Better error handling for rabbitMQ
+
+4.6 (12) -------
+Multi-peer logging
 
 Bugs fix now
 ------------
@@ -86,8 +88,7 @@ Resume game doesn't seem to work during bidding phase - dealer gets out of line
 
 Short-term
 ----------
-Think about using nearby service for a logger - apparently it works in MacOS
-Think about making sync class a singleton with a queue
+∫Think about making sync class a singleton with a queue
 Make admin rotate options less available
 Add tests for temporary settings
 Add tests for history / location to check they're not saved if play a game

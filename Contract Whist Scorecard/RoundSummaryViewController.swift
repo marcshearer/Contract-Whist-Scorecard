@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RoundSummaryViewController: CustomViewController {
+class RoundSummaryViewController: UIViewController {
 
     // MARK: - Class Properties ======================================================================== -
     

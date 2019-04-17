@@ -16,7 +16,7 @@ enum DetailMode {
     case none
 }
 
-class PlayerDetailViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, SyncDelegate {
+class PlayerDetailViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, SyncDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     // Main state properties

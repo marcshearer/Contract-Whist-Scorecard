@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import CoreLocation
 
-class HistoryViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate {
+class HistoryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     

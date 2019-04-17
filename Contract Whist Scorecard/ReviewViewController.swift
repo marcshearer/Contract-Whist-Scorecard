@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ReviewViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate {
+class ReviewViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     // Properties passed to/from segues
     public var scorecard: Scorecard!

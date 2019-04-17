@@ -7,14 +7,14 @@
 //
 
 import UIKit
-        
+
 enum ConnectionMode {
     case unknown
     case nearby
     case online
     case loopback
 }
-        
+
 enum InviteStatus {
     case none
     case inviting
@@ -22,9 +22,9 @@ enum InviteStatus {
     case reconnecting
 }
 
-class HostViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate,
+class HostViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate,
 CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStateDelegate, SearchDelegate {
-
+    
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
@@ -42,7 +42,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     
     // Queue
     private var queue: [QueueEntry] = []
-
+    
     private var playerData: [PlayerData] = []
     private var unique = 0
     private var observer: NSObjectProtocol?
@@ -97,7 +97,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     @IBOutlet weak var scorecardButton: RoundedButton!
     @IBOutlet weak var continueButton: RoundedButton!
     @IBOutlet weak var imageView: UIImageView!
-
+    
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     
     @IBAction func hideHostGamePreview(segue:UIStoryboardSegue) {
@@ -147,7 +147,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         if self.playingComputer {
             // Game against computer
             loopback = true
-             defaultConnectionMode = .loopback
+            defaultConnectionMode = .loopback
             // Don't send scores automatically when updated - send explicitly
             self.scorecard.sendScores = false
             
@@ -167,7 +167,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         // Set finish button
         finishButton.setImage(UIImage(named: self.backImage), for: .normal)
         finishButton.setTitle(self.backText)
-
+        
         // Allow broadcast of scores
         self.scorecard.sendScores = true
         
@@ -213,7 +213,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         } else {
             self.setConnectionMode(defaultConnectionMode)
         }
-
+        
         // Update instructions / title
         if Utility.isSimulator {
             self.titleBar.title = Scorecard.deviceName
@@ -272,7 +272,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 
                 // Disconnect
                 self.setConnectionMode(.unknown)
-            
+                
                 switch mode {
                 case .nearby:
                     // Start broadcasting
@@ -346,7 +346,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     }
     
     // MARK: - Connection Delegate handlers ===================================================================== -
-
+    
     internal func connectionReceived(from peer: CommsPeer, info: [String : Any?]?) -> Bool {
         // Will accept all connections, but some will automatically disconnect with a relevant error message once connection complete
         var playerMO: PlayerMO! = nil
@@ -362,7 +362,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             // A player returning from the same device - probably a reconnect - just update the details
             self.playerData[index].peer = peer
             self.updateFaceTimeAddress(info: info, playerData: self.playerData[index])
-         } else if self.connectionMode == .online {
+        } else if self.connectionMode == .online {
             // Should already be in list
             if let index = self.playerData.index(where: {$0.email == peer.playerEmail}) {
                 if self.playerData[index].peer != nil && self.playerData[index].peer.deviceName != peer.deviceName && self.playerData[index].peer.state != .notConnected {
@@ -553,7 +553,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 case .reconnecting:
                     inviteStatus = .reconnecting
                 default:
-                     break
+                    break
                 }
                 if playerData.count >= 2 {
                     for playerNumber in 2...playerData.count {
@@ -574,7 +574,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     }
     
     // MARK: - TableView Overrides ===================================================================== -
-
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         switch tableView.tag {
         case 1:
@@ -677,7 +677,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             default:
                 break
             }
-           
+            
         } else {
             // Player
             switch tableView.tag {
@@ -692,7 +692,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             default:
                 break
             }
-
+            
             cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! HostPlayerTableCell
             
             self.playerData[dataRow].cell = cell
@@ -705,7 +705,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         cell.selectedBackgroundView = backgroundView
         
         return cell
-
+        
     }
     
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
@@ -825,7 +825,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 self.startOnlineConnection()
                 self.startHostBroadcast(email: self.playerData[0].email, name: self.playerData[0].name, invite: invite, queueUUID: (self.scorecard.recoveryMode ? self.scorecard.recoveryConnectionUUID : nil))
                 
-             } else {
+            } else {
                 // Incomplete list of invitees - exit
                 if self.defaultConnectionMode == .unknown {
                     self.setConnectionMode(.unknown)
@@ -849,7 +849,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     }
     
     // MARK: - User Interface Methods ================================================================ -
-
+    
     func updateCell(playerData: PlayerData, hostMode: Bool) {
         if let cell = playerData.cell {
             cell.playerNameLabel.text = playerData.name
@@ -954,7 +954,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             self.startHostBroadcast(email: playerData[0].email, name: playerData[0].email)
         }
     }
-
+    
     private func startOnlineConnection() {
         // Create comms service and take hosting delegate
         rabbitMQHost = RabbitMQServerService(purpose: .playing, serviceID: nil)
@@ -983,8 +983,8 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     private func startLoopbackClient(scorecard: Scorecard, email: String, name: String, deviceName: String, hostPeer: CommsPeer, playerNumber: Int) {
         let computerPlayer = ComputerPlayer(scorecard: scorecard, email: email, name: name, deviceName: deviceName, hostPeer: hostPeer, playerNumber: playerNumber)
         computerPlayers?[playerNumber] = computerPlayer as ComputerPlayerDelegate
-   }
-
+    }
+    
     private func takeDelegates(_ delegate: Any?) {
         self.hostService?.stateDelegate = delegate as! CommsStateDelegate?
         self.hostService?.dataDelegate = delegate as! CommsDataDelegate?
@@ -1050,10 +1050,10 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         }
         guestPlayerTableView.endUpdates()
     }
-        
+    
     private func setupPlayers() {
         var xref: [Int] = []
-
+        
         for playerNumber in 1...playerData.count {
             if self.scorecard.recoveryMode {
                 // Ensure players are in same order as before
@@ -1124,27 +1124,31 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         self.hostService?.start(email: email, queueUUID: queueUUID, name: name, invite: invite, recoveryMode: self.scorecard.recoveryMode)
     }
     
-    public func finishHost() {
+    public func finishHost(completion: (()->())? = nil) {
         self.scorecard.sendScores = false
-        self.stopHostBroadcast()
-        self.takeDelegates(nil)
-        self.scorecard.commsDelegate = nil
-        self.hostService = nil
-        self.scorecard.resetSharing()
-        self.clearHandlerCompleteNotification(observer: self.observer)
-        self.scorecard.resetOverrideSettings()
+        self.stopHostBroadcast(completion: {
+            self.takeDelegates(nil)
+            self.scorecard.commsDelegate = nil
+            self.hostService = nil
+            self.scorecard.resetSharing()
+            self.clearHandlerCompleteNotification(observer: self.observer)
+            self.scorecard.resetOverrideSettings()
+            completion?()
+        })
     }
     
     private func exitHost() {
         self.exiting = true
-        self.finishHost()
-        self.performSegue(withIdentifier: "hideHost", sender: self)
+        self.finishHost(completion: {
+            self.performSegue(withIdentifier: "hideHost", sender: self)
+        })
     }
     
-    private func stopHostBroadcast() {
+    private func stopHostBroadcast(completion: (()->())? = nil) {
         // Revert to normal sharing (if enabled)
-        self.hostService?.stop()
+        self.hostService?.stop(completion: completion)
     }
+    
     // MARK: - Segue Prepare Handler ================================================================ -
     
     override internal func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -1164,7 +1168,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         }
     }
 }
-        
+
 // MARK: - Utility classes ========================================================================= -
 
 class PlayerData {

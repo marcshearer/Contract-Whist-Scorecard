@@ -21,7 +21,7 @@ enum AppState {
     case waiting
 }
 
-class ClientViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate, SearchDelegate, CutDelegate, GamePreviewDelegate, UIPopoverPresentationControllerDelegate {
+class ClientViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate, SearchDelegate, CutDelegate, GamePreviewDelegate, UIPopoverPresentationControllerDelegate {
 
     // MARK: - Class Properties ======================================================================== -
     
@@ -57,6 +57,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
 
     private var idleTimer: Timer!
     private var connectingTimer: Timer!
+    private var finishing = false
 
     private var newGame: Bool!
     private var gameOver = false
@@ -970,7 +971,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             Utility.debugMessage("client", "Application state \(newState)")
             
             self.appState = newState
-            if newState == .notConnected {
+            if newState == .notConnected && !finishing {
                 self.startIdleTimer()
             } else {
                 self.stopIdleTimer()
@@ -984,6 +985,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     private func startIdleTimer() {
+        self.stopIdleTimer()
         self.idleTimer = Timer.scheduledTimer(
             timeInterval: TimeInterval(10),
             target: self,
@@ -993,10 +995,13 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     private func stopIdleTimer() {
+        Utility.debugMessage("client", "Stopping idle timer (\(self.idleTimer != nil))")
         self.idleTimer?.invalidate()
+        self.idleTimer = nil
     }
     
     private func startConnectingTimer() {
+        self.stopConnectingTimer()
         self.connectingTimer = Timer.scheduledTimer(
             timeInterval: TimeInterval(2),
             target: self,
@@ -1007,6 +1012,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     private func stopConnectingTimer() {
         self.connectingTimer?.invalidate()
+        self.connectingTimer = nil
     }
 
     
@@ -1108,7 +1114,9 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     public func finishClient(resetRecovery: Bool = true) {
+        self.finishing = true
         self.stopIdleTimer()
+        self.stopConnectingTimer()
         UIApplication.shared.isIdleTimerDisabled = false
         self.finishConnection(self.multipeerClient)
         self.multipeerClient = nil

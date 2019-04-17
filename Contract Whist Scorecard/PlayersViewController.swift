@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class PlayersViewController: CustomViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class PlayersViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     // MARK: - Class Properties ======================================================================== -
     

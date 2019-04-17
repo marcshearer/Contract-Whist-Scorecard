@@ -8,7 +8,7 @@
 
 import UIKit
 
-class GetStartedViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource {
+class GetStartedViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     // MARK: - Class Properties ======================================================================== -
     

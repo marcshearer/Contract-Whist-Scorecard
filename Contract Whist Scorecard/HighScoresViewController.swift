@@ -14,7 +14,7 @@ enum HighScoreType {
     case twosMade
 }
 
-class HighScoresViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate {
+class HighScoresViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     

@@ -482,7 +482,7 @@ class Utility {
             #endif
         }
         
-        if Utility.isDevelopment || Scorecard.adminMode || force {
+        if Utility.isDevelopment || Scorecard.adminMode || force || (Config.multiPeerLogService != "" && MultipeerLogger.logger.connected) {
             if mainThread {
                 Utility.mainThread(suppressDebug: true, execute: {
                     closure()

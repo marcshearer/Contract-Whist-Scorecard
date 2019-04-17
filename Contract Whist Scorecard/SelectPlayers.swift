@@ -15,7 +15,7 @@ public enum DescriptionMode {
     case none
 }
 
-class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, SyncDelegate {
+class SelectPlayersViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SyncDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     

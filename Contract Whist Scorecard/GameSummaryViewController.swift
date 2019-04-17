@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, SyncDelegate, UIPopoverControllerDelegate {
+class GameSummaryViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SyncDelegate, UIPopoverControllerDelegate {
 
     // Main state properties
     public var scorecard: Scorecard!

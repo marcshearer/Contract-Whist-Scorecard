@@ -14,7 +14,7 @@ enum ScorepadMode {
     case amend
 }
 
-class ScorepadViewController: CustomViewController,
+class ScorepadViewController: UIViewController,
                               UITableViewDataSource, UITableViewDelegate,
                               UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,
                               HandStatusDelegate {

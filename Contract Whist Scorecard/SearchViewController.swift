@@ -15,7 +15,7 @@ protocol SearchDelegate : class {
     
 }
 
-class SearchViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
+class SearchViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
 
     // Main state properties
     public var scorecard: Scorecard!

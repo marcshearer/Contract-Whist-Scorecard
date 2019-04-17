@@ -13,7 +13,7 @@ protocol GamePreviewDelegate {
     func gamePreviewComplete()
 }
 
-class GamePreviewViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, CutDelegate, UIPopoverPresentationControllerDelegate {
+class GamePreviewViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, CutDelegate, UIPopoverPresentationControllerDelegate {
     
     // MARK: - Class Properties ================================================================ -
     

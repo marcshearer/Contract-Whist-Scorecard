@@ -64,9 +64,10 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsServerHandlerDelegat
         LoopbackService.peerList[self.myPeer.deviceName] = LoopbackDelegates(peer: self.myPeer , connectionDelegate: self.connectionDelegate, stateDelegate: self.stateDelegate, dataDelegate: self.dataDelegate, loopbackServiceDelegate: self)
     }
  
-    public func stop() {
+    public func stop(completion: (()->())?) {
         // Remove myself from the shared peer list
         LoopbackService.peerList.removeValue(forKey: self.myPeer.deviceName)
+        completion?()
     }
     
     func reset() {

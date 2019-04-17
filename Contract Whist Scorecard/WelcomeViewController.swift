@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import MessageUI
 
-class WelcomeViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, ReconcileDelegate, SyncDelegate, MFMailComposeViewControllerDelegate, UIPopoverPresentationControllerDelegate {
+class WelcomeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ReconcileDelegate, SyncDelegate, MFMailComposeViewControllerDelegate, UIPopoverPresentationControllerDelegate {
 
     // MARK: - Class Properties ================================================================ -
     
@@ -351,7 +351,6 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         }
         
         welcomeActionCell.actionButton.tag = indexPath.row + 1
-        welcomeActionCell.separatorInset = UIEdgeInsets.init(top: 0.0, left: welcomeActionCell.bounds.size.width, bottom: 0.0, right: 0.0);
         welcomeActionCell.actionButton.addTarget(self, action: #selector(WelcomeViewController.actionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
         self.enableButtons(button: indexPath.row+1)
         
@@ -830,5 +829,4 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
 
 class WelcomeActionCell: UITableViewCell {
     @IBOutlet weak var actionButton: RoundedButton!
-    @IBOutlet weak var resumeButtonView: UIView!
 }

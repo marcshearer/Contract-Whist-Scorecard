@@ -228,7 +228,7 @@ protocol CommsServerHandlerDelegate : CommsHandlerDelegate {
     
     func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool)
     
-    func stop()
+    func stop(completion: (()->())?)
 }
 
 extension CommsServerHandlerDelegate {
@@ -259,6 +259,10 @@ extension CommsServerHandlerDelegate {
     
     func start(email: String!, queueUUID: String!, recoveryMode: Bool) {
         start(email: email, queueUUID: queueUUID, name: nil, invite: nil, recoveryMode: recoveryMode)
+    }
+    
+    func stop() {
+        stop(completion: nil)
     }
 
 }

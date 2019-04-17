@@ -305,7 +305,7 @@ class MultipeerServerService : MultipeerService, CommsServerHandlerDelegate, MCN
         
     }
     
-    internal func stop() {
+    internal func stop(completion: (()->())?) {
         self.debugMessage("Stop Server \(self.connectionPurpose)")
         
         super.stopService()
@@ -321,6 +321,7 @@ class MultipeerServerService : MultipeerService, CommsServerHandlerDelegate, MCN
         }
         self.endSessions()
         changeState(to: .notStarted)
+        completion?()
     }
     
     // MARK: - Comms Handler State handler =================================================================== -

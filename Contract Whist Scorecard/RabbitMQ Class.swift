@@ -566,7 +566,7 @@ public protocol RabbitMQBroadcastDelegate : class {
 
 public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
     
-    private var connection: RMQConnection!
+    private weak var connection: RMQConnection!
     private weak var channel: RMQChannel!
     private weak var queue: RMQQueue!
     private weak var exchange: RMQExchange!
@@ -597,7 +597,7 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
     }
     
     internal func connect() {
-        self.connection = RMQConnection(uri: self.rabbitMQUri, delegate: self, recoverAfter: 2.0)
+        self.connection = RMQConnection(uri: self.rabbitMQUri, delegate: self)
         self.connection.start()
         self.createChannel()
     }

@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import MessageUI
 
-class WelcomeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ReconcileDelegate, SyncDelegate, MFMailComposeViewControllerDelegate, UIPopoverPresentationControllerDelegate {
+class WelcomeViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, ReconcileDelegate, SyncDelegate, MFMailComposeViewControllerDelegate, UIPopoverPresentationControllerDelegate {
 
     // MARK: - Class Properties ================================================================ -
     

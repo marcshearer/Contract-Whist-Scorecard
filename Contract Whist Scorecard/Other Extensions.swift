@@ -46,7 +46,11 @@ extension UIViewController {
         self.navigationController?.isNavigationBarHidden = false
     }
     
-    public var prefersStatusBarHidden: Bool {
+}
+
+class CustomViewController : UIViewController {
+    
+    override var prefersStatusBarHidden: Bool {
         get {
             return AppDelegate.applicationPrefersStatusBarHidden ?? true
         }

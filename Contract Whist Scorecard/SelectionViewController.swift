@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class SelectionViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
+class SelectionViewController: CustomViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout {
 
     // MARK: - Class Properties ======================================================================== -
 

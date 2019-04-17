@@ -21,7 +21,7 @@ enum AppState {
     case waiting
 }
 
-class ClientViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate, SearchDelegate, CutDelegate, GamePreviewDelegate, UIPopoverPresentationControllerDelegate {
+class ClientViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate, SearchDelegate, CutDelegate, GamePreviewDelegate, UIPopoverPresentationControllerDelegate {
 
     // MARK: - Class Properties ======================================================================== -
     

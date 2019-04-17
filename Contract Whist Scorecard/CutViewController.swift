@@ -12,7 +12,7 @@ protocol CutDelegate {
     func cutComplete()
 }
 
-class CutViewController: UIViewController {
+class CutViewController: CustomViewController {
 
     // MARK: - Class Properties ======================================================================== -
     // Main state properties

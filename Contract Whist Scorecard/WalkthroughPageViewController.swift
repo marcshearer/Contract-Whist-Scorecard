@@ -145,4 +145,11 @@ class WalkthroughPageViewController: UIPageViewController, UIPageViewControllerD
             setViewControllers([nextViewController], direction: .forward, animated: true, completion: nil)
         }
     }
+   
+    override var prefersStatusBarHidden: Bool {
+        get {
+            return AppDelegate.applicationPrefersStatusBarHidden ?? true
+        }
+    }
+    
 }

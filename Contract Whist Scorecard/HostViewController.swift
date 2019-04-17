@@ -22,7 +22,7 @@ enum InviteStatus {
     case reconnecting
 }
 
-class HostViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate,
+class HostViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate,
 CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStateDelegate, SearchDelegate {
     
     // MARK: - Class Properties ======================================================================== -

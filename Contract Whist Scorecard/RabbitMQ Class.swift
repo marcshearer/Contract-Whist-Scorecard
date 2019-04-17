@@ -574,6 +574,7 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
     private var parent: RabbitMQService!
     private let myDeviceName = Scorecard.deviceName
     private let filterBroadcast: String!
+    private var channelRecovery = false
 
     private var rabbitMQPeerList: [String: RabbitMQPeer] = [:]               // [deviceName: RabbitMQPeer]
     private var connectionDelegate: [String : CommsConnectionDelegate] = [:] // [deviceName : CommsConnectionDelegate]
@@ -605,7 +606,7 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
         if let connection = self.connection {
             Utility.debugMessage("RabbitMQQueue", "Opening queue \(queueUUID!)") // TODO Remove
             self.channel = connection.createChannel()
-            self.queue = self.channel.queue("") // , options: .exclusive)
+            self.queue = self.channel.queue("", options: .exclusive)
             self.exchange = self.channel.fanout(self.queueUUID) // , options: .autoDelete)
             self.queue.bind(self.exchange)
             self.queue.subscribe( { [weak self] (_ message: RMQMessage) -> Void in
@@ -783,7 +784,11 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
     
     public func channel(_ channel: RMQChannel!, error: Error!) {
         Utility.mainThread {
-            if error != nil {
+            if error != nil && !self.channelRecovery {
+                
+                // Block attempting to recover while still recovering
+                self.channelRecovery = true
+                
                 self.parent?.debugMessage("Channel with error for \(self.queueUUID!) - \(error.localizedDescription) (\(self.rabbitMQPeerList.count) peers)")
                 
                 // Notify state to peers
@@ -793,6 +798,7 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
                 self.disconnect()
                 Utility.executeAfter(delay: 2.0, completion: {
                     self.connect()
+                    self.channelRecovery = false
                 })
             }
         }

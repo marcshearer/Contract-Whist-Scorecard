@@ -116,8 +116,42 @@ class DataAdmin {
         }
         return true
     }
-    
+   
     class func patchLocalDatabase(from viewController: UIViewController, silent: Bool = false) {
+        var participantsUpdated = 0
+        let history = History(getParticipants: true, includeBF: false)
+        _ = CoreData.update(updateLogic: {
+            for historyGame in history.games {
+                if historyGame.participant[0].handsPlayed == 25 {
+                    var nonBonusScore:Int16 = 0
+                    for historyParticipant in historyGame.participant {
+                        nonBonusScore += historyParticipant.totalScore - (historyParticipant.handsMade * 10)
+                    }
+                    let totalTwos = Int16((nonBonusScore - 91) / 10)
+                    var twosAllocated:Int16 = 0
+                    for participantNumber in 1...historyGame.participant.count {
+                        let historyParticipant = historyGame.participant[participantNumber - 1]
+                        let myNonBonusScore:Int16 = historyParticipant.totalScore - (historyParticipant.handsMade * 10)
+                        var twosMade:Int16
+                        if participantNumber == historyGame.participant.count {
+                            twosMade = totalTwos - twosAllocated
+                        } else {
+                            twosMade = Utility.roundQuotient(myNonBonusScore * totalTwos, nonBonusScore)
+                        }
+                        twosAllocated += twosMade
+                        historyParticipant.participantMO.handsPlayed = 13
+                        historyParticipant.participantMO.twosMade = twosMade
+                        participantsUpdated += 1
+                    }
+                }
+            }
+        })
+        if !silent {
+            viewController.alertMessage("Hands played and twos made patched locally - \(participantsUpdated) participants updated", title: "Complete")
+        }
+    }
+    
+    class func resetSyncRecordIDs(from viewController: UIViewController, silent: Bool = false) {
         var participantsUpdated = 0
         let history = History(getParticipants: true, includeBF: false)
         _ = CoreData.update(updateLogic: {

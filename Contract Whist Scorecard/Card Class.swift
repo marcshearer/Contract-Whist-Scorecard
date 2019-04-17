@@ -320,11 +320,9 @@ class Suit : Hashable {
             self.suitEnum = .noTrump
         }
     }
-    
-    public var hashValue: Int {
-        get {
-            return self.suitEnum.hashValue
-        }
+ 
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.suitEnum.hashValue)
     }
     
     static func ==(lhs: Suit, rhs: Suit) -> Bool {

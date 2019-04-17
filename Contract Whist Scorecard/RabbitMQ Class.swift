@@ -261,10 +261,11 @@ class RabbitMQServerService : RabbitMQService, CommsServerHandlerDelegate, Comms
             _ = self.connectionDelegate?.connectionReceived(from: rabbitMQPeer.commsPeer)
         }
         
+        // Send (re-send) invitations
+        self.sendInvitation(email: email, name: name, invite: invite)
+        
         if !self.recoveryMode {
             // New connection
-            self.sendInvitation(email: email, name: name, invite: invite)
-            self.inviteEmail = email
             self.handlerStateChange(to: .inviting)
         } else {
             // Reconnecting to old connection
@@ -283,6 +284,7 @@ class RabbitMQServerService : RabbitMQService, CommsServerHandlerDelegate, Comms
                                        to: invite,
                                        inviteUUID: self.serverInviteUUID,
                                        completion: self.sendInvitationCompletion)
+           self.inviteEmail = email
         }
     }
     

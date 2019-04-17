@@ -358,13 +358,13 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             // Use local name
             name = playerMO.name!
         }
-        if let index = self.playerData.index(where: {($0.peer != nil && $0.peer.deviceName == peer.deviceName) && $0.email == peer.playerEmail}) {
+        if let index = self.playerData.firstIndex(where: {($0.peer != nil && $0.peer.deviceName == peer.deviceName) && $0.email == peer.playerEmail}) {
             // A player returning from the same device - probably a reconnect - just update the details
             self.playerData[index].peer = peer
             self.updateFaceTimeAddress(info: info, playerData: self.playerData[index])
         } else if self.connectionMode == .online {
             // Should already be in list
-            if let index = self.playerData.index(where: {$0.email == peer.playerEmail}) {
+            if let index = self.playerData.firstIndex(where: {$0.email == peer.playerEmail}) {
                 if self.playerData[index].peer != nil && self.playerData[index].peer.deviceName != peer.deviceName && self.playerData[index].peer.state != .notConnected {
                     // Duplicate - add it temporarily - to disconnect in state change
                     addPlayer(name: name, email: peer.playerEmail!, playerMO: playerMO, peer: peer, inviteStatus: .none, disconnectReason: "This player has already joined from another device")
@@ -424,7 +424,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         Utility.mainThread { [unowned self] in
             var row: Int!
             var playerNumber: Int!
-            row = self.playerData.index(where: {$0.peer != nil && $0.peer.deviceName == peer.deviceName})
+            row = self.playerData.firstIndex(where: {$0.peer != nil && $0.peer.deviceName == peer.deviceName})
             if row != nil {
                 let currentState = self.playerData[row].peer.state
                 Utility.debugMessage("host", "State change from \(currentState) to \(peer.state)") // TODO Remove
@@ -441,7 +441,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                         var error = false
                         if self.connectionMode == .nearby {
                             // Nearby connection - Check if duplicate from a different device
-                            if self.playerData.index(where: {($0.peer == nil || $0.peer.deviceName != peer.deviceName) && $0.email == self.playerData[playerNumber - 1].email}) != nil {
+                            if self.playerData.firstIndex(where: {($0.peer == nil || $0.peer.deviceName != peer.deviceName) && $0.email == self.playerData[playerNumber - 1].email}) != nil {
                                 error = true
                             }
                             if error {
@@ -514,7 +514,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     }
     
     private func reflectState(peer: CommsPeer) {
-        let playerNumber = playerData.index(where: {$0.peer != nil && $0.peer.deviceName == peer.deviceName})
+        let playerNumber = playerData.firstIndex(where: {$0.peer != nil && $0.peer.deviceName == peer.deviceName})
         if playerNumber != nil {
             let playerData = self.playerData[playerNumber!]
             playerData.peer = peer
@@ -767,7 +767,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     }
     
     @objc func disconnectButtonPressed(_ button: UIButton) {
-        let row = playerData.index(where: {$0.unique == button.tag})
+        let row = playerData.firstIndex(where: {$0.unique == button.tag})
         if row != nil {
             let playerNumber = row! + 1
             self.disconnectPlayer(playerNumber: playerNumber, reason: "Closed by remote device")
@@ -1057,7 +1057,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         for playerNumber in 1...playerData.count {
             if self.scorecard.recoveryMode {
                 // Ensure players are in same order as before
-                let index = self.playerData.index(where: {$0.email == self.selectedPlayers[playerNumber - 1].email})
+                let index = self.playerData.firstIndex(where: {$0.email == self.selectedPlayers[playerNumber - 1].email})
                 xref.append(index!)
             } else {
                 xref.append(playerNumber - 1)

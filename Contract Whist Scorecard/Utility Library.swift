@@ -283,7 +283,7 @@ class Utility {
         
         if let image = cloudObject.object(forKey: forKey) {
             let imageAsset = image as! CKAsset
-            if let imageData = try? Data.init(contentsOf: imageAsset.fileURL) {
+            if let imageData = try? Data.init(contentsOf: imageAsset.fileURL!) {
                 result = imageData as NSData?
             }
         }
@@ -303,7 +303,7 @@ class Utility {
             // Write the image to local file for temporary use
             let imageFilePath = NSTemporaryDirectory() + name
             let imageFileURL = URL(fileURLWithPath: imageFilePath)
-            try? scaledImage.jpegData(compressionQuality: 0.8)?.write(to: imageFileURL)
+            ((try? scaledImage.jpegData(compressionQuality: 0.8)?.write(to: imageFileURL)) as ()??)
             // Create image asset for upload
             let imageAsset = CKAsset(fileURL: imageFileURL)
             cloudObject.setValue(imageAsset, forKey: "thumbnail")

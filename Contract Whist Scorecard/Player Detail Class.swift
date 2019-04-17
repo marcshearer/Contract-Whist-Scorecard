@@ -53,7 +53,7 @@ class PlayerDetail {
     
     public var indexMO: Int? {
         get {
-            return self.scorecard.playerList.index(where: {($0.objectID == self.objectID)})
+            return self.scorecard.playerList.firstIndex(where: {($0.objectID == self.objectID)})
         }
     }
     
@@ -127,7 +127,7 @@ class PlayerDetail {
             }) {
                 // Ignore errors
             } else {
-                let index = self.scorecard.playerList.index(where: {($0.name! > self.name)})
+                let index = self.scorecard.playerList.firstIndex(where: {($0.name! > self.name)})
                 self.scorecard.playerList.insert(playerMO, at: (index == nil ? self.scorecard.playerList.count : index!))
                 self.objectID = playerMO.objectID
             }

@@ -115,7 +115,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     }
 
     @IBAction func allSwipe(recognizer:UISwipeGestureRecognizer) {
-        finishButtonPressed(finishButton)
+        finishButtonPressed(finishButton!)
     }
     
     // MARK: - View Overrides ========================================================================== -

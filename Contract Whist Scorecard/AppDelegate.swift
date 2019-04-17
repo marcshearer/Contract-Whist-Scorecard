@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let remoteNotification = options[.remoteNotification] as? [AnyHashable : Any]
             if let userInfo = remoteNotification {
                 Utility.mainThread {
-                    self.processNotification(notification: CKNotification(fromRemoteNotificationDictionary: userInfo), confirm: false)
+                    self.processNotification(notification: CKNotification(fromRemoteNotificationDictionary: userInfo)!, confirm: false)
                 }
             }
         }
@@ -97,7 +97,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) {
-        self.processNotification(notification: CKNotification(fromRemoteNotificationDictionary: userInfo), confirm: true)
+        self.processNotification(notification: CKNotification(fromRemoteNotificationDictionary: userInfo)!, confirm: true)
     }
     
     private func processNotification(notification: CKNotification, confirm: Bool) {

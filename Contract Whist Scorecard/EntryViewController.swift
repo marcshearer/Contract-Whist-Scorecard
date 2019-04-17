@@ -101,7 +101,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     }
     
     @IBAction func rightSwipe(recognizer:UISwipeGestureRecognizer) {
-        self.saveScorePressed(finishButton)
+        self.saveScorePressed(finishButton!)
     }
         
 // MARK: - View Overrides ========================================================================== -

@@ -376,7 +376,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
             self.syncFinished = true
             if returnedList != nil {
                 for playerDetail in returnedList {
-                    var index = self.scorecard.playerList.index(where: {($0.email == playerDetail.email)})
+                    var index = self.scorecard.playerList.firstIndex(where: {($0.email == playerDetail.email)})
                     if index == nil {
                         if self.playerList.count == 0 {
                             // Replace status entry
@@ -387,7 +387,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
                             })
                         } else {
                             // Insert in order
-                            index = self.playerList.index(where: { $0.name > playerDetail.name})
+                            index = self.playerList.firstIndex(where: { $0.name > playerDetail.name})
                             if index == nil {
                                 index = self.playerList.count
                             }
@@ -521,7 +521,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     }
     
     func addNewPlayer(playerDetail: PlayerDetail) {
-        var index = self.playerList.index(where: { $0.name == playerDetail.name})
+        var index = self.playerList.firstIndex(where: { $0.name == playerDetail.name})
         if index != nil {
             // Already in list - just select it (if not already)
             if !self.selection[index!] {
@@ -532,7 +532,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         } else {
             // Add to list
             let clearStatusEntry = (self.playerList.count == 0)
-            index = self.playerList.index(where: { $0.name > playerDetail.name})
+            index = self.playerList.firstIndex(where: { $0.name > playerDetail.name})
             if index == nil {
                 index = playerList.count
             }

@@ -135,11 +135,11 @@ class Hand : NSObject, NSCopying {
         var result = false
         
         let cardNumber = card.toNumber()
-        if let index = self.cards.index(where: {$0.toNumber() == cardNumber}) {
+        if let index = self.cards.firstIndex(where: {$0.toNumber() == cardNumber}) {
             self.cards.remove(at: index)
             result = true
             let handSuit = self.xrefSuit[card.suit]!
-            if let index = handSuit.cards.index(where: {$0.toNumber() == cardNumber}) {
+            if let index = handSuit.cards.firstIndex(where: {$0.toNumber() == cardNumber}) {
                 handSuit.cards.remove(at: index)
             }
         }
@@ -149,7 +149,7 @@ class Hand : NSObject, NSCopying {
     public func find(card: Card) -> (Int, Int)? {
         if let suitNumber = self.xrefElement[card.suit] {
             let cardAsNumber = card.toNumber()
-            if let cardNumber = self.handSuits[suitNumber].toNumbers().index(where: {$0 == cardAsNumber}) {
+            if let cardNumber = self.handSuits[suitNumber].toNumbers().firstIndex(where: {$0 == cardAsNumber}) {
                 return (suitNumber, cardNumber)
             } else {
                 return nil

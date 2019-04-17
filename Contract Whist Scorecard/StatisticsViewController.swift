@@ -252,7 +252,7 @@ class StatisticsViewController: CustomViewController, UITableViewDataSource, UIT
         // Find any cells containing an image which has just been downloaded asynchronously
         if self.thumbnailColumn >= 0 {
              Utility.mainThread {
-                let index = self.selectedList.index(where: {($0.objectID == objectID)})
+                let index = self.selectedList.firstIndex(where: {($0.objectID == objectID)})
                 if index != nil {
                     // Found it - update from managed object and reload the cell
                     self.selectedList[index!].fromManagedObject(playerMO: self.selectedList[index!].playerMO)

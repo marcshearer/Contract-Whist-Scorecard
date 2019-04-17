@@ -220,7 +220,7 @@ class Scorecard {
                 
                 include = true
                 if specificEmail.count != 0 {
-                    if specificEmail.index(where: {($0 == playerMO.email)}) == nil {
+                    if specificEmail.firstIndex(where: {($0 == playerMO.email)}) == nil {
                         include = false
                     }
                 }
@@ -254,17 +254,17 @@ class Scorecard {
     }
     
     func isDuplicateName(_ playerDetail: PlayerDetail) -> Bool {
-        let index = self.playerList.index(where: {$0.name?.uppercased() == playerDetail.name.uppercased() && $0.objectID != playerDetail.objectID} )
+        let index = self.playerList.firstIndex(where: {$0.name?.uppercased() == playerDetail.name.uppercased() && $0.objectID != playerDetail.objectID} )
         return (index != nil)
     }
     
     func isDuplicateEmail(_ playerDetail: PlayerDetail) -> Bool {
-        let index = self.playerList.index(where: {$0.email!.uppercased() == playerDetail.email.uppercased() && $0.objectID != playerDetail.objectID} )
+        let index = self.playerList.firstIndex(where: {$0.email!.uppercased() == playerDetail.email.uppercased() && $0.objectID != playerDetail.objectID} )
         return (index != nil)
     }
     
     func playerName(_ playerEmail: String) -> String {
-        let index = self.playerList.index(where: {$0.email!.uppercased() == playerEmail.uppercased()} )
+        let index = self.playerList.firstIndex(where: {$0.email!.uppercased() == playerEmail.uppercased()} )
         if index != nil {
             return playerList[index!].name!
         } else {
@@ -496,7 +496,7 @@ class Scorecard {
     }
     
     public func enteredPlayer(email: String) -> Player? {
-        if let index = self.player?.index(where: {$0.playerMO != nil && $0.playerMO!.email == email}) {
+        if let index = self.player?.firstIndex(where: {$0.playerMO != nil && $0.playerMO!.email == email}) {
             return self.player?[index]
         } else {
             return nil
@@ -544,7 +544,7 @@ class Scorecard {
     }
     
     public func findPlayerByEmail(_ email: String) -> PlayerMO? {
-        let index = self.playerList.index(where: {($0.email == email)})
+        let index = self.playerList.firstIndex(where: {($0.email == email)})
         if index == nil {
             return nil
         } else {

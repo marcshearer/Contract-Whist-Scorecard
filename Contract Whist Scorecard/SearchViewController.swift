@@ -217,7 +217,7 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
     func updateImage(objectID: NSManagedObjectID) {
         // Find any cells containing an image which has just been downloaded asynchronously
         Utility.mainThread {
-            if let index = self.results.index(where: { ($0?.objectID)! == objectID }) {
+            if let index = self.results.firstIndex(where: { ($0?.objectID)! == objectID }) {
                 // Found it - reload the cell
                 self.searchTableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
             }
@@ -246,7 +246,7 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
                 if playerMO.name!.left(self.searchBar.text!.length).lowercased() == self.searchBar.text?.lowercased() {
                     // Matches search
                     
-                    if self.results.index(where: { $0 != nil && $0!.email! == playerMO.email!}) == nil  {
+                    if self.results.firstIndex(where: { $0 != nil && $0!.email! == playerMO.email!}) == nil  {
                         // Not already in list - add it to result set
                         
                         self.results.append(playerMO)
@@ -286,7 +286,7 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
             if newPlayerDetail.name == "" {
                 // Name not filled in - must have cancelled
             } else {
-                var index: Int! = self.results.index(where: {($0?.name)! > newPlayerDetail.name})
+                var index: Int! = self.results.firstIndex(where: {($0?.name)! > newPlayerDetail.name})
                 searchTableView.performBatchUpdates({
                     if index == nil {
                         // Insert at end

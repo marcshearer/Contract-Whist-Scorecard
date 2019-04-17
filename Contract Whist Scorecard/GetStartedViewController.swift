@@ -262,7 +262,7 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
         var newPlayers = newPlayers
         
         // Move entered player to top of list
-        if let index = newPlayers.index(where: {$0.email == self.syncEmailTextField.text}) {
+        if let index = newPlayers.firstIndex(where: {$0.email == self.syncEmailTextField.text}) {
             if index != 0 {
                 let playerMO = newPlayers[index]
                 newPlayers.remove(at: index)

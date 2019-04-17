@@ -525,7 +525,7 @@ class RabbitMQClientService : RabbitMQService, CommsClientHandlerDelegate, Rabbi
                 
                 // Remove any peers no longer in invite
                 self.forEachPeer { (rabbitMQPeer) in
-                    if invited.index(where: { $0.deviceName == rabbitMQPeer.deviceName }) == nil {
+                    if invited.firstIndex(where: { $0.deviceName == rabbitMQPeer.deviceName }) == nil {
                         // Not in new list - close and delete
                         self.browserDelegate?.peerLost(peer: rabbitMQPeer.commsPeer)
                         rabbitMQPeer.disconnect()
@@ -1089,7 +1089,7 @@ fileprivate class RabbitMQPeer: NSObject, CommsDataDelegate, CommsConnectionDele
         var reason: String?
         if let data = data {
             if let matchSessionUUIDs = data["matchSessionUUIDs"] as! [String]? {
-                if matchSessionUUIDs.index(where: { $0 == self.sessionUUID}) != nil {
+                if matchSessionUUIDs.firstIndex(where: { $0 == self.sessionUUID}) != nil {
                      // Process message
                     switch descriptor {
                     case "connectResponse":

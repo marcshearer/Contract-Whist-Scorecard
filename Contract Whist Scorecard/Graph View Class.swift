@@ -305,7 +305,7 @@ class GraphView: UIView {
     
     @objc internal func detailButtonPressed(_ button: UIButton) {
         let datasetTag = Int(button.tag / Int(1e6))
-        let dataset = datasets.index(where: {$0.tag == datasetTag} )
+        let dataset = datasets.firstIndex(where: {$0.tag == datasetTag} )
         if dataset != nil {
             let drillTag = datasets[dataset!].drillRef[button.tag % Int(1e6)]
             detailDelegate?.graphDetail(drillRef: drillTag)

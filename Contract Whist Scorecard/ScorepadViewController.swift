@@ -226,7 +226,7 @@ class ScorepadViewController: CustomViewController,
     @IBAction private func rightSwipe(recognizer:UISwipeGestureRecognizer) {
         if scorepadMode == .amend {
             if recognizer.state == .ended && !finishButton.isHidden && finishButton.isEnabled {
-                finishGamePressed(self.finishButton)
+                finishGamePressed(self.finishButton!)
             }
         }
     }
@@ -234,7 +234,7 @@ class ScorepadViewController: CustomViewController,
     @IBAction private func leftSwipe(recognizer:UISwipeGestureRecognizer) {
         if scorepadMode == .amend {
             if recognizer.state == .ended {
-                self.scorePressed(scoreEntryButton)
+                self.scorePressed(scoreEntryButton!)
             }
         }
     }

@@ -336,7 +336,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                 trumpIncludeNoTrumpSelection.addTarget(self, action: #selector(SettingsViewController.trumpIncludeNoTrumpAction(_:)), for: .valueChanged)
                 
                 // Set Include No trump selection
-                if self.scorecard.suits.index(where: {$0.toString() == "NT"}) != nil {
+                if self.scorecard.suits.firstIndex(where: {$0.toString() == "NT"}) != nil {
                     trumpIncludeNoTrumpSelection.selectedSegmentIndex = 1
                 } else {
                     trumpIncludeNoTrumpSelection.selectedSegmentIndex = 0
@@ -675,12 +675,12 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
         switch trumpIncludeNoTrumpSelection.selectedSegmentIndex {
         case 0:
             // Remove NT
-            if let index = self.scorecard.suits.index(where: {$0.toString() == "NT"}) {
+            if let index = self.scorecard.suits.firstIndex(where: {$0.toString() == "NT"}) {
                 self.scorecard.settingTrumpSequence.remove(at: index)
             }
         case 1:
             // Add NT
-            if self.scorecard.suits.index(where: {$0.toString() == "NT"}) == nil {
+            if self.scorecard.suits.firstIndex(where: {$0.toString() == "NT"}) == nil {
                 self.scorecard.settingTrumpSequence.append("NT")
             }
         default:

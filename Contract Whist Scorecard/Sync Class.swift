@@ -1051,7 +1051,7 @@ class Sync {
         self.downloadedPlayerRecordList.append(cloudRecord)
         
         // Try to match by email address
-        let found = scorecard.playerList.index(where: { $0.email?.lowercased() == cloudRecord.email.lowercased() })
+        let found = scorecard.playerList.firstIndex(where: { $0.email?.lowercased() == cloudRecord.email.lowercased() })
         if found != nil {
 
             // Merge the records
@@ -1215,7 +1215,7 @@ class Sync {
         if self.specificEmail.count != 0 {
             // Search for specific email
             for email in specificEmail {
-                let found = scorecard.playerList.index(where: { $0.email!.lowercased() as String == email.lowercased() })
+                let found = scorecard.playerList.firstIndex(where: { $0.email!.lowercased() as String == email.lowercased() })
                 if found != nil {
                     self.queueMissingPlayer(playerMO: scorecard.playerList[found!])
                 }
@@ -1232,7 +1232,7 @@ class Sync {
         let matchEmail = playerMO.email
         if matchEmail != nil && matchEmail != "" {
             // Check this email isn't already in cloud list (otherwise duplicates would multiply forever)
-            let found = self.downloadedPlayerRecordList.index(where: { $0.email.lowercased() as String == matchEmail!.lowercased() })
+            let found = self.downloadedPlayerRecordList.firstIndex(where: { $0.email.lowercased() as String == matchEmail!.lowercased() })
             
             if found == nil {
                 // Record is not in the cloud - send it

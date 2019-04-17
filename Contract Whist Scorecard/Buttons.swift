@@ -188,7 +188,7 @@ class ImageButton: RoundedButton {
     
         let imageSize: CGSize = self.imageView!.image!.size
         self.titleEdgeInsets = UIEdgeInsets.init(top: 0.0, left: -imageSize.width, bottom: -(imageSize.height + self.spacing), right: 0.0)
-        let titleSize = title.size(withAttributes: [NSAttributedString.Key.font: self.titleLabel!.font])
+        let titleSize = title.size(withAttributes: [NSAttributedString.Key.font: self.titleLabel!.font!])
         self.imageEdgeInsets = UIEdgeInsets.init(top: -(titleSize.height + self.spacing), left: 0.0, bottom: 0.0, right: -titleSize.width)
     }
     
@@ -196,7 +196,7 @@ class ImageButton: RoundedButton {
         super.setImage(UIImage(named: imageName), for: .normal)
         var titleSize = CGSize(width: 0, height: 0)
         if self.titleLabel?.text != nil {
-            titleSize = self.titleLabel!.text!.size(withAttributes: [NSAttributedString.Key.font: self.titleLabel!.font])
+            titleSize = self.titleLabel!.text!.size(withAttributes: [NSAttributedString.Key.font: self.titleLabel!.font!])
         }
         self.imageEdgeInsets = UIEdgeInsets.init(top: -(titleSize.height + self.spacing), left: 0.0, bottom: 0.0, right: -titleSize.width)
     }

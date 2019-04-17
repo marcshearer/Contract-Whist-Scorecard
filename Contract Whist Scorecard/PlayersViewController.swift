@@ -206,7 +206,7 @@ class PlayersViewController: CustomViewController, UICollectionViewDelegate, UIC
     func updateImage(objectID: NSManagedObjectID) {
         // Find any cells containing an image which has just been downloaded asynchronously
         Utility.mainThread {
-            let index = self.playerList.index(where: {($0.objectID == objectID)})
+            let index = self.playerList.firstIndex(where: {($0.objectID == objectID)})
             if index != nil {   
                 // Found it - update from managed object and reload the cell
                 self.playerList[index!].fromManagedObject(playerMO: self.playerList[index!].playerMO)

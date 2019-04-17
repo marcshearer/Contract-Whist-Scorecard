@@ -266,6 +266,8 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
             return .connecting
         case .connected:
             return .connected
+        @unknown default:
+            return .notConnected
         }
     }
 }

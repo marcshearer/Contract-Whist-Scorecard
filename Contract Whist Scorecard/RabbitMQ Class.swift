@@ -87,9 +87,11 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsS
         }
     }
     
-    public func disconnect(from commsPeer: CommsPeer, reason: String = "", reconnect: Bool) {
-        if let rabbitMQPeer = findRabbitMQPeer(deviceName: commsPeer.deviceName) {
-            rabbitMQPeer.disconnect(reason: reason, reconnect: reconnect, reflectStateChange: true)
+    public func disconnect(from commsPeer: CommsPeer? = nil, reason: String = "", reconnect: Bool) {
+        self.forEachPeer { (rabbitMQPeer) in
+            if commsPeer == nil || commsPeer?.deviceName == rabbitMQPeer.deviceName {
+                rabbitMQPeer.disconnect(reason: reason, reconnect: reconnect, reflectStateChange: true)
+            }
         }
     }
    
@@ -609,7 +611,7 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
             Utility.debugMessage("RabbitMQQueue", "Opening queue \(queueUUID!)") // TODO Remove
             self.channel = connection.createChannel()
             self.queue = self.channel.queue("", options: .exclusive)
-            self.exchange = self.channel.fanout(self.queueUUID) // , options: .autoDelete)
+            self.exchange = self.channel.fanout(self.queueUUID, options: .autoDelete)
             self.queue.bind(self.exchange)
             self.queue.subscribe( { [weak self] (_ message: RMQMessage) -> Void in
                 Utility.mainThread {

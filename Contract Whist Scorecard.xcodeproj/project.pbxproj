@@ -812,10 +812,10 @@
 			children = (
 				B2DA893D1F3CC89C008EE96C /* Comms.swift */,
 				B2C051031EDF194C009DE37F /* Multipeeer Class.swift */,
+				B2D8104D225AF7A7005A86A5 /* Multipeer logger.swift */,
 				B2F7281C1F7199AE006F0941 /* RabbitMQ Class.swift */,
 				B2767C1D2110061B0029155E /* Loopback Class.swift */,
 				B2F7281A1F6D74F9006F0941 /* Invite.swift */,
-				B2D8104D225AF7A7005A86A5 /* Multipeer logger.swift */,
 				B235D2BD1F82288A0019384B /* Notification Simulator.swift */,
 			);
 			name = "Comms Classes";

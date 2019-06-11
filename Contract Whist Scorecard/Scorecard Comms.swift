@@ -144,9 +144,8 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 self.refreshState()
                 
             } else {
-                // Request refresh
-                self.sendRefreshRequest()
-            }
+                // Disconnect (and reconnect)
+                self.commsDelegate?.disconnect(reason: "Reset", reconnect: true)            }
         }
     }
     
@@ -403,7 +402,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     }
     
     public func sendRefreshRequest() {
-         self.sendInstruction("refreshRequest")
+        self.sendInstruction("refreshRequest")
     }
     
     public func refreshState(to commsPeer: CommsPeer! = nil) {

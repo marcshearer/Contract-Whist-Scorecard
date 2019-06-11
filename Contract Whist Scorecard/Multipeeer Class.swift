@@ -88,15 +88,18 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
         session.delegate = nil
     }
     
-    internal func disconnect(from commsPeer: CommsPeer, reason: String = "", reconnect: Bool) {
-        let deviceName = commsPeer.deviceName
-        if let broadcastPeer = broadcastPeerList[deviceName] {
-            broadcastPeer.shouldReconnect = reconnect
-            broadcastPeer.reconnect = reconnect
-            broadcastPeer.state = .notConnected
-            self.stateDelegate?.stateChange(for: commsPeer, reason: reason)
+    internal func disconnect(from commsPeer: CommsPeer? = nil, reason: String = "", reconnect: Bool) {
+        for (deviceName, _) in self.sessionList {
+            if commsPeer == nil || commsPeer?.deviceName == deviceName {
+                if let broadcastPeer = broadcastPeerList[deviceName] {
+                    broadcastPeer.shouldReconnect = reconnect
+                    broadcastPeer.reconnect = reconnect
+                    broadcastPeer.state = .notConnected
+                    self.stateDelegate?.stateChange(for: broadcastPeer.commsPeer, reason: reason)
+                }
+                self.send("disconnect", ["reason" : reason], to: commsPeer)
+            }
         }
-        self.send("disconnect", ["reason" : reason], to: commsPeer)
     }
     
     internal func send(_ descriptor: String, _ dictionary: Dictionary<String, Any?>! = nil, to commsPeer: CommsPeer? = nil, matchEmail: String? = nil) {
@@ -402,7 +405,10 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
     // Comms Handler Client Service handlers ========================================================================= -
     
     internal func start(email: String!, name: String!, recoveryMode: Bool, matchDeviceName: String!) {
-        self.debugMessage("Start Client \(self.connectionPurpose)")
+        if self.connectionPurpose != .other {
+            // Don't log start for other since it might be (probably is) the logger starting! While this works on simulator it crashes devices
+            self.debugMessage("Start Client \(self.connectionPurpose)")
+        }
         
         super.startService(email: email, recoveryMode: recoveryMode, matchDeviceName: matchDeviceName)
         

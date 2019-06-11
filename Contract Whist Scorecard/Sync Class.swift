@@ -1067,8 +1067,8 @@ class Sync {
                 localRecord.thumbnailDate = nil
             }
             
-            if cloudRecord.thumbnailDate != nil && (localRecord.thumbnailDate == nil || localRecord.thumbnailDate < cloudRecord.thumbnailDate) {
-                // thumbnail updated on cloud - queue overwrite of local copy
+            if (cloudRecord.thumbnailDate != nil && (localRecord.thumbnailDate == nil || localRecord.thumbnailDate < cloudRecord.thumbnailDate)) || localRecord.thumbnail == nil {
+                // thumbnail updated on cloud (or not here) - queue overwrite of local copy
                 self.playerImageFromCloud.append(localMO)
             } else if localRecord.thumbnailDate != nil && (cloudRecord.thumbnailDate == nil || localRecord.thumbnailDate > cloudRecord.thumbnailDate) {
                 // Local thumbnail updated - queue overwrite of cloud copy

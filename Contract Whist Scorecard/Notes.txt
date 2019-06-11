@@ -80,8 +80,15 @@ Better error handling for rabbitMQ
 4.6 (12) -------
 Multi-peer logging
 
+4.6 (15) -------
+Allow player detail to scroll in display mode
+Avoid blank location for online games
+Pull down pictures more reliably
+Disconnect and reconnect on shake from client
+
 Bugs fix now
 ------------
+When initialise app - should make the email you type in your default - i.e. set date first
 In search dialogue (on iPad) if filter search any users who don't have a picture sometimes get changed to squares
 Refresh always leaves "last trick" disabled
 Resume game doesn't seem to work during bidding phase - dealer gets out of line
@@ -107,47 +114,4 @@ Sort out constraints when in landscape mode
 
 Swift Gotchas / hints
 ---------------------
-For good resizing on rotation call view.setNeedsLayout() from viewWillTransition and then override viewDidLayoutSubviews (see HandViewController) - NOTE - NOT viewWillLayoutSubviews - Also look at the animateAlongside approach in ScorepadViewController
-Uncaught exception crashes are normally caused by
-    Invalid reuse identifiers on list views / collection views
-    Invalid names on segues
-    Outlets not being set up correctly
-To avoid flashing animations need to put the things that you want to animate inside another view
-To animate (esp with constraints) need to call layoutIfNeeded immediately before and during animation - see Utility.animate()
-When collection has spaces in it re-set the inter-item space and set scroll to horizontal
-When button bar (or navigation bar) doesn't appear set the title in the parent view
-If you get a duplicate navigation bar you can hide the default one with self.showNavigationBar()
-Popovers on iPhone - need to set up the view to have a size of freedom and a status bar of none plus the stuff in prepare for segue
-You can force a label to resize to fill its space by setting a height constraint and then setting this progammatically to a very large number
-Get a crash with NS Fetch Controller if don't get rid of any pointers to cells before try to remove from collection view. Also it calls numberOfItemsIn Section internally and if you are adding or deleting cells you need to return +/- 1 or see the change below about deletePlayer()
-Need to login to iCloud on each simulator
-Default UserDefault settings are in AppDelegate
-You can make a controller a delegate for a child view and hence receive information on things changing back in the parent
-The parent or the child view can detect popover closure by adopting UIPopoverPresentationControllerDelegate and declaring popoverPresentationControllerShouldDismissPopover etc
-Swipes are associated with a specific control - look at the swipes right click - gesture recognizer in referencing outlet connections
-There is a problem in collection views when you delete or insert items. You have to do this in a batch update with the change to the counter - see deletePlayer() in PlayersViewController
-Note that frame sizes are not correct yet until you get to viewDidAppear - you might have to avoid returning non-zero table view row count until you get to this point - see HandViewController
-Table views don't always scroll in Swift 4 - set   tableView.delaysContentTouches = TRUE (Best through User-Defined Runtime Attributes in Storyboard editor)
-To select a cell at initial display in a table view need to call cell.setSelected and tableView.selectRow from tableView.willDisplay (See SearchViewController)
-To make the navigation bar the same colour as other controls - set the tint color of the navigation bar to the colour you want and uncheck the translucent bar
-You can find the size outside the safe area using view.safeAreaInsets.top and view.safeAreaInsets.bottom etc
-You can get the size of the safe area using view.safeAreaLayoutGuide.layoutFrame
-To change the background colour of a section title in a TableView so that it still works on an iPhone X you have to set the colour of the backgroundView in willDisplayHeaderView (see HostViewController)
-To make an image transparent background use Preview. Click the toolbox and a toolbar appears. Select the wand. Drag a rectangle anywhere in background. Turns red. Press delete. File/Save.
-To remove menus from test scripts
-    1,$s/[/][*][@]START_MENU_TOKEN[@][*][/]//g
-    1,$s/[/][*].*[@]END_MENU_TOKEN[@][*][/]//g
-Error message '/Users/Home/Library/Developer/Xcode/DerivedData' - Go to Product / Clean
-When Table View wasn't scrolling it was because "Delay Touch Down" wasn't checked
-Bot testing needs to have simulator set up sensibly - go into Xcode Server user to do this
-Commands to sort out firewall prompt
-Below in allowsim (in PATH)
-    sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate off
-    /usr/libexec/ApplicationFirewall/socketfilterfw --add /Applications/Xcode.app/Contents/MacOS/Xcode
-    /usr/libexec/ApplicationFirewall/socketfilterfw --add /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/Contents/MacOS/Simulator
-    sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on
-Remapped home and end etc using ~/Library/KeyBindings/DefaultKeyBinding.dict - Did Ctrl-C etc in the keyboard settings app shortcuts but then reversed it
-To get rid of insets in a table view need to include willDisplayCell delegate routine and set content to be fixed insets of zero. See ReviewViewController
-To see logs in the system log you need to take Action/Include Debug Messages. Click on Activities. You can then filter type by entering debug in search and then changing Any to Category (or paste category:debug)
-
-
+Now in OneNote

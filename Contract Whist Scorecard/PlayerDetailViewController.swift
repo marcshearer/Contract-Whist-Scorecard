@@ -153,10 +153,6 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             break
         }
         
-        if mode == .display {
-            tableView.isUserInteractionEnabled = false
-        }
-        
         // Store email on entry
         emailOnEntry = playerDetail.email
         visibleOnEntry = playerDetail.visibleLocally
@@ -435,6 +431,10 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             cell?.backgroundColor = UIColor.white
         }
 
+        if self.mode == .display {
+            cell?.isUserInteractionEnabled = false
+        }
+        
         return cell!
     }
     

@@ -36,20 +36,23 @@ class Stepper: UIStepper {
     }
 }
 
-class CustomViewController : UIViewController {
+extension UIViewController {
     
     func hideNavigationBar() {
         self.navigationController?.isNavigationBarHidden = true
     }
     
-    func showNavigationBar() {
+    public func showNavigationBar() {
         self.navigationController?.isNavigationBarHidden = false
     }
+    
+}
+
+class CustomViewController : UIViewController {
     
     override var prefersStatusBarHidden: Bool {
         get {
             return AppDelegate.applicationPrefersStatusBarHidden ?? true
         }
     }
-    
 }

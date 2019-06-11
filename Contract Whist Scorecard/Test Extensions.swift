@@ -251,7 +251,7 @@ extension HandViewController {
         // Set a notification for handler complete
         self.handTestData.observer = NotificationCenter.default.addObserver(forName: .clientHandlerCompleted, object: nil, queue: nil) {
             (notification) in
-            NotificationCenter.default.removeObserver(self.handTestData.observer)
+            NotificationCenter.default.removeObserver(self.handTestData.observer!)
             self.checkTestWait()
         }
     }

@@ -64,9 +64,10 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsServerHandlerDelegat
         LoopbackService.peerList[self.myPeer.deviceName] = LoopbackDelegates(peer: self.myPeer , connectionDelegate: self.connectionDelegate, stateDelegate: self.stateDelegate, dataDelegate: self.dataDelegate, loopbackServiceDelegate: self)
     }
  
-    public func stop() {
+    public func stop(completion: (()->())?) {
         // Remove myself from the shared peer list
         LoopbackService.peerList.removeValue(forKey: self.myPeer.deviceName)
+        completion?()
     }
     
     func reset() {
@@ -97,13 +98,15 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsServerHandlerDelegat
         }
     }
     
-    public func disconnect(from commsPeer: CommsPeer, reason: String, reconnect: Bool) {
+    public func disconnect(from commsPeer: CommsPeer? = nil, reason: String, reconnect: Bool) {
         
         // Pass across state change and remove from connection list
-        if let loopbackDelegates = LoopbackService.peerList[commsPeer.deviceName] {
-            loopbackDelegates.peer.state = .notConnected
-            loopbackDelegates.stateDelegate?.stateChange(for: loopbackDelegates.peer.commsPeer, reason: reason)
-            self.connectionList.removeValue(forKey: commsPeer.deviceName)
+        for (deviceName, loopbackDelegates) in LoopbackService.peerList {
+            if commsPeer == nil || commsPeer?.deviceName == deviceName {
+                loopbackDelegates.peer.state = .notConnected
+                loopbackDelegates.stateDelegate?.stateChange(for: loopbackDelegates.peer.commsPeer, reason: reason)
+                self.connectionList.removeValue(forKey: deviceName)
+            }
         }
     }
     

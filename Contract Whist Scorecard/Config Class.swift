@@ -22,8 +22,11 @@ class Config {
     // Use rabbitMQ instead of/as well as push notifications - best not to do this if connected to network as will double up
     public static let pushNotifications_rabbitMQ = false
     
-    // Queue for log messages - blank to disable
-    public static let rabbitMQLogQueue = "WhistLogger"
+    // Queue for log messages - blank to disable else "WhistLogger"
+    public static let rabbitMQLogQueue = ""
+    
+    // Service for log messages - blank to disable
+    public static let multiPeerLogService = "whist-logger"
     
     // Time unit for auto-play testing (in seconds) - card is played every unit
     public static var autoPlayTimeUnit = 0.05

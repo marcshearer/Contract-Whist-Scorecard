@@ -289,7 +289,7 @@ class History {
                 let game = sortTable[sortIndex-1].index
                 if game < 2 || gameList[game-1].location != gameList[game-2].location {
                     // Check not already there - can happen if different names for same coordinates
-                    let index = gameLocations.index(where: {$0.description == gameList[game-1].location!})
+                    let index = gameLocations.firstIndex(where: {$0.description == gameList[game-1].location!})
                     if index == nil {
                         gameLocations.append(GameLocation(
                             latitude: gameList[game-1].latitude,
@@ -346,7 +346,7 @@ class History {
     }
     
     func find(gameUUID: String) -> HistoryGame! {
-        let found = self.games.index(where: {
+        let found = self.games.firstIndex(where: {
             if $0.gameUUID == gameUUID {
                 return true
             } else {

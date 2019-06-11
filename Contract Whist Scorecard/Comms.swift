@@ -135,7 +135,7 @@ public protocol CommsStateDelegate : class {
     
 }
 
-extension CommsStateDelegate{
+extension CommsStateDelegate {
     
     func stateChange(for peer: CommsPeer) {
         stateChange(for: peer, reason: nil)
@@ -186,7 +186,7 @@ protocol CommsHandlerDelegate : class {
 
     func send(_ descriptor: String, _ dictionary: Dictionary<String, Any?>!, to commsPeer: CommsPeer?, matchEmail: String?)
 
-    func disconnect(from commsPeer: CommsPeer, reason: String, reconnect: Bool)
+    func disconnect(from commsPeer: CommsPeer?, reason: String, reconnect: Bool)
     
     func reset()
 
@@ -213,6 +213,10 @@ extension CommsHandlerDelegate {
         disconnect(from: commsPeer, reason: reason, reconnect: false)
     }
     
+    func disconnect(reason: String, reconnect: Bool) {
+        disconnect(from: nil, reason: reason, reconnect: reconnect)
+    }
+    
     func debugMessage(_ message: String) {
         debugMessage(message, device: nil, force: false)
     }   
@@ -228,7 +232,7 @@ protocol CommsServerHandlerDelegate : CommsHandlerDelegate {
     
     func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool)
     
-    func stop()
+    func stop(completion: (()->())?)
 }
 
 extension CommsServerHandlerDelegate {
@@ -259,6 +263,10 @@ extension CommsServerHandlerDelegate {
     
     func start(email: String!, queueUUID: String!, recoveryMode: Bool) {
         start(email: email, queueUUID: queueUUID, name: nil, invite: nil, recoveryMode: recoveryMode)
+    }
+    
+    func stop() {
+        stop(completion: nil)
     }
 
 }

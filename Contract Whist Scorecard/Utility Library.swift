@@ -283,7 +283,7 @@ class Utility {
         
         if let image = cloudObject.object(forKey: forKey) {
             let imageAsset = image as! CKAsset
-            if let imageData = try? Data.init(contentsOf: imageAsset.fileURL) {
+            if let imageData = try? Data.init(contentsOf: imageAsset.fileURL!) {
                 result = imageData as NSData?
             }
         }
@@ -303,7 +303,7 @@ class Utility {
             // Write the image to local file for temporary use
             let imageFilePath = NSTemporaryDirectory() + name
             let imageFileURL = URL(fileURLWithPath: imageFilePath)
-            try? scaledImage.jpegData(compressionQuality: 0.8)?.write(to: imageFileURL)
+            ((try? scaledImage.jpegData(compressionQuality: 0.8)?.write(to: imageFileURL)) as ()??)
             // Create image asset for upload
             let imageAsset = CKAsset(fileURL: imageFileURL)
             cloudObject.setValue(imageAsset, forKey: "thumbnail")
@@ -448,9 +448,9 @@ class Utility {
             outputMessage = "DEBUG(\(from)): \(timestamp)"
             if showDevice {
                 #if ContractWhist
-                outputMessage = outputMessage + " - Device:\(Scorecard.deviceName)"
+                    outputMessage = outputMessage + " - Device:\(Scorecard.deviceName)"
                 #else
-                outputMessage = outputMessage + UIDevice.current.name
+                    outputMessage = outputMessage + UIDevice.current.name
                 #endif
             }
             outputMessage = outputMessage + " - \(message)"
@@ -462,19 +462,27 @@ class Utility {
                 fflush(stdout)
             }
             #if ContractWhist
-            if (Config.rabbitMQUri_DevMode != .amqpServer || Scorecard.adminMode || force) && Config.rabbitMQLogQueue != "" && Config.rabbitMQUri != "" {
-                let scorecard = Scorecard.getScorecard()!
-                if scorecard.logService == nil {
-                    scorecard.logService = RabbitMQClientService(purpose: .other, serviceID: Config.rabbitMQUri, deviceName: Scorecard.deviceName)
-                    scorecard.logQueue = scorecard.logService.startQueue(delegate: scorecard.logService, queueUUID: Config.rabbitMQLogQueue)
+                // Write to rabbitMQ logs
+                if (Config.rabbitMQUri_DevMode != .amqpServer || Scorecard.adminMode || force) && Config.rabbitMQLogQueue != "" && Config.rabbitMQUri != "" {
+                    let scorecard = Scorecard.getScorecard()!
+                    if scorecard.logService == nil {
+                        scorecard.logService = RabbitMQClientService(purpose: .other, serviceID: Config.rabbitMQUri, deviceName: Scorecard.deviceName)
+                        scorecard.logQueue = scorecard.logService.startQueue(delegate: scorecard.logService, queueUUID: Config.rabbitMQLogQueue)
+                    }
+                    scorecard.logQueue.sendBroadcast(data: ["0" : ["from"      : from,
+                                                                   "message"   : message,
+                                                                   "timestamp" : timestamp]])
                 }
-                scorecard.logQueue.sendBroadcast(data: ["message" : outputMessage,
-                                                        "timestamp" : timestamp])
-            }
+            
+                // Write to multi-peer logs
+                if Config.multiPeerLogService != "" {
+                    MultipeerLogger.logger.write(timestamp: timestamp, source: from, message: message)
+                }
+            
             #endif
         }
         
-        if Utility.isDevelopment || Scorecard.adminMode || force {
+        if Utility.isDevelopment || Scorecard.adminMode || force || (Config.multiPeerLogService != "" && MultipeerLogger.logger.connected) {
             if mainThread {
                 Utility.mainThread(suppressDebug: true, execute: {
                     closure()

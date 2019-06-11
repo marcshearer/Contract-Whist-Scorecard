@@ -57,6 +57,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
 
     private var idleTimer: Timer!
     private var connectingTimer: Timer!
+    private var finishing = false
 
     private var newGame: Bool!
     private var gameOver = false
@@ -474,7 +475,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     private func playHand(peer: CommsPeer, dismiss: Bool = false, hand: Hand! = nil, round: Int! = nil, trick: Int! = nil, made: [Int]! = nil, twos: [Int]! = nil, trickCards: [Card]! = nil, toLead: Int! = nil, lastCards: [Card]! = nil, lastToLead: Int! = nil) {
         
         if self.commsPurpose == .sharing || (self.thisPlayerNumber != nil && hand != nil) {
-            if self.available.index(where: { $0.deviceName == peer.deviceName && $0.framework == peer.framework}) != nil {
+            if self.available.firstIndex(where: { $0.deviceName == peer.deviceName && $0.framework == peer.framework}) != nil {
                 if !dismiss && self.commsPurpose == .playing && self.scorepadViewController != nil {
                     self.scorecard.commsHandlerMode = .playHand
                     self.scorecard.handState.hand = hand
@@ -520,7 +521,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             Utility.debugMessage("client", "Peer found for \(peer.deviceName)")
             // Check if already got this device - if so disconnect it and replace it
 
-            if let index = self.available.index(where: { $0.deviceName == peer.deviceName && $0.peer.framework == peer.framework }) {
+            if let index = self.available.firstIndex(where: { $0.deviceName == peer.deviceName && $0.peer.framework == peer.framework }) {
                 // Already have an entry for this device - re-use it (unless showing as 'Disconnected')
                 
                 if peer.state != .notConnected || self.available[index].oldState != .notConnected {
@@ -675,7 +676,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
         
         if self.clientService!.connect(to: peer, playerEmail: self.thisPlayer, playerName: playerName, context: context, reconnect: true) {
-            if let index = self.available.index(where: { $0.deviceName == peer.deviceName && $0.peer.framework == peer.framework }) {
+            if let index = self.available.firstIndex(where: { $0.deviceName == peer.deviceName && $0.peer.framework == peer.framework }) {
                 available[index].lastConnect = Date()
             }
         } else {
@@ -700,7 +701,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     private func reflectState(peer: CommsPeer) {
-        if let combinedIndex = available.index(where: {$0.deviceName == peer.deviceName && $0.framework == peer.framework}) {
+        if let combinedIndex = available.firstIndex(where: {$0.deviceName == peer.deviceName && $0.framework == peer.framework}) {
             let availableFound = self.available[combinedIndex]
             if peer.state != .connecting {
                 availableFound.connecting = false
@@ -714,7 +715,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
 
     private func currentState(peer: CommsPeer) -> CommsConnectionState {
         // Get current state of a player associated with a device
-        if let combinedIndex = available.index(where: {$0.deviceName == peer.deviceName && $0.framework == peer.framework}) {
+        if let combinedIndex = available.firstIndex(where: {$0.deviceName == peer.deviceName && $0.framework == peer.framework}) {
             return self.available[combinedIndex].peer.state
         } else {
             return .notConnected
@@ -970,7 +971,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             Utility.debugMessage("client", "Application state \(newState)")
             
             self.appState = newState
-            if newState == .notConnected {
+            if newState == .notConnected && !finishing {
                 self.startIdleTimer()
             } else {
                 self.stopIdleTimer()
@@ -984,6 +985,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     private func startIdleTimer() {
+        self.stopIdleTimer()
         self.idleTimer = Timer.scheduledTimer(
             timeInterval: TimeInterval(10),
             target: self,
@@ -993,10 +995,13 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     private func stopIdleTimer() {
+        Utility.debugMessage("client", "Stopping idle timer (\(self.idleTimer != nil))")
         self.idleTimer?.invalidate()
+        self.idleTimer = nil
     }
     
     private func startConnectingTimer() {
+        self.stopConnectingTimer()
         self.connectingTimer = Timer.scheduledTimer(
             timeInterval: TimeInterval(2),
             target: self,
@@ -1007,6 +1012,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     private func stopConnectingTimer() {
         self.connectingTimer?.invalidate()
+        self.connectingTimer = nil
     }
 
     
@@ -1108,7 +1114,9 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     public func finishClient(resetRecovery: Bool = true) {
+        self.finishing = true
         self.stopIdleTimer()
+        self.stopConnectingTimer()
         UIApplication.shared.isIdleTimerDisabled = false
         self.finishConnection(self.multipeerClient)
         self.multipeerClient = nil
@@ -1138,7 +1146,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     private func removeEntry(peer: CommsPeer) {
-        let index = available.index(where: {$0.deviceName == peer.deviceName && $0.framework == peer.framework})
+        let index = available.firstIndex(where: {$0.deviceName == peer.deviceName && $0.framework == peer.framework})
         if index != nil {
             self.clientTableView.beginUpdates()
             self.available.remove(at: index!)

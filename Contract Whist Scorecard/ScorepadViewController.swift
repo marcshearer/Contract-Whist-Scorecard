@@ -226,7 +226,7 @@ class ScorepadViewController: CustomViewController,
     @IBAction private func rightSwipe(recognizer:UISwipeGestureRecognizer) {
         if scorepadMode == .amend {
             if recognizer.state == .ended && !finishButton.isHidden && finishButton.isEnabled {
-                finishGamePressed(self.finishButton)
+                finishGamePressed(self.finishButton!)
             }
         }
     }
@@ -234,7 +234,7 @@ class ScorepadViewController: CustomViewController,
     @IBAction private func leftSwipe(recognizer:UISwipeGestureRecognizer) {
         if scorepadMode == .amend {
             if recognizer.state == .ended {
-                self.scorePressed(scoreEntryButton)
+                self.scorePressed(scoreEntryButton!)
             }
         }
     }
@@ -597,8 +597,8 @@ class ScorepadViewController: CustomViewController,
     private func getLocation() {
         if self.scorecard.isHosting && self.scorecard.commsDelegate?.connectionProximity == .online {
             // Online - location not appropriate
-            self.scorecard.gameLocation.description = "Online"
             self.scorecard.gameLocation = GameLocation()
+            self.scorecard.gameLocation.description = "Online"
             self.saveNewGame()
             self.playHand(setState: true)
         } else {

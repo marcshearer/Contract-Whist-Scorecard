@@ -354,12 +354,12 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     func updateImage(objectID: NSManagedObjectID) {
         // Find any cells containing an image which has just been downloaded asynchronously
         Utility.mainThread {
-            let availableIndex = self.availableList.index(where: {($0.objectID == objectID)})
+            let availableIndex = self.availableList.firstIndex(where: {($0.objectID == objectID)})
             if availableIndex != nil {
                 // Found it - reload the cell
                 self.availableCollectionView.reloadItems(at: [IndexPath(row: availableIndex! + 1, section: 0)])
             }
-            let selectedIndex = self.selectedList.index(where: {($0!.objectID == objectID)})
+            let selectedIndex = self.selectedList.firstIndex(where: {($0!.objectID == objectID)})
             if selectedIndex != nil {
                 // Found it - reload the cell
                 self.selectedCollectionView.reloadItems(at: [IndexPath(row: selectedIndex!, section: 0)])
@@ -628,7 +628,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             if newPlayerDetail.name == "" {
                 // Name not filled in - must have cancelled
             } else {
-                var availableIndex: Int! = self.availableList.index(where: {($0.name! > newPlayerDetail.name)})
+                var availableIndex: Int! = self.availableList.firstIndex(where: {($0.name! > newPlayerDetail.name)})
                 selectedCollectionView.performBatchUpdates({
                     if availableIndex == nil {
                         // Insert at end

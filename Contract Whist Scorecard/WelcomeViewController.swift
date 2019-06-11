@@ -335,7 +335,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             welcomeActionCell.actionButton.setTitle("Delete iCloud Database", for: .normal)
             deleteCloudCell = welcomeActionCell
         case patchButton:
-            welcomeActionCell.actionButton.setTitle("Patch Local Database", for: .normal)
+            welcomeActionCell.actionButton.setTitle("Reset Sync Record IDs", for: .normal)
             patchCell = welcomeActionCell
         case removeDuplicatesButton:
             welcomeActionCell.actionButton.setTitle("Remove Duplicate Games", for: .normal)
@@ -351,7 +351,6 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         }
         
         welcomeActionCell.actionButton.tag = indexPath.row + 1
-        welcomeActionCell.separatorInset = UIEdgeInsets.init(top: 0.0, left: welcomeActionCell.bounds.size.width, bottom: 0.0, right: 0.0);
         welcomeActionCell.actionButton.addTarget(self, action: #selector(WelcomeViewController.actionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
         self.enableButtons(button: indexPath.row+1)
         
@@ -390,8 +389,8 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             // Delete iCloud database
             DataAdmin.deleteCloudDatabase(from: self)
         case patchButton:
-            // Delete iCloud database
-            DataAdmin.patchLocalDatabase(from: self)
+            // Reset Sync Record IDs
+            DataAdmin.resetSyncRecordIDs(from: self)
         case removeDuplicatesButton:
             // Remove duplicate games locally
             DataAdmin.removeDuplicates(from: self)
@@ -830,5 +829,4 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
 
 class WelcomeActionCell: UITableViewCell {
     @IBOutlet weak var actionButton: RoundedButton!
-    @IBOutlet weak var resumeButtonView: UIView!
 }

@@ -115,7 +115,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     }
 
     @IBAction func allSwipe(recognizer:UISwipeGestureRecognizer) {
-        finishButtonPressed(finishButton)
+        finishButtonPressed(finishButton!)
     }
     
     // MARK: - View Overrides ========================================================================== -
@@ -151,10 +151,6 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
 
         default:
             break
-        }
-        
-        if mode == .display {
-            tableView.isUserInteractionEnabled = false
         }
         
         // Store email on entry
@@ -435,6 +431,10 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             cell?.backgroundColor = UIColor.white
         }
 
+        if self.mode == .display {
+            cell?.isUserInteractionEnabled = false
+        }
+        
         return cell!
     }
     

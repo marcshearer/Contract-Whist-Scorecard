@@ -10,7 +10,7 @@ import UIKit
 import CloudKit
 import CoreData
 
-class PlayerDetail {
+ class PlayerDetail: NSObject, DataTableViewerDataSource {
     
     // A class to hold the details of a player which can then be reflected in a core data playerMO class
     // or in a CKRecord CloudKit class
@@ -249,4 +249,14 @@ class PlayerDetail {
         cloudObject.setValue(self.maxTwosDate , forKey: "maxTwosDate")
         cloudObject.setValue(self.syncDate, forKey: "syncDate")
     }
+    
+    override func value(forKey: String) -> Any? {
+        var result: Any?
+        let mirror = Mirror(reflecting: self)
+        if let index = mirror.children.firstIndex(where: {$0.label == forKey}) {
+            result = mirror.children[index].value
+        }
+        return result
+    }
+    
 }

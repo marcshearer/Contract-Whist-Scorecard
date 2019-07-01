@@ -76,12 +76,26 @@ class DarkRoundedButton: RoundedButton {
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.normalTextColor = UIColor.white
+        self.normalTextColor = ScorecardUI.darkHighlightTextColor
+        self.normalBackgroundColor = ScorecardUI.darkHighlightColor
+        self.normalAlpha = 1.0
+        self.disabledTextColor = ScorecardUI.darkHighlightColor
+        self.disabledBackgroundColor = ScorecardUI.darkHighlightColor
+        self.disabledAlpha = 0.5
+        super.isEnabled(true)
+    }
+}
+
+class EmphasisRoundedButton: RoundedButton {
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.normalTextColor = ScorecardUI.emphasisTextColor
         self.normalBackgroundColor = ScorecardUI.emphasisColor
         self.normalAlpha = 1.0
-        self.disabledTextColor = UIColor.white
-        self.disabledBackgroundColor = ScorecardUI.darkHighlightColor
-        self.disabledAlpha = 1.0
+        self.disabledTextColor = ScorecardUI.emphasisTextColor
+        self.disabledBackgroundColor = ScorecardUI.emphasisColor
+        self.disabledAlpha = 0.5
         super.isEnabled(true)
     }
 }

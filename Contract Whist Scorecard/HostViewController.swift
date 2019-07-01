@@ -132,6 +132,12 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         self.performSegue(withIdentifier: "showHostGamePreview", sender: self)
     }
     
+    @IBAction func rightSwipe(recognizer:UISwipeGestureRecognizer) {
+        if recognizer.state == .ended {
+            finishPressed(finishButton)
+        }
+    }
+    
     // MARK: - View Overrides ========================================================================== -
     
     override func viewDidLoad() {
@@ -427,7 +433,6 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             row = self.playerData.firstIndex(where: {$0.peer != nil && $0.peer.deviceName == peer.deviceName})
             if row != nil {
                 let currentState = self.playerData[row].peer.state
-                Utility.debugMessage("host", "State change from \(currentState) to \(peer.state)") // TODO Remove
                 playerNumber = row! + 1
                 switch peer.state {
                 case .connected:
@@ -638,7 +643,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let header = view as! UITableViewHeaderFooterView
-        ScorecardUI.sectionHeaderStyleView(header.backgroundView!)
+        ScorecardUI.highlightStyleView(header.backgroundView!)
         header.textLabel!.font = UIFont.boldSystemFont(ofSize: 18.0)
     }
     
@@ -1146,7 +1151,11 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     
     private func stopHostBroadcast(completion: (()->())? = nil) {
         // Revert to normal sharing (if enabled)
-        self.hostService?.stop(completion: completion)
+        if let service = self.hostService {
+            service.stop(completion: completion)
+        } else {
+            completion?()
+        }
     }
     
     // MARK: - Segue Prepare Handler ================================================================ -

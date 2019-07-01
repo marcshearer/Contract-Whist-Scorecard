@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -25,17 +24,51 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JrC-1V-hch" userLabel="Footer Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="44" width="414" height="852"/>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R7D-RJ-hmj" userLabel="Bottom Line">
+                                <rect key="frame" x="0.0" y="862" width="414" height="2"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="2" id="7qe-jG-Dbk"/>
+                                </constraints>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4mH-Ut-Ta9" userLabel="Left Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="44" width="0.0" height="818"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gJV-Ai-5A3" userLabel="Left Line">
+                                        <rect key="frame" x="-2" y="0.0" width="2" height="818"/>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="2" id="y2X-L5-1Yu"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="gJV-Ai-5A3" firstAttribute="top" secondItem="4mH-Ut-Ta9" secondAttribute="top" id="5yp-Zq-7pO"/>
+                                    <constraint firstAttribute="trailing" secondItem="gJV-Ai-5A3" secondAttribute="trailing" id="Llg-Ck-o3w"/>
+                                    <constraint firstAttribute="bottom" secondItem="gJV-Ai-5A3" secondAttribute="bottom" id="a57-BE-Fe6"/>
+                                </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2V4-Rn-jn9" userLabel="Right Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="414" y="44" width="0.0" height="818"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SeV-1g-Tzl" userLabel="Left Line">
+                                        <rect key="frame" x="0.0" y="0.0" width="2" height="818"/>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="2" id="FXN-PX-YPU"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="SeV-1g-Tzl" firstAttribute="leading" secondItem="2V4-Rn-jn9" secondAttribute="leading" id="Lpg-53-gr4"/>
+                                    <constraint firstAttribute="bottom" secondItem="SeV-1g-Tzl" secondAttribute="bottom" id="Xy0-uu-bel"/>
+                                    <constraint firstItem="SeV-1g-Tzl" firstAttribute="top" secondItem="2V4-Rn-jn9" secondAttribute="top" id="clv-k2-aFe"/>
+                                </constraints>
                             </view>
-                            <navigationBar clipsSubviews="YES" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Skq-xy-HKr">
+                            <navigationBar clipsSubviews="YES" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Skq-xy-HKr" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="44" width="414" height="44"/>
-                                <color key="barTintColor" name="Banner"/>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </textAttributes>
@@ -80,7 +113,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="redraw" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0qL-mh-yEp" userLabel="Header Collection View">
-                                                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Qk4-FS-pii">
                                                         <size key="itemSize" width="50" height="50"/>
@@ -163,7 +196,7 @@
                                                                                     <constraint firstAttribute="width" constant="5" id="vpZ-Lr-rnK"/>
                                                                                 </constraints>
                                                                             </view>
-                                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="YOW-YO-SFG">
+                                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="YOW-YO-SFG">
                                                                                 <rect key="frame" x="5" y="0.0" width="45" height="50"/>
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XYq-c4-gCU" userLabel="Top Line">
@@ -266,7 +299,7 @@
                                                                 <outlet property="scorepadDiscHeight" destination="T3K-Fk-qFN" id="Zoa-96-pCT"/>
                                                                 <outlet property="scorepadImage" destination="grq-ja-GuI" id="nI7-3r-oM0"/>
                                                                 <outlet property="scorepadLeftLineWeight" destination="vpZ-Lr-rnK" id="87k-zc-u2C"/>
-                                                                <outlet property="scorepadTopLineWeight" destination="wC2-jO-NS8" id="TVi-LP-hah"/>
+                                                                <outlet property="scorepadTopLineWeight" destination="wC2-jO-NS8" id="Vpm-Tg-4a1"/>
                                                             </connections>
                                                         </collectionViewCell>
                                                     </cells>
@@ -304,7 +337,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="redraw" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="4T5-T5-xo8" userLabel="Body Collection View">
-                                                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="wCU-a4-0e5">
                                                         <size key="itemSize" width="50" height="50"/>
@@ -512,7 +545,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="redraw" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0hZ-si-j19" userLabel="Footer Collection View">
-                                                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="44" id="Hzh-Hv-tmK"/>
@@ -613,10 +646,12 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="JrC-1V-hch" secondAttribute="trailing" id="6Ln-mk-q9e"/>
                             <constraint firstItem="JrC-1V-hch" firstAttribute="top" secondItem="Qc8-yN-AYf" secondAttribute="top" id="DB7-31-vqH"/>
+                            <constraint firstItem="Qc8-yN-AYf" firstAttribute="bottom" secondItem="R7D-RJ-hmj" secondAttribute="top" id="Eq1-fJ-tEl"/>
                             <constraint firstItem="Qc8-yN-AYf" firstAttribute="bottom" secondItem="2V4-Rn-jn9" secondAttribute="bottom" id="FBy-g1-gBK"/>
                             <constraint firstItem="Qc8-yN-AYf" firstAttribute="trailing" secondItem="uWQ-Kt-TjV" secondAttribute="trailing" id="FMv-g8-SMS"/>
                             <constraint firstItem="7Jo-C4-vPV" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="H1Q-qc-CM2"/>
                             <constraint firstItem="CoM-o8-drH" firstAttribute="top" secondItem="Skq-xy-HKr" secondAttribute="bottom" id="I7X-kw-VrS"/>
+                            <constraint firstItem="Qc8-yN-AYf" firstAttribute="trailing" secondItem="R7D-RJ-hmj" secondAttribute="trailing" id="K2x-od-kYy"/>
                             <constraint firstItem="CoM-o8-drH" firstAttribute="leading" secondItem="Qc8-yN-AYf" secondAttribute="leading" id="LAQ-TR-UNl"/>
                             <constraint firstItem="Skq-xy-HKr" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Ojc-IW-vwW"/>
                             <constraint firstAttribute="trailing" secondItem="2V4-Rn-jn9" secondAttribute="trailing" id="QsG-AD-V0A"/>
@@ -641,6 +676,7 @@
                             <constraint firstItem="Qc8-yN-AYf" firstAttribute="trailing" secondItem="m5j-3V-hPG" secondAttribute="trailing" id="p9y-wJ-ZBM"/>
                             <constraint firstItem="Qc8-yN-AYf" firstAttribute="bottom" secondItem="uWQ-Kt-TjV" secondAttribute="bottom" id="q7V-na-oyS"/>
                             <constraint firstItem="m5j-3V-hPG" firstAttribute="leading" secondItem="Qc8-yN-AYf" secondAttribute="leading" id="v0n-ja-RWi"/>
+                            <constraint firstItem="R7D-RJ-hmj" firstAttribute="leading" secondItem="Qc8-yN-AYf" secondAttribute="leading" id="zeV-Cc-Sf0"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Qc8-yN-AYf"/>
                         <connections>
@@ -743,8 +779,5 @@
     <resources>
         <image name="back" width="14" height="20"/>
         <image name="forward" width="14" height="20"/>
-        <namedColor name="Banner">
-            <color red="0.33300000429153442" green="0.33300000429153442" blue="0.33300000429153442" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
     </resources>
 </document>

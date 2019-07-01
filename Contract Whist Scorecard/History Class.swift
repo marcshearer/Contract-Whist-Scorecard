@@ -33,7 +33,7 @@ class History {
         self.loadGames(getParticipants: getParticipants, unconfirmed: unconfirmed)
     }
     
-    private func loadGames(getParticipants: Bool = false, unconfirmed: Bool = false, gameUUID: String! = nil, includeBF: Bool = false) {
+    public func loadGames(getParticipants: Bool = false, unconfirmed: Bool = false, gameUUID: String! = nil, includeBF: Bool = false) {
         // Fetch list of games from data store
         var predicate: NSPredicate!
         var lastGameUUID: String!
@@ -56,6 +56,7 @@ class History {
                                               filter: predicate,
                                               sort: ("datePlayed", .descending))
         
+        self.games = []
         if gameList.count > 0 {
             for gameLoop in 1...gameList.count {
                 self.games.append(HistoryGame(fromManagedObject: gameList[gameLoop - 1],
@@ -68,7 +69,7 @@ class History {
         }
     }
     
-    static func getNewGames(cutoffDate: Date) -> [String] {
+    static public func getNewGames(cutoffDate: Date) -> [String] {
     // Fetch list of games which have been downloaded since the cutoff date
         var results: [String] = []
         
@@ -96,7 +97,7 @@ class History {
         }
     }
     
-    static func loadParticipants(gameUUID: String, playerNumber: Int! = nil) -> [HistoryParticipant] {
+    static public func loadParticipants(gameUUID: String, playerNumber: Int! = nil) -> [HistoryParticipant] {
         // Fetch list of participants for a specific game (and possibly specific player) from data store
         var results: [HistoryParticipant] = []
         var predicate: NSPredicate
@@ -123,7 +124,7 @@ class History {
         return results
     }
     
-    static func findOpponentNames(playerEmail: String) -> [String] {
+    static public func findOpponentNames(playerEmail: String) -> [String] {
         // Fetch a list of opponent names (not emails) for a specific player email
         var results: [String] = []
         var gameUUID: [String] = []
@@ -169,7 +170,7 @@ class History {
         return results
     }
     
-    static func getHighScores(type: HighScoreType, limit: Int = 3, playerEmailList: [String]) -> [ParticipantMO] {
+    static public func getHighScores(type: HighScoreType, limit: Int = 3, playerEmailList: [String]) -> [ParticipantMO] {
         // Setup query filters
         var sort: [(key: String, direction: SortDirection)]
         let predicate1 = NSPredicate(format: "gameUUID != 'B/F' AND excludeStats = false")
@@ -194,7 +195,7 @@ class History {
         return results
     }
     
-    static func getParticipantEmailList() -> [String] {
+    static public func getParticipantEmailList() -> [String] {
         var results: [String] = []
         
         // Get list all participants on this device sorted by email
@@ -215,23 +216,58 @@ class History {
         
     }
 
-    static func getParticipantRecordsForPlayer(playerEmail: String, includeBF: Bool = true) -> [ParticipantMO] {
-        var predicate: NSPredicate
+    static public func getParticipantRecordsForPlayer(playerEmail: String, includeBF: Bool = true, includeExcluded: Bool = true) -> [ParticipantMO] {
+        var predicate: [NSPredicate]
         // Get all participants from Core Data for player
-        if includeBF {
-            predicate = NSPredicate(format: "email = %@", playerEmail)
-        } else {
-            predicate = NSPredicate(format: "email = %@ and gameUUID <> 'B/F'", playerEmail)
+        
+        predicate = [NSPredicate(format: "email = %@", playerEmail)]
+        
+        if !includeBF {
+            predicate.append(NSPredicate(format: "gameUUID <> 'B/F'"))
+        }
+        
+        if !includeExcluded {
+            predicate.append(NSPredicate(format: "excludeStats = false"))
         }
         
         let results: [ParticipantMO] = CoreData.fetch(from: "Participant",
                                                       filter: predicate,
-                                                      sort: ("datePlayed", .ascending))
+                                                      sort: [("datePlayed", .ascending)])
         
         return results
     }
     
-    static func getNewParticpantGames(cutoffDate: Date, specificEmail: [String] = []) -> [String] {
+    static public func getWinStreaks(playerEmailList: [String], limit: Int = 3) -> [(streak: Int, participantMO: ParticipantMO?)] {
+        let nullDate = Date(timeIntervalSinceReferenceDate: 0)
+        var currentStreak = 0
+        var longestStreak: [(streak: Int, participantMO: ParticipantMO?)] = []
+        
+        for (index, playerEmail) in playerEmailList.enumerated() {
+            longestStreak.append((0, nil))
+            currentStreak = 0
+            let participants = History.getParticipantRecordsForPlayer(playerEmail: playerEmail)
+            if participants.count > 0 {
+                for participantMO in participants {
+                    if participantMO.place == 1 {
+                        currentStreak += 1
+                        if currentStreak > longestStreak[index].streak {
+                            longestStreak[index].streak = currentStreak
+                            longestStreak[index].participantMO = participantMO
+                        }
+                    } else {
+                        currentStreak = 0
+                    }
+                }
+            }
+        }
+        
+        longestStreak.removeAll(where: { $0.streak == 0})
+        longestStreak.sort(by: { $0.streak > $1.streak || ($0.streak == $1.streak && $0.participantMO!.datePlayed ?? nullDate > $1.participantMO!.datePlayed ?? nullDate) })
+        
+        return Array(longestStreak.prefix(3))
+    }
+    
+    static public func getNewParticpantGames(cutoffDate: Date, specificEmail: [String] = []) -> [String] {
         // Fetch list of games where a participant has been downloaded since the cutoff date
         var results: [String] = []
         var predicate1: NSPredicate
@@ -265,7 +301,7 @@ class History {
         return results
     }
     
-    static func getGameLocations(latitude: Double, longitude: Double, skipLocation: String = "") -> [GameLocation] {
+    static public func getGameLocations(latitude: Double, longitude: Double, skipLocation: String = "") -> [GameLocation] {
         var gameLocations: [GameLocation] = []
         
         // Get game list from core data
@@ -305,7 +341,7 @@ class History {
         return gameLocations
     }
     
-    class func deleteDetachedGames(scorecard: Scorecard) {
+    static public func deleteDetachedGames(scorecard: Scorecard) {
         // Run round all participants building up a list of games to delete
         var canDeleteGameUUID: [String] = []
         var lastGameUUID = ""
@@ -345,7 +381,7 @@ class History {
         }
     }
     
-    func find(gameUUID: String) -> HistoryGame! {
+    private func find(gameUUID: String) -> HistoryGame! {
         let found = self.games.firstIndex(where: {
             if $0.gameUUID == gameUUID {
                 return true
@@ -359,7 +395,7 @@ class History {
         }
     }
     
-    static func cloudGameToMO(cloudObject: CKRecord, gameMO: GameMO) {
+    static public func cloudGameToMO(cloudObject: CKRecord, gameMO: GameMO) {
         gameMO.gameUUID = Utility.objectString(cloudObject: cloudObject, forKey: "gameUUID")
         gameMO.deviceUUID = Utility.objectString(cloudObject: cloudObject, forKey: "deviceUUID")
         gameMO.datePlayed = Utility.objectDate(cloudObject: cloudObject, forKey: "datePlayed")
@@ -375,7 +411,7 @@ class History {
         }
     }
     
-    static func cloudGameFromMo(cloudObject: CKRecord, gameMO: GameMO, syncDate: Date) {
+    static public func cloudGameFromMo(cloudObject: CKRecord, gameMO: GameMO, syncDate: Date) {
         cloudObject.setValue(gameMO.gameUUID, forKey: "gameUUID")
         cloudObject.setValue(gameMO.deviceUUID, forKey: "deviceUUID")
         cloudObject.setValue(gameMO.datePlayed, forKey: "datePlayed")
@@ -387,7 +423,7 @@ class History {
         cloudObject.setValue(syncDate, forKey: "syncDate")
     }
     
-    static func cloudParticipantToMO(cloudObject: CKRecord, participantMO: ParticipantMO) {
+    static public func cloudParticipantToMO(cloudObject: CKRecord, participantMO: ParticipantMO) {
         participantMO.gameUUID = Utility.objectString(cloudObject: cloudObject, forKey: "gameUUID")
         participantMO.deviceUUID = Utility.objectString(cloudObject: cloudObject, forKey: "deviceUUID")
         participantMO.datePlayed = Utility.objectDate(cloudObject: cloudObject, forKey: "datePlayed")
@@ -409,7 +445,7 @@ class History {
         }
     }
     
-    static func cloudParticipantFromMO(cloudObject: CKRecord, participantMO: ParticipantMO, syncDate: Date) {
+    static public func cloudParticipantFromMO(cloudObject: CKRecord, participantMO: ParticipantMO, syncDate: Date) {
         cloudObject.setValue(participantMO.gameUUID, forKey: "gameUUID")
         cloudObject.setValue(participantMO.deviceUUID, forKey: "deviceUUID")
         cloudObject.setValue(participantMO.datePlayed, forKey: "datePlayed")
@@ -426,13 +462,9 @@ class History {
         cloudObject.setValue(participantMO.excludeStats, forKey: "excludeStats")
         cloudObject.setValue(syncDate, forKey: "syncDate")
     }
-    
-    func test() {
-        
-    }
 }
 
-public class HistoryGame {
+public class HistoryGame: NSObject, DataTableViewerDataSource {
     var gameUUID: String
     var datePlayed: Date
     var deviceUUID: String
@@ -453,6 +485,15 @@ public class HistoryGame {
         self.localDateCreated = (gameMO.localDateCreated == nil ? Date() : gameMO.localDateCreated! as Date)
         self.gameMO = gameMO
         self.duplicate = duplicate
+    }
+    
+    override public func value(forKey: String) -> Any? {
+        var result: Any?
+        let mirror = Mirror(reflecting: self)
+        if let index = mirror.children.firstIndex(where: {$0.label == forKey}) {
+            result = mirror.children[index].value
+        }
+        return result
     }
 }
 

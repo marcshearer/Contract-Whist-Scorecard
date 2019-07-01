@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -25,31 +26,32 @@
                                 <rect key="frame" x="0.0" y="400" width="320" height="0.0"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gXs-Is-mIL">
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gXs-Is-mIL" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </textAttributes>
                                 <items>
                                     <navigationItem title="Player Name" id="c5v-ql-NOg">
-                                        <barButtonItem key="leftBarButtonItem" id="PwO-mV-Smy">
+                                        <barButtonItem key="leftBarButtonItem" width="70" id="PwO-mV-Smy">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="tailTruncation" id="nao-U2-GpM" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="16" y="11" width="56" height="22"/>
+                                                <rect key="frame" x="16" y="11" width="70" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Back" image="back"/>
                                                 <connections>
-                                                    <action selector="finishButtonPressed:" destination="bWc-Jl-GWH" eventType="touchUpInside" id="Pe6-Ls-cAZ"/>
+                                                    <action selector="backButtonPressed:" destination="bWc-Jl-GWH" eventType="touchUpInside" id="Pe6-Ls-cAZ"/>
                                                 </connections>
                                             </button>
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" width="70" id="QGS-ra-h1h">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="9gf-xI-wrn" customClass="LightRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="234" y="7" width="70" height="30"/>
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="9gf-xI-wrn" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <rect key="frame" x="234" y="11" width="70" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <state key="normal" title="Action"/>
+                                                <state key="normal" title="Action" image="forward">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
                                                 <connections>
-                                                    <action selector="actionButtonPressed:" destination="bWc-Jl-GWH" eventType="touchUpInside" id="RZB-an-s1r"/>
+                                                    <action selector="continueButtonPressed:" destination="bWc-Jl-GWH" eventType="touchUpInside" id="RZB-an-s1r"/>
                                                 </connections>
                                             </button>
                                         </barButtonItem>
@@ -451,6 +453,41 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" tag="1" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Player Detail Body Action Button" id="oVk-Gg-hN9" userLabel="Action Button" customClass="PlayerDetailCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="246" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oVk-Gg-hN9" id="OT3-Xq-84X">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gys-Wx-NCn" customClass="OutlineButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                    <rect key="frame" x="100" y="7.5" width="120" height="30"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="30" id="AnR-DA-DgE"/>
+                                                        <constraint firstAttribute="width" constant="120" id="pAT-fA-kcK"/>
+                                                    </constraints>
+                                                    <state key="normal" title="Button">
+                                                        <color key="titleColor" name="Total"/>
+                                                    </state>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="outlineColor">
+                                                            <color key="value" name="Total"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Gys-Wx-NCn" firstAttribute="centerX" secondItem="OT3-Xq-84X" secondAttribute="centerX" id="06d-fQ-7KL"/>
+                                                <constraint firstAttribute="bottom" secondItem="Gys-Wx-NCn" secondAttribute="bottom" constant="7" id="CU9-aF-Pal"/>
+                                                <constraint firstItem="Gys-Wx-NCn" firstAttribute="top" secondItem="OT3-Xq-84X" secondAttribute="top" constant="7" id="XQn-SI-7L7"/>
+                                                <constraint firstItem="Gys-Wx-NCn" firstAttribute="centerY" secondItem="OT3-Xq-84X" secondAttribute="centerY" id="jxW-eE-GDz"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="playerDetailActionButton" destination="Gys-Wx-NCn" id="A8t-0u-jgo"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </prototypes>
                                 <sections/>
                                 <connections>
@@ -492,14 +529,9 @@
                         <outlet property="footerPaddingView" destination="cSS-DE-NVq" id="q3K-5z-xeV"/>
                         <outlet property="navigationBar" destination="gXs-Is-mIL" id="X6w-8A-xWS"/>
                         <outlet property="tableView" destination="3Pf-sG-Che" id="wgU-9V-DwZ"/>
-                        <segue destination="8b0-42-FMB" kind="unwind" identifier="hidePlayersPlayerDetail" unwindAction="hidePlayersPlayerDetailWithSegue:" id="N4J-HH-Iea"/>
-                        <segue destination="8b0-42-FMB" kind="unwind" identifier="hideSelectionPlayerDetail" unwindAction="hideSelectionPlayerDetailWithSegue:" id="jie-bG-1kE"/>
-                        <segue destination="8b0-42-FMB" kind="unwind" identifier="hideStatisticsPlayerDetail" unwindAction="hideStatisticsPlayerDetailWithSegue:" id="8RM-dL-h1d"/>
-                        <segue destination="8b0-42-FMB" kind="unwind" identifier="hideSelectPlayersPlayerDetail" customClass="UIStoryboardSegueWithCompletion" customModule="Contract_Whist_Scorecard" customModuleProvider="target" unwindAction="hideSelectPlayersPlayerDetailWithSegue:" id="tOR-Y7-qdf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="REd-wj-wdR" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="8b0-42-FMB" userLabel="Exit" sceneMemberID="exit"/>
                 <swipeGestureRecognizer direction="left" id="6D8-ix-WCm" userLabel="Left Swipe Gesture Recognizer">
                     <connections>
                         <action selector="allSwipeWithRecognizer:" destination="bWc-Jl-GWH" id="evY-Pg-mwc"/>
@@ -517,5 +549,9 @@
     <resources>
         <image name="back" width="14" height="20"/>
         <image name="camera" width="30" height="30"/>
+        <image name="forward" width="14" height="20"/>
+        <namedColor name="Total">
+            <color red="0.89803921568627454" green="0.74901960784313726" blue="0.37254901960784315" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

@@ -10,8 +10,23 @@ import UIKit
 import CoreData
 import MessageUI
 
+struct ActionButton {
+    var tag: Int
+    var section: Int
+    var title: String
+    var highlight: Bool
+    var isHidden: (()->Bool)?
+    var action: (UITableViewCell)->()
+}
+
 class WelcomeViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, ReconcileDelegate, SyncDelegate, MFMailComposeViewControllerDelegate, UIPopoverPresentationControllerDelegate {
 
+    private enum Shape {
+        case arrowTop
+        case arrowMiddle
+        case arrowBottom
+    }
+    
     // MARK: - Class Properties ================================================================ -
     
     // Main state properties
@@ -30,40 +45,23 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     private var firstTime = true
     private var getStarted = true
     
-    // Action button IDs
-    private var newGameButton = -1
-    private var onlineGameButton = -1
-    private var getStartedButton = -1
-    private var resumeGameButton = -1
-    private var playersButton = -1
-    private var statisticsButton = -1
-    private var highScoresButton = -1
-    private var historyButton = -1
-    private var deleteCloudButton = -1
-    private var patchButton = -1
-    private var removeDuplicatesButton = -1
-    private var rebuildAllButton = -1
-    private var backupButton = -1
-    private var buttons = 0
+    private var sections: [Int]!
+    private var sectionActions: [Int:[ActionButton]]!
+    private var actionButtons: [ActionButton]!
+    private var mainSection = 1
+    private var infoSection = 2
+    private var adminSection = 3
+    
+    private var recoveryAvailable = false
+    private var recoverOnline = false
+    
     
     // Debug rotations code
     private let code: [CGFloat] = [ -1.0, -1.0, 1.0, -1.0, 1.0]
     private var matching = 0
     
     // UI component pointers
-    private var newGameCell: WelcomeActionCell!
-    private var onlineGameCell: WelcomeActionCell!
-    private var getStartedCell: WelcomeActionCell!
-    private var resumeGameCell: WelcomeActionCell!
-    private var playersCell: WelcomeActionCell!
-    private var statisticsCell: WelcomeActionCell!
-    private var highScoresCell: WelcomeActionCell!
-    private var historyCell: WelcomeActionCell!
-    private var deleteCloudCell: WelcomeActionCell!
-    private var patchCell: WelcomeActionCell!
-    private var removeDuplicatesCell: WelcomeActionCell!
-    private var rebuildAllCell: WelcomeActionCell!
-    private var backupCell: WelcomeActionCell!
+    private var onlineGameCell: UITableViewCell!
     private var reconcileAlertController: UIAlertController!
     private var reconcileContinue: UIAlertAction!
     private var reconcileIndicatorView: UIActivityIndicatorView!
@@ -71,7 +69,6 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var welcomeView: UIView!
     @IBOutlet private weak var syncMessage: UILabel!
-    @IBOutlet private weak var backgroundImage: UIImageView!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var actionsTableView: UITableView!
     @IBOutlet private weak var viewOnlineButton: ClearButton!
@@ -85,58 +82,46 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     }
     
     @IBAction func hideClient(segue:UIStoryboardSegue) {
-        getCloudVersion(async: true)
-        setupButtons()
-        actionsTableView.reloadData()
+        self.getCloudVersion(async: true)
+        self.setupButtons()
     }
     
     @IBAction func hideHost(segue:UIStoryboardSegue) {
-        getCloudVersion(async: true)
-        setupButtons()
-        actionsTableView.reloadData()
+        self.getCloudVersion(async: true)
+        self.setupButtons()
     }
     
     @IBAction func hideGetStarted(segue:UIStoryboardSegue) {
-        scorecard.checkNetworkConnection(button: nil, label: syncMessage)
-        scorecard.recoveryMode = false
-        getCloudVersion(async: true)
-        setupButtons()
+        self.scorecard.checkNetworkConnection(button: nil, label: syncMessage)
+        self.recoveryAvailable = false
+        self.getCloudVersion(async: true)
+        self.setupButtons()
     }
     
     @IBAction func hidePlayers(segue:UIStoryboardSegue) {
-        scorecard.checkNetworkConnection(button: nil, label: syncMessage)
-        getCloudVersion(async: true)
-        enableButtons() // In case removed all players
-    }
-    
-    @IBAction func hideStatistics(segue:UIStoryboardSegue) {
-        scorecard.checkNetworkConnection(button: nil, label: syncMessage)
-        getCloudVersion(async: true)
+        self.scorecard.checkNetworkConnection(button: nil, label: syncMessage)
+        self.getCloudVersion(async: true)
+        self.checkButtons()
     }
     
     @IBAction func hideHighScores(segue:UIStoryboardSegue) {
-        scorecard.checkNetworkConnection(button: nil, label: syncMessage)
-        getCloudVersion(async: true)
-    }
-    
-    @IBAction func hideHistory(segue:UIStoryboardSegue) {
-        scorecard.checkNetworkConnection(button: nil, label: syncMessage)
-        getCloudVersion(async: true)
+        self.scorecard.checkNetworkConnection(button: nil, label: syncMessage)
+        self.getCloudVersion(async: true)
     }
     
     @IBAction func hideSelection(segue:UIStoryboardSegue) {
         // Clear recovery flag
-        scorecard.checkNetworkConnection(button: nil, label: syncMessage)
-        scorecard.recoveryMode = false
-        getCloudVersion(async: true)
-        enableButtons()
+        self.scorecard.checkNetworkConnection(button: nil, label: syncMessage)
+        self.recoveryAvailable = false
+        self.getCloudVersion(async: true)
+        self.checkButtons()
     }
     
     @IBAction func finishGame(segue:UIStoryboardSegue) {
-        scorecard.checkNetworkConnection(button: nil, label: syncMessage)
-        scorecard.recoveryMode = false
-        getCloudVersion(async: true)
-        enableButtons()
+        self.scorecard.checkNetworkConnection(button: nil, label: syncMessage)
+        self.recoveryAvailable = false
+        self.getCloudVersion(async: true)
+        self.checkButtons()
     }
     
     // MARK: - IB Actions ============================================================================== -
@@ -154,7 +139,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     
     @IBAction func leftSwipe(recognizer:UISwipeGestureRecognizer) {
         if recognizer.state == .ended {
-            newGame()
+            self.scoreGame()
         }
     }
     
@@ -183,7 +168,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         self.hideNavigationBar()
         
         // Possible clear all data in test mode
@@ -192,13 +177,15 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         scorecard.initialise(from: self, players: 4, maxRounds: 25, recovery: recovery)
         sync.initialise(scorecard: scorecard)
         
-        if !recovery.checkRecovery() {
+        (self.recoveryAvailable, self.recoverOnline) = recovery.checkOnlineRecovery()
+        
+        if !recoveryAvailable {
             scorecard.reset()
         }
         
         scorecard.checkNetworkConnection(button: nil, label: syncMessage)
         
-        ScorecardUI.selectBackground(size: welcomeView.frame.size, backgroundImage: backgroundImage)
+        self.setupButtons()
         
     }
     
@@ -214,13 +201,17 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             
             // Note flow continues in completion handler of getCloudVersion
         }
-        
-        setupButtons()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        ScorecardUI.selectBackground(size: size, backgroundImage: backgroundImage)
+        self.view.setNeedsLayout()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.actionsTableView.layoutIfNeeded()
+        self.actionsTableView.reloadData()
     }
     
     // MARK: - Sync class delegate methods ===================================================================== -
@@ -288,16 +279,31 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     // MARK: - TableView Overrides ===================================================================== -
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return self.sections.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return buttons
+        return self.sectionActions[sections[section]]!.count
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 {
+            return 1
+        } else {
+            return 20
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return " "
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return UIView()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 64
+        return min(80, max(50, tableView.frame.height / 8.0))
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -306,175 +312,160 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         // Action buttons
         welcomeActionCell = tableView.dequeueReusableCell(withIdentifier: "Welcome Action Cell", for: indexPath) as! WelcomeActionCell
         
-        switch indexPath.row + 1 {
-        case newGameButton:
-            welcomeActionCell.actionButton.setTitle("New Game", for: .normal)
-            newGameCell = welcomeActionCell
-        case onlineGameButton:
-            welcomeActionCell.actionButton.setTitle("Online Game", for: .normal)
-            onlineGameCell = welcomeActionCell
-        case getStartedButton:
-            welcomeActionCell.actionButton.setTitle("Get Started", for: .normal)
-            getStartedCell = welcomeActionCell
-        case resumeGameButton:
-            welcomeActionCell.actionButton.setTitle("Resume Game", for: .normal)
-            resumeGameCell = welcomeActionCell
-        case playersButton:
-            welcomeActionCell.actionButton.setTitle("Players", for: .normal)
-            playersCell = welcomeActionCell
-        case statisticsButton:
-            welcomeActionCell.actionButton.setTitle("Statistics", for: .normal)
-            statisticsCell = welcomeActionCell
-        case highScoresButton:
-            welcomeActionCell.actionButton.setTitle("High Scores", for: .normal)
-            highScoresCell = welcomeActionCell
-        case historyButton:
-            welcomeActionCell.actionButton.setTitle("History", for: .normal)
-            historyCell = welcomeActionCell
-        case deleteCloudButton:
-            welcomeActionCell.actionButton.setTitle("Delete iCloud Database", for: .normal)
-            deleteCloudCell = welcomeActionCell
-        case patchButton:
-            welcomeActionCell.actionButton.setTitle("Reset Sync Record IDs", for: .normal)
-            patchCell = welcomeActionCell
-        case removeDuplicatesButton:
-            welcomeActionCell.actionButton.setTitle("Remove Duplicate Games", for: .normal)
-            removeDuplicatesCell = welcomeActionCell
-        case rebuildAllButton:
-            welcomeActionCell.actionButton.setTitle("Rebuild All Players", for: .normal)
-            rebuildAllCell = welcomeActionCell
-        case backupButton:
-            welcomeActionCell.actionButton.setTitle("Backup Device", for: .normal)
-            backupCell = welcomeActionCell
-        default:
-            break
+        let section = self.sections[indexPath.section]
+        let actionButtons = self.sectionActions[section]!
+        let actionButton = actionButtons[indexPath.row]
+        
+        var shape: Shape
+        var strokeColor: UIColor
+        var fillColor: UIColor
+        var pointType: PolygonPointType
+        
+        // Set section colors
+        if section == 1 {
+            strokeColor = ScorecardUI.shapeHighlightStrokeColor
+            fillColor = ScorecardUI.shapeHighlightFillColor
+        } else {
+            strokeColor = ScorecardUI.shapeStrokeColor
+            fillColor = ScorecardUI.shapeFillColor
+            if indexPath.row % 2 == 0 {
+                shape = .arrowTop
+            } else {
+                shape = .arrowBottom
+            }
         }
         
-        welcomeActionCell.actionButton.tag = indexPath.row + 1
-        welcomeActionCell.actionButton.addTarget(self, action: #selector(WelcomeViewController.actionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
-        self.enableButtons(button: indexPath.row+1)
+        // Override fill color if highlighted
+        if actionButton.highlight {
+            fillColor = strokeColor
+        }
+        
+        // Set shapes
+        if actionButtons.count == 1 {
+            pointType = .rounded
+            shape = .arrowMiddle
+        } else if actionButtons.count == 3 {
+            if indexPath.item == 0 {
+                shape = .arrowTop
+                pointType = .insideRounded
+            } else if indexPath.item == 1 {
+                shape = .arrowMiddle
+                pointType = .point
+            } else {
+                shape = .arrowBottom
+                pointType = .insideRounded
+            }
+        } else {
+            pointType = .halfRounded
+            if indexPath.item % 2 == 0 {
+                shape = .arrowTop
+            } else {
+                shape = .arrowBottom
+            }
+        }
+
+        self.backgroundShape(view: welcomeActionCell.shapeView, shape: shape, strokeColor: strokeColor, fillColor: fillColor, abutted: (indexPath.row != 0) && (indexPath.row != actionButtons.count - 1), pointType: pointType)
+
+        welcomeActionCell.title.text = actionButton.title
+        welcomeActionCell.title.font = UIFont.systemFont(ofSize: min(40, welcomeActionCell.title.frame.width / 9.0, welcomeActionCell.title.frame.height / 1.25), weight: .thin)
+        welcomeActionCell.tag = actionButton.tag
+        welcomeActionCell.selectionStyle = .none
         
         return welcomeActionCell as UITableViewCell
     }
     
-     // MARK: - Action Handlers ================================================================ -
-    
-    @objc func actionButtonPressed(_ button: UIButton) {
-        switch button.tag {
-        case newGameButton:
-            // Start new game
-           newGame()
-        case onlineGameButton:
-            // Play an online game
-            newOnlineGame()
-        case getStartedButton:
-            // Get started dialog
-            self.performSegue(withIdentifier: "showGetStarted", sender: self)
-        case resumeGameButton:
-            // Resume game
-            resumeGame()
-        case playersButton:
-            // Players
-            self.performSegue(withIdentifier: "showPlayers", sender: self )
-        case statisticsButton:
-            // Players
-            self.performSegue(withIdentifier: "showStatistics", sender: self )
-        case highScoresButton:
-            // High Scores
-            self.performSegue(withIdentifier: "showHighScores", sender: self )
-        case historyButton:
-            // History
-            self.performSegue(withIdentifier: "showHistory", sender: self )
-        case deleteCloudButton:
-            // Delete iCloud database
-            DataAdmin.deleteCloudDatabase(from: self)
-        case patchButton:
-            // Reset Sync Record IDs
-            DataAdmin.resetSyncRecordIDs(from: self)
-        case removeDuplicatesButton:
-            // Remove duplicate games locally
-            DataAdmin.removeDuplicates(from: self)
-        case rebuildAllButton:
-            self.reconcilePlayers(allPlayers: true)
-        case backupButton:
-            self.backupDevice()
-        default:
-            break
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        
+        if let cell = tableView.cellForRow(at: indexPath) {
+            let actionButton = actionButtons[cell.tag]
+            Utility.mainThread {
+                actionButton.action(cell)
+            }
         }
+        return nil
     }
     
-    private func setupButtons() {
+     // MARK: - Action Handlers ================================================================ -
+    
+    private func setupButtons(allowRecovery: Bool = true) {
         
-        buttons = 0
-        if self.scorecard.playerList.count == 0 {
-            buttons += 1
-            getStartedButton = buttons
-        } else {
-            getStartedButton = -1
-            getStartedCell = nil
-        }
+        self.actionButtons = []
         
-        // TODO Reinstate (move below online game)
-        buttons += 1
-        newGameButton = buttons
+        self.addAction(section: mainSection, title: "Get Started", isHidden: {self.scorecard.playerList.count != 0}, action: { (_) in
+            self.performSegue(withIdentifier: "showGetStarted", sender: self)
+        })
         
-        // TODO Reinstate (move below online game)
-        buttons += 1
-        resumeGameButton = buttons
+        self.addAction(section: mainSection, title: "Play Game", isHidden: {!self.scorecard.settingSyncEnabled || !(self.scorecard.settingNearbyPlaying || self.scorecard.onlineEnabled)}, action: newOnlineGame)
         
-        if (self.scorecard.settingSyncEnabled && self.scorecard.settingNearbyPlaying || self.scorecard.onlineEnabled) { // TODO Reinstate (remove)
-            buttons += 1
-            onlineGameButton = buttons
-        } // TODO Reinstate (remove
-            
-        buttons += 1
-        playersButton = buttons
+        self.addAction(section: mainSection, title: "Resume Playing", highlight: true, isHidden: {!self.recoveryAvailable || !self.recoverOnline || !allowRecovery}, action: resumeGame)
         
-        buttons += 1
-        statisticsButton = buttons
-        
-        if scorecard.settingSaveHistory {
-            buttons += 1
-            historyButton = buttons
-            buttons += 1
-            highScoresButton = buttons
-        } else {
-            historyButton = -1
-            historyCell = nil
-            highScoresButton = -1
-            highScoresCell = nil
-        }
+        self.addAction(section: mainSection, title: (self.scorecard.settingSyncEnabled ? "Resume Scoring" : "Resume"), highlight: true, isHidden: {!self.recoveryAvailable || self.recoverOnline || !allowRecovery}, action: resumeGame)
 
-        if Scorecard.adminMode {
-            buttons += 1
-            deleteCloudButton = buttons
-            buttons += 1
-            patchButton = buttons
-            buttons += 1
-            removeDuplicatesButton = buttons
-            buttons += 1
-            rebuildAllButton = buttons
-            buttons += 1
-            backupButton = buttons
-            titleLabel.text = "Admin Mode"
-        } else {
-            deleteCloudButton = -1
-            patchButton = -1
-            removeDuplicatesButton = -1
-            rebuildAllButton = -1
-            backupButton = -1
-            deleteCloudCell = nil
-            patchCell = nil
-            removeDuplicatesCell = nil
-            rebuildAllCell = nil
-            backupCell = nil
-            titleLabel.text = "Welcome"
-        }
+        self.addAction(section: mainSection, title: "Score Game", action: { (_) in
+            self.scoreGame()
+        })
         
-        actionsTableView.reloadData()
+        self.addAction(section: infoSection, title: "Players", action: { (_) in
+            self.performSegue(withIdentifier: "showPlayers", sender: self)
+        })
+        
+        self.addAction(section: infoSection, title: "Statistics", action: { (_) in
+            let _ = StatisticsViewer(from: self, scorecard: self.scorecard)
+        })
+        
+        self.addAction(section: infoSection, title: "History", isHidden: {!self.scorecard.settingSaveHistory}, action: { (_) in
+            let _ = HistoryViewer(from: self, scorecard: self.scorecard)
+        })
+        
+        self.addAction(section: infoSection, title: "High Scores", isHidden: {!self.scorecard.settingSaveHistory}, action: { (_) in
+            self.performSegue(withIdentifier: "showHighScores", sender: self)
+        })
+        
+        self.addAction(section: adminSection, title: "Delete iCloud Database", isHidden: {!Scorecard.adminMode}, action: { (_) in
+            DataAdmin.deleteCloudDatabase(from: self)
+        })
+
+        self.addAction(section: adminSection, title: "Reset Sync Record IDs", isHidden: {!Scorecard.adminMode}, action: { (_) in
+            DataAdmin.resetSyncRecordIDs(from: self)
+        })
+
+        self.addAction(section: adminSection, title: "Remove Duplicate Games", isHidden: {!Scorecard.adminMode}, action: { (_) in
+            DataAdmin.removeDuplicates(from: self)
+        })
+        
+        self.addAction(section: adminSection, title: "Rebuild All Players", isHidden: {!Scorecard.adminMode}, action: { (_) in
+            self.reconcilePlayers(allPlayers: true)
+        })
+
+        self.addAction(section: adminSection, title: "Backup Device", isHidden: {!Scorecard.adminMode}, action: { (_) in
+            self.backupDevice()
+        })
+        
+        self.checkButtons()
         
         self.viewOnlineButton.isHidden = !self.scorecard.settingSyncEnabled || !self.scorecard.settingAllowBroadcast
         
+    }
+    
+    private func checkButtons() {
+        self.sections = []
+        self.sectionActions = [:]
+        for actionButton in self.actionButtons {
+            if !(actionButton.isHidden?() ?? false) {
+                let section = actionButton.section
+                if sectionActions[section] == nil {
+                    sectionActions[section] = []
+                    sections.append(section)
+                }
+                sectionActions[section]!.append(actionButton)
+            }
+        }
+        self.actionsTableView.reloadData()
+    }
+    
+    private func addAction(section: Int, title: String, highlight: Bool = false, isHidden: (()->Bool)? = nil, action: @escaping (UITableViewCell)->()) {
+        let tag = self.actionButtons.count
+        self.actionButtons.append(ActionButton(tag: tag, section: section, title: title, highlight: highlight, isHidden: isHidden, action: action))
     }
     
     // MARK: - Popover Overrides ================================================================ -
@@ -493,63 +484,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
 
     // MARK: - Utility Routines ======================================================================== -
     
-    private func enableButtons(button: Int = 0) {
-        if button == 0 || button == getStartedButton {
-            if getStartedCell != nil {
-                getStartedCell.actionButton.isEnabled(scorecard.playerList.count == 0)
-            }
-        }
-        
-        if button == 0 || button == resumeGameButton {
-            if resumeGameCell != nil {
-                let (recoveryEnabled, online) = self.recovery.checkOnlineRecovery()
-                resumeGameCell.actionButton.isEnabled(recoveryEnabled || Scorecard.adminMode)
-                if recoveryEnabled && !online {
-                    resumeGameCell.actionButton.setTitle("Resume Scoring")
-                } else {
-                    resumeGameCell.actionButton.setTitle("Resume Playing")
-                }
-            }
-        }
-        
-        if button == 0 || button == onlineGameButton {
-            if onlineGameCell != nil {
-                onlineGameCell.actionButton.isEnabled(scorecard.playerList.count > 0 && (self.scorecard.settingSyncEnabled && self.scorecard.settingNearbyPlaying || self.scorecard.onlineEnabled))
-            }
-        }
-        
-        if button == 0 || button == playersButton {
-            if playersCell != nil {
-                playersCell.actionButton.isEnabled(scorecard.playerList.count > 0)
-            }
-        }
-        
-        if button == 0 || button == statisticsButton {
-            if statisticsCell != nil {
-                statisticsCell.actionButton.isEnabled(scorecard.playerList.count > 0)
-            }
-        }
-        
-        if button == 0 || button == highScoresButton {
-            if highScoresCell != nil {
-                highScoresCell.actionButton.isEnabled(scorecard.playerList.count > 0)
-            }
-        }
-        
-        if button == 0 || button == historyButton {
-            if historyCell != nil {
-                historyCell.actionButton.isEnabled(scorecard.playerList.count > 0)
-            }
-        }
-        
-        if button == 0 || button == backupButton {
-            if backupCell != nil {
-                backupCell.actionButton.isEnabled(scorecard.playerList.count > 0)
-            }
-        }
-    }
-    
-    private func newGame() {
+    private func scoreGame() {
         if recovery.checkRecovery() {
             // Warn that this is irreversible
             warnResumeGame(okHandler: {
@@ -566,16 +501,15 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     }
     
     private func startNewGame() {
-        resumeGameCell.actionButton.isEnabled(false)
         self.scorecard.setGameInProgress(false)
         self.scorecard.reset()
         self.performSegue(withIdentifier: "showSelection", sender: self )
     }
     
-    private func resumeGame() {
+    private func resumeGame(_ cell: UITableViewCell) {
         // Recover game
         if recovery.checkRecovery() { 
-            resumeGameCell.actionButton.isEnabled(false)
+            self.setupButtons(allowRecovery: false)
             self.scorecard.loadGameDefaults()
             recovery.loadSavedValues()
             scorecard.recoveryMode = true
@@ -595,24 +529,24 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         }
     }
     
-    private func newOnlineGame() {
-        if recovery.checkRecovery() {
+    private func newOnlineGame(_ cell: UITableViewCell) {
+        if self.recovery.checkRecovery() {
             // Warn that this is irreversible
-            warnResumeGame(gameType: "online", okHandler: {
+            self.warnResumeGame(gameType: "online", okHandler: {
                 self.scorecard.recoveryMode = false
-                self.onlineGame()
+                self.onlineGame(cell)
             })
         } else {
-            self.onlineGame()
+            self.onlineGame(cell)
         }
     }
     
-    private func onlineGame() {
+    private func onlineGame(_ cell: UITableViewCell) {
         if Utility.compareVersions(version1: self.scorecard.settingVersion,
                                  version2: self.scorecard.latestVersion) == .lessThan {
             self.alertMessage("You must upgrade to the latest version of the app to use this option")
         } else if self.scorecard.settingSyncEnabled && (self.scorecard.settingNearbyPlaying || self.scorecard.settingOnlinePlayerEmail != nil) {
-            let actionSheet = ActionSheet( view: onlineGameCell.actionButton, direction: .up)
+            let actionSheet = ActionSheet( view: cell, direction: .up)
             actionSheet.add("Host a Game", handler: hostGame)
             actionSheet.add("Join a Game", handler: joinGame)
             // TODO reinstate actionSheet.add("Play against Computer", handler: computerGame)
@@ -648,7 +582,6 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     // MARK: - Segue Prepare Handler ================================================================ -
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
         switch segue.identifier! {
         case "showSettings":
             let destination = segue.destination as! SettingsViewController
@@ -712,21 +645,10 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             let destination = segue.destination as! PlayersViewController
             destination.scorecard = self.scorecard
             destination.detailMode = .amend
+            destination.refresh = true
             destination.returnSegue = "hidePlayers"
             destination.backImage = "home"
             destination.backText = ""
-            
-        case "showStatistics":
-            let destination = segue.destination as! StatisticsViewController
-            destination.scorecard = self.scorecard
-            destination.selectedList = scorecard.playerDetailList()
-            destination.returnSegue = "hideStatistics"
-            destination.backImage = "home"
-            destination.backText = ""
-            
-        case "showHistory":
-            let destination = segue.destination as! HistoryViewController
-            destination.scorecard = self.scorecard
             
         case "showSelection":
             let destination = segue.destination as! SelectionViewController
@@ -823,10 +745,45 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             self.reconcileContinue.isEnabled = true
         }
     }
+    
+    private func backgroundShape(view: UIView, shape: Shape, strokeColor: UIColor, fillColor: UIColor, abutted: Bool = false, pointType: PolygonPointType = .rounded, lineWidth: CGFloat = 3.0) {
+        
+        var points: [PolygonPoint] = []
+        let size = view.frame.size
+        let arrowWidth = size.height
+        let shift = lineWidth / 2.0
+        
+        // Remove any previous view layers
+        view.layer.sublayers?.removeAll()
+        
+        switch shape {
+        case .arrowTop:
+            points.append(PolygonPoint(x: 0.0, y: (abutted ? 0 : shift), pointType: .point))
+            points.append(PolygonPoint(x: size.width - (arrowWidth * 1.5), y: (abutted ? 0 : shift)))
+            points.append(PolygonPoint(x: size.width - (arrowWidth * 0.5), y: size.height, pointType: pointType))
+            points.append(PolygonPoint(x: 0.0, y: size.height, pointType: .point))
+        case .arrowBottom:
+            points.append(PolygonPoint(x: 0.0, y: 0.0, pointType: .point))
+            points.append(PolygonPoint(x: 0.0, y: size.height - (abutted ? 0 : shift), pointType: .point))
+            points.append(PolygonPoint(x: size.width - (arrowWidth * 1.5), y: size.height - (abutted ? 0 : shift)))
+            points.append(PolygonPoint(x: size.width - (arrowWidth * 0.5), y: 0.0, pointType: pointType))
+        case .arrowMiddle:
+            points.append(PolygonPoint(x: 0.0, y: (abutted ? 0 : shift), pointType: .point))
+            points.append(PolygonPoint(x: size.width - (arrowWidth * (abutted ? 0.5 : 1.5)), y: (abutted ? 0 : shift), pointType: pointType))
+            points.append(PolygonPoint(x: size.width - (arrowWidth * (abutted ? 0.0 : 1.0)) , y: (size.height * 0.5) - (abutted ? 0 : shift)))
+            points.append(PolygonPoint(x: size.width - (arrowWidth * (abutted ? 0.5 : 1.5)), y: size.height - (abutted ? 0 : shift), pointType: pointType))
+            points.append(PolygonPoint(x: 0.0, y: size.height, pointType: .point))
+        }
+        
+        Polygon.roundedShape(in: view, definedBy: points, strokeColor: strokeColor, fillColor: fillColor, lineWidth: lineWidth, roundingFraction: 0.05)
+        
+    }
+    
 }
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
 
 class WelcomeActionCell: UITableViewCell {
-    @IBOutlet weak var actionButton: RoundedButton!
+    @IBOutlet weak var title: UILabel!
+    @IBOutlet weak var shapeView: UIView!
 }

@@ -22,11 +22,23 @@ class CoreData {
     static var context: NSManagedObjectContext!
 
     class func fetch<MO: NSManagedObject>(from entityName: String, filter: NSPredicate! = nil, filter2: NSPredicate! = nil, limit: Int = 0,
+                                          sort: [(key: String, direction: SortDirection)]) -> [MO] {
+        var filterArray: [NSPredicate]? = nil
+        if filter != nil {
+            filterArray = [filter]
+        }
+        if filter2 != nil {
+            filterArray?.append(filter2)
+        }
+        return CoreData.fetch(from: entityName, filter: filterArray, limit:limit, sort: sort)
+    }
+    
+    class func fetch<MO: NSManagedObject>(from entityName: String, filter: NSPredicate! = nil, filter2: NSPredicate! = nil, limit: Int = 0,
                                           sort: (key: String, direction: SortDirection)...) -> [MO] {
         return CoreData.fetch(from: entityName, filter: filter, filter2: filter2, limit:limit, sort: sort)
     }
     
-    class func fetch<MO: NSManagedObject>(from entityName: String, filter: NSPredicate! = nil, filter2: NSPredicate! = nil, limit: Int = 0,
+    class func fetch<MO: NSManagedObject>(from entityName: String, filter: [NSPredicate]! = nil, limit: Int = 0,
                      sort: [(key: String, direction: SortDirection)]) -> [MO] {
         // Fetch an array of managed objects from core data
         var results: [MO] = []
@@ -42,11 +54,7 @@ class CoreData {
             
             // Add any predicates
             if filter != nil {
-                if filter2==nil {
-                    request.predicate = filter!
-                } else {
-                    request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [filter!, filter2!])
-                }
+                request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: filter!)
             }
             
             // Add any sort values

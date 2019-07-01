@@ -24,11 +24,11 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     private var sync: Sync!
     
     // Properties to pass state to action controller
-    public var selection = [Bool]()
+    public var selection: [Bool] = []
+    public var playerList: [PlayerDetail] = []
     public var selected = 0
 
     // Properties to get state to/from calling segue
-    public var playerList: [PlayerDetail] = []
     public var specificEmail = ""
     public var descriptionMode: DescriptionMode = .none
     public var returnSegue = ""
@@ -39,15 +39,18 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     public var allowNewPlayer = false
     
     // Local class variables
-    private var selectedPlayer = 0
-    private var selectedMode: DetailMode!
+    private var combinedPlayerList: [Int : [PlayerDetail]] = [:]
+    private var combinedSelection: [Int : [Bool]] = [:]
+    private var selectedPlayer: IndexPath!
     private var syncStarted = false
     private var syncFinished = false
     private var otherPlayerRow = -1
     private var newPlayerRow = -1
-    private var specificPlayerSection = 0
-    private var connectedPlayerSection = 1
-    private var specificPlayerRows = 0
+    private var createdPlayerSection = 1
+    private var downloadedPlayerSection = 2
+    private var actionSection = 0
+    private var relatedPlayerSection = 3
+    private var actionRows = 0
 
     // Alert controller while waiting for cloud download
     private var cloudAlertController: UIAlertController!
@@ -56,27 +59,11 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var backButton: RoundedButton!
+    @IBOutlet private weak var continueButton: RoundedButton!
     @IBOutlet private weak var changeAllButton: RoundedButton!
     @IBOutlet private weak var navigationBar: UINavigationBar!
     @IBOutlet private weak var toolbarViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var footerPaddingTopConstraint: NSLayoutConstraint!
-    
-    // MARK: - IB Unwind Segue Handlers ================================================================ -
-    
-@IBAction private func hideSelectPlayersPlayerDetail(segue:UIStoryboardSegue) {
-        let source = segue.source as! PlayerDetailViewController
-        
-        switch self.selectedMode! {
-        case .create, .download:
-            if let newPlayerDetail = source.playerDetail {
-                if newPlayerDetail.name != "" {
-                    self.addNewPlayer(playerDetail: newPlayerDetail)
-                }
-            }
-        default:
-            break
-        }
-    }
     
     // MARK: - IB Actions ============================================================================== -
 
@@ -91,12 +78,27 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         formatButtons()
     }
     
-    @IBAction private func backPressed(sender: UIButton) {
+    @IBAction private func continuePressed(sender: UIButton) {
         
         if selected > 0 {
             // Action selection
             self.createPlayers()
         }
+        
+        // Abandon any sync in progress
+        self.sync?.stop()
+        
+        // Return to calling program
+        self.performSegue(withIdentifier: returnSegue, sender: self)
+        
+    }
+    
+    @IBAction private func backPressed(sender: UIButton) {
+        
+        // Clear lists
+        self.selected = 0
+        self.selection = []
+        self.playerList = []
         
         // Abandon any sync in progress
         self.sync?.stop()
@@ -137,56 +139,65 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     // MARK: - TableView Overrides ================================================================ -
 
     internal func numberOfSections(in tableView: UITableView) -> Int {
-        return connectedPlayerSection + 1
+        return relatedPlayerSection + 1
     }
     
-    internal func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if connectedPlayerSection > 0 {
-            switch section {
-            case specificPlayerSection:
-                return "Add Specific Players"
-            case connectedPlayerSection:
-                return "Download Connected Players"
-            default:
-                return ""
-            }
+    internal func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if relatedPlayerSection > 0 && section == relatedPlayerSection {
+            return 60
+        } else if (section == createdPlayerSection || section == downloadedPlayerSection) && combinedPlayerList[section]!.count > 0 {
+            return 30
         } else {
-            return nil
+            return 0
         }
+    }
+    
+    internal func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let frame = CGRect(x: 10.0, y: 0.0, width: tableView.frame.width - 15.0, height: (relatedPlayerSection > 0 && section == relatedPlayerSection ? 60 : 30))
+        let view = UIView(frame: frame)
+        view.backgroundColor = ScorecardUI.highlightColor
+        let title = UILabel(frame: frame)
+        title.font = UIFont.systemFont(ofSize: 20.0)
+        if relatedPlayerSection > 0 {
+            switch section {
+            case createdPlayerSection:
+                title.text = "Created players"
+            case downloadedPlayerSection:
+                title.text = "Downloaded players"
+            case relatedPlayerSection:
+                title.text =  "Add players who have previously played with those on this device"
+                title.numberOfLines = 0
+            default:
+                return nil
+            }
+            view.addSubview(title)
+        }
+        return view
     }
     
     internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-        case specificPlayerSection:
-            return specificPlayerRows
-        case connectedPlayerSection:
-            return max(1, self.playerList.count)
+        case actionSection:
+            return actionRows
+        case relatedPlayerSection:
+            return max(1, self.combinedPlayerList[relatedPlayerSection]!.count)
+        case createdPlayerSection, downloadedPlayerSection:
+            return self.combinedPlayerList[section]?.count ?? 0
         default:
             return 0
         }
     }
     
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        let header = view as! UITableViewHeaderFooterView
-        ScorecardUI.sectionHeaderStyleView(header.backgroundView!)
-    }
-
-
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: SelectPlayersCell
         
-        // Create cell
-        cell = tableView.dequeueReusableCell(withIdentifier: "Select Players Cell", for: indexPath) as! SelectPlayersCell
-
-        // Set sizes for no description
-        if descriptionMode == .none {
-            cell.playerNameBottomConstraint.constant = 0
-            cell.playerDescriptionHeightConstraint.constant = 0
-        }
-
         switch indexPath.section {
-        case specificPlayerSection:
-            // Specific player options
+        case actionSection:
+            // Specific player actions
+            
+            // Create cell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Action Cell", for: indexPath) as! SelectPlayersCell
+            
             switch indexPath.row {
             case newPlayerRow:
                 cell.playerName.text = "Create new player"
@@ -197,21 +208,28 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
             default:
                 break
             }
-            self.setTick(cell, to: false)
-            cell.playerDetail.isHidden = true
             cell.playerName.textColor = .black
 
-        case connectedPlayerSection:
-            // Connected players
+        case relatedPlayerSection, createdPlayerSection, downloadedPlayerSection:
+            // Players
             
-            if playerList.count == 0 {
-                // No connected players found
+            // Create cell
+            cell = tableView.dequeueReusableCell(withIdentifier: "Player Cell", for: indexPath) as! SelectPlayersCell
+            
+            // Set sizes for no description
+            if descriptionMode == .none {
+                cell.playerNameBottomConstraint.constant = 0
+                cell.playerDescriptionHeightConstraint.constant = 0
+            }
+            
+            if indexPath.section == relatedPlayerSection && combinedPlayerList[relatedPlayerSection]!.count == 0 {
+                // No related players found
                 if syncFinished {
-                    cell.playerName.text = "No connected players found"
+                    cell.playerName.text = "No related players found"
                     cell.playerDescription.text = ""
                 } else {
-                    cell.playerName.text = "Downloading connected players..."
-                    cell.playerDescription.text = "Please wait..."
+                    cell.playerName.text = "Downloading related players..."
+                    cell.playerDescription.text = ""
                 }
                 
                 cell.playerTick.isHidden = true
@@ -219,28 +237,30 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
                 cell.playerName.textColor = .lightGray
 
             } else {
-                let playerNumber = indexPath.row + 1
-                
-                // Update cell text / format
-                cell.playerName.text = playerList[playerNumber-1].name
-                switch self.descriptionMode {
-                case .opponents:
-                    cell.playerDescription.text = self.getOpponents(playerList[playerNumber-1])
-                case .lastPlayed:
-                    cell.playerDescription.text = self.getLastPlayed(playerList[playerNumber-1])
-                default:
-                    break
+                if let playerDetail = combinedPlayerList[indexPath.section]?[indexPath.row] {
+                    
+                    // Update cell text / format
+                    cell.playerName.text = playerDetail.name
+                    if indexPath.section == createdPlayerSection {
+                        cell.playerDescription.text = "Manually created"
+                    } else if indexPath.section == relatedPlayerSection && self.descriptionMode == .opponents {
+                        cell.playerDescription.text = self.getOpponents(playerDetail)
+                    } else {
+                        cell.playerDescription.text = self.getLastPlayed(playerDetail)
+                    }
+                    self.setTick(cell, to: combinedSelection[indexPath.section]?[indexPath.row] ?? false)
+                    
+                    // Link detail button
+                    cell.playerDetail.addTarget(self, action: #selector(SelectPlayersViewController.playerDetail(_:)), for: UIControl.Event.touchUpInside)
+                    cell.playerDetail.tag = indexPath.section * 100000 + indexPath.row
+                    cell.playerDetail.isHidden = false
+                    cell.playerName.textColor = .black
+                    cell.selectionStyle = .none
+                    
                 }
-                self.setTick(cell, to: selection[playerNumber-1])
-                
-                // Link detail button
-                cell.playerDetail.addTarget(self, action: #selector(SelectPlayersViewController.playerDetail(_:)), for: UIControl.Event.touchUpInside)
-                cell.playerDetail.tag = playerNumber
-                cell.playerDetail.isHidden = false
-                cell.playerName.textColor = .black
             }
         default:
-            break
+            cell = SelectPlayersCell()
         }
             
         return cell
@@ -248,9 +268,8 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     
     internal func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
-        if indexPath.section == connectedPlayerSection && self.playerList.count > 0 {
-            let playerNumber = indexPath.row + 1
-            if selection[playerNumber-1] {
+        if indexPath.section != actionSection && self.combinedPlayerList[indexPath.section]?.count ?? 0 > 0 {
+            if combinedSelection[indexPath.section]?[indexPath.row] ?? false {
                 tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
             } else {
                 tableView.deselectRow(at: indexPath, animated: false)
@@ -259,15 +278,39 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     }
     
     internal func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        var playerDetail: PlayerDetail
+        var selectedMode: DetailMode
+        
         switch indexPath.section {
-        case specificPlayerSection:
+        case actionSection:
             switch indexPath.row {
             case newPlayerRow:
                 selectedMode = .create
             default:
                 selectedMode = .download
             }
-            self.performSegue(withIdentifier: "showPlayerDetail", sender: self)
+            
+            switch selectedMode {
+            case .download, .create:
+                // Blank player to download/create into
+                playerDetail = PlayerDetail(self.scorecard)
+            default:
+                // Display selected player
+                playerDetail = self.combinedPlayerList[selectedPlayer.section]![selectedPlayer.item]
+            }
+            
+            PlayerDetailViewController.show(from: self, playerDetail: playerDetail, mode: selectedMode, sourceView: self.view, scorecard: self.scorecard,
+                                            completion: { (playerDetail, deletePlayer) in
+                                                                switch selectedMode {
+                                                                case .create, .download:
+                                                                    if let newPlayerDetail = playerDetail {
+                                                                        self.addNewPlayer(playerDetail: newPlayerDetail, section: (selectedMode == .download ? self.downloadedPlayerSection : self.createdPlayerSection))
+                                                                    }
+                                                                default:
+                                                                    break
+                                                                }
+                                            })
+            
             return nil
         default:
             return indexPath
@@ -276,9 +319,8 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     
     internal func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.section {
-        case connectedPlayerSection:
-            let playerNumber = indexPath.row+1
-            selection[playerNumber-1] = true
+        case relatedPlayerSection:
+            combinedSelection[indexPath.section]![indexPath.row] = true
             selected += 1
             self.formatButtons()
             self.setTick(tableView.cellForRow(at: indexPath) as! SelectPlayersCell, to: true)
@@ -289,9 +331,8 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     
     internal func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         switch indexPath.section {
-        case connectedPlayerSection:
-            let playerNumber = indexPath.row+1
-            selection[playerNumber-1] = false
+        case relatedPlayerSection:
+            combinedSelection[indexPath.section]![indexPath.row] = false
             selected -= 1
             self.formatButtons()
             self.setTick(tableView.cellForRow(at: indexPath) as! SelectPlayersCell, to: false)
@@ -309,7 +350,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
             self.sync?.initialise(scorecard: scorecard!)
             self.sync?.delegate = self
             
-            // Get connected players from cloud
+            // Get related players from cloud
             if self.specificEmail != "" {
                 self.sync?.synchronise(syncMode: .syncGetPlayers, specificEmail: [self.specificEmail], waitFinish: true)
             } else {
@@ -323,7 +364,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
             syncGetPlayers()
         } else {
             
-            self.cloudAlertController = UIAlertController(title: title, message: "Searching Cloud for Connected Players\n\n\n\n", preferredStyle: .alert)
+            self.cloudAlertController = UIAlertController(title: title, message: "Searching Cloud for related Players\n\n\n\n", preferredStyle: .alert)
         
             //add the activity indicator as a subview of the alert controller's view
             self.cloudIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 0, y: 100,
@@ -378,23 +419,23 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
                 for playerDetail in returnedList {
                     var index = self.scorecard.playerList.firstIndex(where: {($0.email == playerDetail.email)})
                     if index == nil {
-                        if self.playerList.count == 0 {
+                        if self.combinedPlayerList[self.relatedPlayerSection]!.count == 0 {
                             // Replace status entry
                             self.tableView.performBatchUpdates({
-                                self.playerList.append(playerDetail)
-                                self.selection.append(false)
-                                self.tableView.reloadRows(at: [IndexPath(row: 0, section: self.connectedPlayerSection)], with: .automatic)
+                                self.combinedPlayerList[self.relatedPlayerSection]!.append(playerDetail)
+                                self.combinedSelection[self.relatedPlayerSection]?.append(false)
+                                self.tableView.reloadRows(at: [IndexPath(row: 0, section: self.relatedPlayerSection)], with: .automatic)
                             })
                         } else {
                             // Insert in order
-                            index = self.playerList.firstIndex(where: { $0.name > playerDetail.name})
+                            index = self.combinedPlayerList[self.relatedPlayerSection]!.firstIndex(where: { $0.name > playerDetail.name})
                             if index == nil {
-                                index = self.playerList.count
+                                index = self.combinedPlayerList[self.relatedPlayerSection]!.count
                             }
                             self.tableView.performBatchUpdates({
-                                self.playerList.insert(playerDetail, at: index!)
-                                self.selection.insert(false, at: index!)
-                                self.tableView.insertRows(at: [IndexPath(row: index!, section: self.connectedPlayerSection)], with: .automatic)
+                                self.combinedPlayerList[self.relatedPlayerSection]!.insert(playerDetail, at: index!)
+                                self.combinedSelection[self.relatedPlayerSection]?.insert(false, at: index!)
+                                self.tableView.insertRows(at: [IndexPath(row: index!, section: self.relatedPlayerSection)], with: .automatic)
                             })
                         }
                     }
@@ -420,23 +461,31 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     private func setupView() {
         
         // Check what specific options exist
-        specificPlayerRows = 0
+        actionRows = 0
         if allowNewPlayer {
-            newPlayerRow = specificPlayerRows
-            specificPlayerRows += 1
+            newPlayerRow = actionRows
+            actionRows += 1
         }
         if allowOtherPlayer {
-            otherPlayerRow = specificPlayerRows
-            specificPlayerRows += 1
+            otherPlayerRow = actionRows
+            actionRows += 1
         }
-        if specificPlayerRows > 0 {
-            specificPlayerSection = 0
-            connectedPlayerSection = 1
+        if actionRows > 0 {
+            actionSection = 0
+            relatedPlayerSection = 3
         } else {
-            specificPlayerSection = -1
-            connectedPlayerSection = 0
+            actionSection = -1
+            relatedPlayerSection = 0
         }
         
+        // Set up lists / selection
+        self.combinedPlayerList[relatedPlayerSection] = []
+        self.combinedSelection[relatedPlayerSection] = []
+        self.combinedPlayerList[createdPlayerSection] = []
+        self.combinedSelection[createdPlayerSection] = []
+        self.combinedPlayerList[downloadedPlayerSection] = []
+        self.combinedSelection[downloadedPlayerSection] = []
+
         // Set back button image and text
         self.backButton.setImage(UIImage(named: self.backImage), for: .normal)
         self.backButton.setTitle(self.backText)
@@ -446,16 +495,16 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     private func formatButtons() {
         var toolbarHeight:CGFloat = 0.0
         
-        if self.playerList.count > 0 {
+        if self.combinedPlayerList[relatedPlayerSection]!.count > 0 {
             if selected == 0 {
                 // Can't action - can select all
                 changeAllButton.setTitle("Select all", for: .normal)
-                backButton.setTitle("Cancel")
+                continueButton.isHidden = true
                 toolbarHeight = 44
             } else {
                 // Can action - can clear all
                 changeAllButton.setTitle("Clear all", for: .normal)
-                backButton.setTitle("Download")
+                continueButton.isHidden = false
                 toolbarHeight = 44
             }
         } else {
@@ -484,29 +533,35 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     
     private func selectAll(_ to: Bool) {
         // Select all
-        if selection.count > 0 {
-            for playerNumber in 1...selection.count {
-                selection[playerNumber-1] = to
+        selected = 0
+        for (sectionIndex, list) in combinedSelection {
+            for index in 0..<list.count {
+                combinedSelection[sectionIndex]![index] = to
             }
-            selected = (to ? selection.count : 0)
+            selected += (to ? combinedSelection[sectionIndex]!.count : 0)
             tableView.reloadData()
         }
     }
     
     @objc private func playerDetail(_ button: UIButton) {
-        selectedMode = .display
-        selectedPlayer = button.tag
-        self.performSegue(withIdentifier: "showPlayerDetail", sender: self)
+        selectedPlayer = IndexPath(item: button.tag % 100000, section: button.tag / 100000)
+        PlayerDetailViewController.show(from: self, playerDetail: self.combinedPlayerList[selectedPlayer.section]![selectedPlayer.item], mode: .display, sourceView: view, scorecard: self.scorecard)
     }
     
     private func createPlayers() {
         var imageList: [PlayerMO] = []
+        self.playerList = []
+        self.selection = []
         
-        for (index, playerDetail) in playerList.enumerated() {
-            if self.selection[index] {
-                let playerMO = playerDetail.createMO()
-                if playerMO != nil && playerDetail.thumbnailDate != nil {
-                    imageList.append(playerMO!)
+        for (section, list) in combinedPlayerList {
+            for (index, playerDetail) in list.enumerated() {
+                if self.combinedSelection[section]?[index] ?? false {
+                    let playerMO = playerDetail.createMO()
+                    if playerMO != nil && playerDetail.thumbnailDate != nil {
+                        imageList.append(playerMO!)
+                    }
+                    self.playerList.append(playerDetail)
+                    self.selection.append(true)
                 }
             }
         }
@@ -520,30 +575,29 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         
     }
     
-    func addNewPlayer(playerDetail: PlayerDetail) {
-        var index = self.playerList.firstIndex(where: { $0.name == playerDetail.name})
-        if index != nil {
-            // Already in list - just select it (if not already)
-            if !self.selection[index!] {
-                self.selected += 1
-                self.selection[index!] = true
-                self.tableView.reloadRows(at: [IndexPath(row: index!, section: connectedPlayerSection)], with: .automatic)
+    func addNewPlayer(playerDetail: PlayerDetail, section: Int) {
+        var found = false
+        for (sectionIndex, list) in self.combinedPlayerList {
+            if let index = list.firstIndex(where: { $0.email == playerDetail.email}) {
+                // Already in list - just select it (if not already)
+                if !self.combinedSelection[sectionIndex]![index] {
+                    self.selected += 1
+                    self.combinedSelection[sectionIndex]![index] = true
+                    self.tableView.reloadRows(at: [IndexPath(row: index, section: sectionIndex)], with: .automatic)
+                    found = true
+                }
             }
-        } else {
+        }
+        if !found {
             // Add to list
-            let clearStatusEntry = (self.playerList.count == 0)
-            index = self.playerList.firstIndex(where: { $0.name > playerDetail.name})
+            var index = self.combinedPlayerList[section]!.firstIndex(where: { $0.email > playerDetail.email})
             if index == nil {
-                index = playerList.count
+                index = combinedPlayerList[section]!.count
             }
             self.tableView.beginUpdates()
-            if clearStatusEntry {
-                // Remove dummy status entry
-                self.tableView.deleteRows(at: [IndexPath(row: 0, section: connectedPlayerSection)], with: .automatic)
-            }
-            self.playerList.insert(playerDetail, at: index!)
-            self.selection.insert(true, at: index!)
-            self.tableView.insertRows(at: [IndexPath(row: index!, section: connectedPlayerSection)], with: .automatic)
+            self.combinedPlayerList[section]!.insert(playerDetail, at: index!)
+            self.combinedSelection[section]!.insert(true, at: index!)
+            self.tableView.insertRows(at: [IndexPath(row: index!, section: section)], with: .automatic)
             self.selected += 1
             self.tableView.endUpdates()
         }
@@ -571,38 +625,6 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         }
     
         return result
-    }
-
-    
-    // MARK: - Segue Prepare Handler =================================================================== -
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        switch segue.identifier! {
-        case "showPlayerDetail":
-            let destination = segue.destination as! PlayerDetailViewController
-            
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.isModalInPopover = true
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
-            destination.preferredContentSize = CGSize(width: 400, height: 600)
-            
-            switch selectedMode! {
-            case .download, .create:
-                // Blank player to download/create into
-                destination.playerDetail = PlayerDetail(self.scorecard)
-            default:
-                // Display selected player
-                destination.playerDetail = self.playerList[selectedPlayer - 1]
-            }
-            destination.returnSegue = "hideSelectPlayersPlayerDetail"
-            destination.mode = selectedMode
-            destination.scorecard = self.scorecard
-            destination.sourceView = view
-            
-        default:
-            break
-        }
     }
 }
 

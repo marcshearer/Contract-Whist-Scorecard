@@ -13,12 +13,10 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
-    var scorecard: Scorecard!
+    private var scorecard: Scorecard!
     
-    // Properties to pass state to / from segues
-    var playerDetail: PlayerDetail!
-    var gameDetail: HistoryGame!
-    var returnSegue: String!
+    // Properties to determine how view is displayed
+    private var playerDetail: PlayerDetail!
     
     // UI component pointers
     @IBOutlet weak var graphView: GraphView!
@@ -26,12 +24,22 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func finishPressed(_ sender: Any) {
-        self.performSegue(withIdentifier: "hideStatisticsGraph", sender: self)
+        self.dismiss(animated: true, completion: nil)
     }
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
 
     @IBAction func hideGraphHistoryDetail(segue:UIStoryboardSegue) {
+    }
+    
+    // MARK: - method to show this view controller ============================================================================== -
+    
+    static public func show(from sourceViewController: UIViewController, playerDetail: PlayerDetail, scorecard: Scorecard) {
+        let storyboard = UIStoryboard(name: "GraphViewController", bundle: nil)
+        let graphViewController = storyboard.instantiateViewController(withIdentifier: "GraphViewController") as! GraphViewController
+        graphViewController.playerDetail = playerDetail
+        graphViewController.scorecard = scorecard
+        sourceViewController.present(graphViewController, animated: true, completion: nil)
     }
     
     // MARK: - View Overrides ========================================================================== -
@@ -64,7 +72,7 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
         
         // Initialise the view
         graphView.reset()
-        graphView.backgroundColor = ScorecardUI.totalColor
+        graphView.backgroundColor = ScorecardUI.darkHighlightColor
         
         if participantList.count == 0 {
             self.alertMessage("No games played since game history has been saved", okHandler: {
@@ -80,7 +88,7 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
             }
             
             // Add main dataset - score per game
-            graphView.addDataset(values: values, weight: 3.0, color: UIColor.white, gradient: true, pointSize: 6.0, tag: 1, drillRef: drillRef)
+            graphView.addDataset(values: values, weight: 3.0, color: ScorecardUI.darkHighlightTextColor, gradient: true, pointSize: 6.0, tag: 1, drillRef: drillRef)
             graphView.detailDelegate = self
             
             // Add average score line
@@ -128,32 +136,7 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
         let gameUUID = drillRef as! String
         let history = History(gameUUID: gameUUID, getParticipants: true)
         if history.games.count != 0 {
-            self.gameDetail = history.games[0]
-            self.performSegue(withIdentifier: "showGraphHistoryDetail", sender: self)
-        }
-    }
-    
-    // MARK: - Segue Prepare Handler =================================================================== -
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        switch segue.identifier! {
-        case "showGraphHistoryDetail":
-            let destination = segue.destination as! HistoryDetailViewController
-
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
-            destination.preferredContentSize = CGSize(width: 400, height: (scorecard.settingSaveLocation ? 530 :
-                262) - (44 * (scorecard.numberPlayers - gameDetail.participant.count)))
-
-            destination.gameDetail = gameDetail
-            destination.scorecard = self.scorecard
-            destination.returnSegue = "hideGraphHistoryDetail"
-            
-            
-        default:
-            break
+            HistoryDetailViewController.show(from: self, gameDetail: history.games.first!, sourceView: self.view, scorecard: self.scorecard)
         }
     }
 }

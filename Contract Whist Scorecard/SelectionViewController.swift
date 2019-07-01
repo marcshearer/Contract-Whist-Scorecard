@@ -53,12 +53,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     
-    @IBAction func hideSelectionPlayerDetail(segue:UIStoryboardSegue) {
-        // Returning from new player
-        let source = segue.source as! PlayerDetailViewController
-        createPlayers(newPlayers: [source.playerDetail])
-    }
-
     @IBAction func hideGamePreview(segue:UIStoryboardSegue) {
         // Returning from game setup
     }
@@ -175,9 +169,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         // Select watermark background
         // ScorecardUI.selectBackground(size: size, backgroundImage: backgroundImage)
         // Resize cells
-        setWidth(size: size)
-        availableCollectionView.reloadData()
-        selectedCollectionView.reloadData()
+        self.view.setNeedsLayout()
     }
     
     override func viewWillLayoutSubviews() {
@@ -192,6 +184,9 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             // Decide if buttons enabled
             formatButtons(false)
         }
+        setWidth(size: self.view.frame.size)
+        availableCollectionView.reloadData()
+        selectedCollectionView.reloadData()
     }
     
     // MARK: - CollectionView Overrides ================================================================ -
@@ -629,17 +624,19 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 // Name not filled in - must have cancelled
             } else {
                 var availableIndex: Int! = self.availableList.firstIndex(where: {($0.name! > newPlayerDetail.name)})
-                selectedCollectionView.performBatchUpdates({
-                    if availableIndex == nil {
-                        // Insert at end
-                        availableIndex = availableList.count
+                if let playerMO = newPlayerDetail.createMO() {
+                    selectedCollectionView.performBatchUpdates({
+                        if availableIndex == nil {
+                            // Insert at end
+                            availableIndex = availableList.count
+                        }
+                        availableList.insert(playerMO, at: availableIndex)
+                        availableCell.insert(nil, at: availableIndex + 1)
+                        availableCollectionView.insertItems(at: [IndexPath(row: availableIndex + 1, section: 0)])
+                    })
+                    if add {
+                        addSelection(availableIndex + 1)
                     }
-                    availableList.insert(newPlayerDetail.playerMO, at: availableIndex)
-                    availableCell.insert(nil, at: availableIndex + 1)
-                    availableCollectionView.insertItems(at: [IndexPath(row: availableIndex + 1, section: 0)])
-                })
-                if add {
-                    addSelection(availableIndex + 1)
                 }
             }
         }
@@ -649,7 +646,11 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
             self.performSegue(withIdentifier: "showSelectPlayers", sender: self)
         } else {
-            self.performSegue(withIdentifier: "showPlayerDetail", sender: self)
+            PlayerDetailViewController.show(from: self, playerDetail: PlayerDetail(scorecard, visibleLocally: true), mode: .create, sourceView: view, scorecard: self.scorecard, completion: { (playerDetail, deletePlayer) in
+                                                if playerDetail != nil {
+                                                    self.createPlayers(newPlayers: [playerDetail!])
+                                                }
+                                            })
         }
     }
     
@@ -658,21 +659,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         switch segue.identifier! {
-            
-        case "showPlayerDetail":
-            let destination = segue.destination as! PlayerDetailViewController
-
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.isModalInPopover = true
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = selectionView
-            destination.preferredContentSize = CGSize(width: 400, height: 300)
-
-            destination.playerDetail = PlayerDetail(scorecard, visibleLocally: true)
-            destination.mode = .create
-            destination.returnSegue = "hideSelectionPlayerDetail"
-            destination.scorecard = self.scorecard
-            destination.sourceView = view
             
         case "showGamePreview":
             let destination = segue.destination as! GamePreviewViewController

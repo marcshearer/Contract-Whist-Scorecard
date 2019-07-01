@@ -6,12 +6,11 @@
 //  Copyright © 2016 Marc Shearer. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 class Card {
     
-    // A simply class to hold details about a card - i.e. its rank and suit and allow that to be manipulated
+    // A simple class to hold details about a card - i.e. its rank and suit and allow that to be manipulated
     
     var suit: Suit!
     var rank: Int!
@@ -294,7 +293,7 @@ public enum SuitEnum : Int {
     case spade = 4
 }
     
-class Suit : Hashable {
+public class Suit : Hashable {
     
     private let suitEnum: SuitEnum
     
@@ -325,7 +324,7 @@ class Suit : Hashable {
         hasher.combine(self.suitEnum.hashValue)
     }
     
-    static func ==(lhs: Suit, rhs: Suit) -> Bool {
+    public static func ==(lhs: Suit, rhs: Suit) -> Bool {
         return lhs.suitEnum == rhs.suitEnum
     }
     
@@ -334,8 +333,10 @@ class Suit : Hashable {
             switch self.suitEnum {
             case .diamond, .heart:
                 return UIColor.red
-            default:
+            case .club, .spade:
                 return UIColor.black
+            default:
+                return UIColor(named: "Text")! // TODO should really be ScorecardUI.textColor
             }
         }
     }

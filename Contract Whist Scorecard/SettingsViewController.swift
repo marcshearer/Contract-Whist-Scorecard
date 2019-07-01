@@ -378,7 +378,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
             case aboutSubheadingRow:
                 // Sub-heading
                 cell = tableView.dequeueReusableCell(withIdentifier: "About Cell Heading", for: indexPath) as? SettingsTableCell
-                ScorecardUI.sectionHeaderStyleView(cell)
+                ScorecardUI.highlightStyleView(cell)
             case aboutPlayersRow:
                 // Players
                 cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 3 Value", for: indexPath) as? SettingsTableCell
@@ -473,7 +473,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let header = view as! UITableViewHeaderFooterView
-        ScorecardUI.sectionHeaderStyleView(header.backgroundView!)
+        ScorecardUI.highlightStyleView(header.backgroundView!)
     }
     
     internal func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {

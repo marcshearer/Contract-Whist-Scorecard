@@ -102,6 +102,12 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         exitClient(resetRecovery: !self.scorecard.gameInProgress)
     }
     
+    @IBAction func rightSwipe(recognizer:UISwipeGestureRecognizer) {
+        if recognizer.state == .ended {
+            finishPressed(finishButton)
+        }
+    }
+    
     // MARK: - View Overrides ========================================================================== -
 
     override func viewDidLoad() {
@@ -786,7 +792,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     internal func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let header = view as! UITableViewHeaderFooterView
-        ScorecardUI.sectionHeaderStyleView(header.backgroundView!)
+        ScorecardUI.highlightStyleView(header.backgroundView!)
         header.textLabel!.font = UIFont.boldSystemFont(ofSize: 18.0)
     }
     

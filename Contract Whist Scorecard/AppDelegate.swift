@@ -27,6 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().barTintColor = ScorecardUI.emphasisColor
         UINavigationBar.appearance().tintColor = UIColor.white
         UINavigationBar.appearance().isOpaque = true
+        UILabel.appearance().textColor = ScorecardUI.textColor
         
         registerDefaults()
         

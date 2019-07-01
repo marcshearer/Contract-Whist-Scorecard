@@ -32,6 +32,7 @@ protocol SyncDelegate: class {
 public enum SyncMode {
     case syncAll
     case syncGetPlayers
+    case syncUpdatePlayers
     case syncGetPlayerDetails
     case syncGetVersion
     case syncGetVersionAsync
@@ -130,8 +131,10 @@ class Sync {
     }
     
     public func stop() {
-        self.syncPhaseCount = syncPhases.count
-        self.delegate = nil
+        if syncPhases != nil {
+            self.syncPhaseCount = syncPhases.count
+            self.delegate = nil
+        }
     }
     
     public func synchronise(syncMode: SyncMode = .syncAll, specificEmail: [String] = [], specificExternalId: String! = nil, timeout: Double! = 30.0, waitFinish: Bool = true) {
@@ -168,6 +171,11 @@ class Sync {
                               .phaseUpdateLastSyncDate,
                               .phaseGetPlayers, .phaseSendPlayers,
                               .phaseGetSendImages]
+            case .syncUpdatePlayers:
+                // Synchronise players in list with cloud
+                syncPhases = [.phaseGetVersion,
+                              .phaseGetPlayers,
+                              .phaseSendPlayers]
             case .syncGetPlayers:
                 if self.specificExternalId != nil {
                     // Got a specifc External Id - load players that match - not currently used
@@ -1314,7 +1322,10 @@ class Sync {
                 for playerNumber in 1...self.localPlayerRecordList.count {
                     // Copy back edited data if synced OK
                     if self.localPlayerRecordList[playerNumber-1].syncedOk {
+                        
+                        // Copy to managed object
                         self.localPlayerRecordList[playerNumber-1].toManagedObject(playerMO: self.localPlayerMOList[playerNumber - 1])
+                        
                         // Reset sync values
                         self.localPlayerMOList[playerNumber - 1].syncGamesPlayed = self.localPlayerMOList[playerNumber - 1].gamesPlayed
                         self.localPlayerMOList[playerNumber - 1].syncGamesWon = self.localPlayerMOList[playerNumber - 1].gamesWon
@@ -1322,8 +1333,12 @@ class Sync {
                         self.localPlayerMOList[playerNumber - 1].syncHandsPlayed = self.localPlayerMOList[playerNumber - 1].handsPlayed
                         self.localPlayerMOList[playerNumber - 1].syncHandsMade = self.localPlayerMOList[playerNumber - 1].handsMade
                         self.localPlayerMOList[playerNumber - 1].syncTwosMade = self.localPlayerMOList[playerNumber - 1].twosMade
+                        
                         // Store record ID (for new records)
                         self.localPlayerMOList[playerNumber - 1].syncRecordID = self.localPlayerRecordList[playerNumber-1].syncRecordID
+                    
+                        // Notify observers this player has been updated
+                        NotificationCenter.default.post(name: .playerDownloaded, object: self, userInfo: ["playerObjectID": self.localPlayerMOList[playerNumber - 1].objectID])
                     }
                     // Clear sync in progress flag
                     self.localPlayerMOList[playerNumber - 1].syncInProgress = false
@@ -1597,6 +1612,7 @@ class Sync {
 // MARK: - Utility Classes ========================================================================= -
 
 extension Notification.Name {
+    static let playerDownloaded = Notification.Name("playerDownloaded")
     static let playerImageDownloaded = Notification.Name("playerImageDownloaded")
     static let syncBackgroundCompletion = Notification.Name("syncBackgroundCompletion")
 }

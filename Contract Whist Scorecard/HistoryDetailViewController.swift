@@ -16,16 +16,16 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
-    var scorecard: Scorecard!
+    private var scorecard: Scorecard!
     
     // Properties to pass state to / from segues
-    var gameDetail: HistoryGame!
-    var locationLabel: UILabel!
-    var returnSegue: String!
+    private var gameDetail: HistoryGame!
+    private var callerCompletion: ((HistoryGame?)->())?
     
     // Local class variables
     let tableRowHeight:CGFloat = 44.0
     var players = 0
+    var updated = false
     
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet var participantTableView: UITableView!
@@ -55,11 +55,11 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
         }
         if complete {
             saveLocation()
-            locationText.text = gameDetail.gameLocation.description
-        
-            if locationLabel != nil {
-                locationLabel.text = gameDetail.gameLocation.description
+            if locationText.text != gameDetail.gameLocation.description {
+                locationText.text = gameDetail.gameLocation.description
+                self.updated = true
             }
+        
             dropPin()
         }
     }
@@ -67,7 +67,7 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
     // MARK: - IB Actions ============================================================================== -
 
     @IBAction func finishPressed(_ sender: UIButton) {
-        self.performSegue(withIdentifier: returnSegue, sender: self)
+        self.dismiss(animated: true, completion: { self.callerCompletion?((self.updated ? self.gameDetail : nil)) })
     }
     
     @IBAction func updatePressed(_ sender: Any) {
@@ -80,6 +80,22 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
     
     @IBAction func allSwipe(recognizer:UISwipeGestureRecognizer) {
         finishPressed(finishButton)
+    }
+    
+    // MARK: - method to show this view controller ============================================================================== -
+    
+    static public func show(from sourceViewController: UIViewController, gameDetail: HistoryGame, sourceView: UIView?, scorecard: Scorecard, completion: ((HistoryGame?)->())? = nil) {
+        let storyboard = UIStoryboard(name: "HistoryDetailViewController", bundle: nil)
+        let historyDetailViewController = storyboard.instantiateViewController(withIdentifier: "HistoryDetailViewController") as! HistoryDetailViewController
+        historyDetailViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+        historyDetailViewController.isModalInPopover = true
+        historyDetailViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        historyDetailViewController.popoverPresentationController?.sourceView = sourceView
+        historyDetailViewController.preferredContentSize = CGSize(width: 400, height: 600)
+        historyDetailViewController.gameDetail = gameDetail
+        historyDetailViewController.scorecard = scorecard
+        historyDetailViewController.callerCompletion = completion
+        sourceViewController.present(historyDetailViewController, animated: true, completion: nil)
     }
     
     // MARK: - View Overrides ========================================================================== -
@@ -99,7 +115,7 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
         }
         
         let dateString = DateFormatter.localizedString(from: gameDetail.datePlayed, dateStyle: .medium, timeStyle: .none)
-        let timeString = DateFormatter.localizedString(from: gameDetail.datePlayed, dateStyle: .none, timeStyle: .short)
+        let timeString = Utility.dateString(gameDetail.datePlayed, format: "HH:mm")
         titleNavigationItem.title = "\(dateString) - \(timeString)"
         players = gameDetail.participant.count
         participantTableViewHeightConstraint.constant = CGFloat(players + 1) * tableRowHeight

@@ -26,7 +26,6 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     // MARK: - IB Outlets ============================================================================== -
     
     @IBOutlet weak var finishButton: UIButton!
-    @IBOutlet private weak var backgroundImage: UIImageView!
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     
@@ -65,7 +64,6 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        ScorecardUI.selectBackground(size: view.frame.size, backgroundImage: backgroundImage)
         scorecard.checkNetworkConnection(button: self.downloadPlayersButton, label: nil, disable: true)
         enableButtons()
     }
@@ -78,7 +76,6 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        ScorecardUI.selectBackground(size: self.view.safeAreaLayoutGuide.layoutFrame.size, backgroundImage: backgroundImage)
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -90,7 +87,7 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.row {
         case 0:
-            return 60
+            return 100
         case 1:
             return 220
         default:
@@ -147,25 +144,26 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
                 downloadPlayersButton = cell.actionButton
                 downloadPlayersButton.setTitle("Download Players from Cloud")
                 downloadPlayersButton.addTarget(self, action: #selector(GetStartedViewController.downloadPlayersPressed(_:)), for: UIControl.Event.touchUpInside)
+                ScorecardUI.emphasisStyle(downloadPlayersButton)
                 enableButtons()
             case 3:
                 // Other settings button
                 otherSettingsButton = cell.actionButton
                 otherSettingsButton.setTitle("Other Settings")
                 otherSettingsButton.addTarget(self, action: #selector(GetStartedViewController.otherSettingsPressed(_:)), for: UIControl.Event.touchUpInside)
-                otherSettingsButton.backgroundColor = ScorecardUI.emphasisColor
+                ScorecardUI.highlightStyle(otherSettingsButton)
             case 4:
                 // Game walkthrough button
                 gameWalkthroughButton = cell.actionButton
                 gameWalkthroughButton.setTitle("Game Walkthrough")
                 gameWalkthroughButton.addTarget(self, action: #selector(GetStartedViewController.gameWalkthroughPressed(_:)), for: UIControl.Event.touchUpInside)
-                gameWalkthroughButton.backgroundColor = ScorecardUI.emphasisColor
+                ScorecardUI.highlightStyle(gameWalkthroughButton)
             case 5:
                 // Start playing
                 startPlayingButton = cell.actionButton
                 startPlayingButton.setTitle("Home Screen")
                 startPlayingButton.addTarget(self, action: #selector(GetStartedViewController.startPlayingPressed(_:)), for: UIControl.Event.touchUpInside)
-                startPlayingButton.backgroundColor = ScorecardUI.totalColor
+                ScorecardUI.darkHighlightStyle(startPlayingButton)
             default:
                 break
             }
@@ -227,9 +225,10 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
         if syncEmailTextField != nil {
             if scorecard.playerList.count == 0 && scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
                 syncEmailTextField.isHidden = false
-                syncEmailTextField.layer.borderColor = UIColor.blue.cgColor
+                syncEmailTextField.layer.borderColor = ScorecardUI.messageColor.cgColor
                 syncEmailTextField.layer.borderWidth = 2
                 syncEmailTextField.layer.cornerRadius = 5
+                syncEmailTextField.becomeFirstResponder()
             } else {
                 syncEmailTextField.isHidden = true
             }

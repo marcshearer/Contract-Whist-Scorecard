@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -21,7 +22,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2QN-TN-Yp2" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
                             </view>
-                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ffW-WE-f4E">
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ffW-WE-f4E" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="jut-No-pBV"/>
@@ -30,7 +31,7 @@
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </textAttributes>
                                 <items>
-                                    <navigationItem title="Game Preview" id="wLJ-Vj-HuD">
+                                    <navigationItem title="Preview" id="wLJ-Vj-HuD">
                                         <barButtonItem key="leftBarButtonItem" id="oX5-VT-Cds">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="GbG-JI-mmO">
                                                 <rect key="frame" x="16" y="11" width="56" height="22"/>
@@ -60,9 +61,6 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background portrait" translatesAutoresizingMaskIntoConstraints="NO" id="E7h-Ll-Qym">
-                                <rect key="frame" x="16" y="64" width="343" height="587"/>
-                            </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="grouped" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="c5K-bm-x10" userLabel="Player Table View">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -180,7 +178,7 @@
                                             <subviews>
                                                 <button opaque="NO" tag="1" contentMode="scaleAspectFit" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="69E-OW-LQ5" customClass="SideImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                     <rect key="frame" x="17.5" y="11" width="341" height="80"/>
-                                                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                                    <color key="backgroundColor" name="Highlight"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="341" id="Fg2-EV-nmR"/>
                                                         <constraint firstAttribute="height" constant="80" id="u7R-nD-n99"/>
@@ -192,7 +190,7 @@
                                                 </button>
                                                 <button opaque="NO" tag="3" contentMode="scaleAspectFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5QR-vA-soU" customClass="SideImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                     <rect key="frame" x="17.5" y="199" width="340" height="80"/>
-                                                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                                    <color key="backgroundColor" name="Highlight"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="80" id="VLv-ea-Eiy"/>
                                                         <constraint firstAttribute="width" constant="340" id="WhU-rF-Rhf"/>
@@ -204,7 +202,7 @@
                                                 </button>
                                                 <button opaque="NO" tag="2" contentMode="scaleAspectFit" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f7a-6R-rUp" customClass="SideImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                     <rect key="frame" x="17.5" y="105" width="340" height="80"/>
-                                                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                                    <color key="backgroundColor" name="Highlight"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="340" id="Pi4-kP-CNc"/>
                                                         <constraint firstAttribute="height" constant="80" id="mKF-4s-V9C"/>
@@ -306,14 +304,10 @@
                             <constraint firstItem="ffW-WE-f4E" firstAttribute="top" secondItem="wSn-mE-2UN" secondAttribute="top" id="CEF-D5-lth"/>
                             <constraint firstItem="c5K-bm-x10" firstAttribute="leading" secondItem="wSn-mE-2UN" secondAttribute="leading" id="Gu7-ig-Aqd"/>
                             <constraint firstItem="ffW-WE-f4E" firstAttribute="leading" secondItem="iUU-8s-ns4" secondAttribute="leading" id="JzB-y0-eHa"/>
-                            <constraint firstItem="E7h-Ll-Qym" firstAttribute="leading" secondItem="wSn-mE-2UN" secondAttribute="leading" constant="16" id="Ngq-ko-1oc"/>
-                            <constraint firstItem="wSn-mE-2UN" firstAttribute="trailing" secondItem="E7h-Ll-Qym" secondAttribute="trailing" constant="16" id="Oie-EV-ai6"/>
                             <constraint firstItem="2QN-TN-Yp2" firstAttribute="top" secondItem="iUU-8s-ns4" secondAttribute="top" id="Pqs-06-AB9"/>
                             <constraint firstItem="2QN-TN-Yp2" firstAttribute="trailing" secondItem="iUU-8s-ns4" secondAttribute="trailing" id="VdM-H9-jKl"/>
                             <constraint firstItem="wSn-mE-2UN" firstAttribute="bottom" secondItem="c5K-bm-x10" secondAttribute="bottom" id="Xhf-Z4-CdP"/>
-                            <constraint firstItem="E7h-Ll-Qym" firstAttribute="top" secondItem="ffW-WE-f4E" secondAttribute="bottom" id="g44-my-Jak"/>
                             <constraint firstItem="c5K-bm-x10" firstAttribute="top" secondItem="ffW-WE-f4E" secondAttribute="bottom" id="hfF-tw-5fG"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="E7h-Ll-Qym" secondAttribute="bottom" constant="16" id="iLf-yT-o2F"/>
                             <constraint firstItem="wSn-mE-2UN" firstAttribute="top" secondItem="2QN-TN-Yp2" secondAttribute="bottom" id="nSJ-Fw-9tK"/>
                             <constraint firstAttribute="trailing" secondItem="ffW-WE-f4E" secondAttribute="trailing" id="t8j-bC-T7F"/>
                             <constraint firstItem="wSn-mE-2UN" firstAttribute="trailing" secondItem="c5K-bm-x10" secondAttribute="trailing" id="wZy-Fn-C4h"/>
@@ -327,7 +321,6 @@
                     </view>
                     <toolbarItems/>
                     <connections>
-                        <outlet property="backgroundImage" destination="E7h-Ll-Qym" id="MU4-qc-Mf8"/>
                         <outlet property="continueButton" destination="wbi-Gg-AL4" id="IWZ-mh-5PH"/>
                         <outlet property="playerTableView" destination="c5K-bm-x10" id="z5W-B4-q4N"/>
                         <segue destination="6Hq-Pm-vP6" kind="show" identifier="showScorepad" id="OMl-3l-9zT"/>
@@ -366,11 +359,13 @@
     </scenes>
     <resources>
         <image name="back" width="14" height="20"/>
-        <image name="background portrait" width="250" height="445"/>
         <image name="cut pack" width="100" height="100"/>
         <image name="forward" width="14" height="20"/>
         <image name="next dealer" width="100" height="100"/>
         <image name="phone" width="100" height="100"/>
         <image name="settings blue" width="100" height="100"/>
+        <namedColor name="Highlight">
+            <color red="0.93333333333333335" green="0.87450980392156863" blue="0.70588235294117652" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

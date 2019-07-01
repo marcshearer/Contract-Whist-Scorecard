@@ -331,7 +331,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
                     label = playerTwosCell[player - 1]?.entryPlayerLabel
                 }
                 
-                ScorecardUI.errorStyle(label!, errorCondtion: highlight)
+                ScorecardUI.inverseErrorStyle(label!, errorCondtion: highlight)
             }
         }
         
@@ -421,7 +421,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             
             if label != nil {
                 if highlight {
-                    ScorecardUI.darkHighlightStyle(label)
+                    ScorecardUI.highlightStyle(label)
                 } else {
                     ScorecardUI.normalStyle(label)
                 }

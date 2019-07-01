@@ -48,7 +48,6 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
     // MARK: - IB Outlets ================================================================ -
     
     @IBOutlet weak var playerTableView: UITableView!
-    @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var continueButton: UIButton!
 
     // MARK: - IB Unwind Segue Handlers ================================================================ -
@@ -350,8 +349,6 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
             playerTableView.isScrollEnabled = true
         }
         
-        ScorecardUI.selectBackground(size: size, backgroundImage: backgroundImage)
-
     }
     
     private func goToScorepad() {

@@ -109,7 +109,6 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsS
     }
     
     internal func stateChange(for peer: CommsPeer, reason: String?) {
-        Utility.debugMessage("rabbitMQService", "State change to \(peer.state)") // TODO Remove
         self.stateDelegate?.stateChange(for: peer, reason: reason)
     }
     
@@ -608,7 +607,6 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
     
     private func createChannel() {
         if let connection = self.connection {
-            Utility.debugMessage("RabbitMQQueue", "Opening queue \(queueUUID!)") // TODO Remove
             self.channel = connection.createChannel()
             self.queue = self.channel.queue("", options: .exclusive)
             self.exchange = self.channel.fanout(self.queueUUID, options: .autoDelete)
@@ -1142,7 +1140,6 @@ fileprivate class RabbitMQPeer: NSObject, CommsDataDelegate, CommsConnectionDele
     }
     
     public func stateChange(state: CommsConnectionState, reason: String?) {
-        Utility.debugMessage("rabbitMQPeer", "State change from \(self.state) to \(state)") // TODO Remove
         if state != self.state {
             // Pass up any state change
             self.state = state

@@ -581,23 +581,3 @@ class Utility {
     }
 }
 
-// MARK: - Utility Class for Field Output ==================================================== -
-
-class Field {
-    var field: String
-    var title: String
-    var sequence: Int
-    var width: CGFloat
-    var hide: Bool
-    var align: NSTextAlignment
-    
-    init(_ field: String,_ title: String, sequence: Int = 0, width: CGFloat, hide: Bool = false, align: NSTextAlignment = .center) {
-        self.field = field
-        self.title = title
-        self.sequence = sequence
-        self.width = width
-        self.hide = hide
-        self.align = align
-    }
-}
-

@@ -13,6 +13,7 @@ enum DetailMode {
     case amend
     case display
     case download
+    case downloaded
     case none
 }
 
@@ -20,102 +21,116 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     
     // MARK: - Class Properties ======================================================================== -
     // Main state properties
-    var scorecard: Scorecard!
+    public var scorecard: Scorecard!
     private var reconcile: Reconcile!
     private let sync = Sync()
 
-    // Properties to pass state to / from segues
-    var playerDetail: PlayerDetail!
-    var mode: DetailMode!
-    var returnSegue = ""
-    var deletePlayer = false
-    var sourceView: UIView!
+    // Properties to control how view works
+    private var playerDetail: PlayerDetail!
+    private var mode: DetailMode!
+    private var sourceView: UIView!
+    private var callerCompletion: ((PlayerDetail?, Bool)->())?
     
     // Local class variables
-    var tableRows = 0
-    var baseRows = 0
-    var nameTitleRow = 1
-    var nameRow = 2
-    var emailTitleRow = 3
-    var emailRow = 4
-    var twosTitleRow = -1
-    var twosValueRow = -1
-    var imageRow = 6
-    var emailOnEntry = ""
-    var visibleOnEntry = false
-    var actionSheet: ActionSheet!
-    let grayColor = UIColor(white: 0.9, alpha: 1.0)
-    var showEmail = false
+    private var tableRows = 0
+    private var baseRows = 0
+    private var nameTitleRow = 1
+    private var nameRow = 2
+    private var emailTitleRow = 3
+    private var emailRow = 4
+    private var twosTitleRow = -1
+    private var twosValueRow = -1
+    private var imageRow = 6
+    private var emailOnEntry = ""
+    private var visibleOnEntry = false
+    private var actionSheet: ActionSheet!
+    private let grayColor = UIColor(white: 0.9, alpha: 1.0)
+    private var showEmail = false
+    private var changed = false
 
     // Alert controller while waiting for cloud download
     private var cloudAlertController: UIAlertController!
     private var cloudIndicatorView: UIActivityIndicatorView!
 
     // UI component pointers
-    var textFieldList = [UITextField?](repeating: nil, count: 23)
-    var nameErrorLabel: UILabel? = nil
-    var emailErrorLabel: UILabel? = nil
-    var imageView: UIImageView? = nil
-    var emailCell: PlayerDetailCell!
+    private var textFieldList = [UITextField?](repeating: nil, count: 23)
+    private var nameErrorLabel: UILabel? = nil
+    private var emailErrorLabel: UILabel? = nil
+    private var imageView: UIImageView? = nil
+    private var emailCell: PlayerDetailCell!
 
     // MARK: - IB Outlets ============================================================================== -
-    @IBOutlet weak var navigationBar: UINavigationBar!
-    @IBOutlet weak var footerPaddingView: UIView!
-    @IBOutlet weak var finishButton: UIButton!
-    @IBOutlet weak var actionButton: UIButton!
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet private weak var navigationBar: UINavigationBar!
+    @IBOutlet private weak var footerPaddingView: UIView!
+    @IBOutlet private weak var finishButton: UIButton!
+    @IBOutlet private weak var actionButton: UIButton!
+    @IBOutlet private weak var tableView: UITableView!
 
     // MARK: - IB Actions ============================================================================== -
     
-    @IBAction func actionButtonPressed(_ sender: Any) {
-        switch self.mode! {
+    @IBAction func continueButtonPressed(_ sender: Any) {
+        switch mode! {
         case .amend:
-            self.checkDeletePlayer()
+            // Update core data with any changes
+            self.warnEmailChanged(completion: {
+                if !CoreData.update(updateLogic: {
+                    let playerMO = self.playerDetail.playerMO!
+                    if playerMO.email != self.playerDetail.email {
+                        // Need to rebuild as email changed
+                        self.playerDetail.toManagedObject(playerMO: playerMO)
+                        if Reconcile.rebuildLocalPlayer(playerMO: self.playerDetail.playerMO) {
+                            self.playerDetail.fromManagedObject(playerMO: playerMO)
+                        }
+                    } else {
+                        self.playerDetail.toManagedObject(playerMO: playerMO)
+                    }
+                }) {
+                    self.alertMessage("Error saving player")
+                }
+            })
+        case .create:
+            // Player will be created in calling controller (selectPlayers)
+            self.dismiss(animated: true, completion: { self.callerCompletion?(self.playerDetail, false) })
         case .download:
             self.getCloudPlayerDetails()
+        case .downloaded:
+            // No further action required
+            self.dismiss(animated: true, completion: { self.callerCompletion?(self.playerDetail, false) })
         default:
             break
         }
     }
     
-    @IBAction func finishButtonPressed(_ sender: Any) {
+    @IBAction func backButtonPressed(_ sender: Any) {
 
-        if scorecard.isDuplicateName(playerDetail) || scorecard.isDuplicateEmail(playerDetail) || playerDetail.email == "" {
-            // Taking cancel option
+        // Taking cancel option
+        if self.mode != .display {
             playerDetail.name = ""
         }
-        
-        if playerDetail.name != ""  {
-            switch self.mode! {
-            case .amend:
-                // Update core data with any changes
-                if !CoreData.update(updateLogic: {
-                    let playerMO = playerDetail.playerMO!
-                    if playerMO.email != playerDetail.email {
-                        // Need to rebuild as email changed
-                        playerDetail.toManagedObject(playerMO: playerMO)
-                        if Reconcile.rebuildLocalPlayer(playerMO: playerDetail.playerMO) {
-                            playerDetail.fromManagedObject(playerMO: playerMO)
-                        }
-                    } else {
-                        playerDetail.toManagedObject(playerMO: playerMO)
-                    }
-                }) {
-                    self.alertMessage("Error saving player")
-                }
-            case .create:
-                // Player will be created in calling controller (selectPlayers)
-                break
-            default:
-                break
-            }
-        }
-        deletePlayer = false
-        warnEmailChanged()
+        self.dismiss(animated: true, completion: { self.callerCompletion?(nil, false) })
+
     }
 
     @IBAction func allSwipe(recognizer:UISwipeGestureRecognizer) {
-        finishButtonPressed(finishButton!)
+        backButtonPressed(finishButton!)
+    }
+    
+    // MARK: - method to show this view controller ============================================================================== -
+    
+    static public func show(from sourceViewController: UIViewController, playerDetail: PlayerDetail, mode: DetailMode, sourceView: UIView, scorecard: Scorecard, completion: ((PlayerDetail?,Bool)->())? = nil) {
+        let storyboard = UIStoryboard(name: "PlayerDetailViewController", bundle: nil)
+        let playerDetailViewController = storyboard.instantiateViewController(withIdentifier: "PlayerDetailViewController") as! PlayerDetailViewController
+        playerDetailViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+        playerDetailViewController.isModalInPopover = true
+        playerDetailViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        playerDetailViewController.popoverPresentationController?.sourceView = sourceView
+        playerDetailViewController.preferredContentSize = CGSize(width: 400, height: 600)
+        playerDetailViewController.playerDetail = playerDetail
+        playerDetailViewController.mode = mode
+        playerDetailViewController.sourceView = sourceView
+        playerDetailViewController.scorecard = scorecard
+        playerDetailViewController.callerCompletion = completion
+        sourceViewController.present(playerDetailViewController, animated: true, completion: nil)
     }
     
     // MARK: - View Overrides ========================================================================== -
@@ -129,7 +144,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             twosValueRow = baseRows + 1
             baseRows += 2
         }
-        tableRows = baseRows + 8
+        tableRows = baseRows + 10
         navigationBar.topItem?.title = playerDetail.name
         
         switch self.mode! {
@@ -145,7 +160,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             emailRow = 2
             nameTitleRow = 3
             nameRow = 4
-            navigationBar.topItem?.title = "Download Player"
+            navigationBar.topItem?.title = "Download"
             footerPaddingView.backgroundColor = self.grayColor
             showEmail = true
 
@@ -188,7 +203,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         case 0:
             // blank row at the top
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Padding", for: indexPath) as? PlayerDetailCell
-        case nameTitleRow, emailTitleRow, baseRows, baseRows+2, baseRows+4:
+        case nameTitleRow, emailTitleRow, baseRows, baseRows+2, baseRows+4, baseRows+8:
             // Single input title
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Header Single", for: indexPath) as? PlayerDetailCell
         case 5:
@@ -219,6 +234,10 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             cell?.playerDetailLabel1.textColor = (mode == .download ? .lightGray : .black)
             cell?.playerDetailLabel2.textColor = (mode == .download ? .lightGray : .black)
             cell?.playerDetailLabel3.textColor = (mode == .download ? .lightGray : .black)
+        case baseRows+9:
+            // Single action button
+            cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Body Action Button", for: indexPath) as? PlayerDetailCell
+            
         default:
             cell = nil
         }
@@ -396,7 +415,6 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
                 cell!.playerDetailLabel3.text=""
             }
             cell!.separator.isHidden = true
-
         case baseRows+7:
             cell!.playerDetailLabel1.textAlignment = .left
             cell!.playerDetailLabel1.text = "Twos made"
@@ -408,6 +426,13 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             } else {
                 cell!.playerDetailLabel3.text=""
             }
+        case baseRows+8:
+            // Personal Records Title
+            cell!.playerDetailLabel1.text = "Actions"
+        case baseRows+9:
+            cell!.playerDetailActionButton.setTitle("Delete Player", for: .normal)
+            cell!.playerDetailActionButton.addTarget(self, action: #selector(PlayerDetailViewController.actionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
+            
         default:
             break
         }
@@ -431,7 +456,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             cell?.backgroundColor = UIColor.white
         }
 
-        if self.mode == .display {
+        if self.mode == .display || self.mode == .downloaded {
             cell?.isUserInteractionEnabled = false
         }
         
@@ -476,18 +501,18 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     // MARK: - TextField and Button Control Overrides ======================================================== -
     
     @objc func textFieldDidChange(_ textField: UITextField) {
+        self.changed = true
         switch textField.tag {
         case nameRow:
             playerDetail.name = textField.text!
             playerDetail.nameDate = Date()
-            enableButtons()
         case emailRow:
             playerDetail.email = textField.text!
             playerDetail.emailDate = Date()
-            enableButtons()
         default:
             break
         }
+        self.enableButtons()
     }
     
     @objc func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -519,11 +544,22 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     @objc func secureButtonPressed(_ button: UIButton) {
         alertDecision("Note that by default Unique IDs are only visible on a device where they are created. Changing this setting will also make this Unique ID hidden on this device - i.e. you will not be able to see the value on this device although you will be able to change it. Once you select hidden mode, this is irreversible.\n\nYou can only make the Unique ID visible again by blanking it out and re-typing it.\n\nAre you sure you want to do this?", title: "Hidden Mode", okButtonText: "Confirm", okHandler: {
                 self.setEmailVisible(false)
+                self.changed = true
+                self.enableButtons()
         })
     }
     
     @objc func secureInfoButtonPressed(_ button: UIButton) {
         alertMessage("Note that by default Unique IDs are only visible on a device where they are created. \n\nYou can only make the Unique ID visible again by blanking it out and re-typing it.", title: "Hidden Entry")
+    }
+    
+    @objc func actionButtonPressed(_ button: UIButton) {
+        switch button.tag {
+        case 0:
+            self.checkDeletePlayer()
+        default:
+            break
+        }
     }
 
    // MARK: - Image Picker Routines / Overrides ============================================================ -
@@ -538,10 +574,9 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             present(imagePicker, animated: true, completion: nil)
         }
     }
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-// Local variable inserted by Swift 4.2 migrator.
-let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
-
+        let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
         
         if let selectedImage = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage {
             var rotatedImage:UIImage
@@ -560,6 +595,8 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
             imageView!.clipsToBounds = true
             imageView!.alpha = 1.0
             imageView!.backgroundColor = UIColor.lightGray
+            self.changed = true
+            self.enableButtons()
             
         }
         
@@ -589,6 +626,8 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
         imageView!.contentMode = .center
         imageView!.clipsToBounds = false
         imageView!.alpha = 0.5
+        self.changed = true
+        self.enableButtons()
     }
     
     // MARK: - Sync routines including the delegate methods ======================================== -
@@ -649,7 +688,7 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
             self.cloudAlertController.dismiss(animated: true, completion: {
                 if playerList != nil && playerList.count > 0 {
                     self.playerDetail = playerList[0]
-                    self.mode = .display
+                    self.mode = .downloaded
                     self.navigationBar.topItem?.title = self.playerDetail.name
                     self.footerPaddingView.backgroundColor = UIColor.white
                     self.tableView.isUserInteractionEnabled = false
@@ -670,36 +709,51 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
     
     func enableButtons() {
         var finishTitle = ""
+        var invalid: Bool
         
         let duplicateName = scorecard.isDuplicateName(playerDetail)
         let duplicateEmail = scorecard.isDuplicateEmail(playerDetail)
         
-        if duplicateName || duplicateEmail || playerDetail.name == "" || playerDetail.email == "" {
+        switch mode! {
+        case .amend, .create:
+            invalid = duplicateName || duplicateEmail || playerDetail.name == "" || playerDetail.email == ""
+        case .download:
+            invalid = (playerDetail.email == "" || duplicateEmail)
+        default:
+            invalid = false
+        }
+        
+        if invalid {
+            finishTitle = "Cancel"
+        } else if (mode == .amend && self.changed) || mode == .create {
             finishTitle = "Cancel"
         } else {
-            if mode == .create {
-                finishTitle = "Create"
-            } else {
-                finishTitle = "Back"
-            }
+            finishTitle = "Back"
         }
+        finishButton.setTitle(finishTitle, for: .normal)
+        
+        switch mode! {
+        case .amend:
+            actionButton.isHidden = (!self.changed || invalid)
+            actionButton.setTitle("Save", for: .normal)
+        case .create:
+            actionButton.isHidden = invalid
+            actionButton.setTitle("Create", for: .normal)
+        case .download:
+            actionButton.isHidden = invalid
+            actionButton.setTitle("Check", for: .normal)
+        case .downloaded:
+            actionButton.isHidden = false
+            actionButton.setTitle("Add", for: .normal)
+        default:
+            actionButton.isHidden = true
+        }
+        
         if nameErrorLabel != nil {
             nameErrorLabel!.text = (duplicateName ? "Duplicate not allowed" : "")
         }
         if emailErrorLabel != nil {
             emailErrorLabel!.text = (duplicateEmail ? (mode == .download ? "Already on device" : "Duplicate not allowed") : "")
-        }
-        finishButton.setTitle("\(finishTitle)", for: .normal)
-        
-        switch mode! {
-        case .amend:
-            actionButton.isHidden = false
-            actionButton.setTitle("Delete", for: .normal)
-        case .download:
-            actionButton.isHidden = (playerDetail.email == "" || duplicateEmail)
-            actionButton.setTitle("Download", for: .normal)
-        default:
-            actionButton.isHidden = true
         }
         
         if playerDetail.email == "" {
@@ -731,30 +785,25 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
             History.deleteDetachedGames(scorecard: self.scorecard)
 
             // Flag as deleted and return
-            self.deletePlayer = true
-            self.performSegue(withIdentifier: self.returnSegue, sender: self)
+            self.dismiss(animated: true, completion: { self.callerCompletion?(self.playerDetail, true) })
                                                     
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler:nil))
         present(alertController, animated: true, completion: nil)
     }
     
-    func warnEmailChanged() {
+    func warnEmailChanged(completion: (()->())? = nil) {
         if self.playerDetail.name != "" && self.emailOnEntry != "" && self.emailOnEntry != self.playerDetail.email {
             self.alertDecision("If you change a player's unique ID this will separate them from their game history. Essentially this is the same as deleting the player and creating a new one.\n\nAre you sure you want to do this?", title: "Warning",
             okHandler: {
-                // Rebuild player totals and link back
-                self.performSegue(withIdentifier: self.returnSegue, sender: self )
+                completion?()
+                self.dismiss(animated: true, completion: { self.callerCompletion?(self.playerDetail, false) })
             },
             cancelHandler: {
-                self.playerDetail.email = self.emailOnEntry
-                self.emailCell.playerDetailField.text = self.emailOnEntry
-                if !self.visibleOnEntry {
-                    self.setEmailVisible(false)
-                }
             })
         } else {
-            self.performSegue(withIdentifier: self.returnSegue, sender: self )
+            completion?()
+            self.dismiss(animated: true, completion: { self.callerCompletion?(self.playerDetail, false) })
         }
     }
     
@@ -780,6 +829,7 @@ class PlayerDetailCell: UITableViewCell {
     @IBOutlet weak var playerDetailField: UITextField!
     @IBOutlet weak var playerDetailSecure: UIButton!
     @IBOutlet weak var playerDetailSecureInfo: UIButton!
+    @IBOutlet weak var playerDetailActionButton: UIButton!
     @IBOutlet weak var playerImage: UIImageView!
     @IBOutlet weak var separator: UIView!
 }

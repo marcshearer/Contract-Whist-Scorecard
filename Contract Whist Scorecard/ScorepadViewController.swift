@@ -531,8 +531,10 @@ class ScorepadViewController: CustomViewController,
         if playerNumber >= 0 {
             if scorecard.isScorecardDealer() == playerNumber && !forceClear {
                 ScorecardUI.totalStyleView(headerCell)
+                headerCell.scorepadCellLabel?.textColor = ScorecardUI.totalTextColor
             } else {
                 ScorecardUI.emphasisStyleView(headerCell)
+                headerCell.scorepadCellLabel?.textColor = ScorecardUI.emphasisTextColor
             }
         }
     }
@@ -872,7 +874,6 @@ class ScorepadViewController: CustomViewController,
         var player = 0
         var reuseIdentifier = ""
         column = indexPath.row
-        var topLine = true
         
         if collectionView.tag >= 2000000 {
             footerCollection = true
@@ -895,11 +896,11 @@ class ScorepadViewController: CustomViewController,
                     reuseIdentifier = "Header Collection Image Cell"
                 } else {
                     reuseIdentifier = "Header Collection Cell"
-                    topLine = false
                 }
                 
                 headerCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier,for: indexPath)   as! ScorepadCollectionViewCell
                 ScorecardUI.emphasisStyleView(headerCell)
+                headerCell.scorepadCellLabel?.textColor = ScorecardUI.emphasisTextColor
                 
                 if row != playerRow {
                     
@@ -917,7 +918,6 @@ class ScorepadViewController: CustomViewController,
                     }
                 }
                 
-                headerCell.scorepadTopLineWeight.constant = (row == 0 || !topLine ? 0 : thickLineWeight)
                 headerCell.scorepadLeftLineWeight.constant = thickLineWeight
        
                 if row == playerRow {
@@ -928,6 +928,7 @@ class ScorepadViewController: CustomViewController,
                 headerCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Header Collection Cell",for: indexPath) as! ScorepadCollectionViewCell
                 
                 ScorecardUI.emphasisStyleView(headerCell)
+                headerCell.scorepadCellLabel?.textColor = ScorecardUI.emphasisTextColor
                 
                 if column == 0 {
                     // Row titles
@@ -960,6 +961,8 @@ class ScorepadViewController: CustomViewController,
                     headerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 26.0)
                 }
             }
+   
+            headerCell.scorepadTopLineWeight.constant = (row == 0 ? thickLineWeight : 0)
             
             highlightDealer(headerCell: headerCell, playerNumber: column, row: row)
             if player > 0 {
@@ -1016,7 +1019,7 @@ class ScorepadViewController: CustomViewController,
             if column == 0
             {
                 ScorecardUI.emphasisStyle(bodyCell.scorepadCellLabel)
-                bodyCell.scorepadCellLabel.attributedText = scorecard.roundTitle(round, rankColor: UIColor.white, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
+                bodyCell.scorepadCellLabel.attributedText = scorecard.roundTitle(round, rankColor: ScorecardUI.emphasisTextColor, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
                 bodyCell.scorepadLeftLineWeight.constant = 0
                 bodyCell.scorepadCellLabel.accessibilityIdentifier = ""
             } else {

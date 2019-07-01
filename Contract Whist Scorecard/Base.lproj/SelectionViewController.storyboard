@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -21,11 +22,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d37-kV-uuP" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
                             </view>
-                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UgO-yy-CRO">
+                            <navigationBar contentMode="redraw" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UgO-yy-CRO" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
-                                <textAttributes key="titleTextAttributes">
-                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                </textAttributes>
                                 <items>
                                     <navigationItem title="Selection" id="sxd-YE-KrL">
                                         <barButtonItem key="leftBarButtonItem" id="t32-EF-2FA">
@@ -40,7 +38,7 @@
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" id="FL2-Z1-EDp">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Rmr-6u-jtL" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="272" y="11" width="87" height="22"/>
+                                                <rect key="frame" x="270" y="11" width="89" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Continue" image="forward"/>
                                                 <connections>
@@ -311,7 +309,7 @@
                                 </connections>
                             </collectionView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" name="Background"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="UgO-yy-CRO" firstAttribute="top" secondItem="Mqr-Sp-LZb" secondAttribute="top" id="0i8-wY-Gqx"/>
@@ -369,7 +367,6 @@
                         <outlet property="selectionView" destination="Whs-Ka-Uxd" id="QAl-of-52o"/>
                         <outlet property="toolbar" destination="Rkx-tt-68g" id="cfy-kh-frm"/>
                         <outlet property="toolbarBottomConstraint" destination="F3Z-rJ-Pcm" id="Zkm-Km-tnK"/>
-                        <segue destination="cPJ-J5-mJc" kind="presentation" identifier="showPlayerDetail" id="N9w-IV-lmX"/>
                         <segue destination="Vxp-SW-x6a" kind="unwind" identifier="hideSelectionSelectPlayers" unwindAction="hideSelectionSelectPlayersWithSegue:" id="UXW-YD-63I"/>
                         <segue destination="wYy-Td-NIk" kind="show" identifier="showGamePreview" id="zvw-a4-7JA"/>
                         <segue destination="Do4-Za-q4h" kind="popoverPresentation" identifier="showSelectPlayers" popoverAnchorView="Whs-Ka-Uxd" id="ewe-cV-U1p">
@@ -393,14 +390,6 @@
             </objects>
             <point key="canvasLocation" x="6357.6000000000004" y="161.46926536731635"/>
         </scene>
-        <!--Player Detail-->
-        <scene sceneID="a6k-im-bdT">
-            <objects>
-                <viewControllerPlaceholder storyboardName="PlayerDetailViewController" referencedIdentifier="PlayerDetailViewController" id="cPJ-J5-mJc" userLabel="Player Detail" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="9el-Ln-QV9" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="7794" y="203"/>
-        </scene>
         <!--Game Preview-->
         <scene sceneID="Sgh-Qv-hR8">
             <objects>
@@ -422,5 +411,8 @@
         <image name="big tick" width="50" height="50"/>
         <image name="forward" width="14" height="20"/>
         <image name="home" width="22" height="22"/>
+        <namedColor name="Background">
+            <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

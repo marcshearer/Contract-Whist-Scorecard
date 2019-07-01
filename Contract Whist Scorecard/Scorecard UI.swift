@@ -10,22 +10,38 @@ import UIKit
 
 class ScorecardUI {
     
-    // TODO Should name these from XCAssets colors using UIColor(named:) but this is only available in IOS11
-    static let darkHighlightColor = UIColor(red: CGFloat(0.85), green: CGFloat(0.85),
-                                 blue: CGFloat(0.85), alpha: CGFloat(1.0))
-    static let highlightColor = UIColor(red: CGFloat(0.95), green: CGFloat(0.95),
-                                     blue: CGFloat(0.95), alpha: CGFloat(1.0))
-    static let emphasisColor = UIColor.darkGray
-    static let errorColor = UIColor.red
-    static let boldColor = UIColor(red: CGFloat(0.0), green: CGFloat(0.0),
-                            blue: CGFloat(0.7), alpha: CGFloat(1.0))
-    static let totalColor = UIColor(red: CGFloat(0.0), green: CGFloat(0.5), blue: CGFloat(0.5), alpha: CGFloat(1.0))
-    static let sectionHeaderBackgroundColor = darkHighlightColor
-    static let sectionHeadingBackgroundColor = totalColor
-    static let madeContractBackgroundColor = UIColor(red: CGFloat(1.0), green: CGFloat(0.7),
-                                                blue: CGFloat(0.7), alpha: CGFloat(1.0))
-    static let bannerColor = emphasisColor
-    static let tableTopColor = UIColor(red: 0.0, green: 0.635, blue: 0.0, alpha: 1.0)
+    static let backgroundColor = UIColor(named: "Background")!
+    static let bannerColor = UIColor(named: "Banner")!
+    static let bannerTextColor = UIColor(named: "Banner Text")!
+    static let boldColor = UIColor(named: "Bold")!
+    static let boldTextColor = UIColor(named: "Bold Text")!
+    static let darkHighlightColor = UIColor(named: "Dark Highlight")!
+    static let darkHighlightTextColor = UIColor(named: "Dark Highlight Text")!
+    static let emphasisColor = UIColor(named: "Emphasis")!
+    static let emphasisTextColor = UIColor(named: "Emphasis Text")!
+    static let errorColor = UIColor(named: "Error")!
+    static let errorTextColor = UIColor(named: "Error Text")!
+    static let handColor = UIColor(named: "Hand")!
+    static let handTextColor = UIColor(named: "Hand Text")!
+    static let highlightColor = UIColor(named: "Highlight")!
+    static let highlightTextColor = UIColor(named: "Highlight Text")!
+    static let madeContractColor = UIColor(named: "Made Contract")!
+    static let madeContractTextColor = UIColor(named: "Made Contract Text")!
+    static let messageColor = UIColor(named: "Message")!
+    static let messageTextColor = UIColor(named: "MessageText")!
+    static let sectionHeadingColor = UIColor(named: "Section Heading")!
+    static let sectionHeadingTextColor = UIColor(named: "Section Heading Text")!
+    static let tableTopColor = UIColor(named: "Table Top")!
+    static let tableTopTextColor = UIColor(named: "Table Top Text")!
+    static let totalColor = UIColor(named: "Total")!
+    static let totalTextColor = UIColor(named: "Total Text")!
+    static let textColor = UIColor(named: "Text")!
+    static let textEmphasisColor = UIColor(named: "Text Emphasis")!
+    static let textErrorColor = UIColor(named: "Text Error")!
+    static let shapeStrokeColor = UIColor(named: "Shape Stroke")!
+    static let shapeFillColor = UIColor(named: "Shape Fill")!
+    static let shapeHighlightStrokeColor = UIColor(named: "Shape Highlight Stroke")!
+    static let shapeHighlightFillColor = UIColor(named: "Shape Highlight Fill")!
 
     class func roundCorners(_ view: UIView, percent: CGFloat = 0.0) {
         if percent == 0.0 {
@@ -49,64 +65,56 @@ class ScorecardUI {
     }
     
     class func sectionHeadingStyle(_ cell: UITableViewCell) {
-        cell.backgroundColor = ScorecardUI.sectionHeadingBackgroundColor
+        cell.backgroundColor = ScorecardUI.sectionHeadingColor
+        cell.textLabel?.textColor = ScorecardUI.sectionHeadingTextColor
     }
     
     class func sectionHeadingStyle(_ label: UILabel, setFont: Bool = true) {
-        label.backgroundColor = ScorecardUI.sectionHeadingBackgroundColor
-        label.textColor = UIColor.white
+        label.backgroundColor = ScorecardUI.sectionHeadingColor
+        label.textColor = ScorecardUI.sectionHeadingTextColor
         if setFont {
-            label.font = UIFont.boldSystemFont(ofSize: 17.0)
+            label.font = UIFont.systemFont(ofSize: 17.0, weight: .thin)
         }
     }
     
     class func sectionHeadingStyle(_ cell: UICollectionViewCell) {
-        cell.backgroundColor = ScorecardUI.sectionHeadingBackgroundColor
+        cell.backgroundColor = ScorecardUI.sectionHeadingColor
     }
     
     class func sectionHeadingStyleView(_ view: UIView) {
-        view.backgroundColor = ScorecardUI.sectionHeadingBackgroundColor
+        view.backgroundColor = ScorecardUI.sectionHeadingColor
     }
     
-   class func sectionHeaderStyleView(_ view: UITableViewHeaderFooterView) {
-        view.contentView.backgroundColor = ScorecardUI.sectionHeaderBackgroundColor
-        view.detailTextLabel?.textColor = UIColor.white
-    }
-
-    class func sectionHeaderStyle(_ label: UILabel, setFont: Bool = true) {
-        label.backgroundColor = ScorecardUI.sectionHeaderBackgroundColor
-        label.textColor = UIColor.lightGray
+    class func highlightStyle(_ label: UILabel, setFont: Bool = true) {
+        label.backgroundColor = ScorecardUI.highlightColor
+        label.textColor = ScorecardUI.highlightTextColor
         if setFont {
             label.font = UIFont.systemFont(ofSize: 15.0)
         }
     }
     
-    class func sectionHeaderStyleView(_ view: UIView) {
-        view.backgroundColor = ScorecardUI.sectionHeaderBackgroundColor
-    }
-
     class func highlightStyleView(_ view: UIView) {
         view.backgroundColor = ScorecardUI.highlightColor
     }
     
-    class func highlightStyle(_ label: UILabel, lightText: Bool = false) {
-        label.backgroundColor = ScorecardUI.highlightColor
-        label.textColor = lightText ? UIColor.darkGray : UIColor.black
+    class func highlightStyleView(_ view: UITableViewHeaderFooterView) {
+        view.contentView.backgroundColor = ScorecardUI.highlightColor
+        view.detailTextLabel?.textColor = ScorecardUI.highlightTextColor
     }
-    
+
     class func highlightStyle(_ button: UIButton) {
         button.backgroundColor = ScorecardUI.highlightColor
-        button.setTitleColor(UIColor.black, for: .normal)
+        button.setTitleColor(ScorecardUI.highlightTextColor, for: .normal)
     }
     
-    class func darkHighlightStyle(_ label: UILabel, lightText: Bool = false) {
+    class func darkHighlightStyle(_ label: UILabel, lightText: Bool = true) {
         label.backgroundColor = ScorecardUI.darkHighlightColor
-        label.textColor = lightText ? UIColor.darkGray : UIColor.black
+        label.textColor = ScorecardUI.darkHighlightTextColor
     }
 
     class func darkHighlightStyle(_ button: UIButton) {
         button.backgroundColor = ScorecardUI.darkHighlightColor
-        button.setTitleColor(UIColor.black, for: .normal)
+        button.setTitleColor(ScorecardUI.darkHighlightTextColor, for: .normal)
     }
 
     class func darkHighlightStyleView(_ view: UIView) {
@@ -115,17 +123,17 @@ class ScorecardUI {
    
     class func emphasisStyle(_ label: UILabel) {
         label.backgroundColor = ScorecardUI.emphasisColor
-        label.textColor = UIColor.white
+        label.textColor = ScorecardUI.emphasisTextColor
     }
     
     class func emphasisStyle(_ textView: UITextView) {
         textView.backgroundColor = ScorecardUI.emphasisColor
-        textView.textColor = UIColor.white
+        textView.textColor = ScorecardUI.emphasisTextColor
     }
        
     class func emphasisStyle(_ button: UIButton, bigFont: Bool = false) {
         button.backgroundColor = ScorecardUI.emphasisColor
-        button.setTitleColor(UIColor.white, for: .normal)
+        button.setTitleColor(ScorecardUI.emphasisTextColor, for: .normal)
         if bigFont {
             button.titleLabel!.font = UIFont.boldSystemFont(ofSize: 24)
         }
@@ -137,21 +145,22 @@ class ScorecardUI {
     
     class func bannerStyle(_ cell: UITableViewCell) {
         cell.backgroundColor = ScorecardUI.bannerColor
+        cell.textLabel?.textColor = ScorecardUI.bannerTextColor
     }
 
     class func bannerStyle(_ label: UILabel) {
         label.backgroundColor = ScorecardUI.bannerColor
-        label.textColor = UIColor.white
+        label.textColor = ScorecardUI.bannerTextColor
     }
 
     class func totalStyle(_ label: UILabel) {
         label.backgroundColor = ScorecardUI.totalColor
-        label.textColor = UIColor.white
+        label.textColor = ScorecardUI.totalTextColor
     }
     
     class func totalStyle(_ button: UIButton, bigFont: Bool = false) {
         button.backgroundColor = ScorecardUI.totalColor
-        button.setTitleColor(UIColor.white, for: .normal)
+        button.setTitleColor(ScorecardUI.totalTextColor, for: .normal)
         if bigFont {
             button.titleLabel!.font = UIFont.boldSystemFont(ofSize: 24)
         }
@@ -161,32 +170,34 @@ class ScorecardUI {
         view.backgroundColor = ScorecardUI.totalColor
     }
     
-    class func errorStyle(_ label: UILabel, errorCondtion: Bool = true, inverse: Bool = false) {
+    class func errorStyle(_ label: UILabel, errorCondtion: Bool = true) {
         if errorCondtion {
-            if inverse {
-                label.backgroundColor = ScorecardUI.errorColor
-                label.textColor = UIColor.white
-            } else {
-                label.textColor = ScorecardUI.errorColor
-            }
+            label.textColor = ScorecardUI.textErrorColor
         } else {
-            if inverse {
-                label.backgroundColor = UIColor.clear
-            }
-            label.textColor = UIColor.black
+            label.textColor = ScorecardUI.textColor
         }
     }
     
-    class func errorStyle(_ button: UIButton) {
+    class func inverseErrorStyle(_ label: UILabel, errorCondtion: Bool = true) {
+        if errorCondtion {
+            label.backgroundColor = ScorecardUI.errorColor
+            label.textColor = ScorecardUI.errorTextColor
+         } else {
+            label.backgroundColor = UIColor.clear
+            label.textColor = ScorecardUI.textColor
+        }
+    }
+    
+    class func inverseErrorStyle(_ button: UIButton) {
         button.backgroundColor = ScorecardUI.errorColor
-        button.setTitleColor(UIColor.black, for: .normal)
+        button.setTitleColor(ScorecardUI.errorTextColor, for: .normal)
     }
 
     class func normalStyle(_ label: UILabel, setFont: Bool = true) {
         label.backgroundColor = UIColor.clear
-        label.textColor = UIColor.black
+        label.textColor = ScorecardUI.textColor
         if setFont {
-            label.font = UIFont.systemFont(ofSize: 17.0)
+            label.font = UIFont.systemFont(ofSize: 15.0, weight: .thin)
         }
         label.adjustsFontSizeToFitWidth = true
     }
@@ -195,20 +206,9 @@ class ScorecardUI {
         cell.backgroundColor = UIColor.clear
     }
     
-    class func boldHeadingStyle(_ cell: UITableViewCell) {
-        cell.backgroundColor = ScorecardUI.darkHighlightColor
-    }
-    
-    class func boldHeadingStyle(_ label: UILabel, setFont: Bool = true) {
-        label.textColor=UIColor.black
-        if setFont {
-            label.font = UIFont.boldSystemFont(ofSize: 17.0)
-        }
-    }
-
     class func madeContractStyle(_ label: UILabel, setFont: Bool = true) {
-        label.backgroundColor=ScorecardUI.madeContractBackgroundColor
-        label.textColor = UIColor.black
+        label.backgroundColor=ScorecardUI.madeContractColor
+        label.textColor = ScorecardUI.madeContractTextColor
         if setFont {
             label.font = UIFont.boldSystemFont(ofSize: 17.0)
         }
@@ -265,4 +265,23 @@ class ScorecardUI {
     class func landscape() -> Bool {
         return UIScreen.main.bounds.height < UIScreen.main.bounds.width
     }
+    
+    static var screenWidth: CGFloat {
+        get {
+            return UIScreen.main.bounds.width
+        }
+    }
+    
+    static var screenHeight: CGFloat {
+        get {
+            return UIScreen.main.bounds.height
+        }
+    }
+
+    static var screenSize: CGSize {
+        get {
+            return UIScreen.main.bounds.size
+        }
+    }
+
 }

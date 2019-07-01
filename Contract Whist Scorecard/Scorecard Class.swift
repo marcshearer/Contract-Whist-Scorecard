@@ -457,7 +457,7 @@ class Scorecard {
         case Mode.bid:
             if player.bidCell[round-1] != nil {
                 if self.roundError[round-1] {
-                    ScorecardUI.errorStyle(player.bidCell[round-1]!.scorepadCellLabel, errorCondtion: true, inverse: true)
+                    ScorecardUI.inverseErrorStyle(player.bidCell[round-1]!.scorepadCellLabel, errorCondtion: true)
                 } else {
                     ScorecardUI.normalStyle(player.bidCell[round-1]!.scorepadCellLabel, setFont: false)
                 }
@@ -465,7 +465,7 @@ class Scorecard {
         case Mode.made:
             if player.scoreCell[round-1] != nil {
                 if self.roundError[round-1] {
-                    ScorecardUI.errorStyle(player.scoreCell[round-1]!.scorepadCellLabel, errorCondtion: true, inverse: true)
+                    ScorecardUI.inverseErrorStyle(player.scoreCell[round-1]!.scorepadCellLabel, errorCondtion: true)
                 } else {
                     if player.bid(round) != nil && player.bid(round) == player.made(round) {
                         ScorecardUI.madeContractStyle(player.scoreCell[round-1]!.scorepadCellLabel, setFont: false)

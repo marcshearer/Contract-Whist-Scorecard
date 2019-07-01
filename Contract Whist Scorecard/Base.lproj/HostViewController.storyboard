@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -45,7 +45,7 @@
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" id="aiE-DT-Cn0">
                                             <button key="customView" hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Pld-cu-sfw" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="272" y="11" width="87" height="22"/>
+                                                <rect key="frame" x="270" y="11" width="89" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Continue" image="forward">
                                                     <color key="titleColor" name="alternateSelectedControlTextColor" catalog="System" colorSpace="catalog"/>
@@ -91,7 +91,7 @@
                                     <constraint firstAttribute="height" constant="100" id="e9m-Xo-u49"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Host Player Table Cell" id="jrm-LJ-aw5" customClass="HostPlayerTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Host Player Table Cell" id="jrm-LJ-aw5" customClass="HostPlayerTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jrm-LJ-aw5" id="dHd-8p-2dr">
@@ -192,7 +192,7 @@
                                             <outlet property="playerNameLabel" destination="lAu-Bj-uHq" id="vxh-5b-NrE"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Host Mode Table Cell" id="bUh-B8-cGV" customClass="HostPlayerTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Host Mode Table Cell" id="bUh-B8-cGV" customClass="HostPlayerTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bUh-B8-cGV" id="2rt-cf-GgM">
@@ -251,7 +251,7 @@
                                 <rect key="frame" x="0.0" y="324" width="375" height="343"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Guest Player Table Cell" id="cmD-3t-Eaw" customClass="HostPlayerTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Guest Player Table Cell" id="cmD-3t-Eaw" customClass="HostPlayerTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cmD-3t-Eaw" id="QES-61-Bx5">
@@ -398,6 +398,8 @@
                         <viewLayoutGuide key="safeArea" id="U30-2w-X6w"/>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="AEn-Bm-4wH" appends="YES" id="ftg-C9-Jxa"/>
+                            <outletCollection property="gestureRecognizers" destination="dYa-gt-R3i" appends="YES" id="0yN-u9-GC5"/>
+                            <outletCollection property="gestureRecognizers" destination="iDc-wx-pRF" appends="YES" id="hfj-l3-dyV"/>
                         </connections>
                     </view>
                     <connections>
@@ -415,6 +417,16 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lS7-Z0-1GC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="down" id="iDc-wx-pRF">
+                    <connections>
+                        <action selector="rightSwipeWithRecognizer:" destination="jFg-9y-h6N" id="G53-18-pLs"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="right" id="dYa-gt-R3i">
+                    <connections>
+                        <action selector="rightSwipeWithRecognizer:" destination="jFg-9y-h6N" id="Ngi-ks-0GM"/>
+                    </connections>
+                </swipeGestureRecognizer>
                 <exit id="T57-Vi-NC3" userLabel="Exit" sceneMemberID="exit"/>
                 <rotationGestureRecognizer id="AEn-Bm-4wH">
                     <connections>

@@ -22,6 +22,7 @@ class Recovery {
     func saveGameInProgress() {
         var online = ""
         UserDefaults.standard.set(scorecard.gameInProgress, forKey: "recoveryGameInProgress")
+        UserDefaults.standard.synchronize()
         if scorecard.gameInProgress {
             if let delegate = self.scorecard.commsDelegate {
                 if delegate.connectionPurpose == .playing {

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -21,7 +22,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hEU-UB-5K2" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
                             </view>
-                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y6r-2O-8jb">
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y6r-2O-8jb" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -30,7 +31,7 @@
                                     <navigationItem title="History Detail" largeTitleDisplayMode="always" id="Seg-LW-F6o">
                                         <barButtonItem key="leftBarButtonItem" title="Item" id="8bf-Ea-ezt">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="C99-Bz-aQ9" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="16" y="11" width="54" height="22"/>
+                                                <rect key="frame" x="16" y="11" width="56" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Back" image="back"/>
                                                 <connections>
@@ -59,7 +60,7 @@
                                                     <constraint firstAttribute="height" constant="40" id="nsJ-6X-nXE"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <color key="textColor" name="Dark Highlight Text"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xcz-H4-UE0" customClass="LightRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
@@ -73,7 +74,7 @@
                                                 </connections>
                                             </button>
                                         </subviews>
-                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" name="Dark Highlight"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="Xcz-H4-UE0" secondAttribute="trailing" constant="8" id="2sw-Zh-vCa"/>
                                             <constraint firstAttribute="bottom" secondItem="Xcz-H4-UE0" secondAttribute="bottom" constant="4" id="4Cd-o6-LNJ"/>
@@ -246,13 +247,9 @@
                         <segue destination="exh-c3-YQa" kind="popoverPresentation" identifier="updateLocation" popoverAnchorView="BER-xO-Vlg" id="OZr-e6-PHR">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
-                        <segue destination="H4E-z2-AoW" kind="unwind" identifier="hideHistoryDetail" unwindAction="hideHistoryDetailWithSegue:" id="Cka-AT-Ebp"/>
-                        <segue destination="H4E-z2-AoW" kind="unwind" identifier="hideHighScoresHistoryDetail" unwindAction="hideHighScoresHistoryDetailWithSegue:" id="uXg-ov-ki7"/>
-                        <segue destination="H4E-z2-AoW" kind="unwind" identifier="hideGraphHistoryDetail" unwindAction="hideGraphHistoryDetailWithSegue:" id="oZg-pj-Y51"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nCi-c0-zuy" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="H4E-z2-AoW" userLabel="Exit" sceneMemberID="exit"/>
                 <swipeGestureRecognizer direction="left" id="JAx-9U-AjM" userLabel="Left Swipe Gesture Recognizer">
                     <connections>
                         <action selector="allSwipeWithRecognizer:" destination="2Wg-gN-UgP" id="jSK-Al-10W"/>
@@ -277,5 +274,11 @@
     </scenes>
     <resources>
         <image name="back" width="14" height="20"/>
+        <namedColor name="Dark Highlight">
+            <color red="0.46274509803921571" green="0.46274509803921571" blue="0.46274509803921571" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Dark Highlight Text">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

@@ -107,7 +107,7 @@ class GraphView: UIView {
         let graphHeight = height - topBorder - bottomBorder
         var maxValue: CGFloat!
         let context = UIGraphicsGetCurrentContext()
-        let colors = [UIColor.white.cgColor, ScorecardUI.totalColor.cgColor] as CFArray
+        let colors = [UIColor.white.cgColor, ScorecardUI.darkHighlightColor.cgColor] as CFArray
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         let colorLocations: [CGFloat] = [0.0, 1.0]
         let gradient = CGGradient(colorsSpace: colorSpace, colors: colors, locations: colorLocations)

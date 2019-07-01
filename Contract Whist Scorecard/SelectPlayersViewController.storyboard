@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -26,7 +26,7 @@
                                 <rect key="frame" x="0.0" y="667" width="375" height="0.0"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
-                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M8e-Hu-tx9">
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M8e-Hu-tx9" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="dJz-jT-aH4"/>
@@ -35,7 +35,7 @@
                                     <color key="textColor" name="alternateSelectedControlTextColor" catalog="System" colorSpace="catalog"/>
                                 </textAttributes>
                                 <items>
-                                    <navigationItem title="Select Players" largeTitleDisplayMode="always" id="m6r-TL-1uc">
+                                    <navigationItem title="Select" largeTitleDisplayMode="always" id="m6r-TL-1uc">
                                         <barButtonItem key="leftBarButtonItem" id="oFN-gk-zJZ">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="c4B-zY-SXT" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                 <rect key="frame" x="16" y="11" width="100" height="22"/>
@@ -46,15 +46,68 @@
                                                 </connections>
                                             </button>
                                         </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" style="plain" id="FuI-M5-ypT">
+                                            <button key="customView" hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="aOg-wh-Kl7" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <rect key="frame" x="262" y="11" width="97" height="22"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" title="Add" image="forward">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="continuePressedWithSender:" destination="FdF-BR-2d1" eventType="touchUpInside" id="31f-6S-58w"/>
+                                                </connections>
+                                            </button>
+                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="5F0-qL-9mB">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="sectionIndexColor" red="0.93494325876235962" green="0.87451320886611938" blue="0.70714592933654785" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Select Players Cell" rowHeight="70" id="tsN-dZ-Zmr" customClass="SelectPlayersCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Action Cell" rowHeight="70" id="Uhm-2P-vCR" customClass="SelectPlayersCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="70"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Uhm-2P-vCR" id="9h3-xX-aoU">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="69.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="SVg-r0-mdW">
+                                                    <rect key="frame" x="10" y="4" width="355" height="32"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mIz-6r-uCb" userLabel="Player Description">
+                                                    <rect key="frame" x="10" y="43" width="355" height="12"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="12" id="RiK-0g-o1c"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <color key="textColor" name="Message"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="SVg-r0-mdW" firstAttribute="leading" secondItem="9h3-xX-aoU" secondAttribute="leading" constant="10" id="34G-x1-uT9"/>
+                                                <constraint firstItem="mIz-6r-uCb" firstAttribute="top" secondItem="SVg-r0-mdW" secondAttribute="bottom" constant="7" id="5cl-Ij-xmU"/>
+                                                <constraint firstAttribute="trailing" secondItem="SVg-r0-mdW" secondAttribute="trailing" constant="10" id="CVr-Ct-qZF"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="mIz-6r-uCb" secondAttribute="bottom" constant="4" id="LJJ-sR-G4D"/>
+                                                <constraint firstItem="SVg-r0-mdW" firstAttribute="top" secondItem="9h3-xX-aoU" secondAttribute="top" constant="4" id="RW3-GU-emf"/>
+                                                <constraint firstAttribute="trailing" secondItem="mIz-6r-uCb" secondAttribute="trailing" constant="10" id="epd-a7-RBA"/>
+                                                <constraint firstItem="mIz-6r-uCb" firstAttribute="leading" secondItem="9h3-xX-aoU" secondAttribute="leading" constant="10" id="uHP-Ao-IqX"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="playerDescription" destination="mIz-6r-uCb" id="6ec-fd-jHg"/>
+                                            <outlet property="playerDescriptionHeightConstraint" destination="RiK-0g-o1c" id="zql-Pw-Od2"/>
+                                            <outlet property="playerName" destination="SVg-r0-mdW" id="FyX-Bz-yWv"/>
+                                            <outlet property="playerNameBottomConstraint" destination="5cl-Ij-xmU" id="PiZ-JD-dge"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Player Cell" rowHeight="70" id="tsN-dZ-Zmr" customClass="SelectPlayersCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="98" width="375" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tsN-dZ-Zmr" id="lKd-uw-dvN">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="69.5"/>
@@ -188,13 +241,11 @@
                     <connections>
                         <outlet property="backButton" destination="c4B-zY-SXT" id="K2K-7H-Ukb"/>
                         <outlet property="changeAllButton" destination="mFn-E2-icG" id="pB6-ka-IvU"/>
+                        <outlet property="continueButton" destination="aOg-wh-Kl7" id="2xM-iq-GwU"/>
                         <outlet property="footerPaddingTopConstraint" destination="EPW-h3-blQ" id="liL-gP-rJx"/>
                         <outlet property="navigationBar" destination="M8e-Hu-tx9" id="NHh-T7-H0y"/>
                         <outlet property="tableView" destination="5F0-qL-9mB" id="xiu-mw-YXs"/>
                         <outlet property="toolbarViewHeightConstraint" destination="4XP-4H-Aqj" id="92W-AA-IcL"/>
-                        <segue destination="QyQ-Rg-qN6" kind="popoverPresentation" identifier="showPlayerDetail" popoverAnchorView="8Be-gQ-047" id="HMI-oF-Oax">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                        </segue>
                         <segue destination="DOb-ll-Ptr" kind="unwind" identifier="hideSelectionSelectPlayers" unwindAction="hideSelectionSelectPlayersWithSegue:" id="jwr-oI-SeD"/>
                         <segue destination="DOb-ll-Ptr" kind="unwind" identifier="hideGetStartedSelectPlayers" unwindAction="hideGetStartedSelectPlayersWithSegue:" id="vEo-pM-s9i"/>
                         <segue destination="DOb-ll-Ptr" kind="unwind" identifier="hideSearchSelectPlayers" unwindAction="hideSearchSelectPlayersWithSegue:" id="uff-El-LiS"/>
@@ -206,20 +257,13 @@
             </objects>
             <point key="canvasLocation" x="125.59999999999999" y="46.326836581709152"/>
         </scene>
-        <!--PlayerDetailViewController-->
-        <scene sceneID="bkE-nX-7kD">
-            <objects>
-                <viewControllerPlaceholder storyboardName="PlayerDetailViewController" referencedIdentifier="PlayerDetailViewController" id="QyQ-Rg-qN6" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="36j-ix-a5B" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="765" y="46"/>
-        </scene>
     </scenes>
     <resources>
         <image name="box" width="142" height="167"/>
+        <image name="forward" width="14" height="20"/>
         <image name="home" width="22" height="22"/>
         <namedColor name="Banner">
-            <color red="0.33300000429153442" green="0.33300000429153442" blue="0.33300000429153442" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.89803921568627454" green="0.74901960784313726" blue="0.37254901960784315" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Message">
             <color red="0.0" green="0.4779999852180481" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -80,7 +80,6 @@
 		B267DF75211F41FC0086D521 /* Admin Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B267DF74211F41FC0086D521 /* Admin Menu.swift */; };
 		B2693CCB22C78C0B00596D85 /* Statistics Viewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2693CCA22C78C0B00596D85 /* Statistics Viewer.swift */; };
 		B2693CCD22C88B6900596D85 /* History Viewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2693CCC22C88B6900596D85 /* History Viewer.swift */; };
-		B2693CCF22C9D07500596D85 /* Colors.xlsx in Resources */ = {isa = PBXBuildFile; fileRef = B2693CCE22C9D07500596D85 /* Colors.xlsx */; };
 		B2767C1E2110061B0029155E /* Loopback Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2767C1D2110061B0029155E /* Loopback Class.swift */; };
 		B27B1FEA1F9B55ED00ED6FFF /* Scorecard Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27B1FE91F9B55ED00ED6FFF /* Scorecard Tests.swift */; };
 		B28033341F7E046B00CF4696 /* Sync Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28033331F7E046B00CF4696 /* Sync Class.swift */; };
@@ -113,6 +112,7 @@
 		B2DD5D7A1ECE3C8800725B55 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2DD5D791ECE3C8800725B55 /* Assets.xcassets */; };
 		B2DD5D7C1ED1A87600725B55 /* Graph View Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DD5D7B1ED1A87600725B55 /* Graph View Class.swift */; };
 		B2DD5D7E1ED323F400725B55 /* GraphViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DD5D7D1ED323F400725B55 /* GraphViewController.swift */; };
+		B2E556C122C9F86200C49821 /* Colors.xlsx in Resources */ = {isa = PBXBuildFile; fileRef = B2E556C022C9F86100C49821 /* Colors.xlsx */; };
 		B2E7621C1E6C98A0001DAF4F /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7621B1E6C98A0001DAF4F /* Notifications.swift */; };
 		B2E7621E1E73E6A6001DAF4F /* GetStartedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7621D1E73E6A6001DAF4F /* GetStartedViewController.swift */; };
 		B2E7E04D1FBACAFA001206F0 /* Miscellaneous Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7E04C1FBACAFA001206F0 /* Miscellaneous Tests.swift */; };
@@ -266,7 +266,6 @@
 		B267DF74211F41FC0086D521 /* Admin Menu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Admin Menu.swift"; sourceTree = "<group>"; };
 		B2693CCA22C78C0B00596D85 /* Statistics Viewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Statistics Viewer.swift"; sourceTree = "<group>"; };
 		B2693CCC22C88B6900596D85 /* History Viewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "History Viewer.swift"; sourceTree = "<group>"; };
-		B2693CCE22C9D07500596D85 /* Colors.xlsx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Colors.xlsx; sourceTree = "<group>"; };
 		B2767C1D2110061B0029155E /* Loopback Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Loopback Class.swift"; sourceTree = "<group>"; };
 		B27B1FE71F9B55ED00ED6FFF /* Contract Whist Scorecard UI Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Contract Whist Scorecard UI Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B27B1FE91F9B55ED00ED6FFF /* Scorecard Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scorecard Tests.swift"; sourceTree = "<group>"; };
@@ -299,6 +298,7 @@
 		B2DD5D791ECE3C8800725B55 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B2DD5D7B1ED1A87600725B55 /* Graph View Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Graph View Class.swift"; sourceTree = "<group>"; };
 		B2DD5D7D1ED323F400725B55 /* GraphViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphViewController.swift; sourceTree = "<group>"; };
+		B2E556C022C9F86100C49821 /* Colors.xlsx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Colors.xlsx; sourceTree = "<group>"; };
 		B2E7621B1E6C98A0001DAF4F /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		B2E7621D1E73E6A6001DAF4F /* GetStartedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetStartedViewController.swift; sourceTree = "<group>"; };
 		B2E7E04C1FBACAFA001206F0 /* Miscellaneous Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Miscellaneous Tests.swift"; sourceTree = "<group>"; };
@@ -893,7 +893,7 @@
 			children = (
 				CCEA53E21DF3D19F0045292C /* Notes.txt */,
 				B2B1802021195FFA008D3BAA /* Contract Whist Scorecard.pages */,
-				B2693CCE22C9D07500596D85 /* Colors.xlsx */,
+				B2E556C022C9F86100C49821 /* Colors.xlsx */,
 				CC4CC0F61DEADC32007FB24F /* Products */,
 				CC86557B1E021518000AF391 /* Standard Components */,
 				CC86557A1E021503000AF391 /* View Controllers */,
@@ -1133,7 +1133,7 @@
 			files = (
 				B227890D1FB83D49009BABCA /* GamePreviewViewController.storyboard in Resources */,
 				B2B1802121195FFA008D3BAA /* Contract Whist Scorecard.pages in Resources */,
-				B2693CCF22C9D07500596D85 /* Colors.xlsx in Resources */,
+				B2E556C122C9F86200C49821 /* Colors.xlsx in Resources */,
 				B22789081FB83AC4009BABCA /* WalkthroughPageViewController.storyboard in Resources */,
 				B22789011FB83AA7009BABCA /* WelcomeViewController.storyboard in Resources */,
 				CCEA53E31DF3D19F0045292C /* Notes.txt in Resources */,

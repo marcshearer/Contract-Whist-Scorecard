@@ -473,8 +473,9 @@ class Scorecard {
                         if player.bidCell[round-1] == nil{
                             // No bid label so don't need to differentiate
                             ScorecardUI.normalStyle(player.scoreCell[round-1]!.scorepadCellLabel, setFont: false)
+                            // TODO Remove player.scoreCell[round-1]!.backgroundColor = ScorecardUI.backgroundColor
                         } else {
-                            ScorecardUI.darkHighlightStyle(player.scoreCell[round-1]!.scorepadCellLabel)
+                            ScorecardUI.highlightStyle(player.scoreCell[round-1]!.scorepadCellLabel)
                         }
                     }
                     let imageView = player.scoreCell[round-1]!.scorepadImage!
@@ -802,7 +803,14 @@ class Scorecard {
     }
     
     public func roundComplete(_ round: Int) -> Bool {
-        return self.roundPlayer(playerNumber: self.currentPlayers, round: round).score(round) != nil
+        var result = true
+        if self.roundPlayer(playerNumber: self.currentPlayers, round: round).score(round) == nil {
+            result = false
+        }
+        if self.settingBonus2 && self.roundPlayer(playerNumber: self.currentPlayers, round: round).twos(round) == nil {
+            result = false
+        }
+        return result
     }
     
     public func saveMaxScores() {
@@ -865,7 +873,7 @@ class Scorecard {
     }
     
     public func savePlayers(rounds: Int) -> Bool {
-        var result = true
+        var result = false
         // Only save if last round complete
         if self.gameComplete(rounds: rounds) && !self.isPlayingComputer {
             // Check if need to exclude from stats
@@ -878,10 +886,12 @@ class Scorecard {
                     result = self.enteredPlayer(player).save(excludeHistory: excludeHistory, excludeStats: excludeStats)
                 }
             }
-        }
-        if result {
-            // Can't recover once we've saved
-            self.setGameInProgress(false, suppressWatch: true)
+            if result {
+                // Can't recover once we've saved
+                self.setGameInProgress(false, suppressWatch: true)
+            }
+        } else {
+            result = true
         }
         return result
     }

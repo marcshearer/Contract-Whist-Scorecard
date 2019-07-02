@@ -40,7 +40,6 @@
 		B214FBA51FCADC7B00F4F39B /* Contract Whist Watch.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = B214FB881FCADC7B00F4F39B /* Contract Whist Watch.app */; };
 		B214FBAF1FCB711B00F4F39B /* WatchRoundInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214FBAE1FCB711B00F4F39B /* WatchRoundInterfaceController.swift */; };
 		B214FBB11FCB71EB00F4F39B /* Watch Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B214FBB01FCB71EB00F4F39B /* Watch Manager.swift */; };
-		B214FBB31FCB73CA00F4F39B /* Card Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC395F4C1E064EC500165D1C /* Card Class.swift */; };
 		B221EED5210B0DFE00F7FBA0 /* HandViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B221EED3210B0DFE00F7FBA0 /* HandViewController.storyboard */; };
 		B221EED7210B0E2D00F7FBA0 /* HandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B221EED6210B0E2D00F7FBA0 /* HandViewController.swift */; };
 		B22500F11F48425C0042D566 /* Scorecard Comms.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22500F01F48425C0042D566 /* Scorecard Comms.swift */; };
@@ -1240,7 +1239,6 @@
 				B202A00A1FCC87540070D5DC /* WatchGameInterfaceController.swift in Sources */,
 				B214FB9C1FCADC7B00F4F39B /* ExtensionDelegate.swift in Sources */,
 				B202A00D1FCC90E40070D5DC /* Watch State Class.swift in Sources */,
-				B214FBB31FCB73CA00F4F39B /* Card Class.swift in Sources */,
 				B214FBAF1FCB711B00F4F39B /* WatchRoundInterfaceController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

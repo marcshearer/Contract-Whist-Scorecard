@@ -328,7 +328,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
                 cell.playerBidLabel.text = "Bid \(bid!)"
             }
             cell.playerMadeLabel.text = playerMadeText(playerNumber)
-            cell.playerMadeLabel.textColor = UIColor.black
+            cell.playerMadeLabel.textColor = ScorecardUI.textColor
             
             // Format card
             cell.playedCardWidthConstraint.constant = tabletopCardWidth
@@ -901,7 +901,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             let label = UILabel(frame: CGRect(x: (alertController.view.frame.width - 50) / CGFloat(2), y: 20, width: 50, height: 50))
             label.text = "\(bid)"
             label.backgroundColor = ScorecardUI.darkHighlightColor
-            label.textColor = UIColor.black
+            label.textColor = ScorecardUI.totalTextColor
             label.font = UIFont.systemFont(ofSize: 30)
             label.textAlignment = .center
             ScorecardUI.roundCorners(label)
@@ -950,12 +950,12 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         let totalRemaining = scorecard.remaining(playerNumber: 0, round: scorecard.selectedRound, mode: Mode.bid, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
 
         overUnderButton.setTitle("\(totalRemaining >= 0 ? "-" : "+")\(abs(Int64(totalRemaining)))", for: .normal)
-        overUnderButton.setTitleColor((totalRemaining >= 0 ? UIColor.green : UIColor.red), for: .normal)
+        overUnderButton.setTitleColor((totalRemaining >= 0 ? ScorecardUI.contractUnderColor : ScorecardUI.contractOverColor), for: .normal)
 
         if !self.scorecard.roundStarted(scorecard.selectedRound) {
             statusOverUnderLabel.text = ""
         } else {
-            statusOverUnderLabel.textColor = (totalRemaining == 0 ? UIColor.black : (totalRemaining > 0 ? ScorecardUI.totalColor : UIColor.red))
+            statusOverUnderLabel.textColor = (totalRemaining == 0 ? ScorecardUI.contractEqualColor : (totalRemaining > 0 ? ScorecardUI.contractUnderColor : ScorecardUI.contractOverColor))
             statusOverUnderLabel.text = " \(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")"
         }
         statusRoundLabel.attributedText = self.scorecard.roundTitle(round, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)

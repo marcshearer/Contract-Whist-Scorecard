@@ -180,7 +180,7 @@ class Recovery {
         }
         
         // Update current round
-        if scorecard.roundPlayer(playerNumber: scorecard.currentPlayers, round: scorecard.maxEnteredRound).made(scorecard.maxEnteredRound) != nil && scorecard.maxEnteredRound <= scorecard.rounds {
+        if scorecard.roundComplete(scorecard.maxEnteredRound) && scorecard.maxEnteredRound < scorecard.rounds {
             // Round complete - move to next
             scorecard.maxEnteredRound = scorecard.maxEnteredRound + 1
         }

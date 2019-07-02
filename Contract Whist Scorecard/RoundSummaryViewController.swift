@@ -88,7 +88,7 @@ class RoundSummaryViewController: CustomViewController {
         
         let totalRemaining = scorecard.remaining(playerNumber: 0, round: scorecard.selectedRound, mode: Mode.bid, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
         self.overUnder.text = "\(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")"
-        self.overUnder.textColor = (totalRemaining == 0 ? UIColor.black : (totalRemaining > 0 ? UIColor.green : UIColor.red))
+        self.overUnder.textColor = (totalRemaining == 0 ? ScorecardUI.contractEqualColor : (totalRemaining > 0 ? ScorecardUI.contractUnderColor : ScorecardUI.contractOverColor))
     }
     
     func setupBidText(bids: UILabel?...) {

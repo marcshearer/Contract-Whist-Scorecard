@@ -57,9 +57,8 @@ class WatchRoundInterfaceController: WKInterfaceController, WatchStateDelegate {
                 }
             }
             
-            let suit = Suit(fromString: context.trumpSuit)
             let suitColor = (context.trumpSuit == "♥︎" || context.trumpSuit == "♦︎" ? UIColor.red : UIColor.white)
-            let suitString = NSAttributedString(string: suit.toString(), attributes: [NSAttributedString.Key.foregroundColor: suitColor])
+            let suitString = NSAttributedString(string: context.trumpSuit, attributes: [NSAttributedString.Key.foregroundColor: suitColor])
             
             let roundTitle = NSMutableAttributedString()
             roundTitle.append(NSAttributedString(string: "\(context.cards!)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.white]))

@@ -138,7 +138,7 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
         self.roundTitleLabel.attributedText = scorecard.roundTitle(round, rankColor: UIColor.white)
         let totalRemaining = self.scorecard.remaining(playerNumber: 0, round: self.round, mode: Mode.bid, rounds: self.scorecard.rounds, cards: self.scorecard.handState.cards, bounce: self.scorecard.handState.bounce)
         self.overUnderLabel.text = "\(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")"
-        self.overUnderLabel.textColor = (totalRemaining == 0 ? UIColor.black : (totalRemaining > 0 ? UIColor.green : UIColor.red))
+        self.overUnderLabel.textColor = (totalRemaining == 0 ? ScorecardUI.contractEqualColor : (totalRemaining > 0 ? ScorecardUI.contractUnderColor : ScorecardUI.contractOverColor))
     }
     
     private func setupText() {

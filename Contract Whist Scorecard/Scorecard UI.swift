@@ -27,8 +27,6 @@ class ScorecardUI {
     static let highlightTextColor = UIColor(named: "Highlight Text")!
     static let madeContractColor = UIColor(named: "Made Contract")!
     static let madeContractTextColor = UIColor(named: "Made Contract Text")!
-    static let messageColor = UIColor(named: "Message")!
-    static let messageTextColor = UIColor(named: "MessageText")!
     static let sectionHeadingColor = UIColor(named: "Section Heading")!
     static let sectionHeadingTextColor = UIColor(named: "Section Heading Text")!
     static let tableTopColor = UIColor(named: "Table Top")!
@@ -38,10 +36,17 @@ class ScorecardUI {
     static let textColor = UIColor(named: "Text")!
     static let textEmphasisColor = UIColor(named: "Text Emphasis")!
     static let textErrorColor = UIColor(named: "Text Error")!
+    static let textMessageColor = UIColor(named: "Text Message")!
     static let shapeStrokeColor = UIColor(named: "Shape Stroke")!
     static let shapeFillColor = UIColor(named: "Shape Fill")!
     static let shapeHighlightStrokeColor = UIColor(named: "Shape Highlight Stroke")!
     static let shapeHighlightFillColor = UIColor(named: "Shape Highlight Fill")!
+    static let suitDiamondsHeartsColor = UIColor(named: "Suit Diamonds Hearts")!
+    static let suitClubsSpadesColor = UIColor(named: "Suit Clubs Spades")!
+    static let suitNoTrumpsColor = UIColor(named: "Suit No Trumps")!
+    static let contractOverColor = UIColor(named: "Contract Over")!
+    static let contractUnderColor = UIColor(named: "Contract Under")!
+    static let contractEqualColor = UIColor(named: "Contract Equal")!
 
     class func roundCorners(_ view: UIView, percent: CGFloat = 0.0) {
         if percent == 0.0 {

@@ -530,8 +530,8 @@ class ScorepadViewController: CustomViewController,
     private func highlightDealer(headerCell: ScorepadCollectionViewCell, playerNumber: Int, row: Int, forceClear: Bool = false) {
         if playerNumber >= 0 {
             if scorecard.isScorecardDealer() == playerNumber && !forceClear {
-                ScorecardUI.totalStyleView(headerCell)
-                headerCell.scorepadCellLabel?.textColor = ScorecardUI.totalTextColor
+                ScorecardUI.highlightStyleView(headerCell)
+                headerCell.scorepadCellLabel?.textColor = ScorecardUI.highlightTextColor
             } else {
                 ScorecardUI.emphasisStyleView(headerCell)
                 headerCell.scorepadCellLabel?.textColor = ScorecardUI.emphasisTextColor
@@ -866,14 +866,13 @@ class ScorepadViewController: CustomViewController,
         var footerCell: ScorepadCollectionViewCell
         var bodyCell: ScorepadCollectionViewCell
         var cell: UICollectionViewCell
-        var column = 0
         let row = collectionView.tag % 1000000
         let round = row + 1
         var headerCollection =  false
         var footerCollection = false
         var player = 0
         var reuseIdentifier = ""
-        column = indexPath.row
+        let column = indexPath.row
         
         if collectionView.tag >= 2000000 {
             footerCollection = true
@@ -949,7 +948,6 @@ class ScorepadViewController: CustomViewController,
                     headerCell.scorepadLeftLineWeight.constant = thickLineWeight
                 }
                 
-                headerCell.scorepadCellLabel.textColor = UIColor.white
                 headerCell.scorepadTopLineWeight.constant =
                     (row == 0 || (row == playerRow && imageRowHeight != 0) ? 0 : thickLineWeight)
             }
@@ -977,24 +975,21 @@ class ScorepadViewController: CustomViewController,
             
             footerCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Footer Collection Cell",for: indexPath) as! ScorepadCollectionViewCell
         
-            ScorecardUI.totalStyleView(footerCell)
-            
             if column == 0 {
                 // Row titles
+                ScorecardUI.emphasisStyle(footerCell.scorepadCellLabel)
                 footerCell.scorepadCellLabel.text="Total"
                 footerCell.scorepadLeftLineWeight.constant = 0
                 footerCell.scorepadCellLabel.numberOfLines = 1
                 footerCell.scorepadCellLabel.accessibilityIdentifier = ""
             } else {
                 // Row values
-                player = column
+                ScorecardUI.totalStyle(footerCell.scorepadCellLabel)
                 footerCell.scorepadCellLabel.text = "\(scorecard.scorecardPlayer(player).totalScore())"
                 footerCell.scorepadLeftLineWeight.constant = thickLineWeight
                 scorecard.scorecardPlayer(player).setTotalLabel(label: footerCell.scorepadCellLabel)
                 footerCell.scorepadCellLabel.accessibilityIdentifier = "player\(indexPath.row)total"
             }
-            
-            footerCell.scorepadCellLabel.textColor = UIColor.white
             footerCell.scorepadTopLineWeight.constant = thickLineWeight
         
             if narrow {
@@ -1041,7 +1036,6 @@ class ScorepadViewController: CustomViewController,
                     scorecard.formatCell(round: round, playerNumber: player, mode: Mode.made)
                     bodyCell.scorepadCellLabel.accessibilityIdentifier = "player\(player)round\(round)"
                 }
-                bodyCell.scorepadCellLabel.textColor = UIColor.black
             }
             bodyCell.scorepadTopLineWeight.constant = thickLineWeight
             if narrow {

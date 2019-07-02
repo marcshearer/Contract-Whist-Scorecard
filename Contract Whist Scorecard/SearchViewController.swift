@@ -144,7 +144,7 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
         cell = tableView.dequeueReusableCell(withIdentifier: "Player Cell", for: indexPath) as! SearchTableCell
         if let playerMO = results[indexPath.row] {
             cell.playerNameLabel.text = playerMO.name
-            cell.playerNameLabel.textColor = UIColor.black
+            cell.playerNameLabel.textColor = ScorecardUI.textColor
             Utility.setThumbnail(data: playerMO.thumbnail,
                                  imageView: cell.playerImage,
                                  initials: playerMO.name!,
@@ -153,7 +153,7 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
         } else {
             // Disable option
             cell.playerNameLabel.text = self.disableOption!
-            cell.playerNameLabel.textColor = UIColor.blue
+            cell.playerNameLabel.textColor = ScorecardUI.textMessageColor
             cell.playerImage.image = UIImage(named: "cross blue")
             cell.playerImage.contentMode = .center
         }

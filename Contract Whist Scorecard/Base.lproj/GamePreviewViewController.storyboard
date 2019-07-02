@@ -110,17 +110,19 @@
                                                     <rect key="frame" x="64" y="11" width="201" height="32"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                                    <nil key="textColor"/>
+                                                    <color key="textColor" name="Text"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bSJ-0W-aGl" userLabel="Dealer Button" customClass="TotalRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                     <rect key="frame" x="273" y="15" width="44" height="13"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" name="Dark Highlight"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" relation="lessThanOrEqual" constant="44" id="8LB-9G-YsI"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                    <state key="normal" title="Button"/>
+                                                    <state key="normal" title="Button">
+                                                        <color key="titleColor" name="Dark Highlight Text"/>
+                                                    </state>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Dd-qR-woZ" userLabel="FaceTime">
                                                     <rect key="frame" x="325" y="2" width="40" height="40"/>
@@ -144,7 +146,9 @@
                                                 <constraint firstAttribute="bottom" secondItem="auR-9N-5f6" secondAttribute="bottom" id="4G7-De-Dt5"/>
                                                 <constraint firstItem="bSJ-0W-aGl" firstAttribute="leading" secondItem="JJq-oJ-QJT" secondAttribute="trailing" constant="8" id="5XK-zP-G1f"/>
                                                 <constraint firstItem="5Dd-qR-woZ" firstAttribute="centerY" secondItem="82X-px-Cl8" secondAttribute="centerY" id="7vh-6g-oCt"/>
-                                                <constraint firstItem="bSJ-0W-aGl" firstAttribute="top" secondItem="82X-px-Cl8" secondAttribute="top" constant="15" id="F06-NM-5au"/>
+                                                <constraint firstItem="bSJ-0W-aGl" firstAttribute="top" secondItem="82X-px-Cl8" secondAttribute="top" constant="15" id="F06-NM-5au">
+                                                    <variation key="heightClass=compact" constant="5"/>
+                                                </constraint>
                                                 <constraint firstAttribute="trailing" secondItem="5Dd-qR-woZ" secondAttribute="trailing" constant="10" id="PBH-vf-kmP"/>
                                                 <constraint firstItem="5Dd-qR-woZ" firstAttribute="leading" secondItem="bSJ-0W-aGl" secondAttribute="trailing" constant="8" id="Q26-Cf-5mU"/>
                                                 <constraint firstItem="auR-9N-5f6" firstAttribute="leading" secondItem="82X-px-Cl8" secondAttribute="leading" constant="10" id="VjN-LZ-Q1y"/>
@@ -153,7 +157,9 @@
                                                 <constraint firstItem="JJq-oJ-QJT" firstAttribute="leading" secondItem="ljp-aT-UKz" secondAttribute="trailing" constant="16" id="hZR-0u-i3b"/>
                                                 <constraint firstItem="ljp-aT-UKz" firstAttribute="leading" secondItem="82X-px-Cl8" secondAttribute="leading" constant="8" id="hn9-BY-ggj"/>
                                                 <constraint firstItem="JJq-oJ-QJT" firstAttribute="top" secondItem="82X-px-Cl8" secondAttribute="topMargin" id="kqo-jt-Nwq"/>
-                                                <constraint firstItem="auR-9N-5f6" firstAttribute="top" secondItem="bSJ-0W-aGl" secondAttribute="bottom" constant="15" id="lxE-2X-Qo2"/>
+                                                <constraint firstItem="auR-9N-5f6" firstAttribute="top" secondItem="bSJ-0W-aGl" secondAttribute="bottom" constant="15" id="lxE-2X-Qo2">
+                                                    <variation key="heightClass=compact" constant="5"/>
+                                                </constraint>
                                                 <constraint firstAttribute="bottom" secondItem="ljp-aT-UKz" secondAttribute="bottom" constant="2" id="tY4-RH-IBY"/>
                                                 <constraint firstAttribute="trailing" secondItem="auR-9N-5f6" secondAttribute="trailing" id="yTi-zX-D0d"/>
                                             </constraints>
@@ -185,7 +191,7 @@
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                                     <state key="normal" image="cut pack">
-                                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="titleColor" name="Highlight Text"/>
                                                     </state>
                                                 </button>
                                                 <button opaque="NO" tag="3" contentMode="scaleAspectFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5QR-vA-soU" customClass="SideImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
@@ -197,7 +203,7 @@
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                                     <state key="normal" image="settings blue">
-                                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <color key="titleColor" name="Highlight Text"/>
                                                     </state>
                                                 </button>
                                                 <button opaque="NO" tag="2" contentMode="scaleAspectFit" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="f7a-6R-rUp" customClass="SideImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
@@ -209,7 +215,7 @@
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                                     <state key="normal" image="next dealer">
-                                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <color key="titleColor" name="Highlight Text"/>
                                                     </state>
                                                 </button>
                                             </subviews>
@@ -241,35 +247,35 @@
                                             <subviews>
                                                 <button opaque="NO" tag="1" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wUt-jv-Pnx" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                     <rect key="frame" x="-87.5" y="27" width="130" height="130"/>
-                                                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                                    <color key="backgroundColor" name="Highlight"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="130" id="7Nj-S0-Lv1"/>
                                                         <constraint firstAttribute="width" constant="130" id="uwa-GG-pR6"/>
                                                     </constraints>
                                                     <state key="normal" image="cut pack">
-                                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="titleColor" name="Highlight Text"/>
                                                     </state>
                                                 </button>
                                                 <button opaque="NO" tag="2" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DNt-CK-BEw" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                     <rect key="frame" x="122.5" y="27" width="130" height="130"/>
-                                                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                                    <color key="backgroundColor" name="Highlight"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="130" id="a8d-On-TYo"/>
                                                         <constraint firstAttribute="width" constant="130" id="ish-qW-DJb"/>
                                                     </constraints>
                                                     <state key="normal" image="next dealer">
-                                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <color key="titleColor" name="Highlight Text"/>
                                                     </state>
                                                 </button>
                                                 <button opaque="NO" tag="3" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pet-Bb-pAU" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                     <rect key="frame" x="332.5" y="27" width="130" height="130"/>
-                                                    <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                                    <color key="backgroundColor" name="Highlight"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="130" id="N7D-Zt-865"/>
                                                         <constraint firstAttribute="height" constant="130" id="pbc-gu-nHk"/>
                                                     </constraints>
                                                     <state key="normal" image="settings blue">
-                                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <color key="titleColor" name="Highlight Text"/>
                                                     </state>
                                                 </button>
                                             </subviews>
@@ -367,8 +373,20 @@
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <namedColor name="Dark Highlight">
+            <color red="0.46274509803921571" green="0.46274509803921571" blue="0.46274509803921571" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Dark Highlight Text">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="Highlight">
             <color red="0.93333333333333335" green="0.87450980392156863" blue="0.70588235294117652" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Highlight Text">
+            <color red="0.49803921568627452" green="0.49803921568627452" blue="0.49803921568627452" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Text">
+            <color red="0.49803921568627452" green="0.49803921568627452" blue="0.49803921568627452" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

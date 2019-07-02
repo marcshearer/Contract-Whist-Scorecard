@@ -10,12 +10,252 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Contract Whist Scorecard/Sync Class.swift"
-            timestampString = "583700551.4381"
+            timestampString = "583770817.48104"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "231"
             endingLineNumber = "231"
             landmarkName = "syncController()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Contract Whist Scorecard/Core Data Class.swift"
+            timestampString = "583756163.216379"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "120"
+            endingLineNumber = "120"
+            landmarkName = "update(errorHandler:updateLogic:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Contract Whist Scorecard/Sync Class.swift"
+            timestampString = "583770817.481324"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1396"
+            endingLineNumber = "1396"
+            landmarkName = "fetchPlayerImagesFromCloud(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Contract Whist Scorecard/Sync Class.swift"
+            timestampString = "583770817.48138"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "617"
+            endingLineNumber = "617"
+            landmarkName = "updateParticipantsFromCloud()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Contract_Whist_Scorecard.Sync.(updateParticipantsFromCloud in _C969030E6A8639C0203A1393FD3F6957)() -&gt; Swift.Bool"
+                  moduleName = "Contract Whist Scorecard"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/marcshearer/Documents/Xcode%20projects/Contract%20Whist%20Scorecard/Contract%20Whist%20Scorecard/Sync%20Class.swift"
+                  timestampString = "583770817.71585"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "618"
+                  endingLineNumber = "618"
+                  offsetFromSymbolStart = "5240">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in Contract_Whist_Scorecard.Sync.(updateParticipantsFromCloud in _C969030E6A8639C0203A1393FD3F6957)() -&gt; Swift.Bool"
+                  moduleName = "Contract Whist Scorecard"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/marcshearer/Documents/Xcode%20projects/Contract%20Whist%20Scorecard/Contract%20Whist%20Scorecard/Sync%20Class.swift"
+                  timestampString = "583770817.71754"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "620"
+                  endingLineNumber = "620"
+                  offsetFromSymbolStart = "130">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Contract Whist Scorecard/Sync Class.swift"
+            timestampString = "583770817.481423"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "627"
+            endingLineNumber = "627"
+            landmarkName = "updateParticipantsFromCloud()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Contract_Whist_Scorecard.Sync.(updateParticipantsFromCloud in _C969030E6A8639C0203A1393FD3F6957)() -&gt; Swift.Bool"
+                  moduleName = "Contract Whist Scorecard"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/marcshearer/Documents/Xcode%20projects/Contract%20Whist%20Scorecard/Contract%20Whist%20Scorecard/Sync%20Class.swift"
+                  timestampString = "583770817.721229"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "627"
+                  endingLineNumber = "627"
+                  offsetFromSymbolStart = "5704">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 () -&gt; () in Contract_Whist_Scorecard.Sync.(updateParticipantsFromCloud in _C969030E6A8639C0203A1393FD3F6957)() -&gt; Swift.Bool"
+                  moduleName = "Contract Whist Scorecard"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/marcshearer/Documents/Xcode%20projects/Contract%20Whist%20Scorecard/Contract%20Whist%20Scorecard/Sync%20Class.swift"
+                  timestampString = "583770817.722666"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "628"
+                  endingLineNumber = "628"
+                  offsetFromSymbolStart = "98">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Contract Whist Scorecard/Sync Class.swift"
+            timestampString = "583770817.4814661"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "775"
+            endingLineNumber = "775"
+            landmarkName = "updateGamesFromCloud()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Contract_Whist_Scorecard.Sync.(updateGamesFromCloud in _C969030E6A8639C0203A1393FD3F6957)() -&gt; Swift.Bool"
+                  moduleName = "Contract Whist Scorecard"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/marcshearer/Documents/Xcode%20projects/Contract%20Whist%20Scorecard/Contract%20Whist%20Scorecard/Sync%20Class.swift"
+                  timestampString = "583770817.72639"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "775"
+                  endingLineNumber = "775"
+                  offsetFromSymbolStart = "1052">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in Contract_Whist_Scorecard.Sync.(updateGamesFromCloud in _C969030E6A8639C0203A1393FD3F6957)() -&gt; Swift.Bool"
+                  moduleName = "Contract Whist Scorecard"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/marcshearer/Documents/Xcode%20projects/Contract%20Whist%20Scorecard/Contract%20Whist%20Scorecard/Sync%20Class.swift"
+                  timestampString = "583770817.727819"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "777"
+                  endingLineNumber = "777"
+                  offsetFromSymbolStart = "283">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Contract Whist Scorecard/Sync Class.swift"
+            timestampString = "583770817.481505"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "794"
+            endingLineNumber = "794"
+            landmarkName = "updateGamesFromCloud()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Contract_Whist_Scorecard.Sync.(updateGamesFromCloud in _C969030E6A8639C0203A1393FD3F6957)() -&gt; Swift.Bool"
+                  moduleName = "Contract Whist Scorecard"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/marcshearer/Documents/Xcode%20projects/Contract%20Whist%20Scorecard/Contract%20Whist%20Scorecard/Sync%20Class.swift"
+                  timestampString = "583770817.7312109"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "794"
+                  endingLineNumber = "794"
+                  offsetFromSymbolStart = "1653">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 () -&gt; () in Contract_Whist_Scorecard.Sync.(updateGamesFromCloud in _C969030E6A8639C0203A1393FD3F6957)() -&gt; Swift.Bool"
+                  moduleName = "Contract Whist Scorecard"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/marcshearer/Documents/Xcode%20projects/Contract%20Whist%20Scorecard/Contract%20Whist%20Scorecard/Sync%20Class.swift"
+                  timestampString = "583770817.732788"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "795"
+                  endingLineNumber = "795"
+                  offsetFromSymbolStart = "98">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Contract Whist Scorecard/ScorepadViewController.swift"
+            timestampString = "583770817.481545"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "109"
+            endingLineNumber = "109"
+            landmarkName = "hideLocation(segue:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

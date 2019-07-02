@@ -225,7 +225,7 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
         if syncEmailTextField != nil {
             if scorecard.playerList.count == 0 && scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
                 syncEmailTextField.isHidden = false
-                syncEmailTextField.layer.borderColor = ScorecardUI.messageColor.cgColor
+                syncEmailTextField.layer.borderColor = ScorecardUI.textMessageColor.cgColor
                 syncEmailTextField.layer.borderWidth = 2
                 syncEmailTextField.layer.cornerRadius = 5
                 syncEmailTextField.becomeFirstResponder()

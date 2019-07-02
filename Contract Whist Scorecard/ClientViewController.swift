@@ -853,8 +853,8 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             if self.appState == .notConnected || self.appState == .connecting || state != .notConnected {
                 cell.isUserInteractionEnabled = true
                 cell.isEditing = false
-                cell.serviceLabel.textColor = UIColor.black
-                cell.stateLabel.textColor = UIColor.blue
+                cell.serviceLabel.textColor = ScorecardUI.textColor
+                cell.stateLabel.textColor = ScorecardUI.textMessageColor
                 cell.disconnectButton.isHidden = (self.appState == .notConnected)
             } else {
                 cell.serviceLabel.textColor = ScorecardUI.darkHighlightColor

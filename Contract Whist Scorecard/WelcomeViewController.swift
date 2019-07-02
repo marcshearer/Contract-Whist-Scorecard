@@ -397,7 +397,8 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         
         self.addAction(section: mainSection, title: "Play Game", isHidden: {!self.scorecard.settingSyncEnabled || !(self.scorecard.settingNearbyPlaying || self.scorecard.onlineEnabled)}, action: newOnlineGame)
         
-        self.addAction(section: mainSection, title: "Resume Playing", highlight: true, isHidden: {!self.recoveryAvailable || !self.recoverOnline || !allowRecovery}, action: resumeGame)
+        self.addAction(section: mainSection, title: "Resume Playing", highlight: true, isHidden: {!self.recoveryAvailable || !self.recoverOnline || !allowRecovery
+        }, action: resumeGame)
         
         self.addAction(section: mainSection, title: (self.scorecard.settingSyncEnabled ? "Resume Scoring" : "Resume"), highlight: true, isHidden: {!self.recoveryAvailable || self.recoverOnline || !allowRecovery}, action: resumeGame)
 
@@ -546,14 +547,14 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
                                  version2: self.scorecard.latestVersion) == .lessThan {
             self.alertMessage("You must upgrade to the latest version of the app to use this option")
         } else if self.scorecard.settingSyncEnabled && (self.scorecard.settingNearbyPlaying || self.scorecard.settingOnlinePlayerEmail != nil) {
-            let actionSheet = ActionSheet( view: cell, direction: .up)
+            let actionSheet = ActionSheet(view: cell, direction: .up)
             actionSheet.add("Host a Game", handler: hostGame)
-            actionSheet.add("Join a Game", handler: joinGame)
-            // TODO reinstate actionSheet.add("Play against Computer", handler: computerGame)
+            actionSheet.add("Join a Game", style: .destructive, handler: joinGame)
+            actionSheet.add("Play Against Computer", handler: computerGame) // TODO Hide
             actionSheet.add("Cancel", style: .cancel)
             actionSheet.present()
         } else {
-            // TODO reinstate self.computerGame()
+            self.computerGame() // TODO Hide
         }
     }
     

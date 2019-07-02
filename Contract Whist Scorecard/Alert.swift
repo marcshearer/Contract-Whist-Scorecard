@@ -128,23 +128,36 @@ class ActionSheet : NSObject, UIPopoverPresentationControllerDelegate {
     public var alertController: UIAlertController
     private var dark: Bool
     
-    init(_ title: String! = nil, message: String! = nil, dark: Bool = true, view: UIView! = nil, direction: UIPopoverArrowDirection! = nil, x: CGFloat! = nil, y: CGFloat! = nil) {
+    init(_ title: String! = nil, message: String! = nil, dark: Bool = false, view: UIView! = nil, direction: UIPopoverArrowDirection! = nil, x: CGFloat! = nil, y: CGFloat! = nil) {
         var view: UIView! = view
         if view == nil {
             view = Utility.getActiveViewController()!.view
         }
         self.dark = dark
+
+        let optionBackgroundColor = ScorecardUI.highlightColor
+        var titleBackgroundColor: UIColor
+        var titleTextColor: UIColor
+        if dark {
+            titleBackgroundColor = ScorecardUI.darkHighlightColor
+            titleTextColor = ScorecardUI.darkHighlightTextColor
+        } else {
+            titleBackgroundColor = ScorecardUI.emphasisColor
+            titleTextColor = ScorecardUI.emphasisTextColor
+        }
+        
         self.alertController = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
         if let title = title {
             // Set attributed title
-            let attributes = [NSAttributedString.Key.foregroundColor : UIColor.black,
+            let attributes = [NSAttributedString.Key.foregroundColor : titleTextColor,
                               NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 22.0)]
             let titleString = NSMutableAttributedString(string: title, attributes: attributes)
+
             alertController.setValue(titleString, forKey: "attributedTitle")
         }
         if let message = message {
             // Set attributed message
-            let attributes = [NSAttributedString.Key.foregroundColor : (dark ? UIColor.lightGray : UIColor.darkGray)]
+            let attributes = [NSAttributedString.Key.foregroundColor : titleTextColor]
             let messageString = NSMutableAttributedString(string: message, attributes: attributes)
             alertController.setValue(messageString, forKey: "attributedMessage")
         }
@@ -178,23 +191,24 @@ class ActionSheet : NSObject, UIPopoverPresentationControllerDelegate {
                 popover.sourceRect = CGRect(x: x, y: y, width: 0, height: 0)
             }
             if dark {
-                popover.backgroundColor = ScorecardUI.totalColor
+                popover.backgroundColor = optionBackgroundColor
             }
         } else {
-            alertController.view.subviews.first?.subviews.first?.subviews.first?.backgroundColor = ScorecardUI.totalColor
-        }
-        if dark {
-            alertController.view.tintColor = UIColor.white
+            alertController.view.subviews.first?.subviews.first?.subviews.first?.backgroundColor = optionBackgroundColor
+            alertController.view.subviews.first?.subviews.first?.subviews.first?.subviews.first?.backgroundColor = titleBackgroundColor
+            alertController.view.subviews.first?.subviews.first?.subviews.first?.subviews.last?.backgroundColor = optionBackgroundColor
         }
     }
     
     public func add(_ title: String, style: UIAlertAction.Style = UIAlertAction.Style.default, handler: (()->())! = nil) {
-        let action = UIAlertAction(title: title, style: (dark ? style : style), handler: { (UIAlertAction)->() in
+        let action = UIAlertAction(title: title, style: style, handler: { (UIAlertAction)->() in
             handler?()
         })
         alertController.addAction(action)
         if self.dark && style == .cancel {
             action.setValue(UIColor.black, forKey: "titleTextColor")
+        } else {
+            action.setValue(ScorecardUI.highlightTextColor, forKey: "titleTextColor")
         }
     }
     

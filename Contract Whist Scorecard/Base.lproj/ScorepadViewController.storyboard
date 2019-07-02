@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -22,7 +23,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JrC-1V-hch" userLabel="Footer Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="44" width="414" height="852"/>
+                                <rect key="frame" x="0.0" y="862" width="414" height="34"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R7D-RJ-hmj" userLabel="Bottom Line">
                                 <rect key="frame" x="0.0" y="862" width="414" height="2"/>
@@ -100,7 +101,7 @@
                             </navigationBar>
                             <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="CoM-o8-drH" userLabel="Header Table View">
                                 <rect key="frame" x="0.0" y="88" width="414" height="88"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" name="Emphasis"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="88" id="Nae-oA-mIW"/>
                                 </constraints>
@@ -152,7 +153,7 @@
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HeaderLabel" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="mlQ-gE-e09">
                                                                                         <rect key="frame" x="0.0" y="5" width="45" height="45"/>
                                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                        <color key="textColor" name="Emphasis Text"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
                                                                                 </subviews>
@@ -327,7 +328,7 @@
                             </tableView>
                             <tableView clipsSubviews="YES" tag="2" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="m5j-3V-hPG" userLabel="Body Table View">
                                 <rect key="frame" x="0.0" y="176" width="414" height="642"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Body Table Cell" id="5dl-Lb-15P" customClass="ScorepadTableViewCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="44"/>
@@ -338,7 +339,7 @@
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="redraw" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="4T5-T5-xo8" userLabel="Body Collection View">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="wCU-a4-0e5">
                                                         <size key="itemSize" width="50" height="50"/>
                                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -375,11 +376,13 @@
                                                                                     </view>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BodyLabel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BXX-PT-3Zr">
                                                                                         <rect key="frame" x="0.0" y="5" width="45" height="45"/>
+                                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                                         <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
                                                                                 </subviews>
+                                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                 <constraints>
                                                                                     <constraint firstItem="BXX-PT-3Zr" firstAttribute="top" secondItem="37L-NB-jCF" secondAttribute="bottom" id="5lA-32-MRo"/>
                                                                                     <constraint firstItem="37L-NB-jCF" firstAttribute="leading" secondItem="En7-GC-jDI" secondAttribute="leading" id="QAh-4Q-0lh"/>
@@ -391,6 +394,7 @@
                                                                                 </constraints>
                                                                             </stackView>
                                                                         </subviews>
+                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <constraints>
                                                                             <constraint firstItem="En7-GC-jDI" firstAttribute="top" secondItem="9Ze-6D-xFt" secondAttribute="top" id="Byh-Sg-6Ly"/>
                                                                             <constraint firstAttribute="trailing" secondItem="En7-GC-jDI" secondAttribute="trailing" id="DH6-A1-bjZ"/>
@@ -403,6 +407,7 @@
                                                                     </stackView>
                                                                 </subviews>
                                                             </view>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstItem="9Ze-6D-xFt" firstAttribute="top" secondItem="uiX-dn-eZa" secondAttribute="top" id="JQe-xy-Qhf"/>
                                                                 <constraint firstAttribute="bottom" secondItem="9Ze-6D-xFt" secondAttribute="bottom" id="d02-NB-nVc"/>
@@ -447,6 +452,7 @@
                                                                                         <subviews>
                                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BodyLabel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ruM-Kd-B1H">
                                                                                                 <rect key="frame" x="0.0" y="0.0" width="45" height="45"/>
+                                                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                                                 <nil key="textColor"/>
                                                                                                 <nil key="highlightedColor"/>
@@ -459,7 +465,7 @@
                                                                                                 </constraints>
                                                                                             </imageView>
                                                                                         </subviews>
-                                                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="trailing" secondItem="ruM-Kd-B1H" secondAttribute="trailing" id="74u-VF-leu"/>
                                                                                             <constraint firstItem="ruM-Kd-B1H" firstAttribute="top" secondItem="ZyM-WT-TiN" secondAttribute="top" id="D1w-S1-XtV"/>
@@ -471,6 +477,7 @@
                                                                                         </constraints>
                                                                                     </view>
                                                                                 </subviews>
+                                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                 <constraints>
                                                                                     <constraint firstItem="ZyM-WT-TiN" firstAttribute="leading" secondItem="7kT-vo-7Pi" secondAttribute="leading" id="1qH-DY-u4E"/>
                                                                                     <constraint firstItem="vJe-M8-5kj" firstAttribute="top" secondItem="7kT-vo-7Pi" secondAttribute="top" id="5Vm-9E-GBP"/>
@@ -482,6 +489,7 @@
                                                                                 </constraints>
                                                                             </stackView>
                                                                         </subviews>
+                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <constraints>
                                                                             <constraint firstItem="dgz-aL-UBK" firstAttribute="top" secondItem="wtF-yE-YxL" secondAttribute="top" id="2YL-B5-Izc"/>
                                                                             <constraint firstItem="7kT-vo-7Pi" firstAttribute="leading" secondItem="dgz-aL-UBK" secondAttribute="trailing" id="TrT-H0-LHa"/>
@@ -494,6 +502,7 @@
                                                                     </stackView>
                                                                 </subviews>
                                                             </view>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstItem="wtF-yE-YxL" firstAttribute="leading" secondItem="THo-F6-MFk" secondAttribute="leading" id="LDi-5R-rsq"/>
                                                                 <constraint firstAttribute="bottom" secondItem="wtF-yE-YxL" secondAttribute="bottom" id="bAm-kD-XyJ"/>
@@ -510,6 +519,7 @@
                                                     </cells>
                                                 </collectionView>
                                             </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="4T5-T5-xo8" secondAttribute="bottom" id="BwW-fw-WYv"/>
                                                 <constraint firstItem="4T5-T5-xo8" firstAttribute="leading" secondItem="AFT-1X-9g7" secondAttribute="leading" id="Lec-8k-TeN"/>
@@ -517,6 +527,7 @@
                                                 <constraint firstAttribute="trailing" secondItem="4T5-T5-xo8" secondAttribute="trailing" id="sOV-T8-aGD"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
                                             <outlet property="scorepadCollectionView" destination="4T5-T5-xo8" id="n8A-2C-XVe"/>
                                         </connections>
@@ -532,7 +543,7 @@
                             </tableView>
                             <tableView clipsSubviews="YES" tag="3" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="uWQ-Kt-TjV" userLabel="Footer Table View">
                                 <rect key="frame" x="0.0" y="818" width="414" height="44"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" name="Total"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="ANn-tw-pp4"/>
                                 </constraints>
@@ -641,11 +652,11 @@
                                 </connections>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" name="Background"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="JrC-1V-hch" secondAttribute="trailing" id="6Ln-mk-q9e"/>
-                            <constraint firstItem="JrC-1V-hch" firstAttribute="top" secondItem="Qc8-yN-AYf" secondAttribute="top" id="DB7-31-vqH"/>
+                            <constraint firstItem="JrC-1V-hch" firstAttribute="top" secondItem="Qc8-yN-AYf" secondAttribute="bottom" id="DB7-31-vqH"/>
                             <constraint firstItem="Qc8-yN-AYf" firstAttribute="bottom" secondItem="R7D-RJ-hmj" secondAttribute="top" id="Eq1-fJ-tEl"/>
                             <constraint firstItem="Qc8-yN-AYf" firstAttribute="bottom" secondItem="2V4-Rn-jn9" secondAttribute="bottom" id="FBy-g1-gBK"/>
                             <constraint firstItem="Qc8-yN-AYf" firstAttribute="trailing" secondItem="uWQ-Kt-TjV" secondAttribute="trailing" id="FMv-g8-SMS"/>
@@ -779,5 +790,17 @@
     <resources>
         <image name="back" width="14" height="20"/>
         <image name="forward" width="14" height="20"/>
+        <namedColor name="Background">
+            <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Emphasis">
+            <color red="0.89803921568627454" green="0.74901960784313726" blue="0.37254901960784315" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Emphasis Text">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Total">
+            <color red="0.93333333333333335" green="0.87450980392156863" blue="0.70588235294117652" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

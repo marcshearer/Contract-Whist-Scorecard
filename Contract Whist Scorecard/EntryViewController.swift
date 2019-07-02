@@ -37,7 +37,6 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     var undo = Flow()
     
     // Local class variables
-    var firstTime=true
     var bidOnlyMode = false
     
     // Cell sizes
@@ -143,10 +142,8 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
 
     override func viewWillLayoutSubviews() {
         
-        if firstTime {
-            setupSize(to: entryView.frame.size)
-            firstTime = false
-        }
+        setupSize(to: entryView.safeAreaLayoutGuide.layoutFrame.size)
+               
     }
 
     func setupSize(to size: CGSize) {
@@ -318,9 +315,9 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
         
         for playerCell: EntryPlayerCell? in self.playerBidCell {
             
-            if playerCell != nil {
+            if let playerCell = playerCell {
                 
-                let player = playerCell!.tag
+                let player = playerCell.tag
                 
                 switch mode {
                 case Mode.bid:
@@ -331,7 +328,14 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
                     label = playerTwosCell[player - 1]?.entryPlayerLabel
                 }
                 
-                ScorecardUI.inverseErrorStyle(label!, errorCondtion: highlight)
+                if let label = label {
+                    ScorecardUI.errorStyle(label, errorCondtion: highlight)
+                    if highlight {
+                        label.font = UIFont.boldSystemFont(ofSize: 17.0)
+                    } else {
+                        label.font = UIFont.systemFont(ofSize: 17.0)
+                    }
+                }
             }
         }
         
@@ -698,6 +702,7 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
                     playerLabel.textAlignment = .center
                     ScorecardUI.roundCorners(playerLabel)
                     playerBidCell[player-1] = entryPlayerCell
+                    _ = self.checkErrors()
                     
                 case madeColumn:
                     let made: Int? = scorecard.entryPlayer(player).made(scorecard.selectedRound)
@@ -705,6 +710,7 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
                     playerLabel.textAlignment = .center
                     ScorecardUI.roundCorners(playerLabel)
                     playerMadeCell[player-1] = entryPlayerCell
+                    _ = self.checkErrors()
 
                 case twosColumn:
                     let twos: Int? = scorecard.entryPlayer(player).twos(scorecard.selectedRound)
@@ -712,6 +718,7 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
                     playerLabel.text = (twos==nil ? " " : "\(twos!)")
                     ScorecardUI.roundCorners(playerLabel)
                     playerTwosCell[player-1] = entryPlayerCell
+                    _ = self.checkErrors()
                     
                 default:
                     let score: Int? = scorecard.entryPlayer(player).score(scorecard.selectedRound)

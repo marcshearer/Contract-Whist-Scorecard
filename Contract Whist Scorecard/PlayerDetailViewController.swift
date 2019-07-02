@@ -144,7 +144,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             twosValueRow = baseRows + 1
             baseRows += 2
         }
-        tableRows = baseRows + 10
+        tableRows = baseRows + (mode == .amend ? 10 : 8) // Exclude delete if not in amend mode
         navigationBar.topItem?.title = playerDetail.name
         
         switch self.mode! {

@@ -147,8 +147,7 @@ class Sync {
             return
         }
         
-        if !Sync.syncInProgress {
-            Sync.syncInProgress = true
+        if !Sync.syncInProgress || waitFinish {
             self.errors = 0
             self.syncMode = syncMode
             self.specificEmail = specificEmail
@@ -206,7 +205,13 @@ class Sync {
             }
             
             syncPhaseCount = -1
-            self.syncController()
+            if Sync.syncInProgress {
+                    self.syncMessage("Waiting for previous operation to finish")
+                    observer = setSyncCompletionNotification(name: .syncCompletion)
+            } else {
+                Sync.syncInProgress = true
+                self.syncController()
+            }
         }
     }
     
@@ -218,8 +223,8 @@ class Sync {
         
         if Sync.syncBackgroundCompletionInProgress {
             // Background task completing - wait for notification
-            self.syncMessage("Waiting for previous operation to finish")
-            observer = setSyncBackgroundCompletionNotification()
+            self.syncMessage("Waiting for previous background operation to finish")
+            observer = setSyncCompletionNotification(name: .syncBackgroundCompletion)
             return
         }
         
@@ -1380,6 +1385,9 @@ class Sync {
                 }
             }
             fetchOperation.fetchRecordsCompletionBlock = { (records, error) in
+                
+                Utility.executeAfter(delay: 20, completion: { // TODO Remove
+                
                 var playerObjectId: [NSManagedObjectID] = []
                 for cloudObject in self.cloudObjectList {
                     if let email = Utility.objectString(cloudObject: cloudObject, forKey: "email") {
@@ -1400,6 +1408,8 @@ class Sync {
                     NotificationCenter.default.post(name: .playerImageDownloaded, object: self, userInfo: ["playerObjectID": objectId])
                 }
                 self.completeInBackgroundFinish()
+                    
+                })
             }
             self.completeInBackgroundStart()
             publicDatabase.add(fetchOperation)
@@ -1555,6 +1565,10 @@ class Sync {
             if delegate != nil {
                 delegate?.syncCompletion(self.errors)
             }
+            if self.observer != nil {
+                NotificationCenter.default.removeObserver(self.observer!)
+            }
+            NotificationCenter.default.post(name: .syncCompletion, object: self, userInfo: nil)
         }
     }
     
@@ -1600,10 +1614,14 @@ class Sync {
         }
     }
     
-    private func setSyncBackgroundCompletionNotification() -> NSObjectProtocol? {
+    private func setSyncCompletionNotification(name: Notification.Name) -> NSObjectProtocol? {
         // Set a notification for background completion
-        let observer = NotificationCenter.default.addObserver(forName: .syncBackgroundCompletion, object: nil, queue: nil) { (notification) in
-            self.syncController()
+        self.observer = NotificationCenter.default.addObserver(forName: name, object: nil, queue: nil) { (notification) in
+            if !Sync.syncInProgress {
+                Sync.syncInProgress = true
+                NotificationCenter.default.removeObserver(self.observer!)
+                self.syncController()
+            }
         }
         return observer
     }
@@ -1614,6 +1632,7 @@ class Sync {
 extension Notification.Name {
     static let playerDownloaded = Notification.Name("playerDownloaded")
     static let playerImageDownloaded = Notification.Name("playerImageDownloaded")
+    static let syncCompletion = Notification.Name("syncCompletion")
     static let syncBackgroundCompletion = Notification.Name("syncBackgroundCompletion")
 }
 

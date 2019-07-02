@@ -15,6 +15,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
     public let allowSync = true
     public let initialSortField = "datePlayed"
     public let initialSortDescending = true
+    public let bodyRowHeight: CGFloat = 36.0 
     public let separatorHeight: CGFloat = 0.5
     
     private var history: History!

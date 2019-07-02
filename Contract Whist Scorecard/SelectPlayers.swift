@@ -228,7 +228,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
                     cell.playerName.text = "No related players found"
                     cell.playerDescription.text = ""
                 } else {
-                    cell.playerName.text = "Downloading related players..."
+                    cell.playerName.text = "Searching for related players..."
                     cell.playerDescription.text = ""
                 }
                 

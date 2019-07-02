@@ -103,7 +103,7 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
     
     // MARK: - method to show this view controller ============================================================================== -
     
-    static public func show(from sourceViewController: UIViewController, delegate: DataTableViewerDelegate, scorecard: Scorecard, recordList: [DataTableViewerDataSource]) -> DataTableViewController {
+    static public func show(from sourceViewController: UIViewController, delegate: DataTableViewerDelegate, scorecard: Scorecard, recordList: [DataTableViewerDataSource], completion: (()->())? = nil) -> DataTableViewController {
         let storyboard = UIStoryboard(name: "DataTableViewController", bundle: nil)
         let dataTableviewController = storyboard.instantiateViewController(withIdentifier: "DataTableViewController") as! DataTableViewController
         dataTableviewController.recordList = recordList
@@ -151,7 +151,6 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        print("Sort \(lastSortColumn) \(lastSortField)")
         self.clearSortArrows()
         super.viewWillTransition(to: size, with: coordinator)
         self.view.setNeedsLayout()
@@ -391,7 +390,8 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
                 Utility.setThumbnail(data: data,
                                      imageView: cell.bodyThumbnailImage,
                                      initials: name,
-                                     label: cell.bodyThumbnailDisc)
+                                     label: cell.bodyThumbnailDisc,
+                                     size: cell.frame.height - 6)
             default:
                 cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Data Table Body Normal Cell", for: indexPath) as! DataTableCollectionCell
                 ScorecardUI.normalStyle(cell.textLabel)

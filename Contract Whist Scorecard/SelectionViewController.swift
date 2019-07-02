@@ -156,8 +156,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         observer = setImageDownloadNotification()
         
         // Set selection color
-        ScorecardUI.totalStyleView(self.selectedView)
-        ScorecardUI.totalStyleView(self.selectedHeadingView)
+        ScorecardUI.darkHighlightStyleView(self.selectedView)
+        ScorecardUI.darkHighlightStyleView(self.selectedHeadingView)
         self.toolbar.setBackgroundImage(UIImage(),
                                         forToolbarPosition: .any,
                                         barMetrics: .default)
@@ -274,7 +274,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                                      initials: selectedList[playerNumber-1]!.name!,
                                      label: cell.disc)
                 cell.name.text = selectedList[playerNumber-1]!.name!
-                cell.disc.textColor = UIColor.black
             }
 
         }

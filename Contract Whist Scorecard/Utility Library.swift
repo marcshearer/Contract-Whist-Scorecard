@@ -56,6 +56,9 @@ class Utility {
         
         // If given data exists then put it in an image view, otherwise use label for a disk with initials in it
         if data != nil {
+            if size != 0.0 {
+                imageView.frame.size = CGSize(width: size, height: size)
+            }
             imageView.image = UIImage(data: data!)
             imageView.contentMode = .scaleAspectFill
             imageView.clipsToBounds = true
@@ -69,10 +72,13 @@ class Utility {
             
         } else if label != nil {
             // No image - replace with an empty disc (possibly containing initials)
+            if size != 0.0 {
+                label.frame.size = CGSize(width: size, height: size)
+            }
             label.text = toInitials(initials)
             label.textAlignment = .center
             label.font = UIFont.systemFont(ofSize: 20.0)
-            ScorecardUI.darkHighlightStyle(label, lightText: true)
+            ScorecardUI.highlightStyle(label)
             imageView.isHidden = true
             label.isHidden=false
             ScorecardUI.veryRoundCorners(label, radius: size / 2)

@@ -47,7 +47,7 @@ class ScorecardUI {
         if percent == 0.0 {
             view.layer.cornerRadius = 5
         } else {
-            view.layer.cornerRadius = view.layer.bounds.height * (percent/100.0)
+            view.layer.cornerRadius = view.layer.bounds.width * (percent/100.0)
         }
         view.layer.masksToBounds = true
     }
@@ -56,10 +56,10 @@ class ScorecardUI {
         var percent: CGFloat
         if radius == 0.0 {
             percent = 50.0
-        } else if view.layer.bounds.height == 0 {
+        } else if view.layer.bounds.width == 0 {
             percent = 0.0
         } else {
-            percent = radius / view.layer.bounds.height * 100.0
+            percent = radius / view.layer.bounds.width * 100.0
         }
         ScorecardUI.roundCorners(view, percent: percent)
     }

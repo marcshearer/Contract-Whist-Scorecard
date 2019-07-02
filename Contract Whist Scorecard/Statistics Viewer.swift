@@ -133,6 +133,7 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
     }
     
     internal func completion() {
+        NotificationCenter.default.removeObserver(observer!)
         self.callerCompletion?()
     }
     
@@ -161,9 +162,10 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
         // Find any cells containing an image which has just been downloaded asynchronously
         Utility.mainThread {
             let index = self.recordList.firstIndex(where: {($0.objectID == objectID)})
-            if index != nil {
+            if let index = index {
                 // Found it - update from managed object and reload the cell
-                self.recordList[index!].fromManagedObject(playerMO: self.recordList[index!].playerMO)
+                self.recordList[index].fromManagedObject(playerMO: self.recordList[index].playerMO)
+                self.dataTableViewController.refreshRows(at: [IndexPath(row: index, section: 0)])
             }
         }
     }

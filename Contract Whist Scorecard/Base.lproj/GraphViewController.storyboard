@@ -38,7 +38,7 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" name="Total"/>
+                        <color key="backgroundColor" name="Dark Highlight"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="usM-T4-d4I" firstAttribute="bottom" secondItem="aF8-JM-lAM" secondAttribute="bottom" id="0IC-FG-2sd"/>
@@ -72,9 +72,6 @@
         <image name="cross white" width="20" height="20"/>
         <namedColor name="Dark Highlight">
             <color red="0.46274509803921571" green="0.46274509803921571" blue="0.46274509803921571" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Total">
-            <color red="0.89803921568627454" green="0.74901960784313726" blue="0.37254901960784315" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

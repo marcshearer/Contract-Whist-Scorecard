@@ -31,7 +31,7 @@ extension ComputerPlayerDelegate {
 
 class ComputerPlayer: NSObject, ComputerPlayerDelegate {
     
-    private var scorecard: Scorecard
+    private let scorecard = Scorecard.shared
     private var thisPlayer: String
     private var thisPlayerName: String
     private var thisPlayerNumber: Int!
@@ -40,12 +40,11 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
     private var hand: Hand!
     private let autoPlayTimeUnit = 0.05 // TODO Should be 1.0
     
-   init(scorecard: Scorecard, email: String, name: String, deviceName: String, hostPeer: CommsPeer, playerNumber: Int) {
+   init(email: String, name: String, deviceName: String, hostPeer: CommsPeer, playerNumber: Int) {
         
         Config.autoPlayTimeUnit = 0.05 // TODO Remove this
         
         // Store properties
-        self.scorecard = scorecard
         self.thisPlayer = email
         self.thisPlayerName = name
         self.thisPlayerNumber = playerNumber

@@ -10,13 +10,13 @@ import UIKit
 
 class AdminMenu {
     
-    class func rotationGesture(recognizer:UIRotationGestureRecognizer, scorecard: Scorecard, options: [(String, ()->(), Bool)]? = nil) {
+    class func rotationGesture(recognizer:UIRotationGestureRecognizer, options: [(String, ()->(), Bool)]? = nil) {
         if recognizer.state == .ended {
-            self.present(scorecard: scorecard, options: options)
+            self.present(options: options)
         }
     }
     
-    class func present(scorecard: Scorecard, options: [(String, ()->(), Bool)]? = nil) {
+    class func present(options: [(String, ()->(), Bool)]? = nil) {
        
         // Check if any additional options
         var availableOptions = false
@@ -29,7 +29,7 @@ class AdminMenu {
             }
         }
         
-        if availableOptions || (scorecard.commsDelegate != nil && scorecard.commsDelegate?.connectionFramework != .loopback) {
+        if availableOptions || (Scorecard.shared.commsDelegate != nil && Scorecard.shared.commsDelegate?.connectionFramework != .loopback) {
             // There are som options to display
             
             let actionSheet = ActionSheet("Admin Options")
@@ -43,9 +43,9 @@ class AdminMenu {
             }
             
             // Generic options - connections
-            if scorecard.commsDelegate != nil && scorecard.commsDelegate!.connectionFramework != .loopback {
+            if Scorecard.shared.commsDelegate != nil && Scorecard.shared.commsDelegate!.connectionFramework != .loopback {
                 actionSheet.add("Show connections", handler: {
-                    scorecard.commsDelegate?.connectionInfo()
+                    Scorecard.shared.commsDelegate?.connectionInfo()
                 })
             }
             

@@ -11,10 +11,9 @@ import WatchConnectivity
 class WatchManager: NSObject, WCSessionDelegate {
     
     fileprivate var watchSession: WCSession?
-    private let scorecard: Scorecard
+    private let scorecard = Scorecard.shared
     
-    init(_ scorecard: Scorecard) {
-        self.scorecard = scorecard
+    override init() {
         super.init()
         if WCSession.isSupported() {
             watchSession = WCSession.default

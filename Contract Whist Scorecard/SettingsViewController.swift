@@ -15,7 +15,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     // MARK: - Class Properties ======================================================================== -
         
     // Main state properties
-    public var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     
     // Properties to pass state to / from segues
     public var returnSegue = ""
@@ -542,7 +542,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
             scorecard.settingReceiveNotifications = true
             authoriseNotifications(
                 successAction: {
-                    Notifications.updateHighScoreSubscriptions(scorecard: self.scorecard)
+                    Notifications.updateHighScoreSubscriptions()
                 },
                 failureAction: {
                     self.clearReceiveNotifications()
@@ -894,7 +894,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
         // Save 'receive notifications'
         UserDefaults.standard.set(false, forKey: "receiveNotifications")
         // Delete subscriptions
-        Notifications.updateHighScoreSubscriptions(scorecard: self.scorecard)
+        Notifications.updateHighScoreSubscriptions()
     }
     
     func clearAlerts() {

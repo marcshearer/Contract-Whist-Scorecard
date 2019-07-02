@@ -11,9 +11,10 @@ import UIKit
 class RoundSummaryViewController: CustomViewController {
 
     // MARK: - Class Properties ======================================================================== -
+
+    private let scorecard = Scorecard.shared
     
     // Main state properties
-    public var scorecard: Scorecard!
     public var returnSegue: String!
     public var rounds: Int!
     public var cards: [Int]!

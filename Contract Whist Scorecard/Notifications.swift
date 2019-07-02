@@ -76,14 +76,14 @@ class Notifications {
         
     }
     
-    public static func updateHighScoreSubscriptions(scorecard: Scorecard, completion: (()->())? = nil) {
+    public static func updateHighScoreSubscriptions(completion: (()->())? = nil) {
         // First delete any existing high score subscriptions
         Notifications.deleteExistingSubscriptions("highScore", completion: {
             
-            if scorecard.settingSyncEnabled && scorecard.settingReceiveNotifications {
+            if Scorecard.shared.settingSyncEnabled && Scorecard.shared.settingReceiveNotifications {
                 // Now add a notification for each player on this device
                 let database = CKContainer.default().publicCloudDatabase
-                for email in scorecard.playerEmailList() {
+                for email in Scorecard.shared.playerEmailList() {
                     let predicate = NSPredicate(format:"email = %@", email)
                     let subscription = CKQuerySubscription(recordType: "Notifications", predicate: predicate, options: [.firesOnRecordCreation, .firesOnRecordUpdate])
                     
@@ -165,10 +165,9 @@ class Notifications {
             }
         } else {
             // Do not interrupt a game in progress
-            if let scorecard = Scorecard.getScorecard() {
-                if scorecard.gameInProgress {
-                    skipNotification = true
-                }
+            let scorecard = Scorecard.shared
+            if scorecard.gameInProgress {
+                skipNotification = true
             }
         }
         if !skipNotification {

@@ -15,7 +15,7 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     // MARK: - Class Properties ======================================================================== -
 
     // Main state properties
-    var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     
     // Properties to pass state to / from segues
     public var gameLocation: GameLocation!

@@ -19,7 +19,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
-    var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     
     // Local state properties
     private var currentCards = 0
@@ -1016,7 +1016,6 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             destination.preferredContentSize = CGSize(width: 400, height: 554)
             
             destination.returnSegue = "hideHandRoundSummary"
-            destination.scorecard = self.scorecard
             destination.rounds = self.state.rounds
             destination.cards = self.state.cards
             destination.bounce = self.state.bounce
@@ -1031,7 +1030,6 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
             destination.preferredContentSize = CGSize(width: 400, height: 554)
             
-            destination.scorecard = self.scorecard
             destination.firstGameSummary = false
             destination.gameSummaryMode = .display
             destination.rounds = self.state.rounds

@@ -28,7 +28,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
-    var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     
     // Properties to pass state to / from segues
     public var returnSegue = ""
@@ -981,12 +981,12 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         self.computerPlayers = [:]
         var names = ["Harry", "Snape", "Ron"]
         for playerNumber in 2...4 {
-            self.startLoopbackClient(scorecard: self.scorecard, email: "_Player\(playerNumber)", name: names[playerNumber - 2], deviceName: "\(names[playerNumber - 2])'s iPhone", hostPeer: hostPeer, playerNumber: playerNumber)
+            self.startLoopbackClient(email: "_Player\(playerNumber)", name: names[playerNumber - 2], deviceName: "\(names[playerNumber - 2])'s iPhone", hostPeer: hostPeer, playerNumber: playerNumber)
         }
     }
     
-    private func startLoopbackClient(scorecard: Scorecard, email: String, name: String, deviceName: String, hostPeer: CommsPeer, playerNumber: Int) {
-        let computerPlayer = ComputerPlayer(scorecard: scorecard, email: email, name: name, deviceName: deviceName, hostPeer: hostPeer, playerNumber: playerNumber)
+    private func startLoopbackClient(email: String, name: String, deviceName: String, hostPeer: CommsPeer, playerNumber: Int) {
+        let computerPlayer = ComputerPlayer(email: email, name: name, deviceName: deviceName, hostPeer: hostPeer, playerNumber: playerNumber)
         computerPlayers?[playerNumber] = computerPlayer as ComputerPlayerDelegate
     }
     
@@ -1078,10 +1078,10 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             var playerMO = playerData.playerMO
             if playerMO == nil {
                 // Not found - need to create the player locally
-                let playerDetail = PlayerDetail(self.scorecard)
+                let playerDetail = PlayerDetail()
                 playerDetail.name = playerData.name
                 playerDetail.email = playerData.email
-                playerDetail.dedupName(self.scorecard)
+                playerDetail.dedupName()
                 playerMO = playerDetail.createMO()
                 // Get picture
                 if let peer = playerData.peer {
@@ -1167,7 +1167,6 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             let destination = segue.destination as! GamePreviewViewController
             destination.selectedPlayers = self.selectedPlayers
             destination.faceTimeAddress = self.faceTimeAddress
-            destination.scorecard = self.scorecard
             destination.returnSegue = "hideHostGamePreview"
             destination.rabbitMQService = self.rabbitMQHost
             destination.computerPlayerDelegate = self.computerPlayers

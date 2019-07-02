@@ -10,7 +10,9 @@ import UIKit
 import CoreData
 
 class StatisticsViewer : NSObject, DataTableViewerDelegate {
-    
+
+    private let scorecard = Scorecard.shared
+        
     public let viewTitle = "Statistics"
     public let allowSync = true
     public let nameField = "name"
@@ -19,7 +21,6 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
     public let bodyRowHeight:CGFloat = 52.0
         
     private var recordList: [PlayerDetail]
-    private var scorecard: Scorecard
     private var sourceViewController: UIViewController
     private var dataTableViewController: DataTableViewController!
     private var callerCompletion: (()->())?
@@ -44,8 +45,7 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
         DataTableField("handsPlayed",  "Hands Played",     sequence: 8,     width: 75.0,  type: .int),
     ]
     
-    init(from viewController: UIViewController, scorecard: Scorecard, completion: (()->())? = nil) {
-        self.scorecard = scorecard
+    init(from viewController: UIViewController, completion: (()->())? = nil) {
         self.sourceViewController = viewController
         self.recordList = self.scorecard.playerDetailList()
         self.callerCompletion = completion
@@ -55,7 +55,7 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
         observer = setImageDownloadNotification()
         
         // Call the data table viewer
-        dataTableViewController = DataTableViewController.show(from: viewController, delegate: self, scorecard: scorecard, recordList: recordList)
+        dataTableViewController = DataTableViewController.show(from: viewController, delegate: self, recordList: recordList)
     }
     
     internal func didSelect(record: DataTableViewerDataSource, field: String) {
@@ -140,11 +140,11 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
     // MARK: - Drill routines============================================================= -
     
     func drawGraph(playerDetail: PlayerDetail) {
-        GraphViewController.show(from: self.dataTableViewController, playerDetail: playerDetail, scorecard: self.scorecard)
+        GraphViewController.show(from: self.dataTableViewController, playerDetail: playerDetail)
     }
     
     func showDetail(playerDetail: PlayerDetail) {
-        PlayerDetailViewController.show(from: self.dataTableViewController, playerDetail: playerDetail, mode: .display, sourceView: self.dataTableViewController.view, scorecard: self.scorecard)
+        PlayerDetailViewController.show(from: self.dataTableViewController, playerDetail: playerDetail, mode: .display, sourceView: self.dataTableViewController.view)
     }
     
     // MARK: - Image download handlers =================================================== -

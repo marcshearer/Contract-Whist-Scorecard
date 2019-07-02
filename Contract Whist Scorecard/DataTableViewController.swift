@@ -44,8 +44,8 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
-    var scorecard: Scorecard!
-
+    private let scorecard = Scorecard.shared
+    
     var displayedFields: [DataTableField] = []
     var firstTime = true
     var lastSortColumn = -1
@@ -103,12 +103,11 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
     
     // MARK: - method to show this view controller ============================================================================== -
     
-    static public func show(from sourceViewController: UIViewController, delegate: DataTableViewerDelegate, scorecard: Scorecard, recordList: [DataTableViewerDataSource], completion: (()->())? = nil) -> DataTableViewController {
+    static public func show(from sourceViewController: UIViewController, delegate: DataTableViewerDelegate, recordList: [DataTableViewerDataSource], completion: (()->())? = nil) -> DataTableViewController {
         let storyboard = UIStoryboard(name: "DataTableViewController", bundle: nil)
         let dataTableviewController = storyboard.instantiateViewController(withIdentifier: "DataTableViewController") as! DataTableViewController
         dataTableviewController.recordList = recordList
         dataTableviewController.delegate = delegate
-        dataTableviewController.scorecard = scorecard
         sourceViewController.present(dataTableviewController, animated: true, completion: nil)
         
         return dataTableviewController
@@ -285,10 +284,8 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = self.view
             destination.preferredContentSize = CGSize(width: 400, height: 523)
-
             destination.returnSegue = "hideDataTableSync"
-            destination.scorecard = self.scorecard
-
+            
         default:
             break
         }

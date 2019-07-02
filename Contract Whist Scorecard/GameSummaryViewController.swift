@@ -12,7 +12,7 @@ import CoreData
 class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, SyncDelegate, UIPopoverControllerDelegate {
 
     // Main state properties
-    public var scorecard: Scorecard!
+    internal let scorecard = Scorecard.shared
     private let sync = Sync()
     
     // Properties to pass state to / from segues
@@ -105,7 +105,7 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        sync.initialise(scorecard: scorecard)
+        sync.initialise()
         
         self.excludeHistory = (self.scorecard.overrideSelected && self.scorecard.overrideExcludeHistory != nil && self.scorecard.overrideExcludeHistory)
         self.excludeStats = self.excludeHistory || (self.scorecard.overrideSelected && self.scorecard.overrideExcludeStats != nil && self.scorecard.overrideExcludeStats)
@@ -565,7 +565,6 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
             destination.preferredContentSize = CGSize(width: 400, height: 554)
 
             destination.returnSegue = "returnGameSummary"
-            destination.scorecard = self.scorecard
             
         default:
             break

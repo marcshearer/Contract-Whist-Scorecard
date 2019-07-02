@@ -14,7 +14,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     // MARK: - Class Properties ======================================================================== -
 
     // Main state properties
-    public var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     
     // Local class variables
     private var width: CGFloat = 0
@@ -645,7 +645,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
             self.performSegue(withIdentifier: "showSelectPlayers", sender: self)
         } else {
-            PlayerDetailViewController.show(from: self, playerDetail: PlayerDetail(scorecard, visibleLocally: true), mode: .create, sourceView: view, scorecard: self.scorecard, completion: { (playerDetail, deletePlayer) in
+            PlayerDetailViewController.show(from: self, playerDetail: PlayerDetail(visibleLocally: true), mode: .create, sourceView: view, completion: { (playerDetail, deletePlayer) in
                                                 if playerDetail != nil {
                                                     self.createPlayers(newPlayers: [playerDetail!])
                                                 }
@@ -662,7 +662,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         case "showGamePreview":
             let destination = segue.destination as! GamePreviewViewController
             destination.selectedPlayers = selectedList
-            destination.scorecard = self.scorecard
             destination.returnSegue = "hideGamePreview"
         
         case "showSelectPlayers":
@@ -674,7 +673,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             destination.popoverPresentationController?.sourceView = self.view
             destination.preferredContentSize = CGSize(width: 400, height: 600)
             
-            destination.scorecard = self.scorecard
             destination.descriptionMode = .opponents
             destination.returnSegue = "hideSelectionSelectPlayers"
             destination.backText = "Cancel"

@@ -16,7 +16,7 @@ class CutViewController: CustomViewController {
 
     // MARK: - Class Properties ======================================================================== -
     // Main state properties
-    var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     
     // Values passed to/from segues
     public var preCutCards: [Card]!
@@ -434,13 +434,13 @@ class CutViewController: CustomViewController {
     
     // MARK: - Function to present this view ==============================================================
     
-    class func cutForDealer(viewController: UIViewController, view: UIView, scorecard: Scorecard, cutDelegate: CutDelegate! = nil, popoverDelegate: UIPopoverPresentationControllerDelegate? = nil, preCutCards: [Card]? = nil, playerName: [String]? = nil) -> CutViewController {
+    class func cutForDealer(viewController: UIViewController, view: UIView, cutDelegate: CutDelegate! = nil, popoverDelegate: UIPopoverPresentationControllerDelegate? = nil, preCutCards: [Card]? = nil, playerName: [String]? = nil) -> CutViewController {
         var playerName = playerName
         if playerName == nil {
             // Derive from current game
             playerName = []
-            for playerNumber in 1...scorecard.currentPlayers {
-                playerName!.append(scorecard.enteredPlayer(playerNumber).playerMO!.name!)
+            for playerNumber in 1...Scorecard.shared.currentPlayers {
+                playerName!.append(Scorecard.shared.enteredPlayer(playerNumber).playerMO!.name!)
             }
         }
         let storyboard = UIStoryboard(name: "CutViewController", bundle: nil)
@@ -456,7 +456,6 @@ class CutViewController: CustomViewController {
             cutViewController.preferredContentSize = CGSize(width: preferredSize, height: preferredSize)
         }
         
-        cutViewController.scorecard = scorecard
         cutViewController.preCutCards = preCutCards
         cutViewController.playerName = playerName
         cutViewController.delegate = cutDelegate

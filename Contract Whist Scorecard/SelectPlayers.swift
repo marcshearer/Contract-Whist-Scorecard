@@ -20,7 +20,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
-    public weak var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     private var sync: Sync!
     
     // Properties to pass state to action controller
@@ -293,13 +293,13 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
             switch selectedMode {
             case .download, .create:
                 // Blank player to download/create into
-                playerDetail = PlayerDetail(self.scorecard)
+                playerDetail = PlayerDetail()
             default:
                 // Display selected player
                 playerDetail = self.combinedPlayerList[selectedPlayer.section]![selectedPlayer.item]
             }
             
-            PlayerDetailViewController.show(from: self, playerDetail: playerDetail, mode: selectedMode, sourceView: self.view, scorecard: self.scorecard,
+            PlayerDetailViewController.show(from: self, playerDetail: playerDetail, mode: selectedMode, sourceView: self.view,
                                             completion: { (playerDetail, deletePlayer) in
                                                                 switch selectedMode {
                                                                 case .create, .download:
@@ -347,7 +347,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
 
         func syncGetPlayers() {
             
-            self.sync?.initialise(scorecard: scorecard!)
+            self.sync?.initialise()
             self.sync?.delegate = self
             
             // Get related players from cloud
@@ -545,7 +545,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     
     @objc private func playerDetail(_ button: UIButton) {
         selectedPlayer = IndexPath(item: button.tag % 100000, section: button.tag / 100000)
-        PlayerDetailViewController.show(from: self, playerDetail: self.combinedPlayerList[selectedPlayer.section]![selectedPlayer.item], mode: .display, sourceView: view, scorecard: self.scorecard)
+        PlayerDetailViewController.show(from: self, playerDetail: self.combinedPlayerList[selectedPlayer.section]![selectedPlayer.item], mode: .display, sourceView: view)
     }
     
     private func createPlayers() {
@@ -571,7 +571,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         }
 
         // Add these players to list of subscriptions
-        Notifications.updateHighScoreSubscriptions(scorecard: self.scorecard)
+        Notifications.updateHighScoreSubscriptions()
         
     }
     

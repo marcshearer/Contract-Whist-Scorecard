@@ -13,7 +13,7 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
-    public var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     
     // UI component pointers
     var syncEnabledSelection: UISegmentedControl!
@@ -270,7 +270,7 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
         }
         
         // Add these players to list of subscriptions
-        Notifications.updateHighScoreSubscriptions(scorecard: self.scorecard)
+        Notifications.updateHighScoreSubscriptions()
     }
     
     // MARK: - Sync routines including the delegate methods ======================================== -
@@ -295,7 +295,6 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
             destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
             destination.preferredContentSize = CGSize(width: 400, height: 600)
 
-            destination.scorecard = self.scorecard
             destination.returnSegue = "hideGetStartedSettings"
             
         case "showGetStartedSelectPlayers":
@@ -307,7 +306,6 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
             destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
             destination.preferredContentSize = CGSize(width: 400, height: 600)
             
-            destination.scorecard = self.scorecard
             destination.specificEmail = self.syncEmailTextField.text!
             destination.descriptionMode = .lastPlayed
             destination.returnSegue = "hideGetStartedSelectPlayers"

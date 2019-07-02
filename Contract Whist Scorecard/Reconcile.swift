@@ -34,7 +34,7 @@ class Reconcile: SyncDelegate {
     weak var delegate: ReconcileDelegate?
     
     // Main state properties
-    private var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     private let sync = Sync()
     
     // Local state properties
@@ -42,9 +42,8 @@ class Reconcile: SyncDelegate {
     
     // MARK: - Public class methods ==================================================================== -
     
-    func initialise(scorecard: Scorecard) {
-        self.scorecard = scorecard
-        sync.initialise(scorecard: scorecard)
+    func initialise() {
+        sync.initialise()
     }
     
     public func reconcilePlayers(playerMOList: [PlayerMO], syncFirst: Bool = true) {

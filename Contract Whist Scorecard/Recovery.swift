@@ -12,12 +12,8 @@ import CoreLocation
 
 class Recovery {
     
-    var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     var recoveryInProgress = false
-    
-    func initialise(scorecard: Scorecard) {
-        self.scorecard = scorecard
-    }
     
     func saveGameInProgress() {
         var online = ""

@@ -21,7 +21,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     
     // MARK: - Class Properties ======================================================================== -
     // Main state properties
-    public var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     private var reconcile: Reconcile!
     private let sync = Sync()
 
@@ -117,7 +117,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     
     // MARK: - method to show this view controller ============================================================================== -
     
-    static public func show(from sourceViewController: UIViewController, playerDetail: PlayerDetail, mode: DetailMode, sourceView: UIView, scorecard: Scorecard, completion: ((PlayerDetail?,Bool)->())? = nil) {
+    static public func show(from sourceViewController: UIViewController, playerDetail: PlayerDetail, mode: DetailMode, sourceView: UIView, completion: ((PlayerDetail?,Bool)->())? = nil) {
         let storyboard = UIStoryboard(name: "PlayerDetailViewController", bundle: nil)
         let playerDetailViewController = storyboard.instantiateViewController(withIdentifier: "PlayerDetailViewController") as! PlayerDetailViewController
         playerDetailViewController.modalPresentationStyle = UIModalPresentationStyle.popover
@@ -128,7 +128,6 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         playerDetailViewController.playerDetail = playerDetail
         playerDetailViewController.mode = mode
         playerDetailViewController.sourceView = sourceView
-        playerDetailViewController.scorecard = scorecard
         playerDetailViewController.callerCompletion = completion
         sourceViewController.present(playerDetailViewController, animated: true, completion: nil)
     }
@@ -634,7 +633,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     
     func getCloudPlayerDetails() {
         
-        sync.initialise(scorecard: scorecard)
+        sync.initialise()
         
         self.cloudAlertController = UIAlertController(title: title, message: "Downloading player from Cloud\n\n\n\n", preferredStyle: .alert)
         
@@ -779,10 +778,10 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             self.playerDetail.deleteMO()
 
             // Remove this player from list of subscriptions
-            Notifications.updateHighScoreSubscriptions(scorecard: self.scorecard)
+            Notifications.updateHighScoreSubscriptions()
 
             // Delete any detached games
-            History.deleteDetachedGames(scorecard: self.scorecard)
+            History.deleteDetachedGames()
 
             // Flag as deleted and return
             self.dismiss(animated: true, completion: { self.callerCompletion?(self.playerDetail, true) })

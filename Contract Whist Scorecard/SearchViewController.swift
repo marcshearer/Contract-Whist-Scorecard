@@ -18,7 +18,7 @@ protocol SearchDelegate : class {
 class SearchViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
 
     // Main state properties
-    public var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     
     // Properties to pass state to / from segues
     public var formTitle = "Search"
@@ -306,7 +306,6 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
             
         case "showSelectPlayers":
             let destination = segue.destination as! SelectPlayersViewController
-            destination.scorecard = self.scorecard
             destination.descriptionMode = .opponents
             destination.returnSegue = "hideSearchSelectPlayers"
             destination.backText = "Cancel"

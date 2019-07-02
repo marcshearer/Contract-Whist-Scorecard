@@ -11,7 +11,7 @@ import UIKit
 class ReviewViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate {
 
     // Properties passed to/from segues
-    public var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     public var round: Int!
     public var thisPlayer: Int!
     

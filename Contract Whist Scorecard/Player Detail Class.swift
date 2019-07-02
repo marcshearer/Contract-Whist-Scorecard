@@ -14,6 +14,8 @@ import CoreData
     
     // A class to hold the details of a player which can then be reflected in a core data playerMO class
     // or in a CKRecord CloudKit class
+  
+    private let scorecard = Scorecard.shared
     
     // Make sure that if you add any more properties you add them to the methods below - especially ==
     public var name = ""
@@ -43,10 +45,8 @@ import CoreData
     public var syncRecordID: String!
     public var objectID: NSManagedObjectID!
     public var syncedOk = false
-    private var scorecard: Scorecard
     
-    init(_ scorecard: Scorecard, visibleLocally: Bool = false) {
-        self.scorecard = scorecard
+    init(visibleLocally: Bool = false) {
         self.visibleLocally = visibleLocally
         self.localDateCreated = Date()
     }
@@ -135,10 +135,10 @@ import CoreData
         return playerMO
     }
     
-    public func dedupName(_ scorecard: Scorecard) {
+    public func dedupName() {
         let name = self.name
         var modifier = 1
-        while scorecard.isDuplicateName(self) {
+        while Scorecard.shared.isDuplicateName(self) {
             modifier += 1
             self.name = "\(name) (\(modifier))"
         }

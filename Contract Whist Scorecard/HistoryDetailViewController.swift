@@ -16,7 +16,7 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
-    private var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     
     // Properties to pass state to / from segues
     private var gameDetail: HistoryGame!
@@ -84,7 +84,7 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
     
     // MARK: - method to show this view controller ============================================================================== -
     
-    static public func show(from sourceViewController: UIViewController, gameDetail: HistoryGame, sourceView: UIView?, scorecard: Scorecard, completion: ((HistoryGame?)->())? = nil) {
+    static public func show(from sourceViewController: UIViewController, gameDetail: HistoryGame, sourceView: UIView?, completion: ((HistoryGame?)->())? = nil) {
         let storyboard = UIStoryboard(name: "HistoryDetailViewController", bundle: nil)
         let historyDetailViewController = storyboard.instantiateViewController(withIdentifier: "HistoryDetailViewController") as! HistoryDetailViewController
         historyDetailViewController.modalPresentationStyle = UIModalPresentationStyle.popover
@@ -93,7 +93,6 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
         historyDetailViewController.popoverPresentationController?.sourceView = sourceView
         historyDetailViewController.preferredContentSize = CGSize(width: 400, height: 600)
         historyDetailViewController.gameDetail = gameDetail
-        historyDetailViewController.scorecard = scorecard
         historyDetailViewController.callerCompletion = completion
         sourceViewController.present(historyDetailViewController, animated: true, completion: nil)
     }
@@ -405,7 +404,6 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
             destination.preferredContentSize = CGSize(width: 400, height: 554)
 
             destination.gameLocation = self.gameDetail.gameLocation
-            destination.scorecard = self.scorecard
             destination.returnSegue = "hideUpdateLocation"
             destination.useCurrentLocation = false
             destination.mustChange = true

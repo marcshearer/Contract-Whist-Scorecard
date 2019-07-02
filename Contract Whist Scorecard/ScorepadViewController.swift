@@ -22,7 +22,7 @@ class ScorepadViewController: CustomViewController,
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
-    var scorecard: Scorecard! = nil
+    internal let scorecard = Scorecard.shared
     private var recovery: Recovery!
     
     // Properties to pass state to / from segues
@@ -724,7 +724,6 @@ class ScorepadViewController: CustomViewController,
             destination.popoverPresentationController?.sourceView = scorepadView
             destination.preferredContentSize = CGSize(width: 400, height: 554)
 
-            destination.scorecard = self.scorecard
             destination.rounds = self.rounds
             destination.cards = self.cards
             destination.bounce = self.bounce
@@ -742,7 +741,6 @@ class ScorepadViewController: CustomViewController,
             roundSummaryViewController.preferredContentSize = CGSize(width: 400, height: 554)
 
             roundSummaryViewController.returnSegue = "hideClientRoundSummary"
-            roundSummaryViewController.scorecard = self.scorecard
             roundSummaryViewController.rounds = self.rounds
             roundSummaryViewController.cards = self.cards
             roundSummaryViewController.bounce = self.bounce
@@ -757,7 +755,6 @@ class ScorepadViewController: CustomViewController,
             gameSummaryViewController.popoverPresentationController?.sourceView = scorepadView
 
             gameSummaryViewController.preferredContentSize = CGSize(width: 400, height: 554)
-            gameSummaryViewController.scorecard = self.scorecard
             gameSummaryViewController.firstGameSummary = self.firstGameSummary
             gameSummaryViewController.gameSummaryMode = (self.scorecard.isHosting ? .amend : self.scorepadMode)
             gameSummaryViewController.rounds = self.rounds
@@ -774,7 +771,6 @@ class ScorepadViewController: CustomViewController,
             destination.preferredContentSize = CGSize(width: 400, height: 600)
 
             destination.gameLocation = self.scorecard.gameLocation
-            destination.scorecard = self.scorecard
             destination.returnSegue = "hideLocation"
             destination.useCurrentLocation = true
             
@@ -787,7 +783,6 @@ class ScorepadViewController: CustomViewController,
             destination.popoverPresentationController?.sourceView = scorepadView
             destination.preferredContentSize = CGSize(width: 400, height: 554)
   
-            destination.scorecard = self.scorecard
             destination.round = self.reviewRound
             destination.thisPlayer = self.scorecard.handState.enteredPlayerNumber
             

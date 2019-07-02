@@ -470,7 +470,7 @@ class Utility {
             #if ContractWhist
                 // Write to rabbitMQ logs
                 if (Config.rabbitMQUri_DevMode != .amqpServer || Scorecard.adminMode || force) && Config.rabbitMQLogQueue != "" && Config.rabbitMQUri != "" {
-                    let scorecard = Scorecard.getScorecard()!
+                    let scorecard = Scorecard.shared
                     if scorecard.logService == nil {
                         scorecard.logService = RabbitMQClientService(purpose: .other, serviceID: Config.rabbitMQUri, deviceName: Scorecard.deviceName)
                         scorecard.logQueue = scorecard.logService.startQueue(delegate: scorecard.logService, queueUUID: Config.rabbitMQLogQueue)

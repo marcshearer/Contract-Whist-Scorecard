@@ -80,7 +80,7 @@ class Sync {
     public weak var delegate: SyncDelegate?
     
     // Main state properties
-    public var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     
     // Local class variables
     private var errors = 0
@@ -117,8 +117,7 @@ class Sync {
     
     // MARK: - Public class methods -
     
-    public func initialise(scorecard: Scorecard) {
-        self.scorecard = scorecard
+    public func initialise() {
         self.adminMode = Scorecard.adminMode
     }
     
@@ -1042,8 +1041,8 @@ class Sync {
     
     private func mergePlayerCloudObject(_ cloudObject: CKRecord) {
         // First check if this record already in list
-        let cloudRecord = PlayerDetail(scorecard)
-        let localRecord = PlayerDetail(scorecard)
+        let cloudRecord = PlayerDetail()
+        let localRecord = PlayerDetail()
         var changed = false
         
         func add(to: Int64, _ value: Int64) -> Int64 {
@@ -1189,7 +1188,7 @@ class Sync {
     }
 
     private func addPlayerList(_ cloudObject: CKRecord) {
-        let cloudRecord = PlayerDetail(self.scorecard)
+        let cloudRecord = PlayerDetail()
         cloudRecord.fromCloudObject(cloudObject: cloudObject)
         self.downloadedPlayerRecordList.append(cloudRecord)
     }
@@ -1203,7 +1202,7 @@ class Sync {
             for playerDetail in self.downloadedPlayerRecordList {
                 if self.specificExternalId == nil {
                     // Make sure we don't have a duplicate name (if not just checking External Ids)
-                    playerDetail.dedupName(scorecard)
+                    playerDetail.dedupName()
                 }
             }
             self.syncReturnPlayers(self.downloadedPlayerRecordList)
@@ -1250,7 +1249,7 @@ class Sync {
             if found == nil {
                 // Record is not in the cloud - send it
                 let cloudObject = CKRecord(recordType:"Players")
-                let cloudRecord = PlayerDetail(scorecard)
+                let cloudRecord = PlayerDetail()
                 cloudRecord.fromManagedObject(playerMO: playerMO)
                 cloudRecord.syncDate = Date()
                 cloudRecord.syncRecordID = nil

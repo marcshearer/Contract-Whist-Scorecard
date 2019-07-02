@@ -341,7 +341,7 @@ class History {
         return gameLocations
     }
     
-    static public func deleteDetachedGames(scorecard: Scorecard) {
+    static public func deleteDetachedGames() {
         // Run round all participants building up a list of games to delete
         var canDeleteGameUUID: [String] = []
         var lastGameUUID = ""
@@ -356,7 +356,7 @@ class History {
                 lastGameUUID = participantMO.gameUUID!
                 playersFound = false
             }
-            if !playersFound && participantMO.email != nil && participantMO.email! != "" && scorecard.findPlayerByEmail(participantMO.email!) != nil {
+            if !playersFound && participantMO.email != nil && participantMO.email! != "" && Scorecard.shared.findPlayerByEmail(participantMO.email!) != nil {
                 playersFound = true
             }
         }

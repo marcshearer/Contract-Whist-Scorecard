@@ -30,8 +30,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     // MARK: - Class Properties ================================================================ -
     
     // Main state properties
-    public var scorecard = Scorecard()
-    private let recovery = Recovery()
+    private let scorecard = Scorecard.shared
     private let sync = Sync()
     
     // Properties to pass state to / from segues
@@ -174,10 +173,10 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         // Possible clear all data in test mode
         TestMode.resetApp()
         
-        scorecard.initialise(from: self, players: 4, maxRounds: 25, recovery: recovery)
-        sync.initialise(scorecard: scorecard)
+        scorecard.initialise(from: self, players: 4, maxRounds: 25)
+        sync.initialise()
         
-        (self.recoveryAvailable, self.recoverOnline) = recovery.checkOnlineRecovery()
+        (self.recoveryAvailable, self.recoverOnline) = scorecard.recovery.checkOnlineRecovery()
         
         if !recoveryAvailable {
             scorecard.reset()
@@ -411,11 +410,11 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         })
         
         self.addAction(section: infoSection, title: "Statistics", action: { (_) in
-            let _ = StatisticsViewer(from: self, scorecard: self.scorecard)
+            let _ = StatisticsViewer(from: self)
         })
         
         self.addAction(section: infoSection, title: "History", isHidden: {!self.scorecard.settingSaveHistory}, action: { (_) in
-            let _ = HistoryViewer(from: self, scorecard: self.scorecard)
+            let _ = HistoryViewer(from: self)
         })
         
         self.addAction(section: infoSection, title: "High Scores", isHidden: {!self.scorecard.settingSaveHistory}, action: { (_) in
@@ -486,7 +485,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     // MARK: - Utility Routines ======================================================================== -
     
     private func scoreGame() {
-        if recovery.checkRecovery() {
+        if self.scorecard.recovery.checkRecovery() {
             // Warn that this is irreversible
             warnResumeGame(okHandler: {
                 self.startNewGame()
@@ -509,10 +508,10 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     
     private func resumeGame(_ cell: UITableViewCell) {
         // Recover game
-        if recovery.checkRecovery() { 
+        if self.scorecard.recovery.checkRecovery() {
             self.setupButtons(allowRecovery: false)
             self.scorecard.loadGameDefaults()
-            recovery.loadSavedValues()
+            self.scorecard.recovery.loadSavedValues()
             scorecard.recoveryMode = true
             if scorecard.recoveryOnlinePurpose != nil && scorecard.recoveryOnlinePurpose == .playing {
                 if scorecard.recoveryOnlineType == .server {
@@ -531,7 +530,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     }
     
     private func newOnlineGame(_ cell: UITableViewCell) {
-        if self.recovery.checkRecovery() {
+        if self.scorecard.recovery.checkRecovery() {
             // Warn that this is irreversible
             self.warnResumeGame(gameType: "online", okHandler: {
                 self.scorecard.recoveryMode = false
@@ -593,7 +592,6 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             destination.popoverPresentationController?.sourceView = welcomeView
             destination.preferredContentSize = CGSize(width: 400, height: 600)
             
-            destination.scorecard = self.scorecard
             destination.returnSegue = "hideSettings"
             destination.backImage = "home"
             destination.backText = ""
@@ -611,7 +609,6 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             destination.backImage = "home"
             destination.backText = ""
             destination.formTitle = self.clientTitle
-            destination.scorecard = self.scorecard
             destination.commsPurpose = self.clientCommsPurpose
             destination.matchDeviceName = self.clientMatchDeviceName
         
@@ -627,7 +624,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             destination.backImage = "home"
             destination.backText = ""
             destination.playingComputer = self.playingComputer
-            destination.scorecard = self.scorecard
+            
             
         case "showHighScores":
             let destination = segue.destination as! HighScoresViewController
@@ -640,21 +637,15 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             destination.returnSegue = "hideHighScores"
             destination.backImage = "home"
             destination.backText = ""
-            destination.scorecard = self.scorecard
             
         case "showPlayers":
             let destination = segue.destination as! PlayersViewController
-            destination.scorecard = self.scorecard
             destination.detailMode = .amend
             destination.refresh = true
             destination.returnSegue = "hidePlayers"
             destination.backImage = "home"
             destination.backText = ""
             
-        case "showSelection":
-            let destination = segue.destination as! SelectionViewController
-            destination.scorecard = self.scorecard
-
         case "showGetStarted":
             let destination = segue.destination as! GetStartedViewController
             
@@ -662,8 +653,6 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = welcomeView
             destination.preferredContentSize = CGSize(width: 400, height: 600)
-            
-            destination.scorecard = self.scorecard
             
         default:
             break
@@ -673,7 +662,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     // MARK: - Send email and delegate methods =========================================================== -
     
     func backupDevice() {
-        Backup.sendEmail(from: self, scorecard: self.scorecard)
+        Backup.sendEmail(from: self)
     }
         
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
@@ -721,7 +710,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             // Set reconcile running
             reconcile = Reconcile()
             reconcile.delegate = self
-            reconcile.initialise(scorecard: self.scorecard)
+            reconcile.initialise()
             reconcile.reconcilePlayers(playerMOList: playerMOList)
         }
     }

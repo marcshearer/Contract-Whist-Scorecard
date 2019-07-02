@@ -13,7 +13,7 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
-    private var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     
     // Properties to determine how view is displayed
     private var playerDetail: PlayerDetail!
@@ -34,11 +34,10 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
     
     // MARK: - method to show this view controller ============================================================================== -
     
-    static public func show(from sourceViewController: UIViewController, playerDetail: PlayerDetail, scorecard: Scorecard) {
+    static public func show(from sourceViewController: UIViewController, playerDetail: PlayerDetail) {
         let storyboard = UIStoryboard(name: "GraphViewController", bundle: nil)
         let graphViewController = storyboard.instantiateViewController(withIdentifier: "GraphViewController") as! GraphViewController
         graphViewController.playerDetail = playerDetail
-        graphViewController.scorecard = scorecard
         sourceViewController.present(graphViewController, animated: true, completion: nil)
     }
     
@@ -136,7 +135,7 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
         let gameUUID = drillRef as! String
         let history = History(gameUUID: gameUUID, getParticipants: true)
         if history.games.count != 0 {
-            HistoryDetailViewController.show(from: self, gameDetail: history.games.first!, sourceView: self.view, scorecard: self.scorecard)
+            HistoryDetailViewController.show(from: self, gameDetail: history.games.first!, sourceView: self.view)
         }
     }
 }

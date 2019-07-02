@@ -10,6 +10,8 @@ import UIKit
 import CoreData
 
 class HistoryViewer : NSObject, DataTableViewerDelegate {
+
+    private let scorecard = Scorecard.shared
     
     public let viewTitle = "History"
     public let allowSync = true
@@ -19,7 +21,6 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
     public let separatorHeight: CGFloat = 0.5
     
     private var history: History!
-    private var scorecard: Scorecard
     private var sourceViewController: UIViewController
     private var dataTableViewController: DataTableViewController!
     private var callerCompletion: (()->())?
@@ -43,15 +44,14 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
         DataTableField("datePlayed",    "",          sequence: 4,   width: 60,  type: .time,        combineHeading: "Date")
     ]
     
-    init(from viewController: UIViewController, scorecard: Scorecard, completion: (()->())? = nil) {
-        self.scorecard = scorecard
+    init(from viewController: UIViewController, completion: (()->())? = nil) {
         self.sourceViewController = viewController
         super.init()
         self.getHistory()
         self.callerCompletion = completion
         
         // Call the data table viewer
-        dataTableViewController = DataTableViewController.show(from: viewController, delegate: self, scorecard: scorecard, recordList: history.games)
+        dataTableViewController = DataTableViewController.show(from: viewController, delegate: self, recordList: history.games)
     }
     
     internal func didSelect(record: DataTableViewerDataSource, field: String) {
@@ -169,7 +169,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
     // MARK: - Drill routines============================================================= -
     
     func showDetail(historyGame: HistoryGame) {
-        HistoryDetailViewController.show(from: self.dataTableViewController, gameDetail: historyGame, sourceView: self.dataTableViewController.view, scorecard: self.scorecard, completion: { (historyGame) in
+        HistoryDetailViewController.show(from: self.dataTableViewController, gameDetail: historyGame, sourceView: self.dataTableViewController.view, completion: { (historyGame) in
             if let historyGame = historyGame {
                 if let row = self.history.games.firstIndex(where: { $0.gameUUID == historyGame.gameUUID }) {
                     self.dataTableViewController.refreshRows(at: [IndexPath(row: row, section: 0)])

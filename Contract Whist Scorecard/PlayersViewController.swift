@@ -20,7 +20,7 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
-    public var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     
     // Properties to get state from calling segue
     public var detailMode: DetailMode = .amend // Also passed on to detail segue
@@ -73,11 +73,11 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
         if self.scorecard.settingSyncEnabled {
             self.performSegue(withIdentifier: "showSelectPlayers", sender: self)
         } else {
-            PlayerDetailViewController.show(from: self, playerDetail: PlayerDetail(scorecard, visibleLocally: true), mode: .create, sourceView: view, scorecard: self.scorecard, completion: { (playerDetail, deletePlayer) in
-                if playerDetail != nil {
-                    let _ = playerDetail!.createMO()
-                    self.refreshView()
-                }
+            PlayerDetailViewController.show(from: self, playerDetail: PlayerDetail(visibleLocally: true), mode: .create, sourceView: view, completion: { (playerDetail, deletePlayer) in
+                    if playerDetail != nil {
+                        let _ = playerDetail!.createMO()
+                        self.refreshView()
+                    }
             })
         }
     }
@@ -223,8 +223,7 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
         let relativeTapPosition = CGPoint(x: tapPosition.x - cell.frame.minX, y: tapPosition.y - cell.frame.minY)
         if let path = cell.path {
             if path.contains(relativeTapPosition) {
-                PlayerDetailViewController.show(from: self, playerDetail: self.playerList[cell.indexPath.item], mode: detailMode, sourceView: self.view, scorecard: self.scorecard,
-                                                completion: { (playerDetail, deletePlayer) in
+                PlayerDetailViewController.show(from: self, playerDetail: self.playerList[cell.indexPath.item], mode: detailMode, sourceView: self.view, completion: { (playerDetail, deletePlayer) in
                                                     if self.detailMode != .display && playerDetail != nil {
                                                         if deletePlayer {
                                                             // Refresh all
@@ -301,7 +300,7 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
             if players.count > 0 {
                 if self.sync == nil {
                     self.sync = Sync()
-                    self.sync.initialise(scorecard: self.scorecard)
+                    self.sync.initialise()
                 }
                 if self.sync.connect() {
                     self.sync.synchronise(syncMode: .syncUpdatePlayers, specificEmail: players)
@@ -361,7 +360,6 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
             destination.popoverPresentationController?.sourceView = self.view
             destination.preferredContentSize = CGSize(width: 400, height: 600)
             
-            destination.scorecard = self.scorecard
             destination.descriptionMode = .opponents
             destination.returnSegue = "hidePlayersSelectPlayers"
             destination.backText = "Cancel"

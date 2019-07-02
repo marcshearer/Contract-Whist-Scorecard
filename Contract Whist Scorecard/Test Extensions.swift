@@ -25,7 +25,7 @@ class TestMode {
         }
     }
     
-    class func resetSettings(_ scorecard: Scorecard) {
+    class func resetSettings() {
         if let testMode = ProcessInfo.processInfo.environment["TEST_MODE"] {
             if testMode.lowercased() == "true" {
                 var testResetSettings = true
@@ -36,7 +36,7 @@ class TestMode {
                 }
                 if testResetSettings {
                     // In test mode - reset settings
-                    scorecard.testResetSettings()
+                    Scorecard.shared.testResetSettings()
                 }
             }
         }
@@ -47,15 +47,15 @@ extension ScorepadViewController {
     
     @IBAction private func rotationGesture(recognizer:UIRotationGestureRecognizer) {
         
-        let adminMode = (Scorecard.adminMode || self.scorecard.iCloudUserIsMe)
-        AdminMenu.rotationGesture(recognizer: recognizer, scorecard: self.scorecard, options:
-              [("Auto-play",        self.startAutoPlay,   adminMode && self.scorecard.isHosting),
-               ("Fill scorecard",   self.fillScorecard,   adminMode && !self.scorecard.hasJoined)])
+        let adminMode = (Scorecard.adminMode || Scorecard.shared.iCloudUserIsMe)
+        AdminMenu.rotationGesture(recognizer: recognizer, options:
+              [("Auto-play",        self.startAutoPlay,   adminMode && Scorecard.shared.isHosting),
+               ("Fill scorecard",   self.fillScorecard,   adminMode && !Scorecard.shared.hasJoined)])
     }
     
     public func startAutoPlay() {
         // Automatically play the game
-        self.scorecard.getAutoPlayCount(completion: {
+        Scorecard.shared.getAutoPlayCount(completion: {
             self.autoDeal()
         })
     }
@@ -73,37 +73,37 @@ extension ScorepadViewController {
         var twosLeft = 0
         
         for round in 1...self.rounds {
-            cards = self.scorecard.roundCards(round, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
+            cards = Scorecard.shared.roundCards(round, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
             
             totalBid = 0
-            for playerNumber in 1...scorecard.currentPlayers {
+            for playerNumber in 1...Scorecard.shared.currentPlayers {
                 // Random bid
                 cardsLeft = cards-totalBid
-                playersLeft = scorecard.currentPlayers - playerNumber + 1
+                playersLeft = Scorecard.shared.currentPlayers - playerNumber + 1
                 bid = min(cards,Utility.random(Int(max(1,(cardsLeft*3)/(playersLeft))))-1)
                 totalBid += bid
-                if playerNumber == scorecard.currentPlayers && totalBid == cards {
+                if playerNumber == Scorecard.shared.currentPlayers && totalBid == cards {
                     bid = (bid == 0 ? 1 : bid-1)
                 }
-                scorecard.entryPlayer(playerNumber).setBid(round, bid)
+                Scorecard.shared.entryPlayer(playerNumber).setBid(round, bid)
             }
             
             if round != self.rounds {
                 totalMade = 0
-                for playerNumber in 1...scorecard.currentPlayers {
+                for playerNumber in 1...Scorecard.shared.currentPlayers {
                     // Random made
                     cardsLeft = cards - totalMade
-                    if playerNumber != scorecard.currentPlayers {
-                        made = max(0, min(cardsLeft,scorecard.entryPlayer(playerNumber).bid(round)!+Utility.random(3)-2))
+                    if playerNumber != Scorecard.shared.currentPlayers {
+                        made = max(0, min(cardsLeft,Scorecard.shared.entryPlayer(playerNumber).bid(round)!+Utility.random(3)-2))
                     } else {
                         made = cardsLeft
                     }
                     totalMade+=made
-                    scorecard.entryPlayer(playerNumber).setMade(round, made)
+                    Scorecard.shared.entryPlayer(playerNumber).setMade(round, made)
                 }
                 
                 twosLeft = 1
-                for playerNumber in 1...scorecard.currentPlayers {
+                for playerNumber in 1...Scorecard.shared.currentPlayers {
                     // Random twos
                     if twosLeft != 0 && Utility.random(8) == 1 {
                         twos = 1
@@ -111,20 +111,20 @@ extension ScorepadViewController {
                         twos = 0
                     }
                     twosLeft -= twos
-                    scorecard.entryPlayer(playerNumber).setTwos(round, twos, bonus2: self.bonus2)
+                    Scorecard.shared.entryPlayer(playerNumber).setTwos(round, twos, bonus2: self.bonus2)
                 }
             } else {
-                for playerNumber in 1...scorecard.currentPlayers {
-                    scorecard.entryPlayer(playerNumber).setMade(round, nil)
-                    scorecard.entryPlayer(playerNumber).setTwos(round, nil, bonus2: self.bonus2)
+                for playerNumber in 1...Scorecard.shared.currentPlayers {
+                    Scorecard.shared.entryPlayer(playerNumber).setMade(round, nil)
+                    Scorecard.shared.entryPlayer(playerNumber).setTwos(round, nil, bonus2: self.bonus2)
                 }
             }
         }
-        scorecard.maxEnteredRound = self.rounds
+        Scorecard.shared.maxEnteredRound = self.rounds
     }
     
     func autoDeal() {
-        if self.scorecard.autoPlayHands != 0 && self.scorecard.isHosting {
+        if Scorecard.shared.autoPlayHands != 0 && Scorecard.shared.isHosting {
             Utility.executeAfter(delay: 10 * Config.autoPlayTimeUnit, completion: {
                 self.scorePressed(self)
             })
@@ -137,20 +137,20 @@ extension HandViewController {
     
     @IBAction private func rotationGesture(recognizer:UIRotationGestureRecognizer) {
         
-        let adminMode = (Scorecard.adminMode || self.scorecard.iCloudUserIsMe)
-        AdminMenu.rotationGesture(recognizer: recognizer, scorecard: self.scorecard, options:
-            [("Auto-play",          self.startAutoPlay,   adminMode && self.scorecard.isHosting),
+        let adminMode = (Scorecard.adminMode || Scorecard.shared.iCloudUserIsMe)
+        AdminMenu.rotationGesture(recognizer: recognizer, options:
+            [("Auto-play",          self.startAutoPlay,   adminMode && Scorecard.shared.isHosting),
              ("Show debug info",    self.showDebugInfo,   true)])
     }
     
     private func showDebugInfo() {
-        let message = "Selected round: \(self.scorecard.selectedRound)\nRound: \(self.state.round)\nCards: \(self.state.hand.toString())\nDealer: \(self.scorecard.dealerIs)\nTrick: \(self.state.trick!)\nCards played: \(self.state.trickCards.count)\nTo lead: \(self.state.toLead!)\nTo play: \(self.state.toPlay!)"
+        let message = "Selected round: \(Scorecard.shared.selectedRound)\nRound: \(self.state.round)\nCards: \(self.state.hand.toString())\nDealer: \(Scorecard.shared.dealerIs)\nTrick: \(self.state.trick!)\nCards played: \(self.state.trickCards.count)\nTo lead: \(self.state.toLead!)\nTo play: \(self.state.toPlay!)"
         self.alertMessage(message, title: "Hand Information", buttonText: "Continue")
     }
     
     public func startAutoPlay() {
         // Automatically play the game
-        self.scorecard.getAutoPlayCount(completion: {
+        Scorecard.shared.getAutoPlayCount(completion: {
             if self.bidMode {
                 self.autoBid()
             } else {
@@ -160,23 +160,23 @@ extension HandViewController {
     }
     
     func autoBid() {
-        if self.scorecard.autoPlayHands > 0 && (self.scorecard.autoPlayHands > 1 || round <= self.scorecard.autoPlayRounds) {
+        if Scorecard.shared.autoPlayHands > 0 && (Scorecard.shared.autoPlayHands > 1 || round <= Scorecard.shared.autoPlayRounds) {
             var bids: [Int] = []
-            for playerNumber in 1...self.scorecard.currentPlayers {
-                let bid = scorecard.entryPlayer(playerNumber).bid(round)
+            for playerNumber in 1...Scorecard.shared.currentPlayers {
+                let bid = Scorecard.shared.entryPlayer(playerNumber).bid(round)
                 if bid != nil {
                     bids.append(bid!)
                 }
             }
-            if self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round) == bids.count + 1 {
-                let cards = self.scorecard.roundCards(round, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
-                var range = ((Double(cards) / Double(self.scorecard.currentPlayers)) * 2) + 1
+            if Scorecard.shared.entryPlayerNumber(self.enteredPlayerNumber, round: self.round) == bids.count + 1 {
+                let cards = Scorecard.shared.roundCards(round, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
+                var range = ((Double(cards) / Double(Scorecard.shared.currentPlayers)) * 2) + 1
                 range.round()
                 var bid = Utility.random(max(2,Int(range))) - 1
                 bid = min(bid, cards)
-                if self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round) == self.scorecard.currentPlayers {
+                if Scorecard.shared.entryPlayerNumber(self.enteredPlayerNumber, round: self.round) == Scorecard.shared.currentPlayers {
                     // Last to bid - need to avoid remaining
-                    let remaining = scorecard.remaining(playerNumber: self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round), round: self.round, mode: .bid, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
+                    let remaining = Scorecard.shared.remaining(playerNumber: Scorecard.shared.entryPlayerNumber(self.enteredPlayerNumber, round: self.round), round: self.round, mode: .bid, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
                     if bid == remaining {
                         if remaining == 0 {
                             bid += 1
@@ -192,20 +192,20 @@ extension HandViewController {
                 }
             }
         } else {
-            self.scorecard.autoPlayHands = 0
-            self.scorecard.autoPlayRounds = 0
+            Scorecard.shared.autoPlayHands = 0
+            Scorecard.shared.autoPlayRounds = 0
         }
     }
     
     func autoPlay() {
-        if self.scorecard.autoPlayHands > 0 && (self.scorecard.autoPlayHands > 1 || round <= self.scorecard.autoPlayRounds) {
+        if Scorecard.shared.autoPlayHands > 0 && (Scorecard.shared.autoPlayHands > 1 || round <= Scorecard.shared.autoPlayRounds) {
             if self.state.toPlay == self.state.enteredPlayerNumber {
                 for suitNumber in 1...self.state.hand.handSuits.count {
                     if suitEnabled[suitNumber-1] {
                         if let card = self.state.hand.handSuits[suitNumber-1].cards.last {
                             if self.checkCardAvailable(suitNumber, self.state.hand.handSuits[suitNumber-1].cards.count) {
                                 Utility.executeAfter(delay: 1 * Config.autoPlayTimeUnit, completion: {
-                                    self.scorecard.sendCardPlayed(round: self.round, trick: self.state.trick, playerNumber: self.enteredPlayerNumber, card: card)
+                                    Scorecard.shared.sendCardPlayed(round: self.round, trick: self.state.trick, playerNumber: self.enteredPlayerNumber, card: card)
                                     self.playCard(card: card)
                                 })
                             }
@@ -215,13 +215,13 @@ extension HandViewController {
                 }
             }
         } else {
-            self.scorecard.autoPlayHands = 0
-            self.scorecard.autoPlayRounds = 0
+            Scorecard.shared.autoPlayHands = 0
+            Scorecard.shared.autoPlayRounds = 0
         }
     }
     
     func checkBidAvailable() -> Bool {
-        if self.scorecard.commsHandlerMode != .none {
+        if Scorecard.shared.commsHandlerMode != .none {
             self.handTestData.waitAutoBid=true
             self.setHandlerCompleteNotification()
         }
@@ -261,7 +261,7 @@ extension ClientViewController {
     
     @IBAction private func rotationGesture(recognizer:UIRotationGestureRecognizer) {
         
-        AdminMenu.rotationGesture(recognizer: recognizer, scorecard: self.scorecard)
+        AdminMenu.rotationGesture(recognizer: recognizer)
     }
     
     func checkTestMessages(descriptor: String, data: [String : Any?]?, peer: CommsPeer) {
@@ -269,9 +269,9 @@ extension ClientViewController {
         case "autoPlay":
             let dictionary = data as! [String : Int]
             if let autoPlayHands = dictionary["hands"] {
-                self.scorecard.autoPlayHands = autoPlayHands
+                Scorecard.shared.autoPlayHands = autoPlayHands
                 if let autoPlayRounds = dictionary["rounds"] {
-                    self.scorecard.autoPlayRounds = autoPlayRounds
+                    Scorecard.shared.autoPlayRounds = autoPlayRounds
                 }
             }
         default:
@@ -284,7 +284,7 @@ extension HostViewController {
     
     @IBAction private func rotationGesture(recognizer:UIRotationGestureRecognizer) {
         
-        AdminMenu.rotationGesture(recognizer: recognizer, scorecard: self.scorecard)
+        AdminMenu.rotationGesture(recognizer: recognizer)
     }
 }
 
@@ -292,7 +292,7 @@ extension ReviewViewController {
     
     @IBAction private func rotationGesture(recognizer:UIRotationGestureRecognizer) {
         
-        AdminMenu.rotationGesture(recognizer: recognizer, scorecard: self.scorecard)
+        AdminMenu.rotationGesture(recognizer: recognizer)
     }
 }
 
@@ -300,10 +300,10 @@ extension GameSummaryViewController {
     
     internal func autoNewGame() {
         
-        if self.scorecard.isHosting {
-            self.scorecard.autoPlayHands = max(0, self.scorecard.autoPlayHands - 1)
-            self.scorecard.sendAutoPlay()
-            if self.scorecard.autoPlayHands != 0 {
+        if Scorecard.shared.isHosting {
+            Scorecard.shared.autoPlayHands = max(0, Scorecard.shared.autoPlayHands - 1)
+            Scorecard.shared.sendAutoPlay()
+            if Scorecard.shared.autoPlayHands != 0 {
                 // Play another one
                 Utility.executeAfter(delay: 20 * Config.autoPlayTimeUnit, completion: {
                     self.finishGame(from: self, toSegue: "newGame", advanceDealer: true, resetOverrides: false, confirm: false)

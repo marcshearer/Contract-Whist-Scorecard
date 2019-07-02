@@ -186,7 +186,6 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 handViewController.popoverPresentationController?.sourceView = sourceView
                 handViewController.preferredContentSize = CGSize(width: 400, height: 554)
                 
-                handViewController.scorecard = self
                 handViewController.delegate = viewController as? HandStatusDelegate
                 handViewController.computerPlayerDelegate = computerPlayerDelegate
                 
@@ -689,7 +688,6 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         searchViewController.preferredContentSize = CGSize(width: 400, height: 600)
         searchViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
         
-        searchViewController.scorecard = self
         searchViewController.formTitle = title
         searchViewController.instructions = instructions
         searchViewController.disableOption = disableOption

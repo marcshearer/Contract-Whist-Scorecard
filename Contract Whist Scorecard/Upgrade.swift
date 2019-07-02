@@ -13,7 +13,7 @@ import CoreData
 
 class Upgrade {
     
-    class func upgradeTo41(from viewController: UIViewController, scorecard: Scorecard, completion: (()->())? = nil) -> Bool {
+    class func upgradeTo41(from viewController: UIViewController, completion: (()->())? = nil) -> Bool {
         // Sort out corruption in number of hands that happened back in December 2017 / January 2018
         
         let alertWaitController = viewController.alertWait("Upgrading to version 4.1")
@@ -23,8 +23,8 @@ class Upgrade {
         
         // Rebuild all players
         let reconcile = Reconcile()
-        reconcile.initialise(scorecard: scorecard)
-        reconcile.reconcilePlayers(playerMOList: scorecard.playerList, syncFirst: false)
+        reconcile.initialise()
+        reconcile.reconcilePlayers(playerMOList: Scorecard.shared.playerList, syncFirst: false)
         
         alertWaitController.dismiss(animated: true, completion: completion)
             

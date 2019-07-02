@@ -10,7 +10,7 @@ import UIKit
 
 class OverrideViewController : UIViewController, UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate {
     
-    private var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     
     var message: String!
     var formTitle: String!
@@ -272,11 +272,10 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
     
     // Mark: - Main instatiation routine =============================================================== -
     
-    func show(scorecard: Scorecard, backColor: UIColor = UIColor.white, completion: (()->())? = nil) {
+    func show(backColor: UIColor = UIColor.white, completion: (()->())? = nil) {
         let storyboard = UIStoryboard(name: "OverrideViewController", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "OverrideViewController") as! OverrideViewController
         let parentViewController = Utility.getActiveViewController()!
-        viewController.scorecard = scorecard
         viewController.completion = completion
         viewController.formTitle = title
         viewController.message = message

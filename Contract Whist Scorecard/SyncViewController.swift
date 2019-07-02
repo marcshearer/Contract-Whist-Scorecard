@@ -14,7 +14,7 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
-    var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     private let sync = Sync()
     
     // Local class variables
@@ -41,7 +41,7 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        sync.initialise(scorecard: scorecard)
+        sync.initialise()
         actionLabel.text = "Syncing with iCloud"
        
    }

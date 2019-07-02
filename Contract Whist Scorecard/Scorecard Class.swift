@@ -22,7 +22,9 @@ enum CommsHandlerMode {
 
 class Scorecard {
     
-    // Main state class for the application
+    // Main state class for the application - singleton
+    
+    public static let shared = Scorecard()
     
     public var suits: [Suit]!
     
@@ -112,7 +114,7 @@ class Scorecard {
     public var overrideSelected: Bool = false
     
     // Link to recover class
-    public var recovery = Recovery()
+    public var recovery: Recovery!
     
     // Core data variables
     public var playerList:[PlayerMO] = []
@@ -130,15 +132,14 @@ class Scorecard {
     // Admin mode
     static var adminMode = false
         
-    public func initialise(from viewController: UIViewController? = nil, players: Int, maxRounds: Int, recovery: Recovery) {
+    public func initialise(from viewController: UIViewController? = nil, players: Int, maxRounds: Int) {
         
-        recovery.initialise(scorecard: self)
-        self.recovery = recovery
+       self.recovery = Recovery()
         
         self.player = []
         if players > 0 {
             for playerNumber in 1...players {
-                self.player!.append(Player(scorecard: self, playerNumber: playerNumber, recovery: recovery))
+                self.player!.append(Player(playerNumber: playerNumber))
             }
         }
 
@@ -154,7 +155,7 @@ class Scorecard {
         loadSettings()
         
         // Reset settings in test mode (unless requested not to)
-        TestMode.resetSettings(self)
+        TestMode.resetSettings()
         
         // Load defaults
         loadDefaults()
@@ -177,13 +178,13 @@ class Scorecard {
         self.setupSharing()
         
         // Set icloud user flag
-        Scorecard.iCloudUserIsMe(scorecard: self)
+        Scorecard.iCloudUserIsMe()
         
         // Remove any temporary online game notification subscription
         Notifications.removeTemporaryOnlineGameSubscription()
         
         // Set up Watch Manager
-        self.watchManager = WatchManager(self)
+        self.watchManager = WatchManager()
         
    }
     
@@ -196,7 +197,7 @@ class Scorecard {
         // Return a list of player detail records corresponding to player MO list
         var playerDetailList: [PlayerDetail] = []
         for playerMO in self.playerList {
-            let playerDetail = PlayerDetail(self)
+            let playerDetail = PlayerDetail()
             playerDetail.fromManagedObject(playerMO: playerMO)
             playerDetailList.append(playerDetail)
         }
@@ -303,7 +304,7 @@ class Scorecard {
         }
         
         if Utility.compareVersions(version1: self.settingLastVersion, version2: "4.1") == .lessThan  {
-            if !Upgrade.upgradeTo41(from: from, scorecard: self, completion:  successfulCompletion) {
+            if !Upgrade.upgradeTo41(from: from, completion:  successfulCompletion) {
                 return false
             }
         } else {
@@ -1095,9 +1096,9 @@ class Scorecard {
 
     // MARK: - Functions to return useful iCloud information ================================= -
     
-    class func iCloudUserIsMe(scorecard: Scorecard) {
+    class func iCloudUserIsMe() {
         
-        scorecard.iCloudUserIsMe = false
+        Scorecard.shared.iCloudUserIsMe = false
         let container = CKContainer.default()
         container.fetchUserRecordID() {
             recordID, error in
@@ -1108,7 +1109,7 @@ class Scorecard {
                     recordID?.recordName == "_6a4c8d69b48141215f9570049dc70f69" ||
                     recordID?.recordName == "_c4c157aa21caf6572e9a9b6fa1349f46" ||
                     recordID?.recordName == "_a3eb2a77f1e670699112be1835571ae0" {
-                    scorecard.iCloudUserIsMe = true
+                    Scorecard.shared.iCloudUserIsMe = true
                 }
             }
         }
@@ -1127,14 +1128,6 @@ class Scorecard {
             }
         }
         return nil
-    }
-    
-    class func getScorecard() -> Scorecard? {
-        if let welcomeViewController = Scorecard.getWelcomeViewController() {
-            return welcomeViewController.scorecard
-        } else {
-            return nil
-        }
     }
     
     class func dismissChildren(parent: UIViewController, completion: @escaping ()->()) {

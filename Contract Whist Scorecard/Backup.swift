@@ -12,7 +12,7 @@ import MessageUI
 
 class Backup {
 
-    static func sendEmail(from: UIViewController, scorecard: Scorecard) {
+    static func sendEmail(from: UIViewController) {
         var bodyText = ""
         
         if MFMailComposeViewController.canSendMail() {
@@ -25,7 +25,7 @@ class Backup {
             
             bodyText = bodyText + "\"Name\", \"Email\", \"Visible\", \"Created\", \"Local created\", \"Date played\", \"External Id\", \"Games played\", \"Games won\", \"Hands played\", \"Hands made\", \"Twos made\", \"Total score\", \"Max score\", \"Max score date\", \"Max made\", \"Max made date\", \"Max twos\", \"Max twos date\"\n"
             
-            for playerMO in scorecard.playerList {
+            for playerMO in Scorecard.shared.playerList {
                 bodyText = bodyText + "\"\(playerMO.name!)\""
                 bodyText = bodyText + ", \"\(playerMO.email!)\""
                 bodyText = bodyText + ",\((playerMO.visibleLocally ? "true" : "false"))"

@@ -12,13 +12,14 @@ import CoreData
 class Player {
     
     // A class to store all our data about players in the current game
+
+    private let scorecard = Scorecard.shared
     
     private var bid = [Int?]()
     private var made = [Int?]()
     private var twos = [Int?]()
     public var playerNumber = 0
     public let maxRounds = 25
-    private var scorecard: Scorecard
     private var recovery: Recovery? = nil
     public var bidCell = [ScorepadCollectionViewCell?]()
     public var scoreCell = [ScorepadCollectionViewCell?]()
@@ -34,10 +35,9 @@ class Player {
     public var previousMaxScore: Int64 = 0
     public var previousMaxScoreDate = Date()
     
-    public init(scorecard: Scorecard, playerNumber: Int, recovery: Recovery) {
+    public init(playerNumber: Int) {
         
-        self.scorecard = scorecard
-        self.recovery = recovery
+        self.recovery = scorecard.recovery
                 
         if maxRounds > 0 {
             

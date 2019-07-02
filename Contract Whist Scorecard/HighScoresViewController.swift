@@ -19,7 +19,7 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
-    var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     
     // Properties to pass state to / from segues
     var returnSegue = ""
@@ -247,7 +247,7 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
             let history = History(gameUUID: detailParticipantMO.gameUUID)
             
             if history.games.count > 0 {
-                HistoryDetailViewController.show(from: self, gameDetail: history.games[0], sourceView: self.popoverPresentationController?.sourceView, scorecard: scorecard)
+                HistoryDetailViewController.show(from: self, gameDetail: history.games[0], sourceView: self.popoverPresentationController?.sourceView)
             }
         }
         return nil

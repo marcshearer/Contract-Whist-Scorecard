@@ -18,7 +18,7 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
     // MARK: - Class Properties ================================================================ -
     
     // Main state properties
-    public var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     private var recovery: Recovery!
 
     // Delegate
@@ -279,7 +279,7 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
             // Hide the current dealer
             showDealer(playerNumber: scorecard.dealerIs, forceHide: true)
             // Link to cut for dealer animation
-            _ = CutViewController.cutForDealer(viewController: self, view: view, scorecard: scorecard, cutDelegate: self, popoverDelegate: self)
+            _ = CutViewController.cutForDealer(viewController: self, view: view, cutDelegate: self, popoverDelegate: self)
         case 2:
             // Move dealer to next player
             showDealer(playerNumber: scorecard.dealerIs, forceHide: true)
@@ -288,7 +288,7 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
        default:
             // Link to override selection
             let overrideViewController = OverrideViewController()
-            overrideViewController.show(scorecard: scorecard, completion: {
+            overrideViewController.show(completion: {
                 self.formatOverrideButton()
             })
         }
@@ -426,7 +426,6 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
         switch segue.identifier! {
         case "showScorepad":
             let destination = segue.destination as! ScorepadViewController
-            destination.scorecard = self.scorecard
             destination.scorepadMode = (self.scorecard.isHosting || self.scorecard.hasJoined ? .display : .amend)
             if self.scorecard.checkOverride() {
                 destination.cards = scorecard.overrideCards
@@ -453,12 +452,11 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
     
     // MARK: - Function to present this view ==============================================================
     
-    class func showGamePreview(viewController: UIViewController, scorecard: Scorecard, selectedPlayers: [PlayerMO]) -> GamePreviewViewController {
+    class func showGamePreview(viewController: UIViewController, selectedPlayers: [PlayerMO]) -> GamePreviewViewController {
         let storyboard = UIStoryboard(name: "GamePreviewViewController", bundle: nil)
         let gamePreviewViewController = storyboard.instantiateViewController(withIdentifier: "GamePreviewViewController") as! GamePreviewViewController
         gamePreviewViewController.modalPresentationStyle = UIModalPresentationStyle.fullScreen
         
-        gamePreviewViewController.scorecard = scorecard
         gamePreviewViewController.selectedPlayers = selectedPlayers
         gamePreviewViewController.readOnly = true
         

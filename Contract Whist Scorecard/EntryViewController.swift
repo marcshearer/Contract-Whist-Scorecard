@@ -12,8 +12,9 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     
     // MARK: - Class Properties ======================================================================== -
     
+    private let scorecard = Scorecard.shared
+        
     // Properties to pass state to / from segues
-    var scorecard: Scorecard!
     var reeditMode = false
     var rounds: Int!
     var cards: [Int]!
@@ -604,7 +605,6 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
             destination.preferredContentSize = CGSize(width: 400, height: 554)
             destination.returnSegue = "hideRoundSummary"
-            destination.scorecard = self.scorecard
             destination.rounds = self.rounds
             destination.cards = self.cards
             destination.bounce = self.bounce

@@ -26,7 +26,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
-    public var scorecard: Scorecard!
+    private let scorecard = Scorecard.shared
     private var recovery: Recovery!
     private var scorepadViewController: ScorepadViewController!
     private var cutViewController: CutViewController!
@@ -298,10 +298,10 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                         var playerMO = self.scorecard.findPlayerByEmail(playerEmail)
                         if playerMO == nil {
                             // Not found - need to create the player locally
-                            let playerDetail = PlayerDetail(self.scorecard)
+                            let playerDetail = PlayerDetail()
                             playerDetail.name = playerName
                             playerDetail.email = playerEmail
-                            playerDetail.dedupName(self.scorecard)
+                            playerDetail.dedupName()
                             playerMO = playerDetail.createMO()
                             self.scorecard.requestPlayerThumbnail(from: peer, playerEmail: playerEmail)
                         }
@@ -320,7 +320,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                             selectedPlayers.append(self.scorecard.enteredPlayer(playerNumber).playerMO!)
                         }
                         self.dismissAll {
-                            self.gamePreviewViewController = GamePreviewViewController.showGamePreview(viewController: self, scorecard: self.scorecard, selectedPlayers: selectedPlayers)
+                            self.gamePreviewViewController = GamePreviewViewController.showGamePreview(viewController: self, selectedPlayers: selectedPlayers)
                             self.gamePreviewViewController.delegate = self
                         }
                     }
@@ -350,7 +350,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                         viewController = self
                     }
                     let cutDelegate = viewController as! CutDelegate
-                    self.cutViewController = CutViewController.cutForDealer(viewController: viewController, view: viewController.view, scorecard: self.scorecard, cutDelegate: cutDelegate, preCutCards: preCutCards, playerName: playerName)
+                    self.cutViewController = CutViewController.cutForDealer(viewController: viewController, view: viewController.view, cutDelegate: cutDelegate, preCutCards: preCutCards, playerName: playerName)
                 
                 case "scores", "allscores":
                     
@@ -1318,7 +1318,6 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         switch segue.identifier! {
         case "showClientScorepad":
             scorepadViewController = segue.destination as? ScorepadViewController
-            scorepadViewController.scorecard = self.scorecard
             scorepadViewController.scorepadMode = .display
             scorepadViewController.rounds = self.rounds
             scorepadViewController.cards = self.cards

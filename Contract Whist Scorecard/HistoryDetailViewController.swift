@@ -124,7 +124,7 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
             dropPin()
         }
         if self.gameDetail.gameMO.excludeStats {
-            ScorecardUI.sectionHeadingStyleView(self.excludeStatsView)
+            ScorecardUI.sectionHeadingStyle(view: self.excludeStatsView)
         } else {
             self.excludeStatsHeightConstraint.constant = 0
         }

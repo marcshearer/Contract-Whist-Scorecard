@@ -156,8 +156,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         observer = setImageDownloadNotification()
         
         // Set selection color
-        ScorecardUI.darkHighlightStyleView(self.selectedView)
-        ScorecardUI.darkHighlightStyleView(self.selectedHeadingView)
+        ScorecardUI.darkHighlightStyle(view: self.selectedView)
+        ScorecardUI.darkHighlightStyle(view: self.selectedHeadingView)
         self.toolbar.setBackgroundImage(UIImage(),
                                         forToolbarPosition: .any,
                                         barMetrics: .default)

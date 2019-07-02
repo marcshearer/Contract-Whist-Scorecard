@@ -792,7 +792,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     internal func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let header = view as! UITableViewHeaderFooterView
-        ScorecardUI.highlightStyleView(header.backgroundView!)
+        ScorecardUI.highlightStyle(view: header.backgroundView!)
         header.textLabel!.font = UIFont.boldSystemFont(ofSize: 18.0)
     }
     

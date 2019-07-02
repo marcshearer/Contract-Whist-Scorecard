@@ -86,7 +86,7 @@ class ScorecardUI {
         cell.backgroundColor = ScorecardUI.sectionHeadingColor
     }
     
-    class func sectionHeadingStyleView(_ view: UIView) {
+    class func sectionHeadingStyle(view: UIView) {
         view.backgroundColor = ScorecardUI.sectionHeadingColor
     }
     
@@ -98,11 +98,11 @@ class ScorecardUI {
         }
     }
     
-    class func highlightStyleView(_ view: UIView) {
+    class func highlightStyle(view: UIView) {
         view.backgroundColor = ScorecardUI.highlightColor
     }
     
-    class func highlightStyleView(_ view: UITableViewHeaderFooterView) {
+    class func highlightStyle(view: UITableViewHeaderFooterView) {
         view.contentView.backgroundColor = ScorecardUI.highlightColor
         view.detailTextLabel?.textColor = ScorecardUI.highlightTextColor
     }
@@ -122,7 +122,7 @@ class ScorecardUI {
         button.setTitleColor(ScorecardUI.darkHighlightTextColor, for: .normal)
     }
 
-    class func darkHighlightStyleView(_ view: UIView) {
+    class func darkHighlightStyle(view: UIView) {
         view.backgroundColor = ScorecardUI.darkHighlightColor
     }
    
@@ -144,7 +144,7 @@ class ScorecardUI {
         }
     }
     
-    class func emphasisStyleView(_ view: UIView) {
+    class func emphasisStyle(view: UIView) {
         view.backgroundColor = ScorecardUI.emphasisColor
     }
     
@@ -171,7 +171,7 @@ class ScorecardUI {
         }
     }
     
-    class func totalStyleView(_ view: UIView) {
+    class func totalStyle(view: UIView) {
         view.backgroundColor = ScorecardUI.totalColor
     }
     

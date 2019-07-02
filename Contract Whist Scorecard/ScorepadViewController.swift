@@ -530,10 +530,10 @@ class ScorepadViewController: CustomViewController,
     private func highlightDealer(headerCell: ScorepadCollectionViewCell, playerNumber: Int, row: Int, forceClear: Bool = false) {
         if playerNumber >= 0 {
             if scorecard.isScorecardDealer() == playerNumber && !forceClear {
-                ScorecardUI.highlightStyleView(headerCell)
+                ScorecardUI.highlightStyle(view: headerCell)
                 headerCell.scorepadCellLabel?.textColor = ScorecardUI.highlightTextColor
             } else {
-                ScorecardUI.emphasisStyleView(headerCell)
+                ScorecardUI.emphasisStyle(view: headerCell)
                 headerCell.scorepadCellLabel?.textColor = ScorecardUI.emphasisTextColor
             }
         }
@@ -898,7 +898,7 @@ class ScorepadViewController: CustomViewController,
                 }
                 
                 headerCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier,for: indexPath)   as! ScorepadCollectionViewCell
-                ScorecardUI.emphasisStyleView(headerCell)
+                ScorecardUI.emphasisStyle(view: headerCell)
                 headerCell.scorepadCellLabel?.textColor = ScorecardUI.emphasisTextColor
                 
                 if row != playerRow {
@@ -926,7 +926,7 @@ class ScorepadViewController: CustomViewController,
             } else {
                 headerCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Header Collection Cell",for: indexPath) as! ScorepadCollectionViewCell
                 
-                ScorecardUI.emphasisStyleView(headerCell)
+                ScorecardUI.emphasisStyle(view: headerCell)
                 headerCell.scorepadCellLabel?.textColor = ScorecardUI.emphasisTextColor
                 
                 if column == 0 {

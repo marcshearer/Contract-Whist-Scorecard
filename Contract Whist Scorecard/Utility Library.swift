@@ -77,8 +77,7 @@ class Utility {
             }
             label.text = toInitials(initials)
             label.textAlignment = .center
-            label.font = UIFont.systemFont(ofSize: 20.0)
-            ScorecardUI.highlightStyle(label)
+            ScorecardUI.thumbnailDiscStyle(label)
             imageView.isHidden = true
             label.isHidden=false
             ScorecardUI.veryRoundCorners(label, radius: size / 2)

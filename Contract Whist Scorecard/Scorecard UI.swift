@@ -33,6 +33,8 @@ class ScorecardUI {
     static let tableTopTextColor = UIColor(named: "Table Top Text")!
     static let totalColor = UIColor(named: "Total")!
     static let totalTextColor = UIColor(named: "Total Text")!
+    static let thumbnailDiscColor = UIColor(named: "Thumbnail Disc")!
+    static let thumbnailDiscTextColor = UIColor(named: "Thumbnail Disc Text")!
     static let textColor = UIColor(named: "Text")!
     static let textEmphasisColor = UIColor(named: "Text Emphasis")!
     static let textErrorColor = UIColor(named: "Text Error")!
@@ -219,6 +221,14 @@ class ScorecardUI {
         }
     }
 
+    class func thumbnailDiscStyle(_ label: UILabel, setFont: Bool = true) {
+        label.backgroundColor=ScorecardUI.thumbnailDiscColor
+        label.textColor = ScorecardUI.thumbnailDiscTextColor
+        if setFont {
+            label.font = UIFont.boldSystemFont(ofSize: 20.0)
+        }
+    }
+    
     class func largeBoldStyle(_ label: UILabel) {
         label.font = UIFont.boldSystemFont(ofSize: 20.0)
     }

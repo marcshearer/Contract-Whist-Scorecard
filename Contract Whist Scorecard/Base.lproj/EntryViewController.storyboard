@@ -164,9 +164,11 @@
                                                                 <subviews>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ERg-Uc-zuI" customClass="LightRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                                                        <color key="backgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
+                                                                        <color key="backgroundColor" name="Highlight"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                                                        <state key="normal" title="Button"/>
+                                                                        <state key="normal" title="Button">
+                                                                            <color key="titleColor" name="Highlight Text"/>
+                                                                        </state>
                                                                     </button>
                                                                 </subviews>
                                                             </view>
@@ -391,6 +393,12 @@
         </namedColor>
         <namedColor name="Emphasis Text">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Highlight">
+            <color red="0.93333333333333335" green="0.87450980392156863" blue="0.70588235294117652" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Highlight Text">
+            <color red="0.49803921568627452" green="0.49803921568627452" blue="0.49803921568627452" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

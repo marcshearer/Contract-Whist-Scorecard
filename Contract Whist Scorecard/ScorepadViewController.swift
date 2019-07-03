@@ -979,6 +979,7 @@ class ScorepadViewController: CustomViewController,
                 footerCell.scorepadCellLabel.accessibilityIdentifier = ""
             } else {
                 // Row values
+                player = column
                 ScorecardUI.totalStyle(footerCell.scorepadCellLabel)
                 footerCell.scorepadCellLabel.text = "\(scorecard.scorecardPlayer(player).totalScore())"
                 footerCell.scorepadLeftLineWeight.constant = thickLineWeight

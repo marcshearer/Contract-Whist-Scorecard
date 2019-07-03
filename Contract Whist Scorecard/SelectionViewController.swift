@@ -38,6 +38,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     @IBOutlet weak var selectionView: UIView!
     @IBOutlet weak var continueButton: UIButton!
     @IBOutlet weak var clearButton: UIButton!
+    @IBOutlet weak var animationView: UIView!
     @IBOutlet weak var animationThumbnail: UIImageView!
     @IBOutlet weak var animationThumbnailView: UIView!
     @IBOutlet weak var animationDisc: UILabel!
@@ -180,6 +181,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             // Resize cells
             setWidth(size: selectionView.frame.size)
             firstTime = false
+         
+            self.setupAnimationView()
             
             // Decide if buttons enabled
             formatButtons(false)
@@ -514,15 +517,14 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             if updateDisplay {
                 // Animation
                 
-                // Calculate available label offsets / width / height
-                let availableLabel = self.availableCell[addPlayerNumber]?.name!
-                let labelWidth = availableLabel!.bounds.width
-                let labelHeight = availableLabel!.bounds.height
-                
                 // Calculate offsets for available collection view cell
                 let availableCell = self.availableCell[addPlayerNumber]!
                 let availablePoint = availableCell.convert(CGPoint(x: 0, y: 0), to: self.selectionView)
-                let availableLabelPoint = availableLabel!.convert(CGPoint(x:0, y: 0), to: self.selectionView)
+                
+                // Calculate available label offsets / width / height
+                let availableLabel = availableCell.name!
+                let labelHeight = availableLabel.bounds.height
+                let availableLabelPoint = availableLabel.convert(CGPoint(x:0, y: 0), to: self.selectionView)
                 
                 // Mark available player as selected
                 availableCell.thumbnailView.alpha = self.selectedAlpha
@@ -530,20 +532,18 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 availableCell.tick.isHidden = false
                 
                 // Draw a new thumbnail over top of existing - add in views which are uninstalled in IB to avoid warnings of no constraints
-                view.addSubview(self.animationThumbnailView)
-                view.addSubview(self.animationName)
-                self.animationThumbnailView.frame = CGRect(x: availablePoint.x, y: availablePoint.y, width: self.width, height: self.width)
-                self.animationThumbnail.frame = CGRect(x: 0, y: 0, width: self.width, height: self.width)
-                self.animationDisc.frame = CGRect(x: 0, y: 0, width: self.width, height: self.width)
-                self.animationName.frame = CGRect(x: availableLabelPoint.x , y: availableLabelPoint.y, width: labelWidth, height: labelHeight)
+                self.animationView.frame = CGRect(origin: availablePoint, size: CGSize(width: width, height: width + labelHeight - 5))
+                self.adjustAnimationView(labelMinY: availableLabelPoint.y - availablePoint.y, labelHeight: labelHeight)
+                
                 Utility.setThumbnail(data: self.availableList[addPlayerNumber-1].thumbnail,
                                      imageView: self.animationThumbnail,
                                      initials: self.availableList[addPlayerNumber-1].name!,
                                      label: self.animationDisc)
-                self.animationThumbnailView.superview!.bringSubviewToFront(self.animationThumbnailView)
                 self.animationName.text = self.availableList[addPlayerNumber-1].name
-                self.animationThumbnailView.isHidden = false
+                self.animationName.textColor = UIColor.red // ScorecardUI.textColor
+                self.animationView.isHidden = false
                 self.animationName.isHidden = false
+                
                 // Lock the views until animation completes
                 self.availableCollectionView.isUserInteractionEnabled = false
                 self.selectedCollectionView.isUserInteractionEnabled = false
@@ -554,22 +554,24 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                     // Reset width
                     self.setSelectedViewWidthContstraint(numberSelected)
                     
-                    // Shouldn't need to do this, but we do!
-                    self.selectedCollectionView.frame = CGRect(x: self.selectedCollectionView.frame.minX,
+                    // Make the collection view big enough for new selected item
+                    /*self.selectedCollectionView.frame = CGRect(x: self.selectedCollectionView.frame.minX,
                                                            y: self.selectedCollectionView.frame.minY,
                                                            width: self.selectedViewWidth.constant,
                                                            height: self.selectedCollectionView.frame.height)
-                
-                
+                    */
                     // Add a new blank cell to fill
                     self.selectedCollectionView.insertItems(at: [IndexPath(row: numberSelected-1, section: 0)])
                     // Can now fill in the player
                     self.selectedList[numberSelected-1] = self.availableList[addPlayerNumber-1]
-
                 }
                 animation.addCompletion( {_ in
                     
                     // Remember blank selected cell
+                    self.selectedCollectionView.frame = CGRect(x: self.selectedCollectionView.frame.minX,
+                                                               y: self.selectedCollectionView.frame.minY,
+                                                               width: self.selectedViewWidth.constant,
+                                                               height: self.selectedCollectionView.frame.height)
                     
                     emptyCell = self.selectedCell[numberSelected-1]!
                     
@@ -582,12 +584,9 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                     // And move it to the selected area
                     let animation = UIViewPropertyAnimator(duration: 0.3, curve: .easeIn) {
                         // Now move it to the selected area
-                        self.animationThumbnailView.frame = CGRect(x: selectedPoint.x, y: selectedPoint.y, width: self.width, height: self.width)
-                        self.animationThumbnail.frame = CGRect(x: 0, y: 0, width: self.width, height: self.width)
-                        self.animationDisc.frame = CGRect(x: 0, y: 0, width: self.width, height: self.width)
-                        self.animationName.frame = CGRect(x: selectedLabelPoint.x, y: selectedLabelPoint.y, width: labelWidth, height: labelHeight)
-                        self.animationThumbnailView.superview!.bringSubviewToFront(self.animationThumbnailView)
-                        self.animationName.superview!.bringSubviewToFront(self.animationName)
+                        self.animationView.frame = CGRect(x: selectedPoint.x, y: selectedPoint.y, width: self.width, height: self.width+labelHeight)
+                        self.adjustAnimationView(labelMinY: selectedLabelPoint.y - selectedPoint.y, labelHeight: labelHeight)
+                        self.animationName.textColor = UIColor.red // ScorecardUI.darkHighlightTextColor
                     }
                     animation.addCompletion( {_ in
                         // Cell will have been filled when we inserted it - just need to make it visible
@@ -598,7 +597,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                         emptyCell.name.text = self.selectedList[numberSelected-1]!.name!
                         
                         // Now hide thumbnail and tick available player
-                        self.animationThumbnailView.isHidden = true
+                        self.animationView.isHidden = true
                         self.animationName.isHidden = true
                         availableCell.tick.isHidden = false
                         
@@ -613,6 +612,17 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 animation.startAnimation()
             }
         }
+    }
+    
+    private func setupAnimationView() {
+        self.view.addSubview(self.animationView)
+        self.view.bringSubviewToFront(self.animationView)
+    }
+    
+    private func adjustAnimationView(labelMinY: CGFloat, labelHeight: CGFloat) {
+        let width = self.animationView.frame.width
+        self.animationThumbnail.frame = CGRect(x: 0, y: 0, width: width, height: width)
+        self.animationName.frame = CGRect(x: 0, y: labelMinY, width: width, height: labelHeight)
     }
     
     private func createPlayers(newPlayers: [PlayerDetail]) {

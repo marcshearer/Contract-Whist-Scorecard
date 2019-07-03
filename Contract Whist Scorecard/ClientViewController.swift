@@ -345,6 +345,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                     var viewController: UIViewController
                     if self.gamePreviewViewController != nil {
                         self.gamePreviewViewController.cutDelegate = self
+                        self.gamePreviewViewController.showDealer(playerNumber: self.scorecard.dealerIs, forceHide: true)
                         viewController = self.gamePreviewViewController
                     } else {
                         viewController = self

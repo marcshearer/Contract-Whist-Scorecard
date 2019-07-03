@@ -67,7 +67,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                     createPlayerList.append(source.playerList[playerNumber-1])
                 }
             }
-            createPlayers(newPlayers: createPlayerList)
+            createPlayers(newPlayers: createPlayerList, createMO: false)
         }
     }
 
@@ -555,11 +555,11 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                     self.setSelectedViewWidthContstraint(numberSelected)
                     
                     // Make the collection view big enough for new selected item
-                    /*self.selectedCollectionView.frame = CGRect(x: self.selectedCollectionView.frame.minX,
+                    self.selectedCollectionView.frame = CGRect(x: self.selectedCollectionView.frame.minX,
                                                            y: self.selectedCollectionView.frame.minY,
                                                            width: self.selectedViewWidth.constant,
                                                            height: self.selectedCollectionView.frame.height)
-                    */
+                    
                     // Add a new blank cell to fill
                     self.selectedCollectionView.insertItems(at: [IndexPath(row: numberSelected-1, section: 0)])
                     // Can now fill in the player
@@ -568,11 +568,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 animation.addCompletion( {_ in
                     
                     // Remember blank selected cell
-                    self.selectedCollectionView.frame = CGRect(x: self.selectedCollectionView.frame.minX,
-                                                               y: self.selectedCollectionView.frame.minY,
-                                                               width: self.selectedViewWidth.constant,
-                                                               height: self.selectedCollectionView.frame.height)
-                    
                     emptyCell = self.selectedCell[numberSelected-1]!
                     
                     // Calculate offsets for selected collection view cell
@@ -582,7 +577,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                     selectedLabelPoint = selectedLabel.convert(CGPoint(x:0, y: 0), to: self.selectionView)
                     
                     // And move it to the selected area
-                    let animation = UIViewPropertyAnimator(duration: 0.3, curve: .easeIn) {
+                    let animation = UIViewPropertyAnimator(duration: 0.5, curve: .easeIn) {
                         // Now move it to the selected area
                         self.animationView.frame = CGRect(x: selectedPoint.x, y: selectedPoint.y, width: self.width, height: self.width+labelHeight)
                         self.adjustAnimationView(labelMinY: selectedLabelPoint.y - selectedPoint.y, labelHeight: labelHeight)
@@ -625,7 +620,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         self.animationName.frame = CGRect(x: 0, y: labelMinY, width: width, height: labelHeight)
     }
     
-    private func createPlayers(newPlayers: [PlayerDetail]) {
+    private func createPlayers(newPlayers: [PlayerDetail], createMO: Bool) {
         let add = (selectedList.count + newPlayers.count <= self.scorecard.numberPlayers)
         
         for newPlayerDetail in newPlayers {
@@ -633,7 +628,14 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 // Name not filled in - must have cancelled
             } else {
                 var availableIndex: Int! = self.availableList.firstIndex(where: {($0.name! > newPlayerDetail.name)})
-                if let playerMO = newPlayerDetail.createMO() {
+                var playerMO: PlayerMO?
+                if createMO {
+                    // Need to create Managed Object
+                    _ = newPlayerDetail.createMO()
+                } else {
+                    playerMO = newPlayerDetail.playerMO
+                }
+                if let playerMO = playerMO {
                     selectedCollectionView.performBatchUpdates({
                         if availableIndex == nil {
                             // Insert at end
@@ -655,9 +657,10 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
             self.performSegue(withIdentifier: "showSelectPlayers", sender: self)
         } else {
-            PlayerDetailViewController.show(from: self, playerDetail: PlayerDetail(visibleLocally: true), mode: .create, sourceView: view, completion: { (playerDetail, deletePlayer) in
+            PlayerDetailViewController.show(from: self, playerDetail: PlayerDetail(visibleLocally: true), mode: .create, sourceView: view,
+                                            completion: { (playerDetail, deletePlayer) in
                                                 if playerDetail != nil {
-                                                    self.createPlayers(newPlayers: [playerDetail!])
+                                                    self.createPlayers(newPlayers: [playerDetail!], createMO: true)
                                                 }
                                             })
         }

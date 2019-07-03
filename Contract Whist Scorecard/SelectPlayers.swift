@@ -507,8 +507,11 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
                 continueButton.isHidden = false
                 toolbarHeight = 44
             }
-        } else {
+            continueButton.setTitle("Confirm")
             backButton.setTitle("Cancel")
+        } else {
+            continueButton.setTitle("Add")
+            backButton.setTitle(self.backText)
         }
         
         let newToolbarTop = (toolbarHeight == 0 ? 44 : 44 + view.safeAreaInsets.bottom + toolbarHeight)

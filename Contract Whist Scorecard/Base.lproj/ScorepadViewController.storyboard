@@ -602,6 +602,15 @@
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
                                                                                 </subviews>
+                                                                                <constraints>
+                                                                                    <constraint firstItem="7s4-i2-IBi" firstAttribute="top" secondItem="lKL-XY-4ne" secondAttribute="top" id="2Hd-sG-l4w"/>
+                                                                                    <constraint firstAttribute="bottom" secondItem="bjf-fA-s3i" secondAttribute="bottom" id="fd8-qd-arr"/>
+                                                                                    <constraint firstItem="bjf-fA-s3i" firstAttribute="top" secondItem="7s4-i2-IBi" secondAttribute="bottom" id="gUt-Vr-A31"/>
+                                                                                    <constraint firstAttribute="trailing" secondItem="7s4-i2-IBi" secondAttribute="trailing" id="goS-w8-kGe"/>
+                                                                                    <constraint firstItem="7s4-i2-IBi" firstAttribute="leading" secondItem="lKL-XY-4ne" secondAttribute="leading" id="hgW-RD-da8"/>
+                                                                                    <constraint firstAttribute="trailing" secondItem="bjf-fA-s3i" secondAttribute="trailing" id="oQe-jq-BID"/>
+                                                                                    <constraint firstItem="bjf-fA-s3i" firstAttribute="leading" secondItem="lKL-XY-4ne" secondAttribute="leading" id="wZE-Zk-4Ve"/>
+                                                                                </constraints>
                                                                             </stackView>
                                                                         </subviews>
                                                                         <constraints>

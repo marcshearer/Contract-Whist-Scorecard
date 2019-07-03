@@ -951,7 +951,7 @@ class ScorepadViewController: CustomViewController,
                 if narrow {
                     headerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 20.0)
                 } else {
-                    headerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 26.0)
+                    headerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 24.0)
                 }
             }
    
@@ -988,9 +988,9 @@ class ScorepadViewController: CustomViewController,
             footerCell.scorepadTopLineWeight.constant = thickLineWeight
         
             if narrow {
-                footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: (column == 0 ? 20.0 : 26.0))
+                footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 20.0)
             } else {
-                footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: (column == 0 ? 26.0 : 36.0))
+                footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 24.0)
             }
            
             cell=footerCell
@@ -1036,7 +1036,7 @@ class ScorepadViewController: CustomViewController,
             if narrow {
                 bodyCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 20.0)
             } else {
-                bodyCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 26.0)
+                bodyCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 24.0)
             }
             
             cell=bodyCell

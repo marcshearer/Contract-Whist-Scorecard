@@ -121,6 +121,7 @@
 		B27C88FB22CD2945009F8FE1 /* Contents.json in Resources */ = {isa = PBXBuildFile; fileRef = B27C88D122CD2944009F8FE1 /* Contents.json */; };
 		B27C88FC22CD2945009F8FE1 /* Contents.json in Resources */ = {isa = PBXBuildFile; fileRef = B27C88D322CD2944009F8FE1 /* Contents.json */; };
 		B27C88FD22CD2945009F8FE1 /* Contents.json in Resources */ = {isa = PBXBuildFile; fileRef = B27C88D522CD2944009F8FE1 /* Contents.json */; };
+		B27C88FF22CDBB2D009F8FE1 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27C88FE22CDBB2D009F8FE1 /* Palette.swift */; };
 		B28033341F7E046B00CF4696 /* Sync Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28033331F7E046B00CF4696 /* Sync Class.swift */; };
 		B288FAC01FB804D000633FD7 /* Other Main Function Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B288FABF1FB804D000633FD7 /* Other Main Function Tests.swift */; };
 		B288FAC21FB80A0900633FD7 /* Test Utility Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B288FAC11FB80A0900633FD7 /* Test Utility Class.swift */; };
@@ -349,6 +350,7 @@
 		B27C88D122CD2944009F8FE1 /* Contents.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Contents.json; sourceTree = "<group>"; };
 		B27C88D322CD2944009F8FE1 /* Contents.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Contents.json; sourceTree = "<group>"; };
 		B27C88D522CD2944009F8FE1 /* Contents.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Contents.json; sourceTree = "<group>"; };
+		B27C88FE22CDBB2D009F8FE1 /* Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
 		B28033331F7E046B00CF4696 /* Sync Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Sync Class.swift"; sourceTree = "<group>"; };
 		B288FABF1FB804D000633FD7 /* Other Main Function Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Other Main Function Tests.swift"; sourceTree = "<group>"; };
 		B288FAC11FB80A0900633FD7 /* Test Utility Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Test Utility Class.swift"; sourceTree = "<group>"; };
@@ -1234,6 +1236,7 @@
 		B288FAB91FB8027E00633FD7 /* Utility Classes */ = {
 			isa = PBXGroup;
 			children = (
+				B27C88FE22CDBB2D009F8FE1 /* Palette.swift */,
 				CC7A49071DF28BEB00703D38 /* Scorecard UI.swift */,
 				CC395F501E0905BE00165D1C /* Utility Library.swift */,
 				B20A66F91E2385B500E75190 /* Reachability.swift */,
@@ -1370,7 +1373,6 @@
 		CC86557B1E021518000AF391 /* Standard Components */ = {
 			isa = PBXGroup;
 			children = (
-				B27C888422CD2944009F8FE1 /* Other palettes */,
 				B2DD5D791ECE3C8800725B55 /* Assets.xcassets */,
 				CC4CC0F81DEADC32007FB24F /* AppDelegate.swift */,
 				CC4CC0FC1DEADC32007FB24F /* Main.storyboard */,
@@ -1378,6 +1380,7 @@
 				CC4CC1071DEADC32007FB24F /* Info.plist */,
 				B2B1802621196166008D3BAA /* Contract_Whist_Scorecard.xcdatamodeld */,
 				B20DA04F1E1FEC5F0040221D /* Contract Whist Scorecard.entitlements */,
+				B27C888422CD2944009F8FE1 /* Other palettes */,
 			);
 			name = "Standard Components";
 			sourceTree = "<group>";
@@ -1767,6 +1770,7 @@
 				B2767C1E2110061B0029155E /* Loopback Class.swift in Sources */,
 				B20A66FC1E23921E00E75190 /* Buttons.swift in Sources */,
 				B2E9C75F22C1344C00B58BE5 /* Polygon.swift in Sources */,
+				B27C88FF22CDBB2D009F8FE1 /* Palette.swift in Sources */,
 				CC395F511E0905BE00165D1C /* Utility Library.swift in Sources */,
 				CC395F4D1E064EC500165D1C /* Card Class.swift in Sources */,
 				B28033341F7E046B00CF4696 /* Sync Class.swift in Sources */,

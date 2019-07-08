@@ -25,14 +25,12 @@
                             </view>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="left" contentVerticalAlignment="top" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aph-ga-WxR" userLabel="Finish Button" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="8" y="28" width="30" height="30"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="X06-Qk-sdl"/>
                                     <constraint firstAttribute="width" constant="30" id="iTg-rj-ePX"/>
                                 </constraints>
-                                <state key="normal" image="cross white">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
+                                <state key="normal" image="cross white"/>
                                 <connections>
                                     <action selector="finishPressed:" destination="7b0-A7-L4e" eventType="touchUpInside" id="LYO-fs-2i6"/>
                                 </connections>
@@ -70,8 +68,11 @@
     </scenes>
     <resources>
         <image name="cross white" width="20" height="20"/>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="Dark Highlight">
-            <color red="0.46274509803921571" green="0.46274509803921571" blue="0.46274509803921571" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.46299999952316284" green="0.46299999952316284" blue="0.46299999952316284" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

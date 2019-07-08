@@ -353,7 +353,7 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
     
     private func goToScorepad() {
         if self.scorecard.overrideSelected {
-            self.alertDecision("Overrides for the number of cards/rounds have been selected. Are you sure you want to continue",
+            self.alertDecision("Overrides for the number of cards/rounds or stats/history inclusion have been selected. Are you sure you want to continue",
                                title: "Warning",
                                okButtonText: "Use Overrides",
                                okHandler: {

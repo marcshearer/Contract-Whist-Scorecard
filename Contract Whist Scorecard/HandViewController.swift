@@ -328,7 +328,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
                 cell.playerBidLabel.text = "Bid \(bid!)"
             }
             cell.playerMadeLabel.text = playerMadeText(playerNumber)
-            cell.playerMadeLabel.textColor = ScorecardUI.textColor
+            cell.playerMadeLabel.textColor = Palette.tableTopText
             
             // Format card
             cell.playedCardWidthConstraint.constant = tabletopCardWidth
@@ -343,6 +343,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             } else {
                 // Show card
                 cell.cardView.isHidden = false
+                cell.cardLabel.textColor = UIColor.white
                 cell.cardLabel.attributedText = cards[indexPath.row].toAttributedString()
             }
             
@@ -364,6 +365,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Card Collection Cell", for: indexPath) as! CardCollectionCell
             
+            cell.cardLabel.textColor = UIColor.white
             cell.cardLabel.attributedText = self.collectionHand.handSuits[suit-1].cards[card - 1].toAttributedString()
             cell.cardLabel.font = UIFont.systemFont(ofSize: self.handCardFontSize)
             ScorecardUI.roundCorners(cell.cardView, percent: 10)
@@ -431,7 +433,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             if newBidMode == false && !firstBidRefresh {
                 // About to exit bid mode - delay 1 second
                 setupOverUnder()
-                self.setInstructionsColor(to: UIColor.darkGray)
+                self.setInstructionsColor(to: Palette.banner)
                 self.instructionTextView.text = "Bidding Complete"
                 self.finishButton.isHidden = true
                 self.scorecard.commsHandlerMode = .viewTrick
@@ -455,13 +457,13 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
                 // Your bid
                 bidsEnable(true, blockRemaining: bids.count == self.scorecard.currentPlayers - 1)
                 self.instructionTextView.text = "You to bid \(self.scorecard.enteredPlayer(enteredPlayerNumber).playerMO!.name!)"
-                self.setInstructionsColor(to: UIColor.blue)
+                self.setInstructionsColor(to: Palette.bold)
                 self.alertUser()
                 self.autoBid()
             } else {
                 bidsEnable(false)
                 self.instructionTextView.text = "\(self.scorecard.entryPlayer(bids.count + 1).playerMO!.name!) to bid"
-                self.setInstructionsColor(to: UIColor.darkGray)
+                self.setInstructionsColor(to: Palette.banner)
                 // Get computer player to bid
                 self.computerPlayerDelegate?[self.scorecard.entryPlayer(bids.count + 1).playerNumber]??.autoBid()
             }
@@ -479,7 +481,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             if currentTrickCards == self.scorecard.currentPlayers && self.state.trick > 1 {
                 // Hand complete - update tricks made on screen
                 self.playerMadeLabel[self.state.winner! - 1]?.text = playerMadeText(self.state.toPlay!)
-                self.playerMadeLabel[self.state.winner! - 1]?.textColor = UIColor.white
+                self.playerMadeLabel[self.state.winner! - 1]?.textColor = Palette.tableTopTextContrast
                 
                 // Disable lookback
                 lastHandButton.isHidden = true
@@ -540,13 +542,13 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
                 }
             }
             self.instructionTextView.text = "You to play \(self.scorecard.enteredPlayer(self.enteredPlayerNumber).playerMO!.name!)"
-            self.setInstructionsColor(to: UIColor.blue)
+            self.setInstructionsColor(to: Palette.bold)
             self.alertUser()
             self.autoPlay()
         } else {
             self.cardsEnable(false)
             self.instructionTextView.text = "\(self.scorecard.enteredPlayer(self.state.toPlay).playerMO!.name!) to play"
-            self.setInstructionsColor(to: UIColor.darkGray)
+            self.setInstructionsColor(to: Palette.banner)
             // Get computer player to play
             self.computerPlayerDelegate?[self.state.toPlay]??.autoPlay()
         }
@@ -660,8 +662,8 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         if bidMode {
             tabletopView.isHidden = true
             bidView.isHidden = false
-            leftFooterPaddingView.backgroundColor = UIColor.white
-            leftPaddingView.backgroundColor = UIColor.white
+            leftFooterPaddingView.backgroundColor = Palette.background
+            leftPaddingView.backgroundColor = Palette.background
             
             setupBidSize()
             setupHandSize()
@@ -674,8 +676,8 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         } else {
             bidView.isHidden = true
             tabletopView.isHidden = false
-            leftFooterPaddingView.backgroundColor = ScorecardUI.tableTopColor
-            leftPaddingView.backgroundColor = ScorecardUI.tableTopColor
+            leftFooterPaddingView.backgroundColor = Palette.tableTop
+            leftPaddingView.backgroundColor = Palette.tableTop
             
             setupTabletopSize()
             setupHandSize()
@@ -702,11 +704,9 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     
     func bidEnable(_ bid: Int, _ enable: Bool) {
         if enable {
-            bidButton[bid]?.alpha = 1.0
-            bidButton[bid]?.backgroundColor = ScorecardUI.darkHighlightColor
+            bidButton[bid]?.backgroundColor = Palette.highlight.withAlphaComponent(1.0)
         } else {
-            bidButton[bid]?.alpha = 0.3
-            bidButton[bid]?.backgroundColor = ScorecardUI.highlightColor
+            bidButton[bid]?.backgroundColor = Palette.highlight.withAlphaComponent(0.3)
         }
     }
     
@@ -833,14 +833,15 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         alertController.addAction(UIAlertAction(title: "Change card", style: UIAlertAction.Style.default, handler: resetPopover))
         alertController.view.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
         let subview = (alertController.view.subviews.first?.subviews.first?.subviews.first!)! as UIView
-        subview.backgroundColor = ScorecardUI.totalColor
-        alertController.view.tintColor = UIColor.white
+        subview.backgroundColor = Palette.darkHighlight
+        alertController.view.tintColor = Palette.darkHighlightText
         self.present(alertController, animated: false, completion: {
             // Show the card
             let cardWidth: CGFloat = 60
             let label = UILabel(frame: CGRect(x: (alertController.view.frame.width - cardWidth) / CGFloat(2), y: 20, width: cardWidth, height: cardWidth * (3/2)))
+            label.textColor = UIColor.white
             label.attributedText = card.toAttributedString()
-            label.backgroundColor = UIColor.white
+            label.backgroundColor = Palette.cardFace
             label.font = UIFont.systemFont(ofSize: 30)
             label.textAlignment = .center
             ScorecardUI.roundCorners(label)
@@ -878,6 +879,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         let currentCard = self.state.trickCards.count - 1
         if currentCard < self.scorecard.currentPlayers {
             self.playerCardView[currentCard]!.isHidden = false
+            self.playerCardLabel[currentCard]!.textColor = UIColor.white
             self.playerCardLabel[currentCard]!.attributedText = card.toAttributedString()
         }
         
@@ -894,14 +896,14 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         }))
         alertController.view.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
         let subview = (alertController.view.subviews.first?.subviews.first?.subviews.first!)! as UIView
-        subview.backgroundColor = ScorecardUI.totalColor
-        alertController.view.tintColor = UIColor.white
+        subview.backgroundColor = Palette.darkHighlight
+        alertController.view.tintColor = Palette.darkHighlightText
         self.present(alertController, animated: false, completion: {
             // Show the bid
             let label = UILabel(frame: CGRect(x: (alertController.view.frame.width - 50) / CGFloat(2), y: 20, width: 50, height: 50))
             label.text = "\(bid)"
-            label.backgroundColor = ScorecardUI.darkHighlightColor
-            label.textColor = ScorecardUI.totalTextColor
+            label.backgroundColor = Palette.highlight
+            label.textColor = Palette.highlightText
             label.font = UIFont.systemFont(ofSize: 30)
             label.textAlignment = .center
             ScorecardUI.roundCorners(label)
@@ -950,14 +952,15 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         let totalRemaining = scorecard.remaining(playerNumber: 0, round: scorecard.selectedRound, mode: Mode.bid, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
 
         overUnderButton.setTitle("\(totalRemaining >= 0 ? "-" : "+")\(abs(Int64(totalRemaining)))", for: .normal)
-        overUnderButton.setTitleColor((totalRemaining >= 0 ? ScorecardUI.contractUnderColor : ScorecardUI.contractOverColor), for: .normal)
+        overUnderButton.setTitleColor((totalRemaining >= 0 ? Palette.contractUnder : Palette.contractOver), for: .normal)
 
         if !self.scorecard.roundStarted(scorecard.selectedRound) {
             statusOverUnderLabel.text = ""
         } else {
-            statusOverUnderLabel.textColor = (totalRemaining == 0 ? ScorecardUI.contractEqualColor : (totalRemaining > 0 ? ScorecardUI.contractUnderColor : ScorecardUI.contractOverColor))
+            statusOverUnderLabel.textColor = (totalRemaining == 0 ? Palette.contractEqual : (totalRemaining > 0 ? Palette.contractUnder : Palette.contractOver))
             statusOverUnderLabel.text = " \(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")"
         }
+        statusRoundLabel.textColor = UIColor.white
         statusRoundLabel.attributedText = self.scorecard.roundTitle(round, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
     }
     

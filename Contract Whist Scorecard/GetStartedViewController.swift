@@ -26,6 +26,7 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     // MARK: - IB Outlets ============================================================================== -
     
     @IBOutlet weak var finishButton: UIButton!
+    @IBOutlet weak var networkMessageLabel: UILabel!
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     
@@ -35,7 +36,7 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
         } else {
             self.syncEnabledSelection.selectedSegmentIndex = 0
         }
-        scorecard.checkNetworkConnection(button: self.downloadPlayersButton, label: nil, disable: true)
+        scorecard.checkNetworkConnection(button: self.downloadPlayersButton, label: self.networkMessageLabel, disable: true)
         enableButtons()
     }
     
@@ -64,7 +65,7 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        scorecard.checkNetworkConnection(button: self.downloadPlayersButton, label: nil, disable: true)
+        scorecard.checkNetworkConnection(button: self.downloadPlayersButton, label: self.networkMessageLabel, disable: true)
         enableButtons()
     }
     
@@ -144,26 +145,26 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
                 downloadPlayersButton = cell.actionButton
                 downloadPlayersButton.setTitle("Download Players from Cloud")
                 downloadPlayersButton.addTarget(self, action: #selector(GetStartedViewController.downloadPlayersPressed(_:)), for: UIControl.Event.touchUpInside)
-                ScorecardUI.emphasisStyle(downloadPlayersButton)
+                Palette.emphasisStyle(downloadPlayersButton)
                 enableButtons()
             case 3:
                 // Other settings button
                 otherSettingsButton = cell.actionButton
                 otherSettingsButton.setTitle("Other Settings")
                 otherSettingsButton.addTarget(self, action: #selector(GetStartedViewController.otherSettingsPressed(_:)), for: UIControl.Event.touchUpInside)
-                ScorecardUI.highlightStyle(otherSettingsButton)
+                Palette.highlightStyle(otherSettingsButton)
             case 4:
                 // Game walkthrough button
                 gameWalkthroughButton = cell.actionButton
                 gameWalkthroughButton.setTitle("Game Walkthrough")
                 gameWalkthroughButton.addTarget(self, action: #selector(GetStartedViewController.gameWalkthroughPressed(_:)), for: UIControl.Event.touchUpInside)
-                ScorecardUI.highlightStyle(gameWalkthroughButton)
+                Palette.highlightStyle(gameWalkthroughButton)
             case 5:
                 // Start playing
                 startPlayingButton = cell.actionButton
                 startPlayingButton.setTitle("Home Screen")
                 startPlayingButton.addTarget(self, action: #selector(GetStartedViewController.startPlayingPressed(_:)), for: UIControl.Event.touchUpInside)
-                ScorecardUI.darkHighlightStyle(startPlayingButton)
+                Palette.darkHighlightStyle(startPlayingButton)
             default:
                 break
             }
@@ -225,7 +226,7 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
         if syncEmailTextField != nil {
             if scorecard.playerList.count == 0 && scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
                 syncEmailTextField.isHidden = false
-                syncEmailTextField.layer.borderColor = ScorecardUI.textMessageColor.cgColor
+                syncEmailTextField.layer.borderColor = Palette.textMessage.cgColor
                 syncEmailTextField.layer.borderWidth = 2
                 syncEmailTextField.layer.cornerRadius = 5
                 syncEmailTextField.becomeFirstResponder()
@@ -252,7 +253,7 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
             } else {
                 self.syncEnabledSelection.selectedSegmentIndex = 0
             }
-            self.scorecard.checkNetworkConnection(button: self.downloadPlayersButton, label: nil, disable: true)
+            self.scorecard.checkNetworkConnection(button: self.downloadPlayersButton, label: self.networkMessageLabel, disable: true)
             self.enableButtons()
         })
     }

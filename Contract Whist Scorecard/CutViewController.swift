@@ -372,6 +372,7 @@ class CutViewController: CustomViewController {
             self.scorecard.sendCut(cutCards: cut)
         }
         for playerNumber in 1...self.playerName.count {
+            playerCardLabel[playerNumber-1]!.textColor = UIColor.white
             playerCardLabel[playerNumber-1]!.attributedText = cut[playerNumber-1].toAttributedString()
         }
     

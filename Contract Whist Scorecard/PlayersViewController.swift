@@ -300,11 +300,8 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
             if players.count > 0 {
                 if self.sync == nil {
                     self.sync = Sync()
-                    self.sync.initialise()
                 }
-                if self.sync.connect() {
-                    self.sync.synchronise(syncMode: .syncUpdatePlayers, specificEmail: players)
-                }
+                _ = self.sync.synchronise(syncMode: .syncUpdatePlayers, specificEmail: players, waitFinish: true)
             }
         }
     }
@@ -522,7 +519,8 @@ class PlayerCell: ScrollViewCell {
         self.playerThumbnailName.adjustsFontSizeToFitWidth = true
         
         self.playerTile = UILabel(frame: frame)
-        self.playerTile.backgroundColor = ScorecardUI.bannerColor.withAlphaComponent(0.25)
+        self.playerTile.backgroundColor = Palette.thumbnailDisc
+        self.playerTile.textColor = Palette.thumbnailDiscText
         self.addSubview(self.playerTile)
         
         switch type {
@@ -540,7 +538,7 @@ class PlayerCell: ScrollViewCell {
         self.playerTileName = UILabel(frame: tileNameFrame)
         self.playerTile.addSubview(self.playerTileName)
         self.playerTileName.backgroundColor = UIColor.clear
-        self.playerTileName.textColor = ScorecardUI.textColor
+        self.playerTileName.textColor = Palette.text
         self.playerTileName.textAlignment = .center
         self.playerTileName.font = UIFont.systemFont(ofSize: 24.0)
         self.playerTileName.adjustsFontSizeToFitWidth = true

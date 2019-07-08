@@ -42,20 +42,15 @@ class Reconcile: SyncDelegate {
     
     // MARK: - Public class methods ==================================================================== -
     
-    func initialise() {
-        sync.initialise()
-    }
-    
     public func reconcilePlayers(playerMOList: [PlayerMO], syncFirst: Bool = true) {
         self.playerMOList = playerMOList
         
         // First synchronise
         if scorecard.settingSyncEnabled && syncFirst {
-            if self.sync.connect() {
-                self.sync.delegate = self
+            self.sync.delegate = self
+            if self.sync.synchronise(waitFinish: true) {
                 self.reconcileMessage("Sync in progress")
                 // Note this starts synchronisation - reconciliation is then initiated from the completion handler
-                self.sync.synchronise()
             } else {
                 self.reconcileMessage("Unable to synchronise with iCloud", finish: true)
             }
@@ -146,13 +141,10 @@ class Reconcile: SyncDelegate {
     
     // MARK: - Sync class delegate methods ===================================================================== -
     
-    func syncMessage(_ message: String) {
-        Utility.mainThread {
-        }
-    }
-    
     func syncAlert(_ message: String, completion: @escaping ()->()) {
-        completion()
+        Utility.mainThread {
+            completion()
+        }
     }
     
     func syncCompletion(_ errors: Int) {
@@ -165,9 +157,7 @@ class Reconcile: SyncDelegate {
         }
     }
     
-    func syncReturnPlayers(_ playerList: [PlayerDetail]!) {
-    }
-    // MARK: - Utility Routines ======================================================================== -
+   // MARK: - Utility Routines ======================================================================== -
     
     private func reconcileMessage(_ message: String, finish: Bool = false) {
         // call the delegate message handler if there is one

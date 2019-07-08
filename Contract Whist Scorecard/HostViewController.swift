@@ -1,4 +1,4 @@
-//
+ //
 //  HostViewController.swift
 //  Contract Whist Scorecard
 //
@@ -23,7 +23,7 @@ enum InviteStatus {
 }
 
 class HostViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate,
-CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStateDelegate, SearchDelegate {
+CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStateDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     
@@ -246,7 +246,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                             let invitees = selectedPlayers.count - 1
                             if invitees > 0 {
                                 let playerMO = Array(selectedPlayers[1...invitees])
-                                self.returnPlayers(complete: true, playerMO: playerMO, info: ["invitees" : true])
+                                self.returnInvitees(complete: true, playerMO: playerMO)
                             }
                         }
                     }
@@ -293,7 +293,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                         let invitees = selectedPlayers.count - 1
                         if invitees > 0 {
                             let playerMO = Array(selectedPlayers[1...invitees])
-                            self.returnPlayers(complete: true, playerMO: playerMO, info: ["invitees" : true])
+                            self.returnInvitees(complete: true, playerMO: playerMO)
                         }
                     } else {
                         // Select players
@@ -486,6 +486,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             let ready = (self.connectedPlayers >= 3)
             self.scorecardButton.isHidden = !ready
             self.continueButton.isHidden = !ready
+            self.imageView.isHidden = ready
             self.setInstructions()
             if (self.scorecard.recoveryMode || self.playingComputer) && self.connectedPlayers == self.scorecard.currentPlayers {
                 // Recovering or playing computer  - go straight to game setup
@@ -643,7 +644,8 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let header = view as! UITableViewHeaderFooterView
-        ScorecardUI.highlightStyle(view: header.backgroundView!)
+        Palette.sectionHeadingStyle(view: header.backgroundView!)
+        header.textLabel!.textColor = Palette.sectionHeadingText
         header.textLabel!.font = UIFont.boldSystemFont(ofSize: 18.0)
     }
     
@@ -761,7 +763,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     // MARK: - Action Handlers ================================================================ -
     
     @objc func changeHostButtonPressed(_ button: UIButton) {
-        self.scorecard.identifyPlayers(from: self, info: ["player" : true], filter: { (playerMO) in
+        SearchViewController.identifyPlayers(from: self, completion: self.returnPlayer, filter: { (playerMO) in
             // Exclude inviting player
             return (self.playerData[0].email != playerMO.email )
         })
@@ -779,65 +781,65 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         }
     }
     
-    // MARK: - Search delegate handlers ================================================================ -
+    // MARK: - Search return handler ================================================================ -
     
-    func returnPlayers(complete: Bool, playerMO: [PlayerMO]?, info: [String : Any?]?) {
-        if info?["player"] != nil {
-            if complete {
-                // Returning player
-                self.scorecard.defaultPlayerOnDevice = playerMO![0].email!
-                UserDefaults.standard.set(self.scorecard.defaultPlayerOnDevice, forKey: "defaultPlayerOnDevice")
-                self.playerData[0].name = playerMO![0].name!
-                self.playerData[0].email = playerMO![0].email!
-                self.playerData[0].playerMO = playerMO![0]
-                self.refreshHostView()
-                
-                // Check that this player hadn't connected from another devivce
-                if playerData.count > 1 {
-                    var disconnectPlayer: Int! = nil
-                    for playerNumber in 2...playerData.count {
-                        if self.playerData[playerNumber - 1].email == playerMO![0].email! {
-                            disconnectPlayer = playerNumber
-                        }
+    private func returnPlayer(complete: Bool, playerMO: [PlayerMO]?) {
+        if complete {
+            // Returning player
+            self.scorecard.defaultPlayerOnDevice = playerMO![0].email!
+            UserDefaults.standard.set(self.scorecard.defaultPlayerOnDevice, forKey: "defaultPlayerOnDevice")
+            self.playerData[0].name = playerMO![0].name!
+            self.playerData[0].email = playerMO![0].email!
+            self.playerData[0].playerMO = playerMO![0]
+            self.refreshHostView()
+            
+            // Check that this player hadn't connected from another devivce
+            if playerData.count > 1 {
+                var disconnectPlayer: Int! = nil
+                for playerNumber in 2...playerData.count {
+                    if self.playerData[playerNumber - 1].email == playerMO![0].email! {
+                        disconnectPlayer = playerNumber
                     }
-                    if disconnectPlayer != nil {
-                        self.disconnectPlayer(playerNumber: disconnectPlayer, reason: "This player has already connected from another device")
-                    }
+                }
+                if disconnectPlayer != nil {
+                    self.disconnectPlayer(playerNumber: disconnectPlayer, reason: "This player has already connected from another device")
                 }
             }
-        } else if info?["invitees"] != nil {
-            if complete {
-                // Returning invitees
-                
-                // Save selected players
-                self.selectedPlayers = [self.playerData[0].playerMO!] + playerMO!
-                
-                // Insert selected players into list
-                var invite: [String] = []
-                for player in playerMO! {
-                    invite.append(player.email!)
-                    self.addPlayer(name: player.name!,
-                                   email: player.email!,
-                                   playerMO: player,
-                                   peer: nil,
-                                   inviteStatus: .inviting)
-                }
-                
-                // Refresh UI
-                self.guestPlayerTableView.reloadData()
-                
-                // Open connection and send invites
-                self.startOnlineConnection()
-                self.startHostBroadcast(email: self.playerData[0].email, name: self.playerData[0].name, invite: invite, queueUUID: (self.scorecard.recoveryMode ? self.scorecard.recoveryConnectionUUID : nil))
-                
+        }
+    }
+    
+    func returnInvitees(complete: Bool, playerMO: [PlayerMO]?) {
+        if complete {
+            // Returning invitees
+            
+            // Save selected players
+            self.selectedPlayers = [self.playerData[0].playerMO!] + playerMO!
+            
+            // Insert selected players into list
+            var invite: [String] = []
+            for player in playerMO! {
+                invite.append(player.email!)
+                self.addPlayer(name: player.name!,
+                               email: player.email!,
+                               playerMO: player,
+                               peer: nil,
+                               inviteStatus: .inviting)
+            }
+            
+            // Refresh UI
+            self.guestPlayerTableView.reloadData()
+            
+            // Open connection and send invites
+            self.startOnlineConnection()
+            self.startHostBroadcast(email: self.playerData[0].email, name: self.playerData[0].name, invite: invite, queueUUID: (self.scorecard.recoveryMode ? self.scorecard.recoveryConnectionUUID : nil))
+            
+        } else {
+            // Incomplete list of invitees - exit
+            if self.defaultConnectionMode == .unknown {
+                self.setConnectionMode(.unknown)
             } else {
-                // Incomplete list of invitees - exit
-                if self.defaultConnectionMode == .unknown {
-                    self.setConnectionMode(.unknown)
-                } else {
-                    self.exitHost()
-                    
-                }
+                self.exitHost()
+                
             }
         }
     }
@@ -998,12 +1000,12 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     }
     
     private func chooseOnlineInvitees() {
-        self.scorecard.identifyPlayers(from: self,
+        SearchViewController.identifyPlayers(from: self,
                                        title: "Choose players",
                                        instructions: "Choose 2 or 3 players to invite to the game",
                                        minPlayers: 2,
                                        maxPlayers: self.scorecard.numberPlayers - 1,
-                                       info: ["invitees" : true],
+                                       completion: self.returnInvitees,
                                        filter: self.filterPlayers)
     }
     
@@ -1060,7 +1062,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         var xref: [Int] = []
         
         for playerNumber in 1...playerData.count {
-            if self.scorecard.recoveryMode {
+            if self.scorecard.recoveryMode && !self.playingComputer {
                 // Ensure players are in same order as before
                 let index = self.playerData.firstIndex(where: {$0.email == self.selectedPlayers[playerNumber - 1].email})
                 xref.append(index!)

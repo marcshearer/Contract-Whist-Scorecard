@@ -27,7 +27,7 @@
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R7D-RJ-hmj" userLabel="Bottom Line">
                                 <rect key="frame" x="0.0" y="862" width="414" height="2"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" name="Grid"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="2" id="7qe-jG-Dbk"/>
                                 </constraints>
@@ -37,13 +37,12 @@
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gJV-Ai-5A3" userLabel="Left Line">
                                         <rect key="frame" x="-2" y="0.0" width="2" height="818"/>
-                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" name="Grid"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="2" id="y2X-L5-1Yu"/>
                                         </constraints>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="gJV-Ai-5A3" firstAttribute="top" secondItem="4mH-Ut-Ta9" secondAttribute="top" id="5yp-Zq-7pO"/>
                                     <constraint firstAttribute="trailing" secondItem="gJV-Ai-5A3" secondAttribute="trailing" id="Llg-Ck-o3w"/>
@@ -55,13 +54,12 @@
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SeV-1g-Tzl" userLabel="Left Line">
                                         <rect key="frame" x="0.0" y="0.0" width="2" height="818"/>
-                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" name="Grid"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="2" id="FXN-PX-YPU"/>
                                         </constraints>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstItem="SeV-1g-Tzl" firstAttribute="leading" secondItem="2V4-Rn-jn9" secondAttribute="leading" id="Lpg-53-gr4"/>
                                     <constraint firstAttribute="bottom" secondItem="SeV-1g-Tzl" secondAttribute="bottom" id="Xy0-uu-bel"/>
@@ -70,9 +68,6 @@
                             </view>
                             <navigationBar clipsSubviews="YES" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Skq-xy-HKr" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="44" width="414" height="44"/>
-                                <textAttributes key="titleTextAttributes">
-                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </textAttributes>
                                 <items>
                                     <navigationItem title="Scorecard" id="F6Y-rL-bdK">
                                         <barButtonItem key="leftBarButtonItem" id="51I-1V-L3U">
@@ -115,7 +110,7 @@
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="redraw" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0qL-mh-yEp" userLabel="Header Collection View">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" name="Clear"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Qk4-FS-pii">
                                                         <size key="itemSize" width="50" height="50"/>
                                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -135,7 +130,7 @@
                                                                         <subviews>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="003-9S-puq" userLabel="Left Line">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="5" height="50"/>
-                                                                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                                                <color key="backgroundColor" name="Grid"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="width" constant="5" id="Kto-Mf-vch"/>
                                                                                 </constraints>
@@ -145,7 +140,7 @@
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4SF-rg-dYh" userLabel="Top Line">
                                                                                         <rect key="frame" x="0.0" y="0.0" width="45" height="5"/>
-                                                                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                                                        <color key="backgroundColor" name="Grid"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="height" constant="5" id="7L0-wc-Lhi"/>
                                                                                         </constraints>
@@ -192,7 +187,7 @@
                                                                         <subviews>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xgi-DP-c4v" userLabel="Left Line">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="5" height="50"/>
-                                                                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                                                <color key="backgroundColor" name="Grid"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="width" constant="5" id="vpZ-Lr-rnK"/>
                                                                                 </constraints>
@@ -202,14 +197,14 @@
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XYq-c4-gCU" userLabel="Top Line">
                                                                                         <rect key="frame" x="0.0" y="0.0" width="45" height="5"/>
-                                                                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                                                        <color key="backgroundColor" name="Grid"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="height" constant="5" id="wC2-jO-NS8"/>
                                                                                         </constraints>
                                                                                     </view>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d3O-hY-nLU" userLabel="Padding above">
                                                                                         <rect key="frame" x="0.0" y="5" width="45" height="6"/>
-                                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                                                        <color key="backgroundColor" name="Clear"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="height" constant="6" id="cHG-pF-ODM"/>
                                                                                         </constraints>
@@ -219,7 +214,7 @@
                                                                                         <subviews>
                                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WfK-Ha-xtn" userLabel="Padding left">
                                                                                                 <rect key="frame" x="0.0" y="0.0" width="4.5" height="36"/>
-                                                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                                                                <color key="backgroundColor" name="Clear"/>
                                                                                             </view>
                                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fU9-cw-ta5" userLabel="Image Container">
                                                                                                 <rect key="frame" x="4.5" y="0.0" width="36" height="36"/>
@@ -236,13 +231,13 @@
                                                                                                     </label>
                                                                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="grq-ja-GuI">
                                                                                                         <rect key="frame" x="0.0" y="0.0" width="36" height="36"/>
-                                                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                                                                        <color key="backgroundColor" name="Clear"/>
                                                                                                         <constraints>
                                                                                                             <constraint firstAttribute="width" secondItem="grq-ja-GuI" secondAttribute="height" multiplier="1:1" id="6Be-Za-oPx"/>
                                                                                                         </constraints>
                                                                                                     </imageView>
                                                                                                 </subviews>
-                                                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                                                                <color key="backgroundColor" name="Clear"/>
                                                                                                 <constraints>
                                                                                                     <constraint firstAttribute="bottom" secondItem="grq-ja-GuI" secondAttribute="bottom" id="0vH-vu-LPH"/>
                                                                                                     <constraint firstItem="7Na-dy-Qwz" firstAttribute="top" secondItem="fU9-cw-ta5" secondAttribute="top" id="42P-6x-hXn"/>
@@ -257,7 +252,7 @@
                                                                                             </view>
                                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T8v-Lu-bs0" userLabel="Padding right">
                                                                                                 <rect key="frame" x="40.5" y="0.0" width="4.5" height="36"/>
-                                                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                                                                <color key="backgroundColor" name="Clear"/>
                                                                                             </view>
                                                                                         </subviews>
                                                                                         <constraints>
@@ -269,7 +264,7 @@
                                                                                     </stackView>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6pr-B5-jpl" userLabel="Padding below">
                                                                                         <rect key="frame" x="0.0" y="47" width="45" height="3"/>
-                                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                                                        <color key="backgroundColor" name="Clear"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="height" constant="3" id="6kB-qC-bBX"/>
                                                                                         </constraints>
@@ -328,7 +323,7 @@
                             </tableView>
                             <tableView clipsSubviews="YES" tag="2" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="m5j-3V-hPG" userLabel="Body Table View">
                                 <rect key="frame" x="0.0" y="176" width="414" height="642"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" name="Clear"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Body Table Cell" id="5dl-Lb-15P" customClass="ScorepadTableViewCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="44"/>
@@ -339,7 +334,7 @@
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="redraw" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="4T5-T5-xo8" userLabel="Body Collection View">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="backgroundColor" name="Clear"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="wCU-a4-0e5">
                                                         <size key="itemSize" width="50" height="50"/>
                                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -359,7 +354,7 @@
                                                                         <subviews>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ejQ-iq-y0f" userLabel="Left Line">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="5" height="50"/>
-                                                                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                                                <color key="backgroundColor" name="Grid"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="width" constant="5" id="Zen-Tv-ScO"/>
                                                                                 </constraints>
@@ -369,20 +364,18 @@
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="37L-NB-jCF" userLabel="Top Line">
                                                                                         <rect key="frame" x="0.0" y="0.0" width="45" height="5"/>
-                                                                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                                                        <color key="backgroundColor" name="Grid"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="height" constant="5" id="0o7-g1-wJ8"/>
                                                                                         </constraints>
                                                                                     </view>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BodyLabel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BXX-PT-3Zr">
                                                                                         <rect key="frame" x="0.0" y="5" width="45" height="45"/>
-                                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                                         <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
                                                                                 </subviews>
-                                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                 <constraints>
                                                                                     <constraint firstItem="BXX-PT-3Zr" firstAttribute="top" secondItem="37L-NB-jCF" secondAttribute="bottom" id="5lA-32-MRo"/>
                                                                                     <constraint firstItem="37L-NB-jCF" firstAttribute="leading" secondItem="En7-GC-jDI" secondAttribute="leading" id="QAh-4Q-0lh"/>
@@ -394,7 +387,6 @@
                                                                                 </constraints>
                                                                             </stackView>
                                                                         </subviews>
-                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <constraints>
                                                                             <constraint firstItem="En7-GC-jDI" firstAttribute="top" secondItem="9Ze-6D-xFt" secondAttribute="top" id="Byh-Sg-6Ly"/>
                                                                             <constraint firstAttribute="trailing" secondItem="En7-GC-jDI" secondAttribute="trailing" id="DH6-A1-bjZ"/>
@@ -407,7 +399,7 @@
                                                                     </stackView>
                                                                 </subviews>
                                                             </view>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <color key="backgroundColor" name="Clear"/>
                                                             <constraints>
                                                                 <constraint firstItem="9Ze-6D-xFt" firstAttribute="top" secondItem="uiX-dn-eZa" secondAttribute="top" id="JQe-xy-Qhf"/>
                                                                 <constraint firstAttribute="bottom" secondItem="9Ze-6D-xFt" secondAttribute="bottom" id="d02-NB-nVc"/>
@@ -432,7 +424,7 @@
                                                                         <subviews>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dgz-aL-UBK" userLabel="Left Line">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="5" height="50"/>
-                                                                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                                                <color key="backgroundColor" name="Grid"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="width" constant="5" id="QGA-nw-8SZ"/>
                                                                                 </constraints>
@@ -442,7 +434,7 @@
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vJe-M8-5kj" userLabel="Top Line">
                                                                                         <rect key="frame" x="0.0" y="0.0" width="45" height="5"/>
-                                                                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                                                        <color key="backgroundColor" name="Grid"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="height" constant="5" id="KXW-Ry-olz"/>
                                                                                         </constraints>
@@ -452,7 +444,6 @@
                                                                                         <subviews>
                                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BodyLabel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ruM-Kd-B1H">
                                                                                                 <rect key="frame" x="0.0" y="0.0" width="45" height="45"/>
-                                                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                                                 <nil key="textColor"/>
                                                                                                 <nil key="highlightedColor"/>
@@ -465,7 +456,6 @@
                                                                                                 </constraints>
                                                                                             </imageView>
                                                                                         </subviews>
-                                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="trailing" secondItem="ruM-Kd-B1H" secondAttribute="trailing" id="74u-VF-leu"/>
                                                                                             <constraint firstItem="ruM-Kd-B1H" firstAttribute="top" secondItem="ZyM-WT-TiN" secondAttribute="top" id="D1w-S1-XtV"/>
@@ -477,7 +467,6 @@
                                                                                         </constraints>
                                                                                     </view>
                                                                                 </subviews>
-                                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                 <constraints>
                                                                                     <constraint firstItem="ZyM-WT-TiN" firstAttribute="leading" secondItem="7kT-vo-7Pi" secondAttribute="leading" id="1qH-DY-u4E"/>
                                                                                     <constraint firstItem="vJe-M8-5kj" firstAttribute="top" secondItem="7kT-vo-7Pi" secondAttribute="top" id="5Vm-9E-GBP"/>
@@ -489,7 +478,6 @@
                                                                                 </constraints>
                                                                             </stackView>
                                                                         </subviews>
-                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <constraints>
                                                                             <constraint firstItem="dgz-aL-UBK" firstAttribute="top" secondItem="wtF-yE-YxL" secondAttribute="top" id="2YL-B5-Izc"/>
                                                                             <constraint firstItem="7kT-vo-7Pi" firstAttribute="leading" secondItem="dgz-aL-UBK" secondAttribute="trailing" id="TrT-H0-LHa"/>
@@ -502,7 +490,6 @@
                                                                     </stackView>
                                                                 </subviews>
                                                             </view>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstItem="wtF-yE-YxL" firstAttribute="leading" secondItem="THo-F6-MFk" secondAttribute="leading" id="LDi-5R-rsq"/>
                                                                 <constraint firstAttribute="bottom" secondItem="wtF-yE-YxL" secondAttribute="bottom" id="bAm-kD-XyJ"/>
@@ -519,7 +506,6 @@
                                                     </cells>
                                                 </collectionView>
                                             </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="4T5-T5-xo8" secondAttribute="bottom" id="BwW-fw-WYv"/>
                                                 <constraint firstItem="4T5-T5-xo8" firstAttribute="leading" secondItem="AFT-1X-9g7" secondAttribute="leading" id="Lec-8k-TeN"/>
@@ -527,7 +513,7 @@
                                                 <constraint firstAttribute="trailing" secondItem="4T5-T5-xo8" secondAttribute="trailing" id="sOV-T8-aGD"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" name="Clear"/>
                                         <connections>
                                             <outlet property="scorepadCollectionView" destination="4T5-T5-xo8" id="n8A-2C-XVe"/>
                                         </connections>
@@ -557,7 +543,6 @@
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="redraw" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0hZ-si-j19" userLabel="Footer Collection View">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="44" id="Hzh-Hv-tmK"/>
                                                     </constraints>
@@ -580,7 +565,7 @@
                                                                         <subviews>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bke-dz-ngP" userLabel="Left Line">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="5" height="50"/>
-                                                                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                                                <color key="backgroundColor" name="Grid"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="width" constant="5" id="gLO-OB-NzD"/>
                                                                                 </constraints>
@@ -590,7 +575,7 @@
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7s4-i2-IBi" userLabel="Top Line">
                                                                                         <rect key="frame" x="0.0" y="0.0" width="45" height="5"/>
-                                                                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                                                        <color key="backgroundColor" name="Grid"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="height" constant="5" id="EEh-na-JUx"/>
                                                                                         </constraints>
@@ -598,7 +583,7 @@
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FooterLabel" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="bjf-fA-s3i">
                                                                                         <rect key="frame" x="0.0" y="5" width="45" height="45"/>
                                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                                                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                        <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
                                                                                 </subviews>
@@ -802,14 +787,20 @@
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="Emphasis">
-            <color red="0.89803921568627454" green="0.74901960784313726" blue="0.37254901960784315" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.89800000190734863" green="0.74900001287460327" blue="0.37299999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Emphasis Text">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <namedColor name="Grid">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="Total">
-            <color red="0.93333333333333335" green="0.87450980392156863" blue="0.70588235294117652" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.93300002813339233" green="0.875" blue="0.70599997043609619" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

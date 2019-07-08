@@ -214,7 +214,7 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
         default:
             // Body table view
             cell = tableView.dequeueReusableCell(withIdentifier: "Data Table Body Cell", for: indexPath) as! DataTableCell
-            ScorecardUI.normalStyle(cell)
+            Palette.normalStyle(cell)
             cell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row)
             cell.separatorHeightConstraint.constant = self.delegate?.separatorHeight ?? 1.0
             collectionView[indexPath.row] = cell.dataTableCollection
@@ -343,8 +343,8 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Data Table Header Cell", for: indexPath) as! DataTableCollectionCell
             cell.tag = indexPath.row
 
-            ScorecardUI.sectionHeadingStyle(cell.textLabel)
-            cell.headerUpArrowView.backgroundColor = ScorecardUI.sectionHeadingColor
+            Palette.sectionHeadingStyle(cell.textLabel)
+            cell.headerUpArrowView.backgroundColor = Palette.sectionHeading
             cell.textLabel.text = column.title
             cell.textLabel.textAlignment = column.align
             
@@ -391,7 +391,7 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
                                      size: cell.frame.height - 6)
             default:
                 cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Data Table Body Normal Cell", for: indexPath) as! DataTableCollectionCell
-                ScorecardUI.normalStyle(cell.textLabel)
+                Palette.normalStyle(cell.textLabel)
                 cell.textLabel.text = self.getValue(record: record, column: column)
                 cell.textLabel.textAlignment = displayedFields[indexPath.row].align
             }
@@ -625,8 +625,8 @@ class DataTableCell: UITableViewCell {
     
     public func setupArrows() {
         self.resetArrows()
-        self.headerUpArrowShape = self.centralArrow(container: self.headerUpArrowView, up: true, color: ScorecardUI.backgroundColor)
-        self.headerDownArrowShape = self.centralArrow(container: self.headerDownArrowView, up: false, color: ScorecardUI.sectionHeadingColor)
+        self.headerUpArrowShape = self.centralArrow(container: self.headerUpArrowView, up: true, color: Palette.background)
+        self.headerDownArrowShape = self.centralArrow(container: self.headerDownArrowView, up: false, color: Palette.sectionHeading)
     }
     
     private func centralArrow(container: UIView, up: Bool, color: UIColor) -> UIView {

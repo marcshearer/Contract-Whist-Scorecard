@@ -24,10 +24,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        UINavigationBar.appearance().barTintColor = ScorecardUI.emphasisColor
+        UINavigationBar.appearance().barTintColor = Palette.emphasis
         UINavigationBar.appearance().tintColor = UIColor.white
         UINavigationBar.appearance().isOpaque = true
-        UILabel.appearance().textColor = ScorecardUI.textColor
+        // UILabel.appearance().textColor = Palette.text
+        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = Palette.background
         
         registerDefaults()
         

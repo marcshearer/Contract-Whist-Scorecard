@@ -270,7 +270,7 @@ class ScorepadViewController: CustomViewController,
         if firstTimeAppear {
             firstTimeAppear = false
             // Link to location
-            if (scorepadMode == .amend || self.scorecard.isHosting) && self.scorecard.settingSaveLocation &&
+            if (scorepadMode == .amend || self.scorecard.isHosting) && !self.scorecard.isPlayingComputer && self.scorecard.settingSaveLocation &&
                 (self.scorecard.gameLocation == nil || self.scorecard.gameLocation.description == nil || self.scorecard.gameLocation.description == "" ||
                     (self.scorecard.selectedRound == 1 &&
                         !self.scorecard.roundStarted(self.scorecard.selectedRound))) {
@@ -530,11 +530,11 @@ class ScorepadViewController: CustomViewController,
     private func highlightDealer(headerCell: ScorepadCollectionViewCell, playerNumber: Int, row: Int, forceClear: Bool = false) {
         if playerNumber >= 0 {
             if scorecard.isScorecardDealer() == playerNumber && !forceClear {
-                ScorecardUI.highlightStyle(view: headerCell)
-                headerCell.scorepadCellLabel?.textColor = ScorecardUI.highlightTextColor
+                Palette.highlightStyle(view: headerCell)
+                headerCell.scorepadCellLabel?.textColor = Palette.highlightText
             } else {
-                ScorecardUI.emphasisStyle(view: headerCell)
-                headerCell.scorepadCellLabel?.textColor = ScorecardUI.emphasisTextColor
+                Palette.emphasisStyle(view: headerCell)
+                headerCell.scorepadCellLabel?.textColor = Palette.emphasisText
             }
         }
     }
@@ -893,8 +893,8 @@ class ScorepadViewController: CustomViewController,
                 }
                 
                 headerCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier,for: indexPath)   as! ScorepadCollectionViewCell
-                ScorecardUI.emphasisStyle(view: headerCell)
-                headerCell.scorepadCellLabel?.textColor = ScorecardUI.emphasisTextColor
+                Palette.emphasisStyle(view: headerCell)
+                headerCell.scorepadCellLabel?.textColor = Palette.emphasisText
                 
                 if row != playerRow {
                     
@@ -921,8 +921,8 @@ class ScorepadViewController: CustomViewController,
             } else {
                 headerCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Header Collection Cell",for: indexPath) as! ScorepadCollectionViewCell
                 
-                ScorecardUI.emphasisStyle(view: headerCell)
-                headerCell.scorepadCellLabel?.textColor = ScorecardUI.emphasisTextColor
+                Palette.emphasisStyle(view: headerCell)
+                headerCell.scorepadCellLabel?.textColor = Palette.emphasisText
                 
                 if column == 0 {
                     // Row titles
@@ -972,7 +972,7 @@ class ScorepadViewController: CustomViewController,
         
             if column == 0 {
                 // Row titles
-                ScorecardUI.emphasisStyle(footerCell.scorepadCellLabel)
+                Palette.emphasisStyle(footerCell.scorepadCellLabel)
                 footerCell.scorepadCellLabel.text="Total"
                 footerCell.scorepadLeftLineWeight.constant = 0
                 footerCell.scorepadCellLabel.numberOfLines = 1
@@ -980,7 +980,7 @@ class ScorepadViewController: CustomViewController,
             } else {
                 // Row values
                 player = column
-                ScorecardUI.totalStyle(footerCell.scorepadCellLabel)
+                Palette.totalStyle(footerCell.scorepadCellLabel)
                 footerCell.scorepadCellLabel.text = "\(scorecard.scorecardPlayer(player).totalScore())"
                 footerCell.scorepadLeftLineWeight.constant = thickLineWeight
                 scorecard.scorecardPlayer(player).setTotalLabel(label: footerCell.scorepadCellLabel)
@@ -1009,8 +1009,8 @@ class ScorepadViewController: CustomViewController,
             bodyCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ScorepadCollectionViewCell
             if column == 0
             {
-                ScorecardUI.emphasisStyle(bodyCell.scorepadCellLabel)
-                bodyCell.scorepadCellLabel.attributedText = scorecard.roundTitle(round, rankColor: ScorecardUI.emphasisTextColor, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
+                Palette.emphasisStyle(bodyCell.scorepadCellLabel)
+                bodyCell.scorepadCellLabel.attributedText = scorecard.roundTitle(round, rankColor: Palette.emphasisText, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
                 bodyCell.scorepadLeftLineWeight.constant = 0
                 bodyCell.scorepadCellLabel.accessibilityIdentifier = ""
             } else {

@@ -39,15 +39,17 @@
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H5B-2k-XF2" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <textAttributes key="titleTextAttributes">
-                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="textColor" name="Banner Text"/>
                                 </textAttributes>
                                 <items>
                                     <navigationItem id="gXM-gM-Eqi">
                                         <barButtonItem key="leftBarButtonItem" id="OKi-M2-DFj">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="aKf-ti-7PN">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="aKf-ti-7PN" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                 <rect key="frame" x="16" y="11" width="56" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Back" image="back"/>
+                                                <state key="normal" title="Back" image="back">
+                                                    <color key="titleColor" name="Banner Text"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="finishPressed:" destination="FsR-Kn-dnU" eventType="touchUpInside" id="j3Q-bt-jKB"/>
                                                 </connections>
@@ -57,7 +59,9 @@
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="6Q0-4S-yhc" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                 <rect key="frame" x="269" y="5" width="90" height="34"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Sync..."/>
+                                                <state key="normal" title="Sync...">
+                                                    <color key="titleColor" name="Banner Text"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="syncPressed:" destination="FsR-Kn-dnU" eventType="touchUpInside" id="CwY-Rm-MUG"/>
                                                 </connections>
@@ -68,7 +72,7 @@
                             </navigationBar>
                             <tableView clipsSubviews="YES" tag="2" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zs1-6Q-Kuk" userLabel="Body Table View">
                                 <rect key="frame" x="0.0" y="98" width="375" height="525"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" name="Clear"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Data Table Body Cell" id="t2h-Qy-aAO" userLabel="Body Table View Cell" customClass="DataTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
@@ -79,7 +83,7 @@
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fy8-Zj-CwR">
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                                                    <color key="backgroundColor" name="Background"/>
+                                                    <color key="backgroundColor" name="Clear"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="iyq-LE-4la">
                                                         <size key="itemSize" width="0.0" height="0.0"/>
                                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -94,14 +98,14 @@
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="saY-dq-bW5">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
+                                                                        <color key="backgroundColor" name="Clear"/>
                                                                         <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
-                                                                        <nil key="textColor"/>
+                                                                        <color key="textColor" name="Text"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                 </subviews>
                                                             </view>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <color key="backgroundColor" name="Clear"/>
                                                             <constraints>
                                                                 <constraint firstItem="saY-dq-bW5" firstAttribute="leading" secondItem="gRd-bz-jud" secondAttribute="leading" id="3WV-TO-dxb"/>
                                                                 <constraint firstItem="saY-dq-bW5" firstAttribute="top" secondItem="gRd-bz-jud" secondAttribute="top" id="J8K-T8-J4F"/>
@@ -120,11 +124,14 @@
                                                                 <subviews>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ceh-ei-v9a" userLabel="Body Button" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                                         <rect key="frame" x="8" y="8" width="16" height="22"/>
-                                                                        <state key="normal" image="graph"/>
+                                                                        <color key="backgroundColor" name="Clear"/>
+                                                                        <state key="normal" image="graph">
+                                                                            <color key="titleColor" name="Text"/>
+                                                                        </state>
                                                                     </button>
                                                                 </subviews>
                                                             </view>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <color key="backgroundColor" name="Clear"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="bottom" secondItem="Ceh-ei-v9a" secondAttribute="bottom" constant="8" id="EHE-o6-V0C"/>
                                                                 <constraint firstAttribute="trailing" secondItem="Ceh-ei-v9a" secondAttribute="trailing" constant="8" id="I1Q-GI-xhP"/>
@@ -144,7 +151,7 @@
                                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="W86-P7-fmw" userLabel="Vertical Stack View">
                                                                         <subviews>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wgI-v7-r1A" userLabel="Padding above">
-                                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <color key="backgroundColor" name="Clear"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="3" id="EBP-Wf-I11"/>
                                                                                 </constraints>
@@ -152,7 +159,7 @@
                                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="vnV-4q-PCe" userLabel="Horizontal Stack View">
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FrM-hG-Ibp" userLabel="Padding left">
-                                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                        <color key="backgroundColor" name="Clear"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="width" constant="3" id="fOX-Te-lCf"/>
                                                                                         </constraints>
@@ -161,16 +168,17 @@
                                                                                         <subviews>
                                                                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="aIh-3j-wpO">
                                                                                                 <rect key="frame" x="0.0" y="0.0" width="42" height="0.0"/>
-                                                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                                <color key="backgroundColor" name="Clear"/>
                                                                                             </imageView>
                                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iNT-wA-HGU">
                                                                                                 <rect key="frame" x="0.0" y="0.0" width="42" height="0.0"/>
+                                                                                                <color key="backgroundColor" name="Clear"/>
                                                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                                                <nil key="textColor"/>
+                                                                                                <color key="textColor" name="Text"/>
                                                                                                 <nil key="highlightedColor"/>
                                                                                             </label>
                                                                                         </subviews>
-                                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                        <color key="backgroundColor" name="Clear"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="bottom" secondItem="aIh-3j-wpO" secondAttribute="bottom" id="09Z-6J-kWU"/>
                                                                                             <constraint firstItem="iNT-wA-HGU" firstAttribute="bottom" secondItem="aIh-3j-wpO" secondAttribute="bottom" id="HtE-k6-xJ1"/>
@@ -183,13 +191,12 @@
                                                                                         </constraints>
                                                                                     </view>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TdW-J5-VUg" userLabel="Padding right">
-                                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                        <color key="backgroundColor" name="Clear"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="width" constant="7" id="iRz-EV-qcP"/>
                                                                                         </constraints>
                                                                                     </view>
                                                                                 </subviews>
-                                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                                 <constraints>
                                                                                     <constraint firstItem="TdW-J5-VUg" firstAttribute="leading" secondItem="0Lh-dg-sBT" secondAttribute="trailing" id="1sS-E3-9Lq"/>
                                                                                     <constraint firstAttribute="trailing" secondItem="TdW-J5-VUg" secondAttribute="trailing" id="3QH-OQ-EST"/>
@@ -204,13 +211,12 @@
                                                                                 </constraints>
                                                                             </stackView>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e6B-8D-NgD" userLabel="Padding below">
-                                                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                                <color key="backgroundColor" name="Clear"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="3" id="xxe-tR-r9V"/>
                                                                                 </constraints>
                                                                             </view>
                                                                         </subviews>
-                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                         <constraints>
                                                                             <constraint firstItem="vnV-4q-PCe" firstAttribute="top" secondItem="wgI-v7-r1A" secondAttribute="bottom" id="0YN-Ap-Yti"/>
                                                                             <constraint firstAttribute="trailing" secondItem="wgI-v7-r1A" secondAttribute="trailing" id="0k6-cu-JE4"/>
@@ -226,7 +232,7 @@
                                                                     </stackView>
                                                                 </subviews>
                                                             </view>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <color key="backgroundColor" name="Clear"/>
                                                             <constraints>
                                                                 <constraint firstItem="W86-P7-fmw" firstAttribute="leading" secondItem="OqO-Rh-cDg" secondAttribute="leading" id="LCc-6B-xbh"/>
                                                                 <constraint firstItem="W86-P7-fmw" firstAttribute="top" secondItem="OqO-Rh-cDg" secondAttribute="top" id="TvP-ew-Dhh"/>
@@ -242,13 +248,12 @@
                                                 </collectionView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ppf-Ml-K5S" userLabel="Separator">
                                                     <rect key="frame" x="0.0" y="43" width="375" height="1"/>
-                                                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" name="Separator"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="aPQ-ro-IsC"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="Ppf-Ml-K5S" secondAttribute="bottom" id="93O-eW-M0t"/>
                                                 <constraint firstAttribute="trailing" secondItem="Ppf-Ml-K5S" secondAttribute="trailing" id="95x-Ox-e90"/>
@@ -259,7 +264,7 @@
                                                 <constraint firstItem="fy8-Zj-CwR" firstAttribute="leading" secondItem="ggU-xh-ecH" secondAttribute="leading" id="sAr-gg-dS4"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" name="Clear"/>
                                         <connections>
                                             <outlet property="dataTableCollection" destination="fy8-Zj-CwR" id="7lz-iA-HfM"/>
                                             <outlet property="separatorHeightConstraint" destination="aPQ-ro-IsC" id="Hye-Bz-iMN"/>
@@ -276,7 +281,7 @@
                             </tableView>
                             <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="55F-UG-Ned" userLabel="Header Table View">
                                 <rect key="frame" x="0.0" y="64" width="375" height="44"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" name="Clear"/>
                                 <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="MUj-Xx-bYz"/>
@@ -290,8 +295,8 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gXG-S6-tvf" userLabel="Header Collection View">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                                    <color key="backgroundColor" name="Clear"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="MWO-G1-p4t">
                                                         <size key="itemSize" width="50" height="44"/>
                                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -300,7 +305,7 @@
                                                     </collectionViewFlowLayout>
                                                     <cells>
                                                         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" reuseIdentifier="Data Table Header Cell" id="1av-63-VO8" userLabel="Header Collection Cell" customClass="DataTableCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="-0.5" width="50" height="44"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="44"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="44"/>
@@ -308,27 +313,28 @@
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="CC4-IV-sdi">
                                                                         <rect key="frame" x="0.0" y="0.0" width="50" height="24"/>
+                                                                        <color key="backgroundColor" name="Clear"/>
                                                                         <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
-                                                                        <nil key="textColor"/>
+                                                                        <color key="textColor" name="Text"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fo1-5v-pZW">
                                                                         <rect key="frame" x="0.0" y="24" width="50" height="10"/>
-                                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                        <color key="backgroundColor" name="Clear"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="10" id="qHI-un-kW5"/>
                                                                         </constraints>
                                                                     </view>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2EQ-R2-YJx">
                                                                         <rect key="frame" x="0.0" y="34" width="50" height="10"/>
-                                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                        <color key="backgroundColor" name="Clear"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="10" id="aoj-7s-W8L"/>
                                                                         </constraints>
                                                                     </view>
                                                                 </subviews>
                                                             </view>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <color key="backgroundColor" name="Clear"/>
                                                             <constraints>
                                                                 <constraint firstItem="fo1-5v-pZW" firstAttribute="leading" secondItem="1av-63-VO8" secondAttribute="leading" id="6Ma-eX-VJb"/>
                                                                 <constraint firstAttribute="trailing" secondItem="2EQ-R2-YJx" secondAttribute="trailing" id="F1T-iR-jnb"/>
@@ -350,7 +356,6 @@
                                                     </cells>
                                                 </collectionView>
                                             </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
                                                 <constraint firstItem="gXG-S6-tvf" firstAttribute="top" secondItem="6SL-4M-90t" secondAttribute="top" id="1Cu-Po-yqD"/>
                                                 <constraint firstAttribute="bottom" secondItem="gXG-S6-tvf" secondAttribute="bottom" id="AyB-c5-Jp8"/>
@@ -358,7 +363,7 @@
                                                 <constraint firstItem="gXG-S6-tvf" firstAttribute="leading" secondItem="6SL-4M-90t" secondAttribute="leading" id="rDY-X3-CVF"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" name="Clear"/>
                                         <connections>
                                             <outlet property="dataTableCollection" destination="gXG-S6-tvf" id="Q8J-e8-j0t"/>
                                         </connections>
@@ -439,8 +444,23 @@
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <namedColor name="Banner Text">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Banner Text">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="Section Heading">
-            <color red="0.93333333333333335" green="0.87450980392156863" blue="0.70588235294117652" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.93300002813339233" green="0.875" blue="0.70599997043609619" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Separator">
+            <color white="0.67000001668930054" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </namedColor>
+        <namedColor name="Text">
+            <color red="0.49799999594688416" green="0.49799999594688416" blue="0.49799999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

@@ -36,11 +36,11 @@ class RoundSummaryViewController: CustomViewController {
         self.finishPressed()
     }
     
-    @IBAction func rightSwipe(recognizer:UISwipeGestureRecognizer) {
+    @IBAction func rightSwipe(recognizer: UISwipeGestureRecognizer) {
         self.finishPressed()
     }
     
-    @IBAction func tapGesture(recognizer:UITapGestureRecognizer) {
+    @IBAction func tapGesture(recognizer: UITapGestureRecognizer) {
         self.finishPressed()
     }
     
@@ -85,11 +85,12 @@ class RoundSummaryViewController: CustomViewController {
     // MARK: - Utility Routines ======================================================================== -
     
     func setupOverUnder() {
+        self.trumpSuit.textColor = UIColor.white
         self.trumpSuit.attributedText = scorecard.roundSuit(scorecard.selectedRound, suits: self.suits).toAttributedString()
         
         let totalRemaining = scorecard.remaining(playerNumber: 0, round: scorecard.selectedRound, mode: Mode.bid, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
         self.overUnder.text = "\(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")"
-        self.overUnder.textColor = (totalRemaining == 0 ? ScorecardUI.contractEqualColor : (totalRemaining > 0 ? ScorecardUI.contractUnderColor : ScorecardUI.contractOverColor))
+        self.overUnder.textColor = (totalRemaining == 0 ? Palette.contractEqual : (totalRemaining > 0 ? Palette.contractUnder : Palette.contractOver))
     }
     
     func setupBidText(bids: UILabel?...) {

@@ -77,7 +77,7 @@ class Utility {
             }
             label.text = toInitials(initials)
             label.textAlignment = .center
-            ScorecardUI.thumbnailDiscStyle(label)
+            Palette.thumbnailDiscStyle(label)
             imageView.isHidden = true
             label.isHidden=false
             ScorecardUI.veryRoundCorners(label, radius: size / 2)

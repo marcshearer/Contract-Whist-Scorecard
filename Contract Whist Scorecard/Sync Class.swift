@@ -14,19 +14,25 @@ import CloudKit
 
 // If you ever decide to make some of the methods in the protocol optional just insert @objc in front of protocol and put ? after optional method calls
 
-protocol SyncDelegate: class {
+@objc protocol SyncDelegate: class {
     
     // A method to manage a message from the sync controller
-    func syncMessage(_ message: String)
+    @objc optional func syncMessage(_ message: String)
     
     // A method to manage an error condition
-    func syncAlert(_ message: String, completion: @escaping () -> ())
+    @objc optional func syncAlert(_ message: String, completion: @escaping () -> ())
     
     // A method to be called when synchronisation is complete
-    func syncCompletion(_ errors: Int)
+    @objc optional func syncCompletion(_ errors: Int)
+    
+    // A method to be called if the sync is queued
+    @objc optional func syncQueued()
+    
+    // A method to be called when the sync is de-queued and started
+    @objc optional func syncStarted()
     
     // A method to return a player list (only used for getPlayers mode but couldn't make it optional
-    func syncReturnPlayers(_ playerList: [PlayerDetail]!)
+    @objc optional func syncReturnPlayers(_ playerList: [PlayerDetail]!)
 }
 
 public enum SyncMode {
@@ -35,12 +41,10 @@ public enum SyncMode {
     case syncUpdatePlayers
     case syncGetPlayerDetails
     case syncGetVersion
-    case syncGetVersionAsync
 }
 
 private enum SyncPhase {
     case phaseGetVersion
-    case phaseGetVersionAsync
     case phaseGetLastSyncDate
     case phaseUpdateLastSyncDate
     case phaseGetExistingParticipants
@@ -79,9 +83,6 @@ class Sync {
     // Delegate for callback protocol
     public weak var delegate: SyncDelegate?
     
-    // Main state properties
-    private let scorecard = Scorecard.shared
-    
     // Local class variables
     private var errors = 0
     private var cloudObjectList: [CKRecord] = []
@@ -90,12 +91,9 @@ class Sync {
     private var syncPhaseCount = -1
     private var timer: Timer!
     private var timeout: Double!
-    private var adminMode: Bool!
     
     // Variables to hold updates
     public static var syncInProgress = false
-    public static var syncBackgroundCompletionInProgress = false
-    private var setSyncBackgroundCompletionInProgress = false
     private var observer: NSObjectProtocol?
     
     // Player sync state
@@ -117,18 +115,6 @@ class Sync {
     
     // MARK: - Public class methods -
     
-    public func initialise() {
-        self.adminMode = Scorecard.adminMode
-    }
-    
-    public func connect() -> Bool {
-        if Sync.syncInProgress {
-            return false
-        } else {
-            return true
-        }
-    }
-    
     public func stop() {
         if syncPhases != nil {
             self.syncPhaseCount = syncPhases.count
@@ -136,15 +122,11 @@ class Sync {
         }
     }
     
-    public func synchronise(syncMode: SyncMode = .syncAll, specificEmail: [String] = [], specificExternalId: String! = nil, timeout: Double! = 30.0, waitFinish: Bool = true) {
+    public func synchronise(syncMode: SyncMode = .syncAll, specificEmail: [String] = [], specificExternalId: String! = nil, timeout: Double! = 30.0, waitFinish: Bool) -> Bool {
         // Reset state
         errors = 0
         cloudObjectList = []
-        
-        if Sync.syncBackgroundCompletionInProgress && !waitFinish {
-            self.syncCompletion()
-            return
-        }
+        var success = false
         
         if !Sync.syncInProgress || waitFinish {
             self.errors = 0
@@ -156,8 +138,6 @@ class Sync {
             switch syncMode {
             case .syncGetVersion:
                 syncPhases = [.phaseGetVersion]
-            case .syncGetVersionAsync:
-                syncPhases = [.phaseGetVersionAsync]
             case .syncAll:
                 syncPhases = [.phaseGetVersion,
                               .phaseGetLastSyncDate,
@@ -205,13 +185,17 @@ class Sync {
             
             syncPhaseCount = -1
             if Sync.syncInProgress {
-                    self.syncMessage("Waiting for previous operation to finish")
-                    observer = setSyncCompletionNotification(name: .syncCompletion)
+                self.syncMessage("Waiting for previous operation to finish")
+                self.delegate?.syncQueued?()
+                self.delegate?.syncMessage?("Queued...")
+                observer = setSyncCompletionNotification(name: .syncCompletion)
             } else {
                 Sync.syncInProgress = true
                 self.syncController()
             }
+            success = true
         }
+        return success
     }
     
     private func syncController() {
@@ -219,13 +203,6 @@ class Sync {
         // or return true and then recall the controller from a completion block
         var nextPhase = true
         observer = nil
-        
-        if Sync.syncBackgroundCompletionInProgress {
-            // Background task completing - wait for notification
-            self.syncMessage("Waiting for previous background operation to finish")
-            observer = setSyncCompletionNotification(name: .syncBackgroundCompletion)
-            return
-        }
         
         while true {
             
@@ -245,8 +222,6 @@ class Sync {
             switch syncPhases[syncPhaseCount] {
             case .phaseGetVersion:
                 nextPhase = getCloudVersion()
-            case .phaseGetVersionAsync:
-                nextPhase = getCloudVersion(async: true)
             case .phaseGetLastSyncDate:
                 nextPhase = getLastSyncDate()
             case .phaseUpdateLastSyncDate:
@@ -304,7 +279,7 @@ class Sync {
     // Note this is always called first to check for compatibility
     // Other modes are called on successful completion
     
-    private func getCloudVersion(async: Bool = false) -> Bool {
+    private func getCloudVersion() -> Bool {
         // Fetch data from cloud
         var version = "0.0"
         var build: Int = 0
@@ -337,13 +312,13 @@ class Sync {
         
         queryOperation.queryCompletionBlock = { (cursor, error) -> Void in
             if error != nil {
-                self.scorecard.latestVersion = "0.0"
-                self.scorecard.latestBuild = 0
+                Scorecard.shared.latestVersion = "0.0"
+                Scorecard.shared.latestBuild = 0
                 self.errors += 1
                 return
             }
-            self.scorecard.latestVersion = version
-            self.scorecard.latestBuild = build
+            Scorecard.shared.latestVersion = version
+            Scorecard.shared.latestBuild = build
             
             // Set and save rabbitMQ URI
             Scorecard.settingRabbitMQUri = cloudRabbitMQUri
@@ -358,89 +333,79 @@ class Sync {
             }
             
             // Set messages
-            self.scorecard.settingVersionBlockAccess = false
-            self.scorecard.settingVersionBlockSync = false
-            self.scorecard.settingVersionMessage = ""
+            Scorecard.shared.settingVersionBlockAccess = false
+            Scorecard.shared.settingVersionBlockSync = false
+            Scorecard.shared.settingVersionMessage = ""
             
             if accessBlockVersion != nil &&
-                Utility.compareVersions(version1: self.scorecard.settingVersion,
+                Utility.compareVersions(version1: Scorecard.shared.settingVersion,
                                            version2: accessBlockVersion) != .greaterThan {
                 
-                self.scorecard.settingVersionBlockAccess = true
+                Scorecard.shared.settingVersionBlockAccess = true
                 if accessBlockMessage == "" {
                     accessBlockMessage = "A new version of the Contract Whist Scorecard app is available and this version is no longer supported. Please update to the latest version via the App Store."
                 }
-                self.scorecard.settingVersionMessage = accessBlockMessage
+                Scorecard.shared.settingVersionMessage = accessBlockMessage
             }
             
-            if !self.scorecard.settingVersionBlockAccess && self.scorecard.settingDatabase != "" && database != self.scorecard.settingDatabase {
+            if !Scorecard.shared.settingVersionBlockAccess && Scorecard.shared.settingDatabase != "" && database != Scorecard.shared.settingDatabase {
                 // Database (development/production) doesn't match!!
-                self.scorecard.settingVersionBlockSync = true
-                syncBlockMessage = "You are trying to connect to the '\(database!)' database but this device has previously synced with the '\(self.scorecard.settingDatabase)' database"
+                Scorecard.shared.settingVersionBlockSync = true
+                syncBlockMessage = "You are trying to connect to the '\(database!)' database but this device has previously synced with the '\(Scorecard.shared.settingDatabase)' database"
                 if database == "development" {
                     // OK if copying live to development so reset it after warning
                     syncBlockMessage = syncBlockMessage + ". It has been reset"
-                    self.scorecard.settingDatabase = database
+                    Scorecard.shared.settingDatabase = database
                     UserDefaults.standard.set(database, forKey: "database")
                 }
-                self.scorecard.settingVersionMessage = syncBlockMessage
+                Scorecard.shared.settingVersionMessage = syncBlockMessage
             }
             
-            if !self.scorecard.settingVersionBlockAccess && !self.scorecard.settingVersionBlockSync && syncBlockVersion != nil &&
-                Utility.compareVersions(version1: self.scorecard.settingVersion,
+            if !Scorecard.shared.settingVersionBlockAccess && !Scorecard.shared.settingVersionBlockSync && syncBlockVersion != nil &&
+                Utility.compareVersions(version1: Scorecard.shared.settingVersion,
                                         version2: syncBlockVersion) != .greaterThan {
                 
-                self.scorecard.settingVersionBlockSync = true
+                Scorecard.shared.settingVersionBlockSync = true
                 if syncBlockMessage == "" {
                     syncBlockMessage = "A new version of the Contract Whist Scorecard app is available and you will no longer be able to sync with iCloud using this version. Please update to the latest version via the App Store."
                 }
-                self.scorecard.settingVersionMessage = syncBlockMessage
+                Scorecard.shared.settingVersionMessage = syncBlockMessage
                 
             }
             
-            if !self.scorecard.settingVersionBlockAccess && !self.scorecard.settingVersionBlockSync {
+            if !Scorecard.shared.settingVersionBlockAccess && !Scorecard.shared.settingVersionBlockSync {
                 if self.syncMode == .syncGetVersion && infoMessage != nil && infoMessage != "" {
                 
-                    self.scorecard.settingVersionMessage = infoMessage
+                    Scorecard.shared.settingVersionMessage = infoMessage
                 
                 } else if self.syncMode == .syncGetVersion &&
-                    Utility.compareVersions(version1: self.scorecard.settingVersion, build1: self.scorecard.settingBuild,
+                    Utility.compareVersions(version1: Scorecard.shared.settingVersion, build1: Scorecard.shared.settingBuild,
                                             version2: version, build2: build) == .lessThan  {
                     
-                    self.scorecard.settingVersionMessage = "You are currently on version \(self.scorecard.settingVersion) (\(self.scorecard.settingBuild)) of the Contract Whist Scorecard app. A newer version \(version) (\(build)) is available. It is highly recommended that you update to the latest version."
+                    Scorecard.shared.settingVersionMessage = "You are currently on version \(Scorecard.shared.settingVersion) (\(Scorecard.shared.settingBuild)) of the Contract Whist Scorecard app. A newer version \(version) (\(build)) is available. It is highly recommended that you update to the latest version."
                 }
             }
             
             // Save messages for later use if fail to access cloud
-            UserDefaults.standard.set(self.scorecard.settingVersionBlockAccess, forKey: "versionBlockAccess")
-            UserDefaults.standard.set(self.scorecard.settingVersionBlockSync, forKey: "versionBlockSync")
-            UserDefaults.standard.set(self.scorecard.settingVersionMessage, forKey: "versionMessage")
-            if self.scorecard.settingDatabase == "" {
-                self.scorecard.settingDatabase = database
+            UserDefaults.standard.set(Scorecard.shared.settingVersionBlockAccess, forKey: "versionBlockAccess")
+            UserDefaults.standard.set(Scorecard.shared.settingVersionBlockSync, forKey: "versionBlockSync")
+            UserDefaults.standard.set(Scorecard.shared.settingVersionMessage, forKey: "versionMessage")
+            if Scorecard.shared.settingDatabase == "" {
+                Scorecard.shared.settingDatabase = database
                 UserDefaults.standard.set(database, forKey: "database")
             }
             
             // If access and sync not blocked link to sync all if necessary - otherwise complete (and display message)
-            if self.scorecard.settingVersionMessage != "" {
+            if Scorecard.shared.settingVersionMessage != "" {
                 // There is a message - either advisory in get version mode or an error
-                self.syncAlert(self.scorecard.settingVersionMessage)
+                self.syncAlert(Scorecard.shared.settingVersionMessage)
             }
-            
-            if async {
-                self.completeInBackgroundFinish()
-            } else {
-                self.syncController()
-            }
+            self.syncController()
         }
         
         // Execute the query
         publicDatabase.add(queryOperation)
         
-        if async {
-            self.completeInBackgroundStart()
-            return true
-        }
-    
         return false
     }
     
@@ -506,13 +471,13 @@ class Sync {
             switch getParticipantMode {
             case .getExisting:
                 // Get participants based on players who were on this device before the cutoff date and only look at games since the cutoff since previous games should already be here
-                predicateList = self.scorecard.playerEmailList(getPlayerMode: .getExisting, cutoffDate: self.lastSyncDate, specificEmail: self.specificEmail)
+                predicateList = Scorecard.shared.playerEmailList(getPlayerMode: .getExisting, cutoffDate: self.lastSyncDate, specificEmail: self.specificEmail)
                 let predicate1 = NSPredicate(format: "email IN %@", argumentArray: [predicateList])
                 let predicate2 = NSPredicate(format: "syncDate >= %@", self.lastSyncDate as NSDate)
                 predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate1, predicate2])
             case .getNew:
                 // Get participants based on players who are new to this device - hence look at all games
-                predicateList = self.scorecard.playerEmailList(getPlayerMode: .getNew, cutoffDate: self.lastSyncDate, specificEmail: self.specificEmail)
+                predicateList = Scorecard.shared.playerEmailList(getPlayerMode: .getNew, cutoffDate: self.lastSyncDate, specificEmail: self.specificEmail)
                 let predicate1 = NSPredicate(format: "email IN %@", argumentArray: [predicateList])
                 predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate1])
             case .getSpecific:
@@ -558,7 +523,7 @@ class Sync {
         queryOperation.queryCompletionBlock = { (cursor, error) -> Void in
             if error != nil {
                 var message = "Unable to fetch participants from cloud!"
-                if self.adminMode {
+                if Scorecard.adminMode {
                     message = message + " " + error.debugDescription
                 }
                 self.syncMessage(message)
@@ -566,7 +531,7 @@ class Sync {
                 self.syncController()
                 return
             }
-            if self.adminMode {
+            if Scorecard.adminMode {
                 self.syncMessage("\(self.cloudObjectList.count) participant history records downloaded")
             }
             
@@ -577,7 +542,7 @@ class Sync {
                 // More records to get - recurse
                 _ = self.getParticipantsFromCloudQuery(getParticipantMode, gameUUIDList: remainder)
             } else {
-                if !self.adminMode {
+                if !Scorecard.adminMode {
                     self.syncMessage("Participant history records downloaded")
                 }
                 
@@ -633,7 +598,7 @@ class Sync {
             }
         }
  
-        if self.adminMode {
+        if Scorecard.adminMode {
             self.syncMessage("\(updated) participants updated - \(created) participants created locally")
         } else {
             self.syncMessage("Local participant history records updated")
@@ -724,7 +689,7 @@ class Sync {
         queryOperation.queryCompletionBlock = { (cursor, error) -> Void in
             if error != nil {
                 var message = "Unable to fetch games from cloud!"
-                if self.adminMode {
+                if Scorecard.adminMode {
                     message = message + " " + error.debugDescription
                 }
                 self.syncMessage(message)
@@ -732,7 +697,7 @@ class Sync {
                 self.syncController()
                 return
             }
-            if self.adminMode {
+            if Scorecard.adminMode {
                 self.syncMessage("\(self.cloudObjectList.count) game history records downloaded")
             }
             
@@ -743,7 +708,7 @@ class Sync {
                 // More to get - recurse
                 _ = self.getGamesFromCloudQuery(gameUUIDList: remainder)
             } else {
-               if !self.adminMode {
+               if !Scorecard.adminMode {
                     self.syncMessage("Game history records downloaded")
                 }
                 
@@ -803,7 +768,7 @@ class Sync {
             }
         }
         
-        if self.adminMode {
+        if Scorecard.adminMode {
             self.syncMessage("\(updated) games updated - \(created) games created locally")
         } else {
             self.syncMessage("Local game history records updated")
@@ -857,7 +822,7 @@ class Sync {
         self.sendRecordsToCloud(records: self.cloudObjectList, completion: { (success: Bool) in
             if success {
                 OperationQueue.main.addOperation {
-                    if self.adminMode {
+                    if Scorecard.adminMode {
                         self.syncMessage("\(gamesQueued) games uploaded - \(participantsQueued) participants uploaded")
                     } else {
                         self.syncMessage("Games and participants uploaded")
@@ -974,7 +939,7 @@ class Sync {
                 } else if self.syncMode == .syncGetPlayers {
                     emailList = History.getParticipantEmailList()
                 } else {
-                    emailList = self.scorecard.playerEmailList()
+                    emailList = Scorecard.shared.playerEmailList()
                 }
                 if emailList.count == 0 {
                     return true
@@ -1008,7 +973,7 @@ class Sync {
         queryOperation.queryCompletionBlock = { (cursor, error) -> Void in
             if error != nil {
                 var message = "Unable to fetch players from cloud!"
-                if self.adminMode {
+                if Scorecard.adminMode {
                     message = message + " " + error.debugDescription
                 }
                 self.syncMessage(message)
@@ -1017,7 +982,7 @@ class Sync {
                 return
             }
             
-            if self.adminMode {
+            if Scorecard.adminMode {
                 self.syncMessage("\(self.downloadedPlayerRecordList.count) player records downloaded")
             }
             
@@ -1063,11 +1028,11 @@ class Sync {
         self.downloadedPlayerRecordList.append(cloudRecord)
         
         // Try to match by email address
-        let found = scorecard.playerList.firstIndex(where: { $0.email?.lowercased() == cloudRecord.email.lowercased() })
+        let found = Scorecard.shared.playerList.firstIndex(where: { $0.email?.lowercased() == cloudRecord.email.lowercased() })
         if found != nil {
 
             // Merge the records
-            let localMO = scorecard.playerList[found!]
+            let localMO = Scorecard.shared.playerList[found!]
             localRecord.fromManagedObject(playerMO: localMO)
             localRecord.syncRecordID = cloudObject.recordID.recordName
             
@@ -1181,7 +1146,7 @@ class Sync {
     }
     
     private func completeSynchronisePlayersWithCloud() {
-        if !self.adminMode {
+        if !Scorecard.adminMode {
             self.syncMessage("Player records downloaded")
         }
         self.syncController()
@@ -1227,14 +1192,14 @@ class Sync {
         if self.specificEmail.count != 0 {
             // Search for specific email
             for email in specificEmail {
-                let found = scorecard.playerList.firstIndex(where: { $0.email!.lowercased() as String == email.lowercased() })
+                let found = Scorecard.shared.playerList.firstIndex(where: { $0.email!.lowercased() as String == email.lowercased() })
                 if found != nil {
-                    self.queueMissingPlayer(playerMO: scorecard.playerList[found!])
+                    self.queueMissingPlayer(playerMO: Scorecard.shared.playerList[found!])
                 }
             }
         } else {
             // Try entire list
-            for playerMO in self.scorecard.playerList {
+            for playerMO in Scorecard.shared.playerList {
                 self.queueMissingPlayer(playerMO: playerMO)
             }
         }
@@ -1390,7 +1355,7 @@ class Sync {
                 var playerObjectId: [NSManagedObjectID] = []
                 for cloudObject in self.cloudObjectList {
                     if let email = Utility.objectString(cloudObject: cloudObject, forKey: "email") {
-                        if let playerMO = self.scorecard.findPlayerByEmail(email){
+                        if let playerMO = Scorecard.shared.findPlayerByEmail(email){
                             if CoreData.update(updateLogic: {
                                 var thumbnail: Data?
                                 thumbnail = Utility.objectImage(cloudObject: cloudObject, forKey: "thumbnail") as Data?
@@ -1406,11 +1371,9 @@ class Sync {
                 for objectId in playerObjectId {
                     NotificationCenter.default.post(name: .playerImageDownloaded, object: self, userInfo: ["playerObjectID": objectId])
                 }
-                self.completeInBackgroundFinish()
                     
                 })
             }
-            self.completeInBackgroundStart()
             publicDatabase.add(fetchOperation)
         }
     }
@@ -1488,7 +1451,7 @@ class Sync {
         queryOperation.queryCompletionBlock = { (cursor, error) -> Void in
             if error != nil || cursor != nil {
                 var message = "Unable to fetch players from cloud!"
-                if self.adminMode {
+                if Scorecard.adminMode {
                     message = message + " " + error.debugDescription
                 }
                 completion(false, message)
@@ -1537,14 +1500,14 @@ class Sync {
     private func syncMessage(_ message: String) {
         Utility.debugMessage("sync", message)
         if self.delegate != nil {
-            self.delegate?.syncMessage(message)
+            self.delegate?.syncMessage?(message)
         }
     }
     
     private func syncAlert(_ message: String) {
         if self.delegate != nil {
             self.errors = -1
-            self.delegate?.syncAlert(message, completion: self.syncCompletion)
+            self.delegate?.syncAlert?(message, completion: self.syncCompletion)
         }
     }
     
@@ -1558,12 +1521,9 @@ class Sync {
             }
             // Disconnect
             Sync.syncInProgress = false
-            self.completeInBackgroundSet()
             self.delegate = nil
-            // Call the delegate completion handler if there is one
-            if delegate != nil {
-                delegate?.syncCompletion(self.errors)
-            }
+            // Call the delegate completion handler if there was one
+            delegate?.syncCompletion?(self.errors)
             if self.observer != nil {
                 NotificationCenter.default.removeObserver(self.observer!)
             }
@@ -1574,9 +1534,8 @@ class Sync {
     private func syncReturnPlayers(_ playerList: [PlayerDetail]!) {
         // All done
         Sync.syncInProgress = false
-        self.completeInBackgroundSet()
         // Call the delegate handler if there is one
-        delegate?.syncReturnPlayers(playerList)
+        delegate?.syncReturnPlayers?(playerList)
         self.syncController()
     }
     
@@ -1591,34 +1550,14 @@ class Sync {
         self.syncAlert("Sync timed out")
     }
     
-    private func completeInBackgroundFinish() {
-        Utility.debugMessage("Sync", "Sync in background complete")
-        Sync.syncBackgroundCompletionInProgress = false
-        self.setSyncBackgroundCompletionInProgress = false
-        NotificationCenter.default.post(name: .syncBackgroundCompletion, object: self, userInfo: nil)
-    }
-    
-    private func completeInBackgroundStart() {
-        if !Sync.syncInProgress {
-            Sync.syncBackgroundCompletionInProgress = true
-        } else {
-            self.setSyncBackgroundCompletionInProgress = true
-        }
-    }
-    
-    private func completeInBackgroundSet() {
-        if self.setSyncBackgroundCompletionInProgress {
-            Sync.syncBackgroundCompletionInProgress = true
-            self.setSyncBackgroundCompletionInProgress = false
-        }
-    }
-    
     private func setSyncCompletionNotification(name: Notification.Name) -> NSObjectProtocol? {
         // Set a notification for background completion
         self.observer = NotificationCenter.default.addObserver(forName: name, object: nil, queue: nil) { (notification) in
             if !Sync.syncInProgress {
                 Sync.syncInProgress = true
                 NotificationCenter.default.removeObserver(self.observer!)
+                self.delegate?.syncStarted?()
+                self.delegate?.syncMessage?("Started...")
                 self.syncController()
             }
         }

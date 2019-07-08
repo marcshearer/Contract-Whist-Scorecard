@@ -123,7 +123,7 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
             dropPin()
         }
         if self.gameDetail.gameMO.excludeStats {
-            ScorecardUI.sectionHeadingStyle(view: self.excludeStatsView)
+            Palette.sectionHeadingStyle(view: self.excludeStatsView)
         } else {
             self.excludeStatsHeightConstraint.constant = 0
         }
@@ -162,11 +162,11 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
         switch indexPath.row {
         case 0:
             // Header
-            ScorecardUI.sectionHeadingStyle(cell)
-            ScorecardUI.sectionHeadingStyle(cell.name)
-            ScorecardUI.sectionHeadingStyle(cell.totalScore)
-            ScorecardUI.sectionHeadingStyle(cell.handsMade)
-            ScorecardUI.sectionHeadingStyle(cell.otherValue)
+            Palette.sectionHeadingStyle(cell)
+            Palette.sectionHeadingStyle(cell.name)
+            Palette.sectionHeadingStyle(cell.totalScore)
+            Palette.sectionHeadingStyle(cell.handsMade)
+            Palette.sectionHeadingStyle(cell.otherValue)
             
             cell.name.text = "Player"
             cell.totalScore.text = "Score"
@@ -180,17 +180,18 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
             // Player values
             let playerNumber = indexPath.row
             
-            ScorecardUI.normalStyle(cell)
-            ScorecardUI.normalStyle(cell.name)
-            ScorecardUI.normalStyle(cell.totalScore)
-            ScorecardUI.normalStyle(cell.handsMade)
-            ScorecardUI.normalStyle(cell.otherValue)
+            Palette.normalStyle(cell)
+            Palette.normalStyle(cell.name)
+            Palette.normalStyle(cell.totalScore)
+            Palette.normalStyle(cell.handsMade)
+            Palette.normalStyle(cell.otherValue)
             if scorecard.findPlayerByEmail(gameDetail.participant[playerNumber-1].participantMO.email!) == nil {
                 // Player not on device - grey them out
+                let grayedOut = Palette.text.withAlphaComponent(0.3)
                 cell.name.textColor = UIColor.lightGray
-                cell.totalScore.textColor = UIColor.lightGray
-                cell.handsMade.textColor = UIColor.lightGray
-                cell.otherValue.textColor = UIColor.lightGray
+                cell.totalScore.textColor = grayedOut
+                cell.handsMade.textColor = grayedOut
+                cell.otherValue.textColor = grayedOut
             }
 
             cell.name.text = gameDetail.participant[playerNumber-1].name

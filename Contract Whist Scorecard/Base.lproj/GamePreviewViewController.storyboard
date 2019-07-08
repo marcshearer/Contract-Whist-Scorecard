@@ -27,9 +27,6 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="jut-No-pBV"/>
                                 </constraints>
-                                <textAttributes key="titleTextAttributes">
-                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </textAttributes>
                                 <items>
                                     <navigationItem title="Preview" id="wLJ-Vj-HuD">
                                         <barButtonItem key="leftBarButtonItem" id="oX5-VT-Cds">
@@ -46,10 +43,7 @@
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="wbi-Gg-AL4" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                 <rect key="frame" x="261" y="9.5" width="98" height="25"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Continue" image="forward">
-                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </state>
+                                                <state key="normal" title="Continue" image="forward"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="continueButton"/>
                                                 </userDefinedRuntimeAttributes>
@@ -63,7 +57,7 @@
                             </navigationBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="grouped" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="c5K-bm-x10" userLabel="Player Table View">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" name="Clear"/>
                                 <gestureRecognizers/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Game Setup Name Cell" id="qhF-D0-gxF" customClass="GamePreviewNameCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
@@ -78,7 +72,7 @@
                                                     <subviews>
                                                         <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2rE-Pd-lRg">
                                                             <rect key="frame" x="2" y="2" width="36" height="36"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                            <color key="backgroundColor" name="Clear"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="2rE-Pd-lRg" secondAttribute="height" multiplier="1:1" id="zrt-1n-L7F"/>
                                                             </constraints>
@@ -93,7 +87,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" name="Clear"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="ljp-aT-UKz" secondAttribute="height" multiplier="1:1" id="0dI-WL-CPr"/>
                                                         <constraint firstItem="2rE-Pd-lRg" firstAttribute="top" secondItem="ljp-aT-UKz" secondAttribute="top" constant="2" id="1aH-vi-tN4"/>
@@ -108,7 +102,7 @@
                                                 </view>
                                                 <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="JJq-oJ-QJT">
                                                     <rect key="frame" x="64" y="11" width="201" height="32"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                                     <color key="textColor" name="Text"/>
                                                     <nil key="highlightedColor"/>
@@ -126,6 +120,7 @@
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Dd-qR-woZ" userLabel="FaceTime">
                                                     <rect key="frame" x="325" y="2" width="40" height="40"/>
+                                                    <color key="backgroundColor" name="Clear"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="5Dd-qR-woZ" secondAttribute="height" multiplier="1:1" id="XFZ-CA-MVG"/>
                                                         <constraint firstAttribute="width" constant="40" id="osb-cr-gMo"/>
@@ -134,14 +129,14 @@
                                                 </button>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="auR-9N-5f6" userLabel="Separator">
                                                     <rect key="frame" x="10" y="43" width="365" height="1"/>
-                                                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" name="Separator"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="XeH-hy-439"/>
                                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="1" id="gBx-56-bDm"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <color key="backgroundColor" name="Clear"/>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="auR-9N-5f6" secondAttribute="bottom" id="4G7-De-Dt5"/>
                                                 <constraint firstItem="bSJ-0W-aGl" firstAttribute="leading" secondItem="JJq-oJ-QJT" secondAttribute="trailing" constant="8" id="5XK-zP-G1f"/>
@@ -164,7 +159,7 @@
                                                 <constraint firstAttribute="trailing" secondItem="auR-9N-5f6" secondAttribute="trailing" id="yTi-zX-D0d"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" name="Clear"/>
                                         <connections>
                                             <outlet property="faceTimeButton" destination="5Dd-qR-woZ" id="Uka-JR-FCZ"/>
                                             <outlet property="faceTimeButtonTrailing" destination="Q26-Cf-5mU" id="q7d-bv-hTb"/>
@@ -219,6 +214,7 @@
                                                     </state>
                                                 </button>
                                             </subviews>
+                                            <color key="backgroundColor" name="Clear"/>
                                             <constraints>
                                                 <constraint firstItem="69E-OW-LQ5" firstAttribute="leading" secondItem="aov-Ia-Wcc" secondAttribute="leadingMargin" constant="2.5" id="AxD-w3-MTV"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="5QR-vA-soU" secondAttribute="trailing" constant="2.5" id="Ke5-9b-1qF"/>
@@ -231,7 +227,7 @@
                                                 <constraint firstItem="69E-OW-LQ5" firstAttribute="top" secondItem="aov-Ia-Wcc" secondAttribute="topMargin" id="nXg-xG-gcc"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" name="Clear"/>
                                         <connections>
                                             <outlet property="cutForDealerButton" destination="69E-OW-LQ5" id="FQc-aF-L2C"/>
                                             <outlet property="nextDealerButton" destination="f7a-6R-rUp" id="Gul-1u-ljC"/>
@@ -279,6 +275,7 @@
                                                     </state>
                                                 </button>
                                             </subviews>
+                                            <color key="backgroundColor" name="Clear"/>
                                             <constraints>
                                                 <constraint firstItem="DNt-CK-BEw" firstAttribute="centerX" secondItem="nPY-38-Edr" secondAttribute="centerX" id="58g-YI-bAf"/>
                                                 <constraint firstItem="wUt-jv-Pnx" firstAttribute="top" secondItem="nPY-38-Edr" secondAttribute="topMargin" constant="16" id="GKN-15-VSA"/>
@@ -288,7 +285,7 @@
                                                 <constraint firstItem="DNt-CK-BEw" firstAttribute="leading" secondItem="wUt-jv-Pnx" secondAttribute="trailing" constant="80" id="zBX-em-wo6"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" name="Clear"/>
                                         <gestureRecognizers/>
                                         <connections>
                                             <outlet property="cutForDealerButton" destination="wUt-jv-Pnx" id="i9e-PB-zUi"/>
@@ -373,20 +370,26 @@
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="Dark Highlight">
-            <color red="0.46274509803921571" green="0.46274509803921571" blue="0.46274509803921571" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.46299999952316284" green="0.46299999952316284" blue="0.46299999952316284" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Dark Highlight Text">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Highlight">
-            <color red="0.93333333333333335" green="0.87450980392156863" blue="0.70588235294117652" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.93300002813339233" green="0.875" blue="0.70599997043609619" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Highlight Text">
-            <color red="0.49803921568627452" green="0.49803921568627452" blue="0.49803921568627452" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.49799999594688416" green="0.49799999594688416" blue="0.49799999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Separator">
+            <color white="0.67000001668930054" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </namedColor>
         <namedColor name="Text">
-            <color red="0.49803921568627452" green="0.49803921568627452" blue="0.49803921568627452" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.49799999594688416" green="0.49799999594688416" blue="0.49799999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

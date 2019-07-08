@@ -15,7 +15,6 @@ class ConfirmCountViewController : UIViewController, UIPopoverPresentationContro
     var value = 1
     var minimumValue: Int?
     var maximumValue: Int?
-    var backColor = ScorecardUI.totalColor
     var confirmHandler: ((Int)->())!
     
     @IBOutlet weak var labelTitle: UILabel!
@@ -43,6 +42,8 @@ class ConfirmCountViewController : UIViewController, UIPopoverPresentationContro
         self.labelTitle.text = self.formTitle
         self.labelMessage.text = self.message
         self.textFieldCount.text = "\(value)"
+        self.textFieldCount.layer.borderColor = Palette.highlightText.cgColor
+        self.textFieldCount.layer.borderWidth = 1.0
         self.stepperCount.value = Double(value)
         if self.minimumValue != nil {
             self.stepperCount.minimumValue = Double(self.minimumValue!)
@@ -50,7 +51,6 @@ class ConfirmCountViewController : UIViewController, UIPopoverPresentationContro
         if self.maximumValue != nil {
             self.stepperCount.maximumValue = Double(self.maximumValue!)
         }
-        view.backgroundColor = self.backColor
         ScorecardUI.roundCorners(view)
     }
     
@@ -63,7 +63,7 @@ class ConfirmCountViewController : UIViewController, UIPopoverPresentationContro
 
 class ConfirmCount {
     
-    func show(title: String, message: String, defaultValue: Int = 1, minimumValue: Int? = nil, maximumValue: Int? = nil, height: Int = 260, backColor: UIColor = ScorecardUI.totalColor, handler: @escaping ((Int)->())) {
+    func show(title: String, message: String, defaultValue: Int = 1, minimumValue: Int? = nil, maximumValue: Int? = nil, height: Int = 260, handler: @escaping ((Int)->())) {
         let storyboard = UIStoryboard(name: "ConfirmCountViewController", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "ConfirmCountViewController") as! ConfirmCountViewController
     
@@ -74,8 +74,7 @@ class ConfirmCount {
         viewController.message = message
         viewController.value = defaultValue
         viewController.confirmHandler = handler
-        viewController.backColor = backColor
-
+ 
         viewController.modalPresentationStyle = UIModalPresentationStyle.popover
         viewController.popoverPresentationController?.delegate = viewController
         viewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()

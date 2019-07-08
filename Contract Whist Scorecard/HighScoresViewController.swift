@@ -34,7 +34,7 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
     
     // MARK: - IB Outlets ============================================================================== -
 
-    @IBOutlet weak var finishButton: RoundedButton!
+    @IBOutlet weak var finishButton: ClearButton!
     @IBOutlet weak var tableView: UITableView!
     
     // MARK: - IB Actions ============================================================================== -
@@ -91,7 +91,7 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
             let view = UILabel(frame: CGRect(x: 0.0, y: 0.0, width: tableView.frame.width, height: 30.0))
             view.backgroundColor = UIColor.clear
             view.font = UIFont.systemFont(ofSize: 20.0, weight: .thin)
-            view.textColor = ScorecardUI.textColor
+            view.textColor = Palette.text
             switch tableView.tag % 1000000 {
             case 0:
                 view.text = "High Scores"

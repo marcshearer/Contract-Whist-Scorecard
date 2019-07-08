@@ -174,7 +174,6 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         TestMode.resetApp()
         
         scorecard.initialise(from: self, players: 4, maxRounds: 25)
-        sync.initialise()
         
         (self.recoveryAvailable, self.recoverOnline) = scorecard.recovery.checkOnlineRecovery()
         
@@ -217,14 +216,9 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     
     func getCloudVersion(async: Bool = false) {
         if scorecard.isNetworkAvailable {
-            if self.sync.connect() {
-                if async {
-                    self.sync.delegate = nil
-                    self.sync.synchronise(syncMode: .syncGetVersionAsync, timeout: nil, waitFinish: false)
-                } else {
-                    self.sync.delegate = self
-                    self.sync.synchronise(syncMode: .syncGetVersion, timeout: nil)  
-                }
+            self.sync.delegate = self
+            if self.sync.synchronise(syncMode: .syncGetVersion, timeout: nil, waitFinish: async) {
+                // Running or queued (if async)
             } else {
                 self.syncCompletion(0)
             }
@@ -234,6 +228,8 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     }
     
     func syncCompletion(_ errors: Int) {
+        
+        Utility.debugMessage("Welcome", "Version returned")
         
         // Continue to Get Started if necessary pending version lookup - a risk but probably OK
         if scorecard.playerList.count == 0 && getStarted {
@@ -259,9 +255,6 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         }
     }
     
-    func syncMessage(_ message: String) {
-    }
-    
     func syncAlert(_ message: String, completion: @escaping ()->()) {
         self.alertMessage(message, title: "Contract Whist Scorecard", okHandler: {
             if self.scorecard.settingVersionBlockAccess {
@@ -271,10 +264,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             }
         })
     }
-    
-    func syncReturnPlayers(_ playerList: [PlayerDetail]!) {
-    }
-    
+        
     // MARK: - TableView Overrides ===================================================================== -
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -318,15 +308,21 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         var shape: Shape
         var strokeColor: UIColor
         var fillColor: UIColor
+        var textColor: UIColor
+        var strokeTextColor: UIColor
         var pointType: PolygonPointType
         
         // Set section colors
         if section == 1 {
-            strokeColor = ScorecardUI.shapeHighlightStrokeColor
-            fillColor = ScorecardUI.shapeHighlightFillColor
+            strokeColor = Palette.shapeHighlightStroke
+            strokeTextColor = Palette.shapeHighlightStrokeText
+            fillColor = Palette.shapeHighlightFill
+            textColor = Palette.shapeHighlightFillText
         } else {
-            strokeColor = ScorecardUI.shapeStrokeColor
-            fillColor = ScorecardUI.shapeFillColor
+            strokeColor = Palette.shapeStroke
+            strokeTextColor = Palette.shapeStrokeText
+            fillColor = Palette.shapeFill
+            textColor = Palette.shapeFillText
             if indexPath.row % 2 == 0 {
                 shape = .arrowTop
             } else {
@@ -337,6 +333,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         // Override fill color if highlighted
         if actionButton.highlight {
             fillColor = strokeColor
+            textColor = strokeTextColor
         }
         
         // Set shapes
@@ -366,6 +363,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         self.backgroundShape(view: welcomeActionCell.shapeView, shape: shape, strokeColor: strokeColor, fillColor: fillColor, abutted: (indexPath.row != 0) && (indexPath.row != actionButtons.count - 1), pointType: pointType)
 
         welcomeActionCell.title.text = actionButton.title
+        welcomeActionCell.title.textColor = textColor
         welcomeActionCell.title.font = UIFont.systemFont(ofSize: min(40, welcomeActionCell.title.frame.width / 9.0, welcomeActionCell.title.frame.height / 1.25), weight: .thin)
         welcomeActionCell.tag = actionButton.tag
         welcomeActionCell.selectionStyle = .none
@@ -710,7 +708,6 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             // Set reconcile running
             reconcile = Reconcile()
             reconcile.delegate = self
-            reconcile.initialise()
             reconcile.reconcilePlayers(playerMOList: playerMOList)
         }
     }

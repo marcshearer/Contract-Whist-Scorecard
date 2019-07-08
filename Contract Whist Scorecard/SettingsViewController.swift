@@ -10,7 +10,7 @@ import UIKit
 import UserNotifications
 import GameKit
 
-class SettingsViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SearchDelegate {
+class SettingsViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     // MARK: - Class Properties ======================================================================== -
         
@@ -233,6 +233,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
             cell = tableView.dequeueReusableCell(withIdentifier: "FaceTime Cell", for: indexPath) as? SettingsTableCell
             cell.faceTimeAddressTextField.addTarget(self, action: #selector(SettingsViewController.faceTimeTextFieldChanged), for: UIControl.Event.editingChanged)
             cell.faceTimeAddressTextField.addTarget(self, action: #selector(SettingsViewController.faceTimeTextFieldChanged), for: UIControl.Event.editingDidEnd)
+            cell.faceTimeAddressTextField.attributedPlaceholder = NSAttributedString(string: "Facetime address for calls", attributes:[NSAttributedString.Key.foregroundColor: Palette.inputControlPlaceholder])
             self.faceTimeAddressTextField = cell.faceTimeAddressTextField
             cell.faceTimeInfoButton.addTarget(self, action: #selector(SettingsViewController.faceTimeInfoPressed(_:)), for: UIControl.Event.touchUpInside)
             self.displayFaceTimeCell()
@@ -378,7 +379,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
             case aboutSubheadingRow:
                 // Sub-heading
                 cell = tableView.dequeueReusableCell(withIdentifier: "About Cell Heading", for: indexPath) as? SettingsTableCell
-                ScorecardUI.highlightStyle(view: cell)
+                Palette.highlightStyle(view: cell)
             case aboutPlayersRow:
                 // Players
                 cell = tableView.dequeueReusableCell(withIdentifier: "About Cell 3 Value", for: indexPath) as? SettingsTableCell
@@ -473,7 +474,9 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let header = view as! UITableViewHeaderFooterView
-        ScorecardUI.highlightStyle(view: header.backgroundView!)
+        Palette.sectionHeadingStyle(view: header.backgroundView!)
+        header.textLabel!.textColor = Palette.sectionHeadingText
+        header.textLabel!.font = UIFont.boldSystemFont(ofSize: 18.0)
     }
     
     internal func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -772,9 +775,9 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
         }
     }
     
-    // MARK: - Search delegate routines ================================================================== -
+    // MARK: - Search return routine ================================================================== -
     
-    func returnPlayers(complete: Bool, playerMO: [PlayerMO]?, info: [String : Any?]?) {
+    private func identifyPlayerCompletion(complete: Bool, playerMO: [PlayerMO]?) {
         var playerEmail: String! = nil
         
         if complete {
@@ -947,12 +950,12 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                 } else {
                     self.onlinePlayerLabel?.text = "Enabled for unknown"
                 }
-                self.onlinePlayerLabel?.textColor = UIColor.black
+                self.onlinePlayerLabel?.textColor = Palette.text
                 self.onlinePlayerChangeButton?.setTitle("Change", for: .normal)
             }
         } else {
             self.onlinePlayerLabel?.text = (inProgress != nil  ? inProgress : "Not enabled")
-            self.onlinePlayerLabel?.textColor = UIColor.lightGray
+            self.onlinePlayerLabel?.textColor = Palette.text.withAlphaComponent(0.4)
             self.onlinePlayerChangeButton?.setTitle("Enable", for: .normal)
         }
         let enabled = (scorecard.settingSyncEnabled && inProgress == nil)
@@ -962,7 +965,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     }
     
     private func identifyOnlinePlayer(disableOption: String! = nil) {
-        self.scorecard.identifyPlayers(from: self, title: "Link Player", disableOption: disableOption, instructions: "You need to link a player to this device to receive invitations for online games", minPlayers: 1, maxPlayers: 1, insufficientMessage: "No players on this device yet")
+        SearchViewController.identifyPlayers(from: self, title: "Link Player", disableOption: disableOption, instructions: "You need to link a player to this device to receive invitations for online games", minPlayers: 1, maxPlayers: 1, insufficientMessage: "No players on this device yet", completion: self.identifyPlayerCompletion)
     }
     
     private func saveOnlineEmailLocally(playerEmail: String!) {
@@ -1008,7 +1011,6 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                 faceTimeAddressTextField.isEnabled = true
                 faceTimeAddressTextField.layer.cornerRadius = 5.0
                 faceTimeAddressTextField.layer.borderWidth = 0.3
-                faceTimeAddressTextField.layer.borderColor = UIColor.blue.cgColor
             }
         }
     }

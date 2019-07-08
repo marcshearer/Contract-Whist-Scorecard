@@ -22,7 +22,7 @@ class InsetPaddingView: InsetPaddingViewNoColor {
     @IBInspectable var bannerColor: UIColor
     
     required init(coder aDecoder: NSCoder) {
-        self.bannerColor = ScorecardUI.bannerColor
+        self.bannerColor = Palette.banner
         super.init(coder: aDecoder)
     }
 

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,7 +21,7 @@
                         <subviews>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="k0v-pi-t17">
                                 <rect key="frame" x="141" y="150" width="92" height="37"/>
-                                <color key="color" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="color" name="Dark Highlight Text"/>
                             </activityIndicatorView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="9uo-b0-008">
                                 <rect key="frame" x="8" y="646" width="359" height="21"/>
@@ -28,12 +29,12 @@
                                     <constraint firstAttribute="height" constant="21" id="xbe-TO-Br1"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="textColor" name="Dark Highlight Text"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="bHZ-lK-RLV" userLabel="Game Summary Table View">
                                 <rect key="frame" x="0.0" y="20" width="375" height="626"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" name="Clear"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Game Summary Header" rowHeight="140" id="jLB-kS-FZ8" customClass="GameSummaryTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="140"/>
@@ -53,7 +54,7 @@
                                                 <constraint firstItem="MYc-2M-mkN" firstAttribute="leading" secondItem="vTW-eU-gH5" secondAttribute="leading" id="xb4-Iv-ufZ"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" name="Clear"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Game Summary Winner" rowHeight="80" id="rBU-OT-fCY" customClass="GameSummaryTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="168" width="375" height="80"/>
@@ -75,7 +76,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" name="Clear"/>
                                                     <constraints>
                                                         <constraint firstAttribute="trailing" secondItem="HEz-vg-Ueu" secondAttribute="trailing" id="J0q-w6-1QY"/>
                                                         <constraint firstAttribute="height" constant="60" id="Mgo-em-WKe"/>
@@ -92,7 +93,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="jFU-HU-sM2">
                                                     <rect key="frame" x="84" y="37.5" width="164.5" height="31.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="26"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="textColor" name="Dark Highlight Text"/>
                                                     <nil key="highlightedColor"/>
                                                     <variation key="heightClass=compact-widthClass=compact">
                                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
@@ -107,7 +108,7 @@
                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="40" id="fLb-vF-FP2"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="26"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="textColor" name="Dark Highlight Text"/>
                                                     <nil key="highlightedColor"/>
                                                     <variation key="heightClass=compact-widthClass=compact">
                                                         <fontDescription key="fontDescription" type="system" pointSize="30"/>
@@ -134,7 +135,7 @@
                                                 <constraint firstItem="uu2-05-hhV" firstAttribute="top" secondItem="p7w-Nh-qvX" secondAttribute="topMargin" constant="12" id="pMW-LB-dOs"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="OET-8Y-4Xw" secondAttribute="trailing" constant="70" id="9ZT-cd-icd"/>
                                             <constraint firstItem="jFU-HU-sM2" firstAttribute="leading" secondItem="rBU-OT-fCY" secondAttribute="leading" constant="84" id="UZc-Ns-BDq"/>
@@ -167,7 +168,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" name="Clear"/>
                                                     <constraints>
                                                         <constraint firstAttribute="bottom" secondItem="Qa8-ge-K9I" secondAttribute="bottom" id="3Hb-nB-rK9"/>
                                                         <constraint firstAttribute="width" constant="40" id="Dn7-Oc-cfo"/>
@@ -184,7 +185,7 @@
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="UYj-82-CUx">
                                                     <rect key="frame" x="104" y="14.5" width="139" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="textColor" name="Dark Highlight Text"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="000" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="jB8-9C-SQg">
@@ -193,7 +194,7 @@
                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="40" id="cnH-o0-Hvs"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="textColor" name="Dark Highlight Text"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="high score 1" translatesAutoresizingMaskIntoConstraints="NO" id="nQp-yb-4CN">
@@ -214,7 +215,7 @@
                                                 <constraint firstItem="yUd-jb-Z6B" firstAttribute="leading" secondItem="ta9-Fw-1jV" secondAttribute="leadingMargin" constant="32.5" id="rrH-iy-l3a"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="jB8-9C-SQg" secondAttribute="trailing" constant="84" id="OhY-aP-KVb"/>
                                             <constraint firstItem="UYj-82-CUx" firstAttribute="leading" secondItem="AZX-eC-hjo" secondAttribute="leading" constant="104" id="RC5-tB-lUk"/>
@@ -278,7 +279,7 @@
                                                 <constraint firstItem="Yd7-Xi-p4i" firstAttribute="leading" secondItem="VBi-Pz-GVS" secondAttribute="trailing" constant="37" id="mt5-rl-swE"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" name="Clear"/>
                                         <connections>
                                             <outlet property="homeButton" destination="VBi-Pz-GVS" id="IDF-tS-OHS"/>
                                             <outlet property="newGameButton" destination="Yd7-Xi-p4i" id="aA7-9z-wGp"/>
@@ -297,7 +298,7 @@
                                 </connections>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" red="0.4079226553440094" green="0.40791574120521545" blue="0.40792429447174072" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <color key="backgroundColor" name="Dark Highlight"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="bHZ-lK-RLV" firstAttribute="top" secondItem="QwS-ao-9CA" secondAttribute="top" id="1D9-d1-hv7"/>
@@ -369,5 +370,14 @@
         <image name="high score 1" width="100" height="100"/>
         <image name="new game" width="100" height="100"/>
         <image name="scorecard left" width="100" height="100"/>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Dark Highlight">
+            <color red="0.46299999952316284" green="0.46299999952316284" blue="0.46299999952316284" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Dark Highlight Text">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

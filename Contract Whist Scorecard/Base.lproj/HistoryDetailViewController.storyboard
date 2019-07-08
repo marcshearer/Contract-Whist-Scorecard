@@ -25,7 +25,7 @@
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y6r-2O-8jb" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                                 <textAttributes key="titleTextAttributes">
-                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="textColor" name="Banner Text"/>
                                 </textAttributes>
                                 <items>
                                     <navigationItem title="History Detail" largeTitleDisplayMode="always" id="Seg-LW-F6o">
@@ -33,7 +33,9 @@
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="C99-Bz-aQ9" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                 <rect key="frame" x="16" y="11" width="56" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Back" image="back"/>
+                                                <state key="normal" title="Back" image="back">
+                                                    <color key="titleColor" name="Banner Text"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="finishPressed:" destination="2Wg-gN-UgP" eventType="touchUpInside" id="Rmd-uA-ICT"/>
                                                 </connections>
@@ -55,7 +57,7 @@
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OnX-jC-bPu">
                                                 <rect key="frame" x="8" y="0.0" width="289" height="40"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="nsJ-6X-nXE"/>
                                                 </constraints>
@@ -91,16 +93,16 @@
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Excluded from statistics" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="bH6-fp-Kga">
                                                 <rect key="frame" x="8" y="0.0" width="359" height="30"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <color key="backgroundColor" name="Clear"/>
+                                                <color key="tintColor" name="Bold"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="30" id="XCa-83-crN"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                                <color key="textColor" name="alternateSelectedControlTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="highlightedColor" name="alternateSelectedControlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
-                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.83529411760000005" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="bH6-fp-Kga" secondAttribute="bottom" id="3SI-bE-sdG"/>
                                             <constraint firstItem="bH6-fp-Kga" firstAttribute="top" secondItem="PPI-r2-8QP" secondAttribute="top" id="QyA-hx-P6X"/>
@@ -111,7 +113,7 @@
                                     </view>
                                     <tableView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="f3E-iU-lrl">
                                         <rect key="frame" x="0.0" y="30" width="375" height="280"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="280" id="IZK-Am-B2Y"/>
                                         </constraints>
@@ -126,7 +128,7 @@
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="adH-9J-E1r">
                                                             <rect key="frame" x="8" y="0.0" width="168" height="43.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                                            <nil key="textColor"/>
+                                                            <color key="textColor" name="Text"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Score" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="Gc4-eb-UX4">
@@ -135,7 +137,7 @@
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="8nZ-AP-Qqg"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                                            <nil key="textColor"/>
+                                                            <color key="textColor" name="Text"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Made" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="h3I-Th-017">
@@ -144,7 +146,7 @@
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="57R-0A-HUg"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                                            <nil key="textColor"/>
+                                                            <color key="textColor" name="Text"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Twos" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="zj4-QV-zjc">
@@ -153,7 +155,7 @@
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="F7R-2q-5xR"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                                            <nil key="textColor"/>
+                                                            <color key="textColor" name="Text"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
@@ -192,7 +194,7 @@
                                         <rect key="frame" x="0.0" y="350" width="375" height="253"/>
                                     </mapView>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" name="Clear"/>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="e7x-Iq-giA" secondAttribute="bottom" id="0GT-ag-Xp9"/>
@@ -211,7 +213,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" name="Background"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="Y6r-2O-8jb" firstAttribute="top" secondItem="SSv-xj-RMn" secondAttribute="top" id="0J4-Yh-io7"/>
@@ -274,11 +276,29 @@
     </scenes>
     <resources>
         <image name="back" width="14" height="20"/>
+        <namedColor name="Background">
+            <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Banner Text">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Banner Text">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Bold">
+            <color red="0.0" green="0.0" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="Dark Highlight">
-            <color red="0.46274509803921571" green="0.46274509803921571" blue="0.46274509803921571" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.46299999952316284" green="0.46299999952316284" blue="0.46299999952316284" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Dark Highlight Text">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Text">
+            <color red="0.49799999594688416" green="0.49799999594688416" blue="0.49799999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

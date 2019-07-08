@@ -155,9 +155,10 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     internal func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let frame = CGRect(x: 10.0, y: 0.0, width: tableView.frame.width - 15.0, height: (relatedPlayerSection > 0 && section == relatedPlayerSection ? 60 : 30))
         let view = UIView(frame: frame)
-        view.backgroundColor = ScorecardUI.highlightColor
+        view.backgroundColor = Palette.sectionHeading
         let title = UILabel(frame: frame)
-        title.font = UIFont.systemFont(ofSize: 20.0)
+        title.font = UIFont.boldSystemFont(ofSize: 20.0)
+        title.textColor = Palette.sectionHeadingText
         if relatedPlayerSection > 0 {
             switch section {
             case createdPlayerSection:
@@ -208,7 +209,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
             default:
                 break
             }
-            cell.playerName.textColor = .black
+            cell.playerName.textColor = Palette.text
 
         case relatedPlayerSection, createdPlayerSection, downloadedPlayerSection:
             // Players
@@ -234,7 +235,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
                 
                 cell.playerTick.isHidden = true
                 cell.playerDetail.isHidden = true
-                cell.playerName.textColor = .lightGray
+                cell.playerName.textColor = Palette.text.withAlphaComponent(0.5)
 
             } else {
                 if let playerDetail = combinedPlayerList[indexPath.section]?[indexPath.row] {
@@ -254,7 +255,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
                     cell.playerDetail.addTarget(self, action: #selector(SelectPlayersViewController.playerDetail(_:)), for: UIControl.Event.touchUpInside)
                     cell.playerDetail.tag = indexPath.section * 100000 + indexPath.row
                     cell.playerDetail.isHidden = false
-                    cell.playerName.textColor = .black
+                    cell.playerName.textColor = Palette.text
                     cell.selectionStyle = .none
                     
                 }
@@ -347,14 +348,13 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
 
         func syncGetPlayers() {
             
-            self.sync?.initialise()
             self.sync?.delegate = self
             
             // Get related players from cloud
             if self.specificEmail != "" {
-                self.sync?.synchronise(syncMode: .syncGetPlayers, specificEmail: [self.specificEmail], waitFinish: true)
+                _ = self.sync?.synchronise(syncMode: .syncGetPlayers, specificEmail: [self.specificEmail], waitFinish: true)
             } else {
-                self.sync?.synchronise(syncMode: .syncGetPlayers, waitFinish: true)
+                _ = self.sync?.synchronise(syncMode: .syncGetPlayers, waitFinish: true)
             }
         }
         
@@ -402,12 +402,13 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     }
     
     internal func syncCompletion(_ errors: Int) {
-        
-        syncComplete {
-            self.syncFinished = true
-            self.cloudAlertController = nil
-            self.formatButtons()
-            self.tableView.reloadData()
+        Utility.mainThread {
+            self.syncComplete {
+                self.syncFinished = true
+                self.cloudAlertController = nil
+                self.formatButtons()
+                self.tableView.reloadData()
+            }
         }
     }
     
@@ -446,7 +447,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         }
     }
     
-    private func syncComplete(completion: @escaping ()->()) {
+    internal func syncComplete(completion: @escaping ()->()) {
         Utility.mainThread {
             if self.cloudAlertController == nil {
                 completion()

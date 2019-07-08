@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -23,9 +24,8 @@
                             </view>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pPE-oz-OCx" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="44" width="400" height="40"/>
-                                <color key="barTintColor" red="0.40784313729999999" green="0.40784313729999999" blue="0.40784313729999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <textAttributes key="titleTextAttributes">
-                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="textColor" name="Banner Text"/>
                                 </textAttributes>
                                 <items>
                                     <navigationItem title="Sync Players" id="QE3-YK-Vgx">
@@ -33,7 +33,9 @@
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="4KG-BW-XxS" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                 <rect key="frame" x="20" y="11" width="56" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Back" image="back"/>
+                                                <state key="normal" title="Back" image="back">
+                                                    <color key="titleColor" name="Banner Text"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="finishPressed:" destination="kEX-6R-oYT" eventType="touchUpInside" id="pgz-fF-SHv"/>
                                                 </connections>
@@ -48,11 +50,12 @@
                                     <constraint firstAttribute="height" constant="44" id="L1F-BI-G2q"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                <nil key="textColor"/>
+                                <color key="textColor" name="Text Emphasised"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="owS-TZ-KyE" userLabel="Sync Graphic">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sync" translatesAutoresizingMaskIntoConstraints="NO" id="owS-TZ-KyE" userLabel="Sync Graphic">
                                 <rect key="frame" x="179" y="158" width="42" height="42"/>
+                                <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="owS-TZ-KyE" secondAttribute="height" multiplier="1:1" id="dg1-91-joC"/>
                                     <constraint firstAttribute="width" constant="100" id="lzY-ff-cce"/>
@@ -60,7 +63,7 @@
                             </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="24" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Y7G-kk-6TA">
                                 <rect key="frame" x="0.0" y="229" width="400" height="240"/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.050000000000000003" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="240" id="pye-Qo-nQI"/>
                                 </constraints>
@@ -73,10 +76,10 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="WDk-9K-pR3">
-                                                    <rect key="frame" x="20" y="0.0" width="380" height="23.5"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <rect key="frame" x="20" y="0.0" width="380" height="24"/>
+                                                    <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
+                                                    <color key="textColor" name="Text"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -87,7 +90,7 @@
                                                 <constraint firstAttribute="trailing" secondItem="WDk-9K-pR3" secondAttribute="trailing" id="bea-Fg-gKf"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" name="Clear"/>
                                         <connections>
                                             <outlet property="label" destination="WDk-9K-pR3" id="SaM-gd-HeY"/>
                                         </connections>
@@ -100,7 +103,7 @@
                                 </connections>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" name="Background"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="Ye1-Hk-Ldd" firstAttribute="bottom" secondItem="Y7G-kk-6TA" secondAttribute="bottom" constant="20" id="4Nq-40-LA2"/>
@@ -145,5 +148,21 @@
     </scenes>
     <resources>
         <image name="back" width="14" height="20"/>
+        <image name="sync" width="100" height="100"/>
+        <namedColor name="Background">
+            <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Banner Text">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Text">
+            <color red="0.49799999594688416" green="0.49799999594688416" blue="0.49799999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Text Emphasised">
+            <color red="0.89800000190734863" green="0.74900001287460327" blue="0.37299999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

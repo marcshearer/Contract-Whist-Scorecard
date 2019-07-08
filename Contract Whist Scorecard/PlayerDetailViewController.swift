@@ -44,7 +44,6 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     private var emailOnEntry = ""
     private var visibleOnEntry = false
     private var actionSheet: ActionSheet!
-    private let grayColor = UIColor(white: 0.9, alpha: 1.0)
     private var showEmail = false
     private var changed = false
 
@@ -160,7 +159,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             nameTitleRow = 3
             nameRow = 4
             navigationBar.topItem?.title = "Download"
-            footerPaddingView.backgroundColor = self.grayColor
+            footerPaddingView.backgroundColor = Palette.disabled
             showEmail = true
 
         default:
@@ -172,6 +171,19 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         visibleOnEntry = playerDetail.visibleLocally
         
         enableButtons()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        switch self.mode! {
+        case .download:
+            // Set footer color
+            footerPaddingView.backgroundColor = Palette.disabled
+            
+        default:
+            break
+        }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -197,6 +209,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: PlayerDetailCell?
+        var title = false
         
         switch indexPath.row {
         case 0:
@@ -205,12 +218,15 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         case nameTitleRow, emailTitleRow, baseRows, baseRows+2, baseRows+4, baseRows+8:
             // Single input title
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Header Single", for: indexPath) as? PlayerDetailCell
+            title = true
         case 5:
             // Thumbnail title
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Header Single", for: indexPath) as? PlayerDetailCell
+            title = true
         case 7, 9, 11, twosTitleRow:
             // Triple title
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Header Triple", for: indexPath) as? PlayerDetailCell
+            title = true
         case nameRow, emailRow:
             // Single input value
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Body Single", for: indexPath) as? PlayerDetailCell
@@ -230,9 +246,6 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         case 8, 10, 12, twosValueRow, baseRows+1, baseRows+3, baseRows+5, baseRows+6, baseRows+7:
             // Triple value
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Body Triple", for: indexPath) as? PlayerDetailCell
-            cell?.playerDetailLabel1.textColor = (mode == .download ? .lightGray : .black)
-            cell?.playerDetailLabel2.textColor = (mode == .download ? .lightGray : .black)
-            cell?.playerDetailLabel3.textColor = (mode == .download ? .lightGray : .black)
         case baseRows+9:
             // Single action button
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Body Action Button", for: indexPath) as? PlayerDetailCell
@@ -240,6 +253,14 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         default:
             cell = nil
         }
+        
+        // Set text colors
+        let disabled = (mode == .download && indexPath.row != emailRow && indexPath.row != emailTitleRow)
+        let textColor = (disabled ? Palette.disabledText : Palette.text)
+        let titleColor = (disabled ? Palette.textMessage.withAlphaComponent(0.4) : Palette.textMessage)
+        cell?.playerDetailLabel1?.textColor = (title ? titleColor : textColor)
+        cell?.playerDetailLabel2?.textColor = (title ? titleColor : textColor)
+        cell?.playerDetailLabel3?.textColor = (title ? titleColor : textColor)
         
         switch indexPath.row {
         case 0:
@@ -249,7 +270,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             // Name title
             cell!.playerDetailLabel1.text = "Player name"
             nameErrorLabel = cell!.playerDetailLabel2
-            ScorecardUI.errorStyle(nameErrorLabel!)
+            Palette.errorStyle(nameErrorLabel!)
         case nameRow:
             // Name value
             cell!.playerDetailField.text = playerDetail.name
@@ -274,7 +295,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
                 cell!.playerDetailLabel1.text = "Unique identifier - E.g. email address"
             }
             emailErrorLabel = cell!.playerDetailLabel2
-            ScorecardUI.errorStyle(emailErrorLabel!)
+            Palette.errorStyle(emailErrorLabel!)
         case emailRow:
             // Email value
             cell!.playerDetailField.text = "\(playerDetail.email)"
@@ -444,15 +465,15 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             // Gray out and disable all but email row
             if indexPath.row == emailRow {
                 cell?.isUserInteractionEnabled = true
-                cell?.backgroundColor = .white
+                cell?.backgroundColor = Palette.background
             } else {
                 cell?.isUserInteractionEnabled = false
                 if indexPath.row > emailRow {
-                    cell?.backgroundColor = self.grayColor
+                    cell?.backgroundColor = Palette.disabled
                 }
             }
         } else {
-            cell?.backgroundColor = UIColor.white
+            cell?.backgroundColor = Palette.background
         }
 
         if self.mode == .display || self.mode == .downloaded {
@@ -593,7 +614,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             imageView!.contentMode = .scaleAspectFill
             imageView!.clipsToBounds = true
             imageView!.alpha = 1.0
-            imageView!.backgroundColor = UIColor.lightGray
+            imageView!.backgroundColor = Palette.disabled
             self.changed = true
             self.enableButtons()
             
@@ -633,12 +654,10 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     
     func getCloudPlayerDetails() {
         
-        sync.initialise()
-        
         self.cloudAlertController = UIAlertController(title: title, message: "Downloading player from Cloud\n\n\n\n", preferredStyle: .alert)
         
         self.sync.delegate = self
-        if self.sync.connect() {
+        if self.sync.synchronise(syncMode: .syncGetPlayerDetails, specificEmail: [playerDetail.email], waitFinish: false) {
             
             //add the activity indicator as a subview of the alert controller's view
             self.cloudIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 0, y: 100,
@@ -653,7 +672,6 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             
             self.present(self.cloudAlertController, animated: true, completion: nil)
             
-            self.sync.synchronise(syncMode: .syncGetPlayerDetails, specificEmail: [playerDetail.email])
         } else {
             self.alertMessage("Error getting player details from iCloud")
             self.actionButton.isHidden = true
@@ -664,10 +682,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         self.sync.fetchPlayerImagesFromCloud(imageFromCloud)
     }
     
-    func syncMessage(_ message: String) {
-    }
-    
-    func syncAlert(_ message: String, completion: @escaping ()->()) {
+    internal func syncAlert(_ message: String, completion: @escaping ()->()) {
         Utility.mainThread {
             self.cloudAlertController.dismiss(animated: true, completion: {
                 self.alertMessage(message, title: "Contract Whist Scorecard", okHandler: {
@@ -678,10 +693,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         }
     }
     
-    func syncCompletion(_ errors: Int) {
-    }
-    
-    func syncReturnPlayers(_ playerList: [PlayerDetail]!) {
+    internal func syncReturnPlayers(_ playerList: [PlayerDetail]!) {
         
         Utility.mainThread {
             self.cloudAlertController.dismiss(animated: true, completion: {
@@ -689,7 +701,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
                     self.playerDetail = playerList[0]
                     self.mode = .downloaded
                     self.navigationBar.topItem?.title = self.playerDetail.name
-                    self.footerPaddingView.backgroundColor = UIColor.white
+                    self.footerPaddingView.backgroundColor = Palette.background
                     self.tableView.isUserInteractionEnabled = false
                     self.enableButtons()
                     self.tableView.reloadData()

@@ -382,7 +382,8 @@ class Scorecard {
         
         // Player names
         for player in 1...currentPlayers {
-            if let defaultPlayerURI = UserDefaults.standard.string(forKey: "player\(player)") {
+            let prefix = (self.isPlayingComputer ? "computerPlayer" : "player")
+            if let defaultPlayerURI = UserDefaults.standard.string(forKey: "\(prefix)\(player)") {
                 // Got a URI - search managed objects for a match
                 playerListNumber = 1
                 
@@ -398,11 +399,11 @@ class Scorecard {
                     
                 }
                 
-                if self.player![player-1].playerMO == nil {
-                    // Might be recovering from a computer game - recreate player
+                if self.player![player-1].playerMO == nil && !self.isPlayingComputer {
+                    // Might be recovering - recreate player if necessary
                     self.player![player-1].playerMO = CoreData.create(from: "Player") as? PlayerMO
-                    self.player![player-1].playerMO!.name = UserDefaults.standard.string(forKey: "player\(player)name")
-                    self.player![player-1].playerMO!.email = UserDefaults.standard.string(forKey: "player\(player)email")
+                    self.player![player-1].playerMO!.name = UserDefaults.standard.string(forKey: "\(prefix)\(player)name")
+                    self.player![player-1].playerMO!.email = UserDefaults.standard.string(forKey: "\(prefix)\(player)email")
                     self.player![player-1].playerNumber = player
                 }
             }
@@ -458,25 +459,25 @@ class Scorecard {
         case Mode.bid:
             if player.bidCell[round-1] != nil {
                 if self.roundError[round-1] {
-                    ScorecardUI.inverseErrorStyle(player.bidCell[round-1]!.scorepadCellLabel, errorCondtion: true)
+                    Palette.inverseErrorStyle(player.bidCell[round-1]!.scorepadCellLabel, errorCondtion: true)
                 } else {
-                    ScorecardUI.normalStyle(player.bidCell[round-1]!.scorepadCellLabel, setFont: false)
+                    Palette.normalStyle(player.bidCell[round-1]!.scorepadCellLabel, setFont: false)
                 }
             }
         case Mode.made:
             if player.scoreCell[round-1] != nil {
                 if self.roundError[round-1] {
-                    ScorecardUI.inverseErrorStyle(player.scoreCell[round-1]!.scorepadCellLabel, errorCondtion: true)
+                    Palette.inverseErrorStyle(player.scoreCell[round-1]!.scorepadCellLabel, errorCondtion: true)
                 } else {
                     if player.bid(round) != nil && player.bid(round) == player.made(round) {
-                        ScorecardUI.madeContractStyle(player.scoreCell[round-1]!.scorepadCellLabel, setFont: false)
+                        Palette.madeContractStyle(player.scoreCell[round-1]!.scorepadCellLabel, setFont: false)
                     } else {
                         if player.bidCell[round-1] == nil{
                             // No bid label so don't need to differentiate
-                            ScorecardUI.normalStyle(player.scoreCell[round-1]!.scorepadCellLabel, setFont: false)
-                            // TODO Remove player.scoreCell[round-1]!.backgroundColor = ScorecardUI.backgroundColor
+                            Palette.normalStyle(player.scoreCell[round-1]!.scorepadCellLabel, setFont: false)
+                            // TODO Remove player.scoreCell[round-1]!.backgroundColor = Palette.backgroundColor
                         } else {
-                            ScorecardUI.highlightStyle(player.scoreCell[round-1]!.scorepadCellLabel)
+                            Palette.highlightStyle(player.scoreCell[round-1]!.scorepadCellLabel)
                         }
                     }
                     let imageView = player.scoreCell[round-1]!.scorepadImage!
@@ -699,9 +700,10 @@ class Scorecard {
             for playerNumber in 1...self.currentPlayers {
                 let playerMO = selectedPlayers[playerNumber-1]!
                 self.enteredPlayer(playerNumber).playerMO = playerMO
-                UserDefaults.standard.set(self.playerURI(playerMO), forKey: "player\(playerNumber)")
-                UserDefaults.standard.set(playerMO.name, forKey: "player\(playerNumber)name")
-                UserDefaults.standard.set(playerMO.email, forKey: "player\(playerNumber)email")
+                let prefix = (self.isPlayingComputer ? "computerPlayer" : "player")
+                UserDefaults.standard.set(self.playerURI(playerMO), forKey: "\(prefix)\(playerNumber)")
+                UserDefaults.standard.set(playerMO.name, forKey: "\(prefix)\(playerNumber)name")
+                UserDefaults.standard.set(playerMO.email, forKey: "\(prefix)\(playerNumber)email")
             }
         }
     }

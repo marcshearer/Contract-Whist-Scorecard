@@ -157,8 +157,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         observer = setImageDownloadNotification()
         
         // Set selection color
-        ScorecardUI.darkHighlightStyle(view: self.selectedView)
-        ScorecardUI.darkHighlightStyle(view: self.selectedHeadingView)
+        Palette.darkHighlightStyle(view: self.selectedView)
+        Palette.darkHighlightStyle(view: self.selectedHeadingView)
         self.toolbar.setBackgroundImage(UIImage(),
                                         forToolbarPosition: .any,
                                         barMetrics: .default)
@@ -540,7 +540,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                                      initials: self.availableList[addPlayerNumber-1].name!,
                                      label: self.animationDisc)
                 self.animationName.text = self.availableList[addPlayerNumber-1].name
-                self.animationName.textColor = UIColor.red // ScorecardUI.textColor
+                self.animationName.textColor = Palette.text
                 self.animationView.isHidden = false
                 self.animationName.isHidden = false
                 
@@ -581,7 +581,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                         // Now move it to the selected area
                         self.animationView.frame = CGRect(x: selectedPoint.x, y: selectedPoint.y, width: self.width, height: self.width+labelHeight)
                         self.adjustAnimationView(labelMinY: selectedLabelPoint.y - selectedPoint.y, labelHeight: labelHeight)
-                        self.animationName.textColor = UIColor.red // ScorecardUI.darkHighlightTextColor
+                        self.animationName.textColor = Palette.darkHighlightText
                     }
                     animation.addCompletion( {_ in
                         // Cell will have been filled when we inserted it - just need to make it visible

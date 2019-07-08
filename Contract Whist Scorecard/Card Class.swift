@@ -332,11 +332,11 @@ public class Suit : Hashable {
         get {
             switch self.suitEnum {
             case .diamond, .heart:
-                return ScorecardUI.suitDiamondsHeartsColor
+                return Palette.suitDiamondsHearts
             case .club, .spade:
-                return ScorecardUI.suitClubsSpadesColor
+                return Palette.suitClubsSpades
             default:
-                return ScorecardUI.suitNoTrumpsColor
+                return Palette.suitNoTrumps
             }
         }
     }

@@ -105,8 +105,6 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        sync.initialise()
-        
         self.excludeHistory = (self.scorecard.overrideSelected && self.scorecard.overrideExcludeHistory != nil && self.scorecard.overrideExcludeHistory)
         self.excludeStats = self.excludeHistory || (self.scorecard.overrideSelected && self.scorecard.overrideExcludeStats != nil && self.scorecard.overrideExcludeStats)
         
@@ -517,39 +515,31 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
             view.isUserInteractionEnabled = false
             activityIndicator.startAnimating()
             self.sync.delegate = self
-            if self.sync.connect() {
-                self.syncMessage("Started...")
-                self.sync.synchronise()
-            } else {
-                self.alertMessage("Error syncing scores. Try later.")
-            }
+            _ = self.sync.synchronise(waitFinish: true)
         } else {
             syncCompletion(0)
         }
     }
     
-    func syncMessage(_ message: String) {
+    internal func syncMessage(_ message: String) {
         Utility.mainThread {
             self.syncMessage.text = "Syncing: \(message)"
         }
     }
     
-    func syncAlert(_ message: String, completion: @escaping ()->()) {
+    internal func syncAlert(_ message: String, completion: @escaping ()->()) {
         self.alertMessage(message, title: "Contract Whist Scorecard", okHandler: {
             completion()
         })
     }
     
-    func syncCompletion(_ errors: Int) {
+    internal func syncCompletion(_ errors: Int) {
         Utility.mainThread {
             self.activityIndicator.stopAnimating()
             self.scorecard.exitScorecard(from: self, toSegue: self.completionToSegue, advanceDealer: self.completionAdvanceDealer, rounds: self.rounds,                resetOverrides: self.completionResetOverrides)
         }
     }
     
-    func syncReturnPlayers(_ playerList: [PlayerDetail]!) {
-    }
-
     // MARK: - Segue Prepare Handler =================================================================== -
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         

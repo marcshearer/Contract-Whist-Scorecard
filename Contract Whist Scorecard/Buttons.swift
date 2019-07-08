@@ -11,10 +11,10 @@ import UIKit
 class RoundedButton: UIButton {
     
     var normalTextColor = UIColor.black
-    var normalBackgroundColor = ScorecardUI.darkHighlightColor
+    var normalBackgroundColor = Palette.darkHighlight
     var normalAlpha: CGFloat = 1.0
     var disabledTextColor = UIColor.black
-    var disabledBackgroundColor = ScorecardUI.highlightColor
+    var disabledBackgroundColor = Palette.highlight
     var disabledAlpha: CGFloat = 0.3
     
     required init(coder aDecoder: NSCoder) {
@@ -63,7 +63,7 @@ class LightRoundedButton: RoundedButton {
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.normalTextColor = UIColor.black
-        self.normalBackgroundColor = ScorecardUI.highlightColor
+        self.normalBackgroundColor = Palette.highlight
         self.normalAlpha = 1.0
         self.disabledTextColor = self.normalTextColor
         self.disabledBackgroundColor = self.normalBackgroundColor
@@ -76,11 +76,11 @@ class DarkRoundedButton: RoundedButton {
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.normalTextColor = ScorecardUI.darkHighlightTextColor
-        self.normalBackgroundColor = ScorecardUI.darkHighlightColor
+        self.normalTextColor = Palette.darkHighlightText
+        self.normalBackgroundColor = Palette.darkHighlight
         self.normalAlpha = 1.0
-        self.disabledTextColor = ScorecardUI.darkHighlightColor
-        self.disabledBackgroundColor = ScorecardUI.darkHighlightColor
+        self.disabledTextColor = Palette.darkHighlight
+        self.disabledBackgroundColor = Palette.darkHighlight
         self.disabledAlpha = 0.5
         super.isEnabled(true)
     }
@@ -90,11 +90,11 @@ class EmphasisRoundedButton: RoundedButton {
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.normalTextColor = ScorecardUI.emphasisTextColor
-        self.normalBackgroundColor = ScorecardUI.emphasisColor
+        self.normalTextColor = Palette.emphasisText
+        self.normalBackgroundColor = Palette.emphasis
         self.normalAlpha = 1.0
-        self.disabledTextColor = ScorecardUI.emphasisTextColor
-        self.disabledBackgroundColor = ScorecardUI.emphasisColor
+        self.disabledTextColor = Palette.emphasisText
+        self.disabledBackgroundColor = Palette.emphasis
         self.disabledAlpha = 0.5
         super.isEnabled(true)
     }
@@ -115,7 +115,7 @@ class TotalRoundedButton: RoundedButton {
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.normalTextColor = UIColor.white
-        self.normalBackgroundColor = ScorecardUI.totalColor
+        self.normalBackgroundColor = Palette.total
         self.normalAlpha = 1.0
         self.disabledTextColor = self.normalTextColor
         self.disabledBackgroundColor = self.normalBackgroundColor
@@ -129,7 +129,7 @@ class ErrorRoundedButton: RoundedButton {
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.normalTextColor = UIColor.white
-        self.normalBackgroundColor = ScorecardUI.errorColor
+        self.normalBackgroundColor = Palette.error
         self.normalAlpha = 1.0
         self.disabledTextColor = self.normalTextColor
         self.disabledBackgroundColor = self.normalBackgroundColor

@@ -54,7 +54,7 @@
                             </imageView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Tlx-l1-ig7" userLabel="Available Collection View">
                                 <rect key="frame" x="10" y="72" width="355" height="395"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" name="Clear"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="gIj-Vz-0t7">
                                     <size key="itemSize" width="75" height="100"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -82,7 +82,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" name="Clear"/>
                                                     <constraints>
                                                         <constraint firstAttribute="trailing" secondItem="h7y-Hj-1nQ" secondAttribute="trailing" id="0Yp-fQ-bFb"/>
                                                         <constraint firstAttribute="trailing" secondItem="4Ga-Co-vqv" secondAttribute="trailing" id="4B8-p4-27k"/>
@@ -97,7 +97,7 @@
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="zmf-uf-fWd">
                                                     <rect key="frame" x="0.0" y="70" width="75" height="30"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -107,11 +107,10 @@
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="big tick" translatesAutoresizingMaskIntoConstraints="NO" id="Kur-dS-clF">
                                                     <rect key="frame" x="19" y="19" width="37.5" height="37.5"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </imageView>
                                             </subviews>
                                         </view>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstItem="gvn-Bl-Rg8" firstAttribute="top" secondItem="PBo-FO-8a1" secondAttribute="top" id="0gd-TE-1rM"/>
                                             <constraint firstAttribute="trailing" secondItem="gvn-Bl-Rg8" secondAttribute="trailing" id="3Ps-wr-2jt"/>
@@ -149,7 +148,6 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
-                                <color key="backgroundColor" red="0.84857636690139771" green="0.9110448956489563" blue="0.95787400007247925" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="32" id="MsR-A6-d64"/>
                                     <constraint firstItem="Y7s-Vi-Z8I" firstAttribute="top" secondItem="xg7-Lf-XRQ" secondAttribute="top" id="UHq-Hk-SEK"/>
@@ -163,7 +161,7 @@
                                 <subviews>
                                     <toolbar clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rkx-tt-68g">
                                         <rect key="frame" x="0.0" y="168" width="375" height="44"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="lx2-Xx-ht3"/>
                                         </constraints>
@@ -175,11 +173,11 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <state key="normal" title="Clear Selection">
-                                                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <color key="titleColor" name="Dark Highlight Text"/>
                                                     </state>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="color" keyPath="outlineColor">
-                                                            <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <color key="value" name="Dark Highlight Text"/>
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
                                                     <connections>
@@ -189,11 +187,9 @@
                                             </barButtonItem>
                                             <barButtonItem style="plain" systemItem="flexibleSpace" id="aTL-X5-VKN"/>
                                         </items>
-                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <color key="barTintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="barTintColor" name="Clear"/>
                                     </toolbar>
                                 </subviews>
-                                <color key="backgroundColor" red="0.84857636690139771" green="0.9110448956489563" blue="0.95787400007247925" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="Rkx-tt-68g" secondAttribute="bottom" id="F3Z-rJ-Pcm"/>
                                     <constraint firstAttribute="trailing" secondItem="Rkx-tt-68g" secondAttribute="trailing" id="Tis-Ps-x1j"/>
@@ -202,7 +198,7 @@
                             </view>
                             <collectionView clipsSubviews="YES" tag="2" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="bfj-Ah-ovh" userLabel="Selected Collection View">
                                 <rect key="frame" x="37.5" y="517" width="300" height="100"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="2hr-9o-10K"/>
                                     <constraint firstAttribute="width" constant="300" id="nqF-Yv-7nT"/>
@@ -234,7 +230,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" name="Clear"/>
                                                     <constraints>
                                                         <constraint firstItem="X4M-db-yud" firstAttribute="leading" secondItem="IpI-B7-Pzv" secondAttribute="leading" id="2Cy-ze-bh3"/>
                                                         <constraint firstItem="ZRY-Ml-2Vp" firstAttribute="leading" secondItem="IpI-B7-Pzv" secondAttribute="leading" id="BNh-G6-M0F"/>
@@ -258,6 +254,7 @@
                                                 </label>
                                             </subviews>
                                         </view>
+                                        <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstAttribute="bottom" secondItem="N1d-zr-xfb" secondAttribute="bottom" id="5jI-UQ-w4l"/>
                                             <constraint firstAttribute="trailing" secondItem="N1d-zr-xfb" secondAttribute="trailing" id="EgQ-6u-395"/>
@@ -300,7 +297,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" name="Clear"/>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="6xM-Fn-Ynw">
                                         <rect key="frame" x="0.0" y="70" width="75" height="30"/>
@@ -313,7 +310,7 @@
                                         </variation>
                                     </label>
                                 </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" name="Clear"/>
                             </view>
                         </subviews>
                         <color key="backgroundColor" name="Background"/>
@@ -415,6 +412,9 @@
         <image name="home" width="22" height="22"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Dark Highlight Text">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

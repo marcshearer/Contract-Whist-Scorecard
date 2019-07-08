@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -11,11 +16,12 @@
             <objects>
                 <viewController storyboardIdentifier="RoundSummaryViewController" title="Round Summary" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FQp-co-xnK" customClass="RoundSummaryViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="eJU-jx-Ao1">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="♦︎" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="120" translatesAutoresizingMaskIntoConstraints="NO" id="r0e-On-sEv">
-                                <rect key="frame" x="150" y="33" width="300" height="219"/>
+                            <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="120" translatesAutoresizingMaskIntoConstraints="NO" id="r0e-On-sEv">
+                                <rect key="frame" x="57" y="57" width="300" height="219"/>
+                                <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="eQ5-fh-Hkw"/>
                                     <constraint firstAttribute="height" constant="219" id="zlB-7T-kEM"/>
@@ -25,7 +31,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1 Under" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="40" translatesAutoresizingMaskIntoConstraints="NO" id="UAK-eu-59d">
-                                <rect key="frame" x="165" y="237" width="270" height="127.5"/>
+                                <rect key="frame" x="72" y="261" width="270" height="95.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="270" id="Vs7-P1-coH"/>
                                     <constraint firstAttribute="height" constant="96" id="ePW-W3-Xru"/>
@@ -35,54 +41,56 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player 1 bid x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="cld-jQ-HAn">
-                                <rect key="frame" x="180" y="372" width="240" height="36"/>
+                                <rect key="frame" x="87" y="364" width="240" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="fFp-Bi-8M5"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="textColor" name="Dark Highlight Text"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player 2 bid x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="3wM-w4-4DI">
-                                <rect key="frame" x="180" y="416" width="240" height="36"/>
+                                <rect key="frame" x="87" y="408" width="240" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="FMl-43-FC4"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="textColor" name="Dark Highlight Text"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player 3 bid x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="8aH-vc-6ie">
-                                <rect key="frame" x="180" y="460" width="240" height="36"/>
+                                <rect key="frame" x="87" y="452" width="240" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="rPz-oj-uoT"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="textColor" name="Dark Highlight Text"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player 4 bid x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="p0z-M5-FE8">
-                                <rect key="frame" x="180" y="504" width="240" height="36"/>
+                                <rect key="frame" x="87" y="496" width="240" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="vra-Cb-QGn"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="textColor" name="Dark Highlight Text"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aH9-sF-nma" userLabel="Finish Button" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="8" y="20" width="20" height="22"/>
+                                <rect key="frame" x="8" y="44" width="20" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="22" id="Tqv-Oy-Kqg"/>
                                     <constraint firstAttribute="width" constant="20" id="VEW-Cu-BFv"/>
                                 </constraints>
-                                <state key="normal" image="cross white"/>
+                                <state key="normal" image="cross white">
+                                    <color key="titleColor" name="Dark Highlight Text"/>
+                                </state>
                                 <connections>
                                     <action selector="finishPressed:" destination="FQp-co-xnK" eventType="touchUpInside" id="2Dv-dI-JiJ"/>
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" name="Dark Highlight"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="HcB-aq-CP7" firstAttribute="bottom" secondItem="p0z-M5-FE8" secondAttribute="bottom" constant="60" id="1dd-lf-s4G"/>
@@ -141,7 +149,7 @@
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="h0O-MI-FUq" appends="YES" id="Ofj-uv-PgC"/>
                             <outletCollection property="gestureRecognizers" destination="4PL-Mb-t2r" appends="YES" id="USZ-vg-3E4"/>
-                            <outletCollection property="gestureRecognizers" destination="BZq-f5-GiW" appends="YES" id="nv7-Sh-4lf"/>
+                            <outletCollection property="gestureRecognizers" destination="uU2-FK-Pnb" appends="YES" id="UOG-FX-H7l"/>
                         </connections>
                     </view>
                     <connections>
@@ -169,9 +177,9 @@
                         <action selector="rightSwipeWithRecognizer:" destination="FQp-co-xnK" id="dm2-ck-qM6"/>
                     </connections>
                 </swipeGestureRecognizer>
-                <tapGestureRecognizer id="BZq-f5-GiW">
+                <tapGestureRecognizer id="uU2-FK-Pnb">
                     <connections>
-                        <action selector="tapGestureWithRecognizer:" destination="FQp-co-xnK" id="hIE-dk-RT4"/>
+                        <action selector="tapGestureWithRecognizer:" destination="FQp-co-xnK" id="3s0-AG-EqK"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
@@ -180,5 +188,14 @@
     </scenes>
     <resources>
         <image name="cross white" width="20" height="20"/>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Dark Highlight">
+            <color red="0.46299999952316284" green="0.46299999952316284" blue="0.46299999952316284" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Dark Highlight Text">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

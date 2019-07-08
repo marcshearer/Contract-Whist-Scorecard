@@ -15,7 +15,6 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
     var message: String!
     var formTitle: String!
     var value = 1
-    var backColor = ScorecardUI.totalColor
     var completion: (()->())!
     
     let instructionSection = 0
@@ -54,7 +53,6 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = self.backColor
         ScorecardUI.roundCorners(view)
         
         if !self.scorecard.overrideSelected {
@@ -64,6 +62,14 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
             self.scorecard.overrideExcludeHistory = false
             self.scorecard.overrideSelected = true
         }
+        
+        self.confirmButton.normalBackgroundColor = Palette.banner
+        self.confirmButton.normalTextColor = Palette.bannerText
+        self.confirmButton.normalAlpha = 1.0
+        self.confirmButton.disabledBackgroundColor = Palette.banner
+        self.confirmButton.disabledTextColor = Palette.bannerText
+        self.confirmButton.disabledAlpha = 0.2
+        
         self.enableButtons()
     }
     
@@ -201,7 +207,9 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let header = view as! UITableViewHeaderFooterView
-        ScorecardUI.highlightStyle(view: header.backgroundView!)
+        Palette.sectionHeadingStyle(view: header.backgroundView!)
+        header.textLabel!.textColor = Palette.sectionHeadingText
+        header.textLabel!.font = UIFont.boldSystemFont(ofSize: 18.0)
     }
 
     // MARK: - Action Handlers ========================================================================= -
@@ -272,14 +280,13 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
     
     // Mark: - Main instatiation routine =============================================================== -
     
-    func show(backColor: UIColor = UIColor.white, completion: (()->())? = nil) {
+    func show(completion: (()->())? = nil) {
         let storyboard = UIStoryboard(name: "OverrideViewController", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "OverrideViewController") as! OverrideViewController
         let parentViewController = Utility.getActiveViewController()!
         viewController.completion = completion
         viewController.formTitle = title
         viewController.message = message
-        viewController.backColor = backColor
 
         viewController.modalPresentationStyle = UIModalPresentationStyle.popover
         viewController.popoverPresentationController?.delegate = self

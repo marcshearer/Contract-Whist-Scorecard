@@ -42,6 +42,9 @@ class GraphView: UIView {
     private var yAxisLabels: [Label] = []
     private var yAxisLimit: Int!
     private var title: String!
+    private var titleColor = Palette.darkHighlightText
+    private var axisColor = Palette.darkHighlightText
+    private var gradientColors = [Palette.darkHighlightText.cgColor, Palette.darkHighlight.cgColor] as CFArray
     private var leftMaxLen: Int = 0
     private var rightMaxLen: Int = 0
     private var bottomMaxLen: Int = 0
@@ -84,8 +87,14 @@ class GraphView: UIView {
         }
     }
     
-    public func addTitle(title: String) {
+    public func addTitle(title: String, color: UIColor = UIColor.white) {
         self.title = title
+        self.titleColor = color
+    }
+    
+    public func setColors(axis: UIColor, gradient: [UIColor]) {
+        self.axisColor = axis
+        self.gradientColors = gradient.map {$0.cgColor} as CFArray
     }
     
     public func addYaxisLabel(text: String, value: CGFloat, position: Position, color: UIColor = UIColor.white) {
@@ -107,10 +116,9 @@ class GraphView: UIView {
         let graphHeight = height - topBorder - bottomBorder
         var maxValue: CGFloat!
         let context = UIGraphicsGetCurrentContext()
-        let colors = [UIColor.white.cgColor, ScorecardUI.darkHighlightColor.cgColor] as CFArray
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         let colorLocations: [CGFloat] = [0.0, 1.0]
-        let gradient = CGGradient(colorsSpace: colorSpace, colors: colors, locations: colorLocations)
+        let gradient = CGGradient(colorsSpace: colorSpace, colors: self.gradientColors, locations: colorLocations)
         
         // Adjust left margin for angled x axis labels
         if bottomMaxLen > 0 {
@@ -145,8 +153,8 @@ class GraphView: UIView {
             }
         
             // Choose line and fill colours
-            UIColor.white.setFill()
-            UIColor.white.setStroke()
+            self.axisColor.setFill()
+            self.axisColor.setStroke()
             
             // Set maximum value
             maxValue = datasets[0].values.max()
@@ -165,10 +173,14 @@ class GraphView: UIView {
             
             for dataset in datasets {
                 // Draw the dataset line
+                
+                context!.saveGState()
+                
                 let xScale: CGFloat = (width - leftMargin - rightMargin - 4) /
                     CGFloat((dataset.values.count - 1))
                 let graphPath = UIBezierPath()
                 graphPath.lineWidth = dataset.weight
+                
                 dataset.color.setFill()
                 dataset.color.setStroke()
                 
@@ -192,8 +204,6 @@ class GraphView: UIView {
                 if dataset.gradient {
                     // Add in the gradient
                     
-                    context!.saveGState()
-                    
                     // Create gradient
                     let clippingPath = graphPath.copy() as! UIBezierPath
                     
@@ -214,8 +224,6 @@ class GraphView: UIView {
                     let endPoint = CGPoint(x: leftMargin, y: columnYPoint(0))
                     
                     context!.drawLinearGradient(gradient!, start: startPoint, end: endPoint, options: CGGradientDrawingOptions(rawValue: 0))
-                    
-                    context!.restoreGState()
                     
                 }
                 
@@ -260,6 +268,7 @@ class GraphView: UIView {
                         self.addSubview(label)
                     }
                 }
+                context!.restoreGState()
             }
         }
         
@@ -269,7 +278,7 @@ class GraphView: UIView {
             label.textAlignment = .center
             label.font = UIFont.systemFont(ofSize: 24)
             label.adjustsFontSizeToFitWidth = true
-            label.textColor = UIColor.white
+            label.textColor = self.titleColor
             label.tag = 1
             self.addSubview(label)
         }

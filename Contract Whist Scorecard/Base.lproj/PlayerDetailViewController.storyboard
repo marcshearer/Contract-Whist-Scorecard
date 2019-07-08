@@ -22,14 +22,14 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oEM-x6-cmp" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="0.0"/>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cSS-DE-NVq" userLabel="Footer Padding View" customClass="InsetPaddingViewNoColor" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w68-7y-hH1">
                                 <rect key="frame" x="0.0" y="400" width="320" height="0.0"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" name="Background"/>
                             </view>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gXs-Is-mIL" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <textAttributes key="titleTextAttributes">
-                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <color key="textColor" name="Banner Text"/>
                                 </textAttributes>
                                 <items>
                                     <navigationItem title="Player Name" id="c5v-ql-NOg">
@@ -37,7 +37,9 @@
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="tailTruncation" id="nao-U2-GpM" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                 <rect key="frame" x="16" y="11" width="70" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Back" image="back"/>
+                                                <state key="normal" title="Back" image="back">
+                                                    <color key="titleColor" name="Banner Text"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="backButtonPressed:" destination="bWc-Jl-GWH" eventType="touchUpInside" id="Pe6-Ls-cAZ"/>
                                                 </connections>
@@ -48,7 +50,7 @@
                                                 <rect key="frame" x="234" y="11" width="70" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Action" image="forward">
-                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="titleColor" name="Banner Text"/>
                                                 </state>
                                                 <connections>
                                                     <action selector="continueButtonPressed:" destination="bWc-Jl-GWH" eventType="touchUpInside" id="RZB-an-s1r"/>
@@ -60,7 +62,7 @@
                             </navigationBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" canCancelContentTouches="NO" bouncesZoom="NO" keyboardDismissMode="interactive" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3Pf-sG-Che">
                                 <rect key="frame" x="0.0" y="44" width="320" height="356"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" name="Clear"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="Player Detail Header Single" rowHeight="20" id="Iqn-31-i02" customClass="PlayerDetailCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="320" height="20"/>
@@ -75,7 +77,7 @@
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Single Field Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" translatesAutoresizingMaskIntoConstraints="NO" id="Es1-ES-Vra" userLabel="Player Detail Label">
                                                             <rect key="frame" x="0.0" y="0.0" width="97.5" height="20"/>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
-                                                            <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="textColor" name="Text Message"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tKT-sf-QpS" userLabel="Player Error Label">
@@ -84,7 +86,7 @@
                                                                 <constraint firstAttribute="width" relation="lessThanOrEqual" constant="150" id="MEs-kF-VEm"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
-                                                            <nil key="textColor"/>
+                                                            <color key="textColor" name="Text Error"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
@@ -103,6 +105,7 @@
                                                 <constraint firstItem="r3Z-8h-EJF" firstAttribute="leading" secondItem="DSq-Vy-Kpv" secondAttribute="leading" constant="16" id="oF8-cu-09J"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" name="Clear"/>
                                         <connections>
                                             <outlet property="playerDetailLabel1" destination="Es1-ES-Vra" id="g9M-lk-iEr"/>
                                             <outlet property="playerDetailLabel2" destination="tKT-sf-QpS" id="4O8-ZG-gh1"/>
@@ -123,21 +126,23 @@
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fqq-qU-pJn" userLabel="Padding">
                                                                     <rect key="frame" x="0.0" y="0.0" width="12" height="43"/>
-                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <color key="backgroundColor" name="Clear"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="12" id="zJS-dv-whN"/>
                                                                     </constraints>
                                                                 </view>
                                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="C0E-d1-64F" userLabel="Single Text Field">
                                                                     <rect key="frame" x="12" y="0.0" width="185" height="43"/>
-                                                                    <nil key="textColor"/>
+                                                                    <color key="textColor" name="Text"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
                                                                 </textField>
                                                                 <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UP8-Iy-hik">
                                                                     <rect key="frame" x="197" y="0.0" width="30" height="43"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                                    <state key="normal" title="Hide"/>
+                                                                    <state key="normal" title="Hide">
+                                                                        <color key="titleColor" name="Text Message"/>
+                                                                    </state>
                                                                 </button>
                                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="infoDark" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AkQ-c6-pgi">
                                                                     <rect key="frame" x="227" y="0.0" width="22" height="43"/>
@@ -159,7 +164,7 @@
                                                         </stackView>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Uir-H5-EIV" userLabel="Separator">
                                                             <rect key="frame" x="0.0" y="43" width="249" height="1"/>
-                                                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <color key="backgroundColor" name="Separator"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="1" id="5cl-QY-b7n"/>
                                                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="1" id="kgv-dM-QLF"/>
@@ -202,7 +207,7 @@
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="90" id="OPL-bT-oOT"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
-                                                            <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="textColor" name="Text Message"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="HE2-Dh-xUJ" userLabel="Header Label 2">
@@ -211,7 +216,7 @@
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="90" id="j63-6N-178"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
-                                                            <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="textColor" name="Text Message"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="GF5-ZI-Jhg" userLabel="Header Label 3">
@@ -220,7 +225,7 @@
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="90" id="DCp-lg-ShQ"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
-                                                            <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                            <color key="textColor" name="Text Message"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
@@ -263,7 +268,7 @@
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="64C-wa-0r5" userLabel="Padding">
                                                                     <rect key="frame" x="0.0" y="0.0" width="12" height="42.5"/>
-                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <color key="backgroundColor" name="Clear"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="12" id="cJQ-uO-HQ9"/>
                                                                     </constraints>
@@ -274,7 +279,7 @@
                                                                         <constraint firstAttribute="width" constant="90" id="Ykq-XR-olm"/>
                                                                     </constraints>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                    <nil key="textColor"/>
+                                                                    <color key="textColor" name="Text"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="eS2-f4-Lxs" userLabel="Body Label 2">
@@ -283,7 +288,7 @@
                                                                         <constraint firstAttribute="width" constant="90" id="z3f-Yv-W3K"/>
                                                                     </constraints>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                    <nil key="textColor"/>
+                                                                    <color key="textColor" name="Text"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="MOq-We-UPG" userLabel="Body Label 3">
@@ -292,12 +297,12 @@
                                                                         <constraint firstAttribute="width" constant="90" id="rqH-bW-yP3"/>
                                                                     </constraints>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                    <nil key="textColor"/>
+                                                                    <color key="textColor" name="Text"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E5g-V0-OLV" userLabel="Padding">
                                                                     <rect key="frame" x="282" y="0.0" width="22" height="42.5"/>
-                                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    <color key="backgroundColor" name="Clear"/>
                                                                 </view>
                                                             </subviews>
                                                             <constraints>
@@ -316,7 +321,7 @@
                                                         </stackView>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K2k-fm-ceX" userLabel="Separator">
                                                             <rect key="frame" x="0.0" y="42.5" width="304" height="1"/>
-                                                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <color key="backgroundColor" name="Separator"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="1" id="aaD-NY-FH2"/>
                                                             </constraints>
@@ -357,7 +362,7 @@
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jPk-m5-qHV" userLabel="Padding Above">
                                                             <rect key="frame" x="0.0" y="0.0" width="304" height="8"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <color key="backgroundColor" name="Clear"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="8" id="Vxi-9a-GWp"/>
                                                             </constraints>
@@ -367,28 +372,28 @@
                                                             <subviews>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ss1-wf-fvs" userLabel="Padding Left">
                                                                     <rect key="frame" x="0.0" y="0.0" width="12" height="62.5"/>
-                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <color key="backgroundColor" name="Clear"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="12" id="tJ6-X6-DfZ"/>
                                                                     </constraints>
                                                                 </view>
                                                                 <imageView userInteractionEnabled="NO" alpha="0.5" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" preservesSuperviewLayoutMargins="YES" image="camera" translatesAutoresizingMaskIntoConstraints="NO" id="oid-al-TdY">
                                                                     <rect key="frame" x="12" y="0.0" width="64" height="62.5"/>
-                                                                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    <color key="backgroundColor" name="Clear"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="64" id="MnP-d8-Tyb"/>
                                                                     </constraints>
                                                                 </imageView>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yNH-mx-g9V" userLabel="Padding Middle">
                                                                     <rect key="frame" x="76" y="0.0" width="10" height="62.5"/>
-                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <color key="backgroundColor" name="Clear"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="10" id="lWH-eN-Nlj"/>
                                                                     </constraints>
                                                                 </view>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dYN-fI-42S" userLabel="Padding Right">
                                                                     <rect key="frame" x="86" y="0.0" width="218" height="62.5"/>
-                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                                    <color key="backgroundColor" name="Clear"/>
                                                                 </view>
                                                             </subviews>
                                                             <constraints>
@@ -403,14 +408,14 @@
                                                         </stackView>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QjM-l1-dYr" userLabel="Padding Below">
                                                             <rect key="frame" x="0.0" y="70.5" width="304" height="8"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                            <color key="backgroundColor" name="Clear"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="8" id="udu-BN-RWA"/>
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S2K-nM-S49" userLabel="Separator">
                                                             <rect key="frame" x="0.0" y="78.5" width="304" height="1"/>
-                                                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <color key="backgroundColor" name="Separator"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="1" id="2dY-Yc-Uom"/>
                                                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="1" id="WP5-aY-jM6"/>
@@ -452,6 +457,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="10"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" name="Clear"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" tag="1" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Player Detail Body Action Button" id="oVk-Gg-hN9" userLabel="Action Button" customClass="PlayerDetailCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="246" width="320" height="44"/>
@@ -462,13 +468,13 @@
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gys-Wx-NCn" customClass="OutlineButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                     <rect key="frame" x="100" y="7.5" width="120" height="30"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <color key="backgroundColor" name="Clear"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="AnR-DA-DgE"/>
                                                         <constraint firstAttribute="width" constant="120" id="pAT-fA-kcK"/>
                                                     </constraints>
                                                     <state key="normal" title="Button">
-                                                        <color key="titleColor" name="Total"/>
+                                                        <color key="titleColor" name="Text"/>
                                                     </state>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="color" keyPath="outlineColor">
@@ -496,24 +502,24 @@
                                 </connections>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" name="Background"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="cSS-DE-NVq" firstAttribute="leading" secondItem="rYz-bu-WB3" secondAttribute="leading" id="0gN-8I-2Aw"/>
                             <constraint firstItem="3Pf-sG-Che" firstAttribute="top" secondItem="gXs-Is-mIL" secondAttribute="bottom" id="9pn-2h-W7Z"/>
                             <constraint firstAttribute="trailing" secondItem="gXs-Is-mIL" secondAttribute="trailing" id="EON-Um-gyK"/>
+                            <constraint firstAttribute="bottom" secondItem="w68-7y-hH1" secondAttribute="bottom" id="Htp-4e-PRh"/>
                             <constraint firstItem="o3W-OF-Z0q" firstAttribute="top" secondItem="oEM-x6-cmp" secondAttribute="bottom" id="Ihu-aU-clz"/>
                             <constraint firstItem="3Pf-sG-Che" firstAttribute="bottom" secondItem="o3W-OF-Z0q" secondAttribute="bottom" id="KCV-FW-m3J"/>
                             <constraint firstItem="3Pf-sG-Che" firstAttribute="trailing" secondItem="rYz-bu-WB3" secondAttribute="trailing" id="Nfe-di-RzQ"/>
                             <constraint firstAttribute="trailing" secondItem="oEM-x6-cmp" secondAttribute="trailing" id="NkH-0z-lB0"/>
-                            <constraint firstAttribute="trailing" secondItem="cSS-DE-NVq" secondAttribute="trailing" id="Pt0-fX-pQa"/>
                             <constraint firstItem="oEM-x6-cmp" firstAttribute="leading" secondItem="rYz-bu-WB3" secondAttribute="leading" id="QRZ-oN-kHQ"/>
-                            <constraint firstAttribute="bottom" secondItem="cSS-DE-NVq" secondAttribute="bottom" id="QgS-Uk-B3r"/>
-                            <constraint firstItem="cSS-DE-NVq" firstAttribute="top" secondItem="o3W-OF-Z0q" secondAttribute="bottom" id="VNT-kT-si7"/>
+                            <constraint firstItem="w68-7y-hH1" firstAttribute="leading" secondItem="o3W-OF-Z0q" secondAttribute="leading" id="cVe-3N-9sr"/>
                             <constraint firstItem="gXs-Is-mIL" firstAttribute="leading" secondItem="rYz-bu-WB3" secondAttribute="leading" id="f27-dE-BJr"/>
                             <constraint firstItem="gXs-Is-mIL" firstAttribute="top" secondItem="o3W-OF-Z0q" secondAttribute="top" id="kP6-IP-iQy"/>
+                            <constraint firstItem="w68-7y-hH1" firstAttribute="top" secondItem="o3W-OF-Z0q" secondAttribute="bottom" id="mbk-Pd-mel"/>
                             <constraint firstItem="3Pf-sG-Che" firstAttribute="leading" secondItem="rYz-bu-WB3" secondAttribute="leading" id="nKv-9x-RaD"/>
                             <constraint firstItem="oEM-x6-cmp" firstAttribute="top" secondItem="rYz-bu-WB3" secondAttribute="top" id="uoA-ZN-1fQ"/>
+                            <constraint firstItem="o3W-OF-Z0q" firstAttribute="trailing" secondItem="w68-7y-hH1" secondAttribute="trailing" id="zLt-fO-a7k"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="o3W-OF-Z0q"/>
                         <connections>
@@ -526,7 +532,7 @@
                     <connections>
                         <outlet property="actionButton" destination="9gf-xI-wrn" id="7hQ-5a-HST"/>
                         <outlet property="finishButton" destination="nao-U2-GpM" id="aIe-2T-hSz"/>
-                        <outlet property="footerPaddingView" destination="cSS-DE-NVq" id="q3K-5z-xeV"/>
+                        <outlet property="footerPaddingView" destination="w68-7y-hH1" id="Xmj-iS-LZI"/>
                         <outlet property="navigationBar" destination="gXs-Is-mIL" id="X6w-8A-xWS"/>
                         <outlet property="tableView" destination="3Pf-sG-Che" id="wgU-9V-DwZ"/>
                     </connections>
@@ -550,8 +556,32 @@
         <image name="back" width="14" height="20"/>
         <image name="camera" width="30" height="30"/>
         <image name="forward" width="14" height="20"/>
+        <namedColor name="Background">
+            <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Banner Text">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Banner Text">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Separator">
+            <color white="0.67000001668930054" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </namedColor>
+        <namedColor name="Text">
+            <color red="0.49799999594688416" green="0.49799999594688416" blue="0.49799999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Text Error">
+            <color red="0.92199999094009399" green="0.19200000166893005" blue="0.13300000131130219" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Text Message">
+            <color red="0.0" green="0.4779999852180481" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="Total">
-            <color red="0.89803921568627454" green="0.74901960784313726" blue="0.37254901960784315" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.93300002813339233" green="0.875" blue="0.70599997043609619" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

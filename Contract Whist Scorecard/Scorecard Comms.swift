@@ -673,34 +673,6 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         self.commsDelegate?.send(instruction, nil, to: commsPeer)
     }
     
-    public func identifyPlayers(from viewController: UIViewController, title: String = "Player for Device", disableOption: String! = nil, instructions: String! = nil, minPlayers: Int = 1, maxPlayers: Int = 1, insufficientMessage: String! = nil, info: [String : Any]? = nil, filter: ((PlayerMO)->Bool)! = nil) {
-        let storyboard = UIStoryboard(name: "SearchViewController", bundle: nil)
-        let searchViewController = storyboard.instantiateViewController(withIdentifier: "SearchViewController") as! SearchViewController
-
-        searchViewController.modalPresentationStyle = UIModalPresentationStyle.popover
-        searchViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        if let sourceView = viewController.popoverPresentationController?.sourceView {
-            searchViewController.popoverPresentationController?.sourceView = sourceView
-        } else {
-            searchViewController.popoverPresentationController?.sourceView = viewController.view
-        }
-        searchViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.size.width/2, y: UIScreen.main.bounds.size.height/2, width: 0 ,height: 0)
-        searchViewController.preferredContentSize = CGSize(width: 400, height: 600)
-        searchViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
-        
-        searchViewController.formTitle = title
-        searchViewController.instructions = instructions
-        searchViewController.disableOption = disableOption
-        searchViewController.minPlayers = minPlayers
-        searchViewController.maxPlayers = maxPlayers
-        searchViewController.filter = filter
-        searchViewController.info = info
-        searchViewController.insufficientMessage = insufficientMessage
-        searchViewController.delegate = viewController as? SearchDelegate
-
-        viewController.present(searchViewController, animated: true, completion: nil)
-    }
-    
     func entryPlayerNumber(_ enteredPlayerNumber: Int, round: Int) -> Int {
         // Everything in data is in entered player sequence but bids will be in entry player sequence this converts between them
         return self.enteredPlayer(enteredPlayerNumber).entryPlayerNumber(round: round)

@@ -193,10 +193,10 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             let entryPlayerTableCell = tableView.dequeueReusableCell(withIdentifier: "Entry Player Table Cell", for: indexPath) as! EntryPlayerTableCell
             entryPlayerTableCell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row)
             if indexPath.row==0 {
-                ScorecardUI.bannerStyle(entryPlayerTableCell)
+                Palette.bannerStyle(entryPlayerTableCell)
                 entryPlayerTableCell.entryPlayerSeparator.isHidden = true
             } else {
-                ScorecardUI.normalStyle(entryPlayerTableCell)
+                Palette.normalStyle(entryPlayerTableCell)
             }
             playerCollection = entryPlayerTableCell.playerCollection
             cell = entryPlayerTableCell as UITableViewCell
@@ -251,7 +251,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     func formatinstructionLabel() {
         ScorecardUI.largeBoldStyle(instructionLabel)
         ScorecardUI.roundCorners(instructionLabel)
-        ScorecardUI.emphasisStyle(instructionLabel)
+        Palette.emphasisStyle(instructionLabel)
     }
     
     func setupScreen() {
@@ -330,7 +330,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
                 }
                 
                 if let label = label {
-                    ScorecardUI.errorStyle(label, errorCondtion: highlight)
+                    Palette.errorStyle(label, errorCondtion: highlight)
                     if highlight {
                         label.font = UIFont.boldSystemFont(ofSize: 17.0)
                     } else {
@@ -426,9 +426,9 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             
             if label != nil {
                 if highlight {
-                    ScorecardUI.highlightStyle(label)
+                    Palette.highlightStyle(label)
                 } else {
-                    ScorecardUI.normalStyle(label)
+                    Palette.normalStyle(label)
                 }
             }
         }
@@ -683,14 +683,14 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
                 default:
                     playerLabel.text="Score"
                 }
-                ScorecardUI.bannerStyle(playerLabel)
+                Palette.bannerStyle(playerLabel)
                 entryPlayerCell.isUserInteractionEnabled = false
                 
             } else {
                 // Player row
                 let player = collectionView.tag
                 entryPlayerCell.tag = player
-                ScorecardUI.normalStyle(playerLabel)
+                Palette.normalStyle(playerLabel)
                 
                 switch column {
                 case playerColumn:
@@ -731,7 +731,7 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
                 if selectedMode != nil && player == selection.player && selection.mode == selectedMode! {
                     highlightCursor(true)
                 } else {
-                    ScorecardUI.normalStyle(playerLabel)
+                    Palette.normalStyle(playerLabel)
                 }
                 entryPlayerCell.isUserInteractionEnabled = true
                

@@ -135,15 +135,15 @@ class ActionSheet : NSObject, UIPopoverPresentationControllerDelegate {
         }
         self.dark = dark
 
-        let optionBackgroundColor = ScorecardUI.highlightColor
+        let optionBackgroundColor = Palette.highlight
         var titleBackgroundColor: UIColor
         var titleTextColor: UIColor
         if dark {
-            titleBackgroundColor = ScorecardUI.darkHighlightColor
-            titleTextColor = ScorecardUI.darkHighlightTextColor
+            titleBackgroundColor = Palette.darkHighlight
+            titleTextColor = Palette.darkHighlightText
         } else {
-            titleBackgroundColor = ScorecardUI.emphasisColor
-            titleTextColor = ScorecardUI.emphasisTextColor
+            titleBackgroundColor = Palette.emphasis
+            titleTextColor = Palette.emphasisText
         }
         
         self.alertController = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
@@ -208,7 +208,7 @@ class ActionSheet : NSObject, UIPopoverPresentationControllerDelegate {
         if self.dark && style == .cancel {
             action.setValue(UIColor.black, forKey: "titleTextColor")
         } else {
-            action.setValue(ScorecardUI.highlightTextColor, forKey: "titleTextColor")
+            action.setValue(Palette.highlightText, forKey: "titleTextColor")
         }
     }
     

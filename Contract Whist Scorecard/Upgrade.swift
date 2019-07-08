@@ -23,7 +23,6 @@ class Upgrade {
         
         // Rebuild all players
         let reconcile = Reconcile()
-        reconcile.initialise()
         reconcile.reconcilePlayers(playerMOList: Scorecard.shared.playerList, syncFirst: false)
         
         alertWaitController.dismiss(animated: true, completion: completion)

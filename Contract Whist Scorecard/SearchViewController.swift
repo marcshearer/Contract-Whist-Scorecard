@@ -9,29 +9,22 @@
 import UIKit
 import CoreData
 
-protocol SearchDelegate : class {
-    
-    func returnPlayers(complete: Bool, playerMO: [PlayerMO]?, info: [String : Any?]?)
-    
-}
-
 class SearchViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
 
     // Main state properties
     private let scorecard = Scorecard.shared
     
-    // Properties to pass state to / from segues
-    public var formTitle = "Search"
-    public var backText = "Cancel"
-    public var backImage = "back"
-    public var minPlayers = 1
-    public var maxPlayers = 1
-    public var filter: ((PlayerMO)->Bool)!
-    public var disableOption: String!
-    public var instructions: String!
-    public var insufficientMessage: String! = "There are not enough players on this device"
-    public var info: [String : Any?]!
-    public weak var delegate: SearchDelegate?
+    // Properties to determine how view behaves
+    private  var formTitle = "Search"
+    private  var backText = "Cancel"
+    private  var backImage = "back"
+    private  var minPlayers = 1
+    private  var maxPlayers = 1
+    private  var filter: ((PlayerMO)->Bool)!
+    private  var disableOption: String!
+    private  var instructions: String!
+    private  var insufficientMessage: String! = "There are not enough players on this device"
+    private var completion: ((Bool, [PlayerMO]?)->())?
     
     // Local class variables
     private var observer: NSObjectProtocol?
@@ -85,6 +78,36 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
         self.performSegue(withIdentifier: "showSelectPlayers", sender: self)
     }
     
+    // MARK: - Calling routine ========================================================================= -
+    
+    static public func identifyPlayers(from viewController: UIViewController, title: String = "Player for Device", disableOption: String! = nil, instructions: String! = nil, minPlayers: Int = 1, maxPlayers: Int = 1, insufficientMessage: String! = nil, completion: ((Bool, [PlayerMO]?)->())? = nil, filter: ((PlayerMO)->Bool)! = nil) {
+        
+        let storyboard = UIStoryboard(name: "SearchViewController", bundle: nil)
+        let searchViewController = storyboard.instantiateViewController(withIdentifier: "SearchViewController") as! SearchViewController
+        
+        searchViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+        searchViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        if let sourceView = viewController.popoverPresentationController?.sourceView {
+            searchViewController.popoverPresentationController?.sourceView = sourceView
+        } else {
+            searchViewController.popoverPresentationController?.sourceView = viewController.view
+        }
+        searchViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.size.width/2, y: UIScreen.main.bounds.size.height/2, width: 0 ,height: 0)
+        searchViewController.preferredContentSize = CGSize(width: 400, height: 600)
+        searchViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
+        
+        searchViewController.formTitle = title
+        searchViewController.instructions = instructions
+        searchViewController.disableOption = disableOption
+        searchViewController.minPlayers = minPlayers
+        searchViewController.maxPlayers = maxPlayers
+        searchViewController.filter = filter
+        searchViewController.completion = completion
+        searchViewController.insufficientMessage = insufficientMessage
+        
+        viewController.present(searchViewController, animated: true, completion: nil)
+    }
+    
     // MARK: - View Overrides ========================================================================== -
 
     override func viewDidLoad() {
@@ -99,9 +122,6 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
         
         if self.instructions != nil {
             self.instructionsLabel.text = self.instructions
-            // self.instructionsHeightConstraint.constant = 100
-        } else {
-            // self.instructionsHeightConstraint.constant = 0
         }
         finishButton.setTitle(self.backText, for: .normal)
         finishButton.setImage(UIImage(named: self.backImage), for: .normal)
@@ -144,7 +164,7 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
         cell = tableView.dequeueReusableCell(withIdentifier: "Player Cell", for: indexPath) as! SearchTableCell
         if let playerMO = results[indexPath.row] {
             cell.playerNameLabel.text = playerMO.name
-            cell.playerNameLabel.textColor = ScorecardUI.textColor
+            cell.playerNameLabel.textColor = Palette.text
             Utility.setThumbnail(data: playerMO.thumbnail,
                                  imageView: cell.playerImage,
                                  initials: playerMO.name!,
@@ -153,11 +173,18 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
         } else {
             // Disable option
             cell.playerNameLabel.text = self.disableOption!
-            cell.playerNameLabel.textColor = ScorecardUI.textMessageColor
+            cell.playerNameLabel.textColor = Palette.textMessage
             cell.playerImage.image = UIImage(named: "cross blue")
             cell.playerImage.contentMode = .center
         }
 
+        let backgroundView = UIView()
+        let separator = UIView(frame: CGRect(x: 0, y: cell.frame.height - 1.0, width: cell.frame.width, height: 1.0))
+        separator.backgroundColor = Palette.separator
+        backgroundView.addSubview(separator)
+        backgroundView.backgroundColor = Palette.highlight
+        cell.selectedBackgroundView = backgroundView
+        
         return cell
     }
     
@@ -186,6 +213,9 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
             self.selected[indexPath.row] = true
             self.returnPlayers(complete: true, selected: self.selected)
         }
+        if let cell = tableView.cellForRow(at: indexPath) as! SearchTableCell? {
+            cell.playerNameLabel?.textColor = Palette.highlightText
+        }
     }
     
     func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
@@ -195,6 +225,9 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         self.selected[indexPath.row] = false
         self.enableSelectButton()
+        if let cell = tableView.cellForRow(at: indexPath) as! SearchTableCell? {
+            cell.playerNameLabel?.textColor = Palette.text
+        }
     }
     
     // MARK: - SearchBar delegate Overrides ============================================================= -
@@ -275,7 +308,7 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
                     }
                 }
             }
-            self.delegate?.returnPlayers(complete: complete, playerMO: playerMO, info: self.info)
+            self.completion?(complete, playerMO)
         })
     }
     

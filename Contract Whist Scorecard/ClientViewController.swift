@@ -21,7 +21,7 @@ enum AppState {
     case waiting
 }
 
-class ClientViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate, SearchDelegate, CutDelegate, GamePreviewDelegate, UIPopoverPresentationControllerDelegate {
+class ClientViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate, CutDelegate, GamePreviewDelegate, UIPopoverPresentationControllerDelegate {
 
     // MARK: - Class Properties ======================================================================== -
     
@@ -793,7 +793,8 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     internal func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let header = view as! UITableViewHeaderFooterView
-        ScorecardUI.highlightStyle(view: header.backgroundView!)
+        Palette.sectionHeadingStyle(view: header.backgroundView!)
+        header.textLabel!.textColor = Palette.sectionHeadingText
         header.textLabel!.font = UIFont.boldSystemFont(ofSize: 18.0)
     }
     
@@ -854,12 +855,12 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             if self.appState == .notConnected || self.appState == .connecting || state != .notConnected {
                 cell.isUserInteractionEnabled = true
                 cell.isEditing = false
-                cell.serviceLabel.textColor = ScorecardUI.textColor
-                cell.stateLabel.textColor = ScorecardUI.textMessageColor
+                cell.serviceLabel.textColor = Palette.text
+                cell.stateLabel.textColor = Palette.textMessage
                 cell.disconnectButton.isHidden = (self.appState == .notConnected)
             } else {
-                cell.serviceLabel.textColor = ScorecardUI.darkHighlightColor
-                cell.stateLabel.textColor = ScorecardUI.highlightColor
+                cell.serviceLabel.textColor = Palette.text.withAlphaComponent(0.3)
+                cell.stateLabel.textColor = Palette.text.withAlphaComponent(0.3)
                 cell.disconnectButton.isHidden = true
             }
             
@@ -937,9 +938,9 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    // MARK: - Search delegate handlers ================================================================ -
+    // MARK: - Search return handler ================================================================ -
     
-    internal func returnPlayers(complete: Bool, playerMO: [PlayerMO]?, info: [String : Any?]?) {
+    private func returnPlayers(complete: Bool, playerMO: [PlayerMO]?) {
         // Save player as default for device
         if !complete {
             // Cancel taken - exit if no player
@@ -967,7 +968,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     internal func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
         let viewController = popoverPresentationController.presentedViewController
         if viewController is SearchViewController {
-            self.returnPlayers(complete: false, playerMO: nil, info: nil)
+            self.returnPlayers(complete: false, playerMO: nil)
         }
     }
     
@@ -1053,7 +1054,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     @objc private func changePlayerPressed(_ button: UIButton) {
-        self.scorecard.identifyPlayers(from: self, filter: { (playerMO) in
+        SearchViewController.identifyPlayers(from: self, completion: self.returnPlayers, filter: { (playerMO) in
             // Exclude current player
             return (self.thisPlayer == nil || self.thisPlayer != playerMO.email )
         })
@@ -1062,7 +1063,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     private func changePlayerAvailable() {
         let available = (self.appState == .notConnected && !self.recoveryMode)
         self.changePlayerButton?.isEnabled = available
-        self.changePlayerButton?.setTitleColor((available ? UIColor.blue : UIColor.lightGray), for: .normal)
+        self.changePlayerButton?.setTitleColor((available ? Palette.textMessage : Palette.text.withAlphaComponent(0.3)), for: .normal)
     }
     
     private func refreshRoundSummary() {

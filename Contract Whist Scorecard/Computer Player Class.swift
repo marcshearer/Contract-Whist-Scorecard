@@ -38,11 +38,11 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
     private var loopbackService: LoopbackService
     private var hostPeer: CommsPeer
     private var hand: Hand!
-    private let autoPlayTimeUnit = 0.05 // TODO Should be 1.0
+    private let autoPlayTimeUnit = 1.0
     
    init(email: String, name: String, deviceName: String, hostPeer: CommsPeer, playerNumber: Int) {
         
-        Config.autoPlayTimeUnit = 0.05 // TODO Remove this
+        // Config.autoPlayTimeUnit = 0.05 // TODO Remove this
         
         // Store properties
         self.thisPlayer = email

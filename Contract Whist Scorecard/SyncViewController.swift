@@ -8,6 +8,7 @@
 
 import UIKit
 import CloudKit
+import QuartzCore
 
 class SyncViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, SyncDelegate {
     
@@ -41,7 +42,6 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        sync.initialise()
         actionLabel.text = "Syncing with iCloud"
        
    }
@@ -52,14 +52,8 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
         finishButton.isHidden = true
         
         // Invoke the sync
-        if self.sync.connect() {
-            self.sync.delegate = self
-            self.sync.synchronise()
-        } else {
-            self.alertMessage("Error connecting to iCloud", okHandler: {
-                self.returnToCaller()
-            })
-        }
+        self.sync.delegate = self
+        _ = self.sync.synchronise(waitFinish: true)
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -70,7 +64,7 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
     
     // MARK: - Sync class delegate methods ===================================================================== -
     
-    func syncMessage(_ message: String) {
+    internal func syncMessage(_ message: String) {
         Utility.mainThread {
             self.output.append(message)
             self.count += 1
@@ -79,7 +73,7 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
         }
     }
     
-    func syncAlert(_ message: String, completion: @escaping ()->()) {
+    internal func syncAlert(_ message: String, completion: @escaping ()->()) {
         Utility.mainThread {
             self.stopAnimations(false)
         }
@@ -89,7 +83,7 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
         sleep(10)
     }
     
-    func syncCompletion(_ errors: Int) {
+    internal func syncCompletion(_ errors: Int) {
         Utility.mainThread {
             self.errors=errors
             self.stopAnimations(self.errors == 0)
@@ -111,9 +105,6 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
                 self.returnToCaller()
             }
         }
-    }
-    
-    func syncReturnPlayers(_ playerList: [PlayerDetail]!) {
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -143,19 +134,20 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
     }
     
     func startAnimations() {
-        var imageList: [UIImage] = []
-        imageList.append(UIImage(named: "sync 0")!)
-        imageList.append(UIImage(named: "sync 45")!)
-        imageList.append(UIImage(named: "sync 90")!)
-        imageList.append(UIImage(named: "sync 135")!)
-        
-        syncImage.animationImages = imageList;
-        syncImage.animationDuration = 1.0
-        syncImage.startAnimating()
+        syncImage.layer.add(spinAnimation(), forKey: "Rotate")
+    }
+
+    private func spinAnimation() -> CABasicAnimation {
+        let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
+        rotationAnimation.toValue = CGFloat.pi * 2000.0
+        rotationAnimation.duration = 2000.0
+        rotationAnimation.isCumulative = true
+        rotationAnimation.isRemovedOnCompletion = false
+        return rotationAnimation
     }
     
     func stopAnimations(_ success: Bool) {
-        self.syncImage.stopAnimating()
+        self.syncImage.layer.removeAllAnimations()
         if success {
             self.syncImage.image = UIImage(named: "big tick")
             self.actionLabel.text = "Sync Complete"

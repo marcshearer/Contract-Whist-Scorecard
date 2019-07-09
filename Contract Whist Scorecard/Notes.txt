@@ -86,6 +86,9 @@ Avoid blank location for online games
 Pull down pictures more reliably
 Disconnect and reconnect on shake from client
 
+4.6 (16)
+Improve connection by implementing certificate received
+
 Bugs fix now
 ------------
 When initialise app - should make the email you type in your default - i.e. set date first

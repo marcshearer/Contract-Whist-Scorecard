@@ -995,9 +995,11 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     private func stopIdleTimer() {
-        Utility.debugMessage("client", "Stopping idle timer (\(self.idleTimer != nil))")
-        self.idleTimer?.invalidate()
-        self.idleTimer = nil
+        if let timer = self.idleTimer {
+            Utility.debugMessage("client", "Stopping idle timer")
+            timer.invalidate()
+            self.idleTimer = nil
+        }
     }
     
     private func startConnectingTimer() {

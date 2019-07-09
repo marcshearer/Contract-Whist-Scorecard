@@ -92,6 +92,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
         for (deviceName, _) in self.sessionList {
             if commsPeer == nil || commsPeer?.deviceName == deviceName {
                 if let broadcastPeer = broadcastPeerList[deviceName] {
+                    self.debugMessage("disconnect", peerID: broadcastPeer.mcPeer)
                     broadcastPeer.shouldReconnect = reconnect
                     broadcastPeer.reconnect = reconnect
                     broadcastPeer.state = .notConnected
@@ -170,11 +171,19 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
         }
         Utility.debugMessage((self.serviceID == "whist-logger" ? "logger" : "multipeer"), message, force: force)
     }
+    
+    internal func debugMessage(_ message: String, peerID: MCPeerID?) {
+        var outputMessage = message
+        if let peerID = peerID {
+            outputMessage = outputMessage + " Device: \(peerID.displayName) (\(peerID.self))"
+        }
+        self.debugMessage(outputMessage, device: nil, force: false)
+    }
 
     // MARK: - Session delegate handlers ========================================================== -
     
     internal func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
-        debugMessage("Session change state to \((state == MCSessionState.notConnected ? "Not connected" : (state == .connected ? "Connected" : "Connecting")))", device: peerID.displayName)
+        debugMessage("Session change state to \((state == MCSessionState.notConnected ? "Not connected" : (state == .connected ? "Connected" : "Connecting")))", peerID: peerID)
         
         let deviceName = peerID.displayName
         if let broadcastPeer = broadcastPeerList[deviceName] {
@@ -245,6 +254,11 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
             }
         } catch {
         }
+    }
+    
+    func session(_ session: MCSession, didReceiveCertificate certificate: [Any]?, fromPeer peerID: MCPeerID, certificateHandler: @escaping (Bool) -> Void) {
+        self.debugMessage("Certificate", peerID: peerID)
+        certificateHandler(true)
     }
     
     internal func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
@@ -356,6 +370,8 @@ class MultipeerServerService : MultipeerService, CommsServerHandlerDelegate, MCN
             playerEmail = propertyList["email"]
         }
         
+        self.debugMessage("Invitiation from \(playerName ?? "unknown")", peerID: peerID)
+        
         // End any pre-existing sessions since should only have 1 connection at a time
         endSessions(matchDeviceName: deviceName)
         
@@ -371,9 +387,11 @@ class MultipeerServerService : MultipeerService, CommsServerHandlerDelegate, MCN
         if connectionDelegate != nil {
             if connectionDelegate.connectionReceived(from: broadcastPeer.commsPeer, info: propertyList) {
                 invitationHandler(true, session)
+                self.debugMessage("Invitiation accepted", peerID: peerID)
             }
         } else {
             invitationHandler(true, session)
+            self.debugMessage("Invitiation accepted", peerID: peerID)
         }
     }
     
@@ -438,11 +456,18 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
     }
     
     internal func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, context: [String : String]?, reconnect: Bool = true) -> Bool{
-        self.debugMessage("Connect to \(String(describing: commsPeer.deviceName))")
         if let broadcastPeer = self.broadcastPeerList[commsPeer.deviceName] {
+            self.debugMessage("Connect to ", peerID: broadcastPeer.mcPeer)
+            
+            // Stop browsing for other peers
+            self.client.browser.stopBrowsingForPeers()
+            
+            // Set up peer
             broadcastPeer.shouldReconnect = reconnect
             broadcastPeer.playerEmail = playerEmail
             broadcastPeer.playerName = playerName
+            
+            // Set up context data
             var data: Data! = nil
             if let playerName = playerName {
                 do {
@@ -460,12 +485,20 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
                     return false
                 }
             }
+            
+            // Create session
             let session = MCSession(peer: self.myPeerID, securityIdentity: nil, encryptionPreference: .none)
             session.delegate = self
             self.sessionList[broadcastPeer.deviceName] = session
-            self.client.browser.invitePeer(broadcastPeer.mcPeer, to: session, withContext: data, timeout: 5)
+            
+            // Invite server to accept connection
+            let timeout = 30.0
+            self.client.browser.invitePeer(broadcastPeer.mcPeer, to: session, withContext: data, timeout: timeout)
+            self.debugMessage("Connection timeout \(timeout)")
             self._connectionDevice = broadcastPeer.deviceName
+            
             return true
+            
         } else {
             Utility.getActiveViewController()?.alertMessage("Device not recognized", title: "Error")
             return false
@@ -488,7 +521,7 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
         let deviceName = peerID.displayName
         if deviceName != self.myPeerID.displayName {
             
-            debugMessage("Found peer \(peerID.displayName)", device: peerID.displayName)
+            debugMessage("Found peer \(peerID.displayName)", peerID: peerID)
             
             // End any pre-existing sessions
             self.endSessions(matchDeviceName: deviceName)
@@ -551,9 +584,7 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
                 self.debugMessage("Start browsing")
                 self.client.browser.startBrowsingForPeers()
             } else if state == .connected {
-                // Connected - stop browsing
-                self.debugMessage("Stop browsing")
-                self.client.browser.stopBrowsingForPeers()
+                // Connected
             }
         }
     }

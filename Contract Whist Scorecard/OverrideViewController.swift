@@ -95,7 +95,7 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case instructionSection:
-            return 120
+            return 130
         case cardsSection:
             return 50
         case excludeSection:
@@ -111,7 +111,7 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
         switch indexPath.section {
         case instructionSection:
             cell = tableView.dequeueReusableCell(withIdentifier: "Instructions Cell", for: indexPath) as? OverrideTableCell
-            cell.instructionLabel.text = "You can override the number of cards/deals for the next few games only. The games will still appear in history (if you save it), but you can exclude them from player summary statistics since they might distort average values."
+            cell.instructionLabel.text = "This lets you override the number of cards for one or more games.\nYou can also exclude these (or ordinary) games from history/statistics."
         case cardsSection:
             switch indexPath.row {
             case startSliderRow, endSliderRow:

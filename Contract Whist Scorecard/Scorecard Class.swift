@@ -1169,7 +1169,7 @@ class Scorecard {
         get {
             var result = UIDevice.current.name
             var email: String? = nil
-            if Utility.isSimulator {
+            if false && Utility.isSimulator {
                 email = Scorecard.onlineEmail()
                 if email == nil {
                     email = Scorecard.defaultPlayerOnDevice()

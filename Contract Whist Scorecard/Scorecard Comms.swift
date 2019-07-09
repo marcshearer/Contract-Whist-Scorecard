@@ -138,14 +138,19 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             
             // Play sound
             Utility.getActiveViewController()?.alertSound()
+            self.resetConnection()
             
-            if self.isHosting || self.isSharing {
-                // Refresh state to all devices
-                self.refreshState()
-                
-            } else {
-                // Disconnect (and reconnect)
-                self.commsDelegate?.disconnect(reason: "Reset", reconnect: true)            }
+        }
+    }
+    
+    public func resetConnection() {
+        if self.isHosting || self.isSharing {
+            // Refresh state to all devices
+            self.refreshState()
+            
+        } else {
+            // Disconnect (and reconnect)
+            self.commsDelegate?.disconnect(reason: "Reset", reconnect: true)
         }
     }
     

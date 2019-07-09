@@ -45,12 +45,14 @@ class TestMode {
 
 extension ScorepadViewController {
     
-    @IBAction private func rotationGesture(recognizer:UIRotationGestureRecognizer) {
+    internal func testRotationOptions() -> [(String, ()->(), Bool)]? {
         
-        let adminMode = (Scorecard.adminMode || Scorecard.shared.iCloudUserIsMe)
-        AdminMenu.rotationGesture(recognizer: recognizer, options:
-              [("Auto-play",        self.startAutoPlay,   adminMode && Scorecard.shared.isHosting),
-               ("Fill scorecard",   self.fillScorecard,   adminMode && !Scorecard.shared.hasJoined)])
+        if (Scorecard.adminMode || Scorecard.shared.iCloudUserIsMe) && Utility.isDevelopment {
+            return [("Auto-play",        self.startAutoPlay,   Scorecard.shared.isHosting),
+                    ("Fill scorecard",   self.fillScorecard,   !Scorecard.shared.hasJoined && !Scorecard.shared.isHosting)]
+        } else {
+            return nil
+        }
     }
     
     public func startAutoPlay() {
@@ -135,17 +137,13 @@ extension ScorepadViewController {
 
 extension HandViewController {
     
-    @IBAction private func rotationGesture(recognizer:UIRotationGestureRecognizer) {
+    internal func testRotationOptions() -> [(String, ()->(), Bool)]? {
         
-        let adminMode = (Scorecard.adminMode || Scorecard.shared.iCloudUserIsMe)
-        AdminMenu.rotationGesture(recognizer: recognizer, options:
-            [("Auto-play",          self.startAutoPlay,   adminMode && Scorecard.shared.isHosting),
-             ("Show debug info",    self.showDebugInfo,   true)])
-    }
-    
-    private func showDebugInfo() {
-        let message = "Selected round: \(Scorecard.shared.selectedRound)\nRound: \(self.state.round)\nCards: \(self.state.hand.toString())\nDealer: \(Scorecard.shared.dealerIs)\nTrick: \(self.state.trick!)\nCards played: \(self.state.trickCards.count)\nTo lead: \(self.state.toLead!)\nTo play: \(self.state.toPlay!)"
-        self.alertMessage(message, title: "Hand Information", buttonText: "Continue")
+        if (Scorecard.adminMode || Scorecard.shared.iCloudUserIsMe) && Utility.isDevelopment {
+            return [("Auto-play",          self.startAutoPlay,   Scorecard.shared.isHosting)]
+        } else {
+            return nil
+        }
     }
     
     public func startAutoPlay() {
@@ -259,11 +257,6 @@ extension HandViewController {
 
 extension ClientViewController {
     
-    @IBAction private func rotationGesture(recognizer:UIRotationGestureRecognizer) {
-        
-        AdminMenu.rotationGesture(recognizer: recognizer)
-    }
-    
     func checkTestMessages(descriptor: String, data: [String : Any?]?, peer: CommsPeer) {
         switch descriptor {
         case "autoPlay":
@@ -277,22 +270,6 @@ extension ClientViewController {
         default:
             break
         }
-    }
-}
-
-extension HostViewController {
-    
-    @IBAction private func rotationGesture(recognizer:UIRotationGestureRecognizer) {
-        
-        AdminMenu.rotationGesture(recognizer: recognizer)
-    }
-}
-
-extension ReviewViewController {
-    
-    @IBAction private func rotationGesture(recognizer:UIRotationGestureRecognizer) {
-        
-        AdminMenu.rotationGesture(recognizer: recognizer)
     }
 }
 

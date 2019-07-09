@@ -168,6 +168,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                 default:
                     saveHistorySelection.selectedSegmentIndex = 0
                 }
+                saveHistorySelection.isEnabled = !scorecard.settingSyncEnabled
                 
             case saveLocationRow:
                 // Save Location
@@ -866,6 +867,8 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
             // Set the segmented controller
             if enabled {
                 self.syncEnabledSelection.selectedSegmentIndex = 1
+                // Must save history if syncing
+                self.setHistory()
                 // Enable 'receive notifications' and alerts etc
                 self.allowBroadcastSelection?.isEnabled = true
                 self.receiveNotificationsSelection?.isEnabled = true
@@ -887,6 +890,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                 self.alertVibrateSelection?.isEnabled = false
                 self.onlinePlayerChangeButton?.isEnabled = false
                 self.onlinePlayerChangeButton?.alpha = 0.4
+                self.saveHistorySelection.isEnabled = true
             }
         })
     }
@@ -935,6 +939,16 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
             self.nearbyPlayingSelection?.selectedSegmentIndex = 0
             self.scorecard.settingNearbyPlaying = false
             UserDefaults.standard.set(false, forKey: "nearbyPlaying")
+        }
+    }
+    
+    func setHistory() {
+        if !self.scorecard.settingSaveHistory {
+            self.saveHistorySelection?.selectedSegmentIndex = 1
+            self.saveHistorySelection.isEnabled = false
+            self.scorecard.settingSaveHistory = true
+            UserDefaults.standard.set(false, forKey: "saveHistory")
+            self.saveLocationSelection.isEnabled = true
         }
     }
     

@@ -14,7 +14,7 @@ class ScorecardUI {
         if percent == 0.0 {
             view.layer.cornerRadius = 5
         } else {
-            view.layer.cornerRadius = view.layer.bounds.width * (percent/100.0)
+            view.layer.cornerRadius = view.layer.bounds.height * (percent/100.0)
         }
         view.layer.masksToBounds = true
     }

@@ -10,12 +10,6 @@ import UIKit
 
 class AdminMenu {
     
-    class func rotationGesture(recognizer:UIRotationGestureRecognizer, options: [(String, ()->(), Bool)]? = nil) {
-        if recognizer.state == .ended {
-            self.present(options: options)
-        }
-    }
-    
     class func present(options: [(String, ()->(), Bool)]? = nil) {
        
         // Check if any additional options
@@ -44,6 +38,9 @@ class AdminMenu {
             
             // Generic options - connections
             if Scorecard.shared.commsDelegate != nil && Scorecard.shared.commsDelegate!.connectionFramework != .loopback {
+                actionSheet.add("Reset connection", handler: {
+                    Scorecard.shared.resetConnection()
+                })
                 actionSheet.add("Show connections", handler: {
                     Scorecard.shared.commsDelegate?.connectionInfo()
                 })

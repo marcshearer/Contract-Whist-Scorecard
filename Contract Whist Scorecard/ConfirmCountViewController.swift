@@ -59,11 +59,7 @@ class ConfirmCountViewController : UIViewController, UIPopoverPresentationContro
         return UIModalPresentationStyle.none
     }
     
-}
-
-class ConfirmCount {
-    
-    func show(title: String, message: String, defaultValue: Int = 1, minimumValue: Int? = nil, maximumValue: Int? = nil, height: Int = 260, handler: @escaping ((Int)->())) {
+    static func show(title: String, message: String, defaultValue: Int = 1, minimumValue: Int? = nil, maximumValue: Int? = nil, height: Int = 260, handler: @escaping ((Int)->())) {
         let storyboard = UIStoryboard(name: "ConfirmCountViewController", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "ConfirmCountViewController") as! ConfirmCountViewController
     

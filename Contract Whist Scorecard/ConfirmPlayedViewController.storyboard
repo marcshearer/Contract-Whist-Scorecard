@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Confirm Played View Controller-->
+        <scene sceneID="pUI-3i-9Br">
+            <objects>
+                <viewController storyboardIdentifier="ConfirmPlayedViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="x2M-PG-c9N" userLabel="Confirm Played View Controller" customClass="ConfirmPlayedViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="trW-Bp-29g"/>
+                        <viewControllerLayoutGuide type="bottom" id="If8-U8-ybZ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="XJX-bP-Wnd">
+                        <rect key="frame" x="0.0" y="0.0" width="240" height="200"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7a6-UI-jEY">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="40"/>
+                                <color key="backgroundColor" name="Banner"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="beD-3c-ukd"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="thin" pointSize="30"/>
+                                <color key="textColor" name="Banner Text"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2B9-kF-KFs">
+                                <rect key="frame" x="0.0" y="40" width="240" height="120"/>
+                                <color key="backgroundColor" name="Clear"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QjS-KC-W9a" userLabel="Horizontal Separator">
+                                <rect key="frame" x="0.0" y="160" width="240" height="1"/>
+                                <color key="backgroundColor" name="Separator"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="8Nr-dj-Taj"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SAC-LY-LBW">
+                                <rect key="frame" x="120.5" y="161" width="119.5" height="39"/>
+                                <color key="backgroundColor" name="Banner"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="119.5" id="DUD-qE-5aM"/>
+                                    <constraint firstAttribute="height" constant="39" id="WMX-U4-Uzb"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" title="Cancel">
+                                    <color key="titleColor" name="Banner Text"/>
+                                </state>
+                                <connections>
+                                    <action selector="cancelPressed:" destination="x2M-PG-c9N" eventType="touchUpInside" id="7L7-jZ-I1D"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EOW-de-qI9" userLabel="Vertical Separator">
+                                <rect key="frame" x="119.5" y="161" width="1" height="39"/>
+                                <color key="backgroundColor" name="Separator"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="1" id="sR9-w3-VYF"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LbQ-qn-Vs4">
+                                <rect key="frame" x="0.0" y="161" width="119.5" height="39"/>
+                                <color key="backgroundColor" name="Banner"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" title="Confirm">
+                                    <color key="titleColor" name="Banner Text"/>
+                                </state>
+                                <connections>
+                                    <action selector="confirmPressed:" destination="x2M-PG-c9N" eventType="touchUpInside" id="Xtq-gA-x8e"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" name="Highlight"/>
+                        <constraints>
+                            <constraint firstItem="SAC-LY-LBW" firstAttribute="top" secondItem="QjS-KC-W9a" secondAttribute="bottom" id="0O3-eb-luq"/>
+                            <constraint firstItem="QjS-KC-W9a" firstAttribute="leading" secondItem="XJX-bP-Wnd" secondAttribute="leading" id="2hc-KL-oPp"/>
+                            <constraint firstItem="LbQ-qn-Vs4" firstAttribute="leading" secondItem="XJX-bP-Wnd" secondAttribute="leading" id="Dgv-dT-sQE"/>
+                            <constraint firstItem="SAC-LY-LBW" firstAttribute="width" secondItem="LbQ-qn-Vs4" secondAttribute="width" id="HSb-e2-0ta"/>
+                            <constraint firstItem="SAC-LY-LBW" firstAttribute="bottom" secondItem="XJX-bP-Wnd" secondAttribute="bottom" id="I2n-E3-Waj"/>
+                            <constraint firstItem="QjS-KC-W9a" firstAttribute="top" secondItem="2B9-kF-KFs" secondAttribute="bottom" id="JaW-eM-jwX"/>
+                            <constraint firstAttribute="trailing" secondItem="2B9-kF-KFs" secondAttribute="trailing" id="QvY-R6-ntL"/>
+                            <constraint firstItem="EOW-de-qI9" firstAttribute="bottom" secondItem="XJX-bP-Wnd" secondAttribute="bottom" id="W57-zf-1uu"/>
+                            <constraint firstItem="7a6-UI-jEY" firstAttribute="leading" secondItem="XJX-bP-Wnd" secondAttribute="leading" id="Zh2-dl-YYt"/>
+                            <constraint firstItem="7a6-UI-jEY" firstAttribute="trailing" secondItem="XJX-bP-Wnd" secondAttribute="trailing" id="caz-Ug-9B4"/>
+                            <constraint firstItem="SAC-LY-LBW" firstAttribute="height" secondItem="EOW-de-qI9" secondAttribute="height" id="e7c-dk-MBt"/>
+                            <constraint firstItem="2B9-kF-KFs" firstAttribute="top" secondItem="7a6-UI-jEY" secondAttribute="bottom" id="feG-8a-ENi"/>
+                            <constraint firstItem="EOW-de-qI9" firstAttribute="leading" secondItem="LbQ-qn-Vs4" secondAttribute="trailing" id="gxx-dc-25f"/>
+                            <constraint firstItem="SAC-LY-LBW" firstAttribute="height" secondItem="LbQ-qn-Vs4" secondAttribute="height" id="mqN-96-xij"/>
+                            <constraint firstAttribute="top" secondItem="7a6-UI-jEY" secondAttribute="top" id="obM-aa-Oyd"/>
+                            <constraint firstItem="2B9-kF-KFs" firstAttribute="leading" secondItem="XJX-bP-Wnd" secondAttribute="leading" id="qeF-XR-vWi"/>
+                            <constraint firstAttribute="trailing" secondItem="QjS-KC-W9a" secondAttribute="trailing" id="thv-HZ-3nQ"/>
+                            <constraint firstAttribute="bottom" secondItem="LbQ-qn-Vs4" secondAttribute="bottom" id="utE-FM-DBD"/>
+                            <constraint firstItem="SAC-LY-LBW" firstAttribute="leading" secondItem="EOW-de-qI9" secondAttribute="trailing" id="vjM-v1-dn4"/>
+                            <constraint firstAttribute="trailing" secondItem="SAC-LY-LBW" secondAttribute="trailing" id="wCh-8C-zaE"/>
+                        </constraints>
+                    </view>
+                    <value key="contentSizeForViewInPopover" type="size" width="300" height="400"/>
+                    <size key="freeformSize" width="240" height="200"/>
+                    <connections>
+                        <outlet property="cancelButton" destination="SAC-LY-LBW" id="8tj-1H-92e"/>
+                        <outlet property="confirmButton" destination="LbQ-qn-Vs4" id="Whz-5l-aik"/>
+                        <outlet property="contentView" destination="2B9-kF-KFs" id="MEI-K6-urZ"/>
+                        <outlet property="labelTitle" destination="7a6-UI-jEY" id="yUr-tu-KjU"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Qr7-Zf-NIh" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="11357.971014492754" y="1533.4821428571429"/>
+        </scene>
+    </scenes>
+    <resources>
+        <namedColor name="Banner">
+            <color red="0.89800000190734863" green="0.74900001287460327" blue="0.37299999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Banner Text">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Highlight">
+            <color red="0.92941176470588238" green="0.87450980392156863" blue="0.70588235294117652" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Separator">
+            <color white="0.67000001668930054" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </namedColor>
+    </resources>
+</document>

@@ -1066,19 +1066,19 @@ class Scorecard {
         }
     }
     
-    func reCenterPopup(_ viewController: UIViewController) {
+    func reCenterPopup(_ viewController: UIViewController, ignoreScorepad: Bool = false) {
         // Either recenters in parent or if top provided makes that the vertical top
         var verticalCenter: CGFloat
         
-        if self.scorepadHeaderHeight != 0 && UIScreen.main.bounds.size.height > 600 && UIScreen.main.bounds.size.height < 800 {
+        if !ignoreScorepad && self.scorepadHeaderHeight != 0 && UIScreen.main.bounds.size.height > 600 && UIScreen.main.bounds.size.height < 800 {
             // Positioning just below top
             let formHeight = viewController.preferredContentSize.height
             verticalCenter = self.scorepadHeaderHeight + CGFloat(formHeight / 2) + CGFloat(8.0)
         } else {
-            verticalCenter = UIScreen.main.bounds.size.height/2
+            verticalCenter = UIScreen.main.bounds.midY
         }
         
-        viewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.size.width/2, y: verticalCenter, width: 0 ,height: 0)
+        viewController.popoverPresentationController?.sourceRect = CGRect(origin: CGPoint(x: UIScreen.main.bounds.midX, y: verticalCenter), size: CGSize())
     }
     
     func showSummaryImage(_ summaryButton: UIButton) {

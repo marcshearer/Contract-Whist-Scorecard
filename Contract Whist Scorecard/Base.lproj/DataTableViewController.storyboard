@@ -295,7 +295,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gXG-S6-tvf" userLabel="Header Collection View">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="MWO-G1-p4t">
                                                         <size key="itemSize" width="50" height="44"/>
@@ -305,12 +305,19 @@
                                                     </collectionViewFlowLayout>
                                                     <cells>
                                                         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" reuseIdentifier="Data Table Header Cell" id="1av-63-VO8" userLabel="Header Collection Cell" customClass="DataTableCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="44"/>
+                                                            <rect key="frame" x="0.0" y="-0.5" width="50" height="44"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="44"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
+                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bV8-m3-5nP">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="0.0"/>
+                                                                        <color key="backgroundColor" name="Clear"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" id="2oy-Cd-DlZ"/>
+                                                                        </constraints>
+                                                                    </view>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="CC4-IV-sdi">
                                                                         <rect key="frame" x="0.0" y="0.0" width="50" height="24"/>
                                                                         <color key="backgroundColor" name="Clear"/>
@@ -337,13 +344,16 @@
                                                             <color key="backgroundColor" name="Clear"/>
                                                             <constraints>
                                                                 <constraint firstItem="fo1-5v-pZW" firstAttribute="leading" secondItem="1av-63-VO8" secondAttribute="leading" id="6Ma-eX-VJb"/>
+                                                                <constraint firstItem="bV8-m3-5nP" firstAttribute="top" secondItem="1av-63-VO8" secondAttribute="top" id="BSr-tk-yrX"/>
                                                                 <constraint firstAttribute="trailing" secondItem="2EQ-R2-YJx" secondAttribute="trailing" id="F1T-iR-jnb"/>
                                                                 <constraint firstItem="2EQ-R2-YJx" firstAttribute="leading" secondItem="1av-63-VO8" secondAttribute="leading" id="H9U-hd-JSk"/>
                                                                 <constraint firstItem="2EQ-R2-YJx" firstAttribute="top" secondItem="fo1-5v-pZW" secondAttribute="bottom" id="Vca-2o-hAu"/>
                                                                 <constraint firstAttribute="trailing" secondItem="fo1-5v-pZW" secondAttribute="trailing" id="ffC-Jo-tZK"/>
                                                                 <constraint firstItem="fo1-5v-pZW" firstAttribute="top" secondItem="CC4-IV-sdi" secondAttribute="bottom" id="hyr-YH-9Bi"/>
-                                                                <constraint firstItem="CC4-IV-sdi" firstAttribute="top" secondItem="1av-63-VO8" secondAttribute="top" id="msj-eR-0Pd"/>
+                                                                <constraint firstItem="CC4-IV-sdi" firstAttribute="top" secondItem="bV8-m3-5nP" secondAttribute="bottom" id="jFL-kX-jTe"/>
+                                                                <constraint firstItem="bV8-m3-5nP" firstAttribute="leading" secondItem="1av-63-VO8" secondAttribute="leading" id="pOa-Wk-gOc"/>
                                                                 <constraint firstAttribute="bottom" secondItem="2EQ-R2-YJx" secondAttribute="bottom" id="x23-Ha-HBU"/>
+                                                                <constraint firstAttribute="trailing" secondItem="bV8-m3-5nP" secondAttribute="trailing" id="xdz-Pn-kjO"/>
                                                                 <constraint firstAttribute="trailing" secondItem="CC4-IV-sdi" secondAttribute="trailing" id="yLN-Yo-eVQ"/>
                                                                 <constraint firstItem="CC4-IV-sdi" firstAttribute="leading" secondItem="1av-63-VO8" secondAttribute="leading" id="ym6-8g-5fa"/>
                                                             </constraints>
@@ -351,6 +361,8 @@
                                                                 <outlet property="headerDownArrowView" destination="2EQ-R2-YJx" id="obW-r1-h99"/>
                                                                 <outlet property="headerUpArrowView" destination="fo1-5v-pZW" id="aA0-ja-YoZ"/>
                                                                 <outlet property="textLabel" destination="CC4-IV-sdi" id="zv5-cq-1K5"/>
+                                                                <outlet property="topSpacingHeightConstraint" destination="2oy-Cd-DlZ" id="l6a-yG-m4Q"/>
+                                                                <outlet property="topSpacingView" destination="bV8-m3-5nP" id="J6K-Mn-FZ1"/>
                                                             </connections>
                                                         </collectionViewCell>
                                                     </cells>
@@ -379,7 +391,7 @@
                         <constraints>
                             <constraint firstItem="P6c-mS-fXT" firstAttribute="top" secondItem="5eb-gD-VJV" secondAttribute="top" id="0YQ-Bk-SQG"/>
                             <constraint firstItem="X5U-rg-RZw" firstAttribute="top" secondItem="P6c-mS-fXT" secondAttribute="bottom" id="4aE-Yi-jat"/>
-                            <constraint firstItem="X5U-rg-RZw" firstAttribute="bottom" secondItem="zs1-6Q-Kuk" secondAttribute="bottom" id="AYq-rs-Ksq"/>
+                            <constraint firstAttribute="bottom" secondItem="zs1-6Q-Kuk" secondAttribute="bottom" id="AYq-rs-Ksq"/>
                             <constraint firstItem="H5B-2k-XF2" firstAttribute="top" secondItem="X5U-rg-RZw" secondAttribute="top" id="Ag6-uh-bWj"/>
                             <constraint firstAttribute="trailing" secondItem="zs1-6Q-Kuk" secondAttribute="trailing" id="B16-Gk-bwo"/>
                             <constraint firstItem="6k9-mI-xNc" firstAttribute="top" secondItem="H5B-2k-XF2" secondAttribute="bottom" id="GR2-nT-81u"/>
@@ -454,7 +466,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Section Heading">
-            <color red="0.93300002813339233" green="0.875" blue="0.70599997043609619" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.92941176470588238" green="0.87450980392156863" blue="0.70588235294117652" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Separator">
             <color white="0.67000001668930054" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

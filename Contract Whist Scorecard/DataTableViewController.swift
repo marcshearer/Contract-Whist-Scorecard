@@ -22,6 +22,7 @@ import CoreData
     @objc optional var initialSortField: String { get }
     @objc optional var initialSortDescending: Bool {get}
     @objc optional var headerRowHeight: CGFloat { get }
+    @objc optional var headerTopSpacingHeight: CGFloat { get }
     @objc optional var bodyRowHeight: CGFloat { get }
     @objc optional var separatorHeight: CGFloat { get }
     
@@ -344,6 +345,8 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
             cell.tag = indexPath.row
 
             Palette.sectionHeadingStyle(cell.textLabel)
+            cell.topSpacingView.backgroundColor = Palette.sectionHeading
+            cell.topSpacingHeightConstraint.constant = self.delegate?.headerTopSpacingHeight ?? 0.0
             cell.headerUpArrowView.backgroundColor = Palette.sectionHeading
             cell.textLabel.text = column.title
             cell.textLabel.textAlignment = column.align
@@ -605,6 +608,8 @@ class DataTableCell: UITableViewCell {
     public var headerUpArrowShape: UIView!
     public var headerDownArrowShape: UIView!
 
+    @IBOutlet weak var topSpacingView: UIView!
+    @IBOutlet weak var topSpacingHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var textLabel: UILabel!
     @IBOutlet weak var headerUpArrowView: UIView!
     @IBOutlet weak var headerDownArrowView: UIView!

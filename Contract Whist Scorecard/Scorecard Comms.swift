@@ -185,11 +185,15 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 let storyboard = UIStoryboard(name: "HandViewController", bundle: nil)
                 let handViewController = storyboard.instantiateViewController(withIdentifier: "HandViewController") as! HandViewController
 
-                handViewController.modalPresentationStyle = UIModalPresentationStyle.popover
-                handViewController.isModalInPopover = true
-                handViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-                handViewController.popoverPresentationController?.sourceView = sourceView
-                handViewController.preferredContentSize = CGSize(width: 400, height: 554)
+                if !ScorecardUI.phoneSize() {
+                    handViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+                    handViewController.isModalInPopover = true
+                    handViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+                    handViewController.popoverPresentationController?.sourceView = sourceView
+                    handViewController.preferredContentSize = CGSize(width: 400, height: 554)
+                } else {
+                    handViewController.isModalInPopover = false
+                }
                 
                 handViewController.delegate = viewController as? HandStatusDelegate
                 handViewController.computerPlayerDelegate = computerPlayerDelegate

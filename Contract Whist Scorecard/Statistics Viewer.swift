@@ -17,7 +17,8 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
     public let allowSync = true
     public let nameField = "name"
     public let initialSortField = "name"
-    public let headerRowHeight:CGFloat = 62.0
+    public let headerRowHeight:CGFloat = 66.0
+    public let headerTopSpacingHeight: CGFloat = 4.0
     public let bodyRowHeight:CGFloat = 52.0
         
     private var recordList: [PlayerDetail]

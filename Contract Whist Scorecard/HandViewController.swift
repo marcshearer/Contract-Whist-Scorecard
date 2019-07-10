@@ -55,6 +55,10 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     private var tabletopCellWidth: CGFloat!
     private var bidButtonSize: CGFloat = 50.0
     private let instructionHeight: CGFloat = 50.0
+    private let playedCardCollectionHorizontalMargins: CGFloat = 16.0
+    private let playedCardCollectionVerticalMargins: CGFloat = 24.0
+    private let playedCardStats: CGFloat = (3 * 21.0) + 4.0
+    private let playedCardSpacing: CGFloat = 4.0
     private var maxBidButton: Int!
     private var buttonsAcross: Int!
     private var buttonsDown: Int!
@@ -277,7 +281,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             return CGSize(width: bidButtonSize, height: bidButtonSize)
         } else if collectionView.tag == playedCardCollectionTag {
             // Played cards
-            return CGSize(width: tabletopCellWidth, height: tabletopViewHeight - 8)
+            return CGSize(width: tabletopCellWidth, height: tabletopViewHeight - playedCardCollectionVerticalMargins)
         } else {
             // Hand cards
             return CGSize(width: handCardWidth, height: handCardHeight)
@@ -433,7 +437,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             if newBidMode == false && !firstBidRefresh {
                 // About to exit bid mode - delay 1 second
                 setupOverUnder()
-                self.setInstructionsColor(to: Palette.banner)
+                self.setInstructionsColor(to: Palette.hand)
                 self.instructionTextView.text = "Bidding Complete"
                 self.finishButton.isHidden = true
                 self.scorecard.commsHandlerMode = .viewTrick
@@ -463,7 +467,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             } else {
                 bidsEnable(false)
                 self.instructionTextView.text = "\(self.scorecard.entryPlayer(bids.count + 1).playerMO!.name!) to bid"
-                self.setInstructionsColor(to: Palette.banner)
+                self.setInstructionsColor(to: Palette.hand)
                 // Get computer player to bid
                 self.computerPlayerDelegate?[self.scorecard.entryPlayer(bids.count + 1).playerNumber]??.autoBid()
             }
@@ -548,7 +552,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         } else {
             self.cardsEnable(false)
             self.instructionTextView.text = "\(self.scorecard.enteredPlayer(self.state.toPlay).playerMO!.name!) to play"
-            self.setInstructionsColor(to: Palette.banner)
+            self.setInstructionsColor(to: Palette.hand)
             // Get computer player to play
             self.computerPlayerDelegate?[self.state.toPlay]??.autoPlay()
         }
@@ -629,7 +633,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             bidViewHeight = bidHeightMax
         } else {
             // Calculate so that buttons only just fit in
-            bidViewHeight = ((bidButtonSize + 10.0) * CGFloat(buttonsDown)) + 6.0
+            bidViewHeight = ((bidButtonSize + 10.0) * CGFloat(buttonsDown)) + 12.0
         }
         
         // Hide vertical separator if there are3 rows of buttons across
@@ -793,11 +797,11 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     
     func setupTabletopSize() {
         // Set tabletop height
-        let tableTopViewWidth = (self.viewWidth / (ScorecardUI.landscapePhone() ? 2 : 1)) - 72
+        let tableTopViewWidth: CGFloat = (self.viewWidth / (ScorecardUI.landscapePhone() ? 2 : 1)) - playedCardCollectionHorizontalMargins - (CGFloat(self.scorecard.currentPlayers-1) * playedCardSpacing)
         tabletopCellWidth = tableTopViewWidth / CGFloat(self.scorecard.currentPlayers)
-        let maxTabletopCardHeight = tabletopViewHeight - (3 * 21) - (2 * 8)
+        let maxTabletopCardHeight: CGFloat = tabletopViewHeight - playedCardCollectionVerticalMargins - playedCardStats
         let maxTabletopCardWidth = tabletopCellWidth - 8
-        if maxTabletopCardHeight * CGFloat(2.0/3.0) > maxTabletopCardWidth {
+        if maxTabletopCardHeight > maxTabletopCardWidth * CGFloat(3.0/2.0){
             tabletopCardWidth = maxTabletopCardWidth
             tabletopCardHeight = tabletopCardWidth * CGFloat(3.0/2.0)
         } else {
@@ -813,44 +817,24 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         let cell = collectionView.cellForItem(at: indexPath)
         let card =  Card(fromNumber: cell!.tag)
         
-        func playCard(alertAction: UIAlertAction) {
-            Utility.mainThread("playCard", execute: { [unowned self] in
-                let round = self.round!
-                let trick = self.state.trick!
-                self.isModalInPopover = true
-                self.scorecard.sendCardPlayed(round: round, trick: trick, playerNumber: self.enteredPlayerNumber, card: card)
-                self.playCard(card: card)
-            })
-        }
+        let cardWidth: CGFloat = 60
+        let label = UILabel()
+        _ = Constraint.setWidth(control: label, width: cardWidth)
+        _ = Constraint.setHeight(control: label, height: cardWidth * (3.0/2.0))
+        label.attributedText = card.toAttributedString()
+        label.backgroundColor = Palette.cardFace
+        label.font = UIFont.systemFont(ofSize: 30)
+        label.textAlignment = .center
+        ScorecardUI.roundCorners(label)
         
-        func resetPopover(alertAction: UIAlertAction) {
-            self.isModalInPopover = true
-        }
-        
-        // Confirm card
-        let alertController = UIAlertController(title: "", message: "\n\n\n\n\n", preferredStyle: UIAlertController.Style.alert)
-        alertController.addAction(UIAlertAction(title: "Play card", style: UIAlertAction.Style.default, handler: playCard))
-        alertController.addAction(UIAlertAction(title: "Change card", style: UIAlertAction.Style.default, handler: resetPopover))
-        alertController.view.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
-        let subview = (alertController.view.subviews.first?.subviews.first?.subviews.first!)! as UIView
-        subview.backgroundColor = Palette.darkHighlight
-        alertController.view.tintColor = Palette.darkHighlightText
-        self.present(alertController, animated: false, completion: {
-            // Show the card
-            let cardWidth: CGFloat = 60
-            let label = UILabel(frame: CGRect(x: (alertController.view.frame.width - cardWidth) / CGFloat(2), y: 20, width: cardWidth, height: cardWidth * (3/2)))
-            label.textColor = UIColor.white
-            label.attributedText = card.toAttributedString()
-            label.backgroundColor = Palette.cardFace
-            label.font = UIFont.systemFont(ofSize: 30)
-            label.textAlignment = .center
-            ScorecardUI.roundCorners(label)
-            alertController.view.addSubview(label)
-        })
+        ConfirmPlayedViewController.show(title: "Confirm Card", content: label, sourceView: self.popoverPresentationController?.sourceView, confirmText: "Play card", cancelText: "Change card", handler: { self.playCard(card: card) } )
     }
     
     func playCard(card: Card) {
         // Update data structures
+        let round = self.round!
+        let trick = self.state.trick!
+        self.scorecard.sendCardPlayed(round: round, trick: trick, playerNumber: self.enteredPlayerNumber, card: card)
         self.scorecard.playCard(card: card)
         self.refreshCardPlayed(card: card)
     }
@@ -879,7 +863,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         let currentCard = self.state.trickCards.count - 1
         if currentCard < self.scorecard.currentPlayers {
             self.playerCardView[currentCard]!.isHidden = false
-            self.playerCardLabel[currentCard]!.textColor = UIColor.white
+            self.playerCardLabel[currentCard]!.textColor = Palette.cardFace
             self.playerCardLabel[currentCard]!.attributedText = card.toAttributedString()
         }
         
@@ -887,28 +871,17 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     }
     
     func confirmBid(bid: Int) {
-        let alertController = UIAlertController(title: "", message: "\n\n\n", preferredStyle: UIAlertController.Style.alert)
-        alertController.addAction(UIAlertAction(title: "Confirm bid", style: UIAlertAction.Style.default, handler: { (UIAlertAction) in
-            self.makeBid(bid)
-        }))
-        alertController.addAction(UIAlertAction(title: "Change bid", style: UIAlertAction.Style.default, handler: { (UIAlertAction) in
-            self.resetPopover()
-        }))
-        alertController.view.frame = CGRect(x: 0, y: 0, width: 200, height: 100)
-        let subview = (alertController.view.subviews.first?.subviews.first?.subviews.first!)! as UIView
-        subview.backgroundColor = Palette.darkHighlight
-        alertController.view.tintColor = Palette.darkHighlightText
-        self.present(alertController, animated: false, completion: {
-            // Show the bid
-            let label = UILabel(frame: CGRect(x: (alertController.view.frame.width - 50) / CGFloat(2), y: 20, width: 50, height: 50))
-            label.text = "\(bid)"
-            label.backgroundColor = Palette.highlight
-            label.textColor = Palette.highlightText
-            label.font = UIFont.systemFont(ofSize: 30)
-            label.textAlignment = .center
-            ScorecardUI.roundCorners(label)
-            alertController.view.addSubview(label)
-        })
+        let label = UILabel()
+        _ = Constraint.setWidth(control: label, width: 50)
+        _ = Constraint.setHeight(control: label, height: 50)
+        label.text = "\(bid)"
+        label.backgroundColor = Palette.emphasis
+        label.textColor = Palette.emphasisText
+        label.font = UIFont.systemFont(ofSize: 30)
+        label.textAlignment = .center
+        ScorecardUI.roundCorners(label)
+        
+        ConfirmPlayedViewController.show(title: "Confirm Bid", content: label, sourceView: self.popoverPresentationController?.sourceView, confirmText: "Confirm bid", cancelText: "Change bid", handler: { self.makeBid(bid) } )
     }
     
     func makeBid(_ bid: Int) {

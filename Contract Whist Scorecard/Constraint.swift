@@ -25,6 +25,8 @@ class Constraint {
     
     public static func anchor(view: UIView, control: UIView, to: UIView? = nil, toAttribute: NSLayoutConstraint.Attribute? = nil, attributes: NSLayoutConstraint.Attribute...) {
         let to = to ?? view
+        control.translatesAutoresizingMaskIntoConstraints = false
+        control.autoresizingMask = [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
         for attribute in attributes {
             let toAttribute = toAttribute ?? attribute
             let constraint = NSLayoutConstraint(item: control, attribute: attribute, relatedBy: .equal, toItem: to, attribute: toAttribute, multiplier: 1.0, constant: 0.0)

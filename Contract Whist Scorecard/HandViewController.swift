@@ -55,7 +55,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     private var tabletopCellWidth: CGFloat!
     private var bidButtonSize: CGFloat = 50.0
     private let instructionHeight: CGFloat = 50.0
-    private let separatorHeight: CGFloat = 0.25
+    private let separatorHeight: CGFloat = 0.0
     private let playedCardCollectionHorizontalMargins: CGFloat = 16.0
     private let playedCardCollectionVerticalMargins: CGFloat = 24.0
     private let playedCardStats: CGFloat = (3 * 21.0) + 4.0

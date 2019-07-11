@@ -957,7 +957,7 @@ class Scorecard {
         }
     }
     
-    private func reflectNetworkConnection(button: RoundedButton!, label: UILabel!, disable: Bool = false) {
+    public func reflectNetworkConnection(button: RoundedButton!, label: UILabel!, disable: Bool = false) {
         var buttonHidden = true
         var labelText = ""
         var labelHidden = true

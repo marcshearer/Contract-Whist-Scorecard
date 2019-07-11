@@ -24,6 +24,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     private enum Shape {
         case arrowTop
         case arrowMiddle
+        case shortArrowMiddle
         case arrowBottom
     }
     
@@ -44,9 +45,10 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     private var firstTime = true
     private var getStarted = true
     
-    private var sections: [Int]!
+    private var sections: [Int:Int]!
     private var sectionActions: [Int:[ActionButton]]!
     private var actionButtons: [ActionButton]!
+    private var headerSection = 0
     private var mainSection = 1
     private var infoSection = 2
     private var adminSection = 3
@@ -60,15 +62,13 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     private var matching = 0
     
     // UI component pointers
-    private var onlineGameCell: UITableViewCell!
     private var reconcileAlertController: UIAlertController!
     private var reconcileContinue: UIAlertAction!
     private var reconcileIndicatorView: UIActivityIndicatorView!
+    private var syncMessage: UILabel!
     
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var welcomeView: UIView!
-    @IBOutlet private weak var syncMessage: UILabel!
-    @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var actionsTableView: UITableView!
     @IBOutlet private weak var viewOnlineButton: ClearButton!
     
@@ -167,7 +167,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
 
     override func viewDidLoad() {
         super.viewDidLoad()
-                
+        
         self.hideNavigationBar()
         
         // Possible clear all data in test mode
@@ -268,17 +268,24 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     // MARK: - TableView Overrides ===================================================================== -
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return self.sections.count
+        return self.sections.count + 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.sectionActions[sections[section]]!.count
+        if section == self.headerSection {
+            return 1
+        } else {
+            return self.sectionActions[sections[section]!]!.count
+        }
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
+        switch section {
+        case headerSection:
+            return 0
+        case mainSection:
             return 1
-        } else {
+        default:
             return 20
         }
     }
@@ -292,91 +299,114 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return min(80, max(50, tableView.frame.height / 8.0))
+        if indexPath.section == headerSection {
+            return 144
+        } else {
+            if ScorecardUI.portraitPhone() {
+                return min(80, max(50, tableView.frame.height / 8.0))
+            } else {
+                return 80
+            }
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var welcomeActionCell: WelcomeActionCell
         
-        // Action buttons
-        welcomeActionCell = tableView.dequeueReusableCell(withIdentifier: "Welcome Action Cell", for: indexPath) as! WelcomeActionCell
-        
-        let section = self.sections[indexPath.section]
-        let actionButtons = self.sectionActions[section]!
-        let actionButton = actionButtons[indexPath.row]
-        
-        var shape: Shape
-        var strokeColor: UIColor
-        var fillColor: UIColor
-        var textColor: UIColor
-        var strokeTextColor: UIColor
-        var pointType: PolygonPointType
-        
-        // Set section colors
-        if section == 1 {
-            strokeColor = Palette.shapeHighlightStroke
-            strokeTextColor = Palette.shapeHighlightStrokeText
-            fillColor = Palette.shapeHighlightFill
-            textColor = Palette.shapeHighlightFillText
+        if indexPath.section == headerSection {
+            
+            welcomeActionCell = tableView.dequeueReusableCell(withIdentifier: "Welcome Header Cell", for: indexPath) as! WelcomeActionCell
+            self.syncMessage = welcomeActionCell.headerSyncMessage
+            self.scorecard.reflectNetworkConnection(button: nil, label: welcomeActionCell.headerSyncMessage)
+            
         } else {
-            strokeColor = Palette.shapeStroke
-            strokeTextColor = Palette.shapeStrokeText
-            fillColor = Palette.shapeFill
-            textColor = Palette.shapeFillText
-            if indexPath.row % 2 == 0 {
-                shape = .arrowTop
+            
+            // Action buttons
+            welcomeActionCell = tableView.dequeueReusableCell(withIdentifier: "Welcome Action Cell", for: indexPath) as! WelcomeActionCell
+            
+            let section = self.sections[indexPath.section]!
+            let actionButtons = self.sectionActions[section]!
+            let actionButton = actionButtons[indexPath.row]
+            
+            var shape: Shape
+            var strokeColor: UIColor
+            var fillColor: UIColor
+            var textColor: UIColor
+            var strokeTextColor: UIColor
+            var pointType: PolygonPointType
+            
+            // Set section colors
+            if section == mainSection {
+                strokeColor = Palette.shapeHighlightStroke
+                strokeTextColor = Palette.shapeHighlightStrokeText
+                fillColor = Palette.shapeHighlightFill
+                textColor = Palette.shapeHighlightFillText
+            } else if section == adminSection {
+                strokeColor = Palette.shapeAdminStroke
+                strokeTextColor = Palette.shapeAdminText
+                fillColor = Palette.shapeAdminFill
+                textColor = Palette.shapeAdminText
             } else {
-                shape = .arrowBottom
+                strokeColor = Palette.shapeStroke
+                strokeTextColor = Palette.shapeStrokeText
+                fillColor = Palette.shapeFill
+                textColor = Palette.shapeFillText
             }
-        }
-        
-        // Override fill color if highlighted
-        if actionButton.highlight {
-            fillColor = strokeColor
-            textColor = strokeTextColor
-        }
-        
-        // Set shapes
-        if actionButtons.count == 1 {
-            pointType = .rounded
-            shape = .arrowMiddle
-        } else if actionButtons.count == 3 {
-            if indexPath.item == 0 {
-                shape = .arrowTop
-                pointType = .insideRounded
-            } else if indexPath.item == 1 {
+            
+            // Override fill color if highlighted
+            if actionButton.highlight {
+                fillColor = strokeColor
+                textColor = strokeTextColor
+            }
+            
+            // Set shapes
+            if section == adminSection {
+                pointType = .rounded
                 shape = .arrowMiddle
-                pointType = .point
+            } else if actionButtons.count == 1 {
+                pointType = .rounded
+                shape = .shortArrowMiddle
+            } else if actionButtons.count == 3 {
+                if indexPath.item == 0 {
+                    shape = .arrowTop
+                    pointType = .insideRounded
+                } else if indexPath.item == 1 {
+                    shape = .arrowMiddle
+                    pointType = .point
+                } else {
+                    shape = .arrowBottom
+                    pointType = .insideRounded
+                }
             } else {
-                shape = .arrowBottom
-                pointType = .insideRounded
+                pointType = .halfRounded
+                if indexPath.item % 2 == 0 {
+                    shape = .arrowTop
+                } else {
+                    shape = .arrowBottom
+                }
             }
-        } else {
-            pointType = .halfRounded
-            if indexPath.item % 2 == 0 {
-                shape = .arrowTop
-            } else {
-                shape = .arrowBottom
-            }
+            
+            self.backgroundShape(view: welcomeActionCell.actionShapeView, shape: shape, strokeColor: strokeColor, fillColor: fillColor, abuttedAbove: indexPath.row != 0, abuttedBelow: indexPath.row != actionButtons.count - 1, pointType: pointType)
+            
+            welcomeActionCell.actionTitle.text = actionButton.title
+            welcomeActionCell.actionTitle.textColor = textColor
+            welcomeActionCell.actionTitle.font = UIFont.systemFont(ofSize: min((section == adminSection ? 22 : 40), welcomeActionCell.actionTitle.frame.width / 7.5, welcomeActionCell.actionTitle.frame.height / 1.25), weight: .thin)
+            welcomeActionCell.tag = actionButton.tag
+            welcomeActionCell.selectionStyle = .none
+            
         }
-
-        self.backgroundShape(view: welcomeActionCell.shapeView, shape: shape, strokeColor: strokeColor, fillColor: fillColor, abutted: (indexPath.row != 0) && (indexPath.row != actionButtons.count - 1), pointType: pointType)
-
-        welcomeActionCell.title.text = actionButton.title
-        welcomeActionCell.title.textColor = textColor
-        welcomeActionCell.title.font = UIFont.systemFont(ofSize: min(40, welcomeActionCell.title.frame.width / 9.0, welcomeActionCell.title.frame.height / 1.25), weight: .thin)
-        welcomeActionCell.tag = actionButton.tag
-        welcomeActionCell.selectionStyle = .none
         
         return welcomeActionCell as UITableViewCell
     }
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         
-        if let cell = tableView.cellForRow(at: indexPath) {
-            let actionButton = actionButtons[cell.tag]
-            Utility.mainThread {
-                actionButton.action(cell)
+        if indexPath.section != headerSection {
+            if let cell = tableView.cellForRow(at: indexPath) {
+                let actionButton = actionButtons[cell.tag]
+                Utility.mainThread {
+                    actionButton.action(cell)
+                }
             }
         }
         return nil
@@ -446,14 +476,16 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     }
     
     private func checkButtons() {
-        self.sections = []
+        self.sections = [:]
         self.sectionActions = [:]
+        var tableViewSection = 0
         for actionButton in self.actionButtons {
             if !(actionButton.isHidden?() ?? false) {
                 let section = actionButton.section
                 if sectionActions[section] == nil {
                     sectionActions[section] = []
-                    sections.append(section)
+                    tableViewSection += 1
+                    sections[tableViewSection] = section
                 }
                 sectionActions[section]!.append(actionButton)
             }
@@ -733,7 +765,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         }
     }
     
-    private func backgroundShape(view: UIView, shape: Shape, strokeColor: UIColor, fillColor: UIColor, abutted: Bool = false, pointType: PolygonPointType = .rounded, lineWidth: CGFloat = 3.0) {
+    private func backgroundShape(view: UIView, shape: Shape, strokeColor: UIColor, fillColor: UIColor, abuttedAbove: Bool = false, abuttedBelow: Bool = false, pointType: PolygonPointType = .rounded, lineWidth: CGFloat = 3.0) {
         
         var points: [PolygonPoint] = []
         let size = view.frame.size
@@ -745,20 +777,20 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         
         switch shape {
         case .arrowTop:
-            points.append(PolygonPoint(x: 0.0, y: (abutted ? 0 : shift), pointType: .point))
-            points.append(PolygonPoint(x: size.width - (arrowWidth * 1.5), y: (abutted ? 0 : shift)))
+            points.append(PolygonPoint(x: 0.0, y: (abuttedAbove ? 0 : shift), pointType: .point))
+            points.append(PolygonPoint(x: size.width - (arrowWidth * 1.5), y: (abuttedAbove ? 0 : shift), radius: 20.0))
             points.append(PolygonPoint(x: size.width - (arrowWidth * 0.5), y: size.height, pointType: pointType))
             points.append(PolygonPoint(x: 0.0, y: size.height, pointType: .point))
         case .arrowBottom:
             points.append(PolygonPoint(x: 0.0, y: 0.0, pointType: .point))
-            points.append(PolygonPoint(x: 0.0, y: size.height - (abutted ? 0 : shift), pointType: .point))
-            points.append(PolygonPoint(x: size.width - (arrowWidth * 1.5), y: size.height - (abutted ? 0 : shift)))
+            points.append(PolygonPoint(x: 0.0, y: size.height - (abuttedBelow ? 0 : shift), pointType: .point))
+            points.append(PolygonPoint(x: size.width - (arrowWidth * 1.5), y: size.height - (abuttedBelow ? 0 : shift), radius: 20.0))
             points.append(PolygonPoint(x: size.width - (arrowWidth * 0.5), y: 0.0, pointType: pointType))
-        case .arrowMiddle:
-            points.append(PolygonPoint(x: 0.0, y: (abutted ? 0 : shift), pointType: .point))
-            points.append(PolygonPoint(x: size.width - (arrowWidth * (abutted ? 0.5 : 1.5)), y: (abutted ? 0 : shift), pointType: pointType))
-            points.append(PolygonPoint(x: size.width - (arrowWidth * (abutted ? 0.0 : 1.0)) , y: (size.height * 0.5) - (abutted ? 0 : shift)))
-            points.append(PolygonPoint(x: size.width - (arrowWidth * (abutted ? 0.5 : 1.5)), y: size.height - (abutted ? 0 : shift), pointType: pointType))
+        case .arrowMiddle, .shortArrowMiddle:
+            points.append(PolygonPoint(x: 0.0, y: (abuttedAbove ? 0 : shift), pointType: .point))
+            points.append(PolygonPoint(x: size.width - (arrowWidth * (shape == .arrowMiddle ? 0.5 : 1.5)), y: (abuttedAbove ? 0 : shift), pointType: pointType, radius: 20.0))
+            points.append(PolygonPoint(x: size.width - (arrowWidth * (shape == .arrowMiddle ? 0.0 : 1.0)) , y: (size.height * 0.5) - (abuttedBelow ? 0 : shift)))
+            points.append(PolygonPoint(x: size.width - (arrowWidth * (shape == .arrowMiddle ? 0.5 : 1.5)), y: size.height - (abuttedBelow ? 0 : shift), pointType: pointType, radius: 20.0))
             points.append(PolygonPoint(x: 0.0, y: size.height, pointType: .point))
         }
         
@@ -771,6 +803,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
 
 class WelcomeActionCell: UITableViewCell {
-    @IBOutlet weak var title: UILabel!
-    @IBOutlet weak var shapeView: UIView!
+    @IBOutlet weak var headerSyncMessage: UILabel!
+    @IBOutlet weak var actionTitle: UILabel!
+    @IBOutlet weak var actionShapeView: UIView!
 }

@@ -54,6 +54,9 @@ class Palette {
     static let shapeStroke = UIColor(named: "Shape Stroke")!
     static let shapeFillText = UIColor(named: "Shape Fill Text")!
     static let shapeFill = UIColor(named: "Shape Fill")!
+    static let shapeAdminStroke = UIColor(named: "Shape Admin Stroke")!
+    static let shapeAdminText = UIColor(named: "Shape Admin Text")!
+    static let shapeAdminFill = UIColor(named: "Shape Admin Fill")!
     static let shapeHighlightStrokeText = UIColor(named: "Shape Highlight Stroke Text")!
     static let shapeHighlightStroke = UIColor(named: "Shape Highlight Stroke")!
     static let shapeHighlightFillText = UIColor(named: "Shape Highlight Fill Text")!

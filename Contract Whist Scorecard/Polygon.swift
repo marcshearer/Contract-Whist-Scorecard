@@ -62,6 +62,7 @@ class Polygon {
             let previous = points[(index + points.count - 1) % points.count].cgPoint
             let current = points[index % points.count].cgPoint
             let next = points[(index + 1) % points.count].cgPoint
+            let radius = points[index % points.count].radius ?? radius
             
             switch points[index % points.count].pointType {
             case .point:
@@ -139,11 +140,13 @@ class PolygonPoint {
     public var x: CGFloat
     public var y: CGFloat
     public var pointType: PolygonPointType
+    public var radius: CGFloat?
     
-    init(x: CGFloat, y: CGFloat, pointType: PolygonPointType = .rounded) {
+    init(x: CGFloat, y: CGFloat, pointType: PolygonPointType = .rounded, radius: CGFloat? = nil) {
         self.x = x
         self.y = y
         self.pointType = pointType
+        self.radius = radius
     }
     
     var cgPoint: CGPoint {

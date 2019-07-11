@@ -654,7 +654,7 @@ class DataTableCell: UITableViewCell {
         points.append(PolygonPoint(x: size, y: container.frame.minY + size))
         }
         
-        Polygon.roundedShape(in: view, definedBy: points, strokeColor: color, fillColor: color, lineWidth: 1.0, roundingFraction: 0.01)
+        Polygon.roundedShape(in: view, definedBy: points, strokeColor: color, fillColor: color, lineWidth: 1.0, radius: 3.5)
         
         return view
     }

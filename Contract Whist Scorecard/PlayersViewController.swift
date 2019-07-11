@@ -382,29 +382,29 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
         var points: [PolygonPoint] = []
         switch type {
         case .arrowRight:
-            points.append(PolygonPoint(x: minX, y: minY))
-            points.append(PolygonPoint(x: minX + width - arrowWidth, y: minY))
-            points.append(PolygonPoint(x: minX + width, y: minY + (height / 2.0)))
-            points.append(PolygonPoint(x: minX + width - arrowWidth, y: minY + height))
-            points.append(PolygonPoint(x: minX, y: minY + height))
-            points.append(PolygonPoint(x: arrowWidth, y: minY + (height / 2.0)))
+            points.append(PolygonPoint(x: minX, y: minY, pointType: .quadRounded))
+            points.append(PolygonPoint(x: minX + width - arrowWidth, y: minY, pointType: .quadRounded))
+            points.append(PolygonPoint(x: minX + width, y: minY + (height / 2.0), pointType: .quadRounded))
+            points.append(PolygonPoint(x: minX + width - arrowWidth, y: minY + height, pointType: .quadRounded))
+            points.append(PolygonPoint(x: minX, y: minY + height, pointType: .quadRounded))
+            points.append(PolygonPoint(x: arrowWidth, y: minY + (height / 2.0), pointType: .quadRounded))
         case .arrowLeft:
-            points.append(PolygonPoint(x: minX + width, y: minY))
-            points.append(PolygonPoint(x: minX + arrowWidth, y: minY))
-            points.append(PolygonPoint(x: minX, y: minY + (height / 2.0)))
-            points.append(PolygonPoint(x: minX + arrowWidth, y: minY + height))
-            points.append(PolygonPoint(x: minX + width, y: minY + height))
-            points.append(PolygonPoint(x: minX + width - arrowWidth, y: minY + (height / 2.0)))
+            points.append(PolygonPoint(x: minX + width, y: minY, pointType: .quadRounded))
+            points.append(PolygonPoint(x: minX + arrowWidth, y: minY, pointType: .quadRounded))
+            points.append(PolygonPoint(x: minX, y: minY + (height / 2.0), pointType: .quadRounded))
+            points.append(PolygonPoint(x: minX + arrowWidth, y: minY + height, pointType: .quadRounded))
+            points.append(PolygonPoint(x: minX + width, y: minY + height, pointType: .quadRounded))
+            points.append(PolygonPoint(x: minX + width - arrowWidth, y: minY + (height / 2.0), pointType: .quadRounded))
         case .hexagon:
-            points.append(PolygonPoint(x: minX, y: minY + (height / 2.0)))
-            points.append(PolygonPoint(x: minX + arrowWidth, y: minY))
-            points.append(PolygonPoint(x: minX + width - arrowWidth, y: minY))
-            points.append(PolygonPoint(x: minX + width, y: minY + (height / 2.0)))
-            points.append(PolygonPoint(x: minX + width - arrowWidth, y: minY + height))
-            points.append(PolygonPoint(x: minX + arrowWidth, y: minY + height))
+            points.append(PolygonPoint(x: minX, y: minY + (height / 2.0), pointType: .quadRounded))
+            points.append(PolygonPoint(x: minX + arrowWidth, y: minY, pointType: .quadRounded))
+            points.append(PolygonPoint(x: minX + width - arrowWidth, y: minY, pointType: .quadRounded))
+            points.append(PolygonPoint(x: minX + width, y: minY + (height / 2.0), pointType: .quadRounded))
+            points.append(PolygonPoint(x: minX + width - arrowWidth, y: minY + height, pointType: .quadRounded))
+            points.append(PolygonPoint(x: minX + arrowWidth, y: minY + height, pointType: .quadRounded))
         }
         
-        let path = Polygon.roundedBezierPath(definedBy: points)
+        let path = Polygon.roundedBezierPath(definedBy: points, radius: 10.0)
         let shapeLayer = Polygon.shapeLayer(from: path)
         
         return (shapeLayer, path)

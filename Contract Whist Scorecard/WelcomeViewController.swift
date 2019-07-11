@@ -762,7 +762,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             points.append(PolygonPoint(x: 0.0, y: size.height, pointType: .point))
         }
         
-        Polygon.roundedShape(in: view, definedBy: points, strokeColor: strokeColor, fillColor: fillColor, lineWidth: lineWidth, roundingFraction: 0.05)
+        Polygon.roundedShape(in: view, definedBy: points, strokeColor: strokeColor, fillColor: fillColor, lineWidth: lineWidth, radius: 10.0)
         
     }
     

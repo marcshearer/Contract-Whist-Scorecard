@@ -55,6 +55,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     private var tabletopCellWidth: CGFloat!
     private var bidButtonSize: CGFloat = 50.0
     private let instructionHeight: CGFloat = 50.0
+    private let separatorHeight: CGFloat = 0.25
     private let playedCardCollectionHorizontalMargins: CGFloat = 16.0
     private let playedCardCollectionVerticalMargins: CGFloat = 24.0
     private let playedCardStats: CGFloat = (3 * 21.0) + 4.0
@@ -95,7 +96,8 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     @IBOutlet private weak var instructionView: UIView!
     @IBOutlet private weak var instructionViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var instructionViewTrailingConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var instructionTextView: UITextView!
+    @IBOutlet private weak var separatorHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var instructionLabel: UILabel!
     @IBOutlet private weak var statusRoundLabel: UILabel!
     @IBOutlet private weak var statusOverUnderLabel: UILabel!
     @IBOutlet private weak var statusPlayer1BidLabel: UILabel!
@@ -205,6 +207,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         viewWidth = view.safeAreaLayoutGuide.layoutFrame.width
         self.instructionViewLeadingConstraint.constant = self.view.safeAreaInsets.left
         self.instructionViewTrailingConstraint.constant = self.view.safeAreaInsets.right
+        self.separatorHeightConstraint.constant = self.separatorHeight
         self.setButtonFormat()
         if self.resizing {
             self.bidMode = nil
@@ -437,8 +440,9 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             if newBidMode == false && !firstBidRefresh {
                 // About to exit bid mode - delay 1 second
                 setupOverUnder()
-                self.setInstructionsColor(to: Palette.hand)
-                self.instructionTextView.text = "Bidding Complete"
+                self.setInstructionsHighlight(to: false)
+                self.instructionLabel.text = "Bidding Complete"
+                self.instructionLabel.adjustsFontForContentSizeCategory = true
                 self.finishButton.isHidden = true
                 self.scorecard.commsHandlerMode = .viewTrick
                 Utility.executeAfter("bidComplete", delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 1.0), completion: {
@@ -460,14 +464,14 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             if self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round) == bids.count + 1 {
                 // Your bid
                 bidsEnable(true, blockRemaining: bids.count == self.scorecard.currentPlayers - 1)
-                self.instructionTextView.text = "You to bid \(self.scorecard.enteredPlayer(enteredPlayerNumber).playerMO!.name!)"
-                self.setInstructionsColor(to: Palette.bold)
+                self.instructionLabel.text = "You to bid \(self.scorecard.enteredPlayer(enteredPlayerNumber).playerMO!.name!)"
+                self.setInstructionsHighlight(to: true)
                 self.alertUser()
                 self.autoBid()
             } else {
                 bidsEnable(false)
-                self.instructionTextView.text = "\(self.scorecard.entryPlayer(bids.count + 1).playerMO!.name!) to bid"
-                self.setInstructionsColor(to: Palette.hand)
+                self.instructionLabel.text = "\(self.scorecard.entryPlayer(bids.count + 1).playerMO!.name!) to bid"
+                self.setInstructionsHighlight(to: false)
                 // Get computer player to bid
                 self.computerPlayerDelegate?[self.scorecard.entryPlayer(bids.count + 1).playerNumber]??.autoBid()
             }
@@ -545,14 +549,14 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
                     self.cardsEnable(true, suit: cardLed.suit)
                 }
             }
-            self.instructionTextView.text = "You to play \(self.scorecard.enteredPlayer(self.enteredPlayerNumber).playerMO!.name!)"
-            self.setInstructionsColor(to: Palette.bold)
+            self.instructionLabel.text = "You to play \(self.scorecard.enteredPlayer(self.enteredPlayerNumber).playerMO!.name!)"
+            self.setInstructionsHighlight(to: true)
             self.alertUser()
             self.autoPlay()
         } else {
             self.cardsEnable(false)
-            self.instructionTextView.text = "\(self.scorecard.enteredPlayer(self.state.toPlay).playerMO!.name!) to play"
-            self.setInstructionsColor(to: Palette.hand)
+            self.instructionLabel.text = "\(self.scorecard.enteredPlayer(self.state.toPlay).playerMO!.name!) to play"
+            self.setInstructionsHighlight(to: false)
             // Get computer player to play
             self.computerPlayerDelegate?[self.state.toPlay]??.autoPlay()
         }
@@ -659,7 +663,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             handViewHeight = self.viewHeight - instructionHeight
             tabletopViewHeight = handViewHeight
         } else {
-            handViewHeight = self.viewHeight - bidViewHeight - instructionHeight
+            handViewHeight = self.viewHeight - bidViewHeight - instructionHeight - separatorHeight
             tabletopViewHeight = bidViewHeight
         }
         
@@ -1015,9 +1019,10 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         }
     }
     
-    func setInstructionsColor(to color: UIColor) {
-        self.instructionView.backgroundColor = color
-        self.bannerPaddingView.backgroundColor = color
+    func setInstructionsHighlight(to highlight: Bool) {
+        self.instructionView.backgroundColor = (highlight ? Palette.hand : Palette.tableTop)
+        self.instructionLabel.textColor = (highlight ? Palette.handText : Palette.tableTopText)
+        self.bannerPaddingView.backgroundColor = (highlight ? Palette.hand : Palette.tableTop)
     }
 }
 

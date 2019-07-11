@@ -17,8 +17,8 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
     public let allowSync = true
     public let nameField = "name"
     public let initialSortField = "name"
-    public let headerRowHeight:CGFloat = 66.0
-    public let headerTopSpacingHeight: CGFloat = 4.0
+    public let headerRowHeight:CGFloat = 72.0
+    public let headerTopSpacingHeight: CGFloat = 10.0
     public let bodyRowHeight:CGFloat = 52.0
         
     private var recordList: [PlayerDetail]
@@ -30,7 +30,7 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
     // Local class variables
     public let availableFields: [DataTableField] = [
         DataTableField("",             "",                 sequence: 0,     width: 10,    type: .string),
-        DataTableField("name",         "Player Name",      sequence: 2,     width: 80,    type: .string,    pad: true),
+        DataTableField("name",         "Player\nName",     sequence: 2,     width: 80,    type: .string,    pad: true),
         DataTableField("info",         "",                 sequence: 14,    width: 40.0,  type: .button),
         DataTableField("gamesPlayed",  "Games Played",     sequence: 3,     width: 75.0,  type: .int),
         DataTableField("=gamesWon%",   "Games Won %",      sequence: 5,     width: 75.0,  type: .double),

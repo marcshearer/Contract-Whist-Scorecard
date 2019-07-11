@@ -12,18 +12,20 @@ enum PolygonPointType {
     case rounded
     case halfRounded
     case insideRounded
+    case quadRounded
     case point
 }
 
 class Polygon {
     
-    static public func roundedMask(to view: UIView, definedBy points: [PolygonPoint], roundingFraction: CGFloat? = nil) {
-        let shapeLayer = roundedShapeLayer(definedBy: points, roundingFraction: roundingFraction)
+    static public func roundedMask(to view: UIView, definedBy points: [PolygonPoint], radius: CGFloat? = nil) {
+        let shapeLayer = roundedShapeLayer(definedBy: points, radius: radius)
         view.layer.mask = shapeLayer
     }
    
-    static public func roundedShape(in view: UIView, definedBy points: [PolygonPoint], strokeColor: UIColor = UIColor.black, fillColor: UIColor = UIColor.white, lineWidth: CGFloat = 1.0, roundingFraction: CGFloat? = nil) {
-        let path = Polygon.roundedBezierPath(definedBy: points, roundingFraction: roundingFraction)
+    static public func roundedShape(in view: UIView, definedBy points: [PolygonPoint], strokeColor: UIColor = UIColor.black, fillColor: UIColor = UIColor.white, lineWidth: CGFloat = 1.0, radius: CGFloat? = nil) {
+        let insideRadius = (radius == nil ? nil : min(lineWidth * 1.3, radius!))
+        let path = Polygon.roundedBezierPath(definedBy: points, radius: radius, insideRadius: insideRadius)
         let shapeLayer = CAShapeLayer()
         shapeLayer.path = path.cgPath
         shapeLayer.fillColor = fillColor.cgColor
@@ -32,9 +34,9 @@ class Polygon {
         view.layer.addSublayer(shapeLayer)
     }
     
-    static public func roundedShapeLayer(definedBy points: [PolygonPoint], roundingFraction: CGFloat? = nil) -> CAShapeLayer {
+    static public func roundedShapeLayer(definedBy points: [PolygonPoint], radius: CGFloat? = nil) -> CAShapeLayer {
         
-        let path = Polygon.roundedBezierPath(definedBy: points, roundingFraction: roundingFraction)
+        let path = Polygon.roundedBezierPath(definedBy: points, radius: radius)
         
         return Polygon.shapeLayer(from: path)
     }
@@ -49,49 +51,55 @@ class Polygon {
         return shapeLayer
     }
 
-    static public func roundedBezierPath(definedBy points: [PolygonPoint], roundingFraction: CGFloat? = nil) -> UIBezierPath {
+    static public func roundedBezierPath(definedBy points: [PolygonPoint], radius: CGFloat? = nil, insideRadius: CGFloat? = nil) -> UIBezierPath {
         
-        let roundingFraction = roundingFraction ?? 0.1
+        let radius = radius ?? 3.5
+        let insideRadius = insideRadius ?? radius
         
-        var lines: [(start: CGPoint, end: CGPoint)] = []
-        for index in 0...points.count-1 {
-            lines.append(Polygon.partialLine(from: points[index].cgPoint, to: points[(index == points.count-1 ? 0 : index+1)].cgPoint, fraction: roundingFraction))
-        }
-        
-        let path = UIBezierPath()
-        if points.first!.pointType == .point {
-            path.move(to: points.first!.cgPoint)
-        } else {
-            path.move(to: lines.first!.start)
-        }
-        for index in 0..<lines.count {
-            let nextIndex = (index == points.count-1 ? 0 : index+1)
-            let pointType = points[nextIndex].pointType
-            if pointType == .point {
-                path.addLine(to: points[nextIndex].cgPoint)
-            } else {
-                path.addLine(to: lines[index].end)
-                if pointType == .halfRounded {
-                    let point = CGPoint(x: lines[index].end.x + (points[nextIndex].x - lines[index].end.x) / 2.0, y: points[nextIndex].y)
-                    path.addQuadCurve(to: point, controlPoint: point)
-                } else {
-                    path.addQuadCurve(to: lines[nextIndex].start, controlPoint: points[nextIndex].cgPoint)
-                    if pointType == .insideRounded {
-                        path.addLine(to: points[nextIndex].cgPoint)
-                        path.addLine(to: lines[index].end)
-                        path.addLine(to: points[nextIndex].cgPoint)
-                        path.addLine(to: lines[nextIndex].start)
-                    }
-                }
+        let path = CGMutablePath()
+        path.move(to: partialPoint(from: points[0].cgPoint, to: points[1].cgPoint, fraction: 0.5))
+        for index in 1...points.count {
+            let previous = points[(index + points.count - 1) % points.count].cgPoint
+            let current = points[index % points.count].cgPoint
+            let next = points[(index + 1) % points.count].cgPoint
+            
+            switch points[index % points.count].pointType {
+            case .point:
+                path.addLine(to: current)
+                
+            case .halfRounded:
+                let angle = Polygon.angle(at: current, from: previous, to: next)
+                let dx = ((radius / sin(angle)) - radius)
+                let dy = dx * tan(angle) * (previous.y > next.y ? -1 : 1)
+                let point1 = CGPoint(x: current.x - dx, y: current.y - dy)
+                let point2 = CGPoint(x: current.x - dx, y: current.y)
+                path.addArc(tangent1End: point1, tangent2End: point2, radius: radius)
+                
+            case .rounded:
+                path.addArc(tangent1End: current, tangent2End: next, radius: radius)
+                
+            case .quadRounded:
+                path.addLine(to: partialPoint(from: current, to: previous, distance: radius))
+                path.addQuadCurve(to: partialPoint(from: current, to: next, distance: radius), control: current)
+                
+            case .insideRounded:
+                path.addArc(tangent1End: current, tangent2End: next, radius: insideRadius)
+                path.addLine(to: current)
+                path.addLine(to: self.partialPoint(from: current, to: previous, fraction: 0.5))
+                path.addLine(to: current)
+                path.addLine(to: self.partialPoint(from: current, to: next, fraction: 0.5))
             }
         }
-        path.close()
+        path.closeSubpath()
+        let bezierPath = UIBezierPath(cgPath: path)
         
-        return path
+        return bezierPath
     }
     
-    static public func partialLine(from: CGPoint, to: CGPoint, fraction: CGFloat) -> (CGPoint, CGPoint) {
-        return (Polygon.partialPoint(from: from, to: to, fraction: fraction), partialPoint(from: from, to: to, fraction: 1.0 - fraction))
+    static private func radius(_ point1: CGPoint, _ point2: CGPoint) -> CGFloat {
+        let x = point2.x - point1.x
+        let y = point1.y - point2.y
+        return (pow(x, 2) + pow(y,2) / (2 * x)).squareRoot()
     }
     
     static public func partialPoint(from: CGPoint, to: CGPoint, fraction: CGFloat) -> CGPoint {
@@ -99,6 +107,32 @@ class Polygon {
         let newY = from.y + ((to.y - from.y) * fraction)
         return CGPoint(x: newX, y: newY)
     }
+    
+    static public func partialPoint(from: CGPoint, to: CGPoint, distance: CGFloat) -> CGPoint {
+        let x = to.x - from.x
+        let y = to.y - from.y
+        let totalDistance = (pow(x,2) + pow(y,2)).squareRoot()
+        return partialPoint(from: from, to: to, fraction: distance/totalDistance)
+    }
+    
+    static public func partialLine(from: CGPoint, to: CGPoint, fraction: CGFloat) -> (CGPoint, CGPoint) {
+        return (Polygon.partialPoint(from: from, to: to, fraction: fraction), partialPoint(from: from, to: to, fraction: 1.0 - fraction))
+    }
+    
+    static public func angle(from: CGPoint, to: CGPoint) -> CGFloat {
+        return atan2((from.y - to.y), (from.x-to.x))
+    }
+    
+    static public func angle(at: CGPoint, from: CGPoint, to: CGPoint) -> CGFloat {
+        let angle1 = Polygon.angle(from: from, to: at)
+        let angle2 = Polygon.angle(from: to, to: at)
+        var angle = abs(angle1 - angle2)
+        if angle > CGFloat.pi {
+            angle = (2 * CGFloat.pi) - angle
+        }
+        return angle
+    }
+    
 }
 
 class PolygonPoint {

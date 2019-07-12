@@ -973,8 +973,8 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
             self.onlinePlayerChangeButton?.setTitle("Enable", for: .normal)
         }
         let enabled = (scorecard.settingSyncEnabled && inProgress == nil)
-        self.onlinePlayerChangeButton.isEnabled = enabled
-        self.onlinePlayerChangeButton.alpha = enabled ? 1.0 : 0.4
+        self.onlinePlayerChangeButton?.isEnabled = enabled
+        self.onlinePlayerChangeButton?.alpha = enabled ? 1.0 : 0.4
         self.displayFaceTimeCell()
     }
     
@@ -987,7 +987,9 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
         self.scorecard.settingOnlinePlayerEmail = playerEmail
         Utility.mainThread {
             UserDefaults.standard.set(playerEmail, forKey: "onlinePlayerEmail")
-            self.settingsTableView.reloadRows(at: [IndexPath(row: self.onlineRow, section: 0)] , with: .automatic)
+            if self.onlineRow != nil {
+                self.settingsTableView.reloadRows(at: [IndexPath(row: self.onlineRow, section: 0)] , with: .automatic)
+            }
             self.updateOnlineGameSubscriptions()
         }
     }

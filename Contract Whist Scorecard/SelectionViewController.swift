@@ -32,6 +32,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private var availableCell = [SelectionCell?]()
     private var selectedCell = [SelectionCell?]()
 
+
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet weak var availableCollectionView: UICollectionView!
     @IBOutlet weak var selectedCollectionView: UICollectionView!

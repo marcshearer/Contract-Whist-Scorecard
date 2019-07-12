@@ -937,14 +937,14 @@ class Scorecard {
         return true
     }
     
-    public func checkNetworkConnection(button: RoundedButton!, label: UILabel!, disable: Bool = false) {
+    public func checkNetworkConnection(button: RoundedButton!, label: UILabel!, labelHeightConstraint: NSLayoutConstraint? = nil, labelHeight: CGFloat = 0.0, disable: Bool = false) {
         // First check network
         if Reachability.isConnectedToNetwork()
         {
             self.isNetworkAvailable = true
             
             // First look at stored values and act immediately
-            self.reflectNetworkConnection(button: button, label: label, disable: disable)
+            self.reflectNetworkConnection(button: button, label: label, labelHeightConstraint: labelHeightConstraint, labelHeight: labelHeight, disable: disable)
             
             // Now check icloud asynchronously
             CKContainer.default().accountStatus(completionHandler: { (accountStatus, errorMessage) -> Void in
@@ -953,11 +953,11 @@ class Scorecard {
             })
         } else {
             self.isNetworkAvailable = false
-            self.reflectNetworkConnection(button: button, label: label, disable: disable)
+            self.reflectNetworkConnection(button: button, label: label, labelHeightConstraint: labelHeightConstraint, labelHeight: labelHeight, disable: disable)
         }
     }
     
-    public func reflectNetworkConnection(button: RoundedButton!, label: UILabel!, disable: Bool = false) {
+    public func reflectNetworkConnection(button: RoundedButton!, label: UILabel!, labelHeightConstraint: NSLayoutConstraint? = nil, labelHeight: CGFloat = 0.0, disable: Bool = false) {
         var buttonHidden = true
         var labelText = ""
         var labelHidden = true
@@ -993,6 +993,9 @@ class Scorecard {
                 if label != nil {
                     label.text = labelText
                     label.isHidden = labelHidden
+                    if labelHeightConstraint != nil {
+                        labelHeightConstraint?.constant = (labelHidden ? 0.0 : labelHeight)
+                    }
                 }
             }
         }

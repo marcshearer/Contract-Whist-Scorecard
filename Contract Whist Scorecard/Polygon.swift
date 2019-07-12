@@ -16,22 +16,47 @@ enum PolygonPointType {
     case point
 }
 
+enum PolygonTransform {
+    case reflectCenterHorizontal
+    case reflectCenterVertical
+}
+
 class Polygon {
     
     static public func roundedMask(to view: UIView, definedBy points: [PolygonPoint], radius: CGFloat? = nil) {
         let shapeLayer = roundedShapeLayer(definedBy: points, radius: radius)
         view.layer.mask = shapeLayer
     }
+    
+    static public func roundedShape(in view: UIView, definedBy points: [PolygonPoint], strokeColor: UIColor = UIColor.black, fillColor: UIColor = UIColor.white, lineWidth: CGFloat = 1.0, radius: CGFloat? = nil, transform: PolygonTransform? = nil) {
+            _ = Polygon.roundedShapePath(in: view, definedBy: points, strokeColor: strokeColor, fillColor: fillColor, lineWidth: lineWidth, radius: radius, transform: transform)
+        }
    
-    static public func roundedShape(in view: UIView, definedBy points: [PolygonPoint], strokeColor: UIColor = UIColor.black, fillColor: UIColor = UIColor.white, lineWidth: CGFloat = 1.0, radius: CGFloat? = nil) {
+    static public func roundedShapePath(in view: UIView, definedBy points: [PolygonPoint], strokeColor: UIColor = UIColor.black, fillColor: UIColor = UIColor.white, lineWidth: CGFloat = 1.0, radius: CGFloat? = nil, transform: PolygonTransform? = nil) -> UIBezierPath {
         let insideRadius = (radius == nil ? nil : min(lineWidth * 1.3, radius!))
+        
         let path = Polygon.roundedBezierPath(definedBy: points, radius: radius, insideRadius: insideRadius)
+        if let transform = transform {
+            switch transform {
+            case .reflectCenterHorizontal:
+                path.apply(CGAffineTransform(translationX: -(view.bounds.width / 2.0), y: 0.0))
+                path.apply(CGAffineTransform(scaleX: -1, y: 1))
+                path.apply(CGAffineTransform(translationX: (view.bounds.width / 2.0), y: 0.0))
+            case .reflectCenterVertical:
+                path.apply(CGAffineTransform(translationX: 0.0, y: (view.bounds.height / 2.0)))
+                path.apply(CGAffineTransform(scaleX: 1, y: -1))
+                path.apply(CGAffineTransform(translationX: 0.0, y: (view.bounds.height / 2.0)))
+            }
+        }
         let shapeLayer = CAShapeLayer()
         shapeLayer.path = path.cgPath
         shapeLayer.fillColor = fillColor.cgColor
         shapeLayer.strokeColor = strokeColor.cgColor
         shapeLayer.lineWidth = lineWidth
         view.layer.addSublayer(shapeLayer)
+        
+        return path
+        
     }
     
     static public func roundedShapeLayer(definedBy points: [PolygonPoint], radius: CGFloat? = nil) -> CAShapeLayer {

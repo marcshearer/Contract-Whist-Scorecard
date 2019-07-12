@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ScrollViewCell : UIView {
+open class ScrollViewCell : UIView {
     public var indexPath: IndexPath!
 }
 
@@ -16,9 +16,9 @@ class ScrollViewCell : UIView {
     
     @objc optional func numberOfSections(in: ScrollView) -> Int
     
-    func scrollView(_ scrollView: ScrollView, numberofItemsInSection: Int) -> Int
+    func scrollView(_ scrollView: ScrollView, numberOfItemsIn section: Int) -> Int
     
-    func scrollView(_ scrollView: ScrollView, cellForItemAt: IndexPath) -> ScrollViewCell
+    func scrollView(_ scrollView: ScrollView, cellForItemAt indexPath: IndexPath) -> ScrollViewCell
     
 }
 
@@ -28,13 +28,13 @@ class ScrollViewCell : UIView {
     
     @objc optional func scrollView(_ scrollView: ScrollView, viewForSectionHeader: Int) -> UIView
     
-    func scrollView(_ scrollView: ScrollView, frameForItemAt: IndexPath) -> CGRect
+    func scrollView(_ scrollView: ScrollView, frameForItemAt indexPath: IndexPath) -> CGRect
     
-    @objc optional func scrollView(_ scrollView: ScrollView, shouldSelectItemAt: IndexPath) -> Bool
+    @objc optional func scrollView(_ scrollView: ScrollView, shouldSelectItemAt indexPath: IndexPath) -> Bool
     
-    @objc optional func scrollView(_ scrollView: ScrollView, didSelectItemAt: IndexPath, tapPosition: CGPoint)
+    @objc optional func scrollView(_ scrollView: ScrollView, didSelectItemAt indexPath: IndexPath, tapPosition: CGPoint)
     
-    @objc optional func scrollView(_ scrollView: ScrollView, didSelectCellAt: ScrollViewCell, tapPosition: CGPoint)
+    @objc optional func scrollView(_ scrollView: ScrollView, didSelectCell: ScrollViewCell, tapPosition: CGPoint)
 }
 
 class ScrollView : NSObject, UIScrollViewDelegate {
@@ -65,7 +65,7 @@ class ScrollView : NSObject, UIScrollViewDelegate {
             if cell.frame.contains(tapPosition) {
                 // Call both delegates - only one will be implemented
                 self.delegate?.scrollView?(self, didSelectItemAt: cell.indexPath, tapPosition: tapPosition)
-                self.delegate?.scrollView?(self, didSelectCellAt: cell, tapPosition: tapPosition)
+                self.delegate?.scrollView?(self, didSelectCell: cell, tapPosition: tapPosition)
             }
         }
     }
@@ -130,7 +130,7 @@ class ScrollView : NSObject, UIScrollViewDelegate {
                 }
                 
                 // Create items for section
-                if let itemsInSection = self.dataSource?.scrollView(self, numberofItemsInSection: section) {
+                if let itemsInSection = self.dataSource?.scrollView(self, numberOfItemsIn: section) {
                     if itemsInSection > 0 {
                         for item in 0..<itemsInSection {
                             let indexPath = IndexPath(item: item, section: section)
@@ -149,6 +149,9 @@ class ScrollView : NSObject, UIScrollViewDelegate {
     private func reloadCell(at indexPath: IndexPath) {
         if let itemFrame = self.delegate?.scrollView(self, frameForItemAt: indexPath) {
             
+            self.scrollView.contentSize = CGSize(width: max(self.scrollView.contentSize.width, itemFrame.maxX),
+                                                 height: max(self.scrollView.contentSize.height, itemFrame.maxY))
+            
             // Setup content rectangle
             let contentFrame = CGRect(origin: self.scrollView.contentOffset, size: self.scrollView.frame.size)
             
@@ -163,8 +166,6 @@ class ScrollView : NSObject, UIScrollViewDelegate {
                     cell.frame = itemFrame
                     cell.indexPath = indexPath
                     self.scrollView.addSubview(cell)
-                    self.scrollView.contentSize = CGSize(width: max(self.scrollView.contentSize.width, cell.frame.maxX),
-                                                         height: max(self.scrollView.contentSize.height, cell.frame.maxY))
                 }
             }
         }

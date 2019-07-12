@@ -15,12 +15,18 @@ struct ActionButton {
     var section: Int
     var title: String
     var highlight: Bool
+    var sequence: Int
     var isHidden: (()->Bool)?
-    var action: (UITableViewCell)->()
+    var action: (WelcomeActionCell)->()
 }
 
-class WelcomeViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, ReconcileDelegate, SyncDelegate, MFMailComposeViewControllerDelegate, UIPopoverPresentationControllerDelegate {
+public enum Position: String {
+    case left = "left"
+    case right = "right"
+}
 
+class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollViewDelegate, ReconcileDelegate, SyncDelegate, MFMailComposeViewControllerDelegate, UIPopoverPresentationControllerDelegate {
+    
     private enum Shape {
         case arrowTop
         case arrowMiddle
@@ -46,9 +52,8 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     private var getStarted = true
     
     private var sections: [Int:Int]!
-    private var sectionActions: [Int:[ActionButton]]!
+    private var sectionActions: [Int : [(frame: CGRect, position: Position, action: ActionButton)]]!
     private var actionButtons: [ActionButton]!
-    private var headerSection = 0
     private var mainSection = 1
     private var infoSection = 2
     private var adminSection = 3
@@ -56,6 +61,13 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     private var recoveryAvailable = false
     private var recoverOnline = false
     
+    private var scrollView: ScrollView!
+    
+    private let actionStart: CGFloat = 144.0
+    private var actionHeight: CGFloat = 80.0
+    private var lineWidth: CGFloat = 3.0
+    private var sectionSpace: CGFloat = 20.0
+    private var syncLabelHeight: CGFloat = 20.0
     
     // Debug rotations code
     private let code: [CGFloat] = [ -1.0, -1.0, 1.0, -1.0, 1.0]
@@ -65,17 +77,19 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     private var reconcileAlertController: UIAlertController!
     private var reconcileContinue: UIAlertAction!
     private var reconcileIndicatorView: UIActivityIndicatorView!
-    private var syncMessage: UILabel!
     
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var welcomeView: UIView!
-    @IBOutlet private weak var actionsTableView: UITableView!
     @IBOutlet private weak var viewOnlineButton: ClearButton!
+    @IBOutlet private weak var actionScrollView: UIScrollView!
+    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var syncLabel: UILabel!
+    @IBOutlet private weak var syncLabelHeightConstraint: NSLayoutConstraint!
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     
     @IBAction func hideSettings(segue:UIStoryboardSegue) {
-        scorecard.checkNetworkConnection(button: nil, label: syncMessage)
+        scorecard.checkNetworkConnection(button: nil, label: syncLabel, labelHeightConstraint: syncLabelHeightConstraint, labelHeight: syncLabelHeight)
         getCloudVersion(async: true)
         setupButtons()
     }
@@ -91,33 +105,33 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     }
     
     @IBAction func hideGetStarted(segue:UIStoryboardSegue) {
-        self.scorecard.checkNetworkConnection(button: nil, label: syncMessage)
+        self.scorecard.checkNetworkConnection(button: nil, label: syncLabel)
         self.recoveryAvailable = false
         self.getCloudVersion(async: true)
         self.setupButtons()
     }
     
     @IBAction func hidePlayers(segue:UIStoryboardSegue) {
-        self.scorecard.checkNetworkConnection(button: nil, label: syncMessage)
+        self.scorecard.checkNetworkConnection(button: nil, label: syncLabel)
         self.getCloudVersion(async: true)
         self.checkButtons()
     }
     
     @IBAction func hideHighScores(segue:UIStoryboardSegue) {
-        self.scorecard.checkNetworkConnection(button: nil, label: syncMessage)
+        self.scorecard.checkNetworkConnection(button: nil, label: syncLabel)
         self.getCloudVersion(async: true)
     }
     
     @IBAction func hideSelection(segue:UIStoryboardSegue) {
         // Clear recovery flag
-        self.scorecard.checkNetworkConnection(button: nil, label: syncMessage)
+        self.scorecard.checkNetworkConnection(button: nil, label: syncLabel)
         self.recoveryAvailable = false
         self.getCloudVersion(async: true)
         self.checkButtons()
     }
     
     @IBAction func finishGame(segue:UIStoryboardSegue) {
-        self.scorecard.checkNetworkConnection(button: nil, label: syncMessage)
+        self.scorecard.checkNetworkConnection(button: nil, label: syncLabel)
         self.recoveryAvailable = false
         self.getCloudVersion(async: true)
         self.checkButtons()
@@ -154,7 +168,9 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
                 if matching == code.count {
                     // Code correct - set admin mode
                     Scorecard.adminMode = !Scorecard.adminMode
-                    setupButtons()
+                    self.setTitle()
+                    self.checkButtons()
+                    self.scrollView.reloadData()
                     matching = 0
                 }
             } else {
@@ -181,9 +197,16 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             scorecard.reset()
         }
         
-        scorecard.checkNetworkConnection(button: nil, label: syncMessage)
+        // Setup scroll view
+        self.scrollView = ScrollView(self.actionScrollView)
+        self.scrollView.dataSource = self
+        self.scrollView.delegate = self
         
+        scorecard.checkNetworkConnection(button: nil, label: syncLabel)
+        
+        // Setup screen
         self.setupButtons()
+        self.setTitle()
         
     }
     
@@ -208,11 +231,21 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.actionsTableView.layoutIfNeeded()
-        self.actionsTableView.reloadData()
+
+        if ScorecardUI.portraitPhone() {
+            self.actionHeight = min(80.0, max(50.0, (view.frame.height - 44.0 - self.actionStart) / 6.8))
+            self.sectionSpace = 20.0
+        } else {
+            self.actionHeight = (ScorecardUI.phoneSize() ?  80.0 : 120.0)
+            self.sectionSpace = 100.0
+        }
+        
+        // Redraw
+        self.checkButtons()
+        self.scrollView.reloadData()
     }
     
-    // MARK: - Sync class delegate methods ===================================================================== -
+    // MARK: - Sync class delegate methods ============================================== -
     
     func getCloudVersion(async: Bool = false) {
         if scorecard.isNetworkAvailable {
@@ -265,151 +298,113 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         })
     }
         
-    // MARK: - TableView Overrides ===================================================================== -
+    // MARK: - ScrollView Overrides ===================================================================== -
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return self.sections.count + 1
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == self.headerSection {
-            return 1
-        } else {
-            return self.sectionActions[sections[section]!]!.count
-        }
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        switch section {
-        case headerSection:
-            return 0
-        case mainSection:
-            return 1
-        default:
-            return 20
-        }
+    internal func numberOfSections(in: ScrollView) -> Int {
+        return self.sections.count
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return " "
+    internal func scrollView(_ scrollView: ScrollView, numberOfItemsIn section: Int) -> Int {
+        return self.sectionActions[sections[section]!]?.count ?? 0
     }
     
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return UIView()
+    internal func scrollView(_ scrollView: ScrollView, frameForItemAt indexPath: IndexPath) -> CGRect {
+        let section = self.sections[indexPath.section]!
+        let actionButtons = self.sectionActions[section]!
+        let (frame, _, _) = actionButtons[indexPath.row]
+        return frame
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == headerSection {
-            return 144
-        } else {
-            if ScorecardUI.portraitPhone() {
-                return min(80, max(50, tableView.frame.height / 8.0))
-            } else {
-                return 80
-            }
-        }
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var welcomeActionCell: WelcomeActionCell
+    internal func scrollView(_ scrollView: ScrollView, cellForItemAt indexPath: IndexPath) -> ScrollViewCell {
         
-        if indexPath.section == headerSection {
-            
-            welcomeActionCell = tableView.dequeueReusableCell(withIdentifier: "Welcome Header Cell", for: indexPath) as! WelcomeActionCell
-            self.syncMessage = welcomeActionCell.headerSyncMessage
-            self.scorecard.reflectNetworkConnection(button: nil, label: welcomeActionCell.headerSyncMessage)
-            
+        let section = self.sections[indexPath.section]!
+        let actionButtons = self.sectionActions[section]!
+        let (frame, position, actionButton) = actionButtons[indexPath.row]
+        
+        var shape: Shape
+        var strokeColor: UIColor
+        var fillColor: UIColor
+        var textColor: UIColor
+        var strokeTextColor: UIColor
+        var pointType: PolygonPointType
+        
+        // Get cell
+        let welcomeActionCell = WelcomeActionCell(frame: CGRect(origin: CGPoint(), size: frame.size), position: position, textInset: 20.0 + (position == .left ? self.view.safeAreaInsets.left : self.view.safeAreaInsets.right))
+        
+        // Set section colors
+        if section == mainSection {
+            strokeColor = Palette.shapeHighlightStroke
+            strokeTextColor = Palette.shapeHighlightStrokeText
+            fillColor = Palette.shapeHighlightFill
+            textColor = Palette.shapeHighlightFillText
+        } else if section == adminSection {
+            strokeColor = Palette.shapeAdminStroke
+            strokeTextColor = Palette.shapeAdminText
+            fillColor = Palette.shapeAdminFill
+            textColor = Palette.shapeAdminText
         } else {
-            
-            // Action buttons
-            welcomeActionCell = tableView.dequeueReusableCell(withIdentifier: "Welcome Action Cell", for: indexPath) as! WelcomeActionCell
-            
-            let section = self.sections[indexPath.section]!
-            let actionButtons = self.sectionActions[section]!
-            let actionButton = actionButtons[indexPath.row]
-            
-            var shape: Shape
-            var strokeColor: UIColor
-            var fillColor: UIColor
-            var textColor: UIColor
-            var strokeTextColor: UIColor
-            var pointType: PolygonPointType
-            
-            // Set section colors
-            if section == mainSection {
-                strokeColor = Palette.shapeHighlightStroke
-                strokeTextColor = Palette.shapeHighlightStrokeText
-                fillColor = Palette.shapeHighlightFill
-                textColor = Palette.shapeHighlightFillText
-            } else if section == adminSection {
-                strokeColor = Palette.shapeAdminStroke
-                strokeTextColor = Palette.shapeAdminText
-                fillColor = Palette.shapeAdminFill
-                textColor = Palette.shapeAdminText
-            } else {
-                strokeColor = Palette.shapeStroke
-                strokeTextColor = Palette.shapeStrokeText
-                fillColor = Palette.shapeFill
-                textColor = Palette.shapeFillText
-            }
-            
-            // Override fill color if highlighted
-            if actionButton.highlight {
-                fillColor = strokeColor
-                textColor = strokeTextColor
-            }
-            
-            // Set shapes
-            if section == adminSection {
-                pointType = .rounded
+            strokeColor = Palette.shapeStroke
+            strokeTextColor = Palette.shapeStrokeText
+            fillColor = Palette.shapeFill
+            textColor = Palette.shapeFillText
+        }
+        
+        // Override fill color if highlighted
+        if actionButton.highlight {
+            fillColor = strokeColor
+            textColor = strokeTextColor
+        }
+        
+        // Set shapes
+        if section == adminSection {
+            pointType = .rounded
+            shape = .arrowMiddle
+        } else if actionButtons.count == 1 {
+            pointType = .rounded
+            shape = .shortArrowMiddle
+        } else if actionButtons.count == 3 {
+            if indexPath.item == 0 {
+                shape = .arrowTop
+                pointType = .insideRounded
+            } else if indexPath.item == 1 {
                 shape = .arrowMiddle
-            } else if actionButtons.count == 1 {
-                pointType = .rounded
-                shape = .shortArrowMiddle
-            } else if actionButtons.count == 3 {
-                if indexPath.item == 0 {
-                    shape = .arrowTop
-                    pointType = .insideRounded
-                } else if indexPath.item == 1 {
-                    shape = .arrowMiddle
-                    pointType = .point
-                } else {
-                    shape = .arrowBottom
-                    pointType = .insideRounded
-                }
+                pointType = .point
             } else {
-                pointType = .halfRounded
-                if indexPath.item % 2 == 0 {
-                    shape = .arrowTop
-                } else {
-                    shape = .arrowBottom
-                }
+                shape = .arrowBottom
+                pointType = .insideRounded
             }
-            
-            self.backgroundShape(view: welcomeActionCell.actionShapeView, shape: shape, strokeColor: strokeColor, fillColor: fillColor, abuttedAbove: indexPath.row != 0, abuttedBelow: indexPath.row != actionButtons.count - 1, pointType: pointType)
-            
-            welcomeActionCell.actionTitle.text = actionButton.title
-            welcomeActionCell.actionTitle.textColor = textColor
-            welcomeActionCell.actionTitle.font = UIFont.systemFont(ofSize: min((section == adminSection ? 22 : 40), welcomeActionCell.actionTitle.frame.width / 7.5, welcomeActionCell.actionTitle.frame.height / 1.25), weight: .thin)
-            welcomeActionCell.tag = actionButton.tag
-            welcomeActionCell.selectionStyle = .none
-            
+        } else {
+            pointType = .halfRounded
+            if indexPath.item % 2 == 0 {
+                shape = .arrowTop
+            } else {
+                shape = .arrowBottom
+            }
         }
         
-        return welcomeActionCell as UITableViewCell
+        welcomeActionCell.path = self.backgroundShape(view: welcomeActionCell.actionShapeView, shape: shape, strokeColor: strokeColor, fillColor: fillColor, pointType: pointType, lineWidth: self.lineWidth, reflected: (position == .right))
+        
+        welcomeActionCell.actionTitle.text = actionButton.title
+        welcomeActionCell.actionTitle.textColor = textColor
+        welcomeActionCell.actionTitle.font = UIFont.systemFont(ofSize: min((section == adminSection ? 22 : 40), welcomeActionCell.actionTitle.frame.width / 7.5, welcomeActionCell.actionTitle.frame.height / 1.25), weight: .thin)
+        welcomeActionCell.tag = actionButton.tag
+        
+        return welcomeActionCell
     }
     
-    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        
-        if indexPath.section != headerSection {
-            if let cell = tableView.cellForRow(at: indexPath) {
-                let actionButton = actionButtons[cell.tag]
-                Utility.mainThread {
-                    actionButton.action(cell)
+    internal func scrollView(_ scrollView: ScrollView, didSelectCell cell: ScrollViewCell, tapPosition: CGPoint) {
+
+        if let cell = cell as? WelcomeActionCell {
+            let relativeTapPosition = CGPoint(x: tapPosition.x - cell.frame.minX, y: tapPosition.y - cell.frame.minY)
+            if let path = cell.path {
+                if path.contains(relativeTapPosition) {
+                    Utility.mainThread {
+                        let actionButton = self.actionButtons[cell.tag]
+                        actionButton.action(cell)
+                    }
                 }
             }
         }
-        return nil
     }
     
      // MARK: - Action Handlers ================================================================ -
@@ -422,7 +417,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             self.performSegue(withIdentifier: "showGetStarted", sender: self)
         })
         
-        self.addAction(section: mainSection, title: "Play Game", isHidden: {!self.scorecard.settingSyncEnabled || !(self.scorecard.settingNearbyPlaying || self.scorecard.onlineEnabled)}, action: newOnlineGame)
+        self.addAction(section: mainSection, title: "Play Game", isHidden: {!self.scorecard.settingSyncEnabled || !(self.scorecard.settingNearbyPlaying || self.scorecard.onlineEnabled) || self.scorecard.playerList.count == 0}, action: newOnlineGame)
         
         self.addAction(section: mainSection, title: "Resume Playing", highlight: true, isHidden: {!self.recoveryAvailable || !self.recoverOnline || !allowRecovery
         }, action: resumeGame)
@@ -433,19 +428,19 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
             self.scoreGame()
         })
         
-        self.addAction(section: infoSection, title: "Players", action: { (_) in
+        self.addAction(section: infoSection, title: "Players", isHidden: {self.scorecard.playerList.count == 0}, action: { (_) in
             self.performSegue(withIdentifier: "showPlayers", sender: self)
         })
         
-        self.addAction(section: infoSection, title: "Statistics", action: { (_) in
+        self.addAction(section: infoSection, title: "Statistics", isHidden: {self.scorecard.playerList.count == 0}, action: { (_) in
             let _ = StatisticsViewer(from: self)
         })
         
-        self.addAction(section: infoSection, title: "History", isHidden: {!self.scorecard.settingSaveHistory}, action: { (_) in
+        self.addAction(section: infoSection, title: "History", isHidden: {!self.scorecard.settingSaveHistory || self.scorecard.playerList.count == 0}, action: { (_) in
             let _ = HistoryViewer(from: self)
         })
         
-        self.addAction(section: infoSection, title: "High Scores", isHidden: {!self.scorecard.settingSaveHistory}, action: { (_) in
+        self.addAction(section: infoSection, title: "High Scores", isHidden: {!self.scorecard.settingSaveHistory || self.scorecard.playerList.count == 0}, action: { (_) in
             self.performSegue(withIdentifier: "showHighScores", sender: self)
         })
         
@@ -476,26 +471,118 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     }
     
     private func checkButtons() {
+        var position: Position
+        var columnData: [Position : (y: CGFloat, sections: Int)] = [:]
+        var scrollViewSection = -1
+
+        columnData[.left] = (self.actionStart , 0)
+        columnData[.right] = (self.actionStart, 0)
+        
+        // Initialise structures
         self.sections = [:]
         self.sectionActions = [:]
-        var tableViewSection = 0
+        
+        // Scan actions building lists by section of included options and position (left/right)
         for actionButton in self.actionButtons {
             if !(actionButton.isHidden?() ?? false) {
                 let section = actionButton.section
-                if sectionActions[section] == nil {
-                    sectionActions[section] = []
-                    tableViewSection += 1
-                    sections[tableViewSection] = section
+                
+                if self.sectionActions[section] == nil {
+                    scrollViewSection += 1
                 }
-                sectionActions[section]!.append(actionButton)
+                
+                if ScorecardUI.portraitPhone() {
+                    position = .left
+                } else {
+                    position = ((scrollViewSection % 2) == 0 ? .left : .right)
+                }
+                
+                if self.sectionActions[section] == nil {
+                    self.sectionActions[section] = []
+                    self.sections[scrollViewSection] = section
+                }
+                
+                self.sectionActions[section]!.append((CGRect(), position, actionButton))
             }
         }
-        self.actionsTableView.reloadData()
+        
+        // Update frames
+        let sorted = self.sectionActions!.sorted(by: {$0.key < $1.key})
+        for (section, actions) in sorted {
+            var newSection = true
+            
+            for (index, action) in actions.enumerated() {
+            
+                if newSection {
+                    columnData[action.position]!.sections += 1
+                    newSection = false
+                }
+                
+                var x: CGFloat
+                var width: CGFloat
+                let column = columnData[action.position]!
+                var offset: CGFloat = 0.0
+                
+                // Adjust position for two column mode / format
+                if ScorecardUI.portraitPhone() {
+                    x = 0.0
+                    width = self.actionScrollView.frame.width
+                    
+                } else {
+                    if action.position == .left {
+                        x = 0.0
+                        width = (self.actionScrollView.frame.width / 2.0)
+                        if section == mainSection && actions.count == 3 {
+                            width += 10.0
+                        } else {
+                            width += 60.0
+                        }
+                    } else {
+                        x = (self.actionScrollView.frame.width / 2.0) - 60.0
+                        width = (self.actionScrollView.frame.width / 2.0) + 60.0
+                    }
+                    
+                    switch sectionActions[mainSection]!.count {
+                    case 1:
+                        switch section {
+                        case mainSection:
+                            offset =  0.5 * self.actionHeight
+                        case infoSection:
+                            offset = -1.0 * self.actionHeight
+                        default:
+                            break
+                        }
+                    case 2:
+                        if section == infoSection {
+                            offset = -1.0 * self.actionHeight
+                        }
+                    case 3:
+                        if section == infoSection {
+                            offset = -0.5 * self.actionHeight
+                        }
+                    default:
+                        break
+                    }
+                }
+                
+                if !ScorecardUI.phoneSize() {
+                    offset += 180.0
+                }
+                
+                let totalSectionSpace = (CGFloat(column.sections - 1) * self.sectionSpace)
+                
+                // Update data structures
+                self.sectionActions[section]![index].frame = CGRect(x: x, y: totalSectionSpace + offset + column.y, width: width, height: self.actionHeight)
+                columnData[action.position]!.y += self.actionHeight
+            }
+        }
+        
+        self.scrollView.reloadData()
     }
     
-    private func addAction(section: Int, title: String, highlight: Bool = false, isHidden: (()->Bool)? = nil, action: @escaping (UITableViewCell)->()) {
+    private func addAction(section: Int, title: String, highlight: Bool = false, isHidden: (()->Bool)? = nil, action: @escaping (WelcomeActionCell)->()) {
         let tag = self.actionButtons.count
-        self.actionButtons.append(ActionButton(tag: tag, section: section, title: title, highlight: highlight, isHidden: isHidden, action: action))
+        self.actionButtons.append(ActionButton(tag: tag, section: section, title: title, highlight: highlight, sequence: self.actionButtons.count, isHidden: isHidden, action: action))
     }
     
     // MARK: - Popover Overrides ================================================================ -
@@ -513,6 +600,17 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
     }
 
     // MARK: - Utility Routines ======================================================================== -
+    
+    private func setTitle() {
+        if Scorecard.adminMode {
+            self.titleLabel.text = "Admin Mode"
+            self.titleLabel.textColor = Palette.textError
+        } else {
+            self.titleLabel.text = "Welcome ..."
+            self.titleLabel.textColor = Palette.textEmphasis
+        }
+        
+    }
     
     private func scoreGame() {
         if self.scorecard.recovery.checkRecovery() {
@@ -536,7 +634,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         self.performSegue(withIdentifier: "showSelection", sender: self )
     }
     
-    private func resumeGame(_ cell: UITableViewCell) {
+    private func resumeGame(_ cell: WelcomeActionCell) {
         // Recover game
         if self.scorecard.recovery.checkRecovery() {
             self.setupButtons(allowRecovery: false)
@@ -559,7 +657,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         }
     }
     
-    private func newOnlineGame(_ cell: UITableViewCell) {
+    private func newOnlineGame(_ cell: WelcomeActionCell) {
         if self.scorecard.recovery.checkRecovery() {
             // Warn that this is irreversible
             self.warnResumeGame(gameType: "online", okHandler: {
@@ -571,7 +669,7 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         }
     }
     
-    private func onlineGame(_ cell: UITableViewCell) {
+    private func onlineGame(_ cell: WelcomeActionCell) {
         if Utility.compareVersions(version1: self.scorecard.settingVersion,
                                  version2: self.scorecard.latestVersion) == .lessThan {
             self.alertMessage("You must upgrade to the latest version of the app to use this option")
@@ -765,36 +863,39 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
         }
     }
     
-    private func backgroundShape(view: UIView, shape: Shape, strokeColor: UIColor, fillColor: UIColor, abuttedAbove: Bool = false, abuttedBelow: Bool = false, pointType: PolygonPointType = .rounded, lineWidth: CGFloat = 3.0) {
+    private func backgroundShape(view: UIView, shape: Shape, strokeColor: UIColor, fillColor: UIColor, pointType: PolygonPointType = .rounded, lineWidth: CGFloat = 3.0, clipTop: Bool = false, clipBottom: Bool = false, reflected: Bool = false) -> UIBezierPath {
         
         var points: [PolygonPoint] = []
+        let shiftTop = (clipTop ? 0.5 : 0) * lineWidth
+        let shiftBottom = (clipBottom ? 0.5 : 0) * lineWidth
         let size = view.frame.size
-        let arrowWidth = size.height
-        let shift = lineWidth / 2.0
+        let width = size.width - 16.0
+        let height = size.height
+        let arrowWidth = height
         
         // Remove any previous view layers
         view.layer.sublayers?.removeAll()
         
         switch shape {
         case .arrowTop:
-            points.append(PolygonPoint(x: 0.0, y: (abuttedAbove ? 0 : shift), pointType: .point))
-            points.append(PolygonPoint(x: size.width - (arrowWidth * 1.5), y: (abuttedAbove ? 0 : shift), radius: 20.0))
-            points.append(PolygonPoint(x: size.width - (arrowWidth * 0.5), y: size.height, pointType: pointType))
-            points.append(PolygonPoint(x: 0.0, y: size.height, pointType: .point))
+            points.append(PolygonPoint(x: 0.0, y: -shiftTop, pointType: .point))
+            points.append(PolygonPoint(x: width - (arrowWidth * 1.5), y: -shiftTop, radius: 20.0))
+            points.append(PolygonPoint(x: width - (arrowWidth * 0.5), y: height + shiftBottom, pointType: pointType))
+            points.append(PolygonPoint(x: 0.0, y: height + shiftBottom, pointType: .point))
         case .arrowBottom:
-            points.append(PolygonPoint(x: 0.0, y: 0.0, pointType: .point))
-            points.append(PolygonPoint(x: 0.0, y: size.height - (abuttedBelow ? 0 : shift), pointType: .point))
-            points.append(PolygonPoint(x: size.width - (arrowWidth * 1.5), y: size.height - (abuttedBelow ? 0 : shift), radius: 20.0))
-            points.append(PolygonPoint(x: size.width - (arrowWidth * 0.5), y: 0.0, pointType: pointType))
+            points.append(PolygonPoint(x: 0.0, y: -shiftTop, pointType: .point))
+            points.append(PolygonPoint(x: 0.0, y: height + shiftBottom, pointType: .point))
+            points.append(PolygonPoint(x: width - (arrowWidth * 1.5), y: height + shiftBottom, radius: 20.0))
+            points.append(PolygonPoint(x: width - (arrowWidth * 0.5), y: -shiftTop, pointType: pointType))
         case .arrowMiddle, .shortArrowMiddle:
-            points.append(PolygonPoint(x: 0.0, y: (abuttedAbove ? 0 : shift), pointType: .point))
-            points.append(PolygonPoint(x: size.width - (arrowWidth * (shape == .arrowMiddle ? 0.5 : 1.5)), y: (abuttedAbove ? 0 : shift), pointType: pointType, radius: 20.0))
-            points.append(PolygonPoint(x: size.width - (arrowWidth * (shape == .arrowMiddle ? 0.0 : 1.0)) , y: (size.height * 0.5) - (abuttedBelow ? 0 : shift)))
-            points.append(PolygonPoint(x: size.width - (arrowWidth * (shape == .arrowMiddle ? 0.5 : 1.5)), y: size.height - (abuttedBelow ? 0 : shift), pointType: pointType, radius: 20.0))
-            points.append(PolygonPoint(x: 0.0, y: size.height, pointType: .point))
+            points.append(PolygonPoint(x: 0.0, y: -shiftTop, pointType: .point))
+            points.append(PolygonPoint(x: width - (arrowWidth * (shape == .arrowMiddle ? 0.5 : 1.5)), y: -shiftTop, pointType: pointType, radius: 20.0))
+            points.append(PolygonPoint(x: width - (arrowWidth * (shape == .arrowMiddle ? 0.0 : 1.0)), y: (height * 0.5)))
+            points.append(PolygonPoint(x: width - (arrowWidth * (shape == .arrowMiddle ? 0.5 : 1.5)), y: height + shiftBottom, pointType: pointType, radius: 20.0))
+            points.append(PolygonPoint(x: 0.0, y: height + shiftBottom, pointType: .point))
         }
         
-        Polygon.roundedShape(in: view, definedBy: points, strokeColor: strokeColor, fillColor: fillColor, lineWidth: lineWidth, radius: 10.0)
+        return Polygon.roundedShapePath(in: view, definedBy: points, strokeColor: strokeColor, fillColor: fillColor, lineWidth: lineWidth, radius: 10.0, transform: (reflected ? .reflectCenterHorizontal : nil))
         
     }
     
@@ -802,8 +903,30 @@ class WelcomeViewController: CustomViewController, UITableViewDataSource, UITabl
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
 
-class WelcomeActionCell: UITableViewCell {
-    @IBOutlet weak var headerSyncMessage: UILabel!
-    @IBOutlet weak var actionTitle: UILabel!
-    @IBOutlet weak var actionShapeView: UIView!
+class WelcomeActionCell: ScrollViewCell {
+    public var actionTitle: UILabel!
+    public var actionShapeView: UIView!
+    public var path: UIBezierPath!
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    convenience init(frame: CGRect, position: Position, textInset: CGFloat) {
+        
+        self.init(frame: frame)
+        
+        self.actionShapeView = UIView(frame: frame)
+        self.addSubview(self.actionShapeView)
+        
+        let titleWidth = self.actionShapeView.frame.width * 0.7
+        self.actionTitle = UILabel(frame: CGRect(x: frame.minX + (position == .left ? textInset : frame.width - (textInset + titleWidth)), y: frame.minY, width: titleWidth, height: frame.height))
+        self.actionTitle.textAlignment = (position == .left ? .left : .right)
+        self.addSubview(self.actionTitle)
+        self.bringSubviewToFront(self.actionTitle)
+    }
 }

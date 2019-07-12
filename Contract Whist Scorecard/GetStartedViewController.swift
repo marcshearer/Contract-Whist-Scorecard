@@ -16,17 +16,19 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     private let scorecard = Scorecard.shared
     
     // UI component pointers
-    var syncEnabledSelection: UISegmentedControl!
-    var syncEmailTextField: UITextField!
-    var downloadPlayersButton: RoundedButton!
-    var otherSettingsButton: RoundedButton!
-    var gameWalkthroughButton: RoundedButton!
-    var startPlayingButton: RoundedButton!
+    private var syncEnabledSelection: UISegmentedControl!
+    private var syncEmailTextField: UITextField!
+    private var downloadPlayersButton: RoundedButton!
+    private var otherSettingsButton: RoundedButton!
+    private var gameWalkthroughButton: RoundedButton!
+    private var startPlayingButton: RoundedButton!
+    private var syncLabel: UILabel!
+    private var syncLabelHeightConstraint: NSLayoutConstraint!
+    private var syncLabelHeight: CGFloat = 20.0
     
     // MARK: - IB Outlets ============================================================================== -
     
     @IBOutlet weak var finishButton: UIButton!
-    @IBOutlet weak var networkMessageLabel: UILabel!
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     
@@ -36,7 +38,7 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
         } else {
             self.syncEnabledSelection.selectedSegmentIndex = 0
         }
-        scorecard.checkNetworkConnection(button: self.downloadPlayersButton, label: self.networkMessageLabel, disable: true)
+        scorecard.checkNetworkConnection(button: self.downloadPlayersButton, label: self.syncLabel, labelHeightConstraint: self.syncLabelHeightConstraint, labelHeight: self.syncLabelHeight, disable: true)
         enableButtons()
     }
     
@@ -65,7 +67,7 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        scorecard.checkNetworkConnection(button: self.downloadPlayersButton, label: self.networkMessageLabel, disable: true)
+        scorecard.checkNetworkConnection(button: self.downloadPlayersButton, label: self.syncLabel, labelHeightConstraint: self.syncLabelHeightConstraint, labelHeight: self.syncLabelHeight, disable: true)
         enableButtons()
     }
     
@@ -88,11 +90,11 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.row {
         case 0:
-            return 100
+            return 130
         case 1:
             return 220
         default:
-            return 60
+            return min(60, max(50, (tableView.frame.height - 130 - 220) / 5.0))
         }
     }
     
@@ -103,6 +105,9 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
         case 0:
             // Get Started message
             cell = tableView.dequeueReusableCell(withIdentifier: "Get Started Cell", for: indexPath) as? GetStartedCell
+            self.syncLabel = cell.headerSyncLabel
+            self.syncLabelHeightConstraint = cell.headerSyncLabelHeightConstraint
+            self.scorecard.reflectNetworkConnection(button: self.downloadPlayersButton, label: self.syncLabel, labelHeightConstraint: self.syncLabelHeightConstraint, labelHeight: self.syncLabelHeight)
             
         case 1:
             // Sync Enabled
@@ -253,7 +258,7 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
             } else {
                 self.syncEnabledSelection.selectedSegmentIndex = 0
             }
-            self.scorecard.checkNetworkConnection(button: self.downloadPlayersButton, label: self.networkMessageLabel, disable: true)
+            self.scorecard.checkNetworkConnection(button: self.downloadPlayersButton, label: self.syncLabel, labelHeightConstraint: self.syncLabelHeightConstraint, labelHeight: self.syncLabelHeight, disable: true)
             self.enableButtons()
         })
     }
@@ -327,4 +332,6 @@ class GetStartedCell: UITableViewCell {
     @IBOutlet weak var syncInfo: RoundedButton!
     @IBOutlet weak var actionButton: RoundedButton!
     @IBOutlet weak var instructionLabel: UILabel!
+    @IBOutlet weak var headerSyncLabel: UILabel!
+    @IBOutlet weak var headerSyncLabelHeightConstraint: NSLayoutConstraint!
 }

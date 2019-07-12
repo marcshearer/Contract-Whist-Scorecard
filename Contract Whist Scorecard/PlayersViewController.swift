@@ -171,8 +171,7 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
     
     // MARK: - ScrollView Overrides ================================================================ -
 
-    func scrollView(_ scrollView: ScrollView,
-                    numberofItemsInSection section: Int) -> Int {
+    func scrollView(_ scrollView: ScrollView, numberOfItemsIn section: Int) -> Int {
         let players = self.playerList?.count ?? 0
         return players
     }
@@ -218,7 +217,7 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
         return cell
     }
     
-    func scrollView(_ scrollView: ScrollView, didSelectCellAt cell: ScrollViewCell, tapPosition: CGPoint) {
+    func scrollView(_ scrollView: ScrollView, didSelectCell cell: ScrollViewCell, tapPosition: CGPoint) {
         let cell = cell as! PlayerCell
         let relativeTapPosition = CGPoint(x: tapPosition.x - cell.frame.minX, y: tapPosition.y - cell.frame.minY)
         if let path = cell.path {

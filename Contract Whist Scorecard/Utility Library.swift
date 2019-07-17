@@ -63,7 +63,7 @@ class Utility {
             imageView.contentMode = .scaleAspectFill
             imageView.clipsToBounds = true
             imageView.alpha = 1.0
-            imageView.superview!.bringSubviewToFront(imageView)
+            imageView.superview?.bringSubviewToFront(imageView)
             imageView.isHidden = false
             ScorecardUI.veryRoundCorners(imageView, radius: size / 2)
             if label != nil {

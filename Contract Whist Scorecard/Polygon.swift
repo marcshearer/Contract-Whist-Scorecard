@@ -59,19 +59,20 @@ class Polygon {
         
     }
     
-    static public func roundedShapeLayer(definedBy points: [PolygonPoint], radius: CGFloat? = nil) -> CAShapeLayer {
+    static public func roundedShapeLayer(definedBy points: [PolygonPoint], strokeColor: UIColor? = nil, fillColor: UIColor? = nil, lineWidth: CGFloat? = nil, radius: CGFloat? = nil) -> CAShapeLayer {
         
         let path = Polygon.roundedBezierPath(definedBy: points, radius: radius)
         
-        return Polygon.shapeLayer(from: path)
+        return Polygon.shapeLayer(from: path, strokeColor: strokeColor, fillColor: fillColor, lineWidth: lineWidth)
     }
     
-    static public func shapeLayer(from path: UIBezierPath) -> CAShapeLayer {
+    static public func shapeLayer(from path: UIBezierPath, strokeColor: UIColor? = nil, fillColor: UIColor? = nil, lineWidth: CGFloat? = nil) -> CAShapeLayer {
         
         let shapeLayer = CAShapeLayer()
         shapeLayer.path = path.cgPath
-        shapeLayer.fillColor = UIColor.white.cgColor
-        shapeLayer.strokeColor = UIColor.black.cgColor
+        shapeLayer.lineWidth = lineWidth ?? 1.0
+        shapeLayer.fillColor = fillColor?.cgColor ?? UIColor.white.cgColor
+        shapeLayer.strokeColor = strokeColor?.cgColor ?? UIColor.black.cgColor
         
         return shapeLayer
     }
@@ -167,11 +168,15 @@ class PolygonPoint {
     public var pointType: PolygonPointType
     public var radius: CGFloat?
     
-    init(x: CGFloat, y: CGFloat, pointType: PolygonPointType = .rounded, radius: CGFloat? = nil) {
+    init(x: CGFloat, y: CGFloat, pointType: PolygonPointType? = nil, radius: CGFloat? = nil) {
         self.x = x
         self.y = y
-        self.pointType = pointType
+        self.pointType = pointType ?? .rounded
         self.radius = radius
+    }
+    
+    convenience init(origin: CGPoint, pointType: PolygonPointType = .rounded, radius: CGFloat? = nil) {
+        self.init(x: origin.x, y: origin.y, pointType: pointType, radius: radius)
     }
     
     var cgPoint: CGPoint {

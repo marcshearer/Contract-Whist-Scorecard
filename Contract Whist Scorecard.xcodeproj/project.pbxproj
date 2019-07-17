@@ -68,6 +68,8 @@
 		B235D2BE1F82288A0019384B /* Notification Simulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235D2BD1F82288A0019384B /* Notification Simulator.swift */; };
 		B2361A3722D5B965007D88BB /* ConfirmPlayedViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2361A3622D5B965007D88BB /* ConfirmPlayedViewController.storyboard */; };
 		B2361A3A22D5B9DD007D88BB /* ConfirmPlayedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2361A3922D5B9DD007D88BB /* ConfirmPlayedViewController.swift */; };
+		B243385322D89B4E002EBD40 /* ThumbnailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B243385222D89B4E002EBD40 /* ThumbnailView.swift */; };
+		B243385522D89B72002EBD40 /* ThumbnailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B243385422D89B72002EBD40 /* ThumbnailView.xib */; };
 		B24AABE01EC07274000D34B0 /* Backup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABDF1EC07274000D34B0 /* Backup.swift */; };
 		B24AABE21EC0BC08000D34B0 /* Upgrade.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABE11EC0BC08000D34B0 /* Upgrade.swift */; };
 		B24AABE41EC4DC5F000D34B0 /* Core Data Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABE31EC4DC5F000D34B0 /* Core Data Class.swift */; };
@@ -258,6 +260,8 @@
 		B235D2BD1F82288A0019384B /* Notification Simulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification Simulator.swift"; sourceTree = "<group>"; };
 		B2361A3622D5B965007D88BB /* ConfirmPlayedViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ConfirmPlayedViewController.storyboard; sourceTree = "<group>"; };
 		B2361A3922D5B9DD007D88BB /* ConfirmPlayedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmPlayedViewController.swift; sourceTree = "<group>"; };
+		B243385222D89B4E002EBD40 /* ThumbnailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailView.swift; sourceTree = "<group>"; };
+		B243385422D89B72002EBD40 /* ThumbnailView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThumbnailView.xib; sourceTree = "<group>"; };
 		B24AABDF1EC07274000D34B0 /* Backup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Backup.swift; sourceTree = "<group>"; };
 		B24AABE11EC0BC08000D34B0 /* Upgrade.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Upgrade.swift; sourceTree = "<group>"; };
 		B24AABE31EC4DC5F000D34B0 /* Core Data Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Core Data Class.swift"; sourceTree = "<group>"; };
@@ -719,6 +723,15 @@
 			name = "Confirm Played";
 			sourceTree = "<group>";
 		};
+		B243385122D89AE7002EBD40 /* Thumbnail View */ = {
+			isa = PBXGroup;
+			children = (
+				B243385422D89B72002EBD40 /* ThumbnailView.xib */,
+				B243385222D89B4E002EBD40 /* ThumbnailView.swift */,
+			);
+			name = "Thumbnail View";
+			sourceTree = "<group>";
+		};
 		B2594E8922524FBA004398FB /* Scripts */ = {
 			isa = PBXGroup;
 			children = (
@@ -771,6 +784,7 @@
 		B288FAB71FB8024A00633FD7 /* Miscellaneous Views */ = {
 			isa = PBXGroup;
 			children = (
+				B243385122D89AE7002EBD40 /* Thumbnail View */,
 				B221EEF5210B1C1D00F7FBA0 /* Graph */,
 				B221EEF4210B1C1500F7FBA0 /* Settings */,
 				B221EEF3210B1C0E00F7FBA0 /* Sync */,
@@ -1167,6 +1181,7 @@
 				B25FC7C922D0733C00D2E651 /* SelectPlayersViewController.storyboard in Resources */,
 				B227891B1FB84BA2009BABCA /* GameSummaryViewController.storyboard in Resources */,
 				B227892D1FB88BDD009BABCA /* HistoryDetailViewController.storyboard in Resources */,
+				B243385522D89B72002EBD40 /* ThumbnailView.xib in Resources */,
 				B22789151FB8490F009BABCA /* EntryViewController.storyboard in Resources */,
 				B221EED5210B0DFE00F7FBA0 /* HandViewController.storyboard in Resources */,
 				B227892A1FB885AC009BABCA /* ConfirmCountViewController.storyboard in Resources */,
@@ -1334,6 +1349,7 @@
 				B2B180122110128C008D3BAA /* (null) in Sources */,
 				B2F7281B1F6D74F9006F0941 /* Invite.swift in Sources */,
 				B20A66FA1E2385B500E75190 /* Reachability.swift in Sources */,
+				B243385322D89B4E002EBD40 /* ThumbnailView.swift in Sources */,
 				B2FA298E1EA9E215002A5D03 /* Alert.swift in Sources */,
 				B2D2D2DC1ED9975A00CA7B3A /* ClientViewController.swift in Sources */,
 				B235D2BE1F82288A0019384B /* Notification Simulator.swift in Sources */,

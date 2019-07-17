@@ -607,7 +607,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
             self.titleLabel.textColor = Palette.textError
         } else {
             self.titleLabel.text = "Welcome ..."
-            self.titleLabel.textColor = Palette.textEmphasis
+            self.titleLabel.textColor = Palette.textEmphasised
         }
         
     }

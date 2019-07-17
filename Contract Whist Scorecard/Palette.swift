@@ -47,7 +47,7 @@ class Palette {
     static let separator = UIColor(named: "Separator")
     static let grid = UIColor(named: "Grid")
     static let text = UIColor(named: "Text")!
-    static let textEmphasis = UIColor(named: "Text Emphasis")!
+    static let textEmphasised = UIColor(named: "Text Emphasised")!
     static let textError = UIColor(named: "Text Error")!
     static let textMessage = UIColor(named: "Text Message")!
     static let shapeStrokeText = UIColor(named: "Shape Stroke Text")!
@@ -61,6 +61,8 @@ class Palette {
     static let shapeHighlightStroke = UIColor(named: "Shape Highlight Stroke")!
     static let shapeHighlightFillText = UIColor(named: "Shape Highlight Fill Text")!
     static let shapeHighlightFill = UIColor(named: "Shape Highlight Fill")!
+    static let shapeTableLeg = UIColor(named: "Shape Table Leg")
+    static let shapeTableLegShadow = UIColor(named: "Shape Table Leg Shadow")
     static let suitDiamondsHearts = UIColor(named: "Suit Diamonds Hearts")!
     static let suitClubsSpades = UIColor(named: "Suit Clubs Spades")!
     static let suitNoTrumps = UIColor(named: "Suit No Trumps")!

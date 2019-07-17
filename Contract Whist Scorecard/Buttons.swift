@@ -152,10 +152,9 @@ class ClearButton: RoundedButton {
     }
 }
 
-class OutlineButton: ClearButton {
+class OutlineButton: RoundedButton {
 
-    @IBInspectable
-    public var outlineColor: UIColor?
+    @IBInspectable public var outlineColor: UIColor?
     {
         set (color) {
             self.layer.borderColor = color?.cgColor
@@ -174,6 +173,28 @@ class OutlineButton: ClearButton {
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.layer.borderWidth = 1.0
+    }
+}
+
+class AngledButton: ClearButton {
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        var points: [PolygonPoint] = []
+        let lineWidth: CGFloat = 1.0
+        let frame = CGRect(x: lineWidth / 2.0, y: lineWidth / 2.0, width: self.frame.width - lineWidth, height: self.frame.height - lineWidth)
+        let angleSize: CGFloat = self.frame.height / 3.0
+        points.append(PolygonPoint(x: frame.minX , y: frame.midY))
+        points.append(PolygonPoint(x: frame.minX + angleSize, y: frame.minY))
+        points.append(PolygonPoint(x: frame.maxX - angleSize, y: frame.minY))
+        points.append(PolygonPoint(x: frame.maxX, y: frame.midY))
+        points.append(PolygonPoint(x: frame.maxX - angleSize, y: frame.maxY))
+        points.append(PolygonPoint(x: frame.minX + angleSize, y: frame.maxY))
+        
+        Polygon.roundedShape(in: self, definedBy: points, strokeColor: self.titleColor(for: .normal)!, fillColor: self.backgroundColor!)
+        self.titleEdgeInsets = UIEdgeInsets.init(top: 5.0, left: angleSize + 5.0, bottom: 5.0, right: angleSize + 5.0)
+        self.backgroundColor = UIColor.clear
     }
 }
 

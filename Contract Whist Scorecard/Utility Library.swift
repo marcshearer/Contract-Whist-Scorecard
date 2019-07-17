@@ -119,12 +119,17 @@ class Utility {
     
     class func toInitials(_ input: String) -> String {
         var output = ""
-        let words = input.split(at: " ").map{String($0)}
-        if words.count > 0 {
-            for word in 0...(words.count-1) {
-                let letter = words[word].left(1).uppercased()
-                if letter >= "A" && letter <= "Z" {
-                    output = output + letter
+        if input.left(1) == "=" {
+            output = input.right(input.count - 1)
+        } else {
+            
+            let words = input.split(at: " ").map{String($0)}
+            if words.count > 0 {
+                for word in 0...(words.count-1) {
+                    let letter = words[word].left(1).uppercased()
+                    if letter >= "A" && letter <= "Z" {
+                        output = output + letter
+                    }
                 }
             }
         }

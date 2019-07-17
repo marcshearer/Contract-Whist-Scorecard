@@ -31,6 +31,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private var tableLayers: [CAShapeLayer] = []
     private var tableRect: CGRect!
     let corners = true // TODO Decide and remove one
+    let diagonal = true // TODO Decide and remove one
   
     // Main local state handlers
     private var availableList: [PlayerMO] = []
@@ -276,6 +277,15 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     // MARK: - Form Presentation / Handling Routines =================================================== -
     
     func drawTable() {
+        if diagonal {
+            drawTableDiagonal()
+        } else {
+            drawTableSquare()
+        }
+    }
+    
+    
+    func drawTableDiagonal() {
 
         var points: [PolygonPoint] = []
         
@@ -292,14 +302,14 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         self.tableLayers = []
         
         // Setup table co-ordinates
-        insertPoint(PolygonPoint(x: tableRect.midX, y: tableRect.maxY, pointType: .quadRounded))
-        insertPoint(PolygonPoint(x: tableRect.minX, y: tableRect.midY, pointType: .quadRounded))
-        insertPoint(PolygonPoint(x: tableRect.midX, y: tableRect.minY, pointType: .quadRounded))
-        insertPoint(PolygonPoint(x: tableRect.maxX, y: tableRect.midY, pointType: .quadRounded))
+        insertPoint(PolygonPoint(x: tableRect.midX, y: tableRect.maxY + 10.0, pointType: .quadRounded))
+        insertPoint(PolygonPoint(x: tableRect.minX, y: tableRect.midY + 10.0, pointType: .quadRounded))
+        insertPoint(PolygonPoint(x: tableRect.midX, y: tableRect.minY + 10.0, pointType: .quadRounded))
+        insertPoint(PolygonPoint(x: tableRect.maxX, y: tableRect.midY + 10.0, pointType: .quadRounded))
         let tablePoints = points
         
         // Add table
-        let tableLayer = Polygon.roundedShapeLayer(definedBy: tablePoints, strokeColor: Palette.shapeHighlightStroke, fillColor: Palette.shapeHighlightFill, lineWidth: 5.0, radius: 10.0)
+        let tableLayer = Polygon.roundedShapeLayer(definedBy: tablePoints, strokeColor: Palette.background, fillColor: Palette.tableTop, lineWidth: 5.0, radius: 10.0)
         self.selectedView.layer.insertSublayer(tableLayer, at: 0)
         self.tableLayers.append(tableLayer)
         
@@ -313,7 +323,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         
         
         // Add table shadow
-        let tableShadowLayer = Polygon.roundedShapeLayer(definedBy: points, strokeColor: nil, fillColor: Palette.shapeHighlightStroke, lineWidth: 0.0, radius: 10.0)
+        let tableShadowLayer = Polygon.roundedShapeLayer(definedBy: points, strokeColor: nil, fillColor: Palette.background, lineWidth: 0.0, radius: 10.0)
         self.selectedView.layer.insertSublayer(tableShadowLayer, above: tableLayer)
         self.tableLayers.append(tableShadowLayer)
         
@@ -338,10 +348,79 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         
         // Setup room co-ordinates
         points = []
-        let apex = CGPoint(x: tablePoints[2].x, y: tablePoints[2].y - self.height - 10.0)
-        insertPoint(self.projectPoint(point1: apex, point2: CGPoint(x: tablePoints[1].x, y: tablePoints[1].y - self.height - 10.0), newX: -2.5, pointType: .point))
+        let apex = CGPoint(x: tablePoints[2].x, y: tablePoints[2].y - self.height - 25.0)
+        insertPoint(self.projectPoint(point1: apex, point2: CGPoint(x: tablePoints[1].x, y: tablePoints[1].y - self.height - 25.0), newX: -2.5, pointType: .point))
         insertPoint(PolygonPoint(origin: apex, radius: 40.0))
-        insertPoint(self.projectPoint(point1: apex, point2: CGPoint(x: tablePoints[3].x, y: tablePoints[3].y - self.height - 10.0), newX: self.selectedView.frame.width + 2.5, pointType: .point))
+        insertPoint(self.projectPoint(point1: apex, point2: CGPoint(x: tablePoints[3].x, y: tablePoints[3].y - self.height - 25.0), newX: self.selectedView.frame.width + 2.5, pointType: .point))
+        insertPoint(PolygonPoint(x: self.selectedView.frame.width + 2.5, y: self.selectedView.frame.height, pointType: .point))
+        insertPoint(PolygonPoint(x: -2.5, y: self.selectedView.frame.height, pointType: .point))
+        
+        // Add room
+        let roomLayer = Polygon.roundedShapeLayer(definedBy: points, strokeColor: UIColor.white, fillColor: Palette.hand, lineWidth: 5.0, radius: 20.0)
+        self.selectedView.layer.insertSublayer(roomLayer, below: tableLayer)
+        self.tableLayers.append(roomLayer)
+    }
+    
+    func drawTableSquare() {
+        
+        var points: [PolygonPoint] = []
+        
+        func insertPoint(_ point: PolygonPoint, at index: Int? = nil) {
+            if index == nil {
+                points.append(point)
+            } else {
+                points.insert(point, at: index!)
+            }
+        }
+        
+        // Remove previous layers
+        self.tableLayers.forEach( { $0.removeFromSuperlayer() })
+        self.tableLayers = []
+        
+        let skew: CGFloat = self.tableRect.width / 4.0
+        
+        // Setup table co-ordinates
+        insertPoint(PolygonPoint(x: tableRect.minX, y: tableRect.maxY, pointType: .quadRounded))
+        insertPoint(PolygonPoint(x: tableRect.minX + skew, y: tableRect.minY, pointType: .quadRounded))
+        insertPoint(PolygonPoint(x: tableRect.maxX - skew, y: tableRect.minY, pointType: .quadRounded))
+        insertPoint(PolygonPoint(x: tableRect.maxX, y: tableRect.maxY, pointType: .quadRounded))
+        let tablePoints = points
+        
+        // Add table
+        let tableLayer = Polygon.roundedShapeLayer(definedBy: tablePoints, strokeColor: Palette.shapeHighlightStroke, fillColor: Palette.shapeHighlightFill, lineWidth: 5.0, radius: 10.0)
+        self.selectedView.layer.insertSublayer(tableLayer, at: 0)
+        self.tableLayers.append(tableLayer)
+        
+        points = []
+        insertPoint(PolygonPoint(origin: self.add(point: tablePoints[0], y: -2.5).cgPoint, pointType: .point))
+        insertPoint(PolygonPoint(origin: self.add(point: tablePoints[0], y: 20.0).cgPoint, pointType: .quadRounded))
+        insertPoint(PolygonPoint(origin: self.add(point: tablePoints[3], y: 20.0).cgPoint, pointType: .quadRounded))
+        insertPoint(PolygonPoint(origin: self.add(point: tablePoints[3], y: -2.5).cgPoint, pointType: .point))
+        
+        // Add table shadow
+        let tableShadowLayer = Polygon.roundedShapeLayer(definedBy: points, strokeColor: nil, fillColor: Palette.shapeHighlightStroke, lineWidth: 0.0, radius: 10.0)
+        self.selectedView.layer.insertSublayer(tableShadowLayer, above: tableLayer)
+        self.tableLayers.append(tableShadowLayer)
+        
+        // Add table legs
+        self.addTableLeg(
+            point1: self.projectPoint(point1: tablePoints[0].cgPoint, point2: tablePoints[3].cgPoint, newX: tablePoints[0].x + 10.0),
+            point2: self.projectPoint(point1: tablePoints[0].cgPoint, point2: tablePoints[3].cgPoint, newX: tablePoints[0].x + 25.0),
+            point3: self.projectPoint(point1: tablePoints[0].cgPoint, point2: tablePoints[3].cgPoint, newX: tablePoints[0].x + 40.0),
+            below: tableLayer)
+        
+        self.addTableLeg(
+            point1: self.projectPoint(point1: tablePoints[3].cgPoint, point2: tablePoints[0].cgPoint, newX: tablePoints[3].x - 40.0),
+            point2: self.projectPoint(point1: tablePoints[3].cgPoint, point2: tablePoints[0].cgPoint, newX: tablePoints[3].x - 25.0),
+            point3: self.projectPoint(point1: tablePoints[3].cgPoint, point2: tablePoints[0].cgPoint, newX: tablePoints[3].x - 10.0),
+            below: tableLayer)
+        
+        // Setup room co-ordinates
+        points = []
+        let apex = CGPoint(x: selectedViews[2].frame.midX, y: selectedViews[2].frame.minY - 30.0)
+        insertPoint(self.projectPoint(point1: apex, point2: CGPoint(x: selectedViews[1].frame.midX, y: selectedViews[1].frame.minY - 30.0), newX: -2.5, pointType: .point))
+        insertPoint(PolygonPoint(origin: apex, radius: 40.0))
+        insertPoint(self.projectPoint(point1: apex, point2: CGPoint(x: selectedViews[3].frame.midX, y: selectedViews[3].frame.minY - 30.0), newX: self.selectedView.frame.width + 2.5, pointType: .point))
         insertPoint(PolygonPoint(x: self.selectedView.frame.width + 2.5, y: self.selectedView.frame.height, pointType: .point))
         insertPoint(PolygonPoint(x: -2.5, y: self.selectedView.frame.height, pointType: .point))
         
@@ -389,7 +468,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         continueButton.isHidden = (selectedList.count >= 3 || testMode ? false : true)
         
         // Note the selected view extends 44 below the bottom of the screen. Setting the bottom constraint to zero makes the toolbar disappear
-        let toolbarBottomOffset: CGFloat = (selectedList.count > 0 ? 44 + self.view.safeAreaInsets.bottom : 0)
+        let toolbarBottomOffset: CGFloat = (selectedList.count > 0 ? 44 + (self.view.safeAreaInsets.bottom * 0.40)	 : 0)
         if toolbarBottomOffset != self.toolbarBottomConstraint.constant {
             if animated {
                 Utility.animate(duration: 0.3) {
@@ -462,12 +541,16 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             var x: CGFloat
             var horizontalOffset: CGFloat
             var verticalOffset: CGFloat
+            var squareOffset: CGFloat
+            
             if corners {
                 horizontalOffset = 0.0
                 verticalOffset = 0.0
+                squareOffset = (diagonal ? 0.0 : self.height / 4.0)
             } else {
                 horizontalOffset = (tableRect.width * (vertical == .high ? 0.28 : 0.25)) - (self.width / 2.0)
                 verticalOffset = 10.0
+                squareOffset = 0.0
             }
             
             switch horizontal {
@@ -483,9 +566,9 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             case .low:
                 y = tableRect.minY - self.height - 5.0 + (((self.width / 2.0) + horizontalOffset) * tableRect.height / tableRect.width) + verticalOffset
             case .middle:
-                y = tableRect.midY - self.height - 5.0
+                y = tableRect.midY - self.height - 5.0 + squareOffset
             case .high:
-                y = tableRect.maxY - self.height - 5.0 + (horizontalOffset * tableRect.height / tableRect.width) - verticalOffset
+                y = tableRect.maxY - self.height - CGFloat(5.0) + (horizontalOffset * tableRect.height / tableRect.width) - verticalOffset + squareOffset
             }
             
             return CGPoint(x: x, y: y)
@@ -1037,10 +1120,22 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
 
     
     public func clear(placeHolder: Int? = nil) {
-        let name = (placeHolder == nil ? nil : (placeHolder == 0 ? "Me" : "Opp \(placeHolder!)"))
-        let initials = (placeHolder == nil ? nil : (placeHolder == 0 ? "M e" : "\(placeHolder!)"))
+        var initials = ""
+        switch placeHolder ?? -1 {
+        case 0:
+            initials = "=You"
+        case 1:
+            initials = "=2nd"
+        case 2:
+            initials = "=3rd"
+        case 3:
+            initials = "=(4th)"
+        default:
+            break
+        }
+        
         self.inUse = false
-        self.thumbnail.set(name: name, initials: initials, nameHeight: 30.0)
+        self.thumbnail.set(initials: initials, nameHeight: 30.0)
     }
     
     public func set(textColor: UIColor) {

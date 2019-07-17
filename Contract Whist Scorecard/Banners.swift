@@ -35,7 +35,10 @@ class InsetPaddingView: InsetPaddingViewNoColor {
 
 class NavigationBar: UINavigationBar {
     
+    @IBInspectable var bannerColor: UIColor
+    
     required init?(coder: NSCoder) {
+        self.bannerColor = Palette.banner
         super.init(coder: coder)
         self.setBackgroundImage(UIImage(), for: .default)
         self.shadowImage = UIImage()
@@ -58,8 +61,8 @@ class NavigationBar: UINavigationBar {
     
     override func layoutSubviews() {
         self.isTranslucent = false
-        self.barTintColor = UIColor(named: "Banner")
-        self.backgroundColor = UIColor(named: "Banner")
+        self.barTintColor = self.bannerColor
+        self.backgroundColor = self.bannerColor
         
         var fontSize: CGFloat
         if ScorecardUI.landscapePhone() {
@@ -69,7 +72,7 @@ class NavigationBar: UINavigationBar {
         }
         if let titleLabel = self.topItem?.titleView as! UILabel? {
             titleLabel.font = UIFont.systemFont(ofSize: fontSize, weight: .thin)
-            titleLabel.textColor = UIColor.white
+            titleLabel.textColor = Palette.bannerText
         }
         super.layoutSubviews()
     }

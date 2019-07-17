@@ -506,22 +506,30 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                             let rotateSlots =  clockwiseGap(from: dropSlot, to: currentSlot) + 1
                             var toSlot = dropSlot
                             for slot in 1...rotateSlots {
-                                let fromSlot = (slot == 1 ? currentSlot : nextSlot(from: toSlot, clockwise: false))
+                                let fromSlot = (slot == 1 ? currentSlot : addSlots(to: toSlot, add: -1))
+
                                 if self.selectedViews[fromSlot].inUse {
                                     holdingArea[toSlot] = self.selectedViews[fromSlot].playerMO
                                 }
+
                                 if !self.selectedViews[toSlot].inUse {
                                     // Found a blank slot - can stop rotation and blank out current view
                                     self.selectedViews[currentSlot].clear(placeHolder: slot)
                                     break
                                 }
-                                toSlot = (toSlot + 1) % self.selectedViews.count
+
+                                toSlot = addSlots(to: toSlot, add: 1)
                             }
                             // Now carry out actual moves
-                            for slot in 1...rotateSlots {
-                                toSlot = (dropSlot + slot - 1) % self.selectedViews.count
+                            for index in 0..<rotateSlots {
+                                toSlot = addSlots(to: dropSlot, add: index)
+                                
                                 if let playerMO = holdingArea[toSlot] {
+                                    
+                                    // Set selected view
                                     self.selectedViews[toSlot].set(playerMO: playerMO!)
+                                    
+                                    // Update related list element
                                     if let listIndex = self.selectedList.firstIndex(where: { $0.playerMO == playerMO }) {
                                         self.selectedList[listIndex].slot = toSlot
                                     }
@@ -534,9 +542,11 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             } else if source == .unselected {
                 // Move new player to selected
                 if let dropSlot = self.slotFromLocation(dropSlot: dropView?.tag, dropLocation: dropLocation, spacing: .nearest) {
+                    
                     if self.selectedViews[dropSlot].inUse {
-                        self.removeSelection(dropSlot, updateUnselected: true)
+                        self.removeSelection(dropSlot, updateUnselected: true, animate: false)
                     }
+                    
                     self.addSelection(addedPlayerMO, toSlot: dropSlot, updateUnselected: true, animate: false)
                 }
             }
@@ -544,12 +554,11 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     }
     
     private func clockwiseGap(from: Int, to: Int) -> Int {
-        return ((self.selectedViews.count + to - from) % self.selectedViews.count) + 1
+        return ((self.selectedViews.count + to - from) % self.selectedViews.count)
     }
     
-    private func nextSlot(from: Int, clockwise: Bool = true) -> Int {
-        let direction = (clockwise ? 1 : -1)
-        return (from + self.selectedViews.count + direction) % self.selectedViews.count
+    private func addSlots(to: Int, add: Int = 1) -> Int {
+        return (to + self.selectedViews.count + add) % self.selectedViews.count
     }
     
     private enum Spacing {
@@ -564,10 +573,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         } else if dropLocation != nil {
             var distance: [(slot: Int, distance: CGFloat, gap: Int)] = []
             for slot in 0..<self.selectedViews.count {
-                var gap =  slot - (currentSlot ?? 0)
-                if gap < 0 {
-                    gap += self.selectedViews.count
-                }
+                let gap = clockwiseGap(from: currentSlot ?? 0, to: slot)
                 distance.append((slot, self.selectedViews[slot].frame.center.distance(to: dropLocation!), gap))
             }
             distance.sort(by: {$0.distance < $1.distance})
@@ -575,13 +581,10 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             if spacing == .nearest {
                 slot = distance[0].slot
             } else {
+                // Ignore if current slot is one of 2 nearest to drop
                 if distance[0].slot != currentSlot && distance[1].slot != currentSlot {
-                    // Ignore if current position is one of closest 2
-                    if distance[0].gap > distance[1].gap {
-                        slot = distance[0].slot
-                    } else {
-                        slot = distance[1].slot
-                    }
+                    // Use the one of the 2 furthrest which is closest clockwise
+                    slot = distance[(distance[0].gap > distance[1].gap ? 0 : 1)].slot
                 }
             }
             

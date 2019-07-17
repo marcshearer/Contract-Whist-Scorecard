@@ -30,6 +30,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private var testMode = false
     private var tableLayers: [CAShapeLayer] = []
     private var tableRect: CGRect!
+    let corners = true // TODO Decide and remove one
   
     // Main local state handlers
     private var availableList: [PlayerMO] = []
@@ -459,23 +460,32 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         func positionSelectedView(horizontal: Position, vertical: Position) -> CGPoint {
             var y: CGFloat
             var x: CGFloat
+            var horizontalOffset: CGFloat
+            var verticalOffset: CGFloat
+            if corners {
+                horizontalOffset = 0.0
+                verticalOffset = 0.0
+            } else {
+                horizontalOffset = (tableRect.width * (vertical == .high ? 0.28 : 0.25)) - (self.width / 2.0)
+                verticalOffset = 10.0
+            }
             
             switch horizontal {
             case .low:
-                x = tableRect.minX
+                x = tableRect.minX + horizontalOffset
             case .middle:
                 x = tableRect.midX - (self.width / 2.0)
             case .high:
-                x = tableRect.maxX - self.width
+                x = tableRect.maxX - self.width - horizontalOffset
             }
             
             switch vertical {
             case .low:
-                y = tableRect.minY - self.height - 5.0 + ((self.width / 2.0) * tableRect.height / tableRect.width)
+                y = tableRect.minY - self.height - 5.0 + (((self.width / 2.0) + horizontalOffset) * tableRect.height / tableRect.width) + verticalOffset
             case .middle:
                 y = tableRect.midY - self.height - 5.0
             case .high:
-                y = tableRect.maxY - self.height - 5.0
+                y = tableRect.maxY - self.height - 5.0 + (horizontalOffset * tableRect.height / tableRect.width) - verticalOffset
             }
             
             return CGPoint(x: x, y: y)
@@ -483,10 +493,17 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         }
         
         let viewSize = CGSize(width: self.width, height: self.height)
-        selectedViews[0].frame = CGRect(origin: positionSelectedView(horizontal: .middle, vertical: .high), size: viewSize)
-        selectedViews[1].frame = CGRect(origin: positionSelectedView(horizontal: .low, vertical: .middle), size: viewSize)
-        selectedViews[2].frame = CGRect(origin: positionSelectedView(horizontal: .middle, vertical: .low), size: viewSize)
-        selectedViews[3].frame = CGRect(origin: positionSelectedView(horizontal: .high, vertical: .middle), size: viewSize)
+        if corners {
+            selectedViews[0].frame = CGRect(origin: positionSelectedView(horizontal: .middle, vertical: .high), size: viewSize)
+            selectedViews[1].frame = CGRect(origin: positionSelectedView(horizontal: .low, vertical: .middle), size: viewSize)
+            selectedViews[2].frame = CGRect(origin: positionSelectedView(horizontal: .middle, vertical: .low), size: viewSize)
+            selectedViews[3].frame = CGRect(origin: positionSelectedView(horizontal: .high, vertical: .middle), size: viewSize)
+        } else {
+            selectedViews[0].frame = CGRect(origin: positionSelectedView(horizontal: .low, vertical: .high), size: viewSize)
+            selectedViews[1].frame = CGRect(origin: positionSelectedView(horizontal: .low, vertical: .low), size: viewSize)
+            selectedViews[2].frame = CGRect(origin: positionSelectedView(horizontal: .high, vertical: .low), size: viewSize)
+            selectedViews[3].frame = CGRect(origin: positionSelectedView(horizontal: .high, vertical: .high), size: viewSize)
+        }
     }
     
     private func selectedViewDropAction(dropView: PlayerView? = nil, dropLocation: CGPoint? = nil, source: PlayerViewType, addedPlayerEmail: String) {

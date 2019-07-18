@@ -46,7 +46,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var clearButton: UIButton!
     @IBOutlet private weak var selectedView: SelectedView!
     @IBOutlet private weak var selectedViewHeight: NSLayoutConstraint!
-    @IBOutlet private weak var selectedViewWidth: NSLayoutConstraint!
     @IBOutlet private weak var backgroundImage: UIImageView!
     @IBOutlet private weak var toolbar: UIToolbar!
     @IBOutlet private weak var toolbarBottomConstraint: NSLayoutConstraint!

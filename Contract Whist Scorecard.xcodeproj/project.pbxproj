@@ -70,6 +70,8 @@
 		B2361A3A22D5B9DD007D88BB /* ConfirmPlayedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2361A3922D5B9DD007D88BB /* ConfirmPlayedViewController.swift */; };
 		B243385322D89B4E002EBD40 /* ThumbnailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B243385222D89B4E002EBD40 /* ThumbnailView.swift */; };
 		B243385522D89B72002EBD40 /* ThumbnailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B243385422D89B72002EBD40 /* ThumbnailView.xib */; };
+		B243385922E0A6C3002EBD40 /* SelectedPlayersView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B243385822E0A6C3002EBD40 /* SelectedPlayersView.xib */; };
+		B243385B22E0A6D8002EBD40 /* SelectedPlayersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B243385A22E0A6D8002EBD40 /* SelectedPlayersView.swift */; };
 		B24AABE01EC07274000D34B0 /* Backup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABDF1EC07274000D34B0 /* Backup.swift */; };
 		B24AABE21EC0BC08000D34B0 /* Upgrade.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABE11EC0BC08000D34B0 /* Upgrade.swift */; };
 		B24AABE41EC4DC5F000D34B0 /* Core Data Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABE31EC4DC5F000D34B0 /* Core Data Class.swift */; };
@@ -262,6 +264,8 @@
 		B2361A3922D5B9DD007D88BB /* ConfirmPlayedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmPlayedViewController.swift; sourceTree = "<group>"; };
 		B243385222D89B4E002EBD40 /* ThumbnailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailView.swift; sourceTree = "<group>"; };
 		B243385422D89B72002EBD40 /* ThumbnailView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThumbnailView.xib; sourceTree = "<group>"; };
+		B243385822E0A6C3002EBD40 /* SelectedPlayersView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelectedPlayersView.xib; sourceTree = "<group>"; };
+		B243385A22E0A6D8002EBD40 /* SelectedPlayersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedPlayersView.swift; sourceTree = "<group>"; };
 		B24AABDF1EC07274000D34B0 /* Backup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Backup.swift; sourceTree = "<group>"; };
 		B24AABE11EC0BC08000D34B0 /* Upgrade.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Upgrade.swift; sourceTree = "<group>"; };
 		B24AABE31EC4DC5F000D34B0 /* Core Data Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Core Data Class.swift"; sourceTree = "<group>"; };
@@ -732,6 +736,24 @@
 			name = "Thumbnail View";
 			sourceTree = "<group>";
 		};
+		B243385622E0A67C002EBD40 /* Custom Views */ = {
+			isa = PBXGroup;
+			children = (
+				B243385722E0A68F002EBD40 /* Selected Players View */,
+				B243385122D89AE7002EBD40 /* Thumbnail View */,
+			);
+			name = "Custom Views";
+			sourceTree = "<group>";
+		};
+		B243385722E0A68F002EBD40 /* Selected Players View */ = {
+			isa = PBXGroup;
+			children = (
+				B243385822E0A6C3002EBD40 /* SelectedPlayersView.xib */,
+				B243385A22E0A6D8002EBD40 /* SelectedPlayersView.swift */,
+			);
+			name = "Selected Players View";
+			sourceTree = "<group>";
+		};
 		B2594E8922524FBA004398FB /* Scripts */ = {
 			isa = PBXGroup;
 			children = (
@@ -784,7 +806,6 @@
 		B288FAB71FB8024A00633FD7 /* Miscellaneous Views */ = {
 			isa = PBXGroup;
 			children = (
-				B243385122D89AE7002EBD40 /* Thumbnail View */,
 				B221EEF5210B1C1D00F7FBA0 /* Graph */,
 				B221EEF4210B1C1500F7FBA0 /* Settings */,
 				B221EEF3210B1C0E00F7FBA0 /* Sync */,
@@ -938,6 +959,7 @@
 		CC86557A1E021503000AF391 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				B243385622E0A67C002EBD40 /* Custom Views */,
 				B221EEE3210B1A7000F7FBA0 /* Scorepad Views */,
 				B288FAB61FB801FC00633FD7 /* Online Game Views */,
 				B288FAB51FB801E200633FD7 /* Other Main Views */,
@@ -1193,6 +1215,7 @@
 				B25FC7CA22D0733C00D2E651 /* OverrideViewController.storyboard in Resources */,
 				B2DD5D7A1ECE3C8800725B55 /* Assets.xcassets in Resources */,
 				B227891E1FB84F66009BABCA /* LocationViewController.storyboard in Resources */,
+				B243385922E0A6C3002EBD40 /* SelectedPlayersView.xib in Resources */,
 				B22789001FB83AA7009BABCA /* GetStartedViewController.storyboard in Resources */,
 				B227893F1FB893C9009BABCA /* SettingsViewController.storyboard in Resources */,
 				B22788EF1FB82B45009BABCA /* CutViewController.storyboard in Resources */,
@@ -1352,6 +1375,7 @@
 				B243385322D89B4E002EBD40 /* ThumbnailView.swift in Sources */,
 				B2FA298E1EA9E215002A5D03 /* Alert.swift in Sources */,
 				B2D2D2DC1ED9975A00CA7B3A /* ClientViewController.swift in Sources */,
+				B243385B22E0A6D8002EBD40 /* SelectedPlayersView.swift in Sources */,
 				B235D2BE1F82288A0019384B /* Notification Simulator.swift in Sources */,
 				B2F70E521EE8BC470092C19F /* HostViewController.swift in Sources */,
 				B214FBB11FCB71EB00F4F39B /* Watch Manager.swift in Sources */,

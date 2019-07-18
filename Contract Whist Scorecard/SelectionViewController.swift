@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import CoreServices
 
-class SelectionViewController: CustomViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, UIDropInteractionDelegate {
+class SelectionViewController: CustomViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, UIDropInteractionDelegate, UIGestureRecognizerDelegate {
 
     // MARK: - Class Properties ======================================================================== -
 
@@ -30,9 +30,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private var testMode = false
     private var tableLayers: [CAShapeLayer] = []
     private var tableRect: CGRect!
-    let corners = true // TODO Decide and remove one
-    let diagonal = true // TODO Decide and remove one
-  
+
     // Main local state handlers
     private var availableList: [PlayerMO] = []
     private var unselectedList: [PlayerMO?] = []
@@ -46,7 +44,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var selectionView: UIView!
     @IBOutlet private weak var continueButton: UIButton!
     @IBOutlet private weak var clearButton: UIButton!
-    @IBOutlet private weak var selectedView: UIView!
+    @IBOutlet private weak var selectedView: SelectedView!
     @IBOutlet private weak var selectedViewHeight: NSLayoutConstraint!
     @IBOutlet private weak var selectedViewWidth: NSLayoutConstraint!
     @IBOutlet private weak var backgroundImage: UIImageView!
@@ -151,6 +149,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                                         forToolbarPosition: .any,
                                         barMetrics: .default)
         self.toolbar.setShadowImage(UIImage(), forToolbarPosition: .any)
+        
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -218,7 +217,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             // Create player thumbnail
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Unselected Cell", for: indexPath) as! SelectionCell
             if cell.playerView == nil {
-                cell.playerView = PlayerView(type: .unselected, parent: cell, width: self.width, height: self.height, tag: playerNumber-1, tapAction: self.unselectedViewTapAction)
+                cell.playerView = PlayerView(type: .unselected, parent: cell, width: self.width, height: self.height, tag: playerNumber-1, tapGestureDelegate: self, tapAction: self.unselectedViewTapAction)
             }
             if let playerMO = unselectedList[playerNumber-1] {
                 cell.playerView.set(playerMO: playerMO)
@@ -277,15 +276,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     // MARK: - Form Presentation / Handling Routines =================================================== -
     
     func drawTable() {
-        if diagonal {
-            drawTableDiagonal()
-        } else {
-            drawTableSquare()
-        }
-    }
-    
-    
-    func drawTableDiagonal() {
 
         var points: [PolygonPoint] = []
         
@@ -359,76 +349,10 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         let roomLayer = Polygon.roundedShapeLayer(definedBy: points, strokeColor: UIColor.white, fillColor: Palette.hand, lineWidth: 5.0, radius: 20.0)
         self.selectedView.layer.insertSublayer(roomLayer, below: tableLayer)
         self.tableLayers.append(roomLayer)
+        self.selectedView.path = roomLayer.path
     }
     
-    func drawTableSquare() {
-        
-        var points: [PolygonPoint] = []
-        
-        func insertPoint(_ point: PolygonPoint, at index: Int? = nil) {
-            if index == nil {
-                points.append(point)
-            } else {
-                points.insert(point, at: index!)
-            }
-        }
-        
-        // Remove previous layers
-        self.tableLayers.forEach( { $0.removeFromSuperlayer() })
-        self.tableLayers = []
-        
-        let skew: CGFloat = self.tableRect.width / 4.0
-        
-        // Setup table co-ordinates
-        insertPoint(PolygonPoint(x: tableRect.minX, y: tableRect.maxY, pointType: .quadRounded))
-        insertPoint(PolygonPoint(x: tableRect.minX + skew, y: tableRect.minY, pointType: .quadRounded))
-        insertPoint(PolygonPoint(x: tableRect.maxX - skew, y: tableRect.minY, pointType: .quadRounded))
-        insertPoint(PolygonPoint(x: tableRect.maxX, y: tableRect.maxY, pointType: .quadRounded))
-        let tablePoints = points
-        
-        // Add table
-        let tableLayer = Polygon.roundedShapeLayer(definedBy: tablePoints, strokeColor: Palette.shapeHighlightStroke, fillColor: Palette.shapeHighlightFill, lineWidth: 5.0, radius: 10.0)
-        self.selectedView.layer.insertSublayer(tableLayer, at: 0)
-        self.tableLayers.append(tableLayer)
-        
-        points = []
-        insertPoint(PolygonPoint(origin: self.add(point: tablePoints[0], y: -2.5).cgPoint, pointType: .point))
-        insertPoint(PolygonPoint(origin: self.add(point: tablePoints[0], y: 20.0).cgPoint, pointType: .quadRounded))
-        insertPoint(PolygonPoint(origin: self.add(point: tablePoints[3], y: 20.0).cgPoint, pointType: .quadRounded))
-        insertPoint(PolygonPoint(origin: self.add(point: tablePoints[3], y: -2.5).cgPoint, pointType: .point))
-        
-        // Add table shadow
-        let tableShadowLayer = Polygon.roundedShapeLayer(definedBy: points, strokeColor: nil, fillColor: Palette.shapeHighlightStroke, lineWidth: 0.0, radius: 10.0)
-        self.selectedView.layer.insertSublayer(tableShadowLayer, above: tableLayer)
-        self.tableLayers.append(tableShadowLayer)
-        
-        // Add table legs
-        self.addTableLeg(
-            point1: self.projectPoint(point1: tablePoints[0].cgPoint, point2: tablePoints[3].cgPoint, newX: tablePoints[0].x + 10.0),
-            point2: self.projectPoint(point1: tablePoints[0].cgPoint, point2: tablePoints[3].cgPoint, newX: tablePoints[0].x + 25.0),
-            point3: self.projectPoint(point1: tablePoints[0].cgPoint, point2: tablePoints[3].cgPoint, newX: tablePoints[0].x + 40.0),
-            below: tableLayer)
-        
-        self.addTableLeg(
-            point1: self.projectPoint(point1: tablePoints[3].cgPoint, point2: tablePoints[0].cgPoint, newX: tablePoints[3].x - 40.0),
-            point2: self.projectPoint(point1: tablePoints[3].cgPoint, point2: tablePoints[0].cgPoint, newX: tablePoints[3].x - 25.0),
-            point3: self.projectPoint(point1: tablePoints[3].cgPoint, point2: tablePoints[0].cgPoint, newX: tablePoints[3].x - 10.0),
-            below: tableLayer)
-        
-        // Setup room co-ordinates
-        points = []
-        let apex = CGPoint(x: selectedViews[2].frame.midX, y: selectedViews[2].frame.minY - 30.0)
-        insertPoint(self.projectPoint(point1: apex, point2: CGPoint(x: selectedViews[1].frame.midX, y: selectedViews[1].frame.minY - 30.0), newX: -2.5, pointType: .point))
-        insertPoint(PolygonPoint(origin: apex, radius: 40.0))
-        insertPoint(self.projectPoint(point1: apex, point2: CGPoint(x: selectedViews[3].frame.midX, y: selectedViews[3].frame.minY - 30.0), newX: self.selectedView.frame.width + 2.5, pointType: .point))
-        insertPoint(PolygonPoint(x: self.selectedView.frame.width + 2.5, y: self.selectedView.frame.height, pointType: .point))
-        insertPoint(PolygonPoint(x: -2.5, y: self.selectedView.frame.height, pointType: .point))
-        
-        // Add room
-        let roomLayer = Polygon.roundedShapeLayer(definedBy: points, strokeColor: UIColor.white, fillColor: Palette.shapeFill, lineWidth: 5.0, radius: 20.0)
-        self.selectedView.layer.insertSublayer(roomLayer, below: tableLayer)
-        self.tableLayers.append(roomLayer)
-    }
+
     
     func add(point: PolygonPoint, x: CGFloat = 0.0, y: CGFloat = 0.0) -> PolygonPoint {
         return PolygonPoint(origin: CGPoint(x: point.x + x, y: point.y + y), pointType: point.pointType, radius: point.radius)
@@ -539,36 +463,23 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         func positionSelectedView(horizontal: Position, vertical: Position) -> CGPoint {
             var y: CGFloat
             var x: CGFloat
-            var horizontalOffset: CGFloat
-            var verticalOffset: CGFloat
-            var squareOffset: CGFloat
-            
-            if corners {
-                horizontalOffset = 0.0
-                verticalOffset = 0.0
-                squareOffset = (diagonal ? 0.0 : self.height / 4.0)
-            } else {
-                horizontalOffset = (tableRect.width * (vertical == .high ? 0.28 : 0.25)) - (self.width / 2.0)
-                verticalOffset = 10.0
-                squareOffset = 0.0
-            }
             
             switch horizontal {
             case .low:
-                x = tableRect.minX + horizontalOffset
+                x = tableRect.minX
             case .middle:
                 x = tableRect.midX - (self.width / 2.0)
             case .high:
-                x = tableRect.maxX - self.width - horizontalOffset
+                x = tableRect.maxX - self.width
             }
             
             switch vertical {
             case .low:
-                y = tableRect.minY - self.height - 5.0 + (((self.width / 2.0) + horizontalOffset) * tableRect.height / tableRect.width) + verticalOffset
+                y = tableRect.minY - self.height - 5.0 + (((self.width / 2.0)) * tableRect.height / tableRect.width)
             case .middle:
-                y = tableRect.midY - self.height - 5.0 + squareOffset
+                y = tableRect.midY - self.height - 5.0
             case .high:
-                y = tableRect.maxY - self.height - CGFloat(5.0) + (horizontalOffset * tableRect.height / tableRect.width) - verticalOffset + squareOffset
+                y = tableRect.maxY - self.height - CGFloat(5.0)
             }
             
             return CGPoint(x: x, y: y)
@@ -576,17 +487,10 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         }
         
         let viewSize = CGSize(width: self.width, height: self.height)
-        if corners {
             selectedViews[0].frame = CGRect(origin: positionSelectedView(horizontal: .middle, vertical: .high), size: viewSize)
             selectedViews[1].frame = CGRect(origin: positionSelectedView(horizontal: .low, vertical: .middle), size: viewSize)
             selectedViews[2].frame = CGRect(origin: positionSelectedView(horizontal: .middle, vertical: .low), size: viewSize)
             selectedViews[3].frame = CGRect(origin: positionSelectedView(horizontal: .high, vertical: .middle), size: viewSize)
-        } else {
-            selectedViews[0].frame = CGRect(origin: positionSelectedView(horizontal: .low, vertical: .high), size: viewSize)
-            selectedViews[1].frame = CGRect(origin: positionSelectedView(horizontal: .low, vertical: .low), size: viewSize)
-            selectedViews[2].frame = CGRect(origin: positionSelectedView(horizontal: .high, vertical: .low), size: viewSize)
-            selectedViews[3].frame = CGRect(origin: positionSelectedView(horizontal: .high, vertical: .high), size: viewSize)
-        }
     }
     
     private func selectedViewDropAction(dropView: PlayerView? = nil, dropLocation: CGPoint? = nil, source: PlayerViewType, addedPlayerEmail: String) {
@@ -768,10 +672,12 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                     // Move animation thumbnail to the unselected area
                     let animation = UIViewPropertyAnimator(duration: 0.5, curve: .easeIn) {
                         
-                        let destinationCell = self.unselectedCollectionView.cellForItem(at: IndexPath(item: unselectedPlayerIndex + 1, section: 0))! as! SelectionCell
-                        let unselectedPoint = destinationCell.playerView.thumbnail.convert(CGPoint(x: 0, y: 0), to: self.selectionView)
-                        self.animationView.frame = CGRect(origin: unselectedPoint, size: CGSize(width: self.width, height: self.height))
-                        self.animationView.set(textColor: Palette.text)
+                        self.unselectedCollectionView.scrollToItem(at: IndexPath(item: unselectedPlayerIndex + 1, section: 0), at: .centeredHorizontally, animated: true)
+                        if let destinationCell = self.unselectedCollectionView.cellForItem(at: IndexPath(item: unselectedPlayerIndex + 1, section: 0)) as? SelectionCell {
+                            let unselectedPoint = destinationCell.playerView.thumbnail.convert(CGPoint(x: 0, y: 0), to: self.selectionView)
+                            self.animationView.frame = CGRect(origin: unselectedPoint, size: CGSize(width: self.width, height: self.height))
+                            self.animationView.set(textColor: Palette.text)
+                        }
                     }
                     animation.addCompletion( {_ in
                         
@@ -900,8 +806,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     }
     
     private func setupDragAndDrop() {
-        let unselecetedDropInteraction = UIDropInteraction(delegate: self)
-        self.unselectedCollectionView.addInteraction(unselecetedDropInteraction)
+        let unselectedDropInteraction = UIDropInteraction(delegate: self)
+        self.unselectedCollectionView.addInteraction(unselectedDropInteraction)
         let selectedDropInteraction = UIDropInteraction(delegate: self)
         self.selectedView.addInteraction(selectedDropInteraction)
     }
@@ -956,6 +862,20 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                                                 }
                                             })
         }
+    }
+    
+    // MARK: - Tap gesture delegate handlers =========================================================== -
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if touch.view == self.selectedView {
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
     
     // MARK: - Drop delegate handlers ================================================================== -
@@ -1054,7 +974,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     public var tapAction: ((PlayerView)->())?
     public var dropAction: ((PlayerView?, CGPoint?, PlayerViewType, String)->())?
     
-    init(type: PlayerViewType, parent: UIView, width: CGFloat, height: CGFloat, tag: Int = 0, dropAction: ((PlayerView?, CGPoint?, PlayerViewType, String)->())? = nil, tapAction: ((PlayerView)->())? = nil) {
+    init(type: PlayerViewType, parent: UIView, width: CGFloat, height: CGFloat, tag: Int = 0, tapGestureDelegate: UIGestureRecognizerDelegate? = nil, dropAction: ((PlayerView?, CGPoint?, PlayerViewType, String)->())? = nil, tapAction: ((PlayerView)->())? = nil) {
 
         // Save properties
         self.parent = parent
@@ -1074,6 +994,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         
         // Setup tap gesture
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(PlayerView.tapSelector(_:)))
+        tapGesture.delegate = tapGestureDelegate
         self.thumbnail.addGestureRecognizer(tapGesture)
         
         // Setup drag and drop
@@ -1082,10 +1003,6 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
             dragInteraction.isEnabled = true
             self.thumbnail.addInteraction(dragInteraction)
             self.thumbnail.isUserInteractionEnabled = true
-        }
-        if false && self.type == .selected { // TODO Reinstate to drop on thumbnail rather than selected view
-            let dropInteraction = UIDropInteraction(delegate: self)
-            self.thumbnail.addInteraction(dropInteraction)
         }
     }
     
@@ -1247,4 +1164,19 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         self.source = source
         self.playerEmail = playerEmail
     }
+}
+
+class SelectedView : UIView {
+    
+    public var path: CGPath?
+    
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+        // Pass on events that are not in the path
+        if path == nil || path!.contains(point) {
+            return true
+        } else {
+            return false
+        }
+    }
+    
 }

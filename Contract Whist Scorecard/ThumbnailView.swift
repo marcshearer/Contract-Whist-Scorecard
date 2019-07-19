@@ -29,6 +29,13 @@ public class ThumbnailView: UIView {
         self.loadThumbnailView()
     }
 
+    private func loadThumbnailView() {
+        Bundle.main.loadNibNamed("ThumbnailView", owner: self, options: nil)
+        self.addSubview(contentView)
+        contentView.frame = self.bounds
+        contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    }
+    
     public override var alpha: CGFloat {
         get {
             return super.alpha
@@ -65,13 +72,6 @@ public class ThumbnailView: UIView {
         get {
             return self.discContainer.frame.width
         }
-    }
-    
-    private func loadThumbnailView() {
-        Bundle.main.loadNibNamed("ThumbnailView", owner: self, options: nil)
-        self.addSubview(contentView)
-        contentView.frame = self.bounds
-        contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
     
     public func set(data: Data? = nil, name: String? = nil, initials: String? = nil, nameHeight: CGFloat? = nil, diameter: CGFloat = 0, alpha: CGFloat? = nil) {

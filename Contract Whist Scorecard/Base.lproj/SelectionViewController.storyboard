@@ -63,7 +63,7 @@
                                 <rect key="frame" x="16" y="20" width="288" height="548"/>
                             </imageView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" bounces="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" indicatorStyle="black" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Tlx-l1-ig7" userLabel="Unselected Collection View">
-                                <rect key="frame" x="10" y="72" width="300" height="403"/>
+                                <rect key="frame" x="10" y="72" width="300" height="359"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="gIj-Vz-0t7">
                                     <size key="itemSize" width="75" height="100"/>
@@ -98,8 +98,8 @@
                                     <outlet property="delegate" destination="zGV-gf-a3n" id="P4a-La-Pxg"/>
                                 </connections>
                             </collectionView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jtX-GA-7ms" customClass="SelectedView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="400" width="320" height="212"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jtX-GA-7ms" customClass="SelectedPlayersView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="356" width="320" height="212"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="212" id="1T2-1s-8c6"/>
@@ -165,7 +165,7 @@
                             <constraint firstAttribute="trailing" secondItem="jtX-GA-7ms" secondAttribute="trailing" id="Qcv-hT-QG6"/>
                             <constraint firstItem="C6I-tL-iMh" firstAttribute="leading" secondItem="Whs-Ka-Uxd" secondAttribute="leadingMargin" id="Y4M-Ul-sVc"/>
                             <constraint firstAttribute="bottom" secondItem="T8J-zi-GyC" secondAttribute="bottom" constant="-44" id="bT5-jM-Jmv"/>
-                            <constraint firstAttribute="bottom" secondItem="jtX-GA-7ms" secondAttribute="bottom" constant="-44" id="cKC-9I-Qfp"/>
+                            <constraint firstAttribute="bottom" secondItem="jtX-GA-7ms" secondAttribute="bottom" id="cKC-9I-Qfp"/>
                             <constraint firstItem="T8J-zi-GyC" firstAttribute="top" secondItem="Mqr-Sp-LZb" secondAttribute="bottom" constant="-44" id="fB4-yF-nYs"/>
                             <constraint firstItem="Mqr-Sp-LZb" firstAttribute="bottom" secondItem="C6I-tL-iMh" secondAttribute="bottom" id="gPq-pz-0GU"/>
                             <constraint firstItem="d37-kV-uuP" firstAttribute="top" secondItem="Whs-Ka-Uxd" secondAttribute="top" id="hJb-1R-nUH"/>
@@ -185,7 +185,7 @@
                         <outlet property="clearButton" destination="yT8-YW-vNq" id="7XD-pX-YF8"/>
                         <outlet property="continueButton" destination="Rmr-6u-jtL" id="biA-oB-Ecf"/>
                         <outlet property="navigationBar" destination="UgO-yy-CRO" id="Diq-OI-UgL"/>
-                        <outlet property="selectedView" destination="jtX-GA-7ms" id="pif-ug-DbZ"/>
+                        <outlet property="selectedPlayersView" destination="jtX-GA-7ms" id="pif-ug-DbZ"/>
                         <outlet property="selectedViewHeight" destination="1T2-1s-8c6" id="p6v-xf-NUZ"/>
                         <outlet property="selectionView" destination="Whs-Ka-Uxd" id="QAl-of-52o"/>
                         <outlet property="toolbar" destination="Rkx-tt-68g" id="cfy-kh-frm"/>

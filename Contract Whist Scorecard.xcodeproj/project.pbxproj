@@ -72,6 +72,7 @@
 		B243385522D89B72002EBD40 /* ThumbnailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B243385422D89B72002EBD40 /* ThumbnailView.xib */; };
 		B243385922E0A6C3002EBD40 /* SelectedPlayersView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B243385822E0A6C3002EBD40 /* SelectedPlayersView.xib */; };
 		B243385B22E0A6D8002EBD40 /* SelectedPlayersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B243385A22E0A6D8002EBD40 /* SelectedPlayersView.swift */; };
+		B243385E22E0AEA8002EBD40 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B243385D22E0AEA8002EBD40 /* PlayerView.swift */; };
 		B24AABE01EC07274000D34B0 /* Backup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABDF1EC07274000D34B0 /* Backup.swift */; };
 		B24AABE21EC0BC08000D34B0 /* Upgrade.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABE11EC0BC08000D34B0 /* Upgrade.swift */; };
 		B24AABE41EC4DC5F000D34B0 /* Core Data Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABE31EC4DC5F000D34B0 /* Core Data Class.swift */; };
@@ -266,6 +267,7 @@
 		B243385422D89B72002EBD40 /* ThumbnailView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThumbnailView.xib; sourceTree = "<group>"; };
 		B243385822E0A6C3002EBD40 /* SelectedPlayersView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelectedPlayersView.xib; sourceTree = "<group>"; };
 		B243385A22E0A6D8002EBD40 /* SelectedPlayersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedPlayersView.swift; sourceTree = "<group>"; };
+		B243385D22E0AEA8002EBD40 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		B24AABDF1EC07274000D34B0 /* Backup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Backup.swift; sourceTree = "<group>"; };
 		B24AABE11EC0BC08000D34B0 /* Upgrade.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Upgrade.swift; sourceTree = "<group>"; };
 		B24AABE31EC4DC5F000D34B0 /* Core Data Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Core Data Class.swift"; sourceTree = "<group>"; };
@@ -739,6 +741,7 @@
 		B243385622E0A67C002EBD40 /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
+				B243385C22E0AE97002EBD40 /* Player View */,
 				B243385722E0A68F002EBD40 /* Selected Players View */,
 				B243385122D89AE7002EBD40 /* Thumbnail View */,
 			);
@@ -752,6 +755,14 @@
 				B243385A22E0A6D8002EBD40 /* SelectedPlayersView.swift */,
 			);
 			name = "Selected Players View";
+			sourceTree = "<group>";
+		};
+		B243385C22E0AE97002EBD40 /* Player View */ = {
+			isa = PBXGroup;
+			children = (
+				B243385D22E0AEA8002EBD40 /* PlayerView.swift */,
+			);
+			name = "Player View";
 			sourceTree = "<group>";
 		};
 		B2594E8922524FBA004398FB /* Scripts */ = {
@@ -1391,6 +1402,7 @@
 				CC4CC0F91DEADC32007FB24F /* AppDelegate.swift in Sources */,
 				B2F7281D1F7199AE006F0941 /* RabbitMQ Class.swift in Sources */,
 				B26104271EFA585B005AA63C /* SearchViewController.swift in Sources */,
+				B243385E22E0AEA8002EBD40 /* PlayerView.swift in Sources */,
 				B25FC7CD22D4868500D2E651 /* Rotation Gesture.swift in Sources */,
 				CC9EF3F21DFEE54A006E8930 /* DataTableViewController.swift in Sources */,
 				CCCA16631DEF9947006AA415 /* EntryViewController.swift in Sources */,

@@ -194,6 +194,18 @@ class AngledButton: ClearButton {
         
         Polygon.roundedShape(in: self, definedBy: points, strokeColor: self.titleColor(for: .normal)!, fillColor: self.backgroundColor!)
         self.titleEdgeInsets = UIEdgeInsets.init(top: 5.0, left: angleSize + 5.0, bottom: 5.0, right: angleSize + 5.0)
+        
+        self.normalTextColor = self.titleColor(for: .normal)! // Leave as declared
+        self.normalBackgroundColor = UIColor.clear
+        self.normalAlpha = 1.0
+        self.disabledTextColor = self.normalTextColor
+        self.disabledBackgroundColor = self.normalBackgroundColor
+        self.disabledAlpha = 0.3
+        super.isEnabled(true)
+    }
+    
+    override func didMoveToSuperview() {
+        super.didMoveToSuperview()
         self.backgroundColor = UIColor.clear
     }
 }

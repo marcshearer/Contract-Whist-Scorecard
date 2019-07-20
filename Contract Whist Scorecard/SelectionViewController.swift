@@ -42,6 +42,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var clearButton: UIButton!
     @IBOutlet private weak var selectedPlayersView: SelectedPlayersView!
     @IBOutlet private weak var selectedViewHeight: NSLayoutConstraint!
+    @IBOutlet private weak var selectedViewWidth: NSLayoutConstraint!
     @IBOutlet private weak var backgroundImage: UIImageView!
     @IBOutlet private weak var toolbar: UIToolbar!
     @IBOutlet private weak var toolbarBottomConstraint: NSLayoutConstraint!
@@ -292,8 +293,15 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         
         let selectedTop = unselectedHeight + self.navigationBar.frame.height + view.safeAreaInsets.top
         let selectedHeight: CGFloat = totalHeight + view.safeAreaInsets.top + view.safeAreaInsets.bottom - selectedTop
-        selectedViewHeight?.constant = selectedHeight
-        self.selectedPlayersView.frame = CGRect(x: 0.0, y: selectedTop, width: totalWidth, height: selectedHeight)
+        selectedViewWidth?.constant = totalWidth / 2.0
+        
+        if ScorecardUI.landscapePhone() {
+            selectedViewHeight?.constant = totalHeight - navigationBar.frame.height + view.safeAreaInsets.bottom
+            self.selectedPlayersView.frame = CGRect(x: totalWidth / 2.0, y: navigationBar.frame.height + view.safeAreaInsets.top, width: totalWidth / 2.0, height: totalHeight - navigationBar.frame.height + view.safeAreaInsets.bottom)
+        } else {
+            selectedViewHeight?.constant = selectedHeight
+            self.selectedPlayersView.frame = CGRect(x: 0.0, y: selectedTop, width: totalWidth, height: selectedHeight)
+        }
     
     }
     

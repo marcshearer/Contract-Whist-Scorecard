@@ -83,18 +83,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     @IBAction func finishPressed(_ sender: UIButton) {
         finishAction()
     }
-    
-    @IBAction func leftSwipe(recognizer:UISwipeGestureRecognizer) {
-        if recognizer.state == .ended {
-            continueAction()
-        }
-    }
-    
-    @IBAction func rightSwipe(recognizer:UISwipeGestureRecognizer) {
-        if recognizer.state == .ended {
-            finishAction()
-        }
-    }
 
     // MARK: - View Overrides ========================================================================== -
 
@@ -621,10 +609,22 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 if error == nil {
                     Utility.mainThread {
                         if let playerObject = playerObject as! PlayerObject? {
-                            if let playerEmail = playerObject.playerEmail {
+                            if let playerEmail = playerObject.playerEmail, let source = playerObject.source {
                                 // Dropped on unselected view
-                                if let index = self.selectedPlayersView.playerViews.firstIndex(where: { $0.playerMO?.email == playerEmail }) {
-                                    self.removeSelection(index)
+                                
+                                if source == .selected {
+                                    // From selected area - remove it
+                                    if let index = self.selectedPlayersView.playerViews.firstIndex(where: { $0.playerMO?.email == playerEmail }) {
+                                        self.removeSelection(index)
+                                    }
+                                } else if source == .unselected {
+                                    // From unselected - add it
+                                    if let playerMO = self.availableList.first(where: { $0.email == playerEmail }) {
+                                        self.addSelection(playerMO)
+                                    }
+                                } else if source == .addPlayer {
+                                    // Add player button
+                                    self.addNewPlayer()
                                 }
                             }
                         }

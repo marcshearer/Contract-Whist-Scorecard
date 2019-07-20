@@ -175,10 +175,6 @@
                             <constraint firstItem="Tlx-l1-ig7" firstAttribute="top" secondItem="UgO-yy-CRO" secondAttribute="bottom" constant="8" id="zTp-SX-yct"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Mqr-Sp-LZb"/>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="55S-GX-c6O" appends="YES" id="eL0-I5-s7n"/>
-                            <outletCollection property="gestureRecognizers" destination="Xky-Or-XTU" appends="YES" id="1zP-lw-G8Q"/>
-                        </connections>
                     </view>
                     <connections>
                         <outlet property="backgroundImage" destination="C6I-tL-iMh" id="3Ap-Eu-d0J"/>
@@ -201,16 +197,6 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pg0-6i-AIz" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="Vxp-SW-x6a" userLabel="Exit" sceneMemberID="exit"/>
-                <swipeGestureRecognizer direction="left" id="55S-GX-c6O" userLabel="Left Swipe Gesture Recognizer">
-                    <connections>
-                        <action selector="leftSwipeWithRecognizer:" destination="zGV-gf-a3n" id="ZT3-uW-Z8S"/>
-                    </connections>
-                </swipeGestureRecognizer>
-                <swipeGestureRecognizer direction="right" id="Xky-Or-XTU" userLabel="Right Swipe Gesture Recognizer">
-                    <connections>
-                        <action selector="rightSwipeWithRecognizer:" destination="zGV-gf-a3n" id="0eS-1z-SRz"/>
-                    </connections>
-                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="6357.6000000000004" y="161.46926536731635"/>
         </scene>

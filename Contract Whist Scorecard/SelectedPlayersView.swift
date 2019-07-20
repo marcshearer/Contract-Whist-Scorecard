@@ -44,6 +44,12 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         }
     }
     
+    public override var bounds: CGRect {
+        didSet {
+            contentView.frame = self.bounds
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.loadSelectedPlayersView()
@@ -55,10 +61,24 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         self.loadSelectedPlayersView()
     }
     
-    override var bounds: CGRect {
-        didSet {
-            contentView.frame = self.bounds
-        }
+    public func set(slot: Int, playerMO: PlayerMO) {
+        self.playerViews[slot].set(playerMO: playerMO)
+    }
+    
+    public func clear(slot: Int) {
+        self.clear(playerView: self.playerViews[slot], slot: slot)
+    }
+    
+    public func origin(slot: Int, in view: UIView) -> CGPoint {
+        return self.playerViews[slot].thumbnail.convert(CGPoint(x: 0, y: 0), to: view)
+    }
+    
+    public func freeSlot() -> Int? {
+        return self.playerViews.firstIndex(where: { $0.inUse == false })
+    }
+    
+    public func setEnabled(slot: Int, enabled: Bool) {
+        self.playerViews[slot].isEnabled = enabled
     }
     
     private func loadSelectedPlayersView() {
@@ -87,22 +107,6 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
             self.clear(playerView: playerView, slot: index)
             self.playerViews.append(playerView)
         }
-    }
-    
-    public func set(slot: Int, playerMO: PlayerMO) {
-        self.playerViews[slot].set(playerMO: playerMO)
-    }
-    
-    public func clear(slot: Int) {
-        self.clear(playerView: self.playerViews[slot], slot: slot)
-    }
-    
-    public func origin(slot: Int, in view: UIView) -> CGPoint {
-        return self.playerViews[slot].thumbnail.convert(CGPoint(x: 0, y: 0), to: view)
-    }
-    
-    public func freeSlot() -> Int? {
-        return self.playerViews.firstIndex(where: { $0.inUse == false })
     }
     
     private func clear(playerView: PlayerView, slot: Int) {
@@ -309,7 +313,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
             
             if source == .selected {
                 // Moving a player in selected view - rotate all players in between
-            
+                
                 if let currentSlot = self.playerViewSlot(addedPlayerMO) {
                     // Got the players current slot - work out the drop slot
                     
@@ -319,36 +323,43 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
                         if currentSlot != dropSlot {
                             // Work out where everything will be after rotation - stopping if we land on a blank
                             var holdingArea: [Int:PlayerMO?] = [:]
-                            let rotateSlots =  clockwiseGap(from: dropSlot, to: currentSlot) + 1
-                            var toSlot = dropSlot
-                            for slot in 1...rotateSlots {
-                                let fromSlot = (slot == 1 ? currentSlot : addSlots(to: toSlot, add: -1))
-                                
-                                if self.playerViews[fromSlot].inUse {
-                                    holdingArea[toSlot] = self.playerViews[fromSlot].playerMO
+                            if dropSlot == 0 || currentSlot == 0  {
+                                // Dropping on or from the 'You' player - just swap
+                                holdingArea[dropSlot] = addedPlayerMO
+                                if self.playerViews[dropSlot].inUse {
+                                    holdingArea[currentSlot] = self.playerViews[dropSlot].playerMO
+                                } else {
+                                    self.clear(slot: currentSlot)
                                 }
-                                
-                                if !self.playerViews[toSlot].inUse {
-                                    // Found a blank slot - can stop rotation and blank out current view
-                                    self.playerViews[currentSlot].clear()
-                                    break
+                            } else {
+                                let rotateSlots =  clockwiseGap(from: dropSlot, to: currentSlot) + 1
+                                var toSlot = dropSlot
+                                for slot in 1...rotateSlots {
+                                    let fromSlot = (slot == 1 ? currentSlot : addSlots(to: toSlot, add: -1))
+                                    
+                                    if self.playerViews[fromSlot].inUse {
+                                        holdingArea[toSlot] = self.playerViews[fromSlot].playerMO
+                                    }
+                                    
+                                    if !self.playerViews[toSlot].inUse {
+                                        // Found a blank slot - can stop rotation and blank out current view
+                                        self.clear(slot: currentSlot)
+                                        break
+                                    }
+                                    
+                                    toSlot = addSlots(to: toSlot, add: 1)
                                 }
-                                
-                                toSlot = addSlots(to: toSlot, add: 1)
                             }
                             // Now carry out actual moves
-                            for index in 0..<rotateSlots {
-                                toSlot = addSlots(to: dropSlot, add: index)
+                            for (toSlot, playerMO) in holdingArea {
                                 
-                                if let playerMO = holdingArea[toSlot] {
-                                    
-                                    // Set selected view
-                                    self.playerViews[toSlot].set(playerMO: playerMO!)
-                                    
-                                    // Call back calling view to see if they want to do anything
-                                    self.delegate?.selectedPlayersView?(moved: playerMO!, to: toSlot)
-                                }
+                                // Set selected view
+                                self.playerViews[toSlot].set(playerMO: playerMO!)
+                                
+                                // Call back calling view to see if they want to do anything
+                                self.delegate?.selectedPlayersView?(moved: playerMO!, to: toSlot)
                             }
+                            
                         }
                         
                     }
@@ -383,15 +394,13 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
     private func slotFromLocation(dropLocation: CGPoint, currentSlot: Int?) -> Int? {
         var slot: Int?
         
-        var distance: [(slot: Int, distance: CGFloat, gap: Int?)] = []
+        var distance: [(slot: Int, distance: CGFloat)] = []
         
         // Build list of distances to players
         for slot in 0..<self.playerViews.count {
-            var gap: Int?
-            if currentSlot != nil {
-                gap = clockwiseGap(from: currentSlot!, to: slot)
+            if self.playerViews[slot].isEnabled {
+                distance.append((slot, self.playerViews[slot].frame.center.distance(to: dropLocation)))
             }
-            distance.append((slot, self.playerViews[slot].frame.center.distance(to: dropLocation), gap))
         }
         distance.sort(by: {$0.distance < $1.distance})
         
@@ -401,10 +410,20 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         } else {
             // Work out which 2 slots the drop occurred between and choose appropriate one
             
-            // Ignore if current slot is one of 2 nearest to drop
-            if distance[0].slot != currentSlot && distance[1].slot != currentSlot {
-                // Use the one of the 2 furthrest which is closest clockwise
-                slot = distance[(distance[0].gap! > distance[1].gap! ? 0 : 1)].slot
+            if distance[0].slot == currentSlot {
+                // Dropped nearest self - do nothing
+            } else if distance[0].slot == 0 {
+              // Dropped nearest unused 'You' player slot
+                slot = 0
+            } else if distance[1].slot == currentSlot {
+                // Second closest is self - just drop on closest
+                slot = distance[0].slot
+            } else if distance[0].slot == 0 || distance[1].slot == 0 {
+                // Between the 'You' player and another - drop on the other
+                slot = max(distance[0].slot, distance[1].slot)
+            } else {
+                // Dropped between other 2 players
+                slot = (currentSlot == 1 ? 3 : (currentSlot == 2 ? 1 : 2))
             }
         }
         
@@ -412,11 +431,13 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
     }
     
     private func clockwiseGap(from: Int, to: Int) -> Int {
-        return ((self.playerViews.count + to - from) % self.playerViews.count)
+        let count = self.playerViews.count - 1
+        return (count + (to - from)) % count
     }
     
     private func addSlots(to: Int, add: Int = 1) -> Int {
-        return (to + self.playerViews.count + add) % self.playerViews.count
+        let count = self.playerViews.count - 1
+        return ((to - 1) + count + add) % count + 1
     }
     
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {

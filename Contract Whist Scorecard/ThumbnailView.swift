@@ -74,11 +74,11 @@ public class ThumbnailView: UIView {
         }
     }
     
-    public func set(data: Data? = nil, name: String? = nil, initials: String? = nil, nameHeight: CGFloat? = nil, diameter: CGFloat = 0, alpha: CGFloat? = nil) {
+    public func set(data: Data? = nil, name: String? = nil, initials: String? = nil, nameHeight: CGFloat? = nil, diameter: CGFloat = 0, alpha: CGFloat? = nil, placeholder: Bool = false) {
         
         let initials = initials ?? (name ?? "")
         
-        Utility.setThumbnail(data: data, imageView: self.discImage, initials: initials, label: self.discInitials, size: diameter)
+        Utility.setThumbnail(data: data, imageView: self.discImage, initials: initials, label: self.discInitials, size: diameter, placeholder: placeholder)
         
         if let nameHeight = nameHeight {
             self.nameHeightConstraint.constant = nameHeight

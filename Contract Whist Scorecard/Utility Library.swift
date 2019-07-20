@@ -52,7 +52,7 @@ class Utility {
     
     // MARK: - Thumbnail display routine ===================================================================== -
     
-    class func setThumbnail(data: Data?, imageView: UIImageView, initials: String = "", label: UILabel! = nil, size: CGFloat = 0) {
+    class func setThumbnail(data: Data?, imageView: UIImageView, initials: String = "", label: UILabel! = nil, size: CGFloat = 0, placeholder: Bool = false) {
         
         // If given data exists then put it in an image view, otherwise use label for a disk with initials in it
         if data != nil {
@@ -77,7 +77,11 @@ class Utility {
             }
             label.text = toInitials(initials)
             label.textAlignment = .center
-            Palette.thumbnailDiscStyle(label)
+            if placeholder {
+                Palette.thumbnailPlaceholderStyle(label)
+            } else {
+                Palette.thumbnailDiscStyle(label)
+            }
             imageView.isHidden = true
             label.isHidden=false
             ScorecardUI.veryRoundCorners(label, radius: size / 2)

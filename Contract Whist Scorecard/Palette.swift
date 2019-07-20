@@ -44,6 +44,8 @@ class Palette {
     static let totalText = UIColor(named: "Total Text")!
     static let thumbnailDisc = UIColor(named: "Thumbnail Disc")!
     static let thumbnailDiscText = UIColor(named: "Thumbnail Disc Text")!
+    static let thumbnailPlaceholder = UIColor(named: "Thumbnail Placeholder")!
+    static let thumbnailPlaceholderText = UIColor(named: "Thumbnail Placeholder Text")!
     static let separator = UIColor(named: "Separator")
     static let grid = UIColor(named: "Grid")
     static let text = UIColor(named: "Text")!
@@ -225,6 +227,14 @@ class Palette {
     class func thumbnailDiscStyle(_ label: UILabel, setFont: Bool = true) {
         label.backgroundColor=Palette.thumbnailDisc
         label.textColor = Palette.thumbnailDiscText
+        if setFont {
+            label.font = UIFont.boldSystemFont(ofSize: 20.0)
+        }
+    }
+    
+    class func thumbnailPlaceholderStyle(_ label: UILabel, setFont: Bool = true) {
+        label.backgroundColor=Palette.thumbnailPlaceholder
+        label.textColor = Palette.thumbnailPlaceholderText
         if setFont {
             label.font = UIFont.boldSystemFont(ofSize: 20.0)
         }

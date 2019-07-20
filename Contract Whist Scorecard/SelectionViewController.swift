@@ -578,20 +578,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         }
     }
     
-    // MARK: - Tap gesture delegate handlers =========================================================== -
-    
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        if touch.view == self.selectedPlayersView {
-            return false
-        } else {
-            return true
-        }
-    }
-    
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
-    }
-    
     // MARK: - Drop delegate handlers ================================================================== -
     
     func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {

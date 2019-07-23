@@ -14,7 +14,7 @@ class ScorecardUI {
         if percent == 0.0 {
             view.layer.cornerRadius = 5
         } else {
-            view.layer.cornerRadius = view.layer.bounds.height * (percent/100.0)
+            view.layer.cornerRadius = view.layer.bounds.width * (percent/100.0)
         }
         view.layer.masksToBounds = true
     }
@@ -67,6 +67,15 @@ class ScorecardUI {
         }
     }
     
+    class func setToolbarClear(toolbar: UIToolbar) {
+        toolbar.setBackgroundImage(UIImage(),
+                                        forToolbarPosition: .any,
+                                        barMetrics: .default)
+        toolbar.setShadowImage(UIImage(), forToolbarPosition: .any)
+        toolbar.backgroundColor = UIColor.clear
+        toolbar.tintColor = UIColor.clear
+    }
+    
     class func landscapePhone() -> Bool {
         return UIScreen.main.traitCollection.verticalSizeClass == .compact && UIScreen.main.traitCollection.horizontalSizeClass == .compact
     }
@@ -77,6 +86,10 @@ class ScorecardUI {
     
     class func phoneSize() -> Bool {
         return UIScreen.main.traitCollection.verticalSizeClass == .compact || UIScreen.main.traitCollection.horizontalSizeClass == .compact
+    }
+    
+    class func smallPhoneSize() -> Bool {
+        return (UIScreen.main.traitCollection.verticalSizeClass == .compact || UIScreen.main.traitCollection.horizontalSizeClass == .compact) && min(UIScreen.main.bounds.width, UIScreen.main.bounds.height) <= 320
     }
     
     class func landscape() -> Bool {

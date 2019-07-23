@@ -13,7 +13,7 @@ protocol GamePreviewDelegate {
     func gamePreviewComplete()
 }
 
-class GamePreviewViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, CutDelegate, UIPopoverPresentationControllerDelegate {
+class GamePreviewViewController: CustomViewController, CutDelegate, ImageButtonDelegate {
     
     // MARK: - Class Properties ================================================================ -
     
@@ -26,7 +26,7 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
     
     // Properties to pass state to / from segues
     public var selectedPlayers = [PlayerMO?]()          // Selected players passed in from player selection
-    public var faceTimeAddress: [String] = []          // FaceTime addresses for the above
+    public var faceTimeAddress: [String] = []           // FaceTime addresses for the above
     public var returnSegue: String!                     // View to return to
     public var rabbitMQService: RabbitMQService!
     public var computerPlayerDelegate: [Int: ComputerPlayerDelegate?]?
@@ -37,24 +37,29 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
     private var buttonMode = "Triangle"
     private var buttonRowHeight:CGFloat = 0.0
     private var playerRowHeight:CGFloat = 0.0
+    private var thumbnailWidth: CGFloat = 75.0
+    private var thumbnailHeight: CGFloat = 100.0
+    private var haloWidth: CGFloat = 3.0
     private var observer: NSObjectProtocol?
     private var faceTimeAvailable = false
     private var firstTime = true
-    
-    // UI component pointers
-    private var gamePreviewNameCell = [GamePreviewNameCell?]()
-    private var actionCell: GamePreviewActionCell!
+    private var cutCardView: [UILabel] = []
     
     // MARK: - IB Outlets ================================================================ -
     
-    @IBOutlet weak var playerTableView: UITableView!
-    @IBOutlet weak var continueButton: UIButton!
+    @IBOutlet private weak var continueButton: UIButton!
+    @IBOutlet private weak var selectedPlayersView: SelectedPlayersView!
+    @IBOutlet private weak var overrideButton: UIButton!
+    @IBOutlet private weak var toolbar: UIToolbar!
+    @IBOutlet private weak var toolbarBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var actionButtonView: UIView!
+    @IBOutlet private weak var cutForDealerButton: ImageButton!
+    @IBOutlet private weak var nextDealerButton: ImageButton!
 
     // MARK: - IB Unwind Segue Handlers ================================================================ -
 
     @IBAction func hideScorepad(segue:UIStoryboardSegue) {
         self.scorecard.setGameInProgress(false)
-        self.formatOverrideButton()
     }
 
     // MARK: - IB Actions ============================================================================== -
@@ -74,7 +79,28 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
     @IBAction func continuePressed(_ sender: Any) {
         self.goToScorepad()
     }
-
+    
+    @IBAction func overrideSettingsPressed(_ sender: UIButton) {
+        let overrideViewController = OverrideViewController()
+        overrideViewController.show()
+    }
+    
+    internal func imageButtonPressed(_ sender: ImageButton) {
+        switch sender.tag {
+        case 1:
+            // Cut for dealer
+            self.executeCut()
+        case 2:
+            // Next dealer
+            self.showDealer(playerNumber: scorecard.dealerIs, forceHide: true)
+            self.scorecard.nextDealer()
+            self.showCurrentDealer()
+            
+        default:
+            break
+        }
+    }
+    
     @IBAction func leftSwipe(recognizer:UISwipeGestureRecognizer) {
         if recognizer.state == .ended {
             showScorepad()
@@ -108,11 +134,7 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
         
         recovery = scorecard.recovery
 
-        for _ in 1...scorecard.numberPlayers {
-            gamePreviewNameCell.append(nil)
-        }
-        
-        // Make sure dealer not too high
+       // Make sure dealer not too high
         if self.scorecard.dealerIs > self.scorecard.currentPlayers {
             self.scorecard.saveDealer(1)
         }
@@ -126,13 +148,18 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
 
         // Set readonly
         if self.readOnly {
-            self.playerTableView.isUserInteractionEnabled = false
+            self.selectedPlayersView.isEnabled = false
             self.continueButton.isHidden = true
         }
         
         if !self.readOnly {
             self.checkFaceTimeAvailable()
         }
+        
+        self.createCutCards()
+        
+        // Set toolbar clear
+        ScorecardUI.setToolbarClear(toolbar: toolbar)
         
     }
     
@@ -148,152 +175,27 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        setupScreen(size: size)
-        playerTableView.reloadData()
+        self.view.setNeedsLayout()
     }
     
-    override internal func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        setupScreen(size: UIScreen.main.bounds.size)
+        self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth)
+        self.selectedPlayersView.setHaloColor(color: Palette.halo)
+        self.selectedPlayersView.drawRoom(thumbnailWidth: thumbnailWidth, thumbnailHeight: thumbnailHeight, directions: .up, .down)
+        for slot in 0..<self.scorecard.currentPlayers {
+            self.selectedPlayersView.set(slot: slot, playerMO: self.selectedPlayers[slot]!)
+        }
+        self.showCurrentDealer()
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         self.scorecard.motionBegan(motion, with: event)
     }
- 
-    // MARK: - Popover Overrides ================================================================ -
-    
-    func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
-        let childViewController = popoverPresentationController.presentedViewController
-        if childViewController is CutViewController {
-            self.showCurrentDealer()
-        }
-    }
-    
-    // MARK: - TableView Overrides ================================================================ -
-   
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        switch section {
-        case 0:
-            return scorecard.currentPlayers
-        case 1:
-            return 1
-        default:
-            return 0
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.section {
-        case 0:
-            return playerRowHeight
-        default:
-            return buttonRowHeight
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        var cell: UITableViewCell?
-        
-        switch indexPath.section {
-        case 0:
-            // Player names
-                let playerNumber = indexPath.row+1
-                
-                gamePreviewNameCell[playerNumber-1] = tableView.dequeueReusableCell(withIdentifier: "Game Setup Name Cell", for: indexPath) as? GamePreviewNameCell
-             
-                // Setup the text input field
-                gamePreviewNameCell[playerNumber-1]!.playerName.text = "\(scorecard.enteredPlayer(playerNumber).playerMO!.name!)"
-                
-                // Setup the dealer button
-                gamePreviewNameCell[playerNumber-1]!.playerButton.setTitle("Dealer", for: .normal)
-                showDealer(playerNumber: playerNumber)
-                
-                // Setup the thumbnail picture
-                var thumbnail: Data?
-                if let playerDetail = scorecard.enteredPlayer(playerNumber).playerMO {
-                    thumbnail = playerDetail.thumbnail
-                }
-                Utility.setThumbnail(data: thumbnail,
-                                     imageView: gamePreviewNameCell[playerNumber-1]!.playerImage,
-                                     initials: scorecard.enteredPlayer(playerNumber).playerMO!.name!,
-                                     label: gamePreviewNameCell[playerNumber-1]!.playerDisc,
-                                     size: playerRowHeight-4)
-                
-                // Make facetime button available
-                if self.faceTimeAvailable {
-                    gamePreviewNameCell[playerNumber-1]!.faceTimeButtonWidth.constant = 40
-                    gamePreviewNameCell[playerNumber-1]!.faceTimeButtonTrailing.constant = 8
-                    if playerNumber <= self.faceTimeAddress.count && self.faceTimeAddress[playerNumber - 1] != "" {
-                        gamePreviewNameCell[playerNumber-1]!.faceTimeButton.isHidden = false
-                        gamePreviewNameCell[playerNumber-1]!.faceTimeButton.tag = playerNumber
-                        gamePreviewNameCell[playerNumber-1]!.faceTimeButton.addTarget(self, action: #selector(GamePreviewViewController.faceTimePressed(_:)), for: UIControl.Event.touchUpInside)
-                    } else {
-                        gamePreviewNameCell[playerNumber-1]!.faceTimeButton.isHidden = true
-                    }
-                } else {
-                    gamePreviewNameCell[playerNumber-1]!.faceTimeButtonWidth.constant = 0
-                    gamePreviewNameCell[playerNumber-1]!.faceTimeButtonTrailing.constant = 0
-                }
-                
-                // Setup return value
-                cell = gamePreviewNameCell[playerNumber-1]
-            
-        case 1:
-            // Action buttons
-            actionCell = tableView.dequeueReusableCell(withIdentifier: "Game Setup Action Cell " + buttonMode, for: indexPath) as? GamePreviewActionCell
-            
-            actionCell.cutForDealerButton.setTitle("Cut for Dealer")
-            actionCell.cutForDealerButton.addTarget(self, action: #selector(GamePreviewViewController.actionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
-            
-            actionCell.nextDealerButton.setTitle("Next Dealer")
-            actionCell.nextDealerButton.addTarget(self, action: #selector(GamePreviewViewController.actionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
-          
-            actionCell.overrideSettingsButton.setTitle("Override Settings")
-            actionCell.overrideSettingsButton.addTarget(self, action: #selector(GamePreviewViewController.actionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
-            
-            cell = actionCell
-
-        default:
-            cell = nil
-        }
-        return cell!
-    }
     
     // MARK: - Action Handlers ================================================================ -
-
-    @objc func actionButtonPressed(_ button: UIButton) {
-        switch button.tag {
-        case 1:
-            // Choose dealer at random
-            
-            // Hide the current dealer
-            showDealer(playerNumber: scorecard.dealerIs, forceHide: true)
-            // Link to cut for dealer animation
-            _ = CutViewController.cutForDealer(viewController: self, view: view, cutDelegate: self, popoverDelegate: self)
-        case 2:
-            // Move dealer to next player
-            showDealer(playerNumber: scorecard.dealerIs, forceHide: true)
-            scorecard.nextDealer()
-            showCurrentDealer()
-       default:
-            // Link to override selection
-            let overrideViewController = OverrideViewController()
-            overrideViewController.show(completion: {
-                self.formatOverrideButton()
-            })
-        }
-    }
-    
+ 
     @objc func faceTimePressed(_ button: UIButton) {
         let playerNumber = button.tag
         Utility.faceTime(phoneNumber: self.faceTimeAddress[playerNumber - 1])
@@ -316,7 +218,7 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
             let index = self.scorecard.enteredIndex(objectID)
             if index != nil {	
                 // Found it - reload the cell
-                self.playerTableView.reloadRows(at: [IndexPath(row: index!, section: 0)], with: .fade)
+                //TODO Update selected image
             }
         }
     }
@@ -335,20 +237,30 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
     func setupScreen(size: CGSize) {
         if size.width >= 530 {
             buttonMode = "Row"
-            buttonRowHeight = 162
+            buttonRowHeight = 160
         } else {
-            buttonMode = "Triangle"
-            buttonRowHeight = 290
+            buttonMode = "Row"
+            buttonRowHeight = 160
         }
         
         playerRowHeight = max(48, min(80, (size.height - buttonRowHeight - 100) / CGFloat(scorecard.currentPlayers)))
         
-        if playerRowHeight > 48 {
-            playerTableView.isScrollEnabled = false
-        } else {
-            playerTableView.isScrollEnabled = true
+        self.slideOutToolbar()
+
+    }
+    
+    private func slideOutToolbar(animated: Bool = false) {
+        // Note the selected view extends 44 below the bottom of the screen. Setting the bottom constraint to zero makes the toolbar disappear
+        let toolbarBottomOffset: CGFloat = -44 + (self.view.safeAreaInsets.bottom * 0.40)
+        if toolbarBottomOffset != self.toolbarBottomConstraint.constant {
+            if animated {
+                Utility.animate(duration: 0.3) {
+                    self.toolbarBottomConstraint.constant = toolbarBottomOffset
+                }
+            } else {
+                self.toolbarBottomConstraint.constant = toolbarBottomOffset
+            }
         }
-        
     }
     
     private func goToScorepad() {
@@ -357,7 +269,7 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
                                title: "Warning",
                                okButtonText: "Use Overrides",
                                okHandler: {
-                                self.showScorepad()
+                               self.showScorepad()
             },
                                otherButtonText: "Use Settings",
                                otherHandler: {
@@ -387,12 +299,14 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
     }
     
     public func showDealer(playerNumber: Int, forceHide: Bool = false) {
-        gamePreviewNameCell[playerNumber-1]!.playerButton.isHidden =
-            (playerNumber == scorecard.dealerIs && !playerTableView.isEditing && !forceHide ? false : true)
-    }
-    
-    private func formatOverrideButton() {
-        // No longer required
+        
+        if forceHide {
+            self.selectedPlayersView.setHaloColor(slot: playerNumber - 1, color: Palette.halo)
+            self.selectedPlayersView.setHaloWidth(slot: playerNumber - 1, haloWidth: 3.0)
+        } else {
+            self.selectedPlayersView.setHaloColor(slot: playerNumber - 1, color: Palette.haloDealer)
+            self.selectedPlayersView.setHaloWidth(slot: playerNumber - 1, haloWidth: 5.0)
+        }
     }
     
     // MARK: - Utility Routines ================================================================ -
@@ -418,6 +332,217 @@ class GamePreviewViewController: CustomViewController, UITableViewDataSource, UI
             self.faceTimeAvailable = !allBlank
         }
     }
+    
+    // MARK: - Cut for Dealer ========================================================== -
+    
+    private func executeCut(preCutCards: [Card]? = nil) {
+        var cutCards: [Card]
+        
+        // Remove current dealer halo
+        self.showDealer(playerNumber: self.scorecard.dealerIs, forceHide: true)
+        
+        // Carry out cut and broadcast
+        cutCards = self.cutCards(preCutCards: preCutCards)
+        if self.scorecard.isHosting {
+            self.scorecard.sendCut(cutCards: cutCards)
+        }
+        
+        animateDealCards(cards: cutCards, afterDuration: 0.2, stepDuration: 0.3, completion: {
+            self.animateTurnCards(afterDuration: 0.3, stepDuration: 0.5, completion: {
+                self.animateHideOthers(afterDuration: 0.5, stepDuration: 0.5, completion: {
+                    self.animateOutcome(cards: cutCards, afterDuration: 0.0, stepDuration: 1.0, completion: {
+                        self.animateClear(afterDuration: 2.0, stepDuration: 0.5, completion: {
+                            self.animateResume()
+                        })
+                    })
+                })
+            })
+        })
+    }
+    
+    private func cutOutcome(cutCards: [Card]) -> NSMutableAttributedString {
+        
+        let outcome = NSMutableAttributedString()
+        let outcomeTextColor = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        
+        outcome.append(NSMutableAttributedString(string: self.selectedPlayers[self.scorecard.dealerIs - 1]!.name!, attributes: outcomeTextColor))
+        outcome.append(NSMutableAttributedString(string: " wins with ", attributes: outcomeTextColor))
+        outcome.append(cutCards[scorecard.dealerIs-1].toAttributedString())
+        
+        return outcome
+    }
+    
+    private func cutCards(preCutCards: [Card]?) -> [Card] {
+        var cards: [Card] = []
+        
+        if preCutCards != nil {
+            cards = preCutCards!
+        } else {
+            let deal = Pack.deal(numberCards: 1, numberPlayers: self.selectedPlayers.count)
+            for playerLoop in 1...self.selectedPlayers.count {
+                cards.append(deal.hands[playerLoop-1].cards[0])
+            }
+        }
+        
+        // Determine who won
+        var dealerIs = 1
+        for playerLoop in 1...self.selectedPlayers.count {
+            if cards[playerLoop-1].toNumber() > cards[dealerIs-1].toNumber() {
+                dealerIs = playerLoop
+            }
+        }
+        
+        // Save it
+        self.scorecard.saveDealer(dealerIs)
+        
+        return cards
+    }
+    
+    private func animateDealCards(cards: [Card], afterDuration: TimeInterval, stepDuration: TimeInterval, completion: @escaping ()->()) {
+        
+        // Disable actions
+        self.cutForDealerButton.isEnabled = false
+        self.nextDealerButton.isEnabled = false
+        
+        // Hide thumbnails
+        for slot in 0..<self.scorecard.currentPlayers {
+            self.selectedPlayersView.setThumbnailAlpha(slot: slot, alpha: 0.0)
+        }
+        
+        // Animate cards
+        var slot = 1
+        for sequence in 0..<self.scorecard.currentPlayers {
+            
+            // Position a card on the deck and show back (only subview)
+            let cardView = self.cutCardView[slot]
+            let button = self.cutForDealerButton!
+            cardView.frame = CGRect(origin: button.convert(CGPoint(x: (button.frame.width - cardView.frame.width) / 2.0,
+                                                                   y: (button.frame.height - cardView.frame.height) * 0.25),
+                                                           to: self.view),
+                                    size: cardView.frame.size)
+            cardView.alpha = 1.0
+            let cardImageView = self.cutCardView[slot].subviews.first!
+            cardImageView.alpha = 1.0
+            cardView.bringSubviewToFront(cardImageView)
+            self.view.bringSubviewToFront(self.actionButtonView)
+            self.actionButtonView.bringSubviewToFront(self.cutForDealerButton)
+            cardView.attributedText = cards[slot].toAttributedString()
+    
+            let animation = UIViewPropertyAnimator(duration: stepDuration, curve: .easeIn) {
+                // Move card to player
+                let origin = self.selectedPlayersView.origin(slot: slot, in: self.view)
+                cardView.frame = CGRect(origin: CGPoint(x: origin.x + ((self.thumbnailWidth - cardView.frame.width) / 2.0),
+                                                        y: origin.y),
+                                        size: cardView.frame.size)
+            }
+            if slot == 0 {
+                animation.addCompletion({ _ in
+                    // Fade buttons
+                    self.cutForDealerButton.alpha = 0.5
+                    self.nextDealerButton.alpha = 0.5
+                    completion()
+                })
+            }
+            animation.startAnimation(afterDelay: Double(sequence) * afterDuration)
+            
+            slot = (slot + 1) % self.scorecard.currentPlayers
+            
+        }
+    }
+    
+    private func animateTurnCards(afterDuration: TimeInterval = 0.0, stepDuration: TimeInterval, slot: Int = 1, completion: @escaping ()->()) {
+        
+        // Animate card turn
+        let animation = UIViewPropertyAnimator(duration: stepDuration, curve: .easeIn) {
+            // Fade out the back
+            self.cutCardView[slot].subviews.first!.alpha = 0.0
+        }
+        animation.addCompletion({ _ in
+            if slot == 0 {
+                completion()
+            } else {
+                self.animateTurnCards(afterDuration: afterDuration, stepDuration: stepDuration, slot: (slot + 1) % self.scorecard.currentPlayers, completion: completion)
+            }
+        })
+        animation.startAnimation(afterDelay: afterDuration)
+    }
+    
+    private func animateHideOthers(afterDuration: TimeInterval, stepDuration: TimeInterval, completion: @escaping ()->()) {
+        let animation = UIViewPropertyAnimator(duration: stepDuration, curve: .easeIn) {
+            for slot in 0..<self.scorecard.currentPlayers {
+                self.selectedPlayersView.setAlpha(slot: slot, alpha: 0.0)
+                if slot + 1 != self.scorecard.dealerIs {
+                    self.cutCardView[slot].alpha = 0.0
+                }
+            }
+        }
+        animation.addCompletion({ _ in
+            completion()
+        })
+        animation.startAnimation(afterDelay: afterDuration)
+    }
+    
+    private func animateOutcome(cards: [Card], afterDuration: TimeInterval, stepDuration: TimeInterval, completion: @escaping ()->()) {
+        
+        // Animate outcome
+        self.selectedPlayersView.message = self.cutOutcome(cutCards: cards)
+        self.selectedPlayersView.messageAlpha = 0.0
+        
+        let animation = UIViewPropertyAnimator(duration: stepDuration, curve: .easeIn) {
+            // Update the outcome
+            self.selectedPlayersView.messageAlpha = 1.0
+            let cutCard = self.cutCardView[self.scorecard.dealerIs - 1]
+            cutCard.frame = self.selectedPlayersView.getMessageViewFrame(size: cutCard.frame.size, in: self.view)
+        }
+        animation.addCompletion({ _ in
+            completion()
+        })
+        animation.startAnimation(afterDelay: afterDuration)
+    }
+    
+    private func animateClear(afterDuration: TimeInterval, stepDuration: TimeInterval, completion: @escaping ()->()) {
+        
+        // Animate removal
+        let animation = UIViewPropertyAnimator(duration: stepDuration, curve: .easeIn) {
+            for slot in 0..<self.scorecard.currentPlayers {
+                self.cutCardView[slot].alpha = 0.0
+                self.selectedPlayersView.setAlpha(slot: slot, alpha: 1.0)
+                self.selectedPlayersView.setThumbnailAlpha(slot: slot, alpha: 1.0)
+            }
+        }
+        animation.addCompletion({ _ in
+            completion()
+        })
+        animation.startAnimation(afterDelay: afterDuration)
+    }
+    
+    private func animateResume() {
+        self.selectedPlayersView.message = NSAttributedString()
+        self.showCurrentDealer()
+        self.cutForDealerButton.isEnabled = true
+        self.nextDealerButton.isEnabled = true
+        self.cutForDealerButton.alpha = 1.0
+        self.nextDealerButton.alpha = 1.0
+        self.selectedPlayersView.messageAlpha = 1.0
+    }
+    
+    private func createCutCards() {
+        for _ in 0..<self.scorecard.currentPlayers {
+            let cardView = UILabel(frame: CGRect(origin: CGPoint(), size: CGSize(width: 50.0, height: 75.0)))
+            cardView.backgroundColor = Palette.cardFace
+            ScorecardUI.roundCorners(cardView)
+            cardView.textAlignment = .center
+            cardView.font = UIFont.systemFont(ofSize: 24.0)
+            let cardImageView = UIImageView(frame: cardView.frame)
+            cardImageView.image = UIImage(named: "card back")
+            cardView.addSubview(cardImageView)
+            self.view.addSubview(cardView)
+            cardView.alpha = 0.0
+            cardImageView.alpha = 0.0
+            self.cutCardView.append(cardView)
+        }
+    }
+    
     
     // MARK: - Segue Prepare Handler ================================================================ -
 

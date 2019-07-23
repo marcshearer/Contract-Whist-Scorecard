@@ -10,10 +10,12 @@ import UIKit
 
 public class ThumbnailView: UIView {
 
+    private var haloWidth: CGFloat = 0.0
+    
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet public weak var discImage: UIImageView!
     @IBOutlet public weak var discInitials: UILabel!
-    @IBOutlet public weak var discContainer: UIView!
+    @IBOutlet public weak var discHalo: UIView!
     @IBOutlet public weak var name: UILabel!
     @IBOutlet public weak var nameHeightConstraint: NSLayoutConstraint!
     @IBOutlet public weak var additionalImage: UIImageView!
@@ -28,7 +30,12 @@ public class ThumbnailView: UIView {
         super.init(coder: aDecoder)
         self.loadThumbnailView()
     }
-
+    
+    convenience init(frame: CGRect, haloWidth: CGFloat) {
+        self.init(frame: frame)
+        self.haloWidth = haloWidth
+    }
+    
     private func loadThumbnailView() {
         Bundle.main.loadNibNamed("ThumbnailView", owner: self, options: nil)
         self.addSubview(contentView)
@@ -55,7 +62,7 @@ public class ThumbnailView: UIView {
         set (newValue) {
             super.tag = newValue
             self.contentView?.tag = newValue
-            self.discContainer?.tag = newValue
+            self.discHalo?.tag = newValue
             self.discImage?.tag = newValue
             self.discInitials?.tag = newValue
             self.name?.tag = newValue
@@ -70,7 +77,7 @@ public class ThumbnailView: UIView {
     
     public var diameter: CGFloat {
         get {
-            return self.discContainer.frame.width
+            return self.discHalo.frame.width
         }
     }
     
@@ -110,16 +117,34 @@ public class ThumbnailView: UIView {
         self.frame = frame
         
         // Adjust components
-        self.discContainer.frame = CGRect(origin: CGPoint(), size: CGSize(width: frame.width, height: frame.width))
-        self.discImage.frame = self.discContainer.frame
-        ScorecardUI.veryRoundCorners(self.discImage, radius: frame.width/2.0)
-        self.discInitials.frame = self.discContainer.frame
-        ScorecardUI.veryRoundCorners(self.discContainer, radius: frame.width/2.0)
+        self.discHalo.frame = CGRect(origin: CGPoint(), size: CGSize(width: self.frame.width - 0.0, height: self.frame.width - 0.0))
+        ScorecardUI.veryRoundCorners(self.discHalo, radius: (self.discHalo.frame.width - 0.0) / 2.0)
+        
+        let discSize: CGFloat = frame.width - (2 * self.haloWidth)
+        self.discImage.frame = CGRect(x: haloWidth, y: haloWidth, width: discSize, height: discSize)
+        ScorecardUI.veryRoundCorners(self.discImage, radius: discSize / 2.0)
+        self.discInitials.frame = self.discImage.frame
+        ScorecardUI.veryRoundCorners(self.discInitials, radius: discSize / 2.0)
         self.name.frame = (CGRect(x: 0.0, y: frame.width - 5.0, width: frame.width, height: frame.height - frame.width + 5.0))
     }
     
     public func set(textColor: UIColor) {
         self.name.textColor = textColor
+    }
+    
+    public func set(thumbnailAlpha: CGFloat) {
+        self.discHalo.alpha = thumbnailAlpha
+        self.discImage.alpha = thumbnailAlpha
+        self.discInitials.alpha = thumbnailAlpha
+    }
+    
+    public func set(haloWidth: CGFloat) {
+        self.haloWidth = haloWidth
+        self.set(frame: frame)
+    }
+    
+    public func set(haloColor: UIColor) {
+        self.discHalo.backgroundColor = haloColor
     }
     
 }

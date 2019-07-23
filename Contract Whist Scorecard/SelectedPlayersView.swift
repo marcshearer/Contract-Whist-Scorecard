@@ -21,6 +21,13 @@ import UIKit
 
 // MARK: - Selected Players View Class ================================================================================= -
 
+public enum ArrowDirection: Int {
+    case up = 0
+    case left = 1
+    case down = 2
+    case right = 3
+}
+
 class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate {
 
     // Public properties
@@ -29,14 +36,22 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
     
     // Internal properties
     private var scorecard = Scorecard.shared
+    private var messageLabel = UILabel()
     private var roomPath: CGPath?
     private var tableLayers: [CAShapeLayer] = []
     private var tablePoints: [PolygonPoint]!
-    private var tableRect: CGRect!
+    private var roomFrame: CGRect!
+    private var squareFrame: CGRect!
+    private var tableFrame: CGRect!
+    private let tableRatio: CGFloat = 1/3
     private var width: CGFloat! = 50.0
     private var height: CGFloat! = 75.0
-    private var legHeight: CGFloat! = 100.0
+    private var haloWidth: CGFloat = 0.0
     private let lineWidth: CGFloat = 5.0
+    private let tableInset: CGFloat = 20.0
+    private var additionalAdjustment: CGFloat = 0.0
+    private var players: Int!
+    private var arrowDirections: [ArrowDirection : Bool]!
 
     // MARK: - IB Outlets ============================================================================== -
     
@@ -61,6 +76,24 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         }
     }
     
+    public var message: NSAttributedString {
+        get {
+            return self.messageLabel.attributedText!
+        }
+        set(newValue) {
+            self.messageLabel.attributedText = newValue
+        }
+    }
+    
+    public var messageAlpha: CGFloat {
+        get {
+            return self.messageLabel.alpha
+        }
+        set(newValue) {
+            self.messageLabel.alpha = newValue
+        }
+    }
+    
     // MARK: - Constructors ============================================================================== -
     
     override init(frame: CGRect) {
@@ -72,6 +105,11 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.loadSelectedPlayersView()
+    }
+    
+    convenience init(frame: CGRect, haloWidth: CGFloat) {
+        self.init(frame: frame)
+        self.haloWidth = haloWidth
     }
     
     // MARK: - Public methods ============================================================================== -
@@ -100,11 +138,53 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         self.playerViews[slot].isEnabled = enabled
     }
     
-    public func drawRoom(thumbnailWidth: CGFloat, thumbnailHeight: CGFloat, legHeight: CGFloat) {
+    public func setThumbnailAlpha(slot: Int? = nil, alpha: CGFloat) {
+        for index in 0..<self.playerViews.count {
+            if slot == nil || slot == index {
+                self.playerViews[index].set(thumbnailAlpha: alpha)
+            }
+        }
+    }
+    
+    public func setAlpha(slot: Int? = nil, alpha: CGFloat) {
+        for index in 0..<self.playerViews.count {
+            if slot == nil || slot == index {
+                self.playerViews[index].alpha = alpha
+            }
+        }
+    }
+    
+    public func setHaloWidth(slot: Int? = nil, haloWidth: CGFloat) {
+        for index in 0..<self.playerViews.count {
+            if slot == nil || slot == index {
+                self.playerViews[index].set(haloWidth: haloWidth)
+            }
+        }
+    }
+    
+    public func setHaloColor(slot: Int? = nil, color: UIColor) {
+        for index in 0..<self.playerViews.count {
+            if slot == nil || slot == index {
+                self.playerViews[index].set(haloColor: color)
+            }
+        }
+    }
+    
+    public func getMessageViewFrame(size: CGSize, in view: UIView) -> CGRect {
+        return CGRect(origin: self.contentView.convert(CGPoint(x: self.tableFrame.midX - (size.width / 2.0), y: self.tableFrame.midY - 16 - size.height), to: view), size: size)
+    }
+    
+    public func drawRoom(thumbnailWidth: CGFloat? = nil, thumbnailHeight: CGFloat? = nil, players: Int? = nil, directions: ArrowDirection...) {
         
-        // Save leg height and thumbnail sizes
-        self.legHeight = legHeight
-        self.setThumbnailSize(width: thumbnailWidth, height: thumbnailHeight)
+        // Save leg height and thumbnail sizes etc
+        self.setThumbnailSize(width: thumbnailWidth ?? 60.0, height: thumbnailHeight ?? 90.0)
+        self.players = players ?? self.scorecard.currentPlayers
+        
+        // save arrow directions
+        self.arrowDirections = [:]
+        for arrowDirection in directions {
+            self.arrowDirections[arrowDirection] = true
+        }
         
         // Draw room components
         self.drawRoomComponents()
@@ -123,6 +203,13 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         // Setup view as drop zone
         let selectedDropInteraction = UIDropInteraction(delegate: self)
         self.addInteraction(selectedDropInteraction)
+        
+        // Set up message view
+        self.addSubview(messageLabel)
+        self.bringSubviewToFront(messageLabel)
+        self.messageLabel.numberOfLines = 0
+        self.messageLabel.textAlignment = .center
+        self.messageLabel.textColor = Palette.handTextContrast
     }
     
     private func setupSelectedPlayers(dropAction: ((PlayerView?, CGPoint?, PlayerViewType, String)->())? = nil, tapAction: ((PlayerView)->())? = nil) {
@@ -132,9 +219,9 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         
         for index in 0..<self.scorecard.numberPlayers {
             
-            let playerView = PlayerView(type: .selected, parent: self.contentView, width: self.width, height: self.height, tag: index)
+            let playerView = PlayerView(type: .selected, parent: self.contentView, width: self.width, height: self.height, tag: index, haloWidth: self.haloWidth)
             playerView.delegate = self
-            playerView.set(textColor: Palette.darkHighlightText)
+            playerView.set(textColor: Palette.handTextContrast)
             self.clear(playerView: playerView, slot: index)
             self.playerViews.append(playerView)
         }
@@ -172,24 +259,91 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         // Draw elements
         let tableLayer = self.drawTabletop()
         self.drawTableShadow(above: tableLayer)
-        self.drawTableLegs(below: tableLayer)
         self.drawRoomBackground(below: tableLayer)
+        self.drawTableLegs(below: tableLayer)
         
         // Position player views
         self.positionSelectedPlayers()
+        
+        // Position message label
+        self.messageLabel.frame = CGRect(x: self.tableFrame.minX + 20.0, y: self.tableFrame.minY, width: self.tableFrame.width - 40.0, height: self.tableFrame.height)
     }
     
     private func setupTablePoints() {
         
+        // Calculate room rectangle
+        var widthElements: CGFloat = 2.0
+        var heightElements: CGFloat = 2.0
+        var leftElements: CGFloat = 0.0
+        var topElements: CGFloat = 0.0
+
+        if self.arrowDirections[.up] ?? false {
+            heightElements += 1.0
+            topElements += 1.0
+        }
+        if self.arrowDirections[.down] ?? false {
+            heightElements += 1.0
+        }
+        if self.arrowDirections[.left] ?? false {
+            leftElements += 1.0
+            widthElements += 1.0
+        }
+        if self.arrowDirections[.right] ?? false {
+            widthElements += 1.0
+        }
+        
+        let widthComponent = self.frame.width / widthElements
+        let heightComponent = widthComponent * tableRatio
+        let heightInset = tableInset * heightComponent / widthComponent
+        
+        let unadjustedHeight: CGFloat = 2.0 * heightComponent
+        let topAdjustment: CGFloat = self.height + 20.0 - ((self.arrowDirections[.up] ?? false) ? heightComponent : 0)
+        self.additionalAdjustment = (self.arrowDirections[.down] ?? false ? 50.0 : 0.0)
+        var adjustedHeight: CGFloat = unadjustedHeight + topAdjustment + additionalAdjustment
+        
+        let hideAdjustment: CGFloat = (0.5 * self.lineWidth)
+        let roomX: CGFloat = ((arrowDirections[.left] ?? false) ? 0.0 : -hideAdjustment)
+        let roomY: CGFloat = ((arrowDirections[.up] ?? false) ? 0.0 : -hideAdjustment)
+        let roomWidth: CGFloat = (self.frame.width - roomX + ((arrowDirections[.right] ?? false) ? 0.0 : hideAdjustment))
+        var roomHeight: CGFloat
+        if self.arrowDirections[.down] ?? false {
+            // Just use what you need
+            roomHeight = (heightComponent * (heightElements - 2.0)) + adjustedHeight
+        } else {
+            // Extend to the edge (and beyond)
+            roomHeight = self.frame.height + hideAdjustment
+        }
+        
+        if roomHeight > self.frame.height {
+            // Use up bottom adjustment to save space
+            let adjust = min(roomHeight - self.frame.height, additionalAdjustment)
+            roomHeight -= adjust
+            adjustedHeight -= adjust
+            additionalAdjustment -= adjust
+        }
+        
+        self.roomFrame = CGRect(x: roomX,
+                                y: roomY,
+                                width: roomWidth,
+                                height: roomHeight)
+        
+        self.squareFrame = CGRect(x: roomFrame.minX + leftElements * widthComponent,
+                                  y: roomFrame.minY + topElements * heightComponent,
+                              width: roomWidth - ((widthElements - 2.0) * widthComponent),
+                              height: adjustedHeight)
+        
         // Calculate table rectangle
-        self.tableRect = CGRect(x: 20.0, y: self.height + 20.0, width: self.frame.width - 40.0, height: self.frame.height - self.height - 30.0 - self.legHeight)
+        self.tableFrame = CGRect(x: squareFrame.minX + tableInset,
+                                y: squareFrame.minY + heightInset + topAdjustment + additionalAdjustment,
+                                width: squareFrame.width - (2.0 * tableInset),
+                                height: unadjustedHeight - (2.0 * heightInset))
         
         // Setup table co-ordinates
         self.tablePoints = []
-        self.tablePoints.append(PolygonPoint(x: tableRect.midX, y: tableRect.maxY + 10.0, pointType: .quadRounded))
-        self.tablePoints.append(PolygonPoint(x: tableRect.minX, y: tableRect.midY + 10.0, pointType: .quadRounded))
-        self.tablePoints.append(PolygonPoint(x: tableRect.midX, y: tableRect.minY + 10.0, pointType: .quadRounded))
-        self.tablePoints.append(PolygonPoint(x: tableRect.maxX, y: tableRect.midY + 10.0, pointType: .quadRounded))
+        self.tablePoints.append(PolygonPoint(x: tableFrame.midX, y: tableFrame.maxY, pointType: .quadRounded))
+        self.tablePoints.append(PolygonPoint(x: tableFrame.minX, y: tableFrame.midY, pointType: .quadRounded))
+        self.tablePoints.append(PolygonPoint(x: tableFrame.midX, y: tableFrame.minY, pointType: .quadRounded))
+        self.tablePoints.append(PolygonPoint(x: tableFrame.maxX, y: tableFrame.midY, pointType: .quadRounded))
     }
     
     private func drawTabletop() -> CAShapeLayer{
@@ -258,12 +412,29 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
     
     func addTableLeg(point1: PolygonPoint, point2: PolygonPoint, point3: PolygonPoint, above layer: CALayer) {
         
+        let apex = CGPoint(x: self.squareFrame.midX, y: self.roomFrame.maxY - (0.5 * self.lineWidth))
+        let left = CGPoint(x: self.squareFrame.minX, y: self.squareFrame.maxY - (0.5 * self.lineWidth))
+        let right = CGPoint(x: self.squareFrame.maxX, y: self.squareFrame.maxY - (0.5 * self.lineWidth))
+        
+        var bottom1: CGFloat
+        var bottom2: CGFloat
+        var bottom3: CGFloat
+        if arrowDirections[.down] ?? false {
+            bottom1 = projectPoint(point1: (point1.x < self.tableFrame.midX ? left : right), point2: apex, newX: point1.x).y
+            bottom2 = projectPoint(point1: (point2.x < self.tableFrame.midX ? left : right), point2: apex, newX: point2.x).y
+            bottom3 = projectPoint(point1: (point3.x < self.tableFrame.midX ? left : right), point2: apex, newX: point3.x).y
+        } else {
+            bottom1 = contentView.frame.maxY
+            bottom2 = contentView.frame.maxY
+            bottom3 = contentView.frame.maxY
+        }
+        
         // Draw left hand side
         var points: [PolygonPoint] = []
         points.append(PolygonPoint(origin: point1.cgPoint, pointType: .point))
         points.append(PolygonPoint(origin: point2.cgPoint, pointType: .point))
-        points.append(PolygonPoint(x: point2.x, y: contentView.frame.maxY, pointType: .point))
-        points.append(PolygonPoint(x: point1.x, y: contentView.frame.maxY, pointType: .point))
+        points.append(PolygonPoint(x: point2.x, y: bottom2, pointType: .point))
+        points.append(PolygonPoint(x: point1.x, y: bottom1, pointType: .point))
         let leg = Polygon.roundedShapeLayer(definedBy: points, strokeColor: nil, fillColor: Palette.shapeTableLeg, lineWidth: 0.0)
         self.contentView.layer.insertSublayer(leg, above: layer)
         self.tableLayers.append(leg)
@@ -272,8 +443,8 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         points = []
         points.append(PolygonPoint(origin: point2.cgPoint, pointType: .point))
         points.append(PolygonPoint(origin: point3.cgPoint, pointType: .point))
-        points.append(PolygonPoint(x: point3.x, y: contentView.frame.maxY, pointType: .point))
-        points.append(PolygonPoint(x: point2.x, y: contentView.frame.maxY, pointType: .point))
+        points.append(PolygonPoint(x: point3.x, y: bottom3, pointType: .point))
+        points.append(PolygonPoint(x: point2.x, y: bottom2, pointType: .point))
         let shadow = Polygon.roundedShapeLayer(definedBy: points, strokeColor: nil, fillColor: Palette.shapeTableLegShadow, lineWidth: 0.0)
         self.contentView.layer.insertSublayer(shadow, above: layer)
         self.tableLayers.append(shadow)
@@ -283,22 +454,53 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         
         // Setup room co-ordinates - draw slightly outside view to avoid stroke in some areas
         var points: [PolygonPoint] = []
-        let apex = CGPoint(x: self.tablePoints[2].x, y: self.tablePoints[2].y - self.height - 25.0)
-        points.append(self.projectPoint(point1: apex,
-                                        point2: CGPoint(x: self.tablePoints[1].x, y: self.tablePoints[1].y - self.height - 25.0),
-                                        newX: -(lineWidth / 2.0), pointType: .point))
-        points.append(PolygonPoint(origin: apex, radius: 40.0))
-        points.append(self.projectPoint(point1: apex,
-                                        point2: CGPoint(x: self.tablePoints[3].x, y: self.tablePoints[3].y - self.height - 25.0),
-                                        newX: self.contentView.frame.width + (lineWidth / 2.0), pointType: .point))
-        points.append(PolygonPoint(x: self.contentView.frame.width + (lineWidth / 2.0), y: self.contentView.frame.height + (lineWidth / 2.0), pointType: .point))
-        points.append(PolygonPoint(x: -(lineWidth / 2.0), y: self.contentView.frame.height + (lineWidth / 2.0), pointType: .point))
+        
+        points.append(PolygonPoint(x: squareFrame.minX, y: squareFrame.minY, pointType: .point))
+        
+        // Add top side or arrow
+        if arrowDirections[.up] ?? false {
+            points.append(PolygonPoint(x: squareFrame.midX, y: roomFrame.minY, pointType: .quadRounded))
+        } else {
+            points.append(PolygonPoint(x: squareFrame.minX, y: roomFrame.minY, pointType: .point))
+            points.append(PolygonPoint(x: squareFrame.maxX, y: roomFrame.minY, pointType: .point))
+        }
+        points.append(PolygonPoint(x: squareFrame.maxX, y: squareFrame.minY, pointType: .point))
+        
+        // Add right side or arrow
+        if arrowDirections[.right] ?? false {
+            points.append(PolygonPoint(x: roomFrame.maxX, y: squareFrame.midY, pointType: .quadRounded))
+        } else {
+            points.append(PolygonPoint(x: roomFrame.maxX, y: squareFrame.minY, pointType: .point))
+            points.append(PolygonPoint(x: roomFrame.maxX, y: squareFrame.maxY, pointType: .point))
+        }
+        points.append(PolygonPoint(x: squareFrame.maxX, y: squareFrame.maxY, pointType: .point))
+        
+        // Add bottom side or arrow
+        if arrowDirections[.down] ?? false {
+            points.append(PolygonPoint(x: squareFrame.midX, y: roomFrame.maxY, pointType: .quadRounded))
+        } else {
+            points.append(PolygonPoint(x: squareFrame.maxX, y: roomFrame.maxY, pointType: .point))
+            points.append(PolygonPoint(x: squareFrame.minX, y: roomFrame.maxY, pointType: .point))
+        }
+        points.append(PolygonPoint(x: squareFrame.minX, y: squareFrame.maxY, pointType: .point))
+        
+        // Add left side or arrow
+        if arrowDirections[.left] ?? false {
+            points.append(PolygonPoint(x: roomFrame.minX, y: squareFrame.midY, pointType: .quadRounded))
+        } else {
+            points.append(PolygonPoint(x: roomFrame.minX, y: squareFrame.maxY, pointType: .point))
+            points.append(PolygonPoint(x: roomFrame.minX, y: squareFrame.minY, pointType: .point))
+        }
         
         // Add room
-        let roomLayer = Polygon.roundedShapeLayer(definedBy: points, strokeColor: UIColor.white, fillColor: Palette.hand, lineWidth: 5.0, radius: 20.0)
-        self.contentView.layer.insertSublayer(roomLayer, below: tableLayer)
-        self.tableLayers.append(roomLayer)
-        self.roomPath = roomLayer.path
+        let roomStrokeLayer = Polygon.roundedShapeLayer(definedBy: points, strokeColor: UIColor.white, fillColor: UIColor.clear, lineWidth: 5.0, radius: 20.0)
+        self.contentView.layer.insertSublayer(roomStrokeLayer, above: tableLayer)
+        self.tableLayers.append(roomStrokeLayer)
+        
+        let roomFillLayer = Polygon.roundedShapeLayer(definedBy: points, strokeColor: UIColor.white, fillColor: Palette.hand, lineWidth: 0.0, radius: 20.0)
+        self.contentView.layer.insertSublayer(roomFillLayer, below: tableLayer)
+        self.tableLayers.append(roomFillLayer)
+        self.roomPath = roomFillLayer.path
     }
     
     private func setThumbnailSize(width: CGFloat, height: CGFloat) {
@@ -308,44 +510,36 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
     
     private func positionSelectedPlayers() {
         
-        enum Position {
-            case low
-            case middle
-            case high
-        }
+        let apex = CGPoint(x: self.tableFrame.midX - (self.width / 2.0), y: 22.0 + (additionalAdjustment / 2.0))
+        let left = CGPoint(x: self.tableFrame.minX - (self.width / 2.0), y: self.squareFrame.minY + 15.0 + (additionalAdjustment / 2.0))
+        let right = CGPoint(x: self.tableFrame.maxX - (self.width / 2.0), y: self.squareFrame.minY + 15.0 + (additionalAdjustment / 2.0))
         
-        func positionSelectedView(horizontal: Position, vertical: Position) -> CGPoint {
-            var y: CGFloat
-            var x: CGFloat
+        func positionSelectedView(_ newX: CGFloat) -> CGPoint {
+            var result: CGPoint
             
-            switch horizontal {
-            case .low:
-                x = self.tableRect.minX
-            case .middle:
-                x = self.tableRect.midX - (self.width / 2.0)
-            case .high:
-                x = self.tableRect.maxX - self.width
+            if newX < apex.x {
+                result = self.projectPoint(point1: apex, point2: left, newX: newX).cgPoint
+            } else {
+                result = self.projectPoint(point1: apex, point2: right, newX: newX).cgPoint
             }
             
-            switch vertical {
-            case .low:
-                let halfPlayerAdjustment = (((self.width / 2.0)) * (tableRect.height / tableRect.width))
-                y = self.tableRect.minY - self.height - 5.0 + halfPlayerAdjustment
-            case .middle:
-                y = self.tableRect.midY - self.height - 5.0
-            case .high:
-                y = self.tableRect.maxY - self.height - CGFloat(5.0)
-            }
-            
-            return CGPoint(x: x, y: y)
+            return result
             
         }
         
         let viewSize = CGSize(width: self.width, height: self.height)
-        playerViews[0].frame = CGRect(origin: positionSelectedView(horizontal: .middle, vertical: .high), size: viewSize)
-        playerViews[1].frame = CGRect(origin: positionSelectedView(horizontal: .low, vertical: .middle), size: viewSize)
-        playerViews[2].frame = CGRect(origin: positionSelectedView(horizontal: .middle, vertical: .low), size: viewSize)
-        playerViews[3].frame = CGRect(origin: positionSelectedView(horizontal: .high, vertical: .middle), size: viewSize)
+        let middleX: CGFloat = (self.players == self.scorecard.numberPlayers ? 0.0 : (self.tableFrame.width / 8.0)) + (self.width / 2.0)
+        
+        playerViews[0].frame = CGRect(origin: CGPoint(x: apex.x, y: self.tableFrame.maxY - self.height - 2.0), size: viewSize)
+        playerViews[1].frame = CGRect(origin: positionSelectedView(left.x + middleX), size: viewSize)
+        
+        if self.players == self.scorecard.numberPlayers {
+            playerViews[2].frame = CGRect(origin: positionSelectedView(apex.x), size: viewSize)
+        } else {
+            playerViews[self.scorecard.numberPlayers - 1].isHidden = true
+        }
+        
+        playerViews[self.players - 1].frame = CGRect(origin: positionSelectedView(right.x - middleX), size: viewSize)
     }
     
     func add(point: PolygonPoint, x: CGFloat = 0.0, y: CGFloat = 0.0) -> PolygonPoint {

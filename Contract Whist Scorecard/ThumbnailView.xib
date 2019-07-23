@@ -15,7 +15,7 @@
             <connections>
                 <outlet property="additionalImage" destination="CSk-0Z-taK" id="Bou-3D-ER4"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="Wjz-xA-iIV"/>
-                <outlet property="discContainer" destination="PGG-ax-99W" id="ju6-0D-2W5"/>
+                <outlet property="discHalo" destination="PGG-ax-99W" id="ju6-0D-2W5"/>
                 <outlet property="discImage" destination="rhG-BJ-BxN" id="zZr-op-Z6k"/>
                 <outlet property="discInitials" destination="Nv3-ah-HNS" id="TFj-Y7-hbR"/>
                 <outlet property="name" destination="kXi-0g-avo" id="55p-4I-eaj"/>
@@ -34,11 +34,8 @@
                             <rect key="frame" x="0.0" y="0.0" width="75" height="75"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1" verticalHuggingPriority="1" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nv3-ah-HNS">
-                            <rect key="frame" x="0.0" y="0.0" width="75" height="75"/>
-                            <constraints>
-                                <constraint firstAttribute="width" secondItem="Nv3-ah-HNS" secondAttribute="height" multiplier="1:1" id="3bu-Tf-8WF"/>
-                            </constraints>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1" verticalHuggingPriority="1" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nv3-ah-HNS">
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -46,10 +43,6 @@
                     </subviews>
                     <color key="backgroundColor" name="Clear"/>
                     <constraints>
-                        <constraint firstItem="Nv3-ah-HNS" firstAttribute="top" secondItem="PGG-ax-99W" secondAttribute="top" id="3JG-Fk-aM9"/>
-                        <constraint firstAttribute="trailing" secondItem="Nv3-ah-HNS" secondAttribute="trailing" id="c2t-T7-jcF"/>
-                        <constraint firstAttribute="bottom" secondItem="Nv3-ah-HNS" secondAttribute="bottom" id="jpQ-al-Qt9"/>
-                        <constraint firstItem="Nv3-ah-HNS" firstAttribute="leading" secondItem="PGG-ax-99W" secondAttribute="leading" id="xiX-rZ-wkv"/>
                         <constraint firstAttribute="width" secondItem="PGG-ax-99W" secondAttribute="height" multiplier="1:1" id="ygX-ux-EP3"/>
                     </constraints>
                 </view>
@@ -88,6 +81,7 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="35.507246376811594" y="34.821428571428569"/>
         </view>
     </objects>
     <resources>

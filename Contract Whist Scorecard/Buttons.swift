@@ -220,32 +220,45 @@ class RightClearButton: ClearButton {
     }
 }
 
-class ImageButton: RoundedButton {
+class OldImageButton: RoundedButton {
     
     let spacing: CGFloat = 6.0
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        super.isEnabled(true)
+        self.resize()
     }
     
     override func setTitle(_ title: String) {
         // Set title
         super.setTitle(title)
-    
-        let imageSize: CGSize = self.imageView!.image!.size
-        self.titleEdgeInsets = UIEdgeInsets.init(top: 0.0, left: -imageSize.width, bottom: -(imageSize.height + self.spacing), right: 0.0)
-        let titleSize = title.size(withAttributes: [NSAttributedString.Key.font: self.titleLabel!.font!])
-        self.imageEdgeInsets = UIEdgeInsets.init(top: -(titleSize.height + self.spacing), left: 0.0, bottom: 0.0, right: -titleSize.width)
+        self.resize()
     }
     
     func setImage(_ imageName: String) {
         super.setImage(UIImage(named: imageName), for: .normal)
-        var titleSize = CGSize(width: 0, height: 0)
-        if self.titleLabel?.text != nil {
-            titleSize = self.titleLabel!.text!.size(withAttributes: [NSAttributedString.Key.font: self.titleLabel!.font!])
-        }
-        self.imageEdgeInsets = UIEdgeInsets.init(top: -(titleSize.height + self.spacing), left: 0.0, bottom: 0.0, right: -titleSize.width)
+        self.resize()
+    }
+    
+    func resize() {
+        let imageSize: CGSize = self.imageView!.image!.size
+        let titleSize = self.currentTitle!.size(withAttributes: [NSAttributedString.Key.font: self.titleLabel!.font!])
+        let totalHeight = imageSize.height + titleSize.height + self.spacing
+        
+        self.titleEdgeInsets = UIEdgeInsets(top: 0.0,
+                                                 left: -imageSize.width,
+                                                 bottom: -(totalHeight - titleSize.height),
+                                                 right: 0.0)
+        
+        self.imageEdgeInsets = UIEdgeInsets(top: -(totalHeight - imageSize.height),
+                                                 left: 0.0,
+                                                 bottom: 0.0,
+                                                 right: -titleSize.width)
+        
+        self.contentEdgeInsets = UIEdgeInsets(top: 0.0,
+                                              left: 0.0,
+                                              bottom: titleSize.height,
+                                              right: 0.0)
     }
 }
 

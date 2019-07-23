@@ -34,8 +34,9 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     public var thumbnail: ThumbnailView!
     public var inUse = false
     public var playerMO: PlayerMO?
+    public var haloWidth: CGFloat = 0.0
     
-    init(type: PlayerViewType, parent: UIView, width: CGFloat, height: CGFloat, tag: Int = 0, tapGestureDelegate: UIGestureRecognizerDelegate? = nil) {
+    init(type: PlayerViewType, parent: UIView, width: CGFloat, height: CGFloat, tag: Int = 0, haloWidth: CGFloat = 0.0, tapGestureDelegate: UIGestureRecognizerDelegate? = nil) {
         
         // Save properties
         self.parent = parent
@@ -45,7 +46,8 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         super.init()
         
         // Setup thumbnail
-        self.thumbnail = ThumbnailView(frame: CGRect(x: 5.0, y: 5.0, width: width, height: height))
+        self.thumbnail = ThumbnailView(frame: CGRect(x: 5.0, y: 5.0, width: width, height: height), haloWidth: haloWidth)
+        self.haloWidth = haloWidth
         self.thumbnail.tag = tag
     
         parent.addSubview(self.thumbnail)
@@ -92,6 +94,15 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         }
     }
     
+    public var isHidden: Bool {
+        get {
+            return self.thumbnail.isHidden
+        }
+        set(newValue) {
+            self.thumbnail.isHidden = newValue
+        }
+    }
+    
     public func set(data: Data? = nil, name: String? = nil, initials: String? = nil, nameHeight: CGFloat? = nil, alpha: CGFloat? = nil) {
         self.inUse = true
         self.playerMO = nil
@@ -102,6 +113,21 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         self.set(data: playerMO.thumbnail, name: playerMO.name)
         self.playerMO = playerMO
     }
+    
+    public func set(haloWidth: CGFloat) {
+        self.haloWidth = haloWidth
+        self.thumbnail.set(haloWidth: haloWidth)
+        self.thumbnail.set(frame: self.frame)
+    }
+    
+    public func set(haloColor: UIColor) {
+        self.thumbnail.set(haloColor: haloColor)
+    }
+    
+    public func set(thumbnailAlpha: CGFloat) {
+        self.thumbnail.set(thumbnailAlpha: thumbnailAlpha)
+    }
+    
     
     public func clear(initials: String? = nil) {
         self.inUse = false
@@ -162,7 +188,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     
     public func dragInteraction(_ interaction: UIDragInteraction, previewForLifting item: UIDragItem, session: UIDragSession) -> UITargetedDragPreview? {
         // Create a new view to display the image as a drag preview.
-        let previewView = ThumbnailView(frame: CGRect(origin: CGPoint(), size: self.frame.size))
+        let previewView = ThumbnailView(frame: CGRect(origin: CGPoint(), size: self.frame.size), haloWidth: self.haloWidth)
         previewView.set(data: self.playerMO?.thumbnail, name: self.playerMO?.name)
         previewView.set(textColor: Palette.darkHighlightText)
         let center = CGPoint(x: self.frame.width / 2.0, y: self.frame.height / 2.0)

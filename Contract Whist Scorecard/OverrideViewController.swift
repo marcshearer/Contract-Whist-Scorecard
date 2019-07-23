@@ -15,7 +15,7 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
     var message: String!
     var formTitle: String!
     var value = 1
-    var completion: (()->())!
+    var completion: (()->())?
     
     let instructionSection = 0
     let cardsSection = 1
@@ -40,14 +40,14 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
     
     // MARK: - IB Actions ============================================================================== -
     @IBAction func confirmPressed(_ sender: UIButton) {
-        self.completion()
+        self.completion?()
         self.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func cancelPressed(_ sender: UIButton) {
         // Disable override
         self.scorecard.resetOverrideSettings()
-        self.completion()
+        self.completion?()
         self.dismiss(animated: true, completion: nil)
     }
     

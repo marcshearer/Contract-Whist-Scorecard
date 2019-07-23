@@ -24,9 +24,13 @@ class Palette {
     static let emphasisText = UIColor(named: "Emphasis Text")!
     static let error = UIColor(named: "Error")!
     static let errorText = UIColor(named: "Error Text")!
+    static let gameBanner = UIColor(named: "Game Banner")!
+    static let gameBannerText = UIColor(named: "Game Banner Text")!
+    static let halo = UIColor(named: "Halo")!
+    static let haloDealer = UIColor(named: "Halo Dealer")!
     static let hand = UIColor(named: "Hand")!
     static let handText = UIColor(named: "Hand Text")!
-    static let handTextContrast = UIColor(named: "Hand Text Contrast")
+    static let handTextContrast = UIColor(named: "Hand Text Contrast")!
     static let highlight = UIColor(named: "Highlight")!
     static let highlightText = UIColor(named: "Highlight Text")!
     static let inputControl = UIColor(named: "Input Control")!

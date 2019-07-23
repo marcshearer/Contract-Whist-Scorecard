@@ -73,6 +73,8 @@
 		B243385922E0A6C3002EBD40 /* SelectedPlayersView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B243385822E0A6C3002EBD40 /* SelectedPlayersView.xib */; };
 		B243385B22E0A6D8002EBD40 /* SelectedPlayersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B243385A22E0A6D8002EBD40 /* SelectedPlayersView.swift */; };
 		B243385E22E0AEA8002EBD40 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B243385D22E0AEA8002EBD40 /* PlayerView.swift */; };
+		B243386022E57BBC002EBD40 /* ImageButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = B243385F22E57BBC002EBD40 /* ImageButton.xib */; };
+		B243386322E57BE7002EBD40 /* ImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B243386222E57BE7002EBD40 /* ImageButton.swift */; };
 		B24AABE01EC07274000D34B0 /* Backup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABDF1EC07274000D34B0 /* Backup.swift */; };
 		B24AABE21EC0BC08000D34B0 /* Upgrade.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABE11EC0BC08000D34B0 /* Upgrade.swift */; };
 		B24AABE41EC4DC5F000D34B0 /* Core Data Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABE31EC4DC5F000D34B0 /* Core Data Class.swift */; };
@@ -268,6 +270,8 @@
 		B243385822E0A6C3002EBD40 /* SelectedPlayersView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelectedPlayersView.xib; sourceTree = "<group>"; };
 		B243385A22E0A6D8002EBD40 /* SelectedPlayersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedPlayersView.swift; sourceTree = "<group>"; };
 		B243385D22E0AEA8002EBD40 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
+		B243385F22E57BBC002EBD40 /* ImageButton.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImageButton.xib; sourceTree = "<group>"; };
+		B243386222E57BE7002EBD40 /* ImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageButton.swift; sourceTree = "<group>"; };
 		B24AABDF1EC07274000D34B0 /* Backup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Backup.swift; sourceTree = "<group>"; };
 		B24AABE11EC0BC08000D34B0 /* Upgrade.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Upgrade.swift; sourceTree = "<group>"; };
 		B24AABE31EC4DC5F000D34B0 /* Core Data Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Core Data Class.swift"; sourceTree = "<group>"; };
@@ -741,9 +745,10 @@
 		B243385622E0A67C002EBD40 /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
+				B243385122D89AE7002EBD40 /* Thumbnail View */,
 				B243385C22E0AE97002EBD40 /* Player View */,
 				B243385722E0A68F002EBD40 /* Selected Players View */,
-				B243385122D89AE7002EBD40 /* Thumbnail View */,
+				B243386122E57BD1002EBD40 /* Image Button View */,
 			);
 			name = "Custom Views";
 			sourceTree = "<group>";
@@ -763,6 +768,16 @@
 				B243385D22E0AEA8002EBD40 /* PlayerView.swift */,
 			);
 			name = "Player View";
+			sourceTree = "<group>";
+		};
+		B243386122E57BD1002EBD40 /* Image Button View */ = {
+			isa = PBXGroup;
+			children = (
+				B243385F22E57BBC002EBD40 /* ImageButton.xib */,
+				B243386222E57BE7002EBD40 /* ImageButton.swift */,
+			);
+			name = "Image Button View";
+			path = ..;
 			sourceTree = "<group>";
 		};
 		B2594E8922524FBA004398FB /* Scripts */ = {
@@ -1205,6 +1220,7 @@
 				CCEA53E31DF3D19F0045292C /* Notes.txt in Resources */,
 				B22789241FB882F7009BABCA /* ClientViewController.storyboard in Resources */,
 				B22789361FB8911F009BABCA /* PlayersViewController.storyboard in Resources */,
+				B243386022E57BBC002EBD40 /* ImageButton.xib in Resources */,
 				B22789451FB8951A009BABCA /* GraphViewController.storyboard in Resources */,
 				B2594E862251FEB2004398FB /* MyDevices.sh in Resources */,
 				B22789021FB83AA7009BABCA /* SelectionViewController.storyboard in Resources */,
@@ -1366,6 +1382,7 @@
 				B250610020CD7F480030EE8F /* Recovery.swift in Sources */,
 				B267DF75211F41FC0086D521 /* Admin Menu.swift in Sources */,
 				B2C051041EDF194C009DE37F /* Multipeeer Class.swift in Sources */,
+				B243386322E57BE7002EBD40 /* ImageButton.swift in Sources */,
 				B2666A1F1FADAC0700A34CB0 /* Test Extensions.swift in Sources */,
 				B20DA0441E142D1E0040221D /* SelectionViewController.swift in Sources */,
 				B2DA893E1F3CC89C008EE96C /* Comms.swift in Sources */,

@@ -123,6 +123,66 @@ class Polygon {
         return bezierPath
     }
     
+    static public func angledBannerContinuationMask(view: UIView, frame: CGRect, type: ShapeType, arrowWidth: CGFloat) {
+        
+        let width = frame.width
+        let height = frame.height
+        let minX = frame.minX
+        let minY = frame.minY
+        
+        var points: [CGPoint] = []
+        switch type {
+        case .arrowLeft:
+            points.append(CGPoint(x: minX + width, y: minY))
+            points.append(CGPoint(x: minX + width, y: minY + height))
+            points.append(CGPoint(x: minX + arrowWidth, y: minY + height))
+            points.append(CGPoint(x: minX, y: minY))
+        case .arrowRight:
+            points.append(CGPoint(x: minX, y: minY))
+            points.append(CGPoint(x: minX, y: minY + height))
+            points.append(CGPoint(x: minX + width - arrowWidth, y: minY + height))
+            points.append(CGPoint(x: minX + width, y: minY))
+        case .hexagon:
+            points.append(CGPoint(x: minX, y: minY))
+            points.append(CGPoint(x: minX + arrowWidth, y: minY + height))
+            points.append(CGPoint(x: minX + width - arrowWidth, y: minY + height))
+            points.append(CGPoint(x: minX + width, y: minY))
+        }
+        
+        var lines: [(start: CGPoint, end: CGPoint)] = []
+        for index in 0...points.count-1 {
+            lines.append(Polygon.partialLine(from: points[index], to: points[(index == points.count-1 ? 0 : index+1)], fraction: 0.1))
+        }
+        
+        let path = UIBezierPath()
+        if ScorecardUI.screenWidth <= 500 {
+            path.move(to: points[0])
+        } else {
+            path.move(to: CGPoint(x: points[0].x - (lines[2].end.x - lines[2].start.x) * 0.1, y: points[3].y))
+            path.addQuadCurve(to: lines[0].start, controlPoint: points[0])
+        }
+        if type == . hexagon {
+            path.addLine(to: lines[0].end)
+            path.addQuadCurve(to: lines[1].start, controlPoint: points[1])
+        } else {
+            path.addLine(to: points[1])
+        }
+        path.addLine(to: lines[1].end)
+        path.addQuadCurve(to: lines[2].start, controlPoint: points[2])
+        path.addLine(to: lines[2].end)
+        path.addQuadCurve(to: CGPoint(x: points[3].x + (lines[2].end.x - lines[2].start.x) * 0.1, y: points[3].y), controlPoint: points[3])
+        path.addLine(to: points[0])
+        path.close()
+        
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = path.cgPath
+        shapeLayer.fillColor = UIColor.white.cgColor
+        shapeLayer.strokeColor = UIColor.black.cgColor
+        
+        view.layer.mask = shapeLayer
+    }
+
+    
     static private func radius(_ point1: CGPoint, _ point2: CGPoint) -> CGFloat {
         let x = point2.x - point1.x
         let y = point1.y - point2.y

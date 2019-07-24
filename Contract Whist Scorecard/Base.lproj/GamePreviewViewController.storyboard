@@ -187,7 +187,7 @@
                             <constraint firstItem="nKd-io-ud9" firstAttribute="top" secondItem="PAW-t6-IPh" secondAttribute="top" constant="44" id="D2A-Qa-VDI"/>
                             <constraint firstItem="Q9h-T1-fE7" firstAttribute="leading" secondItem="iUU-8s-ns4" secondAttribute="leading" id="G9T-dS-D3q"/>
                             <constraint firstItem="Q9h-T1-fE7" firstAttribute="bottom" secondItem="iUU-8s-ns4" secondAttribute="bottom" constant="-44" id="ION-Gm-a3V"/>
-                            <constraint firstItem="wSn-mE-2UN" firstAttribute="trailing" secondItem="PAW-t6-IPh" secondAttribute="trailing" id="JFY-zz-N9f"/>
+                            <constraint firstAttribute="trailing" secondItem="PAW-t6-IPh" secondAttribute="trailing" id="JFY-zz-N9f"/>
                             <constraint firstItem="ffW-WE-f4E" firstAttribute="leading" secondItem="iUU-8s-ns4" secondAttribute="leading" id="JzB-y0-eHa"/>
                             <constraint firstItem="nKd-io-ud9" firstAttribute="trailing" secondItem="wSn-mE-2UN" secondAttribute="trailing" id="LVw-q5-pJC"/>
                             <constraint firstItem="wSn-mE-2UN" firstAttribute="trailing" secondItem="Q9h-T1-fE7" secondAttribute="trailing" id="NqS-TK-vQU"/>
@@ -221,6 +221,7 @@
                         <outlet property="nextDealerButton" destination="xXV-k4-gfB" id="wCg-D7-3mu"/>
                         <outlet property="overrideButton" destination="Qne-23-HdM" id="CM6-WU-g0M"/>
                         <outlet property="selectedPlayersView" destination="nKd-io-ud9" id="c8G-bf-FIe"/>
+                        <outlet property="toolbar" destination="Br9-M7-EK0" id="JTK-px-m9u"/>
                         <outlet property="toolbarBottomConstraint" destination="5yv-cV-e7f" id="dzN-kF-koh"/>
                         <segue destination="6Hq-Pm-vP6" kind="show" identifier="showScorepad" id="OMl-3l-9zT"/>
                         <segue destination="Zg2-0A-XQQ" kind="unwind" identifier="hideGamePreview" unwindAction="hideGamePreviewWithSegue:" id="ENU-76-LlQ"/>

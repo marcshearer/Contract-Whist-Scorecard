@@ -27,6 +27,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private var firstTime = true
     private var selectedAlpha: CGFloat = 0.5
     private var testMode = false
+    private var addPlayerThumbnail: Bool = false
 
     // Main local state handlers
     private var availableList: [PlayerMO] = []
@@ -38,16 +39,18 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var unselectedCollectionView: UICollectionView!
     @IBOutlet private weak var selectionView: UIView!
+    @IBOutlet private weak var toolbarContinueButton: UIButton!
     @IBOutlet private weak var continueButton: UIButton!
     @IBOutlet private weak var clearButton: UIButton!
+    @IBOutlet private weak var addPlayerButton: UIButton!
     @IBOutlet private weak var selectedPlayersView: SelectedPlayersView!
     @IBOutlet private weak var selectedViewHeight: NSLayoutConstraint!
     @IBOutlet private weak var selectedViewWidth: NSLayoutConstraint!
     @IBOutlet private weak var toolbar: UIToolbar!
     @IBOutlet private weak var toolbarBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var navigationBar: UINavigationBar!
-    @IBOutlet private weak var bannerContinuation: UIView!
-    @IBOutlet private weak var bannerContinuationHeightConstraint: UIView!
+    @IBOutlet private weak var bannerContinuationView: UIView!
+    @IBOutlet private weak var bannerContinuationHeightConstraint: NSLayoutConstraint!
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     
@@ -80,6 +83,10 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 self.removeSelection(selected.slot, animate: false)
             }
         }
+    }
+    
+    @IBAction func addPlayerPressed(_ sender: UIButton) {
+        self.addNewPlayer()
     }
 
     @IBAction func finishPressed(_ sender: UIButton) {
@@ -137,6 +144,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
+    
         self.view.setNeedsLayout()
     }
     
@@ -150,13 +158,17 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             self.setupAnimationView()
             
             self.setupDragAndDrop()
-            
-            // Decide if buttons enabled
-            formatButtons(false)
         }
         
+        // Decide if buttons enabled
+        formatButtons(false)
+    
+        // Draw filler in banner
+        let width: CGFloat = self.view.frame.width * 0.54
+        Polygon.angledBannerContinuationMask(view: bannerContinuationView, frame: CGRect(x: 0, y: 0, width: width, height: bannerContinuationHeight), type: .arrowRight, arrowWidth: bannerContinuationHeight * 2 / 3)
+        
         // Draw table
-        self.selectedPlayersView.drawRoom(thumbnailWidth: self.width, thumbnailHeight: self.height, players: self.scorecard.numberPlayers, directions: .up)
+        self.selectedPlayersView.drawRoom(thumbnailWidth: self.width, thumbnailHeight: self.height, players: self.scorecard.numberPlayers, directions: (ScorecardUI.landscapePhone() ? .none : .up))
         
         // Reload unselected player collection
         unselectedCollectionView.reloadData()
@@ -166,7 +178,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        return unselectedList.count + 1 // Extra one for new player
+        return unselectedList.count + (addPlayerThumbnail ? 1 : 0)
     }
 
     func collectionView(_ collectionView: UICollectionView,
@@ -185,9 +197,9 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         
         // Available players
         
-        let playerNumber = indexPath.row
+        let playerNumber = indexPath.row + (addPlayerThumbnail ? 0 : 1)
         
-        if playerNumber == 0 {
+        if addPlayerThumbnail && indexPath.row == 0 {
             // Create add player thumbnail
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Add Player Cell", for: indexPath) as! SelectionCell
             if cell.playerView == nil {
@@ -219,9 +231,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let playerNumber = indexPath.row
         
-        if playerNumber == 0 {
+        if addPlayerThumbnail && indexPath.row == 0 {
             // New player
             addNewPlayer()
         }
@@ -262,7 +273,9 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     func formatButtons(_ animated: Bool = true) {
         
-        continueButton.isHidden = (selectedList.count >= 3 || testMode ? false : true)
+        let hidden = (selectedList.count >= 3 || testMode ? false : true)
+        toolbarContinueButton.isHidden = hidden || (!ScorecardUI.smallPhoneSize() && !ScorecardUI.landscapePhone())
+        continueButton.isHidden = hidden || (ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone())
         
         // Note the selected view extends 44 below the bottom of the screen. Setting the bottom constraint to zero makes the toolbar disappear
         let toolbarBottomOffset: CGFloat = (selectedList.count > 0 ? 44 + (self.view.safeAreaInsets.bottom * 0.40)	 : 0)
@@ -279,33 +292,37 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     func setSize(size: CGSize) {
         
-        if ScorecardUI.smallPhoneSize() {
+        if ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone() {
             self.bannerContinuationHeight = 0.0
+            addPlayerThumbnail = true
         } else {
-            self.bannerContinuationHeight = 44.0
+            self.bannerContinuationHeight = 60.0
+            addPlayerThumbnail = false
         }
+        self.bannerContinuationHeightConstraint.constant = self.bannerContinuationHeight
         
         let totalWidth = size.width - view.safeAreaInsets.left - view.safeAreaInsets.right
+        let selectedWidth = (ScorecardUI.landscapePhone() ? (totalWidth / 2.0) : totalWidth)
         let totalHeight = size.height - view.safeAreaInsets.top - view.safeAreaInsets.bottom
-        let numberThatFit = max(5, Int(totalWidth / (min(totalWidth, totalHeight) > 450 ? 120 : 75)))
+        let numberThatFit = max(5, Int(selectedWidth / (min(totalWidth, totalHeight) > 450 ? 120 : 75)))
         
-        self.width = min((totalHeight - 170)/2, ((totalWidth - (CGFloat(numberThatFit + 1) * 10.0)) / CGFloat(numberThatFit)))
+        self.width = min((totalHeight - 170)/2, ((selectedWidth - (CGFloat(numberThatFit + 1) * 10.0)) / CGFloat(numberThatFit)))
         self.height = self.width + self.labelHeight - 5.0
         self.rowHeight = self.height + self.interRowSpacing
     
         let unselectedRows: Int = max(3, Int((totalHeight * 0.6) / self.rowHeight))
         let unselectedHeight = CGFloat(unselectedRows) * rowHeight
         
-        let selectedTop = unselectedHeight + self.navigationBar.frame.height + self.bannerContinuationHeight + view.safeAreaInsets.top
+        let selectedTop = unselectedHeight + self.navigationBar.intrinsicContentSize.height + self.bannerContinuationHeight + view.safeAreaInsets.top
         let selectedHeight: CGFloat = totalHeight + view.safeAreaInsets.top + view.safeAreaInsets.bottom - selectedTop
-        selectedViewWidth?.constant = (totalWidth / 2.0) + view.safeAreaInsets.right
+        selectedViewWidth?.constant = selectedWidth
         
         if ScorecardUI.landscapePhone() {
-            selectedViewHeight?.constant = totalHeight - navigationBar.frame.height + view.safeAreaInsets.bottom
-            self.selectedPlayersView.frame = CGRect(x: totalWidth / 2.0, y: navigationBar.frame.height + view.safeAreaInsets.top, width: (totalWidth / 2.0) + view.safeAreaInsets.right, height: totalHeight - navigationBar.frame.height + view.safeAreaInsets.bottom)
+            selectedViewHeight?.constant = totalHeight - navigationBar.intrinsicContentSize.height + view.safeAreaInsets.bottom
+            self.selectedPlayersView.frame = CGRect(x: size.width - view.safeAreaInsets.right - selectedWidth, y: navigationBar.intrinsicContentSize.height + view.safeAreaInsets.top, width: selectedWidth, height: totalHeight - navigationBar.intrinsicContentSize.height + view.safeAreaInsets.bottom)
         } else {
             selectedViewHeight?.constant = selectedHeight
-            self.selectedPlayersView.frame = CGRect(x: 0.0, y: selectedTop, width: totalWidth, height: selectedHeight)
+            self.selectedPlayersView.frame = CGRect(x: 0.0, y: selectedTop, width: selectedWidth, height: selectedHeight)
         }
     
     }

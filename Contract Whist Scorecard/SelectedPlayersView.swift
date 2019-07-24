@@ -22,6 +22,7 @@ import UIKit
 // MARK: - Selected Players View Class ================================================================================= -
 
 public enum ArrowDirection: Int {
+    case none = -1
     case up = 0
     case left = 1
     case down = 2
@@ -311,7 +312,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
             roomHeight = (heightComponent * (heightElements - 2.0)) + adjustedHeight
         } else {
             // Extend to the edge (and beyond)
-            roomHeight = self.frame.height + hideAdjustment
+            roomHeight = self.frame.height + hideAdjustment - roomX
         }
         
         if roomHeight > self.frame.height {
@@ -322,20 +323,26 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
             additionalAdjustment -= adjust
         }
         
+        var safeAreaInsets: CGFloat = 0.0
+        if !(self.arrowDirections[.right] ?? false) {
+            // If no right arrow extend to edge of superview
+            safeAreaInsets = self.superview!.safeAreaInsets.right
+        }
+        
         self.roomFrame = CGRect(x: roomX,
                                 y: roomY,
-                                width: roomWidth,
+                                width: roomWidth + safeAreaInsets,
                                 height: roomHeight)
         
         self.squareFrame = CGRect(x: roomFrame.minX + leftElements * widthComponent,
                                   y: roomFrame.minY + topElements * heightComponent,
-                              width: roomWidth - ((widthElements - 2.0) * widthComponent),
-                              height: adjustedHeight)
+                                  width: roomWidth - ((widthElements - 2.0) * widthComponent) + safeAreaInsets,
+                                  height: adjustedHeight)
         
         // Calculate table rectangle
         self.tableFrame = CGRect(x: squareFrame.minX + tableInset,
                                 y: squareFrame.minY + heightInset + topAdjustment + additionalAdjustment,
-                                width: squareFrame.width - (2.0 * tableInset),
+                                width: squareFrame.width - (2.0 * tableInset) - safeAreaInsets,
                                 height: unadjustedHeight - (2.0 * heightInset))
         
         // Setup table co-ordinates
@@ -510,9 +517,9 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
     
     private func positionSelectedPlayers() {
         
-        let apex = CGPoint(x: self.tableFrame.midX - (self.width / 2.0), y: 22.0 + (additionalAdjustment / 2.0))
-        let left = CGPoint(x: self.tableFrame.minX - (self.width / 2.0), y: self.squareFrame.minY + 15.0 + (additionalAdjustment / 2.0))
-        let right = CGPoint(x: self.tableFrame.maxX - (self.width / 2.0), y: self.squareFrame.minY + 15.0 + (additionalAdjustment / 2.0))
+        let apex = CGPoint(x: self.tableFrame.midX - (self.width / 2.0), y: self.tableFrame.minY - self.height - 10.0 - (additionalAdjustment / 2.0))
+        let left = CGPoint(x: self.tableFrame.minX - (self.width / 2.0), y: self.tableFrame.midY - self.height - 10.0 - (additionalAdjustment / 2.0))
+        let right = CGPoint(x: self.tableFrame.maxX - (self.width / 2.0), y: self.tableFrame.midY - self.height - 10.0 - (additionalAdjustment / 2.0))
         
         func positionSelectedView(_ newX: CGFloat) -> CGPoint {
             var result: CGPoint

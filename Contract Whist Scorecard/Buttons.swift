@@ -178,8 +178,10 @@ class OutlineButton: RoundedButton {
 
 class AngledButton: ClearButton {
     
-    required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+    private var layers: [CAShapeLayer] = []
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
         
         var points: [PolygonPoint] = []
         let lineWidth: CGFloat = 1.0
@@ -192,9 +194,17 @@ class AngledButton: ClearButton {
         points.append(PolygonPoint(x: frame.maxX - angleSize, y: frame.maxY))
         points.append(PolygonPoint(x: frame.minX + angleSize, y: frame.maxY))
         
-        Polygon.roundedShape(in: self, definedBy: points, strokeColor: self.titleColor(for: .normal)!, fillColor: self.backgroundColor!)
-        self.titleEdgeInsets = UIEdgeInsets.init(top: 5.0, left: angleSize + 5.0, bottom: 5.0, right: angleSize + 5.0)
+        // Remove previous layers
+        for layer in self.layers {
+            layer.removeFromSuperlayer()
+        }
         
+        // Add new shape
+        let layer = Polygon.roundedShapeLayer(definedBy: points, strokeColor: self.titleColor(for: .normal)!, fillColor: UIColor.clear)
+        self.layer.addSublayer(layer)
+        layers.append(layer)
+        
+        // Set button properties
         self.normalTextColor = self.titleColor(for: .normal)! // Leave as declared
         self.normalBackgroundColor = UIColor.clear
         self.normalAlpha = 1.0
@@ -202,10 +212,9 @@ class AngledButton: ClearButton {
         self.disabledBackgroundColor = self.normalBackgroundColor
         self.disabledAlpha = 0.3
         super.isEnabled(true)
-    }
-    
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
+
+        let inset: CGFloat = angleSize + 5.0
+        self.titleEdgeInsets = UIEdgeInsets.init(top: 5.0, left: inset, bottom: 5.0, right: inset)
         self.backgroundColor = UIColor.clear
     }
 }

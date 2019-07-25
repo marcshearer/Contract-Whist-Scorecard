@@ -178,10 +178,16 @@ class OutlineButton: RoundedButton {
 
 class AngledButton: ClearButton {
     
+    @IBInspectable var fillColor: UIColor!
+    @IBInspectable var strokeColor: UIColor!
+    
     private var layers: [CAShapeLayer] = []
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
+        self.fillColor = self.fillColor ?? UIColor.clear
+        self.strokeColor = self.strokeColor ?? self.titleColor(for: .normal)
         
         var points: [PolygonPoint] = []
         let lineWidth: CGFloat = 1.0
@@ -200,7 +206,7 @@ class AngledButton: ClearButton {
         }
         
         // Add new shape
-        let layer = Polygon.roundedShapeLayer(definedBy: points, strokeColor: self.titleColor(for: .normal)!, fillColor: UIColor.clear)
+        let layer = Polygon.roundedShapeLayer(definedBy: points, strokeColor: self.strokeColor, fillColor: self.fillColor, lineWidth: 1.0)
         self.layer.addSublayer(layer)
         layers.append(layer)
         
@@ -211,8 +217,11 @@ class AngledButton: ClearButton {
         self.disabledTextColor = self.normalTextColor
         self.disabledBackgroundColor = self.normalBackgroundColor
         self.disabledAlpha = 0.3
-        super.isEnabled(true)
+        self.isEnabled(true)
 
+        self.superview?.bringSubviewToFront(self)
+        self.bringSubviewToFront(self.titleLabel!)
+        
         let inset: CGFloat = angleSize + 5.0
         self.titleEdgeInsets = UIEdgeInsets.init(top: 5.0, left: inset, bottom: 5.0, right: inset)
         self.backgroundColor = UIColor.clear

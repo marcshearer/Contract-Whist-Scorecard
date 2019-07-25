@@ -591,14 +591,15 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
                 if let currentSlot = self.playerViewSlot(addedPlayerMO) {
                     // Got the players current slot - work out the drop slot
                     
-                    if let dropSlot = self.slotFromLocation(dropLocation: dropLocation, currentSlot: currentSlot) {
+                    let (dropSlot, rotate) = self.slotFromLocation(dropLocation: dropLocation, currentSlot: currentSlot)
                         
+                    if let dropSlot = dropSlot {
                         // Ignore if dropping on itself
                         if currentSlot != dropSlot {
-                            // Work out where everything will be after rotation - stopping if we land on a blank
+                            
                             var holdingArea: [Int:PlayerMO?] = [:]
-                            if dropSlot == 0 || currentSlot == 0  {
-                                // Dropping on or from the 'You' player - just swap
+                            if !rotate {
+                                // Just swap
                                 holdingArea[dropSlot] = addedPlayerMO
                                 if self.playerViews[dropSlot].inUse {
                                     holdingArea[currentSlot] = self.playerViews[dropSlot].playerMO
@@ -606,6 +607,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
                                     self.clear(slot: currentSlot)
                                 }
                             } else {
+                                // Work out where everything will be after rotation - stopping if we land on a blank
                                 let rotateSlots =  self.clockwiseGap(from: dropSlot, to: currentSlot) + 1
                                 var toSlot = dropSlot
                                 for slot in 1...rotateSlots {
@@ -640,7 +642,8 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
                 }
             } else {
                 // Can't handle here - pass back for delegate to handle
-                if let slot = self.slotFromLocation(dropLocation: dropLocation, currentSlot: nil) {
+                let (slot, _) = self.slotFromLocation(dropLocation: dropLocation, currentSlot: nil)
+                if let slot = slot {
                     self.delegate?.selectedPlayersView?(wasDroppedOn: slot, from: source, playerMO: addedPlayerMO)
                 }
             }
@@ -659,8 +662,9 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         return result
     }
     
-    private func slotFromLocation(dropLocation: CGPoint, currentSlot: Int?) -> Int? {
+    private func slotFromLocation(dropLocation: CGPoint, currentSlot: Int?) -> (Int?, Bool) {
         var slot: Int?
+        var rotate = false
         
         var distance: [(slot: Int, distance: CGFloat)] = []
         
@@ -681,21 +685,34 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
             if distance[0].slot == currentSlot {
                 // Dropped nearest self - do nothing
             } else if distance[0].slot == 0 {
-              // Dropped nearest unused 'You' player slot
+              // Dropped nearest 'You' player slot - drop on it
                 slot = 0
             } else if distance[1].slot == currentSlot {
                 // Second closest is self - just drop on closest
                 slot = distance[0].slot
-            } else if distance[0].slot == 0 || distance[1].slot == 0 {
+            } else if distance[0].distance <= distance[1].distance / 3.0 {
+                // Within a quarter of the slot - just drop on closest
+                slot = distance[0].slot
+            } else if !self.playerViews[distance[0].slot].inUse {
+                // Nearest slot not in use - drop on it
+                slot = distance[0].slot
+            } else if !self.playerViews[distance[1].slot].inUse {
+                // Second nearest slot not in use - drop on it
+                slot = distance[1].slot
+            } else if distance[1].slot == 0 {
                 // Between the 'You' player and another - drop on the other
                 slot = max(distance[0].slot, distance[1].slot)
+            } else if currentSlot == 0 {
+                // 'You' player dropped between 2 others - swap with closest
+                slot = distance[0].slot
             } else {
                 // Dropped between other 2 players
-                slot = (currentSlot == 1 ? 3 : (currentSlot == 2 ? 1 : 2))
+                slot = (currentSlot == 1 ? 3 : (currentSlot == 3 ? 2 : 1))
+                rotate = true
             }
         }
         
-        return slot
+        return (slot, rotate)
     }
     
     private func clockwiseGap(from: Int, to: Int) -> Int {

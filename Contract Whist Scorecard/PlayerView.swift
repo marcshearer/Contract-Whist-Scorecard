@@ -131,6 +131,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     
     public func clear(initials: String? = nil) {
         self.inUse = false
+        self.playerMO = nil
         self.thumbnail.set(initials: initials, nameHeight: 30.0, placeholder: true)
     }
     

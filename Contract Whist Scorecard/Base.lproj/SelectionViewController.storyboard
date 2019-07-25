@@ -28,11 +28,11 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AZC-do-ZAj" userLabel="Banner Continuation View">
-                                <rect key="frame" x="0.0" y="32" width="312.5" height="60"/>
+                                <rect key="frame" x="0.0" y="32" width="324" height="60"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XWY-FH-Uey" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="16" y="15" width="227" height="30"/>
-                                        <color key="backgroundColor" name="Game Banner"/>
+                                        <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="YOK-cY-eY4"/>
                                         </constraints>
@@ -41,6 +41,12 @@
                                         </state>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="fixedWidth" value="YES"/>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
+                                                <color key="value" name="Game Banner"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="strokeColor">
+                                                <color key="value" name="Game Banner Text"/>
+                                            </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="addPlayerPressed:" destination="zGV-gf-a3n" eventType="touchUpInside" id="bPW-CC-JB7"/>
@@ -56,15 +62,21 @@
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7SY-Bw-ahm" userLabel="Continue" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="325" y="47" width="227" height="30"/>
-                                <color key="backgroundColor" name="Background"/>
+                                <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="lcc-Fx-5g7"/>
                                 </constraints>
                                 <state key="normal" title="Continue">
-                                    <color key="titleColor" name="Game Banner"/>
+                                    <color key="titleColor" name="Game Banner Text"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="fixedWidth" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
+                                        <color key="value" name="Game Banner"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="strokeColor">
+                                        <color key="value" name="Game Banner"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="continuePressed:" destination="zGV-gf-a3n" eventType="touchUpInside" id="RW6-EI-NNf"/>
@@ -172,11 +184,19 @@
                                                 <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="yT8-YW-vNq" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                     <rect key="frame" x="32" y="5" width="136" height="34"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" name="Hand"/>
+                                                    <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <state key="normal" title="Clear Selection">
                                                         <color key="titleColor" name="Hand Text"/>
                                                     </state>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
+                                                            <color key="value" name="Hand"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="strokeColor">
+                                                            <color key="value" name="Hand Text"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
                                                     <connections>
                                                         <action selector="clearPressed:" destination="zGV-gf-a3n" eventType="touchUpInside" id="DRq-XF-hgc"/>
                                                     </connections>
@@ -216,7 +236,7 @@
                             <constraint firstItem="T8J-zi-GyC" firstAttribute="leading" secondItem="jtX-GA-7ms" secondAttribute="leading" id="ODC-lu-UMD"/>
                             <constraint firstItem="jtX-GA-7ms" firstAttribute="trailing" secondItem="T8J-zi-GyC" secondAttribute="trailing" id="Pns-aa-Ueb"/>
                             <constraint firstItem="UgO-yy-CRO" firstAttribute="leading" secondItem="Whs-Ka-Uxd" secondAttribute="leading" id="PtH-W2-tvn"/>
-                            <constraint firstItem="AZC-do-ZAj" firstAttribute="width" secondItem="Whs-Ka-Uxd" secondAttribute="width" multiplier="0.55" id="WhT-wV-9f2"/>
+                            <constraint firstItem="AZC-do-ZAj" firstAttribute="width" secondItem="Whs-Ka-Uxd" secondAttribute="width" multiplier="0.57" id="WhT-wV-9f2"/>
                             <constraint firstItem="7SY-Bw-ahm" firstAttribute="width" secondItem="XWY-FH-Uey" secondAttribute="width" id="aM5-Wu-D1d"/>
                             <constraint firstAttribute="bottom" secondItem="T8J-zi-GyC" secondAttribute="bottom" constant="-44" id="bT5-jM-Jmv"/>
                             <constraint firstAttribute="bottom" secondItem="jtX-GA-7ms" secondAttribute="bottom" id="cKC-9I-Qfp"/>

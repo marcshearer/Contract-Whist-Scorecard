@@ -153,11 +153,19 @@
                                                 <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Qne-23-HdM" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                     <rect key="frame" x="89" y="5" width="142" height="34"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" name="Table Top"/>
+                                                    <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <state key="normal" title="Override Settings">
                                                         <color key="titleColor" name="Table Top Text Contrast"/>
                                                     </state>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
+                                                            <color key="value" name="Table Top"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                        <userDefinedRuntimeAttribute type="color" keyPath="strokeColor">
+                                                            <color key="value" name="Table Top Text Contrast"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
                                                     <connections>
                                                         <action selector="overrideSettingsPressed:" destination="M5N-Yi-C04" eventType="touchUpInside" id="6mB-Sc-FvS"/>
                                                     </connections>

@@ -164,7 +164,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         formatButtons(false)
     
         // Draw filler in banner
-        let width: CGFloat = self.view.frame.width * 0.54
+        let width: CGFloat = self.view.frame.width * 0.55
         Polygon.angledBannerContinuationMask(view: bannerContinuationView, frame: CGRect(x: 0, y: 0, width: width, height: bannerContinuationHeight), type: .arrowRight, arrowWidth: bannerContinuationHeight * 2 / 3)
         
         // Draw table
@@ -259,7 +259,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             let unselectedIndex = self.unselectedList.firstIndex(where: {($0?.objectID == objectID)})
             if unselectedIndex != nil {
                 // Found it - reload the cell
-                self.unselectedCollectionView.reloadItems(at: [IndexPath(row: unselectedIndex! + 1, section: 0)])
+                self.unselectedCollectionView.reloadItems(at: [IndexPath(row: unselectedIndex! + (self.addPlayerThumbnail ? 1 : 0), section: 0)])
             }
             if let selected = self.selectedList.first(where: {($0.playerMO.objectID == objectID)}) {
                 // Found it - refresh the cell
@@ -423,8 +423,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                     // Move animation thumbnail to the unselected area
                     let animation = UIViewPropertyAnimator(duration: 0.5, curve: .easeIn) {
                         
-                        self.unselectedCollectionView.scrollToItem(at: IndexPath(item: unselectedPlayerIndex + 1, section: 0), at: .centeredHorizontally, animated: true)
-                        if let destinationCell = self.unselectedCollectionView.cellForItem(at: IndexPath(item: unselectedPlayerIndex + 1, section: 0)) as? SelectionCell {
+                        self.unselectedCollectionView.scrollToItem(at: IndexPath(item: unselectedPlayerIndex + (self.addPlayerThumbnail ? 1 : 0), section: 0), at: .centeredHorizontally, animated: true)
+                        if let destinationCell = self.unselectedCollectionView.cellForItem(at: IndexPath(item: unselectedPlayerIndex + (self.addPlayerThumbnail ? 1 : 0), section: 0)) as? SelectionCell {
                             let unselectedPoint = destinationCell.playerView.thumbnail.convert(CGPoint(x: 0, y: 0), to: self.selectionView)
                             self.animationView.frame = CGRect(origin: unselectedPoint, size: CGSize(width: self.width, height: self.height))
                             self.animationView.set(textColor: Palette.text)
@@ -434,7 +434,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                         
                         // Replace nil entry with player and refresh collection view
                         self.unselectedList[unselectedPlayerIndex] = selectedPlayerMO
-                        self.unselectedCollectionView.reloadItems(at: [IndexPath(item: unselectedPlayerIndex + 1, section: 0)])
+                        self.unselectedCollectionView.reloadItems(at: [IndexPath(item: unselectedPlayerIndex + (self.addPlayerThumbnail ? 1 : 0), section: 0)])
                         
                         // Now hide animation thumbnail
                         self.animationView.alpha = 0.0
@@ -469,7 +469,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 
                 // Calculate offsets for available collection view cell
                 if let unselectedPlayerIndex = unselectedList.firstIndex(where: { $0 == selectedPlayerMO }) {
-                    if let unselectedCell = unselectedCollectionView.cellForItem(at: IndexPath(item: unselectedPlayerIndex + 1, section: 0)) as! SelectionCell? {
+                    if let unselectedCell = unselectedCollectionView.cellForItem(at: IndexPath(item: unselectedPlayerIndex + (self.addPlayerThumbnail ? 1 : 0), section: 0)) as! SelectionCell? {
                         let unselectedPoint = unselectedCell.convert(CGPoint(x: 0, y: 0), to: self.selectionView)
                         
                         // Draw a new thumbnail over top of existing - add in views which are uninstalled in IB to avoid warnings of no constraints
@@ -523,7 +523,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             } else {
                 unselectedCollectionView.performBatchUpdates({
                     self.unselectedList.remove(at: index)
-                    self.unselectedCollectionView.deleteItems(at: [IndexPath(item: index + 1, section: 0)])
+                    self.unselectedCollectionView.deleteItems(at: [IndexPath(item: index + (self.addPlayerThumbnail ? 1 : 0), section: 0)])
                 })
             }
         }
@@ -536,7 +536,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         }
         unselectedCollectionView.performBatchUpdates({
             self.unselectedList.insert((leaveNil ? nil : playerMO), at: insertIndex)
-            self.unselectedCollectionView.insertItems(at: [IndexPath(item: insertIndex + 1, section: 0)])
+            self.unselectedCollectionView.insertItems(at: [IndexPath(item: insertIndex + (self.addPlayerThumbnail ? 1 : 0), section: 0)])
         })
         return insertIndex
     }
@@ -583,7 +583,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                     }
                     unselectedCollectionView.performBatchUpdates({
                         unselectedList.insert(playerMO, at: unselectedIndex)
-                        unselectedCollectionView.insertItems(at: [IndexPath(row: unselectedIndex + 1, section: 0)])
+                        unselectedCollectionView.insertItems(at: [IndexPath(row: unselectedIndex + (self.addPlayerThumbnail ? 1 : 0), section: 0)])
                     })
                     
                     // Add to selection if there is space

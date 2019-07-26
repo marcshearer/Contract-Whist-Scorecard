@@ -23,13 +23,13 @@ class Constraint {
         return constraint
     }
     
-    public static func anchor(view: UIView, control: UIView, to: UIView? = nil, toAttribute: NSLayoutConstraint.Attribute? = nil, attributes: NSLayoutConstraint.Attribute...) {
+    public static func anchor(view: UIView, control: UIView, to: UIView? = nil, multiplier: CGFloat = 1.0, constant: CGFloat = 0.0, toAttribute: NSLayoutConstraint.Attribute? = nil, attributes: NSLayoutConstraint.Attribute...) {
         let to = to ?? view
         control.translatesAutoresizingMaskIntoConstraints = false
         control.autoresizingMask = [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
         for attribute in attributes {
             let toAttribute = toAttribute ?? attribute
-            let constraint = NSLayoutConstraint(item: control, attribute: attribute, relatedBy: .equal, toItem: to, attribute: toAttribute, multiplier: 1.0, constant: 0.0)
+            let constraint = NSLayoutConstraint(item: control, attribute: attribute, relatedBy: .equal, toItem: to, attribute: toAttribute, multiplier: multiplier, constant: constant)
             view.addConstraint(constraint)
         }
     }

@@ -15,6 +15,8 @@ class Palette {
     static let bannerText = UIColor(named: "Banner Text")!
     static let bold = UIColor(named: "Bold")!
     static let boldText = UIColor(named: "Bold Text")!
+    static let continueButton = UIColor(named: "Continue Button")!
+    static let continueButtonText = UIColor(named: "Continue Button Text")!
     static let darkHighlight = UIColor(named: "Dark Highlight")!
     static let darkHighlightText = UIColor(named: "Dark Highlight Text")!
     static let darkHighlightTextContrast = UIColor(named: "Dark Highlight Text Contrast")!

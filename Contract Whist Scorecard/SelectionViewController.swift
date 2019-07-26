@@ -24,6 +24,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private let labelHeight: CGFloat = 30.0
     private let interRowSpacing:CGFloat = 10.0
     private var bannerContinuationHeight: CGFloat = 44.0
+    private var haloWidth: CGFloat = 3.0
     private var firstTime = true
     private var selectedAlpha: CGFloat = 0.5
     private var testMode = false
@@ -39,7 +40,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var unselectedCollectionView: UICollectionView!
     @IBOutlet private weak var selectionView: UIView!
-    @IBOutlet private weak var toolbarContinueButton: UIButton!
+    @IBOutlet private weak var bannerContinueButton: UIButton!
     @IBOutlet private weak var continueButton: UIButton!
     @IBOutlet private weak var clearButton: UIButton!
     @IBOutlet private weak var addPlayerButton: UIButton!
@@ -56,6 +57,9 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     @IBAction func hideGamePreview(segue:UIStoryboardSegue) {
         // Returning from game setup
+        self.scorecard.loadGameDefaults()
+        self.selectedList = []
+        self.assignPlayers()
     }
     
     @IBAction func hideSelectionSelectPlayers(segue:UIStoryboardSegue) {
@@ -111,8 +115,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         }
         
         // Try to find players from last time
-        scorecard.loadGameDefaults()
-        assignPlayers()
+        self.scorecard.loadGameDefaults()
+        self.assignPlayers()
         
         // Check if in recovery mode - if so (and found all players) go straight to game setup
         if scorecard.recoveryMode {
@@ -135,7 +139,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         
         // Set up selected players view delegate
         self.selectedPlayersView.delegate = self
-        
         
         // Set status bar clear
         ScorecardUI.setToolbarClear(toolbar: toolbar)
@@ -168,6 +171,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         Polygon.angledBannerContinuationMask(view: bannerContinuationView, frame: CGRect(x: 0, y: 0, width: width, height: bannerContinuationHeight), type: .arrowRight, arrowWidth: bannerContinuationHeight * 2 / 3)
         
         // Draw table
+        self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth)
+        self.selectedPlayersView.setHaloColor(color: Palette.halo)
         self.selectedPlayersView.drawRoom(thumbnailWidth: self.width, thumbnailHeight: self.height, players: self.scorecard.numberPlayers, directions: (ScorecardUI.landscapePhone() ? .none : .up))
         
         // Reload unselected player collection
@@ -274,7 +279,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     func formatButtons(_ animated: Bool = true) {
         
         let hidden = (selectedList.count >= 3 || testMode ? false : true)
-        toolbarContinueButton.isHidden = hidden || (!ScorecardUI.smallPhoneSize() && !ScorecardUI.landscapePhone())
+        bannerContinueButton.isHidden = hidden || (!ScorecardUI.smallPhoneSize() && !ScorecardUI.landscapePhone())
         continueButton.isHidden = hidden || (ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone())
         
         // Note the selected view extends 44 below the bottom of the screen. Setting the bottom constraint to zero makes the toolbar disappear
@@ -381,7 +386,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             let playerURI = scorecard.playerURI(scorecard.enteredPlayer(playerNumber).playerMO)
             if playerURI != "" {
                 if let playerMO = availableList.first(where: { self.scorecard.playerURI($0) == playerURI }) {
-                    addSelection(playerMO, updateUnselectedCollection: false, animate: false)
+                    addSelection(playerMO, toSlot: playerNumber - 1, updateUnselectedCollection: false, animate: false)
                 }
             }
         }
@@ -548,7 +553,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     }
     
     private func setupAnimationView() {
-        self.animationView = PlayerView(type: .animation, parent: self.view, width: self.width, height: self.height, tag: -1)
+        self.animationView = PlayerView(type: .animation, parent: self.view, width: self.width, height: self.height, tag: -1, haloWidth: self.haloWidth)
     }
     
     private func setupDragAndDrop() {

@@ -42,6 +42,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         self.parent = parent
         self.type = type
         self.tag = tag
+        self.haloWidth = haloWidth
         
         super.init()
         

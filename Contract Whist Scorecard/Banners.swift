@@ -43,7 +43,7 @@ class NavigationBar: UINavigationBar {
         self.setBackgroundImage(UIImage(), for: .default)
         self.shadowImage = UIImage()
         
-        let titleLabel = UILabel(frame: CGRect(x: 0.0, y: 0.0, width: self.frame.width - (max(80.0, self.topItem?.leftBarButtonItem?.width ?? 0.0, (self.topItem?.rightBarButtonItem?.width ?? 0.0)) * 2.0), height: self.frame.height))
+        let titleLabel = UILabel(frame: CGRect(x: 0.0, y: 0.0, width: 100.0, height: self.frame.height))
         titleLabel.backgroundColor = UIColor.clear
         titleLabel.adjustsFontSizeToFitWidth = true
         titleLabel.minimumScaleFactor = 0.5
@@ -53,13 +53,15 @@ class NavigationBar: UINavigationBar {
     
     override func draw(_ rect: CGRect) {
         if let titleText = self.topItem?.title, let titleLabel = self.topItem?.titleView as! UILabel? {
-            Constraint.anchor(view: self, control: titleLabel, attributes: .centerX)
             titleLabel.text = titleText
         }
         super.draw(rect)
     }
     
     override func layoutSubviews() {
+        
+        super.layoutSubviews()
+        
         self.isTranslucent = false
         self.barTintColor = self.bannerColor
         self.backgroundColor = self.bannerColor
@@ -70,11 +72,14 @@ class NavigationBar: UINavigationBar {
         } else {
             fontSize = min(28.0, CGFloat(Int(UIScreen.main.bounds.width / 12)))
         }
-        if let titleLabel = self.topItem?.titleView as! UILabel? {
+        if let titleText = self.topItem?.title, let titleLabel = self.topItem?.titleView as! UILabel? {
             titleLabel.font = UIFont.systemFont(ofSize: fontSize, weight: .thin)
+            let titleSize = titleText.size(withAttributes: [NSAttributedString.Key.font: titleLabel.font!])
+            titleLabel.frame = CGRect(x: 0.0, y: 0.0, width: titleSize.width, height: self.frame.height)
+            titleLabel.textAlignment = .center
+            titleLabel.text = titleText
             titleLabel.textColor = Palette.bannerText
         }
-        super.layoutSubviews()
     }
     
 }

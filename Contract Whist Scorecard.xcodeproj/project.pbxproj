@@ -68,6 +68,8 @@
 		B235D2BE1F82288A0019384B /* Notification Simulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235D2BD1F82288A0019384B /* Notification Simulator.swift */; };
 		B2361A3722D5B965007D88BB /* ConfirmPlayedViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2361A3622D5B965007D88BB /* ConfirmPlayedViewController.storyboard */; };
 		B2361A3A22D5B9DD007D88BB /* ConfirmPlayedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2361A3922D5B9DD007D88BB /* ConfirmPlayedViewController.swift */; };
+		B2430CC722EABD1D00C4FC77 /* SlideOutButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2430CC622EABD1D00C4FC77 /* SlideOutButton.xib */; };
+		B2430CC922EABD3100C4FC77 /* SlideOutButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2430CC822EABD3100C4FC77 /* SlideOutButton.swift */; };
 		B243385322D89B4E002EBD40 /* ThumbnailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B243385222D89B4E002EBD40 /* ThumbnailView.swift */; };
 		B243385522D89B72002EBD40 /* ThumbnailView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B243385422D89B72002EBD40 /* ThumbnailView.xib */; };
 		B243385922E0A6C3002EBD40 /* SelectedPlayersView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B243385822E0A6C3002EBD40 /* SelectedPlayersView.xib */; };
@@ -265,6 +267,8 @@
 		B235D2BD1F82288A0019384B /* Notification Simulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification Simulator.swift"; sourceTree = "<group>"; };
 		B2361A3622D5B965007D88BB /* ConfirmPlayedViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ConfirmPlayedViewController.storyboard; sourceTree = "<group>"; };
 		B2361A3922D5B9DD007D88BB /* ConfirmPlayedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmPlayedViewController.swift; sourceTree = "<group>"; };
+		B2430CC622EABD1D00C4FC77 /* SlideOutButton.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SlideOutButton.xib; sourceTree = "<group>"; };
+		B2430CC822EABD3100C4FC77 /* SlideOutButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideOutButton.swift; sourceTree = "<group>"; };
 		B243385222D89B4E002EBD40 /* ThumbnailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailView.swift; sourceTree = "<group>"; };
 		B243385422D89B72002EBD40 /* ThumbnailView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThumbnailView.xib; sourceTree = "<group>"; };
 		B243385822E0A6C3002EBD40 /* SelectedPlayersView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelectedPlayersView.xib; sourceTree = "<group>"; };
@@ -733,6 +737,15 @@
 			name = "Confirm Played";
 			sourceTree = "<group>";
 		};
+		B2430CCA22EABD4800C4FC77 /* Slide Out Button */ = {
+			isa = PBXGroup;
+			children = (
+				B2430CC622EABD1D00C4FC77 /* SlideOutButton.xib */,
+				B2430CC822EABD3100C4FC77 /* SlideOutButton.swift */,
+			);
+			name = "Slide Out Button";
+			sourceTree = "<group>";
+		};
 		B243385122D89AE7002EBD40 /* Thumbnail View */ = {
 			isa = PBXGroup;
 			children = (
@@ -749,6 +762,7 @@
 				B243385C22E0AE97002EBD40 /* Player View */,
 				B243385722E0A68F002EBD40 /* Selected Players View */,
 				B243386122E57BD1002EBD40 /* Image Button View */,
+				B2430CCA22EABD4800C4FC77 /* Slide Out Button */,
 			);
 			name = "Custom Views";
 			sourceTree = "<group>";
@@ -1249,6 +1263,7 @@
 				B22789421FB894AE009BABCA /* PlayerDetailViewController.storyboard in Resources */,
 				B227893C1FB8932A009BABCA /* SyncViewController.storyboard in Resources */,
 				B22789391FB8924C009BABCA /* HighScoresViewController.storyboard in Resources */,
+				B2430CC722EABD1D00C4FC77 /* SlideOutButton.xib in Resources */,
 				B22789181FB84A75009BABCA /* RoundSummaryViewController.storyboard in Resources */,
 				CC4CC0FE1DEADC32007FB24F /* Main.storyboard in Resources */,
 				B22789121FB844CD009BABCA /* ScorepadViewController.storyboard in Resources */,
@@ -1373,6 +1388,7 @@
 				B22500F11F48425C0042D566 /* Scorecard Comms.swift in Sources */,
 				CC7A49081DF28BEB00703D38 /* Scorecard UI.swift in Sources */,
 				B2E7621C1E6C98A0001DAF4F /* Notifications.swift in Sources */,
+				B2430CC922EABD3100C4FC77 /* SlideOutButton.swift in Sources */,
 				B20A66FE1E24002400E75190 /* GameSummaryViewController.swift in Sources */,
 				B202552122BCCE220074310A /* ScrollView.swift in Sources */,
 				CC4CC0FB1DEADC32007FB24F /* ScorepadViewController.swift in Sources */,

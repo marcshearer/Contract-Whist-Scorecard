@@ -33,7 +33,7 @@ public class ThumbnailView: UIView {
     
     convenience init(frame: CGRect, haloWidth: CGFloat) {
         self.init(frame: frame)
-        self.haloWidth = haloWidth
+        self.set(haloWidth: haloWidth)
     }
     
     private func loadThumbnailView() {
@@ -117,7 +117,7 @@ public class ThumbnailView: UIView {
         self.frame = frame
         
         // Adjust components
-        self.discHalo.frame = CGRect(origin: CGPoint(), size: CGSize(width: self.frame.width - 0.0, height: self.frame.width - 0.0))
+        self.discHalo.frame = CGRect(origin: CGPoint(), size: CGSize(width: self.frame.width, height: self.frame.width))
         ScorecardUI.veryRoundCorners(self.discHalo, radius: (self.discHalo.frame.width - 0.0) / 2.0)
         
         let discSize: CGFloat = frame.width - (2 * self.haloWidth)

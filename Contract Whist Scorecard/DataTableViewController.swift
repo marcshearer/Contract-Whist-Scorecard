@@ -644,17 +644,17 @@ class DataTableCell: UITableViewCell {
         self.addSubview(view)
         view.isHidden = true
 
-       if up == true {
-        points.append(PolygonPoint(x: 0.0, y: container.frame.minY + size))
-        points.append(PolygonPoint(x: (size * 2.0), y: container.frame.minY + size))
-        points.append(PolygonPoint(x: size, y: container.frame.minY))
+        if up == true {
+            points.append(PolygonPoint(x: 0.0, y: container.frame.minY + size, pointType: .point))
+            points.append(PolygonPoint(x: (size * 2.0), y: container.frame.minY + size, pointType: .point))
+            points.append(PolygonPoint(x: size, y: container.frame.minY))
         } else {
-        points.append(PolygonPoint(x: 0.0, y: container.frame.minY))
-        points.append(PolygonPoint(x: (size * 2.0), y: container.frame.minY))
-        points.append(PolygonPoint(x: size, y: container.frame.minY + size))
+            points.append(PolygonPoint(x: 0.0, y: container.frame.minY, pointType: .point))
+            points.append(PolygonPoint(x: (size * 2.0), y: container.frame.minY, pointType: .point))
+            points.append(PolygonPoint(x: size, y: container.frame.minY + size))
         }
         
-        Polygon.roundedShape(in: view, definedBy: points, strokeColor: color, fillColor: color, lineWidth: 1.0, radius: 3.5)
+        Polygon.roundedShape(in: view, definedBy: points, strokeColor: color, fillColor: color, lineWidth: 1.0, radius: 2.0)
         
         return view
     }

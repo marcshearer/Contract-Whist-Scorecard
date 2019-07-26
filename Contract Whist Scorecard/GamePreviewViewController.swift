@@ -13,7 +13,7 @@ protocol GamePreviewDelegate {
     func gamePreviewComplete()
 }
 
-class GamePreviewViewController: CustomViewController, CutDelegate, ImageButtonDelegate {
+class GamePreviewViewController: CustomViewController, CutDelegate, ImageButtonDelegate, SelectedPlayersViewDelegate {
     
     // MARK: - Class Properties ================================================================ -
     
@@ -37,8 +37,10 @@ class GamePreviewViewController: CustomViewController, CutDelegate, ImageButtonD
     private var buttonMode = "Triangle"
     private var buttonRowHeight:CGFloat = 0.0
     private var playerRowHeight:CGFloat = 0.0
-    private var thumbnailWidth: CGFloat = 75.0
-    private var thumbnailHeight: CGFloat = 100.0
+    private var thumbnailWidth: CGFloat!
+    private var thumbnailHeight: CGFloat!
+    private var cutCardWidth: CGFloat!
+    private var cutCardHeight: CGFloat!
     private var haloWidth: CGFloat = 3.0
     private var observer: NSObjectProtocol?
     private var faceTimeAvailable = false
@@ -47,9 +49,10 @@ class GamePreviewViewController: CustomViewController, CutDelegate, ImageButtonD
     
     // MARK: - IB Outlets ================================================================ -
     
+    @IBOutlet private weak var bannerContinueButton: UIButton!
     @IBOutlet private weak var continueButton: UIButton!
+    @IBOutlet private weak var continueButtonHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var selectedPlayersView: SelectedPlayersView!
-    @IBOutlet private weak var overrideButton: UIButton!
     @IBOutlet private weak var toolbar: UIToolbar!
     @IBOutlet private weak var toolbarBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var actionButtonView: UIView!
@@ -139,18 +142,16 @@ class GamePreviewViewController: CustomViewController, CutDelegate, ImageButtonD
             self.scorecard.saveDealer(1)
         }
         
-        updateSelectedPlayers(selectedPlayers)
-        setupScreen(size: self.view.frame.size)
-        scorecard.saveMaxScores()
+        self.updateSelectedPlayers(selectedPlayers)
+        self.setupScreen(size: self.view.frame.size)
+        self.scorecard.saveMaxScores()
         
         // Set nofification for image download
-        observer = setImageDownloadNotification()
+        self.observer = setImageDownloadNotification()
 
-        // Set readonly
-        if self.readOnly {
-            self.selectedPlayersView.isEnabled = false
-            self.continueButton.isHidden = true
-        }
+        // Setup buttons
+        self.setupButtons()
+        
         
         if !self.readOnly {
             self.checkFaceTimeAvailable()
@@ -160,6 +161,9 @@ class GamePreviewViewController: CustomViewController, CutDelegate, ImageButtonD
         
         // Set toolbar clear
         ScorecardUI.setToolbarClear(toolbar: toolbar)
+        
+        // Become delegate of selected players view
+        self.selectedPlayersView.delegate = self
         
     }
     
@@ -183,11 +187,12 @@ class GamePreviewViewController: CustomViewController, CutDelegate, ImageButtonD
         setupScreen(size: UIScreen.main.bounds.size)
         self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth)
         self.selectedPlayersView.setHaloColor(color: Palette.halo)
-        self.selectedPlayersView.drawRoom(thumbnailWidth: thumbnailWidth, thumbnailHeight: thumbnailHeight, directions: .up, .down)
+        self.selectedPlayersView.drawRoom(thumbnailWidth: thumbnailWidth, thumbnailHeight: thumbnailHeight, directions: (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.up), (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.down))
         for slot in 0..<self.scorecard.currentPlayers {
             self.selectedPlayersView.set(slot: slot, playerMO: self.selectedPlayers[slot]!)
         }
         self.showCurrentDealer()
+        self.setupButtons()
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
@@ -232,9 +237,23 @@ class GamePreviewViewController: CustomViewController, CutDelegate, ImageButtonD
         self.cutDelegate?.cutComplete()
     }
     
+    // MARK: - Selected Players View delegate handlers =============================================== -
+    
+    func selectedPlayersView(moved playerMO: PlayerMO, to slot: Int) {
+        // Update related list element
+        self.selectedPlayers[slot] = playerMO
+        self.updateSelectedPlayers(selectedPlayers)
+    }
+    
     // MARK: - Form Presentation / Handling Routines ================================================================ -
     
     func setupScreen(size: CGSize) {
+        
+        self.thumbnailWidth = min(75.0, (size.width / (ScorecardUI.landscapePhone() ? 2.0 : 1.0)) / 5.0)
+        self.thumbnailHeight = self.thumbnailWidth + 25.0
+        self.cutCardHeight = self.thumbnailWidth
+        self.cutCardWidth = self.cutCardHeight * 2.0 / 3.0
+        
         if size.width >= 530 {
             buttonMode = "Row"
             buttonRowHeight = 160
@@ -247,6 +266,18 @@ class GamePreviewViewController: CustomViewController, CutDelegate, ImageButtonD
         
         self.slideOutToolbar()
 
+    }
+    
+    private func setupButtons() {
+        if self.readOnly {
+            self.selectedPlayersView.isEnabled = false
+            self.bannerContinueButton.isHidden = true
+            self.continueButton.isHidden = true
+        } else {
+            self.bannerContinueButton.isHidden = !ScorecardUI.landscapePhone() && !ScorecardUI.smallPhoneSize()
+            self.continueButton.isHidden = ScorecardUI.landscapePhone() || ScorecardUI.smallPhoneSize()
+        }
+        self.continueButtonHeightConstraint.constant = (self.continueButton.isHidden ? 0.0 : 50.0)
     }
     
     private func slideOutToolbar(animated: Bool = false) {
@@ -528,7 +559,7 @@ class GamePreviewViewController: CustomViewController, CutDelegate, ImageButtonD
     
     private func createCutCards() {
         for _ in 0..<self.scorecard.currentPlayers {
-            let cardView = UILabel(frame: CGRect(origin: CGPoint(), size: CGSize(width: 50.0, height: 75.0)))
+            let cardView = UILabel(frame: CGRect(origin: CGPoint(), size: CGSize(width: cutCardWidth, height: cutCardHeight)))
             cardView.backgroundColor = Palette.cardFace
             ScorecardUI.roundCorners(cardView)
             cardView.textAlignment = .center

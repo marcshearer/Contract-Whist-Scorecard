@@ -298,7 +298,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         let heightInset = tableInset * heightComponent / widthComponent
         
         let unadjustedHeight: CGFloat = 2.0 * heightComponent
-        let topAdjustment: CGFloat = self.height + 20.0 - ((self.arrowDirections[.up] ?? false) ? heightComponent : 0)
+        var topAdjustment: CGFloat = self.height + 20.0 - ((self.arrowDirections[.up] ?? false) ? heightComponent : 0)
         self.additionalAdjustment = (self.arrowDirections[.down] ?? false ? 50.0 : 0.0)
         var adjustedHeight: CGFloat = unadjustedHeight + topAdjustment + additionalAdjustment
         
@@ -307,12 +307,15 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         let roomY: CGFloat = ((arrowDirections[.up] ?? false) ? 0.0 : -hideAdjustment)
         let roomWidth: CGFloat = (self.frame.width - roomX + ((arrowDirections[.right] ?? false) ? 0.0 : hideAdjustment))
         var roomHeight: CGFloat
-        if self.arrowDirections[.down] ?? false {
+        let normalRoomHeight: CGFloat = (heightComponent * (heightElements - 2.0)) + adjustedHeight
+        let adjustment: CGFloat = self.frame.height + hideAdjustment - roomX - normalRoomHeight
+        if (self.arrowDirections[.down] ?? false) || adjustment <= 0 {
             // Just use what you need
-            roomHeight = (heightComponent * (heightElements - 2.0)) + adjustedHeight
+            roomHeight = normalRoomHeight
         } else {
             // Extend to the edge (and beyond)
-            roomHeight = self.frame.height + hideAdjustment - roomX
+            roomHeight = normalRoomHeight + adjustment
+            topAdjustment += 3 * (adjustment / 8.0)
         }
         
         if roomHeight > self.frame.height {

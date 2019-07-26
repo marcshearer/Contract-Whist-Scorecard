@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_0" orientation="landscape">
+    <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -16,11 +16,11 @@
             <objects>
                 <viewController storyboardIdentifier="SelectionViewController" title="Selection" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zGV-gf-a3n" customClass="SelectionViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Whs-Ka-Uxd">
-                        <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d37-kV-uuP" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="568" height="0.0"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
                                         <color key="value" name="Shape Highlight Fill"/>
@@ -28,10 +28,10 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AZC-do-ZAj" userLabel="Banner Continuation View">
-                                <rect key="frame" x="0.0" y="32" width="324" height="60"/>
+                                <rect key="frame" x="0.0" y="64" width="182.5" height="60"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XWY-FH-Uey" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="16" y="15" width="227" height="30"/>
+                                        <rect key="frame" x="16" y="15" width="128" height="30"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="YOK-cY-eY4"/>
@@ -61,7 +61,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7SY-Bw-ahm" userLabel="Continue" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="325" y="47" width="227" height="30"/>
+                                <rect key="frame" x="176" y="79" width="128" height="30"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="lcc-Fx-5g7"/>
@@ -83,7 +83,7 @@
                                 </connections>
                             </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" indicatorStyle="black" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Tlx-l1-ig7" userLabel="Unselected Collection View">
-                                <rect key="frame" x="10" y="100" width="348" height="220"/>
+                                <rect key="frame" x="10" y="132" width="300" height="299"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="gIj-Vz-0t7">
                                     <size key="itemSize" width="75" height="100"/>
@@ -101,7 +101,7 @@
                                         </view>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="Unselected Cell" id="Rab-qC-bur" customClass="SelectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="91" y="0.0" width="75" height="100"/>
+                                        <rect key="frame" x="112.5" y="0.0" width="75" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="75" height="100"/>
@@ -110,7 +110,7 @@
                                     </collectionViewCell>
                                 </cells>
                                 <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="cPp-9m-eMW">
-                                    <rect key="frame" x="0.0" y="100" width="348" height="60"/>
+                                    <rect key="frame" x="0.0" y="100" width="300" height="60"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </collectionReusableView>
                                 <connections>
@@ -119,7 +119,7 @@
                                 </connections>
                             </collectionView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jtX-GA-7ms" customClass="SelectedPlayersView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="368" y="32" width="200" height="288"/>
+                                <rect key="frame" x="0.0" y="356" width="320" height="212"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="212" id="1T2-1s-8c6"/>
@@ -138,12 +138,12 @@
                                 </variation>
                             </view>
                             <navigationBar contentMode="redraw" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UgO-yy-CRO" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="568" height="32"/>
+                                <rect key="frame" x="0.0" y="20" width="320" height="44"/>
                                 <items>
                                     <navigationItem title="Selection" id="sxd-YE-KrL">
                                         <barButtonItem key="leftBarButtonItem" id="t32-EF-2FA">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="eQy-4V-yYX">
-                                                <rect key="frame" x="20" y="5" width="60" height="22"/>
+                                                <rect key="frame" x="16" y="11" width="60" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" image="home"/>
                                                 <connections>
@@ -153,7 +153,7 @@
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" id="FL2-Z1-EDp">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Rmr-6u-jtL" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="459" y="5" width="89" height="22"/>
+                                                <rect key="frame" x="215" y="11" width="89" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Continue" image="forward"/>
                                                 <connections>
@@ -170,10 +170,10 @@
                                 </userDefinedRuntimeAttributes>
                             </navigationBar>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T8J-zi-GyC" userLabel="Toolbar view">
-                                <rect key="frame" x="368" y="276" width="200" height="88"/>
+                                <rect key="frame" x="0.0" y="524" width="320" height="88"/>
                                 <subviews>
                                     <toolbar clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rkx-tt-68g">
-                                        <rect key="frame" x="0.0" y="44" width="200" height="44"/>
+                                        <rect key="frame" x="0.0" y="44" width="320" height="44"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="lx2-Xx-ht3"/>
@@ -182,7 +182,7 @@
                                             <barButtonItem style="plain" systemItem="flexibleSpace" id="ZBb-nx-uE1"/>
                                             <barButtonItem width="48" style="plain" id="Q5c-1T-Mzy">
                                                 <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="yT8-YW-vNq" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="32" y="5" width="136" height="34"/>
+                                                    <rect key="frame" x="92" y="5" width="136" height="34"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
@@ -272,6 +272,7 @@
                         <outlet property="addPlayerButton" destination="XWY-FH-Uey" id="Dss-Qc-1vR"/>
                         <outlet property="bannerContinuationHeightConstraint" destination="SCD-ZH-5hb" id="Y1m-xI-K9t"/>
                         <outlet property="bannerContinuationView" destination="AZC-do-ZAj" id="5hg-Rh-Mpf"/>
+                        <outlet property="bannerContinueButton" destination="Rmr-6u-jtL" id="biA-oB-Ecf"/>
                         <outlet property="clearButton" destination="yT8-YW-vNq" id="7XD-pX-YF8"/>
                         <outlet property="continueButton" destination="7SY-Bw-ahm" id="JM3-ek-6LL"/>
                         <outlet property="navigationBar" destination="UgO-yy-CRO" id="Diq-OI-UgL"/>
@@ -281,7 +282,6 @@
                         <outlet property="selectionView" destination="Whs-Ka-Uxd" id="QAl-of-52o"/>
                         <outlet property="toolbar" destination="Rkx-tt-68g" id="cfy-kh-frm"/>
                         <outlet property="toolbarBottomConstraint" destination="iIo-Oz-yoO" id="PMM-vL-ipa"/>
-                        <outlet property="toolbarContinueButton" destination="Rmr-6u-jtL" id="biA-oB-Ecf"/>
                         <outlet property="unselectedCollectionView" destination="Tlx-l1-ig7" id="vRw-k0-8iE"/>
                         <segue destination="Vxp-SW-x6a" kind="unwind" identifier="hideSelectionSelectPlayers" unwindAction="hideSelectionSelectPlayersWithSegue:" id="UXW-YD-63I"/>
                         <segue destination="wYy-Td-NIk" kind="show" identifier="showGamePreview" id="zvw-a4-7JA"/>

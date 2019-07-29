@@ -10,7 +10,8 @@ import UIKit
 import CoreData
 import CoreServices
 
-class SelectionViewController: CustomViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, UIDropInteractionDelegate, UIGestureRecognizerDelegate, PlayerViewDelegate, SelectedPlayersViewDelegate {
+class SelectionViewController: CustomViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, UIDropInteractionDelegate, UIGestureRecognizerDelegate, PlayerViewDelegate, SelectedPlayersViewDelegate, SlideOutButtonDelegate {
+    
 
     // MARK: - Class Properties ======================================================================== -
 
@@ -24,7 +25,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private let labelHeight: CGFloat = 30.0
     private let interRowSpacing:CGFloat = 10.0
     private var bannerContinuationHeight: CGFloat = 44.0
-    private var haloWidth: CGFloat = 3.0
+    private var haloWidth: CGFloat = 0.0
     private var firstTime = true
     private var selectedAlpha: CGFloat = 0.5
     private var testMode = false
@@ -42,12 +43,11 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var selectionView: UIView!
     @IBOutlet private weak var bannerContinueButton: UIButton!
     @IBOutlet private weak var continueButton: UIButton!
-    @IBOutlet private weak var clearButton: UIButton!
     @IBOutlet private weak var addPlayerButton: UIButton!
     @IBOutlet private weak var selectedPlayersView: SelectedPlayersView!
     @IBOutlet private weak var selectedViewHeight: NSLayoutConstraint!
     @IBOutlet private weak var selectedViewWidth: NSLayoutConstraint!
-    @IBOutlet private weak var toolbar: UIToolbar!
+    @IBOutlet private weak var slideOutButton: SlideOutButtonView!
     @IBOutlet private weak var toolbarBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var navigationBar: UINavigationBar!
     @IBOutlet private weak var bannerContinuationView: UIView!
@@ -81,14 +81,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         continueAction()
     }
 
-    @IBAction func clearPressed(_ sender: UIButton) {
-        if selectedList.count > 0 {
-            for selected in selectedList {
-                self.removeSelection(selected.slot, animate: false)
-            }
-        }
-    }
-    
     @IBAction func addPlayerPressed(_ sender: UIButton) {
         self.addNewPlayer()
     }
@@ -139,9 +131,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         
         // Set up selected players view delegate
         self.selectedPlayersView.delegate = self
-        
-        // Set status bar clear
-        ScorecardUI.setToolbarClear(toolbar: toolbar)
         
     }
     
@@ -281,27 +270,18 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         let hidden = (selectedList.count >= 3 || testMode ? false : true)
         bannerContinueButton.isHidden = hidden || (!ScorecardUI.smallPhoneSize() && !ScorecardUI.landscapePhone())
         continueButton.isHidden = hidden || (ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone())
-        
-        // Note the selected view extends 44 below the bottom of the screen. Setting the bottom constraint to zero makes the toolbar disappear
-        let toolbarBottomOffset: CGFloat = (selectedList.count > 0 ? 44 + (self.view.safeAreaInsets.bottom * 0.40)	 : 0)
-        if toolbarBottomOffset != self.toolbarBottomConstraint.constant {
-            if animated {
-                Utility.animate(duration: 0.3) {
-                    self.toolbarBottomConstraint.constant = toolbarBottomOffset
-                }
-            } else {
-                self.toolbarBottomConstraint.constant = toolbarBottomOffset
-            }
-        }
+        slideOutButton.isHidden = (selectedList.count == 0)
     }
     
     func setSize(size: CGSize) {
         
         if ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone() {
             self.bannerContinuationHeight = 0.0
+            self.bannerContinuationView.isHidden = true
             addPlayerThumbnail = true
         } else {
             self.bannerContinuationHeight = 60.0
+            self.bannerContinuationView.isHidden = false
             addPlayerThumbnail = false
         }
         self.bannerContinuationHeightConstraint.constant = self.bannerContinuationHeight
@@ -315,7 +295,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         self.height = self.width + self.labelHeight - 5.0
         self.rowHeight = self.height + self.interRowSpacing
     
-        let unselectedRows: Int = max(3, Int((totalHeight * 0.6) / self.rowHeight))
+        let unselectedRows: Int = max(3, Int((totalHeight * 0.55) / self.rowHeight))
         let unselectedHeight = CGFloat(unselectedRows) * rowHeight
         
         let selectedTop = unselectedHeight + self.navigationBar.intrinsicContentSize.height + self.bannerContinuationHeight + view.safeAreaInsets.top
@@ -373,6 +353,16 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             self.addNewPlayer()
         } else {
             self.addSelection(playerView.playerMO!)
+        }
+    }
+    
+    // MARK: - Slide out button delegate handler======================================================== -
+    
+    func slideOutButtonPressed(_ sender: SlideOutButtonView) {
+        if selectedList.count > 0 {
+            for selected in selectedList {
+                self.removeSelection(selected.slot, animate: false)
+            }
         }
     }
     
@@ -549,7 +539,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private func setUserInteraction(_ enabled: Bool) {
         self.unselectedCollectionView.isUserInteractionEnabled = enabled
         self.selectedPlayersView.isEnabled = enabled
-        self.clearButton.isUserInteractionEnabled = enabled
+        self.slideOutButton.isEnabled = enabled
     }
     
     private func setupAnimationView() {

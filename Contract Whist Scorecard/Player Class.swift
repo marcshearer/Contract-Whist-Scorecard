@@ -188,11 +188,13 @@ class Player {
     }
     
     public func saveMaxScore() {
-        self.previousMaxScore = self.playerMO!.maxScore
-        if self.playerMO!.maxScoreDate != nil {
-            self.previousMaxScoreDate = self.playerMO!.maxScoreDate! as Date
-        } else {
-            self.previousMaxScoreDate = Date()
+        if let playerMO = self.playerMO {
+            self.previousMaxScore = playerMO.maxScore
+            if playerMO.maxScoreDate != nil {
+                self.previousMaxScoreDate = playerMO.maxScoreDate! as Date
+            } else {
+                self.previousMaxScoreDate = Date()
+            }
         }
     }
         

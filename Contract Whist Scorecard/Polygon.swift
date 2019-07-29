@@ -59,11 +59,17 @@ class Polygon {
         
     }
     
-    static public func roundedShapeLayer(definedBy points: [PolygonPoint], strokeColor: UIColor? = nil, fillColor: UIColor? = nil, lineWidth: CGFloat? = nil, radius: CGFloat? = nil) -> CAShapeLayer {
+    static public func roundedShapeLayer(in view: UIView? = nil, definedBy points: [PolygonPoint], strokeColor: UIColor? = nil, fillColor: UIColor? = nil, lineWidth: CGFloat? = nil, radius: CGFloat? = nil) -> CAShapeLayer {
         
         let path = Polygon.roundedBezierPath(definedBy: points, radius: radius)
         
-        return Polygon.shapeLayer(from: path, strokeColor: strokeColor, fillColor: fillColor, lineWidth: lineWidth)
+        let shapeLayer = Polygon.shapeLayer(from: path, strokeColor: strokeColor, fillColor: fillColor, lineWidth: lineWidth)
+        
+        if let view = view {
+            view.layer.insertSublayer(shapeLayer, at: 0)
+        }
+        
+        return shapeLayer
     }
     
     static public func shapeLayer(from path: UIBezierPath, strokeColor: UIColor? = nil, fillColor: UIColor? = nil, lineWidth: CGFloat? = nil) -> CAShapeLayer {
@@ -182,7 +188,6 @@ class Polygon {
         view.layer.mask = shapeLayer
     }
 
-    
     static private func radius(_ point1: CGPoint, _ point2: CGPoint) -> CGFloat {
         let x = point2.x - point1.x
         let y = point1.y - point2.y
@@ -218,6 +223,23 @@ class Polygon {
             angle = (2 * CGFloat.pi) - angle
         }
         return angle
+    }
+    
+    static public func hexagonFrame(in view: UIView, frame: CGRect? = nil, strokeColor: UIColor, arrowWidth: CGFloat? = nil, lineWidth: CGFloat = 1.0) -> CAShapeLayer {
+        var points: [PolygonPoint] = []
+        let frame = frame ?? CGRect(origin: CGPoint(), size: view.frame.size)
+        let arrowWidth = arrowWidth ?? frame.height / 3.0
+        let minX = frame.minX + (lineWidth / 2.0)
+        let maxX = frame.maxX - (lineWidth / 2.0)
+        let minY = frame.minY + (lineWidth / 2.0)
+        let maxY = frame.maxY - (lineWidth / 2.0)
+        points.append(PolygonPoint(x: minX, y: frame.midY))
+        points.append(PolygonPoint(x: minX + arrowWidth, y: minY))
+        points.append(PolygonPoint(x: maxX - arrowWidth, y: minY))
+        points.append(PolygonPoint(x: maxX, y: frame.midY))
+        points.append(PolygonPoint(x: maxX - arrowWidth, y: maxY))
+        points.append(PolygonPoint(x: minX + arrowWidth, y: maxY))
+        return Polygon.roundedShapeLayer(in: view, definedBy: points, strokeColor: strokeColor, fillColor: UIColor.clear, lineWidth: lineWidth)
     }
     
 }

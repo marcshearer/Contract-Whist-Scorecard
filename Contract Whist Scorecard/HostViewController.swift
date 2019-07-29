@@ -58,6 +58,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     private var exiting = false
     private var computerPlayers: [Int : ComputerPlayerDelegate]?
     private var firstTime = true
+    private var gamePreviewViewController: GamePreviewViewController!
     
     private var connectedPlayers: Int {
         get {
@@ -356,7 +357,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     internal func connectionReceived(from peer: CommsPeer, info: [String : Any?]?) -> Bool {
         // Will accept all connections, but some will automatically disconnect with a relevant error message once connection complete
         var playerMO: PlayerMO! = nil
-        var name = peer.playerName!
+        var name: String!
         if let email = peer.playerEmail {
             playerMO = scorecard.findPlayerByEmail(email)
         }
@@ -373,14 +374,14 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             if let index = self.playerData.firstIndex(where: {$0.email == peer.playerEmail}) {
                 if self.playerData[index].peer != nil && self.playerData[index].peer.deviceName != peer.deviceName && self.playerData[index].peer.state != .notConnected {
                     // Duplicate - add it temporarily - to disconnect in state change
-                    addPlayer(name: name, email: peer.playerEmail!, playerMO: playerMO, peer: peer, inviteStatus: .none, disconnectReason: "This player has already joined from another device")
+                    addPlayer(name: name, email: peer.playerEmail!, playerMO: playerMO, peer: peer, inviteStatus: .none, disconnectReason: "\(name ?? "This player") has already joined from another device")
                 } else {
                     self.playerData[index].peer = peer
                     self.updateFaceTimeAddress(info: info, playerData: self.playerData[index])
                 }
             } else {
                 // Not found - shouldn't happen - add it temporarily - to disconnect in state change
-                addPlayer(name: name, email: peer.playerEmail!, playerMO: playerMO, peer: peer, inviteStatus: .none, disconnectReason: "This player has not been invited to a game on this device")
+                addPlayer(name: name, email: peer.playerEmail!, playerMO: playerMO, peer: peer, inviteStatus: .none, disconnectReason: "\(name ?? "This player") has not been invited to a game on this device")
             }
         } else {
             addPlayer(name: name, email: peer.playerEmail!, playerMO: playerMO, peer: peer)
@@ -446,16 +447,14 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                         var error = false
                         if self.connectionMode == .nearby {
                             // Nearby connection - Check if duplicate from a different device
-                            if self.playerData.firstIndex(where: {($0.peer == nil || $0.peer.deviceName != peer.deviceName) && $0.email == self.playerData[playerNumber - 1].email}) != nil {
-                                error = true
-                            }
-                            if error {
-                                self.disconnectPlayer(playerNumber: playerNumber, reason: "This player has already connected from another device")
+                            if let _ = self.playerData.firstIndex(where: {($0.peer == nil || $0.peer.deviceName != peer.deviceName) && $0.email == self.playerData[playerNumber - 1].email}) {
+                                self.disconnectPlayer(playerNumber: playerNumber, reason: "\(peer.playerName ?? "This player") has already connected from another device")
                                 error = true
                             }
                         }
                         if !error {
                             self.scorecard.refreshState(to: peer)
+                            self.sendPlayers(overridePlayer: playerNumber)
                         }
                     }
                 case .notConnected:
@@ -465,21 +464,26 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                             self.playerData[playerNumber - 1].peer = nil
                             self.updateCell(playerData: self.playerData[playerNumber - 1], hostMode: false)
                         } else {
-                            self.removePlayer(playerNumber: playerNumber)
+                            self.reflectState(peer: peer)
                         }
                     } else {
                         self.reflectState(peer: peer)
                     }
+                    self.sendPlayers()
                 default:
                     break
                 }
+                
+                // Update game preview if necessary
+                self.gamePreviewViewController?.refreshPlayers(connected: self.connected())
+                
                 // Update whisper
                 if currentState != peer.state {
                     if (peer.state == .notConnected && peer.autoReconnect) || peer.state == .recovering {
                         self.playerData[playerNumber - 1].whisper.show("Connection to \(peer.playerName!) lost. Recovering...")
                     }
                 }
-                if peer.state == .connected {
+                if peer.state == .connected && playerNumber < self.playerData.count {
                     self.playerData[playerNumber - 1].whisper.hide("Connection to \(peer.playerName!) restored")
                 }
             }
@@ -505,6 +509,25 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 }
             }
         }
+    }
+    
+    private func sendPlayers(overridePlayer: Int? = nil) {
+        var players: [(String, String, Bool)] = []
+        let connected = self.connected(overridePlayer: overridePlayer)
+        for playerNumber in 1...self.playerData.count {
+            let playerData = self.playerData[playerNumber - 1]
+            players.append((playerData.email, playerData.name, connected[playerNumber] ?? true))
+            
+        }
+        self.scorecard.sendPlayers(players: players)
+    }
+    
+    private func connected(overridePlayer: Int? = nil) -> [Int : Bool] {
+        var connected: [Int : Bool] = [:]
+        for playerNumber in 1...self.playerData.count {
+            connected[playerNumber] = (playerNumber == 1 || self.playerData[playerNumber - 1].peer?.state == .connected || playerNumber == overridePlayer)
+        }
+        return connected
     }
     
     private func setInstructions() {
@@ -763,6 +786,8 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     // MARK: - Action Handlers ================================================================ -
     
     @objc func changeHostButtonPressed(_ button: UIButton) {
+        self.scorecard.commsDelegate?.disconnect(reason: "Host device has changed player", reconnect: false)
+        self.stopHostBroadcast()
         SearchViewController.identifyPlayers(from: self, completion: self.returnPlayer, filter: { (playerMO) in
             // Exclude inviting player
             return (self.playerData[0].email != playerMO.email )
@@ -777,7 +802,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         let row = playerData.firstIndex(where: {$0.unique == button.tag})
         if row != nil {
             let playerNumber = row! + 1
-            self.disconnectPlayer(playerNumber: playerNumber, reason: "Closed by remote device")
+            self.disconnectPlayer(playerNumber: playerNumber, reason: "\(self.playerData[0].name) has disconnected")
         }
     }
     
@@ -792,19 +817,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             self.playerData[0].email = playerMO![0].email!
             self.playerData[0].playerMO = playerMO![0]
             self.refreshHostView()
-            
-            // Check that this player hadn't connected from another devivce
-            if playerData.count > 1 {
-                var disconnectPlayer: Int! = nil
-                for playerNumber in 2...playerData.count {
-                    if self.playerData[playerNumber - 1].email == playerMO![0].email! {
-                        disconnectPlayer = playerNumber
-                    }
-                }
-                if disconnectPlayer != nil {
-                    self.disconnectPlayer(playerNumber: disconnectPlayer, reason: "This player has already connected from another device")
-                }
-            }
+            self.startHostBroadcast(email: playerMO![0].email!, name: playerMO![0].name!)
         }
     }
     
@@ -958,7 +971,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         self.hostService = multipeerHost
         self.takeDelegates(self)
         if self.playerData.count > 0 {
-            self.startHostBroadcast(email: playerData[0].email, name: playerData[0].email)
+            self.startHostBroadcast(email: playerData[0].email, name: playerData[0].name)
         }
     }
     
@@ -1133,6 +1146,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     
     public func finishHost(completion: (()->())? = nil) {
         self.scorecard.sendScores = false
+        self.scorecard.commsDelegate?.disconnect(reason: "\(self.playerData[0].name) has stopped hosting", reconnect: false)
         self.stopHostBroadcast(completion: {
             self.takeDelegates(nil)
             self.scorecard.commsDelegate = nil
@@ -1166,12 +1180,12 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         
         switch segue.identifier! {
         case "showHostGamePreview":
-            let destination = segue.destination as! GamePreviewViewController
-            destination.selectedPlayers = self.selectedPlayers
-            destination.faceTimeAddress = self.faceTimeAddress
-            destination.returnSegue = "hideHostGamePreview"
-            destination.rabbitMQService = self.rabbitMQHost
-            destination.computerPlayerDelegate = self.computerPlayers
+            gamePreviewViewController = segue.destination as? GamePreviewViewController
+            gamePreviewViewController.selectedPlayers = self.selectedPlayers
+            gamePreviewViewController.faceTimeAddress = self.faceTimeAddress
+            gamePreviewViewController.returnSegue = "hideHostGamePreview"
+            gamePreviewViewController.rabbitMQService = self.rabbitMQHost
+            gamePreviewViewController.computerPlayerDelegate = self.computerPlayers
             
         default:
             break

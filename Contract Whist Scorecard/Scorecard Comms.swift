@@ -253,15 +253,28 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         }
     }
             
-    public func sendPlayers(descriptor: String = "players", to commsPeer: CommsPeer! = nil) {
+    public func sendPlayers(descriptor: String = "players", players: [(email: String, name: String, connected: Bool)]? = nil, to commsPeer: CommsPeer! = nil) {
         var playerList: [String : Any] = [:]
         // Send players
-        for playerNumber in 1...self.currentPlayers {
-            var player: [String : String] = [:]
-            let playerMO = enteredPlayer(playerNumber).playerMO!
-            player["name"] = playerMO.name!
-            player["email"] = playerMO.email!
-            playerList["\(playerNumber)"] = player
+        if let players = players {
+            // List passed in
+            for playerNumber in 1...players.count {
+                var player: [String : String] = [:]
+                player["name"] = players[playerNumber - 1].name
+                player["email"] = players[playerNumber - 1].email
+                player["connected"] = (players[playerNumber - 1].connected ? "true" : "false")
+                playerList["\(playerNumber)"] = player
+            }
+        } else {
+            // Use defined players
+            for playerNumber in 1...self.currentPlayers {
+                var player: [String : String] = [:]
+                let playerMO = enteredPlayer(playerNumber).playerMO!
+                player["name"] = playerMO.name!
+                player["email"] = playerMO.email!
+                player["connected"] = "true"
+                playerList["\(playerNumber)"] = player
+            }
         }
         self.commsDelegate?.send(descriptor, playerList, to: commsPeer)
         self.sendDealer()

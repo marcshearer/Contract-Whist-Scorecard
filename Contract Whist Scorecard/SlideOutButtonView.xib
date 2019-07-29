@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SlideOutButtonView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+            <connections>
+                <outlet property="button" destination="9Pt-V5-ku8" id="sCe-pQ-CHn"/>
+                <outlet property="buttonWidthConstraint" destination="Zq5-wv-CFz" id="YI5-lk-1Jv"/>
+                <outlet property="contentView" destination="iN0-l3-epB" id="Wmf-oq-2Qi"/>
+                <outlet property="toolbar" destination="y3w-Uf-78B" id="4IE-Ut-BOg"/>
+                <outlet property="toolbarBottomConstraint" destination="QqM-54-4qi" id="HW5-pN-NwQ"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="88"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="y3w-Uf-78B" userLabel="Toolbar">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Pt-V5-ku8" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                            <rect key="frame" x="107" y="5" width="200" height="34"/>
+                            <color key="backgroundColor" name="Clear"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="200" id="Zq5-wv-CFz"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                            <state key="normal" title="Button">
+                                <color key="titleColor" name="Hand Text"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
+                                    <color key="value" name="Hand"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="color" keyPath="strokeColor">
+                                    <color key="value" name="Hand Text"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                            <connections>
+                                <action selector="buttonPressed:" destination="-1" eventType="touchUpInside" id="RCG-uH-bM6"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" name="Clear"/>
+                    <constraints>
+                        <constraint firstItem="9Pt-V5-ku8" firstAttribute="centerX" secondItem="y3w-Uf-78B" secondAttribute="centerX" id="DmD-9k-iT8"/>
+                        <constraint firstItem="9Pt-V5-ku8" firstAttribute="centerY" secondItem="y3w-Uf-78B" secondAttribute="centerY" id="i3z-EX-l43"/>
+                        <constraint firstAttribute="height" constant="44" id="wMg-Un-y4a"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" name="Clear"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="y3w-Uf-78B" secondAttribute="bottom" constant="44" id="QqM-54-4qi"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="y3w-Uf-78B" secondAttribute="trailing" id="a4i-3x-j5x"/>
+                <constraint firstItem="y3w-Uf-78B" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="iN7-gM-Weo"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Hand">
+            <color red="0.29411764705882354" green="0.6588235294117647" blue="0.6470588235294118" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Hand Text">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

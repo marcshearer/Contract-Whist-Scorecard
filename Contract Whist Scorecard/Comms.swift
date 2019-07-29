@@ -299,6 +299,10 @@ extension CommsClientHandlerDelegate {
         start(email: email, name: name, recoveryMode: false, matchDeviceName: nil)
     }
     
+    func start(email: String!, name: String!, recoveryMode: Bool) {
+        start(email: email, name: name, recoveryMode: recoveryMode, matchDeviceName: nil)
+    }
+    
     func start(email: String!, recoveryMode: Bool) {
         start(email: email, name: nil, recoveryMode: recoveryMode, matchDeviceName: nil)
     }

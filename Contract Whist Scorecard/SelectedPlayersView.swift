@@ -210,7 +210,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         self.bringSubviewToFront(messageLabel)
         self.messageLabel.numberOfLines = 0
         self.messageLabel.textAlignment = .center
-        self.messageLabel.textColor = Palette.handTextContrast
+        self.messageLabel.textColor = Palette.roomInteriorText
     }
     
     private func setupSelectedPlayers(dropAction: ((PlayerView?, CGPoint?, PlayerViewType, String)->())? = nil, tapAction: ((PlayerView)->())? = nil) {
@@ -222,7 +222,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
             
             let playerView = PlayerView(type: .selected, parent: self.contentView, width: self.width, height: self.height, tag: index, haloWidth: self.haloWidth)
             playerView.delegate = self
-            playerView.set(textColor: Palette.handTextContrast)
+            playerView.set(textColor: Palette.roomInteriorText)
             self.clear(playerView: playerView, slot: index)
             self.playerViews.append(playerView)
         }
@@ -315,7 +315,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         } else {
             // Extend to the edge (and beyond)
             roomHeight = normalRoomHeight + adjustment
-            topAdjustment += 3 * (adjustment / 8.0)
+            topAdjustment += max(0, min(adjustment - 50.0 - self.safeAreaInsets.bottom, adjustment * 0.75))
         }
         
         if roomHeight > self.frame.height {
@@ -507,7 +507,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         self.contentView.layer.insertSublayer(roomStrokeLayer, above: tableLayer)
         self.tableLayers.append(roomStrokeLayer)
         
-        let roomFillLayer = Polygon.roundedShapeLayer(definedBy: points, strokeColor: UIColor.white, fillColor: Palette.hand, lineWidth: 0.0, radius: 20.0)
+        let roomFillLayer = Polygon.roundedShapeLayer(definedBy: points, strokeColor: UIColor.white, fillColor: Palette.roomInterior, lineWidth: 0.0, radius: 20.0)
         self.contentView.layer.insertSublayer(roomFillLayer, below: tableLayer)
         self.tableLayers.append(roomFillLayer)
         self.roomPath = roomFillLayer.path
@@ -518,7 +518,9 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         self.height = height
     }
     
-    private func positionSelectedPlayers() {
+    public func positionSelectedPlayers(players: Int? = nil) {
+        
+        self.players = players ?? self.players
         
         let apex = CGPoint(x: self.tableFrame.midX - (self.width / 2.0), y: self.tableFrame.minY - self.height - 10.0 - (additionalAdjustment / 2.0))
         let left = CGPoint(x: self.tableFrame.minX - (self.width / 2.0), y: self.tableFrame.midY - self.height - 10.0 - (additionalAdjustment / 2.0))
@@ -539,17 +541,33 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         
         let viewSize = CGSize(width: self.width, height: self.height)
         let middleX: CGFloat = (self.players == self.scorecard.numberPlayers ? 0.0 : (self.tableFrame.width / 8.0)) + (self.width / 2.0)
-        
-        playerViews[0].frame = CGRect(origin: CGPoint(x: apex.x, y: self.tableFrame.maxY - self.height - 2.0), size: viewSize)
-        playerViews[1].frame = CGRect(origin: positionSelectedView(left.x + middleX), size: viewSize)
-        
-        if self.players == self.scorecard.numberPlayers {
-            playerViews[2].frame = CGRect(origin: positionSelectedView(apex.x), size: viewSize)
-        } else {
-            playerViews[self.scorecard.numberPlayers - 1].isHidden = true
+        var position: [Int]
+        switch self.players {
+        case 1:
+            position = [0, -1, -1, -1]
+        case 2:
+            position = [0, 2, -1, -1]
+        case 3:
+            position = [0, 1, 3, -1]
+        default:
+            position = [0, 1, 2, 3]
         }
         
-        playerViews[self.players - 1].frame = CGRect(origin: positionSelectedView(right.x - middleX), size: viewSize)
+        for slot in 0..<position.count {
+            playerViews[slot].isHidden = false
+            switch position[slot] {
+            case 0:
+                playerViews[slot].frame = CGRect(origin: CGPoint(x: apex.x, y: self.tableFrame.maxY - self.height - 2.0), size: viewSize)
+            case 1:
+                playerViews[slot].frame = CGRect(origin: positionSelectedView(left.x + middleX), size: viewSize)
+            case 2:
+                playerViews[slot].frame = CGRect(origin: positionSelectedView(apex.x), size: viewSize)
+            case 3:
+                playerViews[slot].frame = CGRect(origin: positionSelectedView(right.x - middleX), size: viewSize)
+            default:
+                playerViews[slot].isHidden = true
+            }
+        }
     }
     
     func add(point: PolygonPoint, x: CGFloat = 0.0, y: CGFloat = 0.0) -> PolygonPoint {

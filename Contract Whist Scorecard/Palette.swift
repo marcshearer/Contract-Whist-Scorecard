@@ -40,12 +40,14 @@ class Palette {
     static let inputControlPlaceholder = UIColor(named: "Input Control Placeholder")!
     static let madeContract = UIColor(named: "Made Contract")!
     static let madeContractText = UIColor(named: "Made Contract Text")!
+    static let roomInterior = UIColor(named: "Room Interior")!
+    static let roomInteriorText = UIColor(named: "Room Interior Text")!
     static let sectionHeading = UIColor(named: "Section Heading")!
     static let sectionHeadingText = UIColor(named: "Section Heading Text")!
     static let sectionHeadingTextContrast = UIColor(named: "Section Heading Text Contrast")!
     static let tableTop = UIColor(named: "Table Top")!
     static let tableTopText = UIColor(named: "Table Top Text")!
-    static let tableTopTextContrast = UIColor(named: "Table Top Text Contrast")
+    static let tableTopTextContrast = UIColor(named: "Table Top Text Contrast")!
     static let total = UIColor(named: "Total")!
     static let totalText = UIColor(named: "Total Text")!
     static let thumbnailDisc = UIColor(named: "Thumbnail Disc")!

@@ -33,6 +33,49 @@ class InsetPaddingView: InsetPaddingViewNoColor {
     
 }
 
+@objc enum ContinuationShapeType: Int {
+    case upArrow = 1
+    case downArrow = 2
+    case leftstep = 3
+}
+
+class BannerContinuation: UIView {
+    
+    @IBInspectable var bannerColor: UIColor
+    @IBInspectable var shape: ContinuationShapeType
+    
+    @IBInspectable var shapeType:Int {
+        get {
+            return self.shape.rawValue
+        }
+        set(shapeType) {
+            self.shape = ContinuationShapeType(rawValue: shapeType) ?? .upArrow
+        }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        self.bannerColor = Palette.banner
+        self.shape = .upArrow
+        super.init(coder: aDecoder)
+    }
+    
+    override func draw(_ rect: CGRect) {
+        var points: [PolygonPoint] = []
+        switch self.shape {
+        case .upArrow:
+            points.append(PolygonPoint(x: rect.minX, y: rect.minY, pointType: .point))
+            points.append(PolygonPoint(x: rect.minX, y: rect.maxY, pointType: .point))
+            points.append(PolygonPoint(x: rect.midX, y: rect.minY, pointType: .quadRounded, radius: 20.0))
+            points.append(PolygonPoint(x: rect.maxX, y: rect.maxY, pointType: .point))
+            points.append(PolygonPoint(x: rect.maxX, y: rect.minY, pointType: .point))
+        default:
+            break
+        }
+        Polygon.roundedShape(in: self, definedBy: points, strokeColor: self.bannerColor, fillColor: self.bannerColor)
+    }
+    
+}
+
 class NavigationBar: UINavigationBar {
     
     @IBInspectable var bannerColor: UIColor

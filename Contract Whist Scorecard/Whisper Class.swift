@@ -24,6 +24,7 @@ class Whisper {
     init() {
         self.label = UILabel()
         self.label.isUserInteractionEnabled = true
+        self.label.adjustsFontSizeToFitWidth = true
     }
     
      public func show(_ message: String, hideAfter: TimeInterval! = nil) {
@@ -63,7 +64,7 @@ class Whisper {
                 self.label.layer.borderWidth = 1.0
                 self.label.font = UIFont.systemFont(ofSize: 16)
                 self.label.textAlignment = .center
-                ScorecardUI.roundCorners(self.label, percent: 20)
+                ScorecardUI.roundCorners(self.label)
                 
                 // Show label
                 self.view.addSubview(self.label)

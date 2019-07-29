@@ -11,10 +11,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Selection-->
+        <!--Selection -->
         <scene sceneID="UIh-IU-VZU">
             <objects>
-                <viewController storyboardIdentifier="SelectionViewController" title="Selection" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zGV-gf-a3n" customClass="SelectionViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SelectionViewController" title="Selection" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zGV-gf-a3n" userLabel="Selection " customClass="SelectionViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Whs-Ka-Uxd">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -120,10 +120,40 @@
                             </collectionView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jtX-GA-7ms" customClass="SelectedPlayersView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="356" width="320" height="212"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="be7-aP-DEd" customClass="SlideOutButtonView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="124" width="320" height="88"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="88" id="om4-UW-TQm"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="buttonFillColor">
+                                                <color key="value" name="Room Interior"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="buttonStrokeColor">
+                                                <color key="value" name="Room Interior Text"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="buttonTextColor">
+                                                <color key="value" name="Room Interior Text"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="viewBackgroundColor">
+                                                <color key="value" name="Clear"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="title" value="Clear All"/>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <outlet property="delegate" destination="zGV-gf-a3n" id="bOR-bu-xjf"/>
+                                        </connections>
+                                    </view>
+                                </subviews>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="212" id="1T2-1s-8c6"/>
                                     <constraint firstAttribute="width" constant="200" id="KfB-6p-mr0"/>
+                                    <constraint firstItem="be7-aP-DEd" firstAttribute="leading" secondItem="jtX-GA-7ms" secondAttribute="leading" id="a6V-aN-TUv"/>
+                                    <constraint firstAttribute="trailing" secondItem="be7-aP-DEd" secondAttribute="trailing" id="pv0-te-Nu9"/>
+                                    <constraint firstAttribute="bottom" secondItem="be7-aP-DEd" secondAttribute="bottom" id="rGD-Kb-c43"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
@@ -169,51 +199,6 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </navigationBar>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T8J-zi-GyC" userLabel="Toolbar view">
-                                <rect key="frame" x="0.0" y="524" width="320" height="88"/>
-                                <subviews>
-                                    <toolbar clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rkx-tt-68g">
-                                        <rect key="frame" x="0.0" y="44" width="320" height="44"/>
-                                        <color key="backgroundColor" name="Clear"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="44" id="lx2-Xx-ht3"/>
-                                        </constraints>
-                                        <items>
-                                            <barButtonItem style="plain" systemItem="flexibleSpace" id="ZBb-nx-uE1"/>
-                                            <barButtonItem width="48" style="plain" id="Q5c-1T-Mzy">
-                                                <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="yT8-YW-vNq" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="92" y="5" width="136" height="34"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" name="Clear"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                    <state key="normal" title="Clear Selection">
-                                                        <color key="titleColor" name="Hand Text"/>
-                                                    </state>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
-                                                            <color key="value" name="Hand"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                        <userDefinedRuntimeAttribute type="color" keyPath="strokeColor">
-                                                            <color key="value" name="Hand Text"/>
-                                                        </userDefinedRuntimeAttribute>
-                                                    </userDefinedRuntimeAttributes>
-                                                    <connections>
-                                                        <action selector="clearPressed:" destination="zGV-gf-a3n" eventType="touchUpInside" id="DRq-XF-hgc"/>
-                                                    </connections>
-                                                </button>
-                                            </barButtonItem>
-                                            <barButtonItem style="plain" systemItem="flexibleSpace" id="aTL-X5-VKN"/>
-                                        </items>
-                                        <color key="barTintColor" name="Clear"/>
-                                    </toolbar>
-                                </subviews>
-                                <color key="backgroundColor" name="Clear"/>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="Rkx-tt-68g" secondAttribute="trailing" id="1E4-wu-j9T"/>
-                                    <constraint firstAttribute="bottom" secondItem="Rkx-tt-68g" secondAttribute="bottom" id="iIo-Oz-yoO"/>
-                                    <constraint firstItem="Rkx-tt-68g" firstAttribute="leading" secondItem="T8J-zi-GyC" secondAttribute="leading" id="wEV-Tq-PFg"/>
-                                </constraints>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" name="Background"/>
                         <gestureRecognizers/>
@@ -230,20 +215,18 @@
                             <constraint firstItem="Tlx-l1-ig7" firstAttribute="leading" secondItem="Mqr-Sp-LZb" secondAttribute="leading" constant="10" id="JrV-bw-eHF"/>
                             <constraint firstItem="Mqr-Sp-LZb" firstAttribute="top" secondItem="d37-kV-uuP" secondAttribute="bottom" id="Jwa-Oe-FW0"/>
                             <constraint firstItem="AZC-do-ZAj" firstAttribute="leading" secondItem="Whs-Ka-Uxd" secondAttribute="leading" id="LAw-CZ-4Ef"/>
-                            <constraint firstItem="Tlx-l1-ig7" firstAttribute="top" secondItem="AZC-do-ZAj" secondAttribute="bottom" constant="8" id="MQp-iA-Su6"/>
+                            <constraint firstItem="Tlx-l1-ig7" firstAttribute="top" secondItem="AZC-do-ZAj" secondAttribute="bottom" constant="8" id="MQp-iA-Su6">
+                                <variation key="heightClass=compact" constant="8"/>
+                            </constraint>
                             <constraint firstItem="UgO-yy-CRO" firstAttribute="width" secondItem="Whs-Ka-Uxd" secondAttribute="width" id="NEH-7n-oSh"/>
                             <constraint firstItem="d37-kV-uuP" firstAttribute="leading" secondItem="Whs-Ka-Uxd" secondAttribute="leading" id="O3j-dg-Flv"/>
-                            <constraint firstItem="T8J-zi-GyC" firstAttribute="leading" secondItem="jtX-GA-7ms" secondAttribute="leading" id="ODC-lu-UMD"/>
-                            <constraint firstItem="jtX-GA-7ms" firstAttribute="trailing" secondItem="T8J-zi-GyC" secondAttribute="trailing" id="Pns-aa-Ueb"/>
                             <constraint firstItem="UgO-yy-CRO" firstAttribute="leading" secondItem="Whs-Ka-Uxd" secondAttribute="leading" id="PtH-W2-tvn"/>
                             <constraint firstItem="AZC-do-ZAj" firstAttribute="width" secondItem="Whs-Ka-Uxd" secondAttribute="width" multiplier="0.57" id="WhT-wV-9f2"/>
                             <constraint firstItem="7SY-Bw-ahm" firstAttribute="width" secondItem="XWY-FH-Uey" secondAttribute="width" id="aM5-Wu-D1d"/>
-                            <constraint firstAttribute="bottom" secondItem="T8J-zi-GyC" secondAttribute="bottom" constant="-44" id="bT5-jM-Jmv"/>
                             <constraint firstAttribute="bottom" secondItem="jtX-GA-7ms" secondAttribute="bottom" id="cKC-9I-Qfp"/>
                             <constraint firstItem="Mqr-Sp-LZb" firstAttribute="trailing" secondItem="jtX-GA-7ms" secondAttribute="trailing" id="dLb-ca-btv"/>
                             <constraint firstItem="7SY-Bw-ahm" firstAttribute="top" secondItem="UgO-yy-CRO" secondAttribute="bottom" constant="15" id="do6-TQ-kLM"/>
                             <constraint firstItem="XWY-FH-Uey" firstAttribute="width" secondItem="Whs-Ka-Uxd" secondAttribute="width" multiplier="0.4" id="eHO-We-DVE"/>
-                            <constraint firstItem="T8J-zi-GyC" firstAttribute="top" secondItem="Mqr-Sp-LZb" secondAttribute="bottom" constant="-44" id="fB4-yF-nYs"/>
                             <constraint firstItem="d37-kV-uuP" firstAttribute="top" secondItem="Whs-Ka-Uxd" secondAttribute="top" id="hJb-1R-nUH"/>
                             <constraint firstAttribute="bottom" secondItem="Tlx-l1-ig7" secondAttribute="bottom" id="lTh-qj-dfR"/>
                             <constraint firstItem="jtX-GA-7ms" firstAttribute="leading" secondItem="Mqr-Sp-LZb" secondAttribute="leading" id="lde-MW-hLR"/>
@@ -273,15 +256,13 @@
                         <outlet property="bannerContinuationHeightConstraint" destination="SCD-ZH-5hb" id="Y1m-xI-K9t"/>
                         <outlet property="bannerContinuationView" destination="AZC-do-ZAj" id="5hg-Rh-Mpf"/>
                         <outlet property="bannerContinueButton" destination="Rmr-6u-jtL" id="biA-oB-Ecf"/>
-                        <outlet property="clearButton" destination="yT8-YW-vNq" id="7XD-pX-YF8"/>
                         <outlet property="continueButton" destination="7SY-Bw-ahm" id="JM3-ek-6LL"/>
                         <outlet property="navigationBar" destination="UgO-yy-CRO" id="Diq-OI-UgL"/>
                         <outlet property="selectedPlayersView" destination="jtX-GA-7ms" id="pif-ug-DbZ"/>
                         <outlet property="selectedViewHeight" destination="1T2-1s-8c6" id="p6v-xf-NUZ"/>
                         <outlet property="selectedViewWidth" destination="KfB-6p-mr0" id="1yK-LH-FS6"/>
                         <outlet property="selectionView" destination="Whs-Ka-Uxd" id="QAl-of-52o"/>
-                        <outlet property="toolbar" destination="Rkx-tt-68g" id="cfy-kh-frm"/>
-                        <outlet property="toolbarBottomConstraint" destination="iIo-Oz-yoO" id="PMM-vL-ipa"/>
+                        <outlet property="slideOutButton" destination="be7-aP-DEd" id="IcN-Br-mSQ"/>
                         <outlet property="unselectedCollectionView" destination="Tlx-l1-ig7" id="vRw-k0-8iE"/>
                         <segue destination="Vxp-SW-x6a" kind="unwind" identifier="hideSelectionSelectPlayers" unwindAction="hideSelectionSelectPlayersWithSegue:" id="UXW-YD-63I"/>
                         <segue destination="wYy-Td-NIk" kind="show" identifier="showGamePreview" id="zvw-a4-7JA"/>
@@ -328,10 +309,10 @@
         <namedColor name="Game Banner Text">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="Hand">
+        <namedColor name="Room Interior">
             <color red="0.29411764705882354" green="0.6588235294117647" blue="0.6470588235294118" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="Hand Text">
+        <namedColor name="Room Interior Text">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Shape Highlight Fill">

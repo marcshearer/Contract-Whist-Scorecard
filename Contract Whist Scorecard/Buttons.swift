@@ -23,6 +23,10 @@ class RoundedButton: UIButton {
         self.titleLabel?.adjustsFontSizeToFitWidth = true
     }
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
     func isEnabled(_ enabled: Bool) {
         if enabled {
             self.setTitleColor(self.normalTextColor, for: .normal)
@@ -150,6 +154,17 @@ class ClearButton: RoundedButton {
         self.disabledAlpha = 0.3
         super.isEnabled(true)
     }
+    
+    override init(frame: CGRect) {
+        super.init(frame:frame)
+        self.normalTextColor = self.titleColor(for: .normal)! // Leave as declared
+        self.normalBackgroundColor = UIColor.clear
+        self.normalAlpha = 1.0
+        self.disabledTextColor = self.normalTextColor
+        self.disabledBackgroundColor = self.normalBackgroundColor
+        self.disabledAlpha = 0.3
+        super.isEnabled(true)
+    }
 }
 
 class OutlineButton: RoundedButton {
@@ -206,8 +221,7 @@ class AngledButton: ClearButton {
         }
         
         // Add new shape
-        let layer = Polygon.roundedShapeLayer(definedBy: points, strokeColor: self.strokeColor, fillColor: self.fillColor, lineWidth: 1.0)
-        self.layer.addSublayer(layer)
+        let layer = Polygon.roundedShapeLayer(in: self, definedBy: points, strokeColor: self.strokeColor, fillColor: self.fillColor, lineWidth: 1.0)
         layers.append(layer)
         
         // Set button properties

@@ -20,10 +20,16 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
     public let connectionPurpose: CommsConnectionPurpose
     public var connectionUUID: String?
     private var _connectionEmail: String?
+    private var _connectionName: String?
     internal var _connectionDevice: String?
     public var connectionEmail: String? {
         get {
             return _connectionEmail
+        }
+    }
+    public var connectionName: String? {
+        get {
+            return _connectionName
         }
     }
     public var connectionDevice: String? {
@@ -64,12 +70,14 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
         }
     }
     
-    internal func startService(email: String!, recoveryMode: Bool, matchDeviceName: String! = nil) {
+    internal func startService(email: String!, name: String!, recoveryMode: Bool, matchDeviceName: String! = nil) {
         self._connectionEmail = email
+        self._connectionName = name
     }
     
     internal func stopService() {
         self._connectionEmail = nil
+        self._connectionName = nil
     }
     
     internal func endSessions(matchDeviceName: String! = nil) {
@@ -314,9 +322,13 @@ class MultipeerServerService : MultipeerService, CommsServerHandlerDelegate, MCN
     internal func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool) {
         self.debugMessage("Start Server \(self.connectionPurpose)")
         
-        super.startService(email: email, recoveryMode: recoveryMode)
+        super.startService(email: email, name: name, recoveryMode: recoveryMode)
         
-        let advertiser = MCNearbyServiceAdvertiser(peer: self.myPeerID, discoveryInfo: nil, serviceType: self.serviceID)
+        var discoveryInfo: [String : String] = [:]
+        discoveryInfo["playerEmail"] = email
+        discoveryInfo["playerName"] = name
+        
+        let advertiser = MCNearbyServiceAdvertiser(peer: self.myPeerID, discoveryInfo: discoveryInfo, serviceType: self.serviceID)
         self.server = ServerConnection(advertiser: advertiser)
         self.server.advertiser.delegate = self
         self.server.advertiser.startAdvertisingPeer()
@@ -428,7 +440,7 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
             self.debugMessage("Start Client \(self.connectionPurpose)")
         }
         
-        super.startService(email: email, recoveryMode: recoveryMode, matchDeviceName: matchDeviceName)
+        super.startService(email: email, name: name, recoveryMode: recoveryMode, matchDeviceName: matchDeviceName)
         
         let browser = MCNearbyServiceBrowser(peer: self.myPeerID, serviceType: serviceID)
         self.client = ClientConnection(browser: browser)
@@ -464,26 +476,24 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
             
             // Set up peer
             broadcastPeer.shouldReconnect = reconnect
-            broadcastPeer.playerEmail = playerEmail
-            broadcastPeer.playerName = playerName
             
             // Set up context data
             var data: Data! = nil
-            if let playerName = playerName {
-                do {
-                    var context = context
-                    if context == nil {
-                        context = [:]
-                    }
-                    context!["player"] = playerName
-                    if let playerEmail = playerEmail {
-                        context!["email"] = playerEmail
-                    }
-                    data = try JSONSerialization.data(withJSONObject: context!, options: .prettyPrinted)
-                } catch {
-                    Utility.getActiveViewController()?.alertMessage("Error connecting to device", title: "Error")
-                    return false
+            do {
+                var context = context
+                if context == nil {
+                    context = [:]
                 }
+                if let playerEmail = playerEmail {
+                    context!["email"] = playerEmail
+                }
+                if let playerName = playerName {
+                    context!["player"] = playerName
+                }
+                data = try JSONSerialization.data(withJSONObject: context!, options: .prettyPrinted)
+            } catch {
+                Utility.getActiveViewController()?.alertMessage("Error connecting to device", title: "Error")
+                return false
             }
             
             // Create session
@@ -533,10 +543,12 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
             } else {
                 broadcastPeer?.mcPeer = peerID
             }
+            broadcastPeer?.playerName = info?["playerName"]
+            broadcastPeer?.playerEmail = info?["playerEmail"]
             
             if broadcastPeer!.reconnect {
                 // Auto-reconnect set - try to connect
-                if !self.connect(to: broadcastPeer!.commsPeer, playerEmail: broadcastPeer?.playerEmail, playerName: broadcastPeer?.playerName, reconnect: true) {
+                if !self.connect(to: broadcastPeer!.commsPeer, playerEmail: broadcastPeer!.commsPeer.playerEmail, playerName: broadcastPeer!.commsPeer.playerName, reconnect: true) {
                     // Not good - shouldn't happen - try stopping browsing and restarting - will retry when find peer again
                     self.client.browser.stopBrowsingForPeers()
                     self.client.browser.startBrowsingForPeers()

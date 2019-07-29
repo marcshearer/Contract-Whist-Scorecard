@@ -671,17 +671,10 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     
     private func onlineGame(_ cell: WelcomeActionCell) {
         if Utility.compareVersions(version1: self.scorecard.settingVersion,
-                                 version2: self.scorecard.latestVersion) == .lessThan {
+                                   version2: self.scorecard.latestVersion) == .lessThan {
             self.alertMessage("You must upgrade to the latest version of the app to use this option")
         } else if self.scorecard.settingSyncEnabled && (self.scorecard.settingNearbyPlaying || self.scorecard.settingOnlinePlayerEmail != nil) {
-            let actionSheet = ActionSheet(view: cell, direction: .up)
-            actionSheet.add("Host a Game", handler: hostGame)
-            actionSheet.add("Join a Game", style: .destructive, handler: joinGame)
-            actionSheet.add("Play Against Computer", handler: computerGame) // TODO Hide
-            actionSheet.add("Cancel", style: .cancel)
-            actionSheet.present()
-        } else {
-            self.computerGame() // TODO Hide
+            self.joinGame()
         }
     }
     

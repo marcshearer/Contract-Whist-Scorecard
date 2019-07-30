@@ -9,30 +9,38 @@
 import UIKit
 import CoreData
 
-protocol GamePreviewDelegate {
-    func gamePreviewComplete()
+@objc protocol GamePreviewDelegate {
+    
+    @objc optional func gamePreviewCompletion()
+    
+    @objc optional func gamePreview(isConnected playerMO: PlayerMO) -> Bool
+    
+    @objc optional func gamePreview(moved playerMO: PlayerMO, to slot: Int)
+    
+    @objc optional func gamePreviewShakeGestureHandler()
+    
 }
 
 class GamePreviewViewController: CustomViewController, ImageButtonDelegate, SelectedPlayersViewDelegate, SlideOutButtonDelegate {
     
     // MARK: - Class Properties ================================================================ -
     
+    // Delegate
+    public var delegate: GamePreviewDelegate?
+    
     // Main state properties
     private let scorecard = Scorecard.shared
     private var recovery: Recovery!
 
-    // Delegate
-    public var delegate: GamePreviewDelegate!
-    
-    // Properties to pass state to / from segues
+    // Properties to determine how view operates
     public var selectedPlayers = [PlayerMO?]()          // Selected players passed in from player selection
-    public var faceTimeAddress: [String] = []           // FaceTime addresses for the above
-    public var returnSegue: String!                     // View to return to
-    public var rabbitMQService: RabbitMQService!
-    public var computerPlayerDelegate: [Int: ComputerPlayerDelegate?]?
-    public var readOnly = false
-    public var formTitle = "Preview"
-    public var backText = "Back"
+    private var faceTimeAddress: [String] = []          // FaceTime addresses for the above
+    private var rabbitMQService: RabbitMQService!
+    private var computerPlayerDelegate: [Int: ComputerPlayerDelegate?]?
+    private var readOnly = false
+    private var formTitle = "Preview"
+    private var backText = "Back"
+    private var completion: (()->())?
     
     // Local class variables
     private var buttonMode = "Triangle"
@@ -75,14 +83,11 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     @IBAction func finishGamePressed(_ sender: Any) {
         // Link back to selection
-        if self.readOnly {
-            self.delegate?.gamePreviewComplete()
-            self.dismiss(animated: true, completion: nil)
-        } else {
+        if !self.scorecard.isHosting && !self.scorecard.hasJoined {
             NotificationCenter.default.removeObserver(observer!)
             self.scorecard.resetOverrideSettings()
-            self.performSegue(withIdentifier: returnSegue, sender: self)
         }
+        self.dismiss(animated: true, completion: self.delegate?.gamePreviewCompletion)
     }
     
     @IBAction func continuePressed(_ sender: Any) {
@@ -194,7 +199,11 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        self.scorecard.motionBegan(motion, with: event)
+        if let shakeGestureHandler = self.delegate?.gamePreviewShakeGestureHandler {
+            shakeGestureHandler()
+        } else {
+            self.scorecard.motionBegan(motion, with: event)
+        }
     }
     
     // MARK: - Action Handlers ================================================================ -
@@ -232,7 +241,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         // Update related list element
         self.selectedPlayers[slot] = playerMO
         self.updateSelectedPlayers(selectedPlayers)
-        self.scorecard.sendPlayers()
+        self.delegate?.gamePreview?(moved: playerMO, to: slot)
     }
     
     // MARK: - Slide out button delegate handlers ==================================================== -
@@ -304,12 +313,12 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         self.positionButtons()
     }
     
-    public func refreshPlayers(connected: [Int:Bool]? = nil) {
+    public func refreshPlayers() {
         self.selectedPlayersView.setAlpha(alpha: 1.0)
         for slot in 0..<self.scorecard.numberPlayers {
             if slot < self.selectedPlayers.count {
                 self.selectedPlayersView.set(slot: slot, playerMO: self.selectedPlayers[slot]!)
-                if connected != nil && !(connected?[slot+1] ?? true) {
+                if !(self.delegate?.gamePreview?(isConnected: self.selectedPlayers[slot]!) ?? true) {
                     self.selectedPlayersView.setAlpha(slot: slot, alpha: 0.3)
                 }
             } else {
@@ -655,15 +664,18 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     // MARK: - Function to present this view ==============================================================
     
-    class func showGamePreview(viewController: UIViewController, selectedPlayers: [PlayerMO], title: String = "Preview", backText: String = "Exit") -> GamePreviewViewController {
+    class func showGamePreview(viewController: UIViewController, selectedPlayers: [PlayerMO], title: String = "Preview", backText: String = "Exit", readOnly: Bool = true, faceTimeAddress: [String] = [], rabbitMQService: RabbitMQService? = nil, computerPlayerDelegates: [Int : ComputerPlayerDelegate]? = nil, delegate: GamePreviewDelegate? = nil) -> GamePreviewViewController {
         let storyboard = UIStoryboard(name: "GamePreviewViewController", bundle: nil)
         let gamePreviewViewController = storyboard.instantiateViewController(withIdentifier: "GamePreviewViewController") as! GamePreviewViewController
         gamePreviewViewController.modalPresentationStyle = UIModalPresentationStyle.fullScreen
-        
         gamePreviewViewController.selectedPlayers = selectedPlayers
         gamePreviewViewController.formTitle = title
         gamePreviewViewController.backText = backText
-        gamePreviewViewController.readOnly = true
+        gamePreviewViewController.readOnly = readOnly
+        gamePreviewViewController.faceTimeAddress = faceTimeAddress
+        gamePreviewViewController.rabbitMQService = rabbitMQService
+        gamePreviewViewController.computerPlayerDelegate = computerPlayerDelegates
+        gamePreviewViewController.delegate = delegate
         
         viewController.present(gamePreviewViewController, animated: true, completion: nil)
         return gamePreviewViewController

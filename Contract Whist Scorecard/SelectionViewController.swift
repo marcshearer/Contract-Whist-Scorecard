@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import CoreServices
 
-class SelectionViewController: CustomViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, UIDropInteractionDelegate, UIGestureRecognizerDelegate, PlayerViewDelegate, SelectedPlayersViewDelegate, SlideOutButtonDelegate {
+class SelectionViewController: CustomViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, UIDropInteractionDelegate, UIGestureRecognizerDelegate, PlayerViewDelegate, SelectedPlayersViewDelegate, SlideOutButtonDelegate, GamePreviewDelegate {
     
 
     // MARK: - Class Properties ======================================================================== -
@@ -54,13 +54,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var bannerContinuationHeightConstraint: NSLayoutConstraint!
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
-    
-    @IBAction func hideGamePreview(segue:UIStoryboardSegue) {
-        // Returning from game setup
-        self.scorecard.loadGameDefaults()
-        self.selectedList = []
-        self.assignPlayers()
-    }
     
     @IBAction func hideSelectionSelectPlayers(segue:UIStoryboardSegue) {
         let source = segue.source as! SelectPlayersViewController
@@ -113,7 +106,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         // Check if in recovery mode - if so (and found all players) go straight to game setup
         if scorecard.recoveryMode {
             if selectedList.count == scorecard.currentPlayers {
-                self.performSegue(withIdentifier: "showGamePreview", sender: self)
+                self.showGamePreview()
            } else {
                 scorecard.recoveryMode = false
             }
@@ -319,7 +312,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
 
     func continueAction() {
         if selectedList.count >= 3 {
-            self.performSegue(withIdentifier: "showGamePreview", sender: self)
+            self.showGamePreview()
         }
     }
     
@@ -603,6 +596,20 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         }
     }
     
+    private func showGamePreview() {
+        selectedList.sort(by: { $0.slot < $1.slot })
+        _ = GamePreviewViewController.showGamePreview(viewController: self, selectedPlayers: selectedList.map{ $0.playerMO }, readOnly: false, delegate: self)
+    }
+    
+    // MARK: - Game Preview Delegate handlers ============================================================================== -
+    
+    internal func gamePreviewCompletion() {
+        // Returning from game setup
+        self.scorecard.loadGameDefaults()
+        self.selectedList = []
+        self.assignPlayers()
+    }
+    
     // MARK: - Drop delegate handlers ================================================================== -
     
     func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
@@ -650,12 +657,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         switch segue.identifier! {
-            
-        case "showGamePreview":
-            let destination = segue.destination as! GamePreviewViewController
-            selectedList.sort(by: { $0.slot < $1.slot })
-            destination.selectedPlayers = selectedList.map{ $0.playerMO }
-            destination.returnSegue = "hideGamePreview"
         
         case "showSelectPlayers":
             let destination = segue.destination as! SelectPlayersViewController

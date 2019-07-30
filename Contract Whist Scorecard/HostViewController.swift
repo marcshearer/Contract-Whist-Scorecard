@@ -23,7 +23,7 @@ enum InviteStatus {
 }
 
 class HostViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate,
-CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStateDelegate {
+CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStateDelegate, GamePreviewDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     
@@ -101,17 +101,6 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     
-    @IBAction func hideHostGamePreview(segue:UIStoryboardSegue) {
-        gameInProgress = false
-        if self.playingComputer {
-            if let segue = segue as? UIStoryboardSegueWithCompletion {
-                segue.completion = {
-                    self.exitHost()
-                }
-            }
-        }
-    }
-    
     @IBAction private func linkFinishGame(segue:UIStoryboardSegue) {
         if let segue = segue as? UIStoryboardSegueWithCompletion {
             segue.completion = {
@@ -130,7 +119,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         self.setupPlayers()
         gameInProgress = true
         self.scorecard.sendPlayers()
-        self.performSegue(withIdentifier: "showHostGamePreview", sender: self)
+        self.showGamePreview()
     }
     
     @IBAction func rightSwipe(recognizer:UISwipeGestureRecognizer) {
@@ -454,7 +443,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                         }
                         if !error {
                             self.scorecard.refreshState(to: peer)
-                            self.sendPlayers(overridePlayer: playerNumber)
+                            self.sendPlayers()
                         }
                     }
                 case .notConnected:
@@ -475,7 +464,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 }
                 
                 // Update game preview if necessary
-                self.gamePreviewViewController?.refreshPlayers(connected: self.connected())
+                self.gamePreviewViewController?.refreshPlayers()
                 
                 // Update whisper
                 if currentState != peer.state {
@@ -497,10 +486,10 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 self.setupPlayers()
                 if self.alertController != nil {
                     self.alertController.dismiss(animated: true, completion: {
-                        self.performSegue(withIdentifier: "showHostGamePreview", sender: self)
+                        self.showGamePreview()
                     })
                 } else {
-                    self.performSegue(withIdentifier: "showHostGamePreview", sender: self)
+                    self.showGamePreview()
                 }
             } else if self.connectionMode == .online && self.playerData.count >= 3 && self.connectedPlayers == self.playerData.count {
                 // Have connections from all invited players - press continue button
@@ -511,23 +500,14 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         }
     }
     
-    private func sendPlayers(overridePlayer: Int? = nil) {
+    private func sendPlayers() {
         var players: [(String, String, Bool)] = []
-        let connected = self.connected(overridePlayer: overridePlayer)
         for playerNumber in 1...self.playerData.count {
             let playerData = self.playerData[playerNumber - 1]
-            players.append((playerData.email, playerData.name, connected[playerNumber] ?? true))
+            players.append((playerData.email, playerData.name, playerNumber == 1 || playerData.peer?.state == .connected))
             
         }
         self.scorecard.sendPlayers(players: players)
-    }
-    
-    private func connected(overridePlayer: Int? = nil) -> [Int : Bool] {
-        var connected: [Int : Bool] = [:]
-        for playerNumber in 1...self.playerData.count {
-            connected[playerNumber] = (playerNumber == 1 || self.playerData[playerNumber - 1].peer?.state == .connected || playerNumber == overridePlayer)
-        }
-        return connected
     }
     
     private func setInstructions() {
@@ -914,7 +894,37 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         }
     }
     
+    // MARK: - Game Preview Delegate handlers ============================================================================== -
+    
+    internal func gamePreviewCompletion() {
+        self.gameInProgress = false
+        if self.playingComputer {
+            self.exitHost()
+        }
+    }
+    
+    internal func gamePreview(isConnected playerMO: PlayerMO) -> Bool {
+        if let index = self.playerData.firstIndex(where: {$0.email == playerMO.email}) {
+            return (index == 0 || playerData[index].peer?.state == .connected)
+        } else {
+            return false
+        }
+    }
+    
+    internal func gamePreview(moved playerMO: PlayerMO, to slot: Int) {
+        if let currentSlot = self.playerData.firstIndex(where: {$0.email == playerMO.email}) {
+            let keepPlayerData = self.playerData[slot]
+            self.playerData[slot] = self.playerData[currentSlot]
+            self.playerData[currentSlot] = keepPlayerData
+        }
+        self.sendPlayers()
+    }
+    
     // MARK: - Utility Routines ======================================================================== -
+    
+    private func showGamePreview() {
+        self.gamePreviewViewController = GamePreviewViewController.showGamePreview(viewController: self, selectedPlayers: selectedPlayers, title: "Host a Game", backText: "Back", readOnly: false, faceTimeAddress: self.faceTimeAddress, rabbitMQService: self.rabbitMQHost, computerPlayerDelegates: self.computerPlayers, delegate: self)
+    }
     
     private func setConnectionMode(_ connectionMode: ConnectionMode, chooseInvitees: Bool = true) {
         let oldConnectionMode = self.connectionMode
@@ -1171,24 +1181,6 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             service.stop(completion: completion)
         } else {
             completion?()
-        }
-    }
-    
-    // MARK: - Segue Prepare Handler ================================================================ -
-    
-    override internal func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        switch segue.identifier! {
-        case "showHostGamePreview":
-            gamePreviewViewController = segue.destination as? GamePreviewViewController
-            gamePreviewViewController.selectedPlayers = self.selectedPlayers
-            gamePreviewViewController.faceTimeAddress = self.faceTimeAddress
-            gamePreviewViewController.returnSegue = "hideHostGamePreview"
-            gamePreviewViewController.rabbitMQService = self.rabbitMQHost
-            gamePreviewViewController.computerPlayerDelegate = self.computerPlayers
-            
-        default:
-            break
         }
     }
 }

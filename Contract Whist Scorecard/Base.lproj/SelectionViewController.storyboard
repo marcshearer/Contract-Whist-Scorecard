@@ -265,7 +265,6 @@
                         <outlet property="slideOutButton" destination="be7-aP-DEd" id="IcN-Br-mSQ"/>
                         <outlet property="unselectedCollectionView" destination="Tlx-l1-ig7" id="vRw-k0-8iE"/>
                         <segue destination="Vxp-SW-x6a" kind="unwind" identifier="hideSelectionSelectPlayers" unwindAction="hideSelectionSelectPlayersWithSegue:" id="UXW-YD-63I"/>
-                        <segue destination="wYy-Td-NIk" kind="show" identifier="showGamePreview" id="zvw-a4-7JA"/>
                         <segue destination="Do4-Za-q4h" kind="popoverPresentation" identifier="showSelectPlayers" popoverAnchorView="Whs-Ka-Uxd" id="ewe-cV-U1p">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
@@ -277,21 +276,13 @@
             </objects>
             <point key="canvasLocation" x="6356.25" y="160.56338028169014"/>
         </scene>
-        <!--Game Preview-->
-        <scene sceneID="Sgh-Qv-hR8">
-            <objects>
-                <viewControllerPlaceholder storyboardName="GamePreviewViewController" referencedIdentifier="GamePreviewViewController" id="wYy-Td-NIk" userLabel="Game Preview" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="A0M-bA-MjT" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="7802" y="134"/>
-        </scene>
         <!--Select Players-->
         <scene sceneID="DJN-Pf-UfJ">
             <objects>
                 <viewControllerPlaceholder storyboardIdentifier="UIViewController-aCF-cU-Oeh" storyboardName="SelectPlayersViewController" referencedIdentifier="SelectPlayersViewController" id="Do4-Za-q4h" userLabel="Select Players" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0Do-0e-mtE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7791" y="268"/>
+            <point key="canvasLocation" x="7035" y="161"/>
         </scene>
     </scenes>
     <resources>

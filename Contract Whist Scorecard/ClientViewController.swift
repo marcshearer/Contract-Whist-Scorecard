@@ -73,6 +73,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     private var invite: Invite!
     private var recoveryMode = false
     private let whisper = Whisper()
+    private var playerConnected: [String : Bool] = [:]
     
     // MARK: - IB Outlets ============================================================================== -
     
@@ -307,13 +308,12 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                     for playerNumber in 1...self.scorecard.currentPlayers {
                         self.scorecard.enteredPlayer(playerNumber).reset()
                     }
-                    var playerConnected: [Int: Bool] = [:]
+                    self.playerConnected = [:]
                     for (playerNumberData, playerData) in data as! [String : [String : Any]] {
                         let playerNumber = Int(playerNumberData)!
                         let playerName = playerData["name"] as! String
                         let playerEmail = playerData["email"] as! String
-                        let connected = (playerData["connected"] as? String) ?? "true"
-                        playerConnected[playerNumber] = (connected == "true")
+                        let playerConnected = (playerData["connected"] as? String) ?? "true"
                         var playerMO = self.scorecard.findPlayerByEmail(playerEmail)
                         if playerMO == nil {
                             // Not found - need to create the player locally
@@ -324,6 +324,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                             playerMO = playerDetail.createMO()
                             self.scorecard.requestPlayerThumbnail(from: peer, playerEmail: playerEmail)
                         }
+                        self.playerConnected[playerEmail] = (playerConnected == "true")
                         self.scorecard.enteredPlayer(playerNumber).playerMO = playerMO
                         self.scorecard.enteredPlayer(playerNumber).reset()
                         self.scorecard.enteredPlayer(playerNumber).saveMaxScore()
@@ -334,7 +335,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                         }
                     }
                     if descriptor == "players" {
-                        self.showGamePreview(connected: playerConnected)
+                        self.showGamePreview()
                     }
                     if descriptor == "play" {
                         if self.scorecard.isViewing && self.scorepadViewController != nil {
@@ -481,7 +482,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    private func showGamePreview(connected: [Int:Bool]) {
+    private func showGamePreview() {
         if self.scorepadViewController == nil {
             var selectedPlayers: [PlayerMO] = []
             for playerNumber in 1...self.scorecard.currentPlayers {
@@ -492,13 +493,12 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             if self.gamePreviewViewController == nil {
                 Utility.debugMessage("show", "Preview shown")
                 self.dismissAll {
-                    self.gamePreviewViewController = GamePreviewViewController.showGamePreview(viewController: self, selectedPlayers: selectedPlayers, title: "Join a Game", backText: "Cancel")
-                    self.gamePreviewViewController.delegate = self
+                    self.gamePreviewViewController = GamePreviewViewController.showGamePreview(viewController: self, selectedPlayers: selectedPlayers, title: "Join a Game", backText: "Cancel", delegate: self)
                 }
             } else {
                 Utility.debugMessage("show", "Preview updated \(selectedPlayers.count)")
                 self.gamePreviewViewController.selectedPlayers = selectedPlayers
-                self.gamePreviewViewController.refreshPlayers(connected: connected)
+                self.gamePreviewViewController.refreshPlayers()
             }
         }
     }
@@ -549,6 +549,17 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         self.scorecard.recoveryMode = false
         self.recoveryMode = true
         self.performSegue(withIdentifier: "showClientScorepad", sender: self)
+    }
+    
+    // MARK: - Game Preview Delegate handlers ================================================================ -
+    
+    internal func gamePreviewCompletion() {
+        self.disconnectPressed()
+        self.gamePreviewViewController = nil
+    }
+    
+    internal func gamePreview(isConnected playerMO: PlayerMO) -> Bool {
+        return self.playerConnected[playerMO.email!] ?? true
     }
     
     // MARK: - Browser Delegate handlers ===================================================================== -
@@ -777,14 +788,6 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                 }
             }
         }
-    }
-    
-    // MARK: - Game Setup delegate routines ============================================================ -
-    
-    internal func gamePreviewComplete() {
-        self.disconnectPressed()
-        self.gamePreviewViewController?.delegate = nil
-        self.gamePreviewViewController = nil
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -1306,8 +1309,6 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         
         func dismissGamePreview() {
             if self.gamePreviewViewController != nil {
-                Utility.debugMessage("dismiss", "Dismissing preview (\(reason))")
-                self.gamePreviewViewController.delegate = nil
                 Utility.debugMessage("dismiss", "Preview dismissed (\(reason))")
                 self.gamePreviewViewController.dismiss(animated: true, completion: {
                     self.gamePreviewViewController = nil

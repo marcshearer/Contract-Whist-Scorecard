@@ -397,7 +397,6 @@
                         <outlet property="scorecardButton" destination="58f-B9-MVv" id="jab-Vf-c1T"/>
                         <outlet property="titleBar" destination="Qj8-GK-V3E" id="wWE-oE-V53"/>
                         <segue destination="T57-Vi-NC3" kind="unwind" identifier="hideHost" unwindAction="hideHostWithSegue:" id="sdC-oM-s17"/>
-                        <segue destination="76N-sc-y5x" kind="show" identifier="showHostGamePreview" id="PB2-nq-efJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lS7-Z0-1GC" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -419,14 +418,6 @@
                 </rotationGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="7986.3999999999996" y="1003.4482758620691"/>
-        </scene>
-        <!--Game Preview-->
-        <scene sceneID="xjJ-gA-ojc">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="UIViewController-M5N-Yi-C04" storyboardName="GamePreviewViewController" referencedIdentifier="GamePreviewViewController" id="76N-sc-y5x" userLabel="Game Preview" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="P7r-jN-fr0" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="8562" y="1003"/>
         </scene>
     </scenes>
     <resources>
@@ -571,7 +562,7 @@ AAAAAAAAAAAAAAAAABshA
             <color white="0.67000001668930054" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </namedColor>
         <namedColor name="Text">
-            <color red="0.49799999594688416" green="0.49799999594688416" blue="0.49799999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Text Message">
             <color red="0.0" green="0.4779999852180481" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

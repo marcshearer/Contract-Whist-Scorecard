@@ -104,7 +104,7 @@
                                 </userDefinedRuntimeAttributes>
                             </navigationBar>
                             <view contentMode="scaleToFill" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="iDT-Xi-tM5" userLabel="Action Button View">
-                                <rect key="frame" x="0.0" y="363.5" width="320" height="66.5"/>
+                                <rect key="frame" x="0.0" y="363.5" width="320" height="80.5"/>
                                 <subviews>
                                     <view tag="2" contentMode="scaleToFill" ambiguous="YES" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FyF-vn-V6o" userLabel="Next Dealer Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="40" y="0.0" width="70" height="106"/>
@@ -156,7 +156,7 @@
                                 </variation>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KKW-id-DrE" userLabel="Continue Button" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="64" y="430" width="192" height="50"/>
+                                <rect key="frame" x="64" y="444" width="192" height="50"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="RHC-Y9-q5u"/>
@@ -233,7 +233,7 @@
                             <constraint firstItem="PAW-t6-IPh" firstAttribute="height" secondItem="nKd-io-ud9" secondAttribute="height" multiplier="0.5" constant="44" id="Ny1-6X-Fnh"/>
                             <constraint firstItem="2QN-TN-Yp2" firstAttribute="top" secondItem="iUU-8s-ns4" secondAttribute="top" id="Pqs-06-AB9"/>
                             <constraint firstItem="KKW-id-DrE" firstAttribute="top" secondItem="iDT-Xi-tM5" secondAttribute="bottom" id="Rvu-Kd-42G"/>
-                            <constraint firstItem="D2Q-5T-MFe" firstAttribute="top" secondItem="KKW-id-DrE" secondAttribute="bottom" id="SzB-7v-AvI"/>
+                            <constraint firstItem="wSn-mE-2UN" firstAttribute="bottom" secondItem="KKW-id-DrE" secondAttribute="bottom" constant="74" id="SzB-7v-AvI"/>
                             <constraint firstItem="PAW-t6-IPh" firstAttribute="leading" secondItem="wSn-mE-2UN" secondAttribute="leading" id="U6b-1a-Msr"/>
                             <constraint firstItem="2QN-TN-Yp2" firstAttribute="trailing" secondItem="iUU-8s-ns4" secondAttribute="trailing" id="VdM-H9-jKl"/>
                             <constraint firstItem="iDT-Xi-tM5" firstAttribute="leading" secondItem="iUU-8s-ns4" secondAttribute="leading" id="XcT-zv-E3Z"/>
@@ -304,8 +304,6 @@
                         <outlet property="overrideSettingsButton" destination="rMq-tB-u4I" id="2VW-Ya-LH6"/>
                         <outlet property="selectedPlayersView" destination="nKd-io-ud9" id="c8G-bf-FIe"/>
                         <segue destination="6Hq-Pm-vP6" kind="show" identifier="showScorepad" id="OMl-3l-9zT"/>
-                        <segue destination="Zg2-0A-XQQ" kind="unwind" identifier="hideGamePreview" unwindAction="hideGamePreviewWithSegue:" id="ENU-76-LlQ"/>
-                        <segue destination="Zg2-0A-XQQ" kind="unwind" identifier="hideHostGamePreview" customClass="UIStoryboardSegueWithCompletion" customModule="Contract_Whist_Scorecard" customModuleProvider="target" unwindAction="hideHostGamePreviewWithSegue:" id="uHv-ar-5U8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vNy-VM-1Ya" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -319,7 +317,6 @@
                         <action selector="rightSwipeWithRecognizer:" destination="M5N-Yi-C04" id="eSY-SQ-Tos"/>
                     </connections>
                 </swipeGestureRecognizer>
-                <exit id="Zg2-0A-XQQ" userLabel="Exit" sceneMemberID="exit"/>
                 <rotationGestureRecognizer rotation="90" id="bOf-Ep-qSS">
                     <connections>
                         <action selector="rotationGestureWithRecognizer:" destination="M5N-Yi-C04" id="umN-HD-5uH"/>

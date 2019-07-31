@@ -250,21 +250,16 @@
                         <outlet property="navigationBar" destination="M8e-Hu-tx9" id="NHh-T7-H0y"/>
                         <outlet property="tableView" destination="5F0-qL-9mB" id="xiu-mw-YXs"/>
                         <outlet property="toolbarViewHeightConstraint" destination="4XP-4H-Aqj" id="92W-AA-IcL"/>
-                        <segue destination="DOb-ll-Ptr" kind="unwind" identifier="hideSelectionSelectPlayers" unwindAction="hideSelectionSelectPlayersWithSegue:" id="jwr-oI-SeD"/>
-                        <segue destination="DOb-ll-Ptr" kind="unwind" identifier="hideGetStartedSelectPlayers" unwindAction="hideGetStartedSelectPlayersWithSegue:" id="vEo-pM-s9i"/>
-                        <segue destination="DOb-ll-Ptr" kind="unwind" identifier="hideSearchSelectPlayers" unwindAction="hideSearchSelectPlayersWithSegue:" id="uff-El-LiS"/>
-                        <segue destination="DOb-ll-Ptr" kind="unwind" identifier="hidePlayersSelectPlayers" unwindAction="hidePlayersSelectPlayersWithSegue:" id="9sL-Wa-8xz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nr-7V-eKu" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="DOb-ll-Ptr" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="125.59999999999999" y="46.326836581709152"/>
         </scene>
     </scenes>
     <resources>
         <image name="box" width="142" height="167"/>
-        <image name="forward" width="14" height="20"/>
+        <image name="forward" width="22" height="22"/>
         <image name="home" width="22" height="22"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -279,7 +274,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Text">
-            <color red="0.49799999594688416" green="0.49799999594688416" blue="0.49799999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Text Message">
             <color red="0.0" green="0.4779999852180481" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

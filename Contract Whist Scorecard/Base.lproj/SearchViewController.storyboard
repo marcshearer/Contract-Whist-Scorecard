@@ -220,24 +220,15 @@
                         <outlet property="navigationTitle" destination="aj7-go-SOW" id="nnR-Mx-9Uu"/>
                         <outlet property="searchBar" destination="Rfb-9f-KJK" id="lFq-cN-vRl"/>
                         <outlet property="searchTableView" destination="RFU-ae-J30" id="82G-hr-YOj"/>
-                        <segue destination="s24-ky-ZXx" kind="show" identifier="showSelectPlayers" id="leY-xF-RUW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4SM-0w-Rjb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="11359" y="205"/>
         </scene>
-        <!--SelectPlayersViewController-->
-        <scene sceneID="esv-fj-ZEP">
-            <objects>
-                <viewControllerPlaceholder storyboardName="SelectPlayersViewController" referencedIdentifier="SelectPlayersViewController" id="s24-ky-ZXx" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="G7I-08-YeX" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="11831" y="203"/>
-        </scene>
     </scenes>
     <resources>
-        <image name="back" width="14" height="20"/>
+        <image name="back" width="22" height="22"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -248,7 +239,7 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Highlight">
-            <color red="0.93300002813339233" green="0.875" blue="0.70599997043609619" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.92941176470588238" green="0.87450980392156863" blue="0.70588235294117652" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Highlight Text">
             <color red="0.49799999594688416" green="0.49799999594688416" blue="0.49799999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -257,7 +248,7 @@
             <color white="0.67000001668930054" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </namedColor>
         <namedColor name="Text">
-            <color red="0.49799999594688416" green="0.49799999594688416" blue="0.49799999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

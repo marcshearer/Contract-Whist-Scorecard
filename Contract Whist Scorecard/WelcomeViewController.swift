@@ -44,6 +44,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     public var clientTitle: String!
     public var clientMatchDeviceName: String!
     public var clientCommsPurpose: CommsConnectionPurpose!
+    private var hostController: HostController!
     public var playingComputer = false
 
     // Local state variables
@@ -99,12 +100,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         self.setupButtons()
     }
     
-    @IBAction func hideHost(segue:UIStoryboardSegue) {
-        self.getCloudVersion(async: true)
-        self.setupButtons()
-    }
-    
-    @IBAction func hideGetStarted(segue:UIStoryboardSegue) {
+   @IBAction func hideGetStarted(segue:UIStoryboardSegue) {
         self.scorecard.checkNetworkConnection(button: nil, label: syncLabel)
         self.recoveryAvailable = false
         self.getCloudVersion(async: true)
@@ -120,14 +116,6 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     @IBAction func hideHighScores(segue:UIStoryboardSegue) {
         self.scorecard.checkNetworkConnection(button: nil, label: syncLabel)
         self.getCloudVersion(async: true)
-    }
-    
-    @IBAction func hideSelection(segue:UIStoryboardSegue) {
-        // Clear recovery flag
-        self.scorecard.checkNetworkConnection(button: nil, label: syncLabel)
-        self.recoveryAvailable = false
-        self.getCloudVersion(async: true)
-        self.checkButtons()
     }
     
     @IBAction func finishGame(segue:UIStoryboardSegue) {
@@ -592,9 +580,6 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         if viewController is ClientViewController {
             let clientViewController = viewController as! ClientViewController
             clientViewController.finishClient()
-        } else if viewController is HostViewController {
-            let hostViewController = viewController as! HostViewController
-            hostViewController.finishHost()
         }
         return true
     }
@@ -631,7 +616,16 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     private func startNewGame() {
         self.scorecard.setGameInProgress(false)
         self.scorecard.reset()
-        self.performSegue(withIdentifier: "showSelection", sender: self )
+        self.showSelection()
+    }
+    
+    private func showSelection() {
+        SelectionViewController.show(from: self, backText: "", backImage: "home", completion: { (_) in
+            self.scorecard.checkNetworkConnection(button: nil, label: self.syncLabel)
+            self.recoveryAvailable = false
+            self.getCloudVersion(async: true)
+            self.checkButtons()
+        })
     }
     
     private func resumeGame(_ cell: WelcomeActionCell) {
@@ -652,7 +646,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
                     self.joinGame()
                 }
             } else {
-                self.performSegue(withIdentifier: "showSelection", sender: self )
+                self.showSelection()
             }
         }
     }
@@ -680,7 +674,11 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     
     private func hostGame() -> Void {
         self.playingComputer = false
-        self.performSegue(withIdentifier: "showHost", sender: self)
+        self.hostController = HostController(recoveryMode: true, completion: {
+            self.getCloudVersion(async: true)
+            self.setupButtons()
+            self.hostController = nil
+        })
     }
     
     private func joinGame() -> Void {
@@ -732,20 +730,6 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
             destination.formTitle = self.clientTitle
             destination.commsPurpose = self.clientCommsPurpose
             destination.matchDeviceName = self.clientMatchDeviceName
-        
-        case "showHost":
-            let destination = segue.destination as! HostViewController
-            
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.isModalInPopover = true
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = welcomeView
-            destination.preferredContentSize = CGSize(width: 400, height: 600)
-            
-            destination.backImage = "home"
-            destination.backText = ""
-            destination.playingComputer = self.playingComputer
-            
             
         case "showHighScores":
             let destination = segue.destination as! HighScoresViewController

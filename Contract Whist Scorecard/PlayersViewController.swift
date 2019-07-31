@@ -56,22 +56,12 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
     @IBOutlet private weak var rightPadTextTrailingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var rightPadWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var rightPadHeightConstraint: NSLayoutConstraint!
-
-    // MARK: - IB Unwind Segue Handlers ================================================================ -
-  
-    @IBAction func hidePlayersSelectPlayers(segue:UIStoryboardSegue) {
-        // Restore list to core data and refresh
-        let source = segue.source as! SelectPlayersViewController
-        if source.playerList.count != 0 {
-            self.refreshView()
-        }
-    }
     
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func newPlayerPressed(_ sender: UIButton) {
         if self.scorecard.settingSyncEnabled {
-            self.performSegue(withIdentifier: "showSelectPlayers", sender: self)
+            self.showSelectPlayers()
         } else {
             PlayerDetailViewController.show(from: self, playerDetail: PlayerDetail(visibleLocally: true), mode: .create, sourceView: view, completion: { (playerDetail, deletePlayer) in
                     if playerDetail != nil {
@@ -139,10 +129,10 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
             let cellFrame = self.cellFrame(1)
             
             // Mask top border
-            let fillerWidth = cellFrame.width
-            let fillerHeight = (cellFrame.height / 2.0)
+            let fillerWidth = cellFrame.width + 7.0
+            let fillerHeight = (cellFrame.height / 2.0) + 4.0
             let shapeWidth = fillerWidth + view.safeAreaInsets.left
-            let arrowWidth = (fillerWidth - 5.0) / 4.0
+            let arrowWidth = ((fillerWidth + 9.0) / 4.0)
             if ScorecardUI.screenWidth < 500 {
                 self.leftPadWidthConstraint.constant = fillerWidth + view.safeAreaInsets.left + 20.0
                 self.leftPadHeightConstraint.constant = fillerHeight
@@ -269,19 +259,19 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
             switch item % 3 {
             case 0:
                 cellX = 0.0
-                cellY = ((cellHeight + 10.0) * CGFloat(item / 3)) + 5.0
+                cellY = ((cellHeight + 10.0) * CGFloat(item / 3)) + 10.0
             case 1:
                 cellX = viewWidth - cellWidth
-                cellY = ((cellHeight + 10.0) * CGFloat(item / 3)) + 5.0
+                cellY = ((cellHeight + 10.0) * CGFloat(item / 3)) + 10.0
             default:
                 cellX = (6.0 / 20.0) * viewWidth + 2.5
-                cellY = ((cellHeight + 10.0) * (CGFloat(item / 3) + 0.5)) + 5.0
+                cellY = ((cellHeight + 10.0) * (CGFloat(item / 3) + 0.5)) + 10.0
             }
         } else {
             cellWidth = ((4.0 / 7.0) * viewWidth) - 5.0
             cellHeight = ((3.0 / 7.0) * viewWidth) - 10.0
             cellX = (item % 2 == 0 ? viewWidth - cellWidth : 0.0)
-            cellY = (((cellHeight / 2.0) + 5.0) * CGFloat(item)) + 5.0
+            cellY = (((cellHeight / 2.0) + 5.0) * CGFloat(item)) + 10.0
         }
         
         return CGRect(x: cellX, y: cellY, width: cellWidth, height: cellHeight)
@@ -341,31 +331,14 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
         formatButtons()
     }
     
-    // MARK: - Segue Prepare Handler =================================================================== -
+    // MARK: - Utility routines ============================================================================== -
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        switch segue.identifier! {
-            
-        case "showSelectPlayers":
-            let destination = segue.destination as! SelectPlayersViewController
-            
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.isModalInPopover = true
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = self.view
-            destination.preferredContentSize = CGSize(width: 400, height: 600)
-            
-            destination.descriptionMode = .opponents
-            destination.returnSegue = "hidePlayersSelectPlayers"
-            destination.backText = "Cancel"
-            destination.actionText = "Download"
-            destination.allowOtherPlayer = true
-            destination.allowNewPlayer = true
-            
-        default:
-            break
-        }
+    private func showSelectPlayers() {
+        SelectPlayersViewController.show(from: self, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: true, completion: { (selected, playerList, selection) in
+            if selected != nil {
+                self.refreshView()
+            }
+        })
     }
     
     // MARK: - Arrow masks ============================================================================== -

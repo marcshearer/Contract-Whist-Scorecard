@@ -57,6 +57,10 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dU2-44-xkb">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <color key="backgroundColor" name="Clear"/>
+                            </scrollView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zKl-vc-bKj" userLabel="Left Pad View">
                                 <rect key="frame" x="0.0" y="64" width="375" height="100"/>
                                 <subviews>
@@ -95,10 +99,6 @@
                                     <constraint firstAttribute="width" constant="375" id="wfy-iu-TLk"/>
                                 </constraints>
                             </view>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dU2-44-xkb">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
-                                <color key="backgroundColor" name="Clear"/>
-                            </scrollView>
                         </subviews>
                         <color key="backgroundColor" name="Background"/>
                         <constraints>
@@ -144,9 +144,6 @@
                         </segue>
                         <segue destination="0aR-2H-gBg" kind="unwind" identifier="selectionHideCloudPlayers" unwindAction="selectionHideCloudPlayersWithSegue:" id="Gmx-Lv-AIj"/>
                         <segue destination="0aR-2H-gBg" kind="unwind" identifier="hideGetStartedSelectPlayers" unwindAction="hideGetStartedSelectPlayersWithSegue:" id="9bK-Pz-fzp"/>
-                        <segue destination="tfJ-Cu-5UF" kind="popoverPresentation" identifier="showSelectPlayers" popoverAnchorView="9pw-Pu-D89" id="1Mf-P3-stK">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                        </segue>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pQb-Du-Rpn" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -158,14 +155,6 @@
                 <exit id="0aR-2H-gBg" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="4725.6000000000004" y="1000.7496251874064"/>
-        </scene>
-        <!--SelectPlayersViewController-->
-        <scene sceneID="QsS-eg-dVh">
-            <objects>
-                <viewControllerPlaceholder storyboardName="SelectPlayersViewController" referencedIdentifier="SelectPlayersViewController" id="tfJ-Cu-5UF" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="oVx-Mj-kmu" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="5455" y="1000"/>
         </scene>
         <!--Sync-->
         <scene sceneID="LUg-N9-Dij">

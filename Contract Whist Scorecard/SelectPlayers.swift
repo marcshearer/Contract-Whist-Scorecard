@@ -24,14 +24,14 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     private var sync: Sync!
     
     // Properties to pass state to action controller
-    public var selection: [Bool] = []
-    public var playerList: [PlayerDetail] = []
-    public var selected = 0
-
+    private var selection: [Bool] = []
+    private var playerList: [PlayerDetail] = []
+    private var selected = 0
+    private var completion: ((Int?, [PlayerDetail]?, [Bool]?)->())? = nil
+ 
     // Properties to get state to/from calling segue
     public var specificEmail = ""
     public var descriptionMode: DescriptionMode = .none
-    public var returnSegue = ""
     public var actionText = ""
     public var backText = "Back"
     public var backImage = "back"
@@ -89,7 +89,9 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         self.sync?.stop()
         
         // Return to calling program
-        self.performSegue(withIdentifier: returnSegue, sender: self)
+        self.dismiss(animated: true, completion: {
+            self.completion?(self.selected, self.playerList, self.selection)
+        })
         
     }
     
@@ -104,7 +106,9 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         self.sync?.stop()
         
         // Return to calling program
-        self.performSegue(withIdentifier: returnSegue, sender: self)
+        self.dismiss(animated: true, completion: {
+            self.completion?(nil, nil, nil)
+        })
         
     }
     
@@ -630,6 +634,31 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     
         return result
     }
+    
+    // MARK: - Function to show this view  ============================================================================== -
+    
+    public class func show(from viewController: UIViewController, specificEmail: String = "", descriptionMode: DescriptionMode = .none, backText: String = "Cancel", actionText: String = "Download", allowOtherPlayer: Bool = true, allowNewPlayer: Bool = true, completion: ((Int?, [PlayerDetail]?, [Bool]?)->())? = nil) {
+        
+        let storyboard = UIStoryboard(name: "SelectPlayersViewController", bundle: nil)
+        let selectPlayersViewController = storyboard.instantiateViewController(withIdentifier: "SelectPlayersViewController") as! SelectPlayersViewController
+        
+        selectPlayersViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+        selectPlayersViewController.isModalInPopover = true
+        selectPlayersViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        selectPlayersViewController.popoverPresentationController?.sourceView = viewController.view
+        selectPlayersViewController.preferredContentSize = CGSize(width: 400, height: 600)
+        
+        selectPlayersViewController.specificEmail = specificEmail
+        selectPlayersViewController.descriptionMode = descriptionMode
+        selectPlayersViewController.backText = backText
+        selectPlayersViewController.actionText = actionText
+        selectPlayersViewController.allowOtherPlayer = allowOtherPlayer
+        selectPlayersViewController.allowNewPlayer = allowNewPlayer
+        selectPlayersViewController.completion = completion
+    
+        viewController.present(selectPlayersViewController, animated: true, completion: nil)
+    }
+    
 }
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -

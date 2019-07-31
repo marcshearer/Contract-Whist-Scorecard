@@ -60,7 +60,7 @@
                                     <constraint firstItem="XWY-FH-Uey" firstAttribute="leading" secondItem="AZC-do-ZAj" secondAttribute="leading" constant="16" id="yIw-eo-Cdn"/>
                                 </constraints>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7SY-Bw-ahm" userLabel="Continue" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7SY-Bw-ahm" userLabel="Continue Button" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="176" y="79" width="128" height="30"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
@@ -183,7 +183,7 @@
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" id="FL2-Z1-EDp">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Rmr-6u-jtL" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="215" y="11" width="89" height="22"/>
+                                                <rect key="frame" x="209" y="11" width="95" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Continue" image="forward"/>
                                                 <connections>
@@ -256,8 +256,10 @@
                         <outlet property="bannerContinuationHeightConstraint" destination="SCD-ZH-5hb" id="Y1m-xI-K9t"/>
                         <outlet property="bannerContinuationView" destination="AZC-do-ZAj" id="5hg-Rh-Mpf"/>
                         <outlet property="bannerContinueButton" destination="Rmr-6u-jtL" id="biA-oB-Ecf"/>
+                        <outlet property="cancelButton" destination="eQy-4V-yYX" id="SEw-Oj-5yl"/>
                         <outlet property="continueButton" destination="7SY-Bw-ahm" id="JM3-ek-6LL"/>
                         <outlet property="navigationBar" destination="UgO-yy-CRO" id="Diq-OI-UgL"/>
+                        <outlet property="navigationTitle" destination="sxd-YE-KrL" id="q3q-cv-akX"/>
                         <outlet property="selectedPlayersView" destination="jtX-GA-7ms" id="pif-ug-DbZ"/>
                         <outlet property="selectedViewHeight" destination="1T2-1s-8c6" id="p6v-xf-NUZ"/>
                         <outlet property="selectedViewWidth" destination="KfB-6p-mr0" id="1yK-LH-FS6"/>
@@ -265,10 +267,6 @@
                         <outlet property="slideOutButton" destination="be7-aP-DEd" id="IcN-Br-mSQ"/>
                         <outlet property="unselectedCollectionView" destination="Tlx-l1-ig7" id="vRw-k0-8iE"/>
                         <segue destination="Vxp-SW-x6a" kind="unwind" identifier="hideSelectionSelectPlayers" unwindAction="hideSelectionSelectPlayersWithSegue:" id="UXW-YD-63I"/>
-                        <segue destination="Do4-Za-q4h" kind="popoverPresentation" identifier="showSelectPlayers" popoverAnchorView="Whs-Ka-Uxd" id="ewe-cV-U1p">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                        </segue>
-                        <segue destination="Vxp-SW-x6a" kind="unwind" identifier="hideSelection" unwindAction="hideSelectionWithSegue:" id="4tV-b5-uOW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pg0-6i-AIz" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -276,17 +274,9 @@
             </objects>
             <point key="canvasLocation" x="6356.25" y="160.56338028169014"/>
         </scene>
-        <!--Select Players-->
-        <scene sceneID="DJN-Pf-UfJ">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="UIViewController-aCF-cU-Oeh" storyboardName="SelectPlayersViewController" referencedIdentifier="SelectPlayersViewController" id="Do4-Za-q4h" userLabel="Select Players" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="0Do-0e-mtE" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="7035" y="161"/>
-        </scene>
     </scenes>
     <resources>
-        <image name="forward" width="14" height="20"/>
+        <image name="forward" width="22" height="22"/>
         <image name="home" width="22" height="22"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

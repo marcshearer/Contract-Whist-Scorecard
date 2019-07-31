@@ -57,9 +57,9 @@ public enum CommsConnectionPurpose: String {
 
 public class CommsPeer {
     // Note that this is just a construct built from other data structures - therefore it's contents are not mutable
-    public let deviceName: String
-    public let playerEmail: String?
-    public let playerName: String?
+    public let deviceName: String      // Remote device name
+    public let playerEmail: String?    // Remote player email
+    public let playerName: String?     // Remote player name
     public let state: CommsConnectionState
     public let reason: String?
     private var parent: CommsHandlerDelegate

@@ -72,9 +72,6 @@ class ScorepadViewController: CustomViewController,
     private var firstGameSummary = true
     
     // UI component pointers
-    private var entryThumbnail = [UIImageView?]()
-    private var entryDisc = [UILabel?]()
-    private var headerCell = [[ScorepadCollectionViewCell?]]()
     private var imageCollectionView: UICollectionView!
     public var roundSummaryViewController: RoundSummaryViewController!
     public var gameSummaryViewController: GameSummaryViewController!
@@ -249,13 +246,6 @@ class ScorepadViewController: CustomViewController,
         
         // Link to recovery class
         recovery = scorecard.recovery
-
-        // Set up label pointers
-        for _ in 1...scorecard.currentPlayers {
-            entryThumbnail.append(UIImageView())
-            entryDisc.append(UILabel())
-            headerCell.append(Array(repeating: nil, count: 4)) // Maximum of 4 rows in header
-        }
         
         // Set nofification for image download
         observer = setImageDownloadNotification()
@@ -521,10 +511,16 @@ class ScorepadViewController: CustomViewController,
     public func highlightCurrentDealer(_ highlight: Bool) {
         if headerRows > 0 {
             for row in 0...headerRows-1 {
-                let headerCell = self.headerCell[scorecard.isScorecardDealer()-1][row]!
+                let headerCell = self.headerCell(playerNumber: scorecard.isScorecardDealer(), row: row)
                 highlightDealer(headerCell: headerCell, playerNumber: scorecard.isScorecardDealer(), row: row, forceClear: !highlight)
             }
         }
+    }
+    
+    private func headerCell(playerNumber: Int, row: Int) -> ScorepadCollectionViewCell {
+        let tableViewCell = headerTableView.cellForRow(at: IndexPath(row: row, section: 0)) as! ScorepadTableViewCell
+        let collectionView = tableViewCell.scorepadCollectionView
+        return collectionView?.cellForItem(at: IndexPath(item: playerNumber, section: 0)) as! ScorepadCollectionViewCell
     }
     
     private func highlightDealer(headerCell: ScorepadCollectionViewCell, playerNumber: Int, row: Int, forceClear: Bool = false) {
@@ -906,8 +902,6 @@ class ScorepadViewController: CustomViewController,
                                              label: headerCell.scorepadDisc)
                         ScorecardUI.veryRoundCorners(headerCell.scorepadImage, radius: (imageRowHeight-9)/2)
                         ScorecardUI.veryRoundCorners(headerCell.scorepadDisc, radius: (imageRowHeight-9)/2)
-                        entryThumbnail[column-1] = headerCell.scorepadImage
-                        entryDisc[column-1] = headerCell.scorepadDisc
                         headerCell.scorepadDiscHeight.constant = 10000 // Force resize
                     }
                 }
@@ -958,9 +952,6 @@ class ScorepadViewController: CustomViewController,
             headerCell.scorepadTopLineWeight.constant = (row == 0 ? thickLineWeight : 0)
             
             highlightDealer(headerCell: headerCell, playerNumber: column, row: row)
-            if player > 0 {
-                self.headerCell[player-1][row] = headerCell
-            }
             
             cell=headerCell
             

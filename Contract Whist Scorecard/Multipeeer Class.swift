@@ -100,7 +100,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
         for (deviceName, _) in self.sessionList {
             if commsPeer == nil || commsPeer?.deviceName == deviceName {
                 if let broadcastPeer = broadcastPeerList[deviceName] {
-                    self.debugMessage("disconnect", peerID: broadcastPeer.mcPeer)
+                    self.debugMessage("disconnect (\(reason))", peerID: broadcastPeer.mcPeer)
                     broadcastPeer.shouldReconnect = reconnect
                     broadcastPeer.reconnect = reconnect
                     broadcastPeer.state = .notConnected
@@ -259,6 +259,8 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
                         }
                     }
                 }
+            } else {
+                Utility.debugMessage("multipeer", "Ignoring message for \(deviceName)")
             }
         } catch {
         }
@@ -467,6 +469,12 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
         }
     }
     
+    /// Connects to a remote device using multipeer communication
+    /// - parameter to: peer to connect to
+    /// - parameter playerEmail: the player email who is connecting
+    /// - parameter playerName: the player name who is connecting
+    /// - additional context
+    
     internal func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, context: [String : String]?, reconnect: Bool = true) -> Bool{
         if let broadcastPeer = self.broadcastPeerList[commsPeer.deviceName] {
             self.debugMessage("Connect to ", peerID: broadcastPeer.mcPeer)
@@ -546,18 +554,18 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
             broadcastPeer?.playerName = info?["playerName"]
             broadcastPeer?.playerEmail = info?["playerEmail"]
             
+            // Notify delegate
+            browserDelegate?.peerFound(peer: broadcastPeer!.commsPeer)
+            
             if broadcastPeer!.reconnect {
                 // Auto-reconnect set - try to connect
-                if !self.connect(to: broadcastPeer!.commsPeer, playerEmail: broadcastPeer!.commsPeer.playerEmail, playerName: broadcastPeer!.commsPeer.playerName, reconnect: true) {
+                if !self.connect(to: broadcastPeer!.commsPeer, playerEmail: self.connectionEmail, playerName: self.connectionName, reconnect: true) {
                     // Not good - shouldn't happen - try stopping browsing and restarting - will retry when find peer again
                     self.client.browser.stopBrowsingForPeers()
                     self.client.browser.startBrowsingForPeers()
                     broadcastPeer!.state = .reconnecting
                     stateDelegate?.stateChange(for: broadcastPeer!.commsPeer)
                 }
-            } else {
-                // Notify delegate
-                browserDelegate?.peerFound(peer: broadcastPeer!.commsPeer)
             }
         }
     }
@@ -623,9 +631,9 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
 
 public class BroadcastPeer {
     
-    public var mcPeer: MCPeerID
-    public var playerEmail: String?
-    public var playerName: String?
+    public var mcPeer: MCPeerID        // Multi-peer peer
+    public var playerEmail: String?    // Remote player email
+    public var playerName: String?     // Remote playername
     public var state: CommsConnectionState
     public var reason: String?
     public var reconnect: Bool = false

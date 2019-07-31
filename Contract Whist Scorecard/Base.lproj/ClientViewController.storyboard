@@ -40,7 +40,7 @@
                                     <navigationItem title="Play Game" id="9bb-Wg-XPQ">
                                         <barButtonItem key="leftBarButtonItem" id="OTD-R4-zWC">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="0Si-5j-YyO" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="16" y="11" width="56" height="22"/>
+                                                <rect key="frame" x="16" y="11" width="62" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Back" image="back">
                                                     <color key="titleColor" name="Banner Text"/>
@@ -74,7 +74,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="60" sectionHeaderHeight="37" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dtV-HG-agM">
-                                <rect key="frame" x="0.0" y="237" width="375" height="430"/>
+                                <rect key="frame" x="0.0" y="238" width="375" height="429"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Service Cell" rowHeight="60" id="57Y-fT-rsC" userLabel="Client Service Cell" customClass="ClientTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
@@ -85,7 +85,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="249" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="y3D-TD-3Jm">
-                                                    <rect key="frame" x="64" y="38" width="247" height="18"/>
+                                                    <rect key="frame" x="64" y="36" width="247" height="16"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <color key="textColor" name="Text"/>
@@ -116,8 +116,8 @@
                                                 <constraint firstItem="ZYX-OU-Hhe" firstAttribute="centerX" secondItem="ZcL-vg-Z6W" secondAttribute="centerX" id="TYP-L6-GZI"/>
                                                 <constraint firstAttribute="trailing" secondItem="y3D-TD-3Jm" secondAttribute="trailing" constant="64" id="WJU-P4-4zM"/>
                                                 <constraint firstItem="y3D-TD-3Jm" firstAttribute="leading" secondItem="ZcL-vg-Z6W" secondAttribute="leading" constant="64" id="WbS-YT-IAU"/>
-                                                <constraint firstAttribute="bottom" secondItem="y3D-TD-3Jm" secondAttribute="bottom" constant="4" id="gyU-ix-iCX"/>
-                                                <constraint firstItem="y3D-TD-3Jm" firstAttribute="top" secondItem="ZYX-OU-Hhe" secondAttribute="bottom" constant="4" id="wKT-Wz-dhT"/>
+                                                <constraint firstAttribute="bottom" secondItem="y3D-TD-3Jm" secondAttribute="bottom" constant="8" id="gyU-ix-iCX"/>
+                                                <constraint firstItem="y3D-TD-3Jm" firstAttribute="top" secondItem="ZYX-OU-Hhe" secondAttribute="bottom" constant="2" id="wKT-Wz-dhT"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="Clear"/>
@@ -169,16 +169,16 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Play as" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nJF-Zf-jlr">
-                                <rect key="frame" x="16" y="146" width="343" height="21"/>
+                                <rect key="frame" x="16" y="144" width="343" height="24"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="nP2-mV-0hu"/>
+                                    <constraint firstAttribute="height" constant="24" id="nP2-mV-0hu"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="thin" pointSize="24"/>
                                 <color key="textColor" name="Text"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yy9-i2-EGh" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="137.5" y="175" width="100" height="30"/>
+                                <rect key="frame" x="137.5" y="176" width="100" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="JlJ-RV-WVU"/>
                                     <constraint firstAttribute="height" constant="30" id="t90-E2-DzW"/>
@@ -203,10 +203,10 @@
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="RyR-aM-WNg" firstAttribute="top" secondItem="y3A-eA-Tmp" secondAttribute="bottom" constant="16" id="35t-1c-RHd"/>
-                            <constraint firstItem="N76-hf-VXY" firstAttribute="trailing" secondItem="XTv-6o-LLq" secondAttribute="trailing" id="48G-j6-hCy"/>
+                            <constraint firstAttribute="trailing" secondItem="XTv-6o-LLq" secondAttribute="trailing" id="48G-j6-hCy"/>
                             <constraint firstItem="N76-hf-VXY" firstAttribute="bottom" secondItem="dtV-HG-agM" secondAttribute="bottom" id="96w-mZ-QVT"/>
                             <constraint firstItem="XTv-6o-LLq" firstAttribute="top" secondItem="y3A-eA-Tmp" secondAttribute="bottom" id="CVy-zX-lth"/>
-                            <constraint firstItem="XTv-6o-LLq" firstAttribute="leading" secondItem="N76-hf-VXY" secondAttribute="leading" id="Iwy-rb-1CN"/>
+                            <constraint firstItem="XTv-6o-LLq" firstAttribute="leading" secondItem="hFM-Q5-ViO" secondAttribute="leading" id="Iwy-rb-1CN"/>
                             <constraint firstAttribute="trailing" secondItem="y3A-eA-Tmp" secondAttribute="trailing" id="JDi-3J-ELy"/>
                             <constraint firstAttribute="trailing" secondItem="dtV-HG-agM" secondAttribute="trailing" id="U7z-gI-dJC"/>
                             <constraint firstItem="Yy9-i2-EGh" firstAttribute="top" secondItem="nJF-Zf-jlr" secondAttribute="bottom" constant="8" id="UKf-ec-ayF"/>
@@ -221,7 +221,7 @@
                             <constraint firstItem="Clx-ll-10L" firstAttribute="trailing" secondItem="hFM-Q5-ViO" secondAttribute="trailing" id="ixm-Te-QmJ"/>
                             <constraint firstItem="N76-hf-VXY" firstAttribute="trailing" secondItem="nJF-Zf-jlr" secondAttribute="trailing" constant="16" id="lIs-Se-yQQ"/>
                             <constraint firstItem="nJF-Zf-jlr" firstAttribute="leading" secondItem="N76-hf-VXY" secondAttribute="leading" constant="16" id="vqt-pO-OTY"/>
-                            <constraint firstItem="nJF-Zf-jlr" firstAttribute="top" secondItem="RyR-aM-WNg" secondAttribute="bottom" constant="16" id="w1v-bW-tFc"/>
+                            <constraint firstItem="nJF-Zf-jlr" firstAttribute="top" secondItem="RyR-aM-WNg" secondAttribute="bottom" constant="14" id="w1v-bW-tFc"/>
                             <constraint firstItem="y3A-eA-Tmp" firstAttribute="top" secondItem="N76-hf-VXY" secondAttribute="top" id="zEh-o0-CZf"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="N76-hf-VXY"/>
@@ -241,7 +241,6 @@
                         <segue destination="xqo-YA-Qav" kind="unwind" identifier="hideClient" unwindAction="hideClientWithSegue:" id="fOe-cu-YCR"/>
                         <segue destination="Plw-2P-Gw9" kind="show" identifier="showClientScorepad" id="D9t-VC-kIf"/>
                         <segue destination="xqo-YA-Qav" kind="unwind" identifier="linkFinishGame" customClass="UIStoryboardSegueWithCompletion" customModule="Contract_Whist_Scorecard" customModuleProvider="target" unwindAction="linkFinishGameWithSegue:" id="HUC-JM-W3W"/>
-                        <segue destination="HSh-Ci-FY2" kind="show" identifier="showClientHost" id="uJm-86-Ali"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UDy-kc-SSJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -270,19 +269,11 @@
                 <viewControllerPlaceholder storyboardIdentifier="UIViewController-BYZ-38-t0r" storyboardName="ScorepadViewController" referencedIdentifier="ScorepadViewController" id="Plw-2P-Gw9" userLabel="Scorepad" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="URn-kb-KK2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7730" y="946"/>
-        </scene>
-        <!--HostViewController-->
-        <scene sceneID="Gly-RP-upe">
-            <objects>
-                <viewControllerPlaceholder storyboardName="HostViewController" referencedIdentifier="HostViewController" id="HSh-Ci-FY2" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Vqh-XB-zI2" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="7778" y="1046"/>
+            <point key="canvasLocation" x="7738" y="999"/>
         </scene>
     </scenes>
     <resources>
-        <image name="back" width="14" height="20"/>
+        <image name="back" width="22" height="22"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

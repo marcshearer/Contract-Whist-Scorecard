@@ -48,13 +48,6 @@ extension ClientViewController {
     }
 }
 
-extension HostViewController {
-    
-    @IBAction internal func rotationGesture(recognizer:UIRotationGestureRecognizer) {
-        RotationGesture.adminMenu(recognizer: recognizer)
-    }
-}
-
 extension ReviewViewController {
     
     @IBAction internal func rotationGesture(recognizer:UIRotationGestureRecognizer) {

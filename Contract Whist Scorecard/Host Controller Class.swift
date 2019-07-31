@@ -22,21 +22,16 @@ enum InviteStatus {
     case reconnecting
 }
 
-class HostViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate,
-CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStateDelegate, GamePreviewDelegate {
+class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStateDelegate, GamePreviewDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
     private let scorecard = Scorecard.shared
     
-    // Properties to pass state to / from segues
-    public var returnSegue = ""
+    // Properties to pass state to game preview
     public var selectedPlayers: [PlayerMO]!
-    public var faceTimeAddress: [String]!
-    public var formTitle = "Host a Game"
-    public var backText = "Back"
-    public var backImage = "back"
+    public var faceTimeAddress: [String] = []
     public var playingComputer = false
     public var computerPlayerDelegate: [ Int : ComputerPlayerDelegate? ]?
     
@@ -44,6 +39,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     private var queue: [QueueEntry] = []
     
     private var playerData: [PlayerData] = []
+    private var completion: (()->())?
     private var unique = 0
     private var observer: NSObjectProtocol?
     private var gameInProgress = false
@@ -59,13 +55,15 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     private var computerPlayers: [Int : ComputerPlayerDelegate]?
     private var firstTime = true
     private var gamePreviewViewController: GamePreviewViewController!
+    private var canProceed: Bool = false
+    private var recoveryMode: Bool = false    // Recovery mode as defined by where weve come from (largely ignored)
     
     private var connectedPlayers: Int {
         get {
             var count = 0
             if self.playerData.count > 0 {
                 for playerNumber in 1...self.playerData.count {
-                    if (playerData[playerNumber - 1].disconnectReason == nil &&
+                    if playerNumber == 1 || (playerData[playerNumber - 1].disconnectReason == nil &&
                         (playerData[playerNumber - 1].peer != nil && playerData[playerNumber - 1].peer.state == .connected)) ||
                         playerNumber == 1 {
                         count += 1
@@ -87,214 +85,82 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         }
     }
     
-    // MARK: - IB Outlets ============================================================================== -
+    // MARK: - Constructor ========================================================================== -
     
-    @IBOutlet weak var titleBar: UINavigationItem!
-    @IBOutlet weak var finishButton: RoundedButton!
-    @IBOutlet weak var hostPlayerTableView: UITableView!
-    @IBOutlet weak var guestPlayerTableView: UITableView!
-    @IBOutlet weak var hostPlayerTableViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var instructionLabel: UILabel!
-    @IBOutlet weak var scorecardButton: RoundedButton!
-    @IBOutlet weak var continueButton: RoundedButton!
-    @IBOutlet weak var imageView: UIImageView!
-    
-    // MARK: - IB Unwind Segue Handlers ================================================================ -
-    
-    @IBAction private func linkFinishGame(segue:UIStoryboardSegue) {
-        if let segue = segue as? UIStoryboardSegueWithCompletion {
-            segue.completion = {
-                self.exitHost()
-            }
-        }
-    }
-    
-    // MARK: - IB Actions ============================================================================== -
-    
-    @IBAction func finishPressed(_ sender: RoundedButton) {
-        exitHost()
-    }
-    
-    @IBAction func continuePressed(_ sender: RoundedButton) {
-        self.setupPlayers()
-        gameInProgress = true
-        self.scorecard.sendPlayers()
-        self.showGamePreview()
-    }
-    
-    @IBAction func rightSwipe(recognizer:UISwipeGestureRecognizer) {
-        if recognizer.state == .ended {
-            finishPressed(finishButton)
-        }
-    }
-    
-    // MARK: - View Overrides ========================================================================== -
-    
-    override func viewDidLoad() {
-        var nearby = false
-        var online = false
-        var loopback = false
+    init(mode: ConnectionMode? = nil, playerEmail: String? = nil, recoveryMode: Bool = false, completion: (()->())? = nil) {
+        var mode = mode
+        super.init()
         
-        super.viewDidLoad()
+        // Reload players
+        self.scorecard.loadGameDefaults()
         
         // Stop any existing sharing activity
         self.scorecard.stopSharing()
         
-        if self.playingComputer {
-            // Game against computer
-            loopback = true
-            defaultConnectionMode = .loopback
-            // Don't send scores automatically when updated - send explicitly
-            self.scorecard.sendScores = false
+        // Save completion handler and mode
+        self.recoveryMode = recoveryMode
+        self.completion = completion
+        
+        if self.scorecard.recoveryMode {
+            
+            // Set mode
+            switch self.scorecard.recoveryOnlineMode! {
+            case .loopback:
+                mode = .loopback
+            case .broadcast:
+                mode = .nearby
+            case .invite:
+                mode = .online
+            }
+            
+            // Restore players
+            self.resetResumedPlayers()
+            let playerMO = self.selectedPlayers[0]
+            _ = self.addPlayer(name: playerMO.name!, email: playerMO.email!, playerMO: playerMO, peer: nil)
             
         } else {
-            // Start broadcasting unless need to give option to use Online
-            nearby = self.scorecard.settingNearbyPlaying
-            online = self.scorecard.settingOnlinePlayerEmail != nil
-            if nearby && online {
-                defaultConnectionMode = .unknown
-            } else if nearby {
-                defaultConnectionMode = .nearby
-            } else {
-                defaultConnectionMode = .online
-            }
+            
+            // Use passed in player
+            let playerMO = scorecard.findPlayerByEmail(playerEmail!)
+            _ = self.addPlayer(name: playerMO!.name!, email: playerMO!.email!, playerMO: playerMO, peer: nil)
         }
         
-        // Set finish button
-        finishButton.setImage(UIImage(named: self.backImage), for: .normal)
-        finishButton.setTitle(self.backText)
-        
-        // Allow broadcast of scores
-        self.scorecard.sendScores = true
+        // Allow broadcast of scores except in loopback mode
+        self.scorecard.sendScores = (self.connectionMode != .loopback)
         
         // Set observer to detect UI handler completion
         observer = self.handlerCompleteNotification()
         
-        // Setup player and start broadcasting
-        self.scorecard.loadGameDefaults()
-        if scorecard.recoveryMode {
-            // Recovering - use same player
-            self.resetResumedPlayers()
-            let playerMO = self.selectedPlayers[0]
-            _ = self.addPlayer(name: playerMO.name!, email: playerMO.email!, playerMO: playerMO, peer: nil)
-            self.startHostBroadcast(email: playerMO.email, name: playerMO.name!)
-        } else {
-            // Work out default player
-            var defaultPlayer: String!
-            if self.scorecard.settingOnlinePlayerEmail != nil {
-                defaultPlayer = self.scorecard.settingOnlinePlayerEmail
-            } else {
-                defaultPlayer = self.scorecard.defaultPlayerOnDevice
-            }
-            if defaultPlayer != nil {
-                let playerMO = scorecard.findPlayerByEmail(defaultPlayer)
-                if playerMO != nil {
-                    _ = self.addPlayer(name: playerMO!.name!, email: playerMO!.email!, playerMO: playerMO, peer: nil)
-                } else {
-                    defaultPlayer = nil
-                }
-            }
-            if defaultPlayer == nil {
-                let playerMO = self.scorecard.playerList.min(by: {($0.localDateCreated! as Date) < ($1.localDateCreated! as Date)})
-                _ = self.addPlayer(name: playerMO!.name!, email: playerMO!.email!, playerMO: playerMO, peer: nil)
-            }
-        }
-        
-        if loopback {
+        // Start communication
+        switch mode! {
+        case .loopback:
             self.setConnectionMode(.loopback, chooseInvitees: false)
-        } else if online && self.scorecard.recoveryMode && scorecard.recoveryOnlineMode == .invite {
+        case .online:
             self.setConnectionMode(.online, chooseInvitees: false)
-        } else if nearby && scorecard.recoveryMode && scorecard.recoveryOnlineMode == .broadcast {
+        case .nearby:
             self.setConnectionMode(.nearby)
-        } else {
-            self.setConnectionMode(defaultConnectionMode)
+        default:
+            return
         }
         
-        // Update instructions / title
-        if Utility.isSimulator {
-            self.titleBar.title = Scorecard.deviceName
-        } else {
-            self.titleBar.title = self.formTitle
-        }
-        self.setInstructions()
+        // Show game preview
+        self.showGamePreview()
         
-        // Allow resequencing of participants
-        guestPlayerTableView.isEditing = true
-        
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if firstTime {
-            // Check if in recovery mode or playing computer - if so go straight to game setup
-            if self.playingComputer || self.scorecard.recoveryMode {
-                self.waitOtherPlayers(showDialog: !self.playingComputer, completion: {
-                    self.gameInProgress = true
-                    if self.scorecard.recoveryOnlineMode == .invite {
-                        // Simulate return from invitee search
-                        if let selectedPlayers = self.selectedPlayers {
-                            let invitees = selectedPlayers.count - 1
-                            if invitees > 0 {
-                                let playerMO = Array(selectedPlayers[1...invitees])
-                                self.returnInvitees(complete: true, playerMO: playerMO)
-                            }
-                        }
-                    }
-                })
-            }
-            firstTime = false
-        }
-    }
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        scorecard.reCenterPopup(self)
-        self.view.setNeedsLayout()
-    }
-    
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-    }
-    
-    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        
-        // Play sound
-        self.alertSound()
-        
-        if self.currentState != .inviting {
-            // Don't reset while in middle of inviting
-            
-            if let mode = self.connectionMode {
-                
-                // Disconnect
-                self.setConnectionMode(.unknown)
-                
-                switch mode {
-                case .nearby:
-                    // Start broadcasting
-                    self.setConnectionMode(.nearby)
-                    
-                case .online:
-                    // Start connection
-                    self.setConnectionMode(.online, chooseInvitees: false)
-                    
+        // Check if in recovery mode or playing computer - if so go straight to game setup
+        if self.playingComputer || self.scorecard.recoveryMode {
+            self.waitOtherPlayers(showDialog: !self.playingComputer, completion: {
+                self.gameInProgress = true
+                if self.connectionMode == .online {
+                    // Simulate return from invitee search
                     if let selectedPlayers = self.selectedPlayers {
-                        // Resend invites
                         let invitees = selectedPlayers.count - 1
                         if invitees > 0 {
                             let playerMO = Array(selectedPlayers[1...invitees])
                             self.returnInvitees(complete: true, playerMO: playerMO)
                         }
-                    } else {
-                        // Select players
-                        self.chooseOnlineInvitees()
-                        hostPlayerTableView.reloadData()
-                        self.setInstructions()
                     }
-                default:
-                    break
                 }
-            }
+            })
         }
     }
     
@@ -334,11 +200,6 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 }
             }
         }
-    }
-    
-    private func refreshState(playerData : PlayerData) {
-        
-        
     }
     
     // MARK: - Connection Delegate handlers ===================================================================== -
@@ -402,16 +263,11 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             }
         }
         
-        // Add to list and view - don't add players to view if going to disconnect them
-        guestPlayerTableView.beginUpdates()
-        unique += 1
-        playerData.insert(PlayerData(name: name, email: email, playerMO: playerMO, peer: peer, unique: unique, disconnectReason: disconnectReason, inviteStatus: inviteStatus),
+        // Add to list
+        self.unique += 1
+        playerData.insert(PlayerData(name: name, email: email, playerMO: playerMO, peer: peer, unique: self.unique, disconnectReason: disconnectReason, inviteStatus: inviteStatus),
                           at: self.visiblePlayers)
-        if disconnectReason == nil {
-            guestPlayerTableView.insertRows(at: [IndexPath(row: playerData.count-2, section: 0)], with: .automatic)
-        }
-        guestPlayerTableView.endUpdates()
-        
+        self.refreshPlayers()
     }
     
     // MARK: - State Delegate handlers ===================================================================== -
@@ -444,6 +300,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                         if !error {
                             self.scorecard.refreshState(to: peer)
                             self.sendPlayers()
+                            self.refreshPlayers()
                         }
                     }
                 case .notConnected:
@@ -451,7 +308,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                     if peer.mode == .broadcast {
                         if self.scorecard.recoveryMode {
                             self.playerData[playerNumber - 1].peer = nil
-                            self.updateCell(playerData: self.playerData[playerNumber - 1], hostMode: false)
+                            self.refreshPlayers()
                         } else {
                             self.reflectState(peer: peer)
                         }
@@ -459,6 +316,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                         self.reflectState(peer: peer)
                     }
                     self.sendPlayers()
+                    self.refreshPlayers()
                 default:
                     break
                 }
@@ -476,49 +334,31 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                     self.playerData[playerNumber - 1].whisper.hide("Connection to \(peer.playerName!) restored")
                 }
             }
-            let ready = (self.connectedPlayers >= 3)
-            self.scorecardButton.isHidden = !ready
-            self.continueButton.isHidden = !ready
-            self.imageView.isHidden = ready
-            self.setInstructions()
+            
+            self.canProceed = false
             if (self.scorecard.recoveryMode || self.playingComputer) && self.connectedPlayers == self.scorecard.currentPlayers {
                 // Recovering or playing computer  - go straight to game setup
+                self.canProceed = true
                 self.setupPlayers()
-                if self.alertController != nil {
-                    self.alertController.dismiss(animated: true, completion: {
-                        self.showGamePreview()
-                    })
-                } else {
-                    self.showGamePreview()
-                }
             } else if self.connectionMode == .online && self.playerData.count >= 3 && self.connectedPlayers == self.playerData.count {
-                // Have connections from all invited players - press continue button
-                if !self.gameInProgress {
-                    self.continuePressed(self.scorecardButton)
-                }
+                self.canProceed = true
+            } else if self.connectedPlayers >= 3 {
+                self.canProceed = true
             }
+            self.refreshPlayers()
         }
     }
     
     private func sendPlayers() {
-        var players: [(String, String, Bool)] = []
-        for playerNumber in 1...self.playerData.count {
-            let playerData = self.playerData[playerNumber - 1]
-            players.append((playerData.email, playerData.name, playerNumber == 1 || playerData.peer?.state == .connected))
+        // Send updated players to update the preview (prior to the game starting)
+        if !self.gameInProgress {
+            var players: [(String, String, Bool)] = []
+            for index in 0..<self.playerData.count {
+                let playerData = self.playerData[index]
+                players.append((playerData.email, playerData.name, index == 0 || playerData.peer?.state == .connected))
+            }
             
-        }
-        self.scorecard.sendPlayers(players: players)
-    }
-    
-    private func setInstructions() {
-        if self.connectionMode == .unknown {
-            self.instructionLabel.text = "Choose whether you want to conect with nearby players (same room) or over the internet"
-        } else if self.connectedPlayers == scorecard.numberPlayers {
-            self.instructionLabel.text = "All players are now connected. Press the continue button to start the game"
-        } else if self.connectedPlayers >= 3 {
-            self.instructionLabel.text = "Sufficient players are now connected. Press the continue button to start the game, or wait for another player to join"
-        } else {
-            self.instructionLabel.text = "Wait for all other players to connect and then you will be able to start the game"
+            self.scorecard.sendPlayers(players: players)
         }
     }
     
@@ -527,12 +367,11 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         if playerNumber != nil {
             let playerData = self.playerData[playerNumber!]
             playerData.peer = peer
-            self.updateCell(playerData: playerData, hostMode: false)
         }
     }
     
     private func refreshHostView() {
-        self.hostPlayerTableView.reloadData()
+        self.refreshPlayers()
     }
     
     // MARK: - Handler State Overrides ===================================================================== -
@@ -542,7 +381,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             switch state {
             case .notStarted:
                 if self.currentState == .invited || self.currentState == .inviting {
-                    self.alertMessage("Invitation failed")
+                    self.gamePreviewViewController.alertMessage("Invitation failed")
                 }
                 if defaultConnectionMode == .unknown {
                     self.setConnectionMode(.unknown)
@@ -574,7 +413,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                                                         playerName: playerData.name)
                         }
                         playerData.inviteStatus = inviteStatus
-                        self.updateCell(playerData: playerData, hostMode: false)
+                        self.refreshPlayers()
                     }
                 }
             }
@@ -706,7 +545,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! HostPlayerTableCell
             
             self.playerData[dataRow].cell = cell
-            self.updateCell(playerData: self.playerData[dataRow], hostMode: tableView.tag==1)
+            self.refreshPlayers()
             
         }
         
@@ -768,7 +607,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     @objc func changeHostButtonPressed(_ button: UIButton) {
         self.scorecard.commsDelegate?.disconnect(reason: "Host device has changed player", reconnect: false)
         self.stopHostBroadcast()
-        SearchViewController.identifyPlayers(from: self, completion: self.returnPlayer, filter: { (playerMO) in
+        SearchViewController.identifyPlayers(from: self.gamePreviewViewController, completion: self.returnPlayer, filter: { (playerMO) in
             // Exclude inviting player
             return (self.playerData[0].email != playerMO.email )
         })
@@ -820,7 +659,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             }
             
             // Refresh UI
-            self.guestPlayerTableView.reloadData()
+            self.refreshPlayers()
             
             // Open connection and send invites
             self.startOnlineConnection()
@@ -837,6 +676,11 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         }
     }
     
+    private func refreshPlayers() {
+        self.gamePreviewViewController?.selectedPlayers = self.playerData.map {$0.playerMO}
+        self.gamePreviewViewController?.refreshPlayers()
+    }
+    
     // MARK: - Popover Overrides ================================================================ -
     
     func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
@@ -847,60 +691,30 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             }
         }
     }
+
+    // MARK: - Game Preview Delegate handlers ============================================================================== -
     
-    // MARK: - User Interface Methods ================================================================ -
+    internal var gamePreviewCanStartGame: Bool {
+        get {
+            return self.canProceed
+        }
+    }
     
-    func updateCell(playerData: PlayerData, hostMode: Bool) {
-        if let cell = playerData.cell {
-            cell.playerNameLabel.text = playerData.name
-            var thumbnail: Data? = nil
-            if playerData.playerMO != nil {
-                thumbnail = playerData.playerMO.thumbnail
-            }
-            Utility.setThumbnail(data: thumbnail,
-                                 imageView: cell.playerImage,
-                                 initials: playerData.name,
-                                 label: cell.playerDisc,
-                                 size: 50)
-            
-            if hostMode {
-                // Host
-                cell.changeButton.addTarget(self, action: #selector(HostViewController.changeHostButtonPressed(_:)), for: UIControl.Event.touchUpInside)
-                cell.changeButton.isHidden = (self.connectionMode == .online)
+    internal var gamePreviewWaitMessage: NSAttributedString {
+        get {
+            if self.canProceed {
+                return NSAttributedString(string: "Ready to start game")
+            } else if self.recoveryMode {
+                return NSAttributedString(string: "Waiting for other players\nto reconnect...")
             } else {
-                // Guest
-                if playerData.peer == nil || playerData.peer.state == .notConnected {
-                    if let inviteStatus = playerData.inviteStatus {
-                        switch inviteStatus {
-                        case .inviting:
-                            cell.deviceNameLabel.text = "Inviting..."
-                        case .invited:
-                            cell.deviceNameLabel.text = "Invitation sent"
-                        case .reconnecting:
-                            cell.deviceNameLabel.text = "Reconnecting..."
-                        default:
-                            cell.deviceNameLabel.text = "Invitation failed"
-                        }
-                    } else {
-                        cell.deviceNameLabel.text = "Not connected"
-                    }
-                } else {
-                    cell.deviceNameLabel.text = "Connected on \(String(describing: playerData.peer!.deviceName))"
-                }
-                cell.disconnectButton.addTarget(self, action: #selector(HostViewController.disconnectButtonPressed(_:)), for: UIControl.Event.touchUpInside)
-                cell.disconnectButton.tag = playerData.unique
-                cell.disconnectButton.isHidden = (self.connectionMode == .online)
+                return NSAttributedString(string: "Waiting for at least three\nplayers to connect...")
             }
         }
     }
     
-    // MARK: - Game Preview Delegate handlers ============================================================================== -
-    
     internal func gamePreviewCompletion() {
         self.gameInProgress = false
-        if self.playingComputer {
-            self.exitHost()
-        }
+        self.exitHost()
     }
     
     internal func gamePreview(isConnected playerMO: PlayerMO) -> Bool {
@@ -920,10 +734,61 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         self.sendPlayers()
     }
     
+    internal func gamePreviewStartGame() {
+        self.setupPlayers()
+        self.gameInProgress = true
+        self.scorecard.sendPlayers()
+    }
+    
+    internal func gamePreviewStopGame() {
+        self.gameInProgress = false
+    }
+    
+    internal func gamePreviewShakeGestureHandler() {
+        
+        // Play sound
+        self.gamePreviewViewController.alertSound()
+        
+        if self.currentState != .inviting {
+            // Don't reset while in middle of inviting
+            
+            if let mode = self.connectionMode {
+                
+                // Disconnect
+                self.setConnectionMode(.unknown)
+                
+                switch mode {
+                case .nearby:
+                    // Start broadcasting
+                    self.setConnectionMode(.nearby)
+                    
+                case .online:
+                    // Start connection
+                    self.setConnectionMode(.online, chooseInvitees: false)
+                    
+                    if let selectedPlayers = self.selectedPlayers {
+                        // Resend invites
+                        let invitees = selectedPlayers.count - 1
+                        if invitees > 0 {
+                            let playerMO = Array(selectedPlayers[1...invitees])
+                            self.returnInvitees(complete: true, playerMO: playerMO)
+                        }
+                    } else {
+                        // Select players
+                        self.chooseOnlineInvitees()
+                    }
+                default:
+                    break
+                }
+            }
+        }
+    }
+    
     // MARK: - Utility Routines ======================================================================== -
     
     private func showGamePreview() {
-        self.gamePreviewViewController = GamePreviewViewController.showGamePreview(viewController: self, selectedPlayers: selectedPlayers, title: "Host a Game", backText: "Back", readOnly: false, faceTimeAddress: self.faceTimeAddress, rabbitMQService: self.rabbitMQHost, computerPlayerDelegates: self.computerPlayers, delegate: self)
+        let selectedPlayers = self.playerData.map { $0.playerMO! }
+        self.gamePreviewViewController = GamePreviewViewController.show(from: Utility.getActiveViewController()!, selectedPlayers: selectedPlayers, title: "Host a Game", backText: "", readOnly: false, faceTimeAddress: self.faceTimeAddress, rabbitMQService: self.rabbitMQHost, computerPlayerDelegates: self.computerPlayers, delegate: self)
     }
     
     private func setConnectionMode(_ connectionMode: ConnectionMode, chooseInvitees: Bool = true) {
@@ -934,15 +799,6 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             // Clear hand state
             self.scorecard.handState = nil
             
-            // Format table views
-            switch connectionMode {
-            case .unknown:
-                self.hostPlayerTableViewHeightConstraint.constant = 260
-                self.guestPlayerTableView.isHidden = true
-            default:
-                self.hostPlayerTableViewHeightConstraint.constant = 100
-                self.guestPlayerTableView.isHidden = false
-            }
             // Disconnect any existing connected players
             if playerData.count > 1 {
                 for playerNumber in (2...playerData.count).reversed() {
@@ -969,8 +825,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
                 }
             }
             
-            hostPlayerTableView.reloadData()
-            self.setInstructions()
+            self.refreshPlayers()
         }
     }
     
@@ -1023,7 +878,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     }
     
     private func chooseOnlineInvitees() {
-        SearchViewController.identifyPlayers(from: self,
+        SearchViewController.identifyPlayers(from: self.gamePreviewViewController,
                                        title: "Choose players",
                                        instructions: "Choose 2 or 3 players to invite to the game",
                                        minPlayers: 2,
@@ -1072,13 +927,8 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     }
     
     private func removePlayer(playerNumber: Int) {
-        guestPlayerTableView.beginUpdates()
-        let disconnectReason = playerData[playerNumber - 1].disconnectReason
         playerData.remove(at: playerNumber - 1)
-        if disconnectReason == nil {
-            guestPlayerTableView.deleteRows(at: [IndexPath(row: playerNumber - 2, section: 0)], with: .automatic)
-        }
-        guestPlayerTableView.endUpdates()
+        self.refreshPlayers()
     }
     
     private func setupPlayers() {
@@ -1143,9 +993,6 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
     }
     
     private func waitOtherPlayers(showDialog: Bool = true, completion: (()->())? = nil) {
-        if showDialog {
-            self.playerData[0].whisper.show("Waiting for other players to rejoin...")
-        }
         completion?()
     }
     
@@ -1154,7 +1001,7 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
         self.hostService?.start(email: email, queueUUID: queueUUID, name: name, invite: invite, recoveryMode: self.scorecard.recoveryMode)
     }
     
-    public func finishHost(completion: (()->())? = nil) {
+    public func finishHost() {
         self.scorecard.sendScores = false
         self.scorecard.commsDelegate?.disconnect(reason: "\(self.playerData[0].name) has stopped hosting", reconnect: false)
         self.stopHostBroadcast(completion: {
@@ -1164,15 +1011,13 @@ CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStat
             self.scorecard.resetSharing()
             self.clearHandlerCompleteNotification(observer: self.observer)
             self.scorecard.resetOverrideSettings()
-            completion?()
+            self.completion?()
         })
     }
     
     private func exitHost() {
         self.exiting = true
-        self.finishHost(completion: {
-            self.performSegue(withIdentifier: "hideHost", sender: self)
-        })
+        self.finishHost()
     }
     
     private func stopHostBroadcast(completion: (()->())? = nil) {

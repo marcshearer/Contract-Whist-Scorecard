@@ -264,6 +264,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 player["email"] = players[playerNumber - 1].email
                 player["connected"] = (players[playerNumber - 1].connected ? "true" : "false")
                 playerList["\(playerNumber)"] = player
+                Utility.debugMessage("sendPlayersPassed", player["name"]!)
             }
         } else {
             // Use defined players
@@ -274,6 +275,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 player["email"] = playerMO.email!
                 player["connected"] = "true"
                 playerList["\(playerNumber)"] = player
+                Utility.debugMessage("sendPlayers", player["name"]!)
             }
         }
         self.commsDelegate?.send(descriptor, playerList, to: commsPeer)
@@ -417,6 +419,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                                                         "round"        : self.handState.round],
                                           to: commsPeer,
                                           matchEmail: self.enteredPlayer(playerNumber).playerMO!.email!)
+                Utility.debugMessage("sendHandState", "\(playerNumber) \(commsPeer?.deviceName ?? "all") \(self.enteredPlayer(playerNumber).playerMO!.email!)")
                 self.sendAutoPlay()
             }
         }
@@ -435,7 +438,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                     lastRefresh = lastPeerRefresh
                 }
             }
-        }
+         }
         
         // Only send 1 refresh a second!
         if lastRefresh?.timeIntervalSinceNow ?? TimeInterval(-2.0) < TimeInterval(-1.0) {

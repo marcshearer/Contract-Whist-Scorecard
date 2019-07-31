@@ -42,26 +42,11 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
         enableButtons()
     }
     
-    @IBAction func hideGetStartedSelectPlayers(segue:UIStoryboardSegue) {
-        let source = segue.source as! SelectPlayersViewController
-        if source.selected > 0 {
-            var createPlayerList: [PlayerDetail] = []
-            for playerNumber in 1...source.playerList.count {
-                if source.selection[playerNumber-1] {
-                    createPlayerList.append(source.playerList[playerNumber-1])
-                }
-            }
-            createPlayers(newPlayers: createPlayerList)
-        }
-        enableButtons()
-    }
-    
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func finishPressed(_ sender: UIButton) {
         self.performSegue(withIdentifier: "hideGetStarted", sender: self)
     }
-    
 
     // MARK: - View Overrides ===================================================================== -
 
@@ -263,6 +248,24 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
         })
     }
     
+    private func showSelectPlayers() {
+        
+        SelectPlayersViewController.show(from: self, specificEmail: self.syncEmailTextField.text!, descriptionMode: .lastPlayed, allowOtherPlayer: false, allowNewPlayer: false, completion: { (selected, playerList, selection) in
+            if let selected = selected, let playerList = playerList, let selection = selection {
+                if selected > 0 {
+                    var createPlayerList: [PlayerDetail] = []
+                    for playerNumber in 1...playerList.count {
+                        if selection[playerNumber-1] {
+                            createPlayerList.append(playerList[playerNumber-1])
+                        }
+                    }
+                    self.createPlayers(newPlayers: createPlayerList)
+                }
+                self.enableButtons()
+            }
+        })
+    }
+    
     private func createPlayers(newPlayers: [PlayerDetail]) {
         var newPlayers = newPlayers
         
@@ -283,7 +286,7 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     
     func selectCloudPlayers() -> () {
         
-        self.performSegue(withIdentifier: "showGetStartedSelectPlayers", sender: self)
+        self.showSelectPlayers()
     }
     
     // MARK: - Segue Prepare Handler =================================================================== -
@@ -302,23 +305,6 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
             destination.preferredContentSize = CGSize(width: 400, height: 600)
 
             destination.returnSegue = "hideGetStartedSettings"
-            
-        case "showGetStartedSelectPlayers":
-            let destination = segue.destination as! SelectPlayersViewController
-            
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.isModalInPopover = true
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
-            destination.preferredContentSize = CGSize(width: 400, height: 600)
-            
-            destination.specificEmail = self.syncEmailTextField.text!
-            destination.descriptionMode = .lastPlayed
-            destination.returnSegue = "hideGetStartedSelectPlayers"
-            destination.backText = "Cancel"
-            destination.actionText = "Download"
-            destination.allowOtherPlayer = false
-            destination.allowNewPlayer = false
             
         default:
             break

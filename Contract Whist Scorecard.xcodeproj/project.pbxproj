@@ -54,7 +54,6 @@
 		B22789181FB84A75009BABCA /* RoundSummaryViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789161FB84A75009BABCA /* RoundSummaryViewController.storyboard */; };
 		B227891B1FB84BA2009BABCA /* GameSummaryViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789191FB84BA2009BABCA /* GameSummaryViewController.storyboard */; };
 		B227891E1FB84F66009BABCA /* LocationViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B227891C1FB84F66009BABCA /* LocationViewController.storyboard */; };
-		B22789211FB881B9009BABCA /* HostViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B227891F1FB881B9009BABCA /* HostViewController.storyboard */; };
 		B22789241FB882F7009BABCA /* ClientViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789221FB882F7009BABCA /* ClientViewController.storyboard */; };
 		B227892A1FB885AC009BABCA /* ConfirmCountViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789281FB885AC009BABCA /* ConfirmCountViewController.storyboard */; };
 		B227892D1FB88BDD009BABCA /* HistoryDetailViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B227892B1FB88BDD009BABCA /* HistoryDetailViewController.storyboard */; };
@@ -133,7 +132,7 @@
 		B2EA98E51E28609A000B7E54 /* WalkthroughPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2EA98E41E28609A000B7E54 /* WalkthroughPageViewController.swift */; };
 		B2F41B231FB6BBA70043F974 /* Other Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F41B221FB6BBA70043F974 /* Other Extensions.swift */; };
 		B2F70E4E1EE335170092C19F /* Pack Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F70E4D1EE335170092C19F /* Pack Class.swift */; };
-		B2F70E521EE8BC470092C19F /* HostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F70E511EE8BC470092C19F /* HostViewController.swift */; };
+		B2F70E521EE8BC470092C19F /* Host Controller Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F70E511EE8BC470092C19F /* Host Controller Class.swift */; };
 		B2F7281B1F6D74F9006F0941 /* Invite.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F7281A1F6D74F9006F0941 /* Invite.swift */; };
 		B2F7281D1F7199AE006F0941 /* RabbitMQ Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F7281C1F7199AE006F0941 /* RabbitMQ Class.swift */; };
 		B2FA298E1EA9E215002A5D03 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FA298D1EA9E215002A5D03 /* Alert.swift */; };
@@ -253,7 +252,6 @@
 		B22789171FB84A75009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/RoundSummaryViewController.storyboard; sourceTree = "<group>"; };
 		B227891A1FB84BA2009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/GameSummaryViewController.storyboard; sourceTree = "<group>"; };
 		B227891D1FB84F66009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LocationViewController.storyboard; sourceTree = "<group>"; };
-		B22789201FB881B9009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/HostViewController.storyboard; sourceTree = "<group>"; };
 		B22789231FB882F7009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ClientViewController.storyboard; sourceTree = "<group>"; };
 		B22789291FB885AC009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ConfirmCountViewController.storyboard; sourceTree = "<group>"; };
 		B227892C1FB88BDD009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/HistoryDetailViewController.storyboard; sourceTree = "<group>"; };
@@ -332,7 +330,7 @@
 		B2EA98E41E28609A000B7E54 /* WalkthroughPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalkthroughPageViewController.swift; sourceTree = "<group>"; };
 		B2F41B221FB6BBA70043F974 /* Other Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Other Extensions.swift"; sourceTree = "<group>"; };
 		B2F70E4D1EE335170092C19F /* Pack Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pack Class.swift"; sourceTree = "<group>"; };
-		B2F70E511EE8BC470092C19F /* HostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = HostViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		B2F70E511EE8BC470092C19F /* Host Controller Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "Host Controller Class.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		B2F7281A1F6D74F9006F0941 /* Invite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Invite.swift; sourceTree = "<group>"; };
 		B2F7281C1F7199AE006F0941 /* RabbitMQ Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RabbitMQ Class.swift"; sourceTree = "<group>"; };
 		B2FA298D1EA9E215002A5D03 /* Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
@@ -609,15 +607,6 @@
 			name = Client;
 			sourceTree = "<group>";
 		};
-		B221EEE8210B1AC000F7FBA0 /* Host */ = {
-			isa = PBXGroup;
-			children = (
-				B227891F1FB881B9009BABCA /* HostViewController.storyboard */,
-				B2F70E511EE8BC470092C19F /* HostViewController.swift */,
-			);
-			name = Host;
-			sourceTree = "<group>";
-		};
 		B221EEE9210B1AE800F7FBA0 /* History Detail */ = {
 			isa = PBXGroup;
 			children = (
@@ -832,7 +821,6 @@
 		B288FAB61FB801FC00633FD7 /* Online Game Views */ = {
 			isa = PBXGroup;
 			children = (
-				B221EEE8210B1AC000F7FBA0 /* Host */,
 				B221EEE7210B1AB700F7FBA0 /* Client */,
 				B221EEE6210B1AB100F7FBA0 /* Search */,
 				B221EEE5210B1AA900F7FBA0 /* Hand */,
@@ -909,10 +897,11 @@
 			isa = PBXGroup;
 			children = (
 				B2DA893D1F3CC89C008EE96C /* Comms.swift */,
+				B2F70E511EE8BC470092C19F /* Host Controller Class.swift */,
+				B2767C1D2110061B0029155E /* Loopback Class.swift */,
 				B2C051031EDF194C009DE37F /* Multipeeer Class.swift */,
 				B2D8104D225AF7A7005A86A5 /* Multipeer logger.swift */,
 				B2F7281C1F7199AE006F0941 /* RabbitMQ Class.swift */,
-				B2767C1D2110061B0029155E /* Loopback Class.swift */,
 				B2F7281A1F6D74F9006F0941 /* Invite.swift */,
 				B235D2BD1F82288A0019384B /* Notification Simulator.swift */,
 			);
@@ -1239,7 +1228,6 @@
 				B2594E862251FEB2004398FB /* MyDevices.sh in Resources */,
 				B22789021FB83AA7009BABCA /* SelectionViewController.storyboard in Resources */,
 				B22789331FB88FA5009BABCA /* DataTableViewController.storyboard in Resources */,
-				B22789211FB881B9009BABCA /* HostViewController.storyboard in Resources */,
 				B22788EA1FB827A7009BABCA /* SearchViewController.storyboard in Resources */,
 				B25FC7C922D0733C00D2E651 /* SelectPlayersViewController.storyboard in Resources */,
 				B227891B1FB84BA2009BABCA /* GameSummaryViewController.storyboard in Resources */,
@@ -1421,7 +1409,7 @@
 				B2D2D2DC1ED9975A00CA7B3A /* ClientViewController.swift in Sources */,
 				B243385B22E0A6D8002EBD40 /* SelectedPlayersView.swift in Sources */,
 				B235D2BE1F82288A0019384B /* Notification Simulator.swift in Sources */,
-				B2F70E521EE8BC470092C19F /* HostViewController.swift in Sources */,
+				B2F70E521EE8BC470092C19F /* Host Controller Class.swift in Sources */,
 				B214FBB11FCB71EB00F4F39B /* Watch Manager.swift in Sources */,
 				B20DA0401E139C450040221D /* HighScoresViewController.swift in Sources */,
 				B2D2AAB01E1FF8A600E211A9 /* SyncViewController.swift in Sources */,
@@ -1586,14 +1574,6 @@
 				B227891D1FB84F66009BABCA /* Base */,
 			);
 			name = LocationViewController.storyboard;
-			sourceTree = "<group>";
-		};
-		B227891F1FB881B9009BABCA /* HostViewController.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B22789201FB881B9009BABCA /* Base */,
-			);
-			name = HostViewController.storyboard;
 			sourceTree = "<group>";
 		};
 		B22789221FB882F7009BABCA /* ClientViewController.storyboard */ = {

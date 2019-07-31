@@ -31,10 +31,11 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     private var scorepadViewController: ScorepadViewController!
     private var cutViewController: CutViewController!
     private var gamePreviewViewController: GamePreviewViewController!
+    private var hostController: HostController!
 
     // Properties to pass state to / from segues
     public var returnSegue = ""
-    public var backText = "Back"
+    public var backText = ""
     public var backImage = "back"
     public var formTitle: String!
     public var commsPurpose: CommsConnectionPurpose!
@@ -112,9 +113,9 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     @IBAction func changePlayerPressed(_ sender: UIButton) {
-        SearchViewController.identifyPlayers(from: self, completion: self.returnPlayers, filter: { (playerMO) in
-            // Exclude current player
-            return (self.thisPlayer == nil || self.thisPlayer != playerMO.email )
+        
+        _ = SelectionViewController.show(from: self, singleSelection: true, excludePlayerEmail: self.thisPlayer, formTitle: "Play As...", backText: "", backImage: "back", completion: { (playerMO) in
+            self.returnPlayers(playerMO: playerMO)
         })
     }
     
@@ -215,6 +216,12 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         scorecard.reCenterPopup(self)
+        self.view.setNeedsLayout()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.clientTableView.reloadData()
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
@@ -488,12 +495,13 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             for playerNumber in 1...self.scorecard.currentPlayers {
                 if let playerMO = self.scorecard.enteredPlayer(playerNumber).playerMO {
                     selectedPlayers.append(playerMO)
+                    Utility.debugMessage("ShowGamePreview", playerMO.name!)
                 }
             }
             if self.gamePreviewViewController == nil {
                 Utility.debugMessage("show", "Preview shown")
                 self.dismissAll {
-                    self.gamePreviewViewController = GamePreviewViewController.showGamePreview(viewController: self, selectedPlayers: selectedPlayers, title: "Join a Game", backText: "Cancel", delegate: self)
+                    self.gamePreviewViewController = GamePreviewViewController.show(from: self, selectedPlayers: selectedPlayers, title: "Join a Game", backText: "", delegate: self)
                 }
             } else {
                 Utility.debugMessage("show", "Preview updated \(selectedPlayers.count)")
@@ -528,7 +536,10 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                     }
                 }
             } else {
-                self.error("Unknown: \(peer.deviceName)")
+                Utility.debugMessage("client", "Unknown: \(peer.deviceName)")
+                for available in self.available {
+                    Utility.debugMessage("client", "Have \(available.deviceName)")
+                }
             }
         }
         processQueue()
@@ -829,6 +840,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             button.fillColor = Palette.roomInterior
             button.strokeColor = Palette.roomInterior
             button.normalTextColor = Palette.roomInteriorText
+            headerView.backgroundView = UIView()
             headerView.addSubview(button)
             return headerView
         } else {
@@ -840,11 +852,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         switch indexPath.section {
         case self.peerSection:
             // List of remote peers
-            if available.count == 0 {
-                return 100
-            } else {
-                return 80
-            }
+            return 100
             
         case self.hostSection:
             // Hosting options
@@ -868,12 +876,13 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             if available.count == 0 {
                 
                 cell.serviceLabel.textColor = Palette.text
-                cell.serviceLabel.text = "No other devices are currently offering to host a game for you to join"
+                cell.serviceLabel.text = "There are no other devices currently offering to host a game for you to join"
+                cell.serviceLabel.font = UIFont.systemFont(ofSize: 18.0, weight: .regular)
                 
             } else {
                 
-                let frame = CGRect(x: 40.0, y: cell.serviceButton.frame.midY, width: cell.frame.width - (2.0 * 40), height: cell.frame.height - cell.serviceButton.frame.midY - 4.0)
-                cell.hexagonLayer = Polygon.hexagonFrame(in: cell, frame: frame, strokeColor: Palette.tableTop)
+                let frame = CGRect(x: 40.0, y: cell.serviceButton.frame.midY, width: cell.frame.width - (2.0 * 40), height: cell.frame.height - cell.serviceButton.frame.midY - 2.0)
+                cell.hexagonLayer = Polygon.hexagonFrame(in: cell, frame: frame, strokeColor: Palette.tableTop, lineWidth: 3.5, radius: 10.0)
                 
                 let availableFound = self.available[indexPath.row]
                 let name = availableFound.peer.playerName!
@@ -903,6 +912,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                 case .reconnecting:
                     serviceText = "Trying to reconnect to \(name)"
                 }
+                cell.serviceLabel.font = UIFont.systemFont(ofSize: 18.0, weight: .bold)
                 
                 cell.serviceButton.addTarget(self, action: #selector(ClientViewController.selectPeerSelector(_:)), for: UIControl.Event.touchUpInside)
                 cell.serviceButton.tag = indexPath.row
@@ -918,11 +928,11 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             cell.hexagonLayer?.removeFromSuperlayer()
            
             let frame = CGRect(x: 40.0, y: 4.0, width: cell.frame.width - (2.0 * 40), height: cell.frame.height - 8.0)
-            cell.hexagonLayer = Polygon.hexagonFrame(in: cell, frame: frame, strokeColor: Palette.roomInterior.withAlphaComponent((self.available.count == 0 ? 1.0 : 0.3)))
+            cell.hexagonLayer = Polygon.hexagonFrame(in: cell, frame: frame, strokeColor: Palette.roomInterior.withAlphaComponent((self.available.count == 0 ? 1.0 : 1.0)), lineWidth: (self.available.count == 0 ? 2.0 : 1.0), radius: 10.0)
             
             cell.serviceLabel.textColor = Palette.roomInterior
             let hostText = NSMutableAttributedString()
-            let normalText = [NSAttributedString.Key.foregroundColor: Palette.roomInterior.withAlphaComponent((self.available.count == 0 ? 1.0 : 0.6))]
+            let normalText = [NSAttributedString.Key.foregroundColor: Palette.roomInterior.withAlphaComponent((self.available.count == 0 ? 1.0 : 1.0))]
             var boldText: [NSAttributedString.Key : Any] = normalText
             boldText[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 18.0, weight: .black)
             switch indexPath.row {
@@ -972,7 +982,17 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         case self.peerSection:
             self.selectPeer(indexPath.row)
         case self.hostSection:
-            self.performSegue(withIdentifier: "showClientHost", sender: self)
+            var mode: ConnectionMode
+            // TODO Need to limit what is shown to settings
+            switch indexPath.row {
+            case 0:
+                mode = .nearby
+            default:
+                mode = .online
+            }
+            self.hostController = HostController(mode: mode, playerEmail: self.thisPlayer, completion: {
+                self.hostController = nil
+            })
             
         default:
             break
@@ -1015,23 +1035,23 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     // MARK: - Search return handler ================================================================ -
     
-    private func returnPlayers(complete: Bool, playerMO: [PlayerMO]?) {
+    private func returnPlayers(playerMO: PlayerMO?) {
         // Save player as default for device
-        if !complete {
+        if playerMO == nil {
             // Cancel taken - exit if no player
             if thisPlayer == nil {
                 exitClient()
             }
         } else {
             if let onlineEmail = self.scorecard.settingOnlinePlayerEmail {
-                if playerMO![0].email! == onlineEmail {
+                if playerMO!.email! == onlineEmail {
                     // Back to normal user - can remove temporary override
                     Notifications.removeTemporaryOnlineGameSubscription()
                 } else {
-                    Notifications.addTemporaryOnlineGameSubscription(email: playerMO![0].email!)
+                    Notifications.addTemporaryOnlineGameSubscription(email: playerMO!.email!)
                 }
             }
-            self.thisPlayer = playerMO![0].email!
+            self.thisPlayer = playerMO!.email!
             self.scorecard.defaultPlayerOnDevice = self.thisPlayer
             UserDefaults.standard.set(self.thisPlayer, forKey: "defaultPlayerOnDevice")
             self.refreshInvites()
@@ -1044,7 +1064,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     internal func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
         let viewController = popoverPresentationController.presentedViewController
         if viewController is SearchViewController {
-            self.returnPlayers(complete: false, playerMO: nil)
+            self.returnPlayers(playerMO: nil)
         }
     }
     
@@ -1236,10 +1256,10 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         if index != nil {
             self.clientTableView.beginUpdates()
             self.available.remove(at: index!)
-            self.clientTableView.deleteRows(at: [IndexPath(row: index!, section: peerSection)], with: .automatic)
+            self.clientTableView.deleteRows(at: [IndexPath(row: index!, section: peerSection)], with: .left)
             if available.count == 0 {
                 // Just lost last one - need to insert placeholder and update hosting options
-                self.clientTableView.insertRows(at: [IndexPath(row: 0, section: peerSection)], with: .automatic)
+                self.clientTableView.insertRows(at: [IndexPath(row: 0, section: peerSection)], with: .right)
                 for row in 0...1 {
                     self.clientTableView.reloadRows(at: [IndexPath(row: row, section: hostSection)], with: .automatic)
                 }
@@ -1383,19 +1403,6 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     override internal func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         switch segue.identifier! {
-            
-        case "showClientHost":
-            let destination = segue.destination as! HostViewController
-            
-            destination.modalPresentationStyle = .overCurrentContext
-            destination.isModalInPopover = true
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = self.view
-            destination.preferredContentSize = CGSize(width: 400, height: 600)
-            
-            destination.backImage = "home"
-            destination.backText = ""
-            destination.playingComputer = false
             
         case "showClientScorepad":
             scorepadViewController = segue.destination as? ScorepadViewController

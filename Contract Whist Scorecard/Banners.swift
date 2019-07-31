@@ -36,10 +36,12 @@ class InsetPaddingView: InsetPaddingViewNoColor {
 @objc enum ContinuationShapeType: Int {
     case upArrow = 1
     case downArrow = 2
-    case leftstep = 3
+    case leftStep = 3
 }
 
 class BannerContinuation: UIView {
+    
+    private var shapeLayer: CAShapeLayer?
     
     @IBInspectable var bannerColor: UIColor
     @IBInspectable var shape: ContinuationShapeType
@@ -60,6 +62,18 @@ class BannerContinuation: UIView {
     }
     
     override func draw(_ rect: CGRect) {
+        super.draw(rect)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        // Remove previous layer
+        if let layer = self.shapeLayer {
+            layer.removeFromSuperlayer()
+        }
+        
+        let rect = CGRect(origin: CGPoint(), size: self.frame.size)
         var points: [PolygonPoint] = []
         switch self.shape {
         case .upArrow:
@@ -68,10 +82,18 @@ class BannerContinuation: UIView {
             points.append(PolygonPoint(x: rect.midX, y: rect.minY, pointType: .quadRounded, radius: 20.0))
             points.append(PolygonPoint(x: rect.maxX, y: rect.maxY, pointType: .point))
             points.append(PolygonPoint(x: rect.maxX, y: rect.minY, pointType: .point))
+            
+        case .leftStep:
+            let arrowWidth: CGFloat = rect.height / 4.0
+            points.append(PolygonPoint(x: rect.minX, y: rect.minY, pointType: .point))
+            points.append(PolygonPoint(x: rect.minX, y: rect.maxY, pointType: .point))
+            points.append(PolygonPoint(x: rect.midX - arrowWidth, y: rect.maxY))
+            points.append(PolygonPoint(x: rect.midX, y: rect.minY, pointType: .point))
+            
         default:
             break
         }
-        Polygon.roundedShape(in: self, definedBy: points, strokeColor: self.bannerColor, fillColor: self.bannerColor)
+        self.shapeLayer = Polygon.roundedShapeLayer(in: self, definedBy: points, strokeColor: self.bannerColor, fillColor: self.bannerColor)
     }
     
 }

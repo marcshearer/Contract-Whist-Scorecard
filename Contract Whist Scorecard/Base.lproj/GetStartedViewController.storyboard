@@ -140,7 +140,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mgY-ZD-9ME" userLabel="Action Button" customClass="EmphasisRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                    <rect key="frame" x="30" y="10" width="964" height="44"/>
+                                                    <rect key="frame" x="30" y="10" width="315" height="44"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <state key="normal" title="Download Players from Cloud"/>
                                                 </button>
@@ -241,9 +241,6 @@
                         <segue destination="qYQ-cc-0sq" kind="popoverPresentation" identifier="showGetStartedSettings" animates="NO" popoverAnchorView="gBX-K1-URm" id="VgC-Jo-Lqa">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
-                        <segue destination="YJh-1A-cUe" kind="popoverPresentation" identifier="showGetStartedSelectPlayers" popoverAnchorView="gBX-K1-URm" id="hos-9P-EFj">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                        </segue>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e9Q-MP-3gh" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -257,15 +254,7 @@
                 <viewControllerPlaceholder storyboardIdentifier="UIViewController-btt-Xo-OBG" storyboardName="SettingsViewController" referencedIdentifier="SettingsViewController" id="qYQ-cc-0sq" userLabel="Settings" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="z4c-iM-vvG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6982" y="-585"/>
-        </scene>
-        <!--Select Players-->
-        <scene sceneID="yeZ-NN-hHJ">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="UIViewController-aCF-cU-Oeh" storyboardName="SelectPlayersViewController" referencedIdentifier="SelectPlayersViewController" id="YJh-1A-cUe" userLabel="Select Players" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="DaE-D6-tSm" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="6999" y="-500"/>
+            <point key="canvasLocation" x="6986" y="-546"/>
         </scene>
     </scenes>
     <resources>
@@ -284,7 +273,7 @@
             <color red="0.89800000190734863" green="0.74900001287460327" blue="0.37299999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Text">
-            <color red="0.49799999594688416" green="0.49799999594688416" blue="0.49799999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Text Message">
             <color red="0.0" green="0.4779999852180481" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

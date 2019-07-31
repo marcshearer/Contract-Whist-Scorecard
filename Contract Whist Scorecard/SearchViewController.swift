@@ -50,20 +50,7 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
     @IBOutlet weak var finishButton: UIButton!
     @IBOutlet weak var navigationTitle: UINavigationItem!
     
-    // MARK: - IB Unwind Segue Handlers ================================================================ -
-    
-    @IBAction func hideSearchSelectPlayers(segue:UIStoryboardSegue) {
-        let source = segue.source as! SelectPlayersViewController
-        if source.selected > 0 {
-            var createPlayerList: [PlayerDetail] = []
-            for playerNumber in 1...source.playerList.count {
-                if source.selection[playerNumber-1] {
-                    createPlayerList.append(source.playerList[playerNumber-1])
-                }
-            }
-            createPlayers(newPlayers: createPlayerList)
-        }
-    }// MARK: - IB Actions ============================================================================== -
+    // MARK: - IB Actions ============================================================================== -
     
     @IBAction func finishPressed(_ sender: UIButton) {
         NotificationCenter.default.removeObserver(observer!)
@@ -75,7 +62,7 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
     }
     
     @IBAction func addPressed(_ sender: UIButton) {
-        self.performSegue(withIdentifier: "showSelectPlayers", sender: self)
+        self.showSelectPlayers()
     }
     
     // MARK: - Calling routine ========================================================================= -
@@ -259,6 +246,22 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
     
     // MARK: - Utility Routines ======================================================================== -
     
+    private func showSelectPlayers() {
+        SelectPlayersViewController.show(from: self, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: false, completion: { (selected, playerList, selection) in
+            if let selected = selected, let playerList = playerList, let selection = selection {
+                if selected > 0 {
+                    var createPlayerList: [PlayerDetail] = []
+                    for playerNumber in 1...playerList.count {
+                        if selection[playerNumber-1] {
+                            createPlayerList.append(playerList[playerNumber-1])
+                        }
+                    }
+                    self.createPlayers(newPlayers: createPlayerList)
+                }
+            }
+        })
+    }
+    
     func getSearchList() {
         if self.results.count > 0 {
             // Remove everything except the disable option and anything selected
@@ -330,23 +333,6 @@ class SearchViewController: CustomViewController, UITableViewDataSource, UITable
                     searchTableView.insertRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
                 })
             }
-        }
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        switch segue.identifier! {
-            
-        case "showSelectPlayers":
-            let destination = segue.destination as! SelectPlayersViewController
-            destination.descriptionMode = .opponents
-            destination.returnSegue = "hideSearchSelectPlayers"
-            destination.backText = "Cancel"
-            destination.actionText = "Download"
-            destination.allowOtherPlayer = true
-            
-        default:
-            break
         }
     }
 }

@@ -18,6 +18,14 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     // Main state properties
     private let scorecard = Scorecard.shared
     
+    // Variables to decide how view behaves
+    private var singleSelection: Bool = false
+    private var completion: ((PlayerMO?)->())? = nil
+    private var backText: String = "Back"
+    private var backImage: String = "back"
+    private var excludePlayerEmail: String? = nil
+    private var formTitle = "Selection"
+    
     // Local class variables
     private var width: CGFloat = 0.0
     private var height: CGFloat = 0.0
@@ -41,6 +49,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var unselectedCollectionView: UICollectionView!
     @IBOutlet private weak var selectionView: UIView!
+    @IBOutlet private weak var cancelButton: UIButton!
     @IBOutlet private weak var bannerContinueButton: UIButton!
     @IBOutlet private weak var continueButton: UIButton!
     @IBOutlet private weak var addPlayerButton: UIButton!
@@ -48,26 +57,11 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var selectedViewHeight: NSLayoutConstraint!
     @IBOutlet private weak var selectedViewWidth: NSLayoutConstraint!
     @IBOutlet private weak var slideOutButton: SlideOutButtonView!
-    @IBOutlet private weak var toolbarBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var navigationBar: UINavigationBar!
+    @IBOutlet private weak var navigationTitle: UINavigationItem!
     @IBOutlet private weak var bannerContinuationView: UIView!
     @IBOutlet private weak var bannerContinuationHeightConstraint: NSLayoutConstraint!
     
-    // MARK: - IB Unwind Segue Handlers ================================================================ -
-    
-    @IBAction func hideSelectionSelectPlayers(segue:UIStoryboardSegue) {
-        let source = segue.source as! SelectPlayersViewController
-        if source.selected > 0 {
-            var createPlayerList: [PlayerDetail] = []
-            for playerNumber in 1...source.playerList.count {
-                if source.selection[playerNumber-1] {
-                    createPlayerList.append(source.playerList[playerNumber-1])
-                }
-            }
-            createPlayers(newPlayers: createPlayerList, createMO: false)
-        }
-    }
-
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func continuePressed(_ sender: UIButton) {
@@ -95,13 +89,17 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
 
         // Add players to available and unselected list
         for playerMO in scorecard.playerList {
-            availableList.append(playerMO)
-            unselectedList.append(playerMO)
+            if self.excludePlayerEmail != playerMO.email {
+                availableList.append(playerMO)
+                unselectedList.append(playerMO)
+            }
         }
         
-        // Try to find players from last time
-        self.scorecard.loadGameDefaults()
-        self.assignPlayers()
+        if !self.singleSelection {
+            // Try to find players from last time
+            self.scorecard.loadGameDefaults()
+            self.assignPlayers()
+        }
         
         // Check if in recovery mode - if so (and found all players) go straight to game setup
         if scorecard.recoveryMode {
@@ -115,6 +113,11 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         // Set interline space
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = interRowSpacing
+        
+        // Set cancel button and title
+        self.navigationTitle.title = self.formTitle
+        self.cancelButton.setImage(UIImage(named: self.backImage), for: .normal)
+        self.cancelButton.setTitle(self.backText, for: .normal)
         
         // Check network
         scorecard.checkNetworkConnection(button: nil, label: nil)
@@ -291,27 +294,32 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         let unselectedRows: Int = max(3, Int((totalHeight * 0.55) / self.rowHeight))
         let unselectedHeight = CGFloat(unselectedRows) * rowHeight
         
-        let selectedTop = unselectedHeight + self.navigationBar.intrinsicContentSize.height + self.bannerContinuationHeight + view.safeAreaInsets.top
-        let selectedHeight: CGFloat = totalHeight + view.safeAreaInsets.top + view.safeAreaInsets.bottom - selectedTop
-        selectedViewWidth?.constant = selectedWidth
-        
-        if ScorecardUI.landscapePhone() {
-            selectedViewHeight?.constant = totalHeight - navigationBar.intrinsicContentSize.height + view.safeAreaInsets.bottom
-            self.selectedPlayersView.frame = CGRect(x: size.width - view.safeAreaInsets.right - selectedWidth, y: navigationBar.intrinsicContentSize.height + view.safeAreaInsets.top, width: selectedWidth, height: totalHeight - navigationBar.intrinsicContentSize.height + view.safeAreaInsets.bottom)
+        if self.singleSelection {
+            selectedViewHeight?.constant = 0
         } else {
-            selectedViewHeight?.constant = selectedHeight
-            self.selectedPlayersView.frame = CGRect(x: 0.0, y: selectedTop, width: selectedWidth, height: selectedHeight)
+            let selectedTop = unselectedHeight + self.navigationBar.intrinsicContentSize.height + self.bannerContinuationHeight + view.safeAreaInsets.top
+            let selectedHeight: CGFloat = totalHeight + view.safeAreaInsets.top + view.safeAreaInsets.bottom - selectedTop
+            selectedViewWidth?.constant = selectedWidth
+            
+            if ScorecardUI.landscapePhone() {
+                selectedViewHeight?.constant = totalHeight - navigationBar.intrinsicContentSize.height + view.safeAreaInsets.bottom
+                self.selectedPlayersView.frame = CGRect(x: size.width - view.safeAreaInsets.right - selectedWidth, y: navigationBar.intrinsicContentSize.height + view.safeAreaInsets.top, width: selectedWidth, height: totalHeight - navigationBar.intrinsicContentSize.height + view.safeAreaInsets.bottom)
+            } else {
+                selectedViewHeight?.constant = selectedHeight
+                self.selectedPlayersView.frame = CGRect(x: 0.0, y: selectedTop, width: selectedWidth, height: selectedHeight)
+            }
         }
-    
     }
     
     func finishAction() {
         NotificationCenter.default.removeObserver(observer!)
-        self.performSegue(withIdentifier: "hideSelection", sender: self)
+        self.dismiss(animated: true, completion: {
+            self.completion?(nil)
+        })
     }
 
     func continueAction() {
-        if selectedList.count >= 3 {
+        if !self.singleSelection && selectedList.count >= 3 {
             self.showGamePreview()
         }
     }
@@ -345,7 +353,13 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         if tag < 0 {
             self.addNewPlayer()
         } else {
-            self.addSelection(playerView.playerMO!)
+            if self.singleSelection {
+                self.dismiss(animated: true, completion: {
+                    self.completion?(playerView.playerMO)
+                })
+            } else {
+                self.addSelection(playerView.playerMO!)
+            }
         }
     }
     
@@ -360,6 +374,22 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     }
     
     // MARK: - Utility Routines ======================================================================== -
+    
+    private func showSelectPlayers() {
+        SelectPlayersViewController.show(from: self, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: true, completion: { (selected, playerList, selection) in
+            if let selected = selected, let playerList = playerList, let selection = selection {
+                if selected > 0 {
+                    var createPlayerList: [PlayerDetail] = []
+                    for playerNumber in 1...playerList.count {
+                        if selection[playerNumber-1] {
+                            createPlayerList.append(playerList[playerNumber-1])
+                        }
+                    }
+                    self.createPlayers(newPlayers: createPlayerList, createMO: false)
+                }
+            }
+        })
+    }
 
     func assignPlayers() {
         // Run round player list trying to patch in players from last time
@@ -540,12 +570,15 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     }
     
     private func setupDragAndDrop() {
-        let unselectedDropInteraction = UIDropInteraction(delegate: self)
-        self.unselectedCollectionView.addInteraction(unselectedDropInteraction)
+        if !self.singleSelection {
+            let unselectedDropInteraction = UIDropInteraction(delegate: self)
+            self.unselectedCollectionView.addInteraction(unselectedDropInteraction)
+        }
     }
     
     private func createPlayers(newPlayers: [PlayerDetail], createMO: Bool) {
-        let addToSelected = (selectedList.count + newPlayers.count <= self.scorecard.numberPlayers)
+        let addToSelected = (self.singleSelection ? (newPlayers.count == 1) :
+                                                    (selectedList.count + newPlayers.count <= self.scorecard.numberPlayers))
         
         for newPlayerDetail in newPlayers {
             if newPlayerDetail.name == "" {
@@ -576,7 +609,13 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                     
                     // Add to selection if there is space
                     if addToSelected {
-                        addSelection(playerMO)
+                        if self.singleSelection {
+                            self.dismiss(animated: true, completion: {
+                                self.completion?(playerMO)
+                            })
+                        } else {
+                            self.addSelection(playerMO)
+                        }
                     }
                 }
             }
@@ -585,7 +624,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     func addNewPlayer() {
         if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
-            self.performSegue(withIdentifier: "showSelectPlayers", sender: self)
+            self.showSelectPlayers()
         } else {
             PlayerDetailViewController.show(from: self, playerDetail: PlayerDetail(visibleLocally: true), mode: .create, sourceView: view,
                                             completion: { (playerDetail, deletePlayer) in
@@ -598,7 +637,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     private func showGamePreview() {
         selectedList.sort(by: { $0.slot < $1.slot })
-        _ = GamePreviewViewController.showGamePreview(viewController: self, selectedPlayers: selectedList.map{ $0.playerMO }, readOnly: false, delegate: self)
+        _ = GamePreviewViewController.show(from: self, selectedPlayers: selectedList.map{ $0.playerMO }, readOnly: false, delegate: self)
     }
     
     // MARK: - Game Preview Delegate handlers ============================================================================== -
@@ -651,32 +690,21 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             })
         }
     }
-
-    // MARK: - Segue Prepare Handler =================================================================== -
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    
+    // MARK: - Function to present this view ==============================================================
+    
+    class func show(from viewController: UIViewController, singleSelection: Bool = false, excludePlayerEmail: String = "", formTitle: String = "Selection", backText: String = "Back", backImage: String = "back", completion: ((PlayerMO?)->())? = nil) {
+        let storyboard = UIStoryboard(name: "SelectionViewController", bundle: nil)
+        let selectionViewController = storyboard.instantiateViewController(withIdentifier: "SelectionViewController") as! SelectionViewController
         
-        switch segue.identifier! {
+        selectionViewController.singleSelection = singleSelection
+        selectionViewController.excludePlayerEmail = excludePlayerEmail
+        selectionViewController.formTitle = formTitle
+        selectionViewController.backText = backText
+        selectionViewController.backImage = backImage
+        selectionViewController.completion = completion
         
-        case "showSelectPlayers":
-            let destination = segue.destination as! SelectPlayersViewController
-
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.isModalInPopover = true
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = self.view
-            destination.preferredContentSize = CGSize(width: 400, height: 600)
-            
-            destination.descriptionMode = .opponents
-            destination.returnSegue = "hideSelectionSelectPlayers"
-            destination.backText = "Cancel"
-            destination.actionText = "Download"
-            destination.allowOtherPlayer = true
-            destination.allowNewPlayer = true
-            
-        default:
-            break
-        }
+        viewController.present(selectionViewController, animated: true, completion: nil)
     }
     
 }

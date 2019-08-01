@@ -13,6 +13,7 @@ enum PolygonPointType {
     case halfRounded
     case insideRounded
     case quadRounded
+    case smoothQuadRounded
     case point
 }
 
@@ -91,10 +92,11 @@ class Polygon {
         let path = CGMutablePath()
         path.move(to: partialPoint(from: points[0].cgPoint, to: points[1].cgPoint, fraction: 0.5))
         for index in 1...points.count {
+            let radius = points[index % points.count].radius ?? radius
             let previous = points[(index + points.count - 1) % points.count].cgPoint
             let current = points[index % points.count].cgPoint
+            let extendedPoint = points[index % points.count].extendedPoint ?? CGPoint(x: current.x + radius, y: current.y)
             let next = points[(index + 1) % points.count].cgPoint
-            let radius = points[index % points.count].radius ?? radius
             
             switch points[index % points.count].pointType {
             case .point:
@@ -114,6 +116,10 @@ class Polygon {
             case .quadRounded:
                 path.addLine(to: partialPoint(from: current, to: previous, distance: radius))
                 path.addQuadCurve(to: partialPoint(from: current, to: next, distance: radius), control: current)
+                
+            case .smoothQuadRounded:
+                path.addLine(to: partialPoint(from: current, to: previous, distance: radius))
+                path.addQuadCurve(to: extendedPoint, control: current)
                 
             case .insideRounded:
                 path.addArc(tangent1End: current, tangent2End: next, radius: insideRadius)
@@ -249,16 +255,18 @@ class PolygonPoint {
     public var y: CGFloat
     public var pointType: PolygonPointType
     public var radius: CGFloat?
+    public var extendedPoint: CGPoint?
     
-    init(x: CGFloat, y: CGFloat, pointType: PolygonPointType? = nil, radius: CGFloat? = nil) {
+    init(x: CGFloat, y: CGFloat, pointType: PolygonPointType? = nil, radius: CGFloat? = nil, controlPoint: CGPoint? = nil) {
         self.x = x
         self.y = y
         self.pointType = pointType ?? .rounded
         self.radius = radius
+        self.extendedPoint = controlPoint
     }
     
-    convenience init(origin: CGPoint, pointType: PolygonPointType = .rounded, radius: CGFloat? = nil) {
-        self.init(x: origin.x, y: origin.y, pointType: pointType, radius: radius)
+    convenience init(origin: CGPoint, pointType: PolygonPointType = .rounded, radius: CGFloat? = nil, controlPoint: CGPoint? = nil) {
+        self.init(x: origin.x, y: origin.y, pointType: pointType, radius: radius, controlPoint: controlPoint)
     }
     
     var cgPoint: CGPoint {

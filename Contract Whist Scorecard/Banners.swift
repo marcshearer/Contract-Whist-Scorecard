@@ -84,16 +84,16 @@ class BannerContinuation: UIView {
             points.append(PolygonPoint(x: rect.maxX, y: rect.minY, pointType: .point))
             
         case .leftStep:
-            let arrowWidth: CGFloat = rect.height / 4.0
+            let arrowWidth: CGFloat = (rect.height / 1.5)
             points.append(PolygonPoint(x: rect.minX, y: rect.minY, pointType: .point))
             points.append(PolygonPoint(x: rect.minX, y: rect.maxY, pointType: .point))
-            points.append(PolygonPoint(x: rect.midX - arrowWidth, y: rect.maxY))
-            points.append(PolygonPoint(x: rect.midX, y: rect.minY, pointType: .point))
+            points.append(PolygonPoint(x: rect.midX - (arrowWidth / 2.0), y: rect.maxY, radius: 10.0))
+            points.append(PolygonPoint(x: rect.midX + (arrowWidth / 2.0), y: rect.minY, pointType: .smoothQuadRounded, radius: 5.0))
             
         default:
             break
         }
-        self.shapeLayer = Polygon.roundedShapeLayer(in: self, definedBy: points, strokeColor: self.bannerColor, fillColor: self.bannerColor)
+        self.shapeLayer = Polygon.roundedShapeLayer(in: self, definedBy: points, strokeColor: self.bannerColor, fillColor: self.bannerColor, lineWidth: 0.0)
     }
     
 }
@@ -113,7 +113,6 @@ class NavigationBar: UINavigationBar {
         titleLabel.adjustsFontSizeToFitWidth = true
         titleLabel.minimumScaleFactor = 0.5
         titleLabel.textAlignment = .center
-        self.topItem!.titleView = titleLabel
     }
     
     override func draw(_ rect: CGRect) {

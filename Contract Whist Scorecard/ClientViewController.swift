@@ -32,6 +32,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     private var cutViewController: CutViewController!
     private var gamePreviewViewController: GamePreviewViewController!
     private var hostController: HostController!
+    public let transition = FadeAnimator()
 
     // Properties to pass state to / from segues
     public var returnSegue = ""
@@ -83,6 +84,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     @IBOutlet weak var clientTableView: UITableView!
     @IBOutlet private weak var thisPlayerThumbnail: ThumbnailView!
     @IBOutlet private weak var thisPlayerNameLabel: UILabel!
+    @IBOutlet private weak var thisPlayerThumbnailWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var changePlayerButton: UIButton!
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
@@ -114,7 +116,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     @IBAction func changePlayerPressed(_ sender: UIButton) {
         
-        _ = SelectionViewController.show(from: self, singleSelection: true, excludePlayerEmail: self.thisPlayer, formTitle: "Play As...", backText: "", backImage: "back", completion: { (playerMO) in
+        SelectionViewController.show(from: self, singleSelection: true, thisPlayer: self.thisPlayer, thisPlayerFrame: self.thisPlayerThumbnail.frame, formTitle: "Choose Player", backText: "", backImage: "back", completion: { (playerMO) in
             self.returnPlayers(playerMO: playerMO)
         })
     }
@@ -147,7 +149,6 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             self.titleBar.title = self.formTitle
         }
 
-        
         // Set up sections
         if self.commsPurpose == .playing {
             peerSection = 0
@@ -1072,8 +1073,9 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
 
     private func showThisPlayer() {
         if let playerMO = self.scorecard.findPlayerByEmail(self.thisPlayer) {
-            let width: CGFloat = thisPlayerThumbnail.frame.width
-            self.thisPlayerThumbnail.set(data: playerMO.thumbnail, name: playerMO.name!, nameHeight: 0.0, diameter: width)
+            let size = SelectionViewController.thumbnailSize(view: self.view, labelHeight: 0.0)
+            self.thisPlayerThumbnailWidthConstraint.constant = size.width
+            self.thisPlayerThumbnail.set(data: playerMO.thumbnail, name: playerMO.name!, nameHeight: 0.0, diameter: size.width)
             self.thisPlayerNameLabel.text = "Play as \(playerMO.name!)"
         }
     }

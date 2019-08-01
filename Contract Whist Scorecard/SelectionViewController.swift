@@ -23,7 +23,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private var completion: ((PlayerMO?)->())? = nil
     private var backText: String = "Back"
     private var backImage: String = "back"
-    private var excludePlayerEmail: String? = nil
+    private var thisPlayer: String?
+    private var thisPlayerFrame: CGRect?
     private var formTitle = "Selection"
     
     // Local class variables
@@ -38,6 +39,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private var selectedAlpha: CGFloat = 0.5
     private var testMode = false
     private var addPlayerThumbnail: Bool = false
+    private var thisPlayerView: PlayerView!
 
     // Main local state handlers
     private var availableList: [PlayerMO] = []
@@ -48,19 +50,22 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var unselectedCollectionView: UICollectionView!
+    @IBOutlet private weak var unselectedCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet private weak var selectionView: UIView!
     @IBOutlet private weak var cancelButton: UIButton!
     @IBOutlet private weak var bannerContinueButton: UIButton!
     @IBOutlet private weak var continueButton: UIButton!
-    @IBOutlet private weak var addPlayerButton: UIButton!
+    @IBOutlet private weak var bannerAddPlayerButton: UIButton!
     @IBOutlet private weak var selectedPlayersView: SelectedPlayersView!
     @IBOutlet private weak var selectedViewHeight: NSLayoutConstraint!
     @IBOutlet private weak var selectedViewWidth: NSLayoutConstraint!
     @IBOutlet private weak var slideOutButton: SlideOutButtonView!
     @IBOutlet private weak var navigationBar: UINavigationBar!
     @IBOutlet private weak var navigationTitle: UINavigationItem!
-    @IBOutlet private weak var bannerContinuationView: UIView!
+    @IBOutlet private weak var bannerContinuationView: BannerContinuation!
     @IBOutlet private weak var bannerContinuationHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var thisPlayerViewContainter: UIView!
+    @IBOutlet private weak var thisPlayerViewContainerWidthConstraint: NSLayoutConstraint!
     
     // MARK: - IB Actions ============================================================================== -
     
@@ -89,13 +94,23 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
 
         // Add players to available and unselected list
         for playerMO in scorecard.playerList {
-            if self.excludePlayerEmail != playerMO.email {
+            if self.thisPlayer != playerMO.email {
                 availableList.append(playerMO)
                 unselectedList.append(playerMO)
             }
         }
         
-        if !self.singleSelection {
+        if self.singleSelection {
+            // Switch banner type
+            self.bannerContinuationView.shape = .upArrow
+            self.bannerAddPlayerButton.isHidden = true
+            self.slideOutButton.title = "Add Player"
+            self.slideOutButton.isHidden = false
+            self.slideOutButton.buttonFillColor = UIColor.clear
+            self.slideOutButton.buttonStrokeColor = Palette.gameBanner
+            self.slideOutButton.buttonTextColor = Palette.gameBanner
+            self.showThisPlayer()
+        } else {
             // Try to find players from last time
             self.scorecard.loadGameDefaults()
             self.assignPlayers()
@@ -146,15 +161,12 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             self.setupAnimationView()
             
             self.setupDragAndDrop()
+            
         }
         
         // Decide if buttons enabled
         formatButtons(false)
     
-        // Draw filler in banner
-        let width: CGFloat = self.view.frame.width * 0.55
-        Polygon.angledBannerContinuationMask(view: bannerContinuationView, frame: CGRect(x: 0, y: 0, width: width, height: bannerContinuationHeight), type: .arrowRight, arrowWidth: bannerContinuationHeight * 2 / 3)
-        
         // Draw table
         self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth)
         self.selectedPlayersView.setHaloColor(color: Palette.halo)
@@ -264,16 +276,26 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     func formatButtons(_ animated: Bool = true) {
         
         let hidden = (selectedList.count >= 3 || testMode ? false : true)
-        bannerContinueButton.isHidden = hidden || (!ScorecardUI.smallPhoneSize() && !ScorecardUI.landscapePhone())
-        continueButton.isHidden = hidden || (ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone())
-        slideOutButton.isHidden = (selectedList.count == 0)
+        if (ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone()) {
+            // Banner continuation button used on small or landscape phone
+            continueButton.isHidden = true
+            bannerContinueButton.isHidden = hidden
+            if !self.singleSelection {
+                bannerContinueButton.setTitle("Continue", for: .normal)
+            }
+        } else {
+            // Main continue button used on other devices
+            continueButton.isHidden = hidden
+            bannerContinueButton.isHidden = true
+        }
+        slideOutButton.isHidden = (selectedList.count == 0 && !self.singleSelection)
     }
     
     func setSize(size: CGSize) {
         
         if ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone() {
-            self.bannerContinuationHeight = 0.0
-            self.bannerContinuationView.isHidden = true
+            self.bannerContinuationHeight = (self.singleSelection ? 60.0 : 0.0)
+            self.bannerContinuationView.isHidden = !self.singleSelection
             addPlayerThumbnail = true
         } else {
             self.bannerContinuationHeight = 60.0
@@ -285,17 +307,19 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         let totalWidth = size.width - view.safeAreaInsets.left - view.safeAreaInsets.right
         let selectedWidth = (ScorecardUI.landscapePhone() ? (totalWidth / 2.0) : totalWidth)
         let totalHeight = size.height - view.safeAreaInsets.top - view.safeAreaInsets.bottom
-        let numberThatFit = max(5, Int(selectedWidth / (min(totalWidth, totalHeight) > 450 ? 120 : 75)))
         
-        self.width = min((totalHeight - 170)/2, ((selectedWidth - (CGFloat(numberThatFit + 1) * 10.0)) / CGFloat(numberThatFit)))
-        self.height = self.width + self.labelHeight - 5.0
+        let size = SelectionViewController.thumbnailSize(view: self.view, labelHeight: self.labelHeight)
+        self.width = size.width
+        self.height = size.height
         self.rowHeight = self.height + self.interRowSpacing
     
         let unselectedRows: Int = max(3, Int((totalHeight * 0.55) / self.rowHeight))
         let unselectedHeight = CGFloat(unselectedRows) * rowHeight
         
         if self.singleSelection {
-            selectedViewHeight?.constant = 0
+            self.selectedViewHeight?.constant = 44.0 + 75.0 + self.view.safeAreaInsets.bottom
+            self.selectedPlayersView.alpha = 0.0
+            self.unselectedCollectionViewTopConstraint.constant = self.width + 16.0 + (self.labelHeight - 5.0) + self.interRowSpacing - self.bannerContinuationHeight
         } else {
             let selectedTop = unselectedHeight + self.navigationBar.intrinsicContentSize.height + self.bannerContinuationHeight + view.safeAreaInsets.top
             let selectedHeight: CGFloat = totalHeight + view.safeAreaInsets.top + view.safeAreaInsets.bottom - selectedTop
@@ -309,6 +333,20 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 self.selectedPlayersView.frame = CGRect(x: 0.0, y: selectedTop, width: selectedWidth, height: selectedHeight)
             }
         }
+    }
+    
+    /// Function used in other views to get the same thumbnail size
+    
+    class public func thumbnailSize(view: UIView, labelHeight: CGFloat) -> CGSize {
+        let totalWidth = view.bounds.width - view.safeAreaInsets.left - view.safeAreaInsets.right
+        let selectedWidth = (ScorecardUI.landscapePhone() ? (totalWidth / 2.0) : totalWidth)
+        let totalHeight = view.bounds.height - view.safeAreaInsets.top - view.safeAreaInsets.bottom
+        let numberThatFit = max(5, Int(selectedWidth / (min(totalWidth, totalHeight) > 450 ? 120 : 75)))
+        
+        let width = min((totalHeight - 170)/2, ((selectedWidth - (CGFloat(numberThatFit + 1) * 10.0)) / CGFloat(numberThatFit)))
+        let height = width + labelHeight - 5.0
+        
+        return CGSize(width: width, height: height)
     }
     
     func finishAction() {
@@ -350,13 +388,16 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
 
     internal func playerViewWasTapped(_ playerView: PlayerView) {
         let tag = playerView.tag
-        if tag < 0 {
+        if tag == -1 {
+            // New player button
             self.addNewPlayer()
+        } else if tag == -2 {
+            // This player thumbnail - just exit
+            self.finishAction()
         } else {
             if self.singleSelection {
-                self.dismiss(animated: true, completion: {
-                    self.completion?(playerView.playerMO)
-                })
+                self.completion?(playerView.playerMO)
+                self.dismiss(animated: true, completion: nil)
             } else {
                 self.addSelection(playerView.playerMO!)
             }
@@ -366,9 +407,13 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     // MARK: - Slide out button delegate handler======================================================== -
     
     func slideOutButtonPressed(_ sender: SlideOutButtonView) {
-        if selectedList.count > 0 {
-            for selected in selectedList {
-                self.removeSelection(selected.slot, animate: false)
+        if self.singleSelection {
+            self.addNewPlayer()
+        } else {
+            if selectedList.count > 0 {
+                for selected in selectedList {
+                    self.removeSelection(selected.slot, animate: false)
+                }
             }
         }
     }
@@ -389,6 +434,24 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 }
             }
         })
+    }
+    
+    private func showThisPlayer() {
+        if let thisPlayer = self.thisPlayer {
+            if let playerMO = self.scorecard.findPlayerByEmail(thisPlayer) {
+                var width: CGFloat = thisPlayerViewContainerWidthConstraint.constant - 10.0
+                if let thisPlayerFrame = self.thisPlayerFrame {
+                    width = thisPlayerFrame.width
+                    self.thisPlayerViewContainerWidthConstraint.constant = width + 10.0
+                }
+                    
+                self.thisPlayerView = PlayerView(type: .addPlayer, parent: self.thisPlayerViewContainter, width: width, height: width, tag: -2)
+                self.thisPlayerView.delegate = self
+                self.thisPlayerView.set(playerMO: playerMO, nameHeight: 0.0)
+                self.thisPlayerView.set(textColor: UIColor.clear)
+                self.thisPlayerViewContainter.isHidden = false
+            }
+        }
     }
 
     func assignPlayers() {
@@ -567,6 +630,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     private func setupAnimationView() {
         self.animationView = PlayerView(type: .animation, parent: self.view, width: self.width, height: self.height, tag: -1, haloWidth: self.haloWidth)
+        // Move it off the screen
+        self.animationView.frame = CGRect(x: -self.width, y: -self.height, width: self.width, height: self.height)
     }
     
     private func setupDragAndDrop() {
@@ -693,16 +758,23 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     // MARK: - Function to present this view ==============================================================
     
-    class func show(from viewController: UIViewController, singleSelection: Bool = false, excludePlayerEmail: String = "", formTitle: String = "Selection", backText: String = "Back", backImage: String = "back", completion: ((PlayerMO?)->())? = nil) {
+    class func show(from viewController: UIViewController, singleSelection: Bool = false, thisPlayer: String = "", thisPlayerFrame: CGRect? = nil, formTitle: String = "Selection", backText: String = "Back", backImage: String = "back", completion: ((PlayerMO?)->())? = nil) {
+        
         let storyboard = UIStoryboard(name: "SelectionViewController", bundle: nil)
         let selectionViewController = storyboard.instantiateViewController(withIdentifier: "SelectionViewController") as! SelectionViewController
         
         selectionViewController.singleSelection = singleSelection
-        selectionViewController.excludePlayerEmail = excludePlayerEmail
+        selectionViewController.thisPlayer = thisPlayer
+        selectionViewController.thisPlayerFrame = thisPlayerFrame
         selectionViewController.formTitle = formTitle
         selectionViewController.backText = backText
         selectionViewController.backImage = backImage
         selectionViewController.completion = completion
+        
+        if let viewController = viewController as? ClientViewController {
+            // Animating from client - use special view controller
+            selectionViewController.transitioningDelegate = viewController
+        }
         
         viewController.present(selectionViewController, animated: true, completion: nil)
     }
@@ -715,3 +787,51 @@ class SelectionCell: UICollectionViewCell {
     fileprivate var playerView: PlayerView!
 }
 
+class FadeAnimator: NSObject, UIViewControllerAnimatedTransitioning {
+    
+    let duration = 0.5
+    var presenting = true
+    var originFrame = CGRect.zero
+    
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
+        return duration
+    }
+    
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+        let containerView = transitionContext.containerView
+        let toView = transitionContext.view(forKey: .to)!
+    
+        containerView.addSubview(toView)
+        toView.alpha = 0.0
+        UIView.animate(
+            withDuration: duration,
+            animations: {
+                toView.alpha = 1.0
+        },
+            completion: { _ in
+                transitionContext.completeTransition(true)
+        })
+    }
+}
+
+extension ClientViewController: UIViewControllerTransitioningDelegate {
+    
+    func animationController(
+        forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        self.transition.presenting = true
+        // if presenting is SelectionViewController {
+            return self.transition
+        // } else {
+            return nil
+        // }
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        // if dismissed is SelectionViewController {
+            self.transition.presenting = false
+            return self.transition
+        // } else {
+            return nil
+        // }
+    }
+}

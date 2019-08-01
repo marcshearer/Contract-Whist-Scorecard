@@ -110,8 +110,8 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         self.thumbnail.set(data: data, name: name, initials: initials, nameHeight: nameHeight ?? 30.0, alpha: alpha)
     }
     
-    public func set(playerMO: PlayerMO) {
-        self.set(data: playerMO.thumbnail, name: playerMO.name)
+    public func set(playerMO: PlayerMO, nameHeight: CGFloat? = nil) {
+        self.set(data: playerMO.thumbnail, name: playerMO.name, nameHeight: nameHeight)
         self.playerMO = playerMO
     }
     

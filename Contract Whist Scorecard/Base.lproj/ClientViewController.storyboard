@@ -165,7 +165,7 @@
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="50" id="38b-HW-L25"/>
-                                    <constraint firstAttribute="height" constant="50" id="RcJ-bv-9Sf"/>
+                                    <constraint firstAttribute="width" secondItem="RyR-aM-WNg" secondAttribute="height" multiplier="1:1" id="jSB-aA-Ga0"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Play as" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nJF-Zf-jlr">
@@ -237,6 +237,7 @@
                         <outlet property="finishButton" destination="0Si-5j-YyO" id="tNG-UY-Tpu"/>
                         <outlet property="thisPlayerNameLabel" destination="nJF-Zf-jlr" id="GZ0-RA-vZ7"/>
                         <outlet property="thisPlayerThumbnail" destination="RyR-aM-WNg" id="i3h-jf-wsK"/>
+                        <outlet property="thisPlayerThumbnailWidthConstraint" destination="38b-HW-L25" id="WT5-to-N1T"/>
                         <outlet property="titleBar" destination="9bb-Wg-XPQ" id="Iik-d7-aIX"/>
                         <segue destination="xqo-YA-Qav" kind="unwind" identifier="hideClient" unwindAction="hideClientWithSegue:" id="fOe-cu-YCR"/>
                         <segue destination="Plw-2P-Gw9" kind="show" identifier="showClientScorepad" id="D9t-VC-kIf"/>

@@ -63,6 +63,8 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     private var faceTimeAvailable = false
     private var firstTime = true
     private var cutCardView: [UILabel] = []
+    internal let navTransitionCoordinator = TransitionCoordinator()
+
     
     // MARK: - IB Outlets ================================================================ -
     
@@ -169,6 +171,8 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         // Become delegate of selected players view
         self.selectedPlayersView.delegate = self
         
+        navigationController?.delegate = navTransitionCoordinator
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -188,7 +192,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         self.selectedPlayersView.drawRoom(thumbnailWidth: thumbnailWidth, thumbnailHeight: thumbnailHeight, directions: (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.up), (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.down))
         self.refreshPlayers()
         self.showCurrentDealer()
-        self.updateButtons()
+        self.updateButtons(animate: false)
         self.firstTime = false
     }
     
@@ -266,7 +270,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
 
     }
     
-    private func updateButtons() {
+    private func updateButtons(animate: Bool = true) {
         if self.readOnly {
             self.cutForDealerCenterXConstraint.isActive = true
             self.cutForDealerLeadingConstraint.isActive = false
@@ -302,14 +306,12 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
                     self.nextDealerButton.isEnabled = false
                     self.nextDealerButton.alpha = 0.5
                 }
-                if !self.firstTime {
-                    self.selectedPlayersTopConstraint.constant = topConstraint
+                self.selectedPlayersTopConstraint.constant = topConstraint
+                if animate {
                     let animation = UIViewPropertyAnimator(duration: 0.5, curve: .easeIn) {
                         self.view.layoutIfNeeded()
                     }
                     animation.startAnimation()
-                } else {
-                    self.selectedPlayersTopConstraint.constant = topConstraint
                 }
                 
             }
@@ -729,4 +731,28 @@ class UIStoryboardSegueWithCompletion: UIStoryboardSegue {
             completion()
         }
     }
+}
+
+class TransitionCoordinator: NSObject, UINavigationControllerDelegate {
+
+    internal func navigationController(_ navigationController: UINavigationController,
+                                       animationControllerFor operation: UINavigationController.Operation,
+                                       from fromVC: UIViewController,
+                                       to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return SuppressTransition()
+    }
+}
+
+class SuppressTransition: NSObject, UIViewControllerAnimatedTransitioning {
+    func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?)
+        -> TimeInterval {
+            return 0.0
+    }
+    
+    func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+        // Do nothing
+        
+    }
+
+
 }

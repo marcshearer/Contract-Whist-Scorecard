@@ -37,6 +37,7 @@ class SlideOutButtonView: UIView {
             self._isHidden = newValue
             self.showToolbar(newValue)
         }
+        
     }
     
     public var isEnabled: Bool {
@@ -85,7 +86,6 @@ class SlideOutButtonView: UIView {
         
         let bottomConstraint = NSLayoutConstraint(item: self.contentView as Any, attribute: .bottom, relatedBy: .equal, toItem: self.contentView.superview!, attribute: .bottom, multiplier: 1.0, constant: 44.0)
         self.contentView.superview!.addConstraint(bottomConstraint)
-        
     }
     
     private func showToolbar(_ isHidden: Bool, animated: Bool = true) {
@@ -96,9 +96,11 @@ class SlideOutButtonView: UIView {
             self.button.normalAlpha = 1.0
             self.button.normalBackgroundColor = UIColor.clear
             self.button.setTitle(self.title)
+            self.button.isEnabled(true)
             self.toolbar.backgroundColor = self.viewBackgroundColor
             self.contentView.backgroundColor = UIColor.clear
             self.backgroundColor = UIColor.clear
+            self.layoutIfNeeded()
             
             // Set button width
             let buttonWidth = max(self.superview!.frame.width * 0.33, self.title.size(withAttributes: [NSAttributedString.Key.font: self.button.titleLabel!.font!]).width + 20.0)

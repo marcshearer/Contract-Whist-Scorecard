@@ -285,6 +285,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             }
         } else {
             // Main continue button used on other devices
+            bannerContinueButton.setTitle("X", for: .normal)
             continueButton.isHidden = hidden
             bannerContinueButton.isHidden = true
         }

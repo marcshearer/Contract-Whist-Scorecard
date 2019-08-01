@@ -113,6 +113,7 @@ class NavigationBar: UINavigationBar {
         titleLabel.adjustsFontSizeToFitWidth = true
         titleLabel.minimumScaleFactor = 0.5
         titleLabel.textAlignment = .center
+        self.topItem?.titleView = titleLabel
     }
     
     override func draw(_ rect: CGRect) {

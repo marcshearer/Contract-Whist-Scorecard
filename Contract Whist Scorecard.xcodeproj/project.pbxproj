@@ -42,7 +42,6 @@
 		B221EED7210B0E2D00F7FBA0 /* HandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B221EED6210B0E2D00F7FBA0 /* HandViewController.swift */; };
 		B22500F11F48425C0042D566 /* Scorecard Comms.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22500F01F48425C0042D566 /* Scorecard Comms.swift */; };
 		B22788EA1FB827A7009BABCA /* SearchViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22788E81FB827A7009BABCA /* SearchViewController.storyboard */; };
-		B22788EF1FB82B45009BABCA /* CutViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22788ED1FB82B45009BABCA /* CutViewController.storyboard */; };
 		B22789001FB83AA7009BABCA /* GetStartedViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22788FA1FB83AA7009BABCA /* GetStartedViewController.storyboard */; };
 		B22789011FB83AA7009BABCA /* WelcomeViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22788FC1FB83AA7009BABCA /* WelcomeViewController.storyboard */; };
 		B22789021FB83AA7009BABCA /* SelectionViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22788FE1FB83AA7009BABCA /* SelectionViewController.storyboard */; };
@@ -136,7 +135,6 @@
 		B2F7281B1F6D74F9006F0941 /* Invite.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F7281A1F6D74F9006F0941 /* Invite.swift */; };
 		B2F7281D1F7199AE006F0941 /* RabbitMQ Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F7281C1F7199AE006F0941 /* RabbitMQ Class.swift */; };
 		B2FA298E1EA9E215002A5D03 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2FA298D1EA9E215002A5D03 /* Alert.swift */; };
-		CC395F4B1E063D9600165D1C /* CutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC395F4A1E063D9600165D1C /* CutViewController.swift */; };
 		CC395F4D1E064EC500165D1C /* Card Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC395F4C1E064EC500165D1C /* Card Class.swift */; };
 		CC395F511E0905BE00165D1C /* Utility Library.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC395F501E0905BE00165D1C /* Utility Library.swift */; };
 		CC4CC0F91DEADC32007FB24F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4CC0F81DEADC32007FB24F /* AppDelegate.swift */; };
@@ -240,7 +238,6 @@
 		B221EED6210B0E2D00F7FBA0 /* HandViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandViewController.swift; sourceTree = "<group>"; };
 		B22500F01F48425C0042D566 /* Scorecard Comms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Scorecard Comms.swift"; sourceTree = "<group>"; };
 		B22788E91FB827A7009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SearchViewController.storyboard; sourceTree = "<group>"; };
-		B22788EE1FB82B45009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/CutViewController.storyboard; sourceTree = "<group>"; };
 		B22788FB1FB83AA7009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/GetStartedViewController.storyboard; sourceTree = "<group>"; };
 		B22788FD1FB83AA7009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/WelcomeViewController.storyboard; sourceTree = "<group>"; };
 		B22788FF1FB83AA7009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SelectionViewController.storyboard; sourceTree = "<group>"; };
@@ -335,7 +332,6 @@
 		B2F7281C1F7199AE006F0941 /* RabbitMQ Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RabbitMQ Class.swift"; sourceTree = "<group>"; };
 		B2FA298D1EA9E215002A5D03 /* Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		B7B86B9863661F115CFF4BBC /* Pods-Contract Whist Scorecard.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Contract Whist Scorecard.release.xcconfig"; path = "Pods/Target Support Files/Pods-Contract Whist Scorecard/Pods-Contract Whist Scorecard.release.xcconfig"; sourceTree = "<group>"; };
-		CC395F4A1E063D9600165D1C /* CutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CutViewController.swift; sourceTree = "<group>"; };
 		CC395F4C1E064EC500165D1C /* Card Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Card Class.swift"; sourceTree = "<group>"; };
 		CC395F501E0905BE00165D1C /* Utility Library.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Utility Library.swift"; sourceTree = "<group>"; };
 		CC4CC0F51DEADC32007FB24F /* Contract Whist Scorecard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Contract Whist Scorecard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -554,15 +550,6 @@
 			name = Location;
 			sourceTree = "<group>";
 		};
-		B221EEE2210B199000F7FBA0 /* Cut For Dealer */ = {
-			isa = PBXGroup;
-			children = (
-				B22788ED1FB82B45009BABCA /* CutViewController.storyboard */,
-				CC395F4A1E063D9600165D1C /* CutViewController.swift */,
-			);
-			name = "Cut For Dealer";
-			sourceTree = "<group>";
-		};
 		B221EEE3210B1A7000F7FBA0 /* Scorepad Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -575,7 +562,6 @@
 				B221EEDF210B197200F7FBA0 /* Round Summary */,
 				B221EEE0210B197D00F7FBA0 /* Game Summary */,
 				B221EEE1210B198500F7FBA0 /* Location */,
-				B221EEE2210B199000F7FBA0 /* Cut For Dealer */,
 			);
 			name = "Scorepad Views";
 			sourceTree = "<group>";
@@ -898,11 +884,11 @@
 			children = (
 				B2DA893D1F3CC89C008EE96C /* Comms.swift */,
 				B2F70E511EE8BC470092C19F /* Host Controller Class.swift */,
+				B2F7281A1F6D74F9006F0941 /* Invite.swift */,
 				B2767C1D2110061B0029155E /* Loopback Class.swift */,
 				B2C051031EDF194C009DE37F /* Multipeeer Class.swift */,
 				B2D8104D225AF7A7005A86A5 /* Multipeer logger.swift */,
 				B2F7281C1F7199AE006F0941 /* RabbitMQ Class.swift */,
-				B2F7281A1F6D74F9006F0941 /* Invite.swift */,
 				B235D2BD1F82288A0019384B /* Notification Simulator.swift */,
 			);
 			name = "Comms Classes";
@@ -1247,7 +1233,6 @@
 				B243385922E0A6C3002EBD40 /* SelectedPlayersView.xib in Resources */,
 				B22789001FB83AA7009BABCA /* GetStartedViewController.storyboard in Resources */,
 				B227893F1FB893C9009BABCA /* SettingsViewController.storyboard in Resources */,
-				B22788EF1FB82B45009BABCA /* CutViewController.storyboard in Resources */,
 				B22789421FB894AE009BABCA /* PlayerDetailViewController.storyboard in Resources */,
 				B227893C1FB8932A009BABCA /* SyncViewController.storyboard in Resources */,
 				B22789391FB8924C009BABCA /* HighScoresViewController.storyboard in Resources */,
@@ -1382,7 +1367,6 @@
 				CC4CC0FB1DEADC32007FB24F /* ScorepadViewController.swift in Sources */,
 				B2B180142114AD92008D3BAA /* (null) in Sources */,
 				49075FFC1E0E578E008E06FA /* PlayersViewController.swift in Sources */,
-				CC395F4B1E063D9600165D1C /* CutViewController.swift in Sources */,
 				B250610020CD7F480030EE8F /* Recovery.swift in Sources */,
 				B267DF75211F41FC0086D521 /* Admin Menu.swift in Sources */,
 				B2C051041EDF194C009DE37F /* Multipeeer Class.swift in Sources */,
@@ -1478,14 +1462,6 @@
 				B22788E91FB827A7009BABCA /* Base */,
 			);
 			name = SearchViewController.storyboard;
-			sourceTree = "<group>";
-		};
-		B22788ED1FB82B45009BABCA /* CutViewController.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B22788EE1FB82B45009BABCA /* Base */,
-			);
-			name = CutViewController.storyboard;
 			sourceTree = "<group>";
 		};
 		B22788FA1FB83AA7009BABCA /* GetStartedViewController.storyboard */ = {

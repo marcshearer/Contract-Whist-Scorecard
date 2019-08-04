@@ -1350,8 +1350,6 @@ class Sync {
             }
             fetchOperation.fetchRecordsCompletionBlock = { (records, error) in
                 
-                Utility.executeAfter(delay: 20, completion: { // TODO Remove
-                
                 var playerObjectId: [NSManagedObjectID] = []
                 for cloudObject in self.cloudObjectList {
                     if let email = Utility.objectString(cloudObject: cloudObject, forKey: "email") {
@@ -1371,8 +1369,6 @@ class Sync {
                 for objectId in playerObjectId {
                     NotificationCenter.default.post(name: .playerImageDownloaded, object: self, userInfo: ["playerObjectID": objectId])
                 }
-                    
-                })
             }
             publicDatabase.add(fetchOperation)
         }

@@ -28,9 +28,9 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     // Main state properties
     private let scorecard = Scorecard.shared
     private var recovery: Recovery!
-    private var scorepadViewController: ScorepadViewController!
-    private var cutViewController: CutViewController!
-    private var gamePreviewViewController: GamePreviewViewController!
+    private weak var selectionViewController: SelectionViewController!
+    private weak var scorepadViewController: ScorepadViewController!
+    private weak var gamePreviewViewController: GamePreviewViewController!
     private var hostController: HostController!
     public let transition = FadeAnimator()
 
@@ -116,7 +116,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     @IBAction func changePlayerPressed(_ sender: UIButton) {
         
-        SelectionViewController.show(from: self, singleSelection: true, thisPlayer: self.thisPlayer, thisPlayerFrame: self.thisPlayerThumbnail.frame, formTitle: "Choose Player", backText: "", backImage: "back", completion: { (playerMO) in
+        self.selectionViewController = SelectionViewController.show(from: self, existing: self.selectionViewController, mode: .single, thisPlayer: self.thisPlayer, thisPlayerFrame: self.thisPlayerThumbnail.frame, formTitle: "Choose Player", backText: "", backImage: "back", preCompletion: { (playerMO) in
             self.returnPlayers(playerMO: playerMO)
         })
     }
@@ -657,7 +657,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                 UIApplication.shared.isIdleTimerDisabled = true
                 if peer.state == .connected && currentState != .connected && self.scorecard.gameInProgress {
                     // Get up-to-date
-                    self.scorecard.sendRefreshRequest()
+                    self.scorecard.sendRefreshRequest(to: peer)
                 }
             }
             // Update whisper
@@ -991,8 +991,14 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             default:
                 mode = .online
             }
-            self.hostController = HostController(mode: mode, playerEmail: self.thisPlayer, completion: {
-                self.hostController = nil
+            
+            self.clientService?.stop()
+            self.stopIdleTimer()
+            if self.hostController == nil {
+                self.hostController = HostController(from: self)
+            }
+            self.hostController.start(mode: mode, playerEmail: self.thisPlayer, completion: {
+                self.restart()
             })
             
         default:
@@ -1036,7 +1042,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     // MARK: - Search return handler ================================================================ -
     
-    private func returnPlayers(playerMO: PlayerMO?) {
+    private func returnPlayers(playerMO: [PlayerMO]?) {
         // Save player as default for device
         if playerMO == nil {
             // Cancel taken - exit if no player
@@ -1045,14 +1051,14 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             }
         } else {
             if let onlineEmail = self.scorecard.settingOnlinePlayerEmail {
-                if playerMO!.email! == onlineEmail {
+                if playerMO![0].email! == onlineEmail {
                     // Back to normal user - can remove temporary override
                     Notifications.removeTemporaryOnlineGameSubscription()
                 } else {
-                    Notifications.addTemporaryOnlineGameSubscription(email: playerMO!.email!)
+                    Notifications.addTemporaryOnlineGameSubscription(email: playerMO![0].email!)
                 }
             }
-            self.thisPlayer = playerMO!.email!
+            self.thisPlayer = playerMO![0].email!
             self.scorecard.defaultPlayerOnDevice = self.thisPlayer
             UserDefaults.standard.set(self.thisPlayer, forKey: "defaultPlayerOnDevice")
             self.refreshInvites()
@@ -1281,7 +1287,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             reason = "Connection with remote device lost"
         }
         
-        if self.scorepadViewController == nil && self.cutViewController == nil && self.gamePreviewViewController == nil {
+        if self.scorepadViewController == nil && self.gamePreviewViewController == nil {
             // Check alert controller
             if self.alertController != nil {
                 self.alertController.dismiss(animated: true, completion: {
@@ -1351,21 +1357,11 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             self.scorecard.commsHandlerMode = .dismiss
         }
         
-        if self.scorepadViewController == nil && self.cutViewController == nil && self.gamePreviewViewController == nil{
+        if self.scorepadViewController == nil && self.gamePreviewViewController == nil{
             doCompletion()
         } else {
-            if self.cutViewController != nil  || self.gamePreviewViewController != nil {
-                if self.cutViewController != nil {
-                    Utility.debugMessage("dismiss", "Dismissing cut")
-                    self.cutViewController.dismiss(animated: true, completion: {
-                        Utility.debugMessage("dismiss", "Cut dismissed")
-                        self.cutViewController?.delegate = nil
-                        self.cutViewController = nil
-                        dismissGamePreview()
-                    })
-                } else {
-                    dismissGamePreview()
-                }
+            if self.gamePreviewViewController != nil {
+                dismissGamePreview()
             } else if self.scorepadViewController.roundSummaryViewController != nil {
                 self.scorepadViewController.roundSummaryViewController.dismiss(animated: true, completion: dismissScorepad)
             } else if self.scorepadViewController != nil && self.scorepadViewController.gameSummaryViewController != nil {

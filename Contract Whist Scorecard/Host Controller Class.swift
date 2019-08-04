@@ -38,8 +38,11 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
     // Queue
     private var queue: [QueueEntry] = []
     
+    private weak var parentViewController: UIViewController!
+    private weak var selectionViewController: SelectionViewController!
     private var playerData: [PlayerData] = []
     private var completion: (()->())?
+    private var startMode: ConnectionMode?
     private var unique = 0
     private var observer: NSObjectProtocol?
     private var gameInProgress = false
@@ -87,9 +90,15 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
     
     // MARK: - Constructor ========================================================================== -
     
-    init(mode: ConnectionMode? = nil, playerEmail: String? = nil, recoveryMode: Bool = false, completion: (()->())? = nil) {
-        var mode = mode
+    init(from parentViewController: UIViewController) {
+        self.parentViewController = parentViewController
         super.init()
+    }
+    
+    public func start(mode: ConnectionMode? = nil, playerEmail: String? = nil, recoveryMode: Bool = false, completion: (()->())? = nil) {
+        
+        self.startMode = mode
+        self.playerData = []
         
         // Reload players
         self.scorecard.loadGameDefaults()
@@ -106,11 +115,11 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
             // Set mode
             switch self.scorecard.recoveryOnlineMode! {
             case .loopback:
-                mode = .loopback
+                self.startMode = .loopback
             case .broadcast:
-                mode = .nearby
+                self.startMode = .nearby
             case .invite:
-                mode = .online
+                self.startMode = .online
             }
             
             // Restore players
@@ -131,36 +140,44 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
         // Set observer to detect UI handler completion
         observer = self.handlerCompleteNotification()
         
-        // Start communication
-        switch mode! {
-        case .loopback:
-            self.setConnectionMode(.loopback, chooseInvitees: false)
-        case .online:
-            self.setConnectionMode(.online, chooseInvitees: false)
-        case .nearby:
-            self.setConnectionMode(.nearby)
-        default:
-            return
-        }
-        
-        // Show game preview
-        self.showGamePreview()
-        
-        // Check if in recovery mode or playing computer - if so go straight to game setup
-        if self.playingComputer || self.scorecard.recoveryMode {
-            self.waitOtherPlayers(showDialog: !self.playingComputer, completion: {
-                self.gameInProgress = true
-                if self.connectionMode == .online {
-                    // Simulate return from invitee search
+        if self.startMode == .online {
+            // Show selection
+            self.showSelection(completion: { [unowned self] (selectedPlayers) in
+                if let selectedPlayers = selectedPlayers {
+                    // Finish initialisation
+                    self.selectedPlayers = selectedPlayers
+                    self.initCompletion()
+                    // Send invitations
                     if let selectedPlayers = self.selectedPlayers {
                         let invitees = selectedPlayers.count - 1
                         if invitees > 0 {
                             let playerMO = Array(selectedPlayers[1...invitees])
-                            self.returnInvitees(complete: true, playerMO: playerMO)
+                            self.sendInvites(playerMO: playerMO)
                         }
                     }
+                } else {
+                    self.exitHost()
                 }
             })
+        } else {
+            // Show game preview
+            let selectedPlayers = self.playerData.map { $0.playerMO! }
+            self.showGamePreview(selectedPlayers: selectedPlayers, showCompletion: self.initCompletion)
+        }
+    }
+    
+    private func initCompletion() {
+        
+        // Start communication
+        switch self.startMode! {
+        case .loopback:
+            self.setConnectionMode(.loopback)
+        case .online:
+            self.setConnectionMode(.online)
+        case .nearby:
+            self.setConnectionMode(.nearby)
+        default:
+            return
         }
     }
     
@@ -247,8 +264,9 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
         }
     }
     
-    private func addPlayer(name: String, email: String, playerMO: PlayerMO?, peer: CommsPeer?, inviteStatus: InviteStatus! = nil, disconnectReason: String? = nil) {
+    private func addPlayer(name: String, email: String, playerMO: PlayerMO?, peer: CommsPeer?, inviteStatus: InviteStatus! = nil, disconnectReason: String? = nil, refreshPlayers: Bool = true) {
         var disconnectReason = disconnectReason
+        print("Adding \(name) \(playerData.count) \(playerData.map{$0.email})")
         
         if disconnectReason == nil {
             if gameInProgress {
@@ -342,7 +360,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
                 self.setupPlayers()
             } else if self.connectionMode == .online && self.playerData.count >= 3 && self.connectedPlayers == self.playerData.count {
                 self.canProceed = true
-            } else if self.connectedPlayers >= 3 {
+            } else if self.connectionMode == .nearby && self.connectedPlayers >= 3 {
                 self.canProceed = true
             }
             self.refreshPlayers()
@@ -381,7 +399,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
             switch state {
             case .notStarted:
                 if self.currentState == .invited || self.currentState == .inviting {
-                    self.gamePreviewViewController.alertMessage("Invitation failed")
+                    self.gamePreviewViewController?.alertMessage("Invitation failed")
                 }
                 if defaultConnectionMode == .unknown {
                     self.setConnectionMode(.unknown)
@@ -640,40 +658,30 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
         }
     }
     
-    func returnInvitees(complete: Bool, playerMO: [PlayerMO]?) {
-        if complete {
-            // Returning invitees
-            
-            // Save selected players
-            self.selectedPlayers = [self.playerData[0].playerMO!] + playerMO!
-            
-            // Insert selected players into list
-            var invite: [String] = []
-            for player in playerMO! {
-                invite.append(player.email!)
-                self.addPlayer(name: player.name!,
-                               email: player.email!,
-                               playerMO: player,
-                               peer: nil,
-                               inviteStatus: .inviting)
-            }
-            
-            // Refresh UI
-            self.refreshPlayers()
-            
-            // Open connection and send invites
-            self.startOnlineConnection()
-            self.startHostBroadcast(email: self.playerData[0].email, name: self.playerData[0].name, invite: invite, queueUUID: (self.scorecard.recoveryMode ? self.scorecard.recoveryConnectionUUID : nil))
-            
-        } else {
-            // Incomplete list of invitees - exit
-            if self.defaultConnectionMode == .unknown {
-                self.setConnectionMode(.unknown)
-            } else {
-                self.exitHost()
-                
-            }
+    func sendInvites(playerMO: [PlayerMO]?) {
+        // Save selected players
+        self.selectedPlayers = [self.playerData[0].playerMO!] + playerMO!
+        
+        // Reset player list to just host
+        self.playerData = [self.playerData[0]]
+        
+        // Insert selected players into list
+        var invite: [String] = []
+        for player in playerMO! {
+            invite.append(player.email!)
+            self.addPlayer(name: player.name!,
+                           email: player.email!,
+                           playerMO: player,
+                           peer: nil,
+                           inviteStatus: .inviting)
         }
+        
+        // Refresh UI
+        self.refreshPlayers()
+        
+        // Open connection and send invites
+        self.startOnlineConnection()
+        self.startHostBroadcast(email: self.playerData[0].email, name: self.playerData[0].name, invite: invite, queueUUID: (self.scorecard.recoveryMode ? self.scorecard.recoveryConnectionUUID : nil))
     }
     
     private func refreshPlayers() {
@@ -707,14 +715,24 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
             } else if self.recoveryMode {
                 return NSAttributedString(string: "Waiting for other players\nto reconnect...")
             } else {
-                return NSAttributedString(string: "Waiting for at least three\nplayers to connect...")
+                return NSAttributedString(string: "Waiting for invited\nplayers to connect...")
             }
         }
     }
     
+    internal func gamePreviewInitialisationComplete(gamePreviewViewController: GamePreviewViewController) {
+        if self.startMode == .online {
+            
+            // Store view controller (passed back from selection)
+            self.gamePreviewViewController = gamePreviewViewController
+            
+        }
+    }
+    
     internal func gamePreviewCompletion() {
+        self.stopHostBroadcast()
+        self.gamePreviewViewController = nil
         self.gameInProgress = false
-        self.exitHost()
     }
     
     internal func gamePreview(isConnected playerMO: PlayerMO) -> Bool {
@@ -764,18 +782,15 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
                     
                 case .online:
                     // Start connection
-                    self.setConnectionMode(.online, chooseInvitees: false)
+                    self.setConnectionMode(.online)
                     
                     if let selectedPlayers = self.selectedPlayers {
                         // Resend invites
                         let invitees = selectedPlayers.count - 1
                         if invitees > 0 {
                             let playerMO = Array(selectedPlayers[1...invitees])
-                            self.returnInvitees(complete: true, playerMO: playerMO)
+                            self.sendInvites(playerMO: playerMO)
                         }
-                    } else {
-                        // Select players
-                        self.chooseOnlineInvitees()
                     }
                 default:
                     break
@@ -786,12 +801,17 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
     
     // MARK: - Utility Routines ======================================================================== -
     
-    private func showGamePreview() {
-        let selectedPlayers = self.playerData.map { $0.playerMO! }
-        self.gamePreviewViewController = GamePreviewViewController.show(from: Utility.getActiveViewController()!, selectedPlayers: selectedPlayers, title: "Host a Game", backText: "", readOnly: false, faceTimeAddress: self.faceTimeAddress, rabbitMQService: self.rabbitMQHost, computerPlayerDelegates: self.computerPlayers, delegate: self)
+    private func showGamePreview(selectedPlayers: [PlayerMO], showCompletion: (()->())? = nil) {
+        
+        self.gamePreviewViewController = GamePreviewViewController.show(from: parentViewController, selectedPlayers: selectedPlayers, title: "Host a Game", backText: "", readOnly: false, faceTimeAddress: self.faceTimeAddress, rabbitMQService: self.rabbitMQHost, computerPlayerDelegates: self.computerPlayers, delegate: self, showCompletion: showCompletion)
     }
     
-    private func setConnectionMode(_ connectionMode: ConnectionMode, chooseInvitees: Bool = true) {
+    private func showSelection(showCompletion: (()->())? = nil, completion: (([PlayerMO]?)->())? = nil) {
+        self.selectionViewController = SelectionViewController.show(from: parentViewController, existing: self.selectionViewController, mode: .invitees, thisPlayer: self.playerData[0].email, formTitle: "Choose Players", backText: "", backImage: "back", completion: completion, showCompletion: showCompletion, gamePreviewDelegate: self)
+    }
+    
+    
+    private func setConnectionMode(_ connectionMode: ConnectionMode) {
         let oldConnectionMode = self.connectionMode
         if connectionMode != oldConnectionMode {
             self.connectionMode = connectionMode
@@ -813,11 +833,9 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
             } else {
                 switch self.connectionMode! {
                 case .online:
-                    if chooseInvitees {
-                        self.chooseOnlineInvitees()
-                    }
+                    break
                 case .nearby:
-                    self.startNearbyConnection()
+                     self.startNearbyConnection()
                 case .loopback:
                     self.startLoopbackMode()
                 default:
@@ -875,24 +893,6 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
         self.hostService?.dataDelegate = delegate as! CommsDataDelegate?
         self.hostService?.connectionDelegate = delegate as! CommsConnectionDelegate?
         self.hostService?.handlerStateDelegate = delegate as! CommsHandlerStateDelegate?
-    }
-    
-    private func chooseOnlineInvitees() {
-        SearchViewController.identifyPlayers(from: self.gamePreviewViewController,
-                                       title: "Choose players",
-                                       instructions: "Choose 2 or 3 players to invite to the game",
-                                       minPlayers: 2,
-                                       maxPlayers: self.scorecard.numberPlayers - 1,
-                                       completion: self.returnInvitees,
-                                       filter: self.filterPlayers)
-    }
-    
-    internal func filterPlayers(_ playerMO: PlayerMO) -> Bool {
-        if playerMO.email == self.playerData[0].email || playerMO.email == nil {
-            return false
-        } else {
-            return true
-        }
     }
     
     func removeCardPlayed(data: [String : Any]) {
@@ -990,10 +990,6 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
                 }
             }
         }
-    }
-    
-    private func waitOtherPlayers(showDialog: Bool = true, completion: (()->())? = nil) {
-        completion?()
     }
     
     private func startHostBroadcast(email: String!, name: String!, invite: [String]? = nil, queueUUID: String! = nil) {

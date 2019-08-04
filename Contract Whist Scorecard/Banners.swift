@@ -146,7 +146,6 @@ class NavigationBar: UINavigationBar {
             titleLabel.textColor = Palette.bannerText
         }
     }
-    
 }
 
 extension UIImage{

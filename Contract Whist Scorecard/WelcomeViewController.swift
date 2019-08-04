@@ -44,13 +44,13 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     public var clientTitle: String!
     public var clientMatchDeviceName: String!
     public var clientCommsPurpose: CommsConnectionPurpose!
-    private var hostController: HostController!
     public var playingComputer = false
 
     // Local state variables
     private var reconcile: Reconcile!
     private var firstTime = true
     private var getStarted = true
+    private weak var selectionViewController: SelectionViewController!
     
     private var sections: [Int:Int]!
     private var sectionActions: [Int : [(frame: CGRect, position: Position, action: ActionButton)]]!
@@ -620,7 +620,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     }
     
     private func showSelection() {
-        SelectionViewController.show(from: self, backText: "", backImage: "home", completion: { (_) in
+        self.selectionViewController = SelectionViewController.show(from: self, existing: self.selectionViewController, mode: .players, backText: "", backImage: "home", completion: { (_) in
             self.scorecard.checkNetworkConnection(button: nil, label: self.syncLabel)
             self.recoveryAvailable = false
             self.getCloudVersion(async: true)
@@ -674,10 +674,10 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     
     private func hostGame() -> Void {
         self.playingComputer = false
-        self.hostController = HostController(recoveryMode: true, completion: {
+        let hostController = HostController(from: self)
+        hostController.start(recoveryMode: true, completion: {
             self.getCloudVersion(async: true)
             self.setupButtons()
-            self.hostController = nil
         })
     }
     

@@ -121,6 +121,9 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsS
     }
     
     internal func reset() {
+        // Note - overridden in client service
+        self.debugMessage("Resetting")
+        self.disconnect(reason: "Reset", reconnect: true)
     }
     
     internal func connectionInfo() {
@@ -268,6 +271,7 @@ class RabbitMQServerService : RabbitMQService, CommsServerHandlerDelegate, Comms
         if !self.recoveryMode {
             // New connection
             self.handlerStateChange(to: .inviting)
+            self.sendReset(mode: "recover")
         } else {
             // Reconnecting to old connection
             self.handlerStateChange(to: .reconnecting)
@@ -416,6 +420,14 @@ class RabbitMQClientService : RabbitMQService, CommsClientHandlerDelegate, Rabbi
         
         // Remove queue from list - hence closing it
         self.rabbitMQQueueList = [:]
+    }
+    
+    override func reset() {
+        self.debugMessage("Resetting client")
+        // Simulate reset on each queue
+        self.forEachQueue { (rabbitMQQueue) in
+            self.didReceiveBroadcast(descriptor: "reset", data: "reset", from: rabbitMQQueue)
+        }
     }
     
     internal func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, context: [String : String]? = nil, reconnect: Bool = true) -> Bool{
@@ -946,8 +958,6 @@ fileprivate class RabbitMQPeer: NSObject, CommsDataDelegate, CommsConnectionDele
             self.disconnect(reason: "Re-connecting")
             // Allocate a session UUID and store details
             self.sessionUUID = self.rabbitMQSessionUUID
-            self.playerEmail = playerEmail
-            self.playerName = playerName
             self.shouldReconnect = reconnect
             self._autoReconnect = false
             if reconnect {

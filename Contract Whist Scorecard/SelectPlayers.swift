@@ -120,6 +120,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         self.formatButtons()
     }
     
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         view.setNeedsLayout()

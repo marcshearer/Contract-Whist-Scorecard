@@ -57,7 +57,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
         self.connectionPurpose = purpose
         self.connectionType = type
         self.serviceID = serviceID!
-        
+        self.myPeerID = MCPeerID(displayName: Scorecard.deviceName)
         // Create my peer ID to be consistent over time - apparently helps stability!
         var archivedPeerID = UserDefaults.standard.data(forKey: "MCPeerID")
         if archivedPeerID == nil {
@@ -525,6 +525,7 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
     
     internal override func reset() {
         self.debugMessage("Restart browsing")
+        self.disconnect(reason: "Reset", reconnect: true)
         self.client.browser.stopBrowsingForPeers()
         self.client.browser.startBrowsingForPeers()
     }

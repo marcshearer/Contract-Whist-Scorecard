@@ -150,7 +150,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             
         } else {
             // Disconnect (and reconnect)
-            self.commsDelegate?.disconnect(reason: "Reset", reconnect: true)
+            self.commsDelegate?.reset()
         }
     }
     
@@ -425,8 +425,8 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         }
     }
     
-    public func sendRefreshRequest() {
-        self.sendInstruction("refreshRequest")
+    public func sendRefreshRequest(to commsPeer: CommsPeer! = nil) {
+        self.sendInstruction("refreshRequest", to: commsPeer)
     }
     
     public func refreshState(to commsPeer: CommsPeer! = nil) {
@@ -437,10 +437,13 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 if lastRefresh == nil || lastPeerRefresh > lastRefresh! {
                     lastRefresh = lastPeerRefresh
                 }
+            } else {
+                // No previous refresh to this device
+                lastRefresh = Date(timeIntervalSinceReferenceDate: 0.0)
             }
          }
         
-        // Only send 1 refresh a second!
+        // Only send 1 refresh a second to a particular device!
         if lastRefresh?.timeIntervalSinceNow ?? TimeInterval(-2.0) < TimeInterval(-1.0) {
         
             if self.isHosting {
@@ -467,7 +470,6 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             if commsPeer == nil {
                 // Have updated all peers
                 self.lastRefresh = Date()
-                self.lastPeerRefresh = [:]
             } else {
                 self.lastPeerRefresh[commsPeer.deviceName] = Date()
             }

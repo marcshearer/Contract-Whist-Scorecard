@@ -10,6 +10,12 @@ import UIKit
 import CoreData
 import CoreServices
 
+enum SelectionMode {
+    case single
+    case invitees
+    case players
+}
+
 class SelectionViewController: CustomViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, UIDropInteractionDelegate, UIGestureRecognizerDelegate, PlayerViewDelegate, SelectedPlayersViewDelegate, SlideOutButtonDelegate, GamePreviewDelegate {
     
 
@@ -19,8 +25,10 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private let scorecard = Scorecard.shared
     
     // Variables to decide how view behaves
-    private var singleSelection: Bool = false
-    private var completion: ((PlayerMO?)->())? = nil
+    private var selectionMode: SelectionMode!
+    private var preCompletion: (([PlayerMO]?)->())? = nil
+    private var completion: (([PlayerMO]?)->())? = nil
+    private var gamePreviewDelegate: GamePreviewDelegate!
     private var backText: String = "Back"
     private var backImage: String = "back"
     private var thisPlayer: String?
@@ -94,32 +102,29 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
 
         // Add players to available and unselected list
         for playerMO in scorecard.playerList {
-            if self.thisPlayer != playerMO.email {
+            if selectionMode != .single || self.thisPlayer != playerMO.email {
                 availableList.append(playerMO)
                 unselectedList.append(playerMO)
             }
         }
         
-        if self.singleSelection {
-            // Switch banner type
-            self.bannerContinuationView.shape = .upArrow
-            self.bannerAddPlayerButton.isHidden = true
-            self.slideOutButton.title = "Add Player"
-            self.slideOutButton.isHidden = false
-            self.slideOutButton.buttonFillColor = UIColor.clear
-            self.slideOutButton.buttonStrokeColor = Palette.gameBanner
-            self.slideOutButton.buttonTextColor = Palette.gameBanner
+        if self.selectionMode == .single {
+            self.setupSingleScreen()
             self.showThisPlayer()
         } else {
             // Try to find players from last time
             self.scorecard.loadGameDefaults()
             self.assignPlayers()
+            if self.selectionMode == .invitees {
+                // Make sure host is correct
+                self.defaultOnlinePlayers()
+            }
         }
         
         // Check if in recovery mode - if so (and found all players) go straight to game setup
         if scorecard.recoveryMode {
             if selectedList.count == scorecard.currentPlayers {
-                self.showGamePreview()
+                self.continueAction()
            } else {
                 scorecard.recoveryMode = false
             }
@@ -143,6 +148,13 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         // Set up selected players view delegate
         self.selectedPlayersView.delegate = self
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if !self.firstTime && self.selectionMode == .single {
+            self.showThisPlayer()
+        }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -174,6 +186,11 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         
         // Reload unselected player collection
         unselectedCollectionView.reloadData()
+        
+        // If recovering go straight to preview
+        if self.scorecard.recoveryMode {
+            self.continueAction()
+        }
     }
     
     // MARK: - CollectionView Overrides ================================================================ -
@@ -280,7 +297,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             // Banner continuation button used on small or landscape phone
             continueButton.isHidden = true
             bannerContinueButton.isHidden = hidden
-            if !self.singleSelection {
+            if self.selectionMode != .single {
                 bannerContinueButton.setTitle("Continue", for: .normal)
             }
         } else {
@@ -289,14 +306,14 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             continueButton.isHidden = hidden
             bannerContinueButton.isHidden = true
         }
-        slideOutButton.isHidden = (selectedList.count == 0 && !self.singleSelection)
+        slideOutButton.isHidden = (selectedList.count == 0 && self.selectionMode != .single)
     }
     
     func setSize(size: CGSize) {
         
         if ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone() {
-            self.bannerContinuationHeight = (self.singleSelection ? 60.0 : 0.0)
-            self.bannerContinuationView.isHidden = !self.singleSelection
+            self.bannerContinuationHeight = (self.selectionMode == .single ? 60.0 : 0.0)
+            self.bannerContinuationView.isHidden = self.selectionMode != .single
             addPlayerThumbnail = true
         } else {
             self.bannerContinuationHeight = 60.0
@@ -317,7 +334,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         let unselectedRows: Int = max(3, Int((totalHeight * 0.55) / self.rowHeight))
         let unselectedHeight = CGFloat(unselectedRows) * rowHeight
         
-        if self.singleSelection {
+        if self.selectionMode == .single {
             self.selectedViewHeight?.constant = 44.0 + 75.0 + self.view.safeAreaInsets.bottom
             self.selectedPlayersView.alpha = 0.0
             self.unselectedCollectionViewTopConstraint.constant = self.width + 16.0 + (self.labelHeight - 5.0) + self.interRowSpacing - self.bannerContinuationHeight
@@ -352,15 +369,16 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     func finishAction() {
         NotificationCenter.default.removeObserver(observer!)
+        self.preCompletion?(nil)
         self.dismiss(animated: true, completion: {
             self.completion?(nil)
         })
     }
 
     func continueAction() {
-        if !self.singleSelection && selectedList.count >= 3 {
-            self.showGamePreview()
-        }
+        self.completion?(self.selectedList.map {$0.playerMO})
+        selectedList.sort(by: { $0.slot < $1.slot })
+        self.showGamePreview()
     }
     
     // MARK: - Selected Players View delegate handlers =============================================== -
@@ -396,9 +414,11 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             // This player thumbnail - just exit
             self.finishAction()
         } else {
-            if self.singleSelection {
-                self.completion?(playerView.playerMO)
-                self.dismiss(animated: true, completion: nil)
+            if self.selectionMode == .single {
+                self.preCompletion?([playerView.playerMO!])
+                self.dismiss(animated: true, completion: {
+                    self.completion?([playerView.playerMO!])
+                })
             } else {
                 self.addSelection(playerView.playerMO!)
             }
@@ -408,12 +428,14 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     // MARK: - Slide out button delegate handler======================================================== -
     
     func slideOutButtonPressed(_ sender: SlideOutButtonView) {
-        if self.singleSelection {
+        if self.selectionMode == .single {
             self.addNewPlayer()
         } else {
             if selectedList.count > 0 {
-                for selected in selectedList {
-                    self.removeSelection(selected.slot, animate: false)
+                for (index, selected) in selectedList.enumerated() {
+                    if self.selectionMode != .invitees || index != 0 {
+                        self.removeSelection(selected.slot, animate: false)
+                    }
                 }
             }
         }
@@ -467,6 +489,30 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 }
             }
         }
+    }
+    
+    func defaultOnlinePlayers() {
+        let host = self.selectedPlayersView.playerViews[0].playerMO!
+        if host.email != self.thisPlayer {
+            for slot in 0..<self.scorecard.numberPlayers {
+                self.removeSelection(slot, animate: false)
+            }
+            self.addSelection(self.scorecard.findPlayerByEmail(self.thisPlayer!)!, toSlot: 0, updateUnselected: true, updateUnselectedCollection: true, animate: false)
+        }
+        // Don't allow change of host player
+        self.selectedPlayersView.setEnabled(slot: 0, enabled: false)
+    }
+    
+    func setupSingleScreen() {
+        // Switch banner type
+        self.bannerContinuationView.shape = .upArrow
+        self.bannerAddPlayerButton.isHidden = true
+        // Change slide out button to add player
+        self.slideOutButton.title = "Add Player"
+        self.slideOutButton.isHidden = false
+        self.slideOutButton.buttonFillColor = UIColor.clear
+        self.slideOutButton.buttonStrokeColor = Palette.gameBanner
+        self.slideOutButton.buttonTextColor = Palette.gameBanner
     }
     
     func removeSelection(_ selectedSlot: Int, updateUnselected: Bool = true, animate: Bool = true) {
@@ -636,14 +682,14 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     }
     
     private func setupDragAndDrop() {
-        if !self.singleSelection {
+        if self.selectionMode != .single {
             let unselectedDropInteraction = UIDropInteraction(delegate: self)
             self.unselectedCollectionView.addInteraction(unselectedDropInteraction)
         }
     }
     
     private func createPlayers(newPlayers: [PlayerDetail], createMO: Bool) {
-        let addToSelected = (self.singleSelection ? (newPlayers.count == 1) :
+        let addToSelected = (self.selectionMode == .single ? (newPlayers.count == 1) :
                                                     (selectedList.count + newPlayers.count <= self.scorecard.numberPlayers))
         
         for newPlayerDetail in newPlayers {
@@ -675,9 +721,10 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                     
                     // Add to selection if there is space
                     if addToSelected {
-                        if self.singleSelection {
+                        if self.selectionMode == .single {
+                            self.preCompletion?([playerMO])
                             self.dismiss(animated: true, completion: {
-                                self.completion?(playerMO)
+                                self.completion?([playerMO])
                             })
                         } else {
                             self.addSelection(playerMO)
@@ -702,17 +749,52 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     }
     
     private func showGamePreview() {
-        selectedList.sort(by: { $0.slot < $1.slot })
         _ = GamePreviewViewController.show(from: self, selectedPlayers: selectedList.map{ $0.playerMO }, readOnly: false, delegate: self)
     }
     
     // MARK: - Game Preview Delegate handlers ============================================================================== -
     
+    internal var gamePreviewCanStartGame: Bool {
+        get {
+            return self.gamePreviewDelegate?.gamePreviewCanStartGame ?? true
+        }
+    }
+    
+    internal var gamePreviewWaitMessage: NSAttributedString {
+        get {
+            return self.gamePreviewDelegate?.gamePreviewWaitMessage ?? NSAttributedString()
+        }
+    }
+    
+    internal func gamePreviewInitialisationComplete(gamePreviewViewController: GamePreviewViewController) {
+        self.gamePreviewDelegate?.gamePreviewInitialisationComplete?(gamePreviewViewController: gamePreviewViewController)
+    }
+    
     internal func gamePreviewCompletion() {
-        // Returning from game setup
         self.scorecard.loadGameDefaults()
         self.selectedList = []
         self.assignPlayers()
+        self.gamePreviewDelegate?.gamePreviewCompletion?()
+    }
+    
+    internal func gamePreview(isConnected playerMO: PlayerMO) -> Bool {
+        return self.gamePreviewDelegate?.gamePreview?(isConnected: playerMO) ?? true
+    }
+    
+    internal func gamePreview(moved playerMO: PlayerMO, to slot: Int) {
+        self.gamePreviewDelegate?.gamePreview?(moved: playerMO, to: slot)
+    }
+    
+    internal func gamePreviewStartGame() {
+        self.gamePreviewDelegate?.gamePreviewStartGame?()
+    }
+    
+    internal func gamePreviewStopGame() {
+        self.gamePreviewDelegate?.gamePreviewStopGame?()
+    }
+    
+    internal func gamePreviewShakeGestureHandler() {
+        self.gamePreviewDelegate?.gamePreviewShakeGestureHandler?()
     }
     
     // MARK: - Drop delegate handlers ================================================================== -
@@ -759,25 +841,32 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     // MARK: - Function to present this view ==============================================================
     
-    class func show(from viewController: UIViewController, singleSelection: Bool = false, thisPlayer: String = "", thisPlayerFrame: CGRect? = nil, formTitle: String = "Selection", backText: String = "Back", backImage: String = "back", completion: ((PlayerMO?)->())? = nil) {
+    class func show(from viewController: UIViewController, existing selectionViewController: SelectionViewController? = nil, mode: SelectionMode, thisPlayer: String = "", thisPlayerFrame: CGRect? = nil, formTitle: String = "Selection", backText: String = "Back", backImage: String = "back", preCompletion: (([PlayerMO]?)->())? = nil, completion: (([PlayerMO]?)->())? = nil, showCompletion: (()->())? = nil, gamePreviewDelegate: GamePreviewDelegate? = nil) -> SelectionViewController {
+        var selectionViewController = selectionViewController
         
-        let storyboard = UIStoryboard(name: "SelectionViewController", bundle: nil)
-        let selectionViewController = storyboard.instantiateViewController(withIdentifier: "SelectionViewController") as! SelectionViewController
-        
-        selectionViewController.singleSelection = singleSelection
-        selectionViewController.thisPlayer = thisPlayer
-        selectionViewController.thisPlayerFrame = thisPlayerFrame
-        selectionViewController.formTitle = formTitle
-        selectionViewController.backText = backText
-        selectionViewController.backImage = backImage
-        selectionViewController.completion = completion
-        
-        if let viewController = viewController as? ClientViewController {
-            // Animating from client - use special view controller
-            selectionViewController.transitioningDelegate = viewController
+        if selectionViewController == nil {
+            let storyboard = UIStoryboard(name: "SelectionViewController", bundle: nil)
+            selectionViewController = storyboard.instantiateViewController(withIdentifier: "SelectionViewController") as? SelectionViewController
         }
         
-        viewController.present(selectionViewController, animated: true, completion: nil)
+        selectionViewController!.selectionMode = mode
+        selectionViewController!.thisPlayer = thisPlayer
+        selectionViewController!.thisPlayerFrame = thisPlayerFrame
+        selectionViewController!.formTitle = formTitle
+        selectionViewController!.backText = backText
+        selectionViewController!.backImage = backImage
+        selectionViewController!.preCompletion = preCompletion
+        selectionViewController!.completion = completion
+        selectionViewController?.gamePreviewDelegate = gamePreviewDelegate
+
+        if let viewController = viewController as? ClientViewController {
+            // Animating from client - use special view controller
+            selectionViewController!.transitioningDelegate = viewController
+        }
+        
+        viewController.present(selectionViewController!, animated: true, completion: showCompletion)
+        
+        return selectionViewController!
     }
     
 }
@@ -820,19 +909,19 @@ extension ClientViewController: UIViewControllerTransitioningDelegate {
     func animationController(
         forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         self.transition.presenting = true
-        // if presenting is SelectionViewController {
+        if presented is SelectionViewController {
             return self.transition
-        // } else {
+        } else {
             return nil
-        // }
+        }
     }
     
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        // if dismissed is SelectionViewController {
+        if dismissed is SelectionViewController {
             self.transition.presenting = false
             return self.transition
-        // } else {
+        } else {
             return nil
-        // }
+        }
     }
 }

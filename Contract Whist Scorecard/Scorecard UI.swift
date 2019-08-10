@@ -10,6 +10,15 @@ import UIKit
 
 class ScorecardUI {
     
+    class func gradient(_ view: UIView, color: UIColor, gradients: [(alpha: CGFloat, location: CGFloat)]) -> CAGradientLayer {
+        let gradient = CAGradientLayer()
+        gradient.frame = view.bounds
+        gradient.colors = gradients.map { color.withAlphaComponent($0.alpha).cgColor }
+        gradient.locations = gradients.map { $0.location as NSNumber }
+        view.layer.insertSublayer(gradient, at: 0)
+        return gradient
+    }
+    
     class func roundCorners(_ view: UIView, percent: CGFloat = 0.0) {
         if percent == 0.0 {
             view.layer.cornerRadius = 5

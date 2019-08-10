@@ -98,6 +98,57 @@ class BannerContinuation: UIView {
     
 }
 
+class Footer: UIView {
+    
+    private var shapeLayer: CAShapeLayer?
+    
+    @IBInspectable var footerColor: UIColor
+    @IBInspectable var shape: ContinuationShapeType
+    
+    @IBInspectable var shapeType:Int {
+        get {
+            return self.shape.rawValue
+        }
+        set(shapeType) {
+            self.shape = ContinuationShapeType(rawValue: shapeType) ?? .upArrow
+        }
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        self.footerColor = Palette.banner
+        self.shape = .upArrow
+        super.init(coder: aDecoder)
+    }
+    
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        // Remove previous layer
+        if let layer = self.shapeLayer {
+            layer.removeFromSuperlayer()
+        }
+        
+        let rect = CGRect(origin: CGPoint(), size: self.frame.size)
+        var points: [PolygonPoint] = []
+        switch self.shape {
+        case .upArrow:
+            points.append(PolygonPoint(x: rect.minX, y: rect.maxY, pointType: .point))
+            points.append(PolygonPoint(x: rect.midX, y: rect.minY, pointType: .quadRounded, radius: 20.0))
+            points.append(PolygonPoint(x: rect.maxX, y: rect.maxY, pointType: .point))
+            
+        default:
+            break
+        }
+        self.shapeLayer = Polygon.roundedShapeLayer(in: self, definedBy: points, strokeColor: self.footerColor, fillColor: self.footerColor, lineWidth: 0.0)
+    }
+    
+}
+
+
 class NavigationBar: UINavigationBar {
     
     @IBInspectable var bannerColor: UIColor

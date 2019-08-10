@@ -75,8 +75,10 @@ class Scorecard {
     public var autoPlayHands: Int = 0
     public var autoPlayRounds: Int = 0
     
-    // Variable to store scorepad header height to re-center popups correctly
+    // Variables to store scorepad header and body height to re-center popups correctly
     public var scorepadHeaderHeight: CGFloat = 0
+    public var scorepadBodyHeight: CGFloat = 0
+    public var scorepadFooterHeight: CGFloat = 0
     
     // Class to pass state to watch
     public var watchManager: WatchManager!
@@ -1063,9 +1065,11 @@ class Scorecard {
         return self.overrideSelected
     }
         
-    func saveHeaderHeight(_ height: CGFloat) {
+    func saveScorepadHeights(headerHeight: CGFloat, bodyHeight: CGFloat, footerHeight: CGFloat) {
         if UIScreen.main.bounds.size.height > 600 && UIScreen.main.bounds.size.height < 800 {
-            self.scorepadHeaderHeight = height
+            self.scorepadHeaderHeight = headerHeight
+            self.scorepadBodyHeight = bodyHeight
+            self.scorepadFooterHeight = footerHeight
         }
     }
     

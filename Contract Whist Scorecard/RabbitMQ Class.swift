@@ -426,7 +426,7 @@ class RabbitMQClientService : RabbitMQService, CommsClientHandlerDelegate, Rabbi
         self.debugMessage("Resetting client")
         // Simulate reset on each queue
         self.forEachQueue { (rabbitMQQueue) in
-            self.didReceiveBroadcast(descriptor: "reset", data: "reset", from: rabbitMQQueue)
+            self.didReceiveBroadcast(descriptor: "reset", data: "simulated", from: rabbitMQQueue)
         }
     }
     

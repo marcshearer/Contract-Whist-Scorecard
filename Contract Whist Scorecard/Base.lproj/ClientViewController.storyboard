@@ -29,9 +29,6 @@
                             </view>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y3A-eA-Tmp" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="20" width="375" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="i9g-xd-O7m"/>
-                                </constraints>
                                 <viewLayoutGuide key="safeArea" id="InI-gT-K3b"/>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" name="Game Banner Text"/>

@@ -266,7 +266,6 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
     
     private func addPlayer(name: String, email: String, playerMO: PlayerMO?, peer: CommsPeer?, inviteStatus: InviteStatus! = nil, disconnectReason: String? = nil, refreshPlayers: Bool = true) {
         var disconnectReason = disconnectReason
-        print("Adding \(name) \(playerData.count) \(playerData.map{$0.email})")
         
         if disconnectReason == nil {
             if gameInProgress {
@@ -618,29 +617,6 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
     
     func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
         return false
-    }
-    
-    // MARK: - Action Handlers ================================================================ -
-    
-    @objc func changeHostButtonPressed(_ button: UIButton) {
-        self.scorecard.commsDelegate?.disconnect(reason: "Host device has changed player", reconnect: false)
-        self.stopHostBroadcast()
-        SearchViewController.identifyPlayers(from: self.gamePreviewViewController, completion: self.returnPlayer, filter: { (playerMO) in
-            // Exclude inviting player
-            return (self.playerData[0].email != playerMO.email )
-        })
-    }
-    
-    @objc func changeModeButtonPressed(_ button: UIButton) {
-        self.setConnectionMode(.unknown)
-    }
-    
-    @objc func disconnectButtonPressed(_ button: UIButton) {
-        let row = playerData.firstIndex(where: {$0.unique == button.tag})
-        if row != nil {
-            let playerNumber = row! + 1
-            self.disconnectPlayer(playerNumber: playerNumber, reason: "\(self.playerData[0].name) has disconnected")
-        }
     }
     
     // MARK: - Search return handler ================================================================ -

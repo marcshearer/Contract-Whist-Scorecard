@@ -15,7 +15,7 @@
         <scene sceneID="bxj-G7-EJ4">
             <objects>
                 <viewController storyboardIdentifier="GetStartedViewController" title="Get Started" useStoryboardIdentifierAsRestorationIdentifier="YES" id="1IM-Ht-gqg" customClass="GetStartedViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="gBX-K1-URm">
+                    <view key="view" tag="-2" contentMode="scaleToFill" id="gBX-K1-URm">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -195,7 +195,7 @@
                                     <constraint firstAttribute="height" constant="44" id="52M-sE-gRo"/>
                                 </constraints>
                             </view>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="navigationImage" translatesAutoresizingMaskIntoConstraints="NO" id="GEx-Ge-AHR">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="navigationImage banner" translatesAutoresizingMaskIntoConstraints="NO" id="GEx-Ge-AHR">
                                 <rect key="frame" x="121" y="0.0" width="133" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="GEx-Ge-AHR" secondAttribute="height" multiplier="90:54" id="wve-5P-Y2E"/>
@@ -259,7 +259,7 @@
     </scenes>
     <resources>
         <image name="home" width="22" height="22"/>
-        <image name="navigationImage" width="73" height="44"/>
+        <image name="navigationImage banner" width="73" height="44"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

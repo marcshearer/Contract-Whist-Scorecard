@@ -1522,8 +1522,8 @@ class Sync {
             delegate?.syncCompletion?(self.errors)
             if self.observer != nil {
                 NotificationCenter.default.removeObserver(self.observer!)
+                NotificationCenter.default.post(name: .syncCompletion, object: self, userInfo: nil)
             }
-            NotificationCenter.default.post(name: .syncCompletion, object: self, userInfo: nil)
         }
     }
     
@@ -1551,7 +1551,9 @@ class Sync {
         self.observer = NotificationCenter.default.addObserver(forName: name, object: nil, queue: nil) { (notification) in
             if !Sync.syncInProgress {
                 Sync.syncInProgress = true
-                NotificationCenter.default.removeObserver(self.observer!)
+                if let observer = self.observer {
+                    NotificationCenter.default.removeObserver(observer)
+                }
                 self.delegate?.syncStarted?()
                 self.delegate?.syncMessage?("Started...")
                 self.syncController()

@@ -40,15 +40,20 @@ class ScorepadViewController: CustomViewController,
     public var computerPlayerDelegate: [Int : ComputerPlayerDelegate?]?
     
     // Cell dimensions
-    private let minCellHeight = 30
-    private var cellHeight = 0
+    private let minCellHeight: CGFloat = 30
+    private var cellHeight: CGFloat = 0
     private var roundWidth: CGFloat = 0.0
-    private var cellWidth = 0
+    private var cellWidth: CGFloat = 0.0
     private var singleColumn = false
     private var narrow = false
     private var imageRowHeight: CGFloat = 0.0
     private var headerHeight: CGFloat = 0.0
-    private let combinedTriggerWidth = 80
+    private var bannerContinuationHeight: CGFloat = 10.0
+    private let combinedTriggerWidth: CGFloat = 80.0
+    
+    // Gradients
+    let imageGradient: [(alpha: CGFloat, location: CGFloat)] =  [(0.0, 0.0), (0.0, 0.5), (0.8, 1.0)]
+    let playerGradient: [(alpha: CGFloat, location: CGFloat)] = [(0.8, 0.0), (1.0, 0.5), (1.0, 1.0)]
     
     // Header description variables
     private let showThumbnail = true
@@ -60,8 +65,8 @@ class ScorepadViewController: CustomViewController,
     private var bodyColumns = 0
 
     // Cell outline weights
-    private let thickLineWeight: CGFloat = 2
-    private let thinLineWeight: CGFloat = 1
+    private let thickLineWeight: CGFloat = 3.0
+    private let thinLineWeight: CGFloat = 1.0
     
     // Local class variables
     private var lastNavBarHeight:CGFloat = 0.0
@@ -70,6 +75,7 @@ class ScorepadViewController: CustomViewController,
     private var rotated = false
     private var observer: NSObjectProtocol?
     private var firstGameSummary = true
+    private var paddingGradientLayer: [CAGradientLayer] = []
     
     // UI component pointers
     private var imageCollectionView: UICollectionView!
@@ -77,6 +83,7 @@ class ScorepadViewController: CustomViewController,
     public var gameSummaryViewController: GameSummaryViewController!
     
     // MARK: - IB Outlets ============================================================================== -
+    @IBOutlet private weak var bannerContinuationHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var headerViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var footerViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var headerTableView: UITableView!
@@ -87,6 +94,7 @@ class ScorepadViewController: CustomViewController,
     @IBOutlet private weak var finishButton: UIButton!
     @IBOutlet private weak var navigationBar: UINavigationBar!
     @IBOutlet private weak var tapGestureRecognizer: UITapGestureRecognizer!
+    @IBOutlet private var paddingViewLines: [UIView]!
 
     // MARK: - IB Unwind Segue Handlers ================================================================ -
  
@@ -291,24 +299,21 @@ class ScorepadViewController: CustomViewController,
     
     override internal func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        coordinator.animate(alongsideTransition: { (context) in
-            self.view.setNeedsLayout()
-            self.headerTableView.reloadData()
-            self.bodyTableView.reloadData()
-            self.footerTableView.reloadData()
-            self.rotated = true
-        }, completion: nil)
+        self.view.setNeedsLayout()
+        self.rotated = true
     }
     
-    override internal func viewWillLayoutSubviews() {
+    override internal func viewDidLayoutSubviews() {
         super.viewWillLayoutSubviews()
         if lastNavBarHeight != navigationBar.frame.height || lastViewHeight != scorepadView.frame.height {
             setupSize(to: scorepadView.safeAreaLayoutGuide.layoutFrame.size)
+            self.headerTableView.layoutIfNeeded()
             self.headerTableView.reloadData()
             self.bodyTableView.reloadData()
             self.footerTableView.reloadData()
             lastNavBarHeight = navigationBar.frame.height
             lastViewHeight = scorepadView.frame.height
+            self.setupBorders()
         }
     }
     
@@ -328,11 +333,14 @@ class ScorepadViewController: CustomViewController,
             case imageRow:
                 height = imageRowHeight
             default:
-                height = headerHeight - imageRowHeight
+                height = headerHeight - imageRowHeight - bannerContinuationHeight
             }
-        default:
-            // Body and footer
+        case 2:
+            // Body
             height = CGFloat(cellHeight)
+        default:
+            // Footer
+            height = CGFloat(cellHeight + self.view.safeAreaInsets.bottom)
         }
         return height
     }
@@ -426,7 +434,7 @@ class ScorepadViewController: CustomViewController,
         
         // Set cell widths
         roundWidth = round(size.width > CGFloat(600) ? size.width / CGFloat(10) : 60)
-        cellWidth = Int(round((size.width - roundWidth) / (CGFloat(2.0) * CGFloat(scorecard.currentPlayers))))
+        cellWidth = CGFloat(Int(round((size.width - roundWidth) / (CGFloat(2.0) * CGFloat(scorecard.currentPlayers)))))
         
         if cellWidth <= combinedTriggerWidth {
             cellWidth *= 2
@@ -436,16 +444,17 @@ class ScorepadViewController: CustomViewController,
         } else {
             bodyColumns = 2
             narrow = false
-            imageRowHeight = 84.0
+            imageRowHeight = 50.0
         }
         
-        roundWidth = size.width - CGFloat(bodyColumns * scorecard.currentPlayers * cellWidth)
+        roundWidth = size.width - (CGFloat(bodyColumns * scorecard.currentPlayers) * cellWidth)
         
         // work out what appears in which header row
         imageRow = -1
         playerRow = -1
         headerRows = 0
         headerHeight =  0.0
+        bannerContinuationHeight = 0.0
         
         if showThumbnail {
             headerHeight += imageRowHeight
@@ -463,20 +472,23 @@ class ScorepadViewController: CustomViewController,
         var floatCellHeight: CGFloat = (size.height - imageRowHeight - navigationBar.frame.height) / CGFloat(self.rounds+2) // Adding 2 for name row in header and total row
         floatCellHeight.round()
         
-        cellHeight = Int(floatCellHeight)
+        cellHeight = CGFloat(Int(floatCellHeight))
         
         if cellHeight < minCellHeight {
             cellHeight = minCellHeight
             headerHeight += CGFloat(cellHeight)
+            bannerContinuationHeight = 0.0
         } else {
-            headerHeight = size.height - CGFloat((self.rounds+1) * cellHeight) - navigationBar.frame.height
-            imageRowHeight = headerHeight - CGFloat(cellHeight)
+            headerHeight = size.height - (CGFloat(self.rounds+1) * cellHeight) - navigationBar.frame.height
+            imageRowHeight = min(headerHeight - minCellHeight, 50.0)
+            bannerContinuationHeight = headerHeight - imageRowHeight - minCellHeight
         }
         
-        headerViewHeightConstraint.constant = headerHeight
-        footerViewHeightConstraint.constant = CGFloat(cellHeight)
+        bannerContinuationHeightConstraint.constant = bannerContinuationHeight
+        headerViewHeightConstraint.constant = headerHeight - bannerContinuationHeight
+        footerViewHeightConstraint.constant = CGFloat(cellHeight) + self.view.safeAreaInsets.bottom
 
-        scorecard.saveHeaderHeight(headerHeight + navigationBar.frame.height)
+        scorecard.saveScorepadHeights(headerHeight: headerHeight + navigationBar.frame.height, bodyHeight: CGFloat(self.scorecard.rounds) * self.cellHeight, footerHeight: CGFloat(cellHeight) + self.view.safeAreaInsets.bottom)
         
         // If moving to 1 column clear out stored bid cell pointers
         if bodyColumns == 1 {
@@ -485,6 +497,30 @@ class ScorepadViewController: CustomViewController,
                     scorecard.scorecardPlayer(playerNumber).setBidCell(round, cell: nil)
                 }
             }
+        }
+
+    }
+    
+    private func setupBorders() {
+        
+        let line = self.paddingViewLines![0]
+        let height: CGFloat = line.frame.height
+        var gradient: [(alpha: CGFloat, location: CGFloat)] = []
+        let tableViewTop: CGFloat = self.headerTableView.frame.minY
+        for element in self.imageGradient {
+            gradient.append((element.alpha, (tableViewTop + bannerContinuationHeight + (element.location * imageRowHeight)) / height))
+        }
+        for element in self.playerGradient {
+            gradient.append((element.alpha, (tableViewTop + bannerContinuationHeight + imageRowHeight + (element.location * minCellHeight)) / height))
+        }
+        gradient.append((1.0, 1.0))
+        
+        self.paddingGradientLayer.forEach {
+            $0.removeFromSuperlayer()
+        }
+        self.paddingGradientLayer = []
+        self.paddingViewLines?.forEach {
+            paddingGradientLayer.append(ScorecardUI.gradient($0, color: Palette.grid, gradients: gradient))
         }
     }
     
@@ -525,12 +561,17 @@ class ScorepadViewController: CustomViewController,
     
     private func highlightDealer(headerCell: ScorepadCollectionViewCell, playerNumber: Int, row: Int, forceClear: Bool = false) {
         if playerNumber >= 0 {
+            headerCell.scorepadCellGradientLayer?.removeFromSuperlayer()
             if scorecard.isScorecardDealer() == playerNumber && !forceClear {
-                Palette.highlightStyle(view: headerCell)
-                headerCell.scorepadCellLabel?.textColor = Palette.highlightText
+                if row == playerRow {
+                    headerCell.scorepadCellLabel?.textColor = Palette.gameBannerText
+                    headerCell.scorepadCellGradientLayer = ScorecardUI.gradient(headerCell, color: Palette.gameBanner, gradients: playerGradient)
+                } else if row == imageRow {
+                    headerCell.scorepadCellGradientLayer = ScorecardUI.gradient(headerCell, color: Palette.gameBanner, gradients: imageGradient)
+                }
             } else {
-                Palette.emphasisStyle(view: headerCell)
-                headerCell.scorepadCellLabel?.textColor = Palette.emphasisText
+                Palette.tableTopStyle(view: headerCell)
+                
             }
         }
     }
@@ -551,7 +592,7 @@ class ScorepadViewController: CustomViewController,
             
         } else if scorepadMode == .amend {
             // Amend mode - enter score
-            scoreEntryButton.setTitle("Continue")
+            scoreEntryButton.setTitle("Score")
             scoreEntryButton.isHidden = false
             
         } else if self.scorecard.isHosting {
@@ -579,13 +620,13 @@ class ScorepadViewController: CustomViewController,
             if scorecard.gameComplete(rounds: self.rounds) {
                 finishButton.isHidden = true
             } else {
-                finishButton.setTitle("Exit", for: .normal)
+                finishButton.setTitle("", for: .normal)
             }
         } else {
             if self.scorecard.gameInProgress {
-                finishButton.setTitle("Exit", for: .normal)
+                finishButton.setTitle("", for: .normal)
             } else {
-                finishButton.setTitle("Back", for: .normal)
+                finishButton.setTitle("", for: .normal)
             }
         }
     }
@@ -707,6 +748,7 @@ class ScorepadViewController: CustomViewController,
     // MARK: - Segue Prepare Handler =================================================================== -
     override internal func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
+        let scoresHeight: CGFloat = min(ScorecardUI.screenHeight, CGFloat(self.scorecard.rounds) * cellHeight, 600)
         
         switch segue.identifier! {
             
@@ -718,7 +760,7 @@ class ScorepadViewController: CustomViewController,
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = scorepadView
-            destination.preferredContentSize = CGSize(width: 400, height: 554)
+            destination.preferredContentSize = CGSize(width: 400, height: scoresHeight)
 
             destination.rounds = self.rounds
             destination.cards = self.cards
@@ -734,7 +776,7 @@ class ScorepadViewController: CustomViewController,
             roundSummaryViewController.modalPresentationStyle = UIModalPresentationStyle.popover
             roundSummaryViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             roundSummaryViewController.popoverPresentationController?.sourceView = scorepadView
-            roundSummaryViewController.preferredContentSize = CGSize(width: 400, height: 554)
+            roundSummaryViewController.preferredContentSize = CGSize(width: 400, height: scoresHeight)
 
             roundSummaryViewController.returnSegue = "hideClientRoundSummary"
             roundSummaryViewController.rounds = self.rounds
@@ -750,7 +792,7 @@ class ScorepadViewController: CustomViewController,
             gameSummaryViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             gameSummaryViewController.popoverPresentationController?.sourceView = scorepadView
 
-            gameSummaryViewController.preferredContentSize = CGSize(width: 400, height: 554)
+            gameSummaryViewController.preferredContentSize = CGSize(width: 400, height: scoresHeight)
             gameSummaryViewController.firstGameSummary = self.firstGameSummary
             gameSummaryViewController.gameSummaryMode = (self.scorecard.isHosting ? .amend : self.scorepadMode)
             gameSummaryViewController.rounds = self.rounds
@@ -764,7 +806,7 @@ class ScorepadViewController: CustomViewController,
             destination.isModalInPopover = true
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = scorepadView
-            destination.preferredContentSize = CGSize(width: 400, height: 600)
+            destination.preferredContentSize = CGSize(width: 400, height: scoresHeight)
 
             destination.gameLocation = self.scorecard.gameLocation
             destination.returnSegue = "hideLocation"
@@ -777,7 +819,7 @@ class ScorepadViewController: CustomViewController,
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = scorepadView
-            destination.preferredContentSize = CGSize(width: 400, height: 554)
+            destination.preferredContentSize = CGSize(width: 400, height: scoresHeight)
   
             destination.round = self.reviewRound
             destination.thisPlayer = self.scorecard.handState.enteredPlayerNumber
@@ -834,7 +876,7 @@ class ScorepadViewController: CustomViewController,
             }
             else
             {
-                width = CGFloat(cellWidth * bodyColumns)
+                width = cellWidth * CGFloat(bodyColumns)
             }
         }
         else
@@ -875,7 +917,7 @@ class ScorepadViewController: CustomViewController,
             
             // Header
             
-            if (row == imageRow || row == playerRow) && column != 0 {
+            if column != 0 {
                 // Thumbnail and/or name
                  player = column
                 
@@ -889,11 +931,19 @@ class ScorepadViewController: CustomViewController,
                 }
                 
                 headerCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier,for: indexPath)   as! ScorepadCollectionViewCell
-                Palette.emphasisStyle(view: headerCell)
-                headerCell.scorepadCellLabel?.textColor = Palette.emphasisText
                 
-                if row != playerRow {
+                headerCell.scorepadLeftLineGradientLayer?.removeFromSuperlayer()
+                Palette.tableTopStyle(view: headerCell)
+                headerCell.scorepadLeftLineWeight.constant = thickLineWeight
+                headerCell.layoutIfNeeded()
+                
+                if row == playerRow {
+                    // Setup label
+                    headerCell.scorepadCellLabel.textColor = Palette.tableTopTextContrast
+                    headerCell.scorepadCellLabel.text = scorecard.scorecardPlayer(player).playerMO!.name!
+                    headerCell.scorepadLeftLineGradientLayer = ScorecardUI.gradient(headerCell.scorepadLeftLine, color: Palette.grid, gradients: playerGradient)
                     
+                } else {
                     // Setup the thumbnail picture / disc
                     if playerDetail != nil {
                         Utility.setThumbnail(data: playerDetail!.thumbnail,
@@ -904,53 +954,43 @@ class ScorepadViewController: CustomViewController,
                         ScorecardUI.veryRoundCorners(headerCell.scorepadDisc, radius: (imageRowHeight-9)/2)
                         headerCell.scorepadDiscHeight.constant = 10000 // Force resize
                     }
+                    headerCell.scorepadLeftLineGradientLayer = ScorecardUI.gradient(headerCell.scorepadLeftLine, color: Palette.grid, gradients: imageGradient)
                 }
-                
-                headerCell.scorepadLeftLineWeight.constant = thickLineWeight
-       
-                if row == playerRow {
-                    // Setup the name
-                    headerCell.scorepadCellLabel.text = scorecard.scorecardPlayer(player).playerMO!.name!
-                }
+    
             } else {
+                // Title column
                 headerCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Header Collection Cell",for: indexPath) as! ScorepadCollectionViewCell
                 
-                Palette.emphasisStyle(view: headerCell)
-                headerCell.scorepadCellLabel?.textColor = Palette.emphasisText
+                headerCell.scorepadLeftLineGradientLayer?.removeFromSuperlayer()
+                Palette.tableTopStyle(view: headerCell)
+                headerCell.scorepadCellLabel?.textColor = Palette.tableTopTextContrast
                 
-                if column == 0 {
-                    // Row titles
-                    switch row {
-                    case imageRow:
-                        headerCell.scorepadCellLabel.text=""
-                    case playerRow:
-                        headerCell.scorepadCellLabel.text="Player"
-                    default:
-                        break
-                    }
-                    headerCell.scorepadLeftLineWeight.constant = 0
-                    headerCell.scorepadCellLabel.numberOfLines = 1
-                } else {
-                    // Row values
-                    player = column
-                    
-                    headerCell.scorepadLeftLineWeight.constant = thickLineWeight
+                // Row titles
+                switch row {
+                case imageRow:
+                    headerCell.scorepadCellLabel.text=""
+                case playerRow:
+                    headerCell.scorepadCellLabel.text="Player"
+                default:
+                    break
                 }
-                
-                headerCell.scorepadTopLineWeight.constant =
-                    (row == 0 || (row == playerRow && imageRowHeight != 0) ? 0 : thickLineWeight)
+                headerCell.scorepadLeftLineWeight.constant = 0
+                headerCell.scorepadCellLabel.numberOfLines = 1
             }
             
-            if row != imageRow {
+            if row == playerRow {
+                // Setup the name font
                 if narrow {
                     headerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 20.0)
                 } else {
                     headerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 24.0)
                 }
             }
-   
-            headerCell.scorepadTopLineWeight.constant = (row == 0 ? thickLineWeight : 0)
             
+            // Setup top line
+            headerCell.scorepadTopLineWeight.constant = (row == 0 ? 0 /* was thickLineWeight*/ : 0)
+            
+            // Highlight current dealer
             highlightDealer(headerCell: headerCell, playerNumber: column, row: row)
             
             cell=headerCell
@@ -961,9 +1001,12 @@ class ScorepadViewController: CustomViewController,
             
             footerCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Footer Collection Cell",for: indexPath) as! ScorepadCollectionViewCell
         
+            footerCell.scorepadCellLabel.backgroundColor = Palette.roomInterior
+            footerCell.scorepadCellLabel.textColor = Palette.roomInteriorText
+            footerCell.scorepadCellLabelHeight.constant = cellHeight - thickLineWeight
+            
             if column == 0 {
                 // Row titles
-                Palette.emphasisStyle(footerCell.scorepadCellLabel)
                 footerCell.scorepadCellLabel.text="Total"
                 footerCell.scorepadLeftLineWeight.constant = 0
                 footerCell.scorepadCellLabel.numberOfLines = 1
@@ -971,13 +1014,12 @@ class ScorepadViewController: CustomViewController,
             } else {
                 // Row values
                 player = column
-                Palette.totalStyle(footerCell.scorepadCellLabel)
                 footerCell.scorepadCellLabel.text = "\(scorecard.scorecardPlayer(player).totalScore())"
                 footerCell.scorepadLeftLineWeight.constant = thickLineWeight
                 scorecard.scorecardPlayer(player).setTotalLabel(label: footerCell.scorepadCellLabel)
                 footerCell.scorepadCellLabel.accessibilityIdentifier = "player\(indexPath.row)total"
             }
-            footerCell.scorepadTopLineWeight.constant = thickLineWeight
+            footerCell.scorepadTopLineWeight.constant = thinLineWeight
         
             if narrow {
                 footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 20.0)
@@ -1000,7 +1042,7 @@ class ScorepadViewController: CustomViewController,
             bodyCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ScorepadCollectionViewCell
             if column == 0
             {
-                Palette.emphasisStyle(bodyCell.scorepadCellLabel)
+                Palette.tableTopStyle(bodyCell.scorepadCellLabel)
                 bodyCell.scorepadCellLabel.attributedText = scorecard.roundTitle(round, rankColor: Palette.emphasisText, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
                 bodyCell.scorepadLeftLineWeight.constant = 0
                 bodyCell.scorepadCellLabel.accessibilityIdentifier = ""
@@ -1024,7 +1066,7 @@ class ScorepadViewController: CustomViewController,
                     bodyCell.scorepadCellLabel.accessibilityIdentifier = "player\(player)round\(round)"
                 }
             }
-            bodyCell.scorepadTopLineWeight.constant = thickLineWeight
+            bodyCell.scorepadTopLineWeight.constant = thinLineWeight
             if narrow {
                 bodyCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 20.0)
             } else {
@@ -1109,13 +1151,18 @@ class ScorepadTableViewCell: UITableViewCell {
 }
 
 class ScorepadCollectionViewCell: UICollectionViewCell {
+
+    var scorepadCellGradientLayer: CAGradientLayer!
+    var scorepadLeftLineGradientLayer: CAGradientLayer!
     
     @IBOutlet weak var scorepadCellLabel: UILabel!
     @IBOutlet weak var scorepadLeftLineWeight: NSLayoutConstraint!
     @IBOutlet weak var scorepadTopLineWeight: NSLayoutConstraint!
+    @IBOutlet weak var scorepadCellLabelHeight: NSLayoutConstraint!
     @IBOutlet weak var scorepadImage: UIImageView!
     @IBOutlet weak var scorepadDisc: UILabel!
     @IBOutlet weak var scorepadDiscHeight: NSLayoutConstraint!
+    @IBOutlet weak var scorepadLeftLine: UIView!
 }
 
 

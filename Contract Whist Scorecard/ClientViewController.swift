@@ -115,8 +115,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     @IBAction func changePlayerPressed(_ sender: UIButton) {
-        
-        self.selectionViewController = SelectionViewController.show(from: self, existing: self.selectionViewController, mode: .single, thisPlayer: self.thisPlayer, thisPlayerFrame: self.thisPlayerThumbnail.frame, formTitle: "Choose Player", backText: "", backImage: "back", preCompletion: { (playerMO) in
+        self.selectionViewController = SelectionViewController.show(from: self, existing: self.selectionViewController, mode: .single, thisPlayer: self.thisPlayer, thisPlayerFrame: self.thisPlayerThumbnail.frame, formTitle: "Choose Player", backText: "", backImage: "cross white", preCompletion: { (playerMO) in
             self.returnPlayers(playerMO: playerMO)
         })
     }
@@ -197,7 +196,6 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                     self.thisPlayerName = playerMO!.name
                 }
             }
-            self.showThisPlayer()
         }
         
         self.createConnections()
@@ -212,6 +210,11 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         // Set observer to detect UI handler completion
         clientHandlerObserver = self.handlerCompleteNotification()
         
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.showThisPlayer()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -274,7 +277,6 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                 case "wait":
                     // No game running - need to wait for it to start
                     if self.appState != .waiting {
-                        Utility.debugMessage("client", "State: \(self.appState!)")
                         self.dismissAll(completion: {
                             self.appStateChange(to: .waiting)
                             self.reflectState(peer: peer)
@@ -496,16 +498,13 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             for playerNumber in 1...self.scorecard.currentPlayers {
                 if let playerMO = self.scorecard.enteredPlayer(playerNumber).playerMO {
                     selectedPlayers.append(playerMO)
-                    Utility.debugMessage("ShowGamePreview", playerMO.name!)
                 }
             }
             if self.gamePreviewViewController == nil {
-                Utility.debugMessage("show", "Preview shown")
                 self.dismissAll {
                     self.gamePreviewViewController = GamePreviewViewController.show(from: self, selectedPlayers: selectedPlayers, title: "Join a Game", backText: "", delegate: self)
                 }
             } else {
-                Utility.debugMessage("show", "Preview updated \(selectedPlayers.count)")
                 self.gamePreviewViewController.selectedPlayers = selectedPlayers
                 self.gamePreviewViewController.refreshPlayers()
             }
@@ -513,7 +512,6 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     private func hideGamePreview(completion: (()->())? = nil) {
-        Utility.debugMessage("dismiss", "Preview dismissed (hide)")
         self.gamePreviewViewController.dismiss(animated: true, completion: completion)
         self.gamePreviewViewController = nil
     }
@@ -535,11 +533,6 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                     } else if self.scorepadViewController == nil {
                         self.playHandScorecard(peer: peer, hand: hand, round: round, trick: trick, made: made, twos: twos, trickCards: trickCards, toLead: toLead, lastCards: lastCards, lastToLead: lastToLead)
                     }
-                }
-            } else {
-                Utility.debugMessage("client", "Unknown: \(peer.deviceName)")
-                for available in self.available {
-                    Utility.debugMessage("client", "Have \(available.deviceName)")
                 }
             }
         }

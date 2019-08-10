@@ -13,6 +13,8 @@ class Palette {
     static let background = UIColor(named: "Background")!
     static let banner = UIColor(named: "Banner")!
     static let bannerText = UIColor(named: "Banner Text")!
+    static let bidButton = UIColor(named: "Bid Button")!
+    static let bidButtonText = UIColor(named: "Bid Button Text")!
     static let bold = UIColor(named: "Bold")!
     static let boldText = UIColor(named: "Bold Text")!
     static let continueButton = UIColor(named: "Continue Button")!
@@ -38,6 +40,8 @@ class Palette {
     static let inputControl = UIColor(named: "Input Control")!
     static let inputControlText = UIColor(named: "Input Control Text")!
     static let inputControlPlaceholder = UIColor(named: "Input Control Placeholder")!
+    static let instruction = UIColor(named: "Instruction")!
+    static let instructionText = UIColor(named: "Instruction Text")!
     static let madeContract = UIColor(named: "Made Contract")!
     static let madeContractText = UIColor(named: "Made Contract Text")!
     static let roomInterior = UIColor(named: "Room Interior")!
@@ -54,8 +58,8 @@ class Palette {
     static let thumbnailDiscText = UIColor(named: "Thumbnail Disc Text")!
     static let thumbnailPlaceholder = UIColor(named: "Thumbnail Placeholder")!
     static let thumbnailPlaceholderText = UIColor(named: "Thumbnail Placeholder Text")!
-    static let separator = UIColor(named: "Separator")
-    static let grid = UIColor(named: "Grid")
+    static let separator = UIColor(named: "Separator")!
+    static let grid = UIColor(named: "Grid")!
     static let text = UIColor(named: "Text")!
     static let textEmphasised = UIColor(named: "Text Emphasised")!
     static let textError = UIColor(named: "Text Error")!
@@ -76,10 +80,11 @@ class Palette {
     static let suitDiamondsHearts = UIColor(named: "Suit Diamonds Hearts")!
     static let suitClubsSpades = UIColor(named: "Suit Clubs Spades")!
     static let suitNoTrumps = UIColor(named: "Suit No Trumps")!
-    static let cardBack = UIColor(named: "Card Back")
-    static let cardFace = UIColor(named: "Card Face")
+    static let cardBack = UIColor(named: "Card Back")!
+    static let cardFace = UIColor(named: "Card Face")!
     static let contractOver = UIColor(named: "Contract Over")!
     static let contractUnder = UIColor(named: "Contract Under")!
+    static let contractUnderLight = UIColor(named: "Contract Under Light")!
     static let contractEqual = UIColor(named: "Contract Equal")!
     
     class func sectionHeadingStyle(_ cell: UITableViewCell) {
@@ -169,6 +174,25 @@ class Palette {
     class func bannerStyle(_ label: UILabel) {
         label.backgroundColor = Palette.banner
         label.textColor = Palette.bannerText
+    }
+    
+    class func tableTopStyle(view: UIView) {
+        view.backgroundColor = Palette.tableTop
+    }
+    
+    class func tableTopStyle(_ label: UILabel) {
+        label.backgroundColor = Palette.tableTop
+        label.textColor = Palette.tableTopTextContrast
+    }
+    
+    class func instructionStyle(_ label: UILabel) {
+        label.backgroundColor = Palette.instruction
+        label.textColor = Palette.instructionText
+    }
+    
+    class func bidButtonStyle(_ label: UILabel) {
+        label.backgroundColor = Palette.bidButton
+        label.textColor = Palette.bidButtonText
     }
     
     class func totalStyle(_ label: UILabel) {

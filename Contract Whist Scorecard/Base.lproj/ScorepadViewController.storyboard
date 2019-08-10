@@ -21,25 +21,27 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Jo-C4-vPV" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JrC-1V-hch" userLabel="Footer Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="862" width="414" height="34"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
+                                        <color key="value" name="Table Top"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R7D-RJ-hmj" userLabel="Bottom Line">
                                 <rect key="frame" x="0.0" y="862" width="414" height="2"/>
-                                <color key="backgroundColor" name="Grid"/>
+                                <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="2" id="7qe-jG-Dbk"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4mH-Ut-Ta9" userLabel="Left Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="44" width="0.0" height="818"/>
+                                <rect key="frame" x="0.0" y="44" width="0.0" height="852"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gJV-Ai-5A3" userLabel="Left Line">
-                                        <rect key="frame" x="-2" y="0.0" width="2" height="818"/>
-                                        <color key="backgroundColor" name="Grid"/>
+                                        <rect key="frame" x="-3" y="0.0" width="3" height="852"/>
+                                        <color key="backgroundColor" name="Table Top"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="2" id="y2X-L5-1Yu"/>
+                                            <constraint firstAttribute="width" constant="3" id="y2X-L5-1Yu"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -48,15 +50,20 @@
                                     <constraint firstAttribute="trailing" secondItem="gJV-Ai-5A3" secondAttribute="trailing" id="Llg-Ck-o3w"/>
                                     <constraint firstAttribute="bottom" secondItem="gJV-Ai-5A3" secondAttribute="bottom" id="a57-BE-Fe6"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
+                                        <color key="value" name="Table Top"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2V4-Rn-jn9" userLabel="Right Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="414" y="44" width="0.0" height="818"/>
+                                <rect key="frame" x="414" y="44" width="0.0" height="852"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SeV-1g-Tzl" userLabel="Left Line">
-                                        <rect key="frame" x="0.0" y="0.0" width="2" height="818"/>
-                                        <color key="backgroundColor" name="Grid"/>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SeV-1g-Tzl" userLabel="Right Line">
+                                        <rect key="frame" x="0.0" y="0.0" width="3" height="852"/>
+                                        <color key="backgroundColor" name="Table Top"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="2" id="FXN-PX-YPU"/>
+                                            <constraint firstAttribute="width" constant="3" id="FXN-PX-YPU"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -65,14 +72,22 @@
                                     <constraint firstAttribute="bottom" secondItem="SeV-1g-Tzl" secondAttribute="bottom" id="Xy0-uu-bel"/>
                                     <constraint firstItem="SeV-1g-Tzl" firstAttribute="top" secondItem="2V4-Rn-jn9" secondAttribute="top" id="clv-k2-aFe"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
+                                        <color key="value" name="Table Top"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </view>
                             <navigationBar clipsSubviews="YES" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Skq-xy-HKr" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                                <textAttributes key="titleTextAttributes">
+                                    <color key="textColor" name="Table Top Text Contrast"/>
+                                </textAttributes>
                                 <items>
-                                    <navigationItem title="Scorecard" id="F6Y-rL-bdK">
+                                    <navigationItem id="F6Y-rL-bdK">
                                         <barButtonItem key="leftBarButtonItem" id="51I-1V-L3U">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="bgf-Na-549" userLabel="Finish Button">
-                                                <rect key="frame" x="20" y="11" width="56" height="22"/>
+                                                <rect key="frame" x="20" y="11" width="62" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Back" image="back"/>
                                                 <connections>
@@ -83,9 +98,9 @@
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" width="70" id="hEg-rd-MmQ">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="s5c-DG-O7P" userLabel="Score Entry Button" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="305" y="11" width="89" height="22"/>
+                                                <rect key="frame" x="299" y="11" width="95" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Continue" image="forward"/>
+                                                <state key="normal" image="forward"/>
                                                 <connections>
                                                     <action selector="scorePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RPU-Oa-Req"/>
                                                 </connections>
@@ -93,9 +108,21 @@
                                         </barButtonItem>
                                     </navigationItem>
                                 </items>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
+                                        <color key="value" name="Table Top"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </navigationBar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hre-aD-pgw" userLabel="Banner Continuation">
+                                <rect key="frame" x="0.0" y="88" width="414" height="10"/>
+                                <color key="backgroundColor" name="Table Top"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="10" id="drX-Fn-Wuz"/>
+                                </constraints>
+                            </view>
                             <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="CoM-o8-drH" userLabel="Header Table View">
-                                <rect key="frame" x="0.0" y="88" width="414" height="88"/>
+                                <rect key="frame" x="0.0" y="98" width="414" height="88"/>
                                 <color key="backgroundColor" name="Emphasis"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="88" id="Nae-oA-mIW"/>
@@ -129,24 +156,24 @@
                                                                         <rect key="frame" x="0.0" y="0.0" width="90" height="90"/>
                                                                         <subviews>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="003-9S-puq" userLabel="Left Line">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="5" height="50"/>
-                                                                                <color key="backgroundColor" name="Grid"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="3" height="50"/>
+                                                                                <color key="backgroundColor" name="Table Top"/>
                                                                                 <constraints>
-                                                                                    <constraint firstAttribute="width" constant="5" id="Kto-Mf-vch"/>
+                                                                                    <constraint firstAttribute="width" constant="3" id="Kto-Mf-vch"/>
                                                                                 </constraints>
                                                                             </view>
                                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="rqG-2Z-Uhh">
-                                                                                <rect key="frame" x="5" y="0.0" width="45" height="50"/>
+                                                                                <rect key="frame" x="3" y="0.0" width="47" height="50"/>
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4SF-rg-dYh" userLabel="Top Line">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="45" height="5"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="47" height="0.0"/>
                                                                                         <color key="backgroundColor" name="Grid"/>
                                                                                         <constraints>
-                                                                                            <constraint firstAttribute="height" constant="5" id="7L0-wc-Lhi"/>
+                                                                                            <constraint firstAttribute="height" id="7L0-wc-Lhi"/>
                                                                                         </constraints>
                                                                                     </view>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HeaderLabel" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="mlQ-gE-e09">
-                                                                                        <rect key="frame" x="0.0" y="5" width="45" height="45"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="47" height="50"/>
                                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                                         <color key="textColor" name="Emphasis Text"/>
                                                                                         <nil key="highlightedColor"/>
@@ -171,6 +198,7 @@
                                                             </constraints>
                                                             <connections>
                                                                 <outlet property="scorepadCellLabel" destination="mlQ-gE-e09" id="ZLx-Fl-jEQ"/>
+                                                                <outlet property="scorepadLeftLine" destination="003-9S-puq" id="0Fg-cU-8Zf"/>
                                                                 <outlet property="scorepadLeftLineWeight" destination="Kto-Mf-vch" id="7Xc-19-2nB"/>
                                                                 <outlet property="scorepadTopLineWeight" destination="7L0-wc-Lhi" id="c8m-7l-yMl"/>
                                                             </connections>
@@ -186,38 +214,38 @@
                                                                         <rect key="frame" x="0.0" y="0.0" width="90" height="90"/>
                                                                         <subviews>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xgi-DP-c4v" userLabel="Left Line">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="5" height="50"/>
-                                                                                <color key="backgroundColor" name="Grid"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="3" height="50"/>
+                                                                                <color key="backgroundColor" name="Table Top"/>
                                                                                 <constraints>
-                                                                                    <constraint firstAttribute="width" constant="5" id="vpZ-Lr-rnK"/>
+                                                                                    <constraint firstAttribute="width" constant="3" id="vpZ-Lr-rnK"/>
                                                                                 </constraints>
                                                                             </view>
-                                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="YOW-YO-SFG">
-                                                                                <rect key="frame" x="5" y="0.0" width="45" height="50"/>
+                                                                            <stackView opaque="NO" contentMode="bottom" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="YOW-YO-SFG">
+                                                                                <rect key="frame" x="3" y="0.0" width="47" height="50"/>
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XYq-c4-gCU" userLabel="Top Line">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="45" height="5"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="47" height="5"/>
                                                                                         <color key="backgroundColor" name="Grid"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="height" constant="5" id="wC2-jO-NS8"/>
                                                                                         </constraints>
                                                                                     </view>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d3O-hY-nLU" userLabel="Padding above">
-                                                                                        <rect key="frame" x="0.0" y="5" width="45" height="6"/>
+                                                                                        <rect key="frame" x="0.0" y="5" width="47" height="9"/>
                                                                                         <color key="backgroundColor" name="Clear"/>
                                                                                         <constraints>
-                                                                                            <constraint firstAttribute="height" constant="6" id="cHG-pF-ODM"/>
+                                                                                            <constraint firstAttribute="height" constant="9" id="cHG-pF-ODM"/>
                                                                                         </constraints>
                                                                                     </view>
                                                                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="qDR-C1-D1v">
-                                                                                        <rect key="frame" x="0.0" y="11" width="45" height="36"/>
+                                                                                        <rect key="frame" x="0.0" y="14" width="47" height="36"/>
                                                                                         <subviews>
                                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WfK-Ha-xtn" userLabel="Padding left">
-                                                                                                <rect key="frame" x="0.0" y="0.0" width="4.5" height="36"/>
+                                                                                                <rect key="frame" x="0.0" y="0.0" width="5.5" height="36"/>
                                                                                                 <color key="backgroundColor" name="Clear"/>
                                                                                             </view>
                                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fU9-cw-ta5" userLabel="Image Container">
-                                                                                                <rect key="frame" x="4.5" y="0.0" width="36" height="36"/>
+                                                                                                <rect key="frame" x="5.5" y="0.0" width="36" height="36"/>
                                                                                                 <subviews>
                                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Na-dy-Qwz">
                                                                                                         <rect key="frame" x="0.0" y="0.0" width="36" height="36"/>
@@ -251,7 +279,7 @@
                                                                                                 </constraints>
                                                                                             </view>
                                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T8v-Lu-bs0" userLabel="Padding right">
-                                                                                                <rect key="frame" x="40.5" y="0.0" width="4.5" height="36"/>
+                                                                                                <rect key="frame" x="41.5" y="0.0" width="5.5" height="36"/>
                                                                                                 <color key="backgroundColor" name="Clear"/>
                                                                                             </view>
                                                                                         </subviews>
@@ -263,10 +291,10 @@
                                                                                         </constraints>
                                                                                     </stackView>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6pr-B5-jpl" userLabel="Padding below">
-                                                                                        <rect key="frame" x="0.0" y="47" width="45" height="3"/>
+                                                                                        <rect key="frame" x="0.0" y="50" width="47" height="0.0"/>
                                                                                         <color key="backgroundColor" name="Clear"/>
                                                                                         <constraints>
-                                                                                            <constraint firstAttribute="height" constant="3" id="6kB-qC-bBX"/>
+                                                                                            <constraint firstAttribute="height" id="6kB-qC-bBX"/>
                                                                                         </constraints>
                                                                                     </view>
                                                                                 </subviews>
@@ -294,6 +322,7 @@
                                                                 <outlet property="scorepadDisc" destination="7Na-dy-Qwz" id="uR9-2L-ILc"/>
                                                                 <outlet property="scorepadDiscHeight" destination="T3K-Fk-qFN" id="Zoa-96-pCT"/>
                                                                 <outlet property="scorepadImage" destination="grq-ja-GuI" id="nI7-3r-oM0"/>
+                                                                <outlet property="scorepadLeftLine" destination="xgi-DP-c4v" id="lJq-s7-aCt"/>
                                                                 <outlet property="scorepadLeftLineWeight" destination="vpZ-Lr-rnK" id="87k-zc-u2C"/>
                                                                 <outlet property="scorepadTopLineWeight" destination="wC2-jO-NS8" id="Vpm-Tg-4a1"/>
                                                             </connections>
@@ -322,7 +351,7 @@
                                 </connections>
                             </tableView>
                             <tableView clipsSubviews="YES" tag="2" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="m5j-3V-hPG" userLabel="Body Table View">
-                                <rect key="frame" x="0.0" y="176" width="414" height="642"/>
+                                <rect key="frame" x="0.0" y="186" width="414" height="666"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Body Table Cell" id="5dl-Lb-15P" customClass="ScorepadTableViewCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
@@ -353,24 +382,24 @@
                                                                         <rect key="frame" x="-20" y="-20" width="4950" height="50"/>
                                                                         <subviews>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ejQ-iq-y0f" userLabel="Left Line">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="5" height="50"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="3" height="50"/>
                                                                                 <color key="backgroundColor" name="Grid"/>
                                                                                 <constraints>
-                                                                                    <constraint firstAttribute="width" constant="5" id="Zen-Tv-ScO"/>
+                                                                                    <constraint firstAttribute="width" constant="3" id="Zen-Tv-ScO"/>
                                                                                 </constraints>
                                                                             </view>
                                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="En7-GC-jDI">
-                                                                                <rect key="frame" x="5" y="0.0" width="45" height="50"/>
+                                                                                <rect key="frame" x="3" y="0.0" width="47" height="50"/>
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="37L-NB-jCF" userLabel="Top Line">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="45" height="5"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="47" height="3"/>
                                                                                         <color key="backgroundColor" name="Grid"/>
                                                                                         <constraints>
-                                                                                            <constraint firstAttribute="height" constant="5" id="0o7-g1-wJ8"/>
+                                                                                            <constraint firstAttribute="height" constant="3" id="0o7-g1-wJ8"/>
                                                                                         </constraints>
                                                                                     </view>
                                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BodyLabel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BXX-PT-3Zr">
-                                                                                        <rect key="frame" x="0.0" y="5" width="45" height="45"/>
+                                                                                        <rect key="frame" x="0.0" y="3" width="47" height="47"/>
                                                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                                         <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
@@ -423,27 +452,27 @@
                                                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                                         <subviews>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dgz-aL-UBK" userLabel="Left Line">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="5" height="50"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="3" height="50"/>
                                                                                 <color key="backgroundColor" name="Grid"/>
                                                                                 <constraints>
-                                                                                    <constraint firstAttribute="width" constant="5" id="QGA-nw-8SZ"/>
+                                                                                    <constraint firstAttribute="width" constant="3" id="QGA-nw-8SZ"/>
                                                                                 </constraints>
                                                                             </view>
                                                                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="7kT-vo-7Pi">
-                                                                                <rect key="frame" x="5" y="0.0" width="45" height="50"/>
+                                                                                <rect key="frame" x="3" y="0.0" width="47" height="50"/>
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vJe-M8-5kj" userLabel="Top Line">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="45" height="5"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="47" height="3"/>
                                                                                         <color key="backgroundColor" name="Grid"/>
                                                                                         <constraints>
-                                                                                            <constraint firstAttribute="height" constant="5" id="KXW-Ry-olz"/>
+                                                                                            <constraint firstAttribute="height" constant="3" id="KXW-Ry-olz"/>
                                                                                         </constraints>
                                                                                     </view>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZyM-WT-TiN">
-                                                                                        <rect key="frame" x="0.0" y="5" width="45" height="45"/>
+                                                                                        <rect key="frame" x="0.0" y="3" width="47" height="47"/>
                                                                                         <subviews>
                                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BodyLabel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ruM-Kd-B1H">
-                                                                                                <rect key="frame" x="0.0" y="0.0" width="45" height="45"/>
+                                                                                                <rect key="frame" x="0.0" y="0.0" width="47" height="47"/>
                                                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                                                 <nil key="textColor"/>
                                                                                                 <nil key="highlightedColor"/>
@@ -527,8 +556,14 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="Etu-uG-07S"/>
                                 </connections>
                             </tableView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="navigationImage tabletop" translatesAutoresizingMaskIntoConstraints="NO" id="5QO-gP-uIu">
+                                <rect key="frame" x="133.5" y="0.0" width="147" height="88"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="5QO-gP-uIu" secondAttribute="height" multiplier="90:54" id="YgV-fZ-BJG"/>
+                                </constraints>
+                            </imageView>
                             <tableView clipsSubviews="YES" tag="3" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="uWQ-Kt-TjV" userLabel="Footer Table View">
-                                <rect key="frame" x="0.0" y="818" width="414" height="44"/>
+                                <rect key="frame" x="0.0" y="852" width="414" height="44"/>
                                 <color key="backgroundColor" name="Total"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="ANn-tw-pp4"/>
@@ -564,36 +599,46 @@
                                                                         <rect key="frame" x="0.0" y="0.0" width="90" height="90"/>
                                                                         <subviews>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bke-dz-ngP" userLabel="Left Line">
-                                                                                <rect key="frame" x="0.0" y="0.0" width="5" height="50"/>
+                                                                                <rect key="frame" x="0.0" y="0.0" width="3" height="50"/>
                                                                                 <color key="backgroundColor" name="Grid"/>
                                                                                 <constraints>
-                                                                                    <constraint firstAttribute="width" constant="5" id="gLO-OB-NzD"/>
+                                                                                    <constraint firstAttribute="width" constant="3" id="gLO-OB-NzD"/>
                                                                                 </constraints>
                                                                             </view>
-                                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="lKL-XY-4ne">
-                                                                                <rect key="frame" x="5" y="0.0" width="45" height="50"/>
+                                                                            <stackView opaque="NO" contentMode="top" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="lKL-XY-4ne">
+                                                                                <rect key="frame" x="3" y="0.0" width="47" height="50"/>
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7s4-i2-IBi" userLabel="Top Line">
-                                                                                        <rect key="frame" x="0.0" y="0.0" width="45" height="5"/>
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="47" height="5"/>
                                                                                         <color key="backgroundColor" name="Grid"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="height" constant="5" id="EEh-na-JUx"/>
                                                                                         </constraints>
                                                                                     </view>
-                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FooterLabel" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="bjf-fA-s3i">
-                                                                                        <rect key="frame" x="0.0" y="5" width="45" height="45"/>
+                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FooterLabel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" translatesAutoresizingMaskIntoConstraints="NO" id="bjf-fA-s3i">
+                                                                                        <rect key="frame" x="0.0" y="5" width="47" height="45"/>
+                                                                                        <constraints>
+                                                                                            <constraint firstAttribute="height" constant="45" id="iXv-vR-ZdG"/>
+                                                                                        </constraints>
                                                                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                                         <nil key="textColor"/>
                                                                                         <nil key="highlightedColor"/>
                                                                                     </label>
+                                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eAN-Ja-B4W" userLabel="Filler">
+                                                                                        <rect key="frame" x="0.0" y="50" width="47" height="0.0"/>
+                                                                                        <color key="backgroundColor" name="Room Interior"/>
+                                                                                    </view>
                                                                                 </subviews>
                                                                                 <constraints>
                                                                                     <constraint firstItem="7s4-i2-IBi" firstAttribute="top" secondItem="lKL-XY-4ne" secondAttribute="top" id="2Hd-sG-l4w"/>
-                                                                                    <constraint firstAttribute="bottom" secondItem="bjf-fA-s3i" secondAttribute="bottom" id="fd8-qd-arr"/>
+                                                                                    <constraint firstItem="eAN-Ja-B4W" firstAttribute="leading" secondItem="lKL-XY-4ne" secondAttribute="leading" id="8KH-jE-2EH"/>
+                                                                                    <constraint firstAttribute="trailing" secondItem="eAN-Ja-B4W" secondAttribute="trailing" id="8cv-R4-jRW"/>
                                                                                     <constraint firstItem="bjf-fA-s3i" firstAttribute="top" secondItem="7s4-i2-IBi" secondAttribute="bottom" id="gUt-Vr-A31"/>
                                                                                     <constraint firstAttribute="trailing" secondItem="7s4-i2-IBi" secondAttribute="trailing" id="goS-w8-kGe"/>
                                                                                     <constraint firstItem="7s4-i2-IBi" firstAttribute="leading" secondItem="lKL-XY-4ne" secondAttribute="leading" id="hgW-RD-da8"/>
+                                                                                    <constraint firstItem="eAN-Ja-B4W" firstAttribute="top" secondItem="bjf-fA-s3i" secondAttribute="bottom" id="kaj-eH-P3a"/>
                                                                                     <constraint firstAttribute="trailing" secondItem="bjf-fA-s3i" secondAttribute="trailing" id="oQe-jq-BID"/>
+                                                                                    <constraint firstAttribute="bottom" secondItem="eAN-Ja-B4W" secondAttribute="bottom" id="wW3-HT-p1A"/>
                                                                                     <constraint firstItem="bjf-fA-s3i" firstAttribute="leading" secondItem="lKL-XY-4ne" secondAttribute="leading" id="wZE-Zk-4Ve"/>
                                                                                 </constraints>
                                                                             </stackView>
@@ -615,6 +660,7 @@
                                                             </constraints>
                                                             <connections>
                                                                 <outlet property="scorepadCellLabel" destination="bjf-fA-s3i" id="OUB-ba-i6g"/>
+                                                                <outlet property="scorepadCellLabelHeight" destination="iXv-vR-ZdG" id="Nif-Fj-9I9"/>
                                                                 <outlet property="scorepadLeftLineWeight" destination="gLO-OB-NzD" id="y7l-yq-hB4"/>
                                                                 <outlet property="scorepadTopLineWeight" destination="EEh-na-JUx" id="VQH-Zp-A6h"/>
                                                             </connections>
@@ -649,27 +695,29 @@
                         <color key="backgroundColor" name="Background"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="JrC-1V-hch" secondAttribute="trailing" id="6Ln-mk-q9e"/>
-                            <constraint firstItem="JrC-1V-hch" firstAttribute="top" secondItem="Qc8-yN-AYf" secondAttribute="bottom" id="DB7-31-vqH"/>
+                            <constraint firstItem="hre-aD-pgw" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="3Hx-b5-c6f"/>
                             <constraint firstItem="Qc8-yN-AYf" firstAttribute="bottom" secondItem="R7D-RJ-hmj" secondAttribute="top" id="Eq1-fJ-tEl"/>
-                            <constraint firstItem="Qc8-yN-AYf" firstAttribute="bottom" secondItem="2V4-Rn-jn9" secondAttribute="bottom" id="FBy-g1-gBK"/>
+                            <constraint firstAttribute="bottom" secondItem="2V4-Rn-jn9" secondAttribute="bottom" id="FBy-g1-gBK"/>
                             <constraint firstItem="Qc8-yN-AYf" firstAttribute="trailing" secondItem="uWQ-Kt-TjV" secondAttribute="trailing" id="FMv-g8-SMS"/>
                             <constraint firstItem="7Jo-C4-vPV" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="H1Q-qc-CM2"/>
-                            <constraint firstItem="CoM-o8-drH" firstAttribute="top" secondItem="Skq-xy-HKr" secondAttribute="bottom" id="I7X-kw-VrS"/>
+                            <constraint firstItem="5QO-gP-uIu" firstAttribute="bottom" secondItem="Skq-xy-HKr" secondAttribute="bottom" id="J1A-8r-3bn"/>
                             <constraint firstItem="Qc8-yN-AYf" firstAttribute="trailing" secondItem="R7D-RJ-hmj" secondAttribute="trailing" id="K2x-od-kYy"/>
                             <constraint firstItem="CoM-o8-drH" firstAttribute="leading" secondItem="Qc8-yN-AYf" secondAttribute="leading" id="LAQ-TR-UNl"/>
+                            <constraint firstItem="5QO-gP-uIu" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="MH1-jI-uRe"/>
                             <constraint firstItem="Skq-xy-HKr" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Ojc-IW-vwW"/>
                             <constraint firstAttribute="trailing" secondItem="2V4-Rn-jn9" secondAttribute="trailing" id="QsG-AD-V0A"/>
-                            <constraint firstItem="Qc8-yN-AYf" firstAttribute="bottom" secondItem="4mH-Ut-Ta9" secondAttribute="bottom" id="RLa-dJ-cNA"/>
+                            <constraint firstAttribute="bottom" secondItem="4mH-Ut-Ta9" secondAttribute="bottom" id="RLa-dJ-cNA"/>
                             <constraint firstItem="Qc8-yN-AYf" firstAttribute="leading" secondItem="4mH-Ut-Ta9" secondAttribute="trailing" id="TUN-Wl-aGJ"/>
                             <constraint firstAttribute="trailing" secondItem="Skq-xy-HKr" secondAttribute="trailing" id="Tfe-KX-GZC"/>
-                            <constraint firstItem="JrC-1V-hch" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="UGH-wb-hiT"/>
+                            <constraint firstItem="CoM-o8-drH" firstAttribute="top" secondItem="hre-aD-pgw" secondAttribute="bottom" id="U5b-im-9rh"/>
+                            <constraint firstItem="5QO-gP-uIu" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="V0L-qb-Seu"/>
                             <constraint firstItem="2V4-Rn-jn9" firstAttribute="leading" secondItem="Qc8-yN-AYf" secondAttribute="trailing" id="VDa-Rv-cho"/>
                             <constraint firstItem="7Jo-C4-vPV" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="VDg-bj-xlf"/>
                             <constraint firstItem="Skq-xy-HKr" firstAttribute="top" secondItem="Qc8-yN-AYf" secondAttribute="top" id="XEn-GS-6i4"/>
+                            <constraint firstAttribute="trailing" secondItem="hre-aD-pgw" secondAttribute="trailing" id="Ytf-Vq-gl3"/>
                             <constraint firstItem="uWQ-Kt-TjV" firstAttribute="leading" secondItem="Qc8-yN-AYf" secondAttribute="leading" id="Z1z-d4-0wt"/>
-                            <constraint firstItem="JrC-1V-hch" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="ZTn-3l-dI7"/>
                             <constraint firstItem="7Jo-C4-vPV" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Zk7-qb-607"/>
+                            <constraint firstItem="hre-aD-pgw" firstAttribute="top" secondItem="Skq-xy-HKr" secondAttribute="bottom" id="b9u-Xw-2Y9"/>
                             <constraint firstItem="m5j-3V-hPG" firstAttribute="top" secondItem="CoM-o8-drH" secondAttribute="bottom" id="blC-pe-3M1"/>
                             <constraint firstItem="4mH-Ut-Ta9" firstAttribute="top" secondItem="Qc8-yN-AYf" secondAttribute="top" id="bnX-ja-H4R"/>
                             <constraint firstItem="Qc8-yN-AYf" firstAttribute="trailing" secondItem="CoM-o8-drH" secondAttribute="trailing" id="dJj-0f-hw8"/>
@@ -679,7 +727,7 @@
                             <constraint firstItem="4mH-Ut-Ta9" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="lTg-GR-0aC"/>
                             <constraint firstItem="uWQ-Kt-TjV" firstAttribute="top" secondItem="m5j-3V-hPG" secondAttribute="bottom" id="oKi-Sk-mNO"/>
                             <constraint firstItem="Qc8-yN-AYf" firstAttribute="trailing" secondItem="m5j-3V-hPG" secondAttribute="trailing" id="p9y-wJ-ZBM"/>
-                            <constraint firstItem="Qc8-yN-AYf" firstAttribute="bottom" secondItem="uWQ-Kt-TjV" secondAttribute="bottom" id="q7V-na-oyS"/>
+                            <constraint firstAttribute="bottom" secondItem="uWQ-Kt-TjV" secondAttribute="bottom" id="q7V-na-oyS"/>
                             <constraint firstItem="m5j-3V-hPG" firstAttribute="leading" secondItem="Qc8-yN-AYf" secondAttribute="leading" id="v0n-ja-RWi"/>
                             <constraint firstItem="R7D-RJ-hmj" firstAttribute="leading" secondItem="Qc8-yN-AYf" secondAttribute="leading" id="zeV-Cc-Sf0"/>
                         </constraints>
@@ -694,6 +742,7 @@
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <toolbarItems/>
                     <connections>
+                        <outlet property="bannerContinuationHeightConstraint" destination="drX-Fn-Wuz" id="xBE-zN-Ufc"/>
                         <outlet property="bodyTableView" destination="m5j-3V-hPG" id="Wop-NN-xY0"/>
                         <outlet property="finishButton" destination="bgf-Na-549" id="eao-hf-fCb"/>
                         <outlet property="footerTableView" destination="uWQ-Kt-TjV" id="Mqp-Hf-x3Z"/>
@@ -704,6 +753,8 @@
                         <outlet property="scoreEntryButton" destination="s5c-DG-O7P" id="1TD-Ep-oUA"/>
                         <outlet property="scorepadView" destination="8bC-Xf-vdC" id="5On-pJ-fOR"/>
                         <outlet property="tapGestureRecognizer" destination="AaK-e0-qgV" id="klw-dw-bMu"/>
+                        <outletCollection property="paddingViewLines" destination="gJV-Ai-5A3" collectionClass="NSMutableArray" id="131-b6-hlp"/>
+                        <outletCollection property="paddingViewLines" destination="SeV-1g-Tzl" collectionClass="NSMutableArray" id="gnN-Cm-Npx"/>
                         <segue destination="0NF-0V-58Q" kind="unwind" identifier="hideScorepad" unwindAction="hideScorepadWithSegue:" id="WRV-wF-mTI"/>
                         <segue destination="2kj-Q9-HHB" kind="popoverPresentation" identifier="showEntry" animates="NO" popoverAnchorView="8bC-Xf-vdC" id="6cj-gG-58b">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
@@ -782,8 +833,9 @@
         </scene>
     </scenes>
     <resources>
-        <image name="back" width="14" height="20"/>
-        <image name="forward" width="14" height="20"/>
+        <image name="back" width="22" height="22"/>
+        <image name="forward" width="22" height="22"/>
+        <image name="navigationImage tabletop" width="73" height="44"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -791,13 +843,22 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Emphasis">
-            <color red="0.89800000190734863" green="0.74900001287460327" blue="0.37299999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.89803921568627454" green="0.74901960784313726" blue="0.37254901960784315" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Emphasis Text">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Grid">
-            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Room Interior">
+            <color red="0.29411764705882354" green="0.6588235294117647" blue="0.6470588235294118" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Table Top">
+            <color red="0.53725490196078429" green="0.80392156862745101" blue="0.56470588235294117" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Table Top Text Contrast">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Total">
             <color red="0.93300002813339233" green="0.875" blue="0.70599997043609619" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

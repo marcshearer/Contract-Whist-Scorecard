@@ -68,6 +68,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     // MARK: - IB Outlets ================================================================ -
     
+    @IBOutlet private weak var navigationBar: UINavigationBar!
     @IBOutlet private weak var navigationTitle: UINavigationItem!
     @IBOutlet private weak var bannerContinueButton: UIButton!
     @IBOutlet private weak var bannerContinuationLabel: UILabel!
@@ -89,6 +90,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
 
     @IBAction func hideScorepad(segue:UIStoryboardSegue) {
         self.delegate?.gamePreviewStopGame?()
+        self.showCurrentDealer()
         self.scorecard.setGameInProgress(false)
     }
 
@@ -174,10 +176,18 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        if self.scorecard.isHosting && self.scorecard.recoveryMode && self.delegate?.gamePreviewCanStartGame ?? true {
+            // If recovering and controller is happy then go to scorepad
+            self.recoveryScorepad()
+        } else if !self.scorecard.isHosting && !self.scorecard.hasJoined && self.scorecard.recoveryMode {
+            // If recovering in scorepad mode go to scorepad
+            self.recoveryScorepad()
+        }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
+        self.scorecard.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
     
@@ -267,7 +277,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         }
         
         playerRowHeight = max(48, min(80, (size.height - buttonRowHeight - 100) / CGFloat(scorecard.currentPlayers)))
-
+        
     }
     
     private func updateButtons(animate: Bool = true) {
@@ -289,14 +299,14 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             if self.scorecard.isHosting {
                 var topConstraint: CGFloat
                 if self.delegate?.gamePreviewCanStartGame ?? true {
-                    topConstraint = 44.0
+                    topConstraint = navigationBar.intrinsicContentSize.height
                     self.bannerContinuationLabel.isHidden = true
                     self.cutForDealerButton.isEnabled = true
                     self.cutForDealerButton.alpha = 1.0
                     self.nextDealerButton.isEnabled = true
                     self.nextDealerButton.alpha = 1.0
                 } else {
-                    topConstraint = (UIScreen.main.bounds.height * 0.10) + 44.0
+                    topConstraint = (UIScreen.main.bounds.height * 0.10) + navigationBar.intrinsicContentSize.height
                     self.bannerContinueButton.isHidden = true
                     self.continueButton.isHidden = true
                     self.bannerContinuationLabel.attributedText = self.delegate?.gamePreviewWaitMessage
@@ -357,11 +367,6 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             }
             self.selectedPlayersView.positionSelectedPlayers(players: self.selectedPlayers.count)
             self.updateButtons()
-            
-            // If recovering and controller is happy then go to scorepad
-            if self.scorecard.isHosting && self.scorecard.recoveryMode && self.delegate?.gamePreviewCanStartGame ?? true {
-                self.recoveryScorepad()
-            }
         }
     }
     
@@ -385,10 +390,12 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     }
     
     private func recoveryScorepad() {
-        self.alertMessage(if: self.scorecard.overrideSelected, "This game was being played with Override Settings", title: "Reminder", okHandler: {
-            self.delegate?.gamePreviewStartGame?()
-            self.performSegue(withIdentifier: "showScorepad", sender: self )
-        })
+        Utility.mainThread {
+            self.alertMessage(if: self.scorecard.overrideSelected, "This game was being played with Override Settings", title: "Reminder", okHandler: {
+                self.delegate?.gamePreviewStartGame?()
+                self.performSegue(withIdentifier: "showScorepad", sender: self )
+            })
+        }
     }
     
     func showScorepad() {
@@ -706,7 +713,14 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     class func show(from viewController: UIViewController, selectedPlayers: [PlayerMO], title: String = "Preview", backText: String = "", readOnly: Bool = true, faceTimeAddress: [String] = [], rabbitMQService: RabbitMQService? = nil, computerPlayerDelegates: [Int : ComputerPlayerDelegate]? = nil, delegate: GamePreviewDelegate? = nil, showCompletion: (()->())? = nil) -> GamePreviewViewController {
         let storyboard = UIStoryboard(name: "GamePreviewViewController", bundle: nil)
         let gamePreviewViewController = storyboard.instantiateViewController(withIdentifier: "GamePreviewViewController") as! GamePreviewViewController
-        gamePreviewViewController.modalPresentationStyle = UIModalPresentationStyle.fullScreen
+        
+        gamePreviewViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+        gamePreviewViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        gamePreviewViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
+        gamePreviewViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
+        gamePreviewViewController.preferredContentSize = CGSize(width: 400, height: 700)
+        gamePreviewViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
+        
         gamePreviewViewController.selectedPlayers = selectedPlayers
         gamePreviewViewController.formTitle = title
         gamePreviewViewController.backText = backText

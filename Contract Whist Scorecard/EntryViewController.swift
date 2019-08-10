@@ -39,9 +39,11 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     
     // Local class variables
     var bidOnlyMode = false
+    var instructionSection = true
     
     // Cell sizes
     let scoreWidth: CGFloat = 50.0
+    var buttonWidth: CGFloat = 0.0
     var nameWidth: CGFloat = 0.0
     
     // Column descriptors
@@ -54,13 +56,18 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
  
     // MARK: - IB Outlets ============================================================================== -
 
-    @IBOutlet var entryView: UIView!
-    @IBOutlet weak var entryTableView: UITableView!
-    @IBOutlet weak var barTitle: UILabel!
-    @IBOutlet weak var undoButton: RoundedButton!
-    @IBOutlet weak var finishButton: RoundedButton!
-    @IBOutlet weak var errorsButton: RoundedButton!
-    @IBOutlet weak var summaryButton: RoundedButton!
+    @IBOutlet private weak var toolbarHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var navigationImageHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var footerView: Footer!
+    @IBOutlet private weak var footerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var entryView: UIView!
+    @IBOutlet private weak var entryTableView: UITableView!
+    @IBOutlet private var barTitle: [UILabel]!
+    @IBOutlet private var undoButton: [RoundedButton]!
+    @IBOutlet private var finishButton: [RoundedButton]!
+    @IBOutlet private var errorsButton: [RoundedButton]!
+    @IBOutlet private var summaryButton: [RoundedButton]!
     
     // MARK: - IB Unwind Segue Handlers ================================================================ -
     
@@ -72,7 +79,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             setupFlow()
             selection = flow.find(player: 1, mode: Mode.made)
             setForm(false)
-            setupSize(to: entryView.frame.size)
+            setupSize(to: CGSize(width: entryView.frame.width - entryView.safeAreaInsets.left - entryView.safeAreaInsets.right, height: entryView.frame.height))
             entryTableView.reloadData()
         }
     }
@@ -109,7 +116,18 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     override func viewDidLoad() {
         
         super.viewDidLoad()
-                
+        
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        
+        scorecard.reCenterPopup(self)
+        entryTableView.reloadData()
+    }
+
+    override func viewWillLayoutSubviews() {
+        
         setupScreen()
         
         bidOnlyMode = !scorecard.roundBiddingComplete(scorecard.selectedRound) ? true : false
@@ -128,20 +146,10 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             playerScoreCell.append(nil)
         }
         
-        self.scorecard.showSummaryImage(summaryButton)
+        summaryButton.forEach { self.scorecard.showSummaryImage($0) }
         
         // Send state to watch
         self.scorecard.watchManager.updateScores()
-    }
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        
-        scorecard.reCenterPopup(self)
-        entryTableView.reloadData()
-    }
-
-    override func viewWillLayoutSubviews() {
         
         setupSize(to: entryView.safeAreaLayoutGuide.layoutFrame.size)
                
@@ -149,6 +157,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
 
     func setupSize(to size: CGSize) {
         nameWidth = size.width - CGFloat(20 + (columns - 1) * 50)
+        buttonWidth = (ScorecardUI.landscapePhone() ? min(50.0, (ScorecardUI.screenWidth / 10.0) - 12.0) : 50.0)
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -162,7 +171,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
         case 0:
             return scorecard.currentPlayers + 1
         case 1:
-            return 1
+            return (instructionSection ? 1 : 0)
         case 2:
             return 1
         default:
@@ -173,11 +182,11 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return 50
+            return min(ScorecardUI.screenHeight / 7.0, 50.0)
         case 1:
-            return 80
+            return 96.0
         case 2:
-            return 180
+            return 180.0
         default:
             return 0
         }
@@ -193,7 +202,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             let entryPlayerTableCell = tableView.dequeueReusableCell(withIdentifier: "Entry Player Table Cell", for: indexPath) as! EntryPlayerTableCell
             entryPlayerTableCell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row)
             if indexPath.row==0 {
-                Palette.bannerStyle(entryPlayerTableCell)
+                Palette.tableTopStyle(view: entryPlayerTableCell)
                 entryPlayerTableCell.entryPlayerSeparator.isHidden = true
             } else {
                 Palette.normalStyle(entryPlayerTableCell)
@@ -204,8 +213,11 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
         case 1:
             // Instructions
             let instructionCell = tableView.dequeueReusableCell(withIdentifier: "Entry Instruction Cell", for: indexPath) as! EntryInstructionCell
+            let frame = CGRect(x: 8.0, y: 16.0, width: instructionCell.frame.width - 16.0, height: instructionCell.frame.height - 32.0)
+            instructionCell.hexagonShapeLayer?.removeFromSuperlayer()
+            instructionCell.hexagonShapeLayer = Polygon.hexagonFrame(in: instructionCell, frame: frame, strokeColor: Palette.instruction, fillColor: Palette.instruction, radius: 10.0)
             instructionLabel = instructionCell.instructionLabel
-            formatinstructionLabel()
+            instructionLabel.superview?.bringSubviewToFront(instructionLabel)
             issueInstruction()
             
             cell = instructionCell as UITableViewCell
@@ -248,14 +260,23 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
         }
     }
     
-    func formatinstructionLabel() {
-        ScorecardUI.largeBoldStyle(instructionLabel)
-        ScorecardUI.roundCorners(instructionLabel)
-        Palette.emphasisStyle(instructionLabel)
-    }
-    
     func setupScreen() {
-        barTitle.attributedText = scorecard.roundTitle(scorecard.selectedRound, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
+        let title = scorecard.roundTitle(scorecard.selectedRound, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
+        barTitle.forEach { $0.attributedText = title }
+        if ScorecardUI.screenHeight < 667.0 || !ScorecardUI.phoneSize() {
+            // Smaller than an iPhone 7 portrait or on a tablet
+            self.bannerHeightConstraint.constant = 0.0
+            self.navigationImageHeightConstraint.constant = 0.0
+            self.footerHeightConstraint.constant = 0.0
+            self.toolbarHeightConstraint.constant = 44.0
+            instructionSection = ScorecardUI.portraitPhone()
+        } else {
+            self.bannerHeightConstraint.constant = 44.0
+            self.navigationImageHeightConstraint.constant = 44.0 + self.view.safeAreaInsets.top + 10.0
+            self.footerHeightConstraint.constant = 88.0
+            self.toolbarHeightConstraint.constant = 0.0
+            instructionSection = true
+        }
     }
     
     func setupColumns() {
@@ -281,11 +302,11 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     
     func enableMovementButtons() {
         if undo.first == nil {
-            undoButton.isHidden = true
+            undoButton.forEach { $0.isHidden = true }
         } else {
-            undoButton.isHidden = false
+            undoButton.forEach { $0.isHidden = false }
         }
-        summaryButton.isEnabled(!bidOnlyMode)
+        summaryButton.forEach { $0.isEnabled(!bidOnlyMode) }
     }
     
     func setForm(_ tableLoaded: Bool) {
@@ -303,11 +324,11 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
         enableMovementButtons()
         
         if tableLoaded && checkErrors() {
-            finishButton.isHidden = true
-            errorsButton.isHidden = false
+            finishButton.forEach { $0.isHidden = true }
+            errorsButton.forEach { $0.isHidden = false }
         } else {
-            finishButton.isHidden = false
-            errorsButton.isHidden = true
+            finishButton.forEach { $0.isHidden = false }
+            errorsButton.forEach { $0.isHidden = true }
         }
     }
     
@@ -426,9 +447,9 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             
             if label != nil {
                 if highlight {
-                    Palette.highlightStyle(label)
+                    Palette.bidButtonStyle(label)
                 } else {
-                    Palette.normalStyle(label)
+                    Palette.normalStyle(label, setFont: false)
                 }
             }
         }
@@ -603,7 +624,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
-            destination.preferredContentSize = CGSize(width: 400, height: 554)
+            destination.preferredContentSize = CGSize(width: 400, height: self.scorecard.scorepadBodyHeight)
             destination.returnSegue = "hideRoundSummary"
             destination.rounds = self.rounds
             destination.cards = self.cards
@@ -652,8 +673,8 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
         } else {
             // Score buttons
             
-            width = scoreWidth
-            height = scoreWidth
+            width = buttonWidth
+            height = buttonWidth
         }
         
         return CGSize(width: width, height: height)
@@ -666,6 +687,8 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
         
             let entryPlayerCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Entry Player Cell", for: indexPath) as! EntryPlayerCell
             let playerLabel = entryPlayerCell.entryPlayerLabel!
+            let instructionLabel = entryPlayerCell.entryInstructionLabel!
+            instructionLabel.text = ""
             let column = indexPath.row
             
             if collectionView.tag==0 {
@@ -674,6 +697,15 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
                 case playerColumn:
                     playerLabel.text="Player"
                     playerLabel.textAlignment = .left
+                    if !instructionSection {
+                        self.instructionLabel = instructionLabel
+                        entryPlayerCell.entryPlayerWidthConstraint.constant = 64.0
+                        Palette.tableTopStyle(instructionLabel)
+                        instructionLabel.textAlignment = .center
+                        self.issueInstruction()
+                    } else {
+                        entryPlayerCell.entryPlayerWidthConstraint.constant = entryPlayerCell.frame.width - 4.0
+                    }
                 case bidColumn:
                     playerLabel.text="Bid"
                 case madeColumn:
@@ -683,14 +715,15 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
                 default:
                     playerLabel.text="Score"
                 }
-                Palette.bannerStyle(playerLabel)
+                Palette.tableTopStyle(playerLabel)
                 entryPlayerCell.isUserInteractionEnabled = false
                 
             } else {
                 // Player row
                 let player = collectionView.tag
                 entryPlayerCell.tag = player
-                Palette.normalStyle(playerLabel)
+                Palette.normalStyle(playerLabel, setFont: false)
+                entryPlayerCell.entryPlayerWidthConstraint.constant = entryPlayerCell.frame.width - 2.0
                 
                 switch column {
                 case playerColumn:
@@ -731,7 +764,7 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
                 if selectedMode != nil && player == selection.player && selection.mode == selectedMode! {
                     highlightCursor(true)
                 } else {
-                    Palette.normalStyle(playerLabel)
+                    Palette.normalStyle(playerLabel, setFont: false)
                 }
                 entryPlayerCell.isUserInteractionEnabled = true
                
@@ -871,9 +904,12 @@ class EntryPlayerTableCell: UITableViewCell {
 
 class EntryPlayerCell: UICollectionViewCell {
     @IBOutlet weak var entryPlayerLabel: UILabel!
+    @IBOutlet weak var entryInstructionLabel: UILabel!
+    @IBOutlet weak var entryPlayerWidthConstraint: NSLayoutConstraint!
 }
 
 class EntryInstructionCell: UITableViewCell {
+    var hexagonShapeLayer: CAShapeLayer!
     @IBOutlet weak var instructionLabel: UILabel!
 }
 

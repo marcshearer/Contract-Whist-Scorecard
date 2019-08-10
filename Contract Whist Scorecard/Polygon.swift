@@ -231,7 +231,7 @@ class Polygon {
         return angle
     }
     
-    static public func hexagonFrame(in view: UIView, frame: CGRect? = nil, strokeColor: UIColor, arrowWidth: CGFloat? = nil, lineWidth: CGFloat = 2.0, radius: CGFloat? = nil) -> CAShapeLayer {
+    static public func hexagonFrame(in view: UIView, frame: CGRect? = nil, strokeColor: UIColor, fillColor: UIColor = UIColor.clear, arrowWidth: CGFloat? = nil, lineWidth: CGFloat = 2.0, radius: CGFloat? = nil) -> CAShapeLayer {
         var points: [PolygonPoint] = []
         let frame = frame ?? CGRect(origin: CGPoint(), size: view.frame.size)
         let arrowWidth = arrowWidth ?? frame.height / 3.0
@@ -245,7 +245,7 @@ class Polygon {
         points.append(PolygonPoint(x: maxX, y: frame.midY))
         points.append(PolygonPoint(x: maxX - arrowWidth, y: maxY))
         points.append(PolygonPoint(x: minX + arrowWidth, y: maxY))
-        return Polygon.roundedShapeLayer(in: view, definedBy: points, strokeColor: strokeColor, fillColor: UIColor.clear, lineWidth: lineWidth, radius: radius)
+        return Polygon.roundedShapeLayer(in: view, definedBy: points, strokeColor: strokeColor, fillColor: fillColor, lineWidth: lineWidth, radius: radius)
     }
     
 }

@@ -108,6 +108,12 @@ Auto-sync when download players in Get Started
 Host view controller doesn't scroll when rotate
 Update Walkthrough - esp online game
 
+
+TODO
+-----------
+Resume scoring doesn't skip game preview
+Problem if rotate scorepad after recovery
+
 Medium-term
 -----------
 

@@ -48,6 +48,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private var testMode = false
     private var addPlayerThumbnail: Bool = false
     private var thisPlayerView: PlayerView!
+    private var lastPlayerMO: PlayerMO!
 
     // Main local state handlers
     private var availableList: [PlayerMO] = []
@@ -102,10 +103,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
 
         // Add players to available and unselected list
         for playerMO in scorecard.playerList {
-            if selectionMode != .single || self.thisPlayer != playerMO.email {
-                availableList.append(playerMO)
-                unselectedList.append(playerMO)
-            }
+            availableList.append(playerMO)
+            unselectedList.append(playerMO)
         }
         
         if self.selectionMode == .single {
@@ -152,14 +151,22 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if !self.firstTime && self.selectionMode == .single {
-            self.showThisPlayer()
+        // Reset available players
+        if self.selectionMode == .single {
+            self.unselectedList = self.availableList
+            if let playerMO = self.unselectedList.first(where: {$0!.email == self.thisPlayer}) {
+                self.removeUnselected(playerMO!, updateUnselectedCollection: false)
+            }
+            // Show this player
+            if !self.firstTime {
+                self.showThisPlayer()
+            }
         }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-    
+        self.scorecard.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
     
@@ -168,12 +175,9 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         setSize(size: selectionView.frame.size)
         
         if firstTime {
-            
             firstTime = false
             self.setupAnimationView()
-            
             self.setupDragAndDrop()
-            
         }
         
         // Decide if buttons enabled
@@ -330,17 +334,15 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         self.width = size.width
         self.height = size.height
         self.rowHeight = self.height + self.interRowSpacing
-    
-        let unselectedRows: Int = max(3, Int((totalHeight * 0.55) / self.rowHeight))
-        let unselectedHeight = CGFloat(unselectedRows) * rowHeight
         
         if self.selectionMode == .single {
             self.selectedViewHeight?.constant = 44.0 + 75.0 + self.view.safeAreaInsets.bottom
             self.selectedPlayersView.alpha = 0.0
             self.unselectedCollectionViewTopConstraint.constant = self.width + 16.0 + (self.labelHeight - 5.0) + self.interRowSpacing - self.bannerContinuationHeight
         } else {
+            let selectedHeight = self.height * 3.0 + self.view.safeAreaInsets.bottom
+            let unselectedHeight = totalHeight - selectedHeight - self.navigationBar.intrinsicContentSize.height - self.bannerContinuationHeight
             let selectedTop = unselectedHeight + self.navigationBar.intrinsicContentSize.height + self.bannerContinuationHeight + view.safeAreaInsets.top
-            let selectedHeight: CGFloat = totalHeight + view.safeAreaInsets.top + view.safeAreaInsets.bottom - selectedTop
             selectedViewWidth?.constant = selectedWidth
             
             if ScorecardUI.landscapePhone() {
@@ -462,6 +464,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private func showThisPlayer() {
         if let thisPlayer = self.thisPlayer {
             if let playerMO = self.scorecard.findPlayerByEmail(thisPlayer) {
+                self.lastPlayerMO = playerMO
                 var width: CGFloat = thisPlayerViewContainerWidthConstraint.constant - 10.0
                 if let thisPlayerFrame = self.thisPlayerFrame {
                     width = thisPlayerFrame.width
@@ -495,7 +498,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         let host = self.selectedPlayersView.playerViews[0].playerMO!
         if host.email != self.thisPlayer {
             for slot in 0..<self.scorecard.numberPlayers {
-                self.removeSelection(slot, animate: false)
+                self.removeSelection(slot, updateUnselectedCollection: false, animate: false)
             }
             self.addSelection(self.scorecard.findPlayerByEmail(self.thisPlayer!)!, toSlot: 0, updateUnselected: true, updateUnselectedCollection: true, animate: false)
         }
@@ -515,7 +518,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         self.slideOutButton.buttonTextColor = Palette.gameBanner
     }
     
-    func removeSelection(_ selectedSlot: Int, updateUnselected: Bool = true, animate: Bool = true) {
+    func removeSelection(_ selectedSlot: Int, updateUnselected: Bool = true, updateUnselectedCollection: Bool = true, animate: Bool = true) {
         
         if  selectedPlayersView.inUse(slot: selectedSlot) {
             
@@ -529,7 +532,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                     // Just set the view and remove from current view
                     self.selectedPlayersView.clear(slot: selectedSlot)
                     if updateUnselected {
-                        _ = self.addUnselected(selectedPlayerMO)
+                        _ = self.addUnselected(selectedPlayerMO, updateUnselectedCollection: updateUnselectedCollection)
                     }
                     
                 } else {
@@ -657,15 +660,19 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         }
     }
     
-    private func addUnselected(_ playerMO: PlayerMO, leaveNil: Bool = false) -> Int {
+    private func addUnselected(_ playerMO: PlayerMO, leaveNil: Bool = false, updateUnselectedCollection: Bool = true) -> Int {
         var insertIndex = self.unselectedList.count
         if let index = self.unselectedList.firstIndex(where: { $0?.name ?? "" > playerMO.name! }) {
             insertIndex = index
         }
-        unselectedCollectionView.performBatchUpdates({
+        if !updateUnselectedCollection {
             self.unselectedList.insert((leaveNil ? nil : playerMO), at: insertIndex)
-            self.unselectedCollectionView.insertItems(at: [IndexPath(item: insertIndex + (self.addPlayerThumbnail ? 1 : 0), section: 0)])
-        })
+        } else {
+            unselectedCollectionView.performBatchUpdates({
+                self.unselectedList.insert((leaveNil ? nil : playerMO), at: insertIndex)
+                self.unselectedCollectionView.insertItems(at: [IndexPath(item: insertIndex + (self.addPlayerThumbnail ? 1 : 0), section: 0)])
+            })
+        }
         return insertIndex
     }
     
@@ -848,6 +855,13 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             let storyboard = UIStoryboard(name: "SelectionViewController", bundle: nil)
             selectionViewController = storyboard.instantiateViewController(withIdentifier: "SelectionViewController") as? SelectionViewController
         }
+        
+        selectionViewController!.modalPresentationStyle = UIModalPresentationStyle.popover
+        selectionViewController!.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        selectionViewController!.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
+        selectionViewController!.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
+        selectionViewController!.preferredContentSize = CGSize(width: 400, height: min(viewController.view.frame.height, 700))
+        selectionViewController!.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
         
         selectionViewController!.selectionMode = mode
         selectionViewController!.thisPlayer = thisPlayer

@@ -90,6 +90,20 @@ class DarkRoundedButton: RoundedButton {
     }
 }
 
+class BidButton: RoundedButton {
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.normalTextColor = Palette.bidButtonText
+        self.normalBackgroundColor = Palette.bidButton
+        self.normalAlpha = 1.0
+        self.disabledTextColor = Palette.bidButtonText
+        self.disabledBackgroundColor = Palette.bidButton
+        self.disabledAlpha = 0.5
+        super.isEnabled(true)
+    }
+}
+
 class EmphasisRoundedButton: RoundedButton {
     
     required init(coder aDecoder: NSCoder) {

@@ -73,19 +73,17 @@ class SlideOutButtonView: UIView {
         self.buttonStrokeColor = Palette.darkHighlightText
         self.buttonTextColor = Palette.darkHighlightText
         self.viewBackgroundColor = UIColor.clear
+    }
+    
+    override func didMoveToSuperview() {
         
-        // Anchor view to bottom of containing view
-        let leadingConstraint = NSLayoutConstraint(item: self.contentView as Any, attribute: .leading, relatedBy: .equal, toItem: self.contentView.superview!, attribute: .leading, multiplier: 1.0, constant: 0.0)
-        self.contentView.superview!.addConstraint(leadingConstraint)
+        // Setup vertical constraints on superview (assumed to be main view)
         
-        let trailingConstraint = NSLayoutConstraint(item: self.contentView as Any, attribute: .trailing, relatedBy: .equal, toItem: self.contentView.superview!, attribute: .trailing, multiplier: 1.0, constant: 0.0)
-        self.contentView.superview!.addConstraint(trailingConstraint)
+        let topConstraint = NSLayoutConstraint(item: self.contentView as Any, attribute: .top, relatedBy: .equal, toItem: self.superview!, attribute: .bottom, multiplier: 1.0, constant: -44.0)
+        self.superview!.addConstraint(topConstraint)
         
-        let topConstraint = NSLayoutConstraint(item: self.contentView as Any, attribute: .top, relatedBy: .equal, toItem: self.contentView.superview!, attribute: .bottom, multiplier: 1.0, constant: -44.0)
-        self.contentView.superview!.addConstraint(topConstraint)
-        
-        let bottomConstraint = NSLayoutConstraint(item: self.contentView as Any, attribute: .bottom, relatedBy: .equal, toItem: self.contentView.superview!, attribute: .bottom, multiplier: 1.0, constant: 44.0)
-        self.contentView.superview!.addConstraint(bottomConstraint)
+        let bottomConstraint = NSLayoutConstraint(item: self.contentView as Any, attribute: .bottom, relatedBy: .equal, toItem: self.superview!, attribute: .bottom, multiplier: 1.0, constant: 88.0)
+        self.superview!.addConstraint(bottomConstraint)
     }
     
     private func showToolbar(_ isHidden: Bool, animated: Bool = true) {
@@ -106,8 +104,8 @@ class SlideOutButtonView: UIView {
             let buttonWidth = max(self.superview!.frame.width * 0.33, self.title.size(withAttributes: [NSAttributedString.Key.font: self.button.titleLabel!.font!]).width + 20.0)
             self.buttonWidthConstraint?.constant = buttonWidth
             self.button.frame = CGRect(x: (self.toolbar.frame.width - buttonWidth) / 2.0, y: self.button.frame.minY, width: buttonWidth, height: self.button.frame.height)
-            self.superview!.bringSubviewToFront(self)
-            let toolbarBottomOffset: CGFloat = (isHidden ? -88 - self.superview!.safeAreaInsets.bottom : (self.superview!.safeAreaInsets.bottom * 0.40))
+            self.contentView.superview!.bringSubviewToFront(self.contentView)
+            let toolbarBottomOffset: CGFloat = (isHidden ? 0 : 88.0 + (self.contentView.superview!.safeAreaInsets.bottom * 0.4))
             if toolbarBottomOffset != self.toolbarBottomConstraint.constant {
                 if animated {
                     Utility.animate(duration: 0.3) {

@@ -709,7 +709,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.isModalInPopover = true
             destination.popoverPresentationController?.sourceView = welcomeView
-            destination.preferredContentSize = CGSize(width: 400, height: 600)
+            destination.preferredContentSize = CGSize(width: 400, height: 700)
             
             destination.returnSegue = "hideSettings"
             destination.backImage = "home"
@@ -722,7 +722,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
             destination.isModalInPopover = true
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = welcomeView
-            destination.preferredContentSize = CGSize(width: 400, height: 600)
+            destination.preferredContentSize = CGSize(width: 400, height: 700)
             
             destination.returnSegue = "hideClient"
             destination.backImage = "home"
@@ -737,7 +737,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = welcomeView
-            destination.preferredContentSize = CGSize(width: 400, height: 523)
+            destination.preferredContentSize = CGSize(width: 400, height: 700)
             
             destination.returnSegue = "hideHighScores"
             destination.backImage = "home"
@@ -757,7 +757,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
             destination.modalPresentationStyle = UIModalPresentationStyle.popover
             destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
             destination.popoverPresentationController?.sourceView = welcomeView
-            destination.preferredContentSize = CGSize(width: 400, height: 600)
+            destination.preferredContentSize = CGSize(width: 400, height: 700)
             
         default:
             break

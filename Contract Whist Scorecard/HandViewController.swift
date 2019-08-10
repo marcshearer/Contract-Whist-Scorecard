@@ -464,7 +464,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             if self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round) == bids.count + 1 {
                 // Your bid
                 bidsEnable(true, blockRemaining: bids.count == self.scorecard.currentPlayers - 1)
-                self.instructionLabel.text = "You to bid \(self.scorecard.enteredPlayer(enteredPlayerNumber).playerMO!.name!)"
+                self.instructionLabel.text = "You to bid"
                 self.setInstructionsHighlight(to: true)
                 self.alertUser()
                 self.autoBid()
@@ -549,7 +549,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
                     self.cardsEnable(true, suit: cardLed.suit)
                 }
             }
-            self.instructionLabel.text = "You to play \(self.scorecard.enteredPlayer(self.enteredPlayerNumber).playerMO!.name!)"
+            self.instructionLabel.text = "You to play"
             self.setInstructionsHighlight(to: true)
             self.alertUser()
             self.autoPlay()
@@ -934,7 +934,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         if !self.scorecard.roundStarted(scorecard.selectedRound) {
             statusOverUnderLabel.text = ""
         } else {
-            statusOverUnderLabel.textColor = (totalRemaining == 0 ? Palette.contractEqual : (totalRemaining > 0 ? Palette.contractUnder : Palette.contractOver))
+            statusOverUnderLabel.textColor = (totalRemaining == 0 ? Palette.contractEqual : (totalRemaining > 0 ? Palette.contractUnderLight : Palette.contractOver))
             statusOverUnderLabel.text = " \(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")"
         }
         statusRoundLabel.textColor = UIColor.white

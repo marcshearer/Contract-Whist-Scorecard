@@ -33,7 +33,9 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private var backImage: String = "back"
     private var thisPlayer: String?
     private var thisPlayerFrame: CGRect?
+    private var showThisPlayerName = false
     private var formTitle = "Selection"
+    private var bannerColor: UIColor?
     
     // Local class variables
     private var width: CGFloat = 0.0
@@ -69,7 +71,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var selectedViewHeight: NSLayoutConstraint!
     @IBOutlet private weak var selectedViewWidth: NSLayoutConstraint!
     @IBOutlet private weak var slideOutButton: SlideOutButtonView!
-    @IBOutlet private weak var navigationBar: UINavigationBar!
+    @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
+    @IBOutlet private weak var navigationBar: NavigationBar!
     @IBOutlet private weak var navigationTitle: UINavigationItem!
     @IBOutlet private weak var bannerContinuationView: BannerContinuation!
     @IBOutlet private weak var bannerContinuationHeightConstraint: NSLayoutConstraint!
@@ -87,7 +90,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     }
 
     @IBAction func finishPressed(_ sender: UIButton) {
-        finishAction()
+        finishAction()       
     }
 
     // MARK: - View Overrides ========================================================================== -
@@ -107,6 +110,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             unselectedList.append(playerMO)
         }
         
+        // Setup form
         if self.selectionMode == .single {
             self.setupSingleScreen()
             self.showThisPlayer()
@@ -137,6 +141,11 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         self.navigationTitle.title = self.formTitle
         self.cancelButton.setImage(UIImage(named: self.backImage), for: .normal)
         self.cancelButton.setTitle(self.backText, for: .normal)
+        if let bannerColor = self.bannerColor {
+            self.bannerPaddingView.bannerColor = bannerColor
+            self.navigationBar.bannerColor = bannerColor
+            self.bannerContinuationView.bannerColor = bannerColor
+        }
         
         // Check network
         scorecard.checkNetworkConnection(button: nil, label: nil)
@@ -423,9 +432,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         if tag == -1 {
             // New player button
             self.addNewPlayer()
-        } else if tag == -2 {
-            // This player thumbnail - just exit
-            self.finishAction()
         } else {
             if self.selectionMode == .single {
                 self.preCompletion?([playerView.playerMO!])
@@ -475,18 +481,21 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private func showThisPlayer() {
         if let thisPlayer = self.thisPlayer {
             if let playerMO = self.scorecard.findPlayerByEmail(thisPlayer) {
+                var size: CGSize
+                let nameHeight: CGFloat = (self.showThisPlayerName ? 30.0 : 0.0)
                 self.lastPlayerMO = playerMO
-                var width: CGFloat = thisPlayerViewContainerWidthConstraint.constant - 10.0
                 if let thisPlayerFrame = self.thisPlayerFrame {
-                    width = thisPlayerFrame.width
-                    self.thisPlayerViewContainerWidthConstraint.constant = width + 10.0
+                    size = thisPlayerFrame.size
+                } else {
+                    size = SelectionViewController.thumbnailSize(labelHeight: nameHeight)
                 }
+                self.thisPlayerViewContainerWidthConstraint.constant = size.width + 10.0
                 
                 self.thisPlayerView?.removeFromSuperview()
-                self.thisPlayerView = PlayerView(type: .addPlayer, parent: self.thisPlayerViewContainer, width: width, height: width, tag: -2)
+                self.thisPlayerView = PlayerView(type: .addPlayer, parent: self.thisPlayerViewContainer, width: size.width, height: size.height, tag: -2)
                 self.thisPlayerView.delegate = self
-                self.thisPlayerView.set(playerMO: playerMO, nameHeight: 0.0)
-                self.thisPlayerView.set(textColor: UIColor.clear)
+                self.thisPlayerView.set(playerMO: playerMO, nameHeight: nameHeight)
+                self.thisPlayerView.set(textColor: Palette.text)
                 self.thisPlayerViewContainer.isHidden = false
             }
         }
@@ -864,7 +873,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     // MARK: - Function to present this view ==============================================================
     
-    class func show(from viewController: UIViewController, existing selectionViewController: SelectionViewController? = nil, mode: SelectionMode, thisPlayer: String = "", thisPlayerFrame: CGRect? = nil, formTitle: String = "Selection", backText: String = "Back", backImage: String = "back", preCompletion: (([PlayerMO]?)->())? = nil, completion: (([PlayerMO]?)->())? = nil, showCompletion: (()->())? = nil, gamePreviewDelegate: GamePreviewDelegate? = nil) -> SelectionViewController {
+    class func show(from viewController: UIViewController, existing selectionViewController: SelectionViewController? = nil, mode: SelectionMode, thisPlayer: String? = nil, thisPlayerFrame: CGRect? = nil, showThisPlayerName: Bool = false, formTitle: String = "Selection", backText: String = "Back", backImage: String = "", bannerColor: UIColor? = nil, preCompletion: (([PlayerMO]?)->())? = nil, completion: (([PlayerMO]?)->())? = nil, showCompletion: (()->())? = nil, gamePreviewDelegate: GamePreviewDelegate? = nil) -> SelectionViewController {
         var selectionViewController = selectionViewController
         
         if selectionViewController == nil {
@@ -880,9 +889,11 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         selectionViewController!.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
         
         selectionViewController!.selectionMode = mode
-        selectionViewController!.thisPlayer = thisPlayer
+        selectionViewController!.thisPlayer = thisPlayer ?? ""
         selectionViewController!.thisPlayerFrame = thisPlayerFrame
+        selectionViewController!.showThisPlayerName = showThisPlayerName
         selectionViewController!.formTitle = formTitle
+        selectionViewController!.bannerColor = bannerColor
         selectionViewController!.backText = backText
         selectionViewController!.backImage = backImage
         selectionViewController!.preCompletion = preCompletion

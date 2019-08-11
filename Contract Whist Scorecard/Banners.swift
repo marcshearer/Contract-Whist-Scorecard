@@ -128,10 +128,9 @@ class Footer: UIView {
         super.layoutSubviews()
         
         // Remove previous layer
-        if let layer = self.shapeLayer {
-            layer.removeFromSuperlayer()
-        }
+        self.shapeLayer?.removeFromSuperlayer()
         
+        // Add new layer
         let rect = CGRect(origin: CGPoint(), size: self.frame.size)
         var points: [PolygonPoint] = []
         switch self.shape {

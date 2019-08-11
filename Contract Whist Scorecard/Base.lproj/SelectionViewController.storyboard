@@ -258,6 +258,7 @@
                         <outlet property="bannerContinuationHeightConstraint" destination="EQX-m4-CCM" id="M9L-QW-Gan"/>
                         <outlet property="bannerContinuationView" destination="YUd-84-9H5" id="Way-u1-kSi"/>
                         <outlet property="bannerContinueButton" destination="Rmr-6u-jtL" id="biA-oB-Ecf"/>
+                        <outlet property="bannerPaddingView" destination="d37-kV-uuP" id="lw0-fB-ywF"/>
                         <outlet property="cancelButton" destination="eQy-4V-yYX" id="SEw-Oj-5yl"/>
                         <outlet property="continueButton" destination="7SY-Bw-ahm" id="JM3-ek-6LL"/>
                         <outlet property="navigationBar" destination="UgO-yy-CRO" id="Diq-OI-UgL"/>

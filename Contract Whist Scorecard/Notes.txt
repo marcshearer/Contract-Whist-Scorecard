@@ -111,8 +111,6 @@ Update Walkthrough - esp online game
 
 TODO
 -----------
-Resume scoring doesn't skip game preview
-Problem if rotate scorepad after recovery
 
 Medium-term
 -----------

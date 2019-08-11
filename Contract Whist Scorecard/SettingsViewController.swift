@@ -778,28 +778,28 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     // MARK: - Search return routine ================================================================== -
     
-    private func identifyPlayerCompletion(complete: Bool, playerMO: [PlayerMO]?) {
+    private func identifyPlayerCompletion(playerMO: [PlayerMO]?) {
         var playerEmail: String! = nil
         
-        if complete {
-            if let playerMO = playerMO {
-                playerEmail = playerMO[0].email
-                if playerEmail != self.scorecard.settingOnlinePlayerEmail {
-                    self.onlinePlayerChangeButton?.isEnabled = false
-                    self.onlinePlayerChangeButton?.alpha = 0.4
-                    self.authoriseNotifications(
-                        successAction: {
-                            self.saveOnlineEmailLocally(playerEmail: playerEmail)
-                            self.enableAlerts()
-                        },
-                        failureAction: {
-                            self.clearOnline()
-                            self.enableAlerts()
-                        })
-                    self.displayOnlineCell(inProgress: "Enabling")
-                }
-            } else {
-                // Disabling Online games - blank out the player
+        if let playerMO = playerMO {
+            playerEmail = playerMO[0].email
+            if playerEmail != self.scorecard.settingOnlinePlayerEmail {
+                self.onlinePlayerChangeButton?.isEnabled = false
+                self.onlinePlayerChangeButton?.alpha = 0.4
+                self.authoriseNotifications(
+                    successAction: {
+                        self.saveOnlineEmailLocally(playerEmail: playerEmail)
+                        self.enableAlerts()
+                },
+                    failureAction: {
+                        self.clearOnline()
+                        self.enableAlerts()
+                })
+                self.displayOnlineCell(inProgress: "Enabling")
+            }
+        } else {
+            // Disabling Online games - blank out the player
+            if self.scorecard.settingOnlinePlayerEmail != nil {
                 self.clearOnline()
                 self.displayOnlineCell(inProgress: "Disabling")
                 self.enableAlerts()
@@ -979,7 +979,8 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     }
     
     private func identifyOnlinePlayer(disableOption: String! = nil) {
-        SearchViewController.identifyPlayers(from: self, title: "Link Player", disableOption: disableOption, instructions: "You need to link a player to this device to receive invitations for online games", minPlayers: 1, maxPlayers: 1, insufficientMessage: "No players on this device yet", completion: self.identifyPlayerCompletion)
+        let thisPlayer = self.scorecard.settingOnlinePlayerEmail
+        _ = SelectionViewController.show(from: self, mode: .single, thisPlayer: thisPlayer, showThisPlayerName: true, formTitle: "Select Player", backText: (thisPlayer == nil ? "" : "Disable"), backImage: (thisPlayer == nil ? "cross white" : ""), bannerColor: Palette.banner, completion: self.identifyPlayerCompletion)
     }
     
     private func saveOnlineEmailLocally(playerEmail: String!) {

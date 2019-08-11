@@ -31,7 +31,7 @@
                                 <rect key="frame" x="44" y="32" width="768" height="0.0"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="PUR-r5-ySO">
-                                        <rect key="frame" x="32" y="40" width="704" height="40"/>
+                                        <rect key="frame" x="32" y="24" width="298" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="aF4-bC-pDj"/>
                                         </constraints>
@@ -42,10 +42,10 @@
                                 </subviews>
                                 <color key="backgroundColor" name="Game Banner"/>
                                 <constraints>
-                                    <constraint firstItem="PUR-r5-ySO" firstAttribute="leading" secondItem="PAW-t6-IPh" secondAttribute="leading" constant="32" id="BEZ-rY-g0Y"/>
-                                    <constraint firstItem="PUR-r5-ySO" firstAttribute="top" secondItem="PAW-t6-IPh" secondAttribute="top" constant="40" id="Hiv-gs-7nz"/>
+                                    <constraint firstItem="PUR-r5-ySO" firstAttribute="top" secondItem="PAW-t6-IPh" secondAttribute="top" constant="40" id="Hiv-gs-7nz">
+                                        <variation key="heightClass=compact" constant="24"/>
+                                    </constraint>
                                     <constraint firstAttribute="height" id="Q7P-Hg-bKp"/>
-                                    <constraint firstAttribute="trailing" secondItem="PUR-r5-ySO" secondAttribute="trailing" constant="32" id="f6n-9a-qXI"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
@@ -83,7 +83,7 @@
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="wbi-Gg-AL4" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                 <rect key="frame" x="653" y="3.6666666666666679" width="95" height="25"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Continue" image="forward"/>
+                                                <state key="normal" title="Start" image="forward"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="continueButton"/>
                                                 </userDefinedRuntimeAttributes>
@@ -101,7 +101,7 @@
                                 </userDefinedRuntimeAttributes>
                             </navigationBar>
                             <view contentMode="scaleToFill" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="iDT-Xi-tM5" userLabel="Action Button View">
-                                <rect key="frame" x="0.0" y="32" width="406" height="249"/>
+                                <rect key="frame" x="44" y="32" width="362" height="249"/>
                                 <subviews>
                                     <view tag="1" contentMode="scaleToFill" verticalHuggingPriority="1" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xXV-k4-gfB" userLabel="Cut for Dealer Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="144.5" y="0.0" width="99.5" height="134.33333333333334"/>
@@ -158,8 +158,8 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="RHC-Y9-q5u"/>
                                 </constraints>
-                                <state key="normal" title="Continue">
-                                    <color key="titleColor" name="Game Banner Text"/>
+                                <state key="normal" title="Start Game">
+                                    <color key="titleColor" name="Continue Button Text"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
@@ -174,7 +174,7 @@
                                 </connections>
                             </button>
                             <view tag="-3" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rMq-tB-u4I" customClass="SlideOutButtonView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="724" width="406" height="88"/>
+                                <rect key="frame" x="44" y="724" width="362" height="88"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="title" value="Override Settings"/>
@@ -213,7 +213,7 @@
                             <constraint firstItem="iDT-Xi-tM5" firstAttribute="bottom" secondItem="KKW-id-DrE" secondAttribute="top" constant="30" id="SzB-7v-AvI"/>
                             <constraint firstItem="PAW-t6-IPh" firstAttribute="leading" secondItem="wSn-mE-2UN" secondAttribute="leading" id="U6b-1a-Msr"/>
                             <constraint firstItem="2QN-TN-Yp2" firstAttribute="trailing" secondItem="iUU-8s-ns4" secondAttribute="trailing" id="VdM-H9-jKl"/>
-                            <constraint firstItem="iDT-Xi-tM5" firstAttribute="leading" secondItem="iUU-8s-ns4" secondAttribute="leading" id="XcT-zv-E3Z"/>
+                            <constraint firstItem="iDT-Xi-tM5" firstAttribute="leading" secondItem="wSn-mE-2UN" secondAttribute="leading" id="XcT-zv-E3Z"/>
                             <constraint firstItem="PAW-t6-IPh" firstAttribute="top" secondItem="ffW-WE-f4E" secondAttribute="bottom" id="bjx-vj-TAk"/>
                             <constraint firstItem="iDT-Xi-tM5" firstAttribute="top" secondItem="nKd-io-ud9" secondAttribute="bottom" id="dJ9-ru-3tX"/>
                             <constraint firstItem="FyF-vn-V6o" firstAttribute="width" secondItem="iUU-8s-ns4" secondAttribute="width" multiplier="0.33" id="f3c-kg-KUq"/>
@@ -225,6 +225,7 @@
                             <constraint firstItem="nKd-io-ud9" firstAttribute="top" secondItem="ffW-WE-f4E" secondAttribute="bottom" id="mvr-Ru-v6f"/>
                             <constraint firstItem="wSn-mE-2UN" firstAttribute="top" secondItem="2QN-TN-Yp2" secondAttribute="bottom" id="nSJ-Fw-9tK"/>
                             <constraint firstItem="iDT-Xi-tM5" firstAttribute="top" secondItem="PAW-t6-IPh" secondAttribute="bottom" id="oaF-eq-Jqe"/>
+                            <constraint firstItem="PUR-r5-ySO" firstAttribute="trailing" secondItem="iDT-Xi-tM5" secondAttribute="trailing" constant="-32" id="qt8-oF-dds"/>
                             <constraint firstAttribute="trailing" secondItem="ffW-WE-f4E" secondAttribute="trailing" id="t8j-bC-T7F"/>
                             <constraint firstItem="wSn-mE-2UN" firstAttribute="trailing" secondItem="iDT-Xi-tM5" secondAttribute="trailing" id="thd-wQ-VbB"/>
                             <constraint firstItem="nKd-io-ud9" firstAttribute="bottom" secondItem="iUU-8s-ns4" secondAttribute="bottom" id="u5S-gs-3xy">
@@ -233,6 +234,7 @@
                             <constraint firstItem="KKW-id-DrE" firstAttribute="centerX" secondItem="iUU-8s-ns4" secondAttribute="centerX" id="v6Q-Jj-W1f"/>
                             <constraint firstItem="PAW-t6-IPh" firstAttribute="height" secondItem="iUU-8s-ns4" secondAttribute="height" multiplier="0.6" constant="44" id="wZV-ex-5I8"/>
                             <constraint firstItem="nKd-io-ud9" firstAttribute="width" secondItem="wSn-mE-2UN" secondAttribute="width" multiplier="0.5" id="wpQ-bJ-PLx"/>
+                            <constraint firstItem="PUR-r5-ySO" firstAttribute="leading" secondItem="iDT-Xi-tM5" secondAttribute="leading" constant="32" id="yEG-p1-cC1"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="wSn-mE-2UN"/>
                         <variation key="default">

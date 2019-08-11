@@ -70,20 +70,23 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="60" sectionHeaderHeight="37" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dtV-HG-agM">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="60" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="dtV-HG-agM">
                                 <rect key="frame" x="0.0" y="238" width="375" height="429"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Service Cell" rowHeight="60" id="57Y-fT-rsC" userLabel="Client Service Cell" customClass="ClientTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="37" width="375" height="60"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="375" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="57Y-fT-rsC" id="ZcL-vg-Z6W">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="249" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="y3D-TD-3Jm">
-                                                    <rect key="frame" x="64" y="36" width="247" height="16"/>
+                                                    <rect key="frame" x="87.5" y="36" width="200" height="16"/>
                                                     <color key="backgroundColor" name="Clear"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="200" id="tFQ-eF-nJ9"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <color key="textColor" name="Text"/>
                                                     <nil key="highlightedColor"/>
@@ -109,10 +112,9 @@
                                                 </button>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="y3D-TD-3Jm" firstAttribute="centerX" secondItem="ZcL-vg-Z6W" secondAttribute="centerX" id="JHP-ds-5ya"/>
                                                 <constraint firstItem="ZYX-OU-Hhe" firstAttribute="top" secondItem="ZcL-vg-Z6W" secondAttribute="top" constant="4" id="NvT-zF-mM4"/>
                                                 <constraint firstItem="ZYX-OU-Hhe" firstAttribute="centerX" secondItem="ZcL-vg-Z6W" secondAttribute="centerX" id="TYP-L6-GZI"/>
-                                                <constraint firstAttribute="trailing" secondItem="y3D-TD-3Jm" secondAttribute="trailing" constant="64" id="WJU-P4-4zM"/>
-                                                <constraint firstItem="y3D-TD-3Jm" firstAttribute="leading" secondItem="ZcL-vg-Z6W" secondAttribute="leading" constant="64" id="WbS-YT-IAU"/>
                                                 <constraint firstAttribute="bottom" secondItem="y3D-TD-3Jm" secondAttribute="bottom" constant="8" id="gyU-ix-iCX"/>
                                                 <constraint firstItem="y3D-TD-3Jm" firstAttribute="top" secondItem="ZYX-OU-Hhe" secondAttribute="bottom" constant="2" id="wKT-Wz-dhT"/>
                                             </constraints>
@@ -121,18 +123,22 @@
                                         <connections>
                                             <outlet property="serviceButton" destination="ZYX-OU-Hhe" id="wrj-Sc-MrY"/>
                                             <outlet property="serviceLabel" destination="y3D-TD-3Jm" id="Eu9-tS-PXc"/>
+                                            <outlet property="serviceLabelWidthConstraint" destination="tFQ-eF-nJ9" id="waR-iz-YUN"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Host Cell" rowHeight="60" id="8c7-66-pQ1" userLabel="Host Cell" customClass="ClientTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="97" width="375" height="60"/>
+                                        <rect key="frame" x="0.0" y="115.5" width="375" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8c7-66-pQ1" id="1my-G3-RQR">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="60"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="249" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Snz-vg-bDL">
-                                                    <rect key="frame" x="64" y="8" width="247" height="44"/>
+                                                    <rect key="frame" x="87.5" y="8" width="200" height="44"/>
                                                     <color key="backgroundColor" name="Clear"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="200" id="LfD-YD-8Hy"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <color key="textColor" name="Room Interior"/>
                                                     <nil key="highlightedColor"/>
@@ -140,15 +146,15 @@
                                             </subviews>
                                             <color key="backgroundColor" name="Clear"/>
                                             <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="Snz-vg-bDL" secondAttribute="trailing" constant="64" id="Pz2-uX-BqF"/>
                                                 <constraint firstItem="Snz-vg-bDL" firstAttribute="top" secondItem="1my-G3-RQR" secondAttribute="top" constant="8" id="e1E-NW-JLg"/>
-                                                <constraint firstItem="Snz-vg-bDL" firstAttribute="leading" secondItem="1my-G3-RQR" secondAttribute="leading" constant="64" id="oU2-Xf-E9h"/>
+                                                <constraint firstItem="Snz-vg-bDL" firstAttribute="centerX" secondItem="1my-G3-RQR" secondAttribute="centerX" id="o23-cL-upZ"/>
                                                 <constraint firstAttribute="bottom" secondItem="Snz-vg-bDL" secondAttribute="bottom" constant="8" id="v2L-fJ-OFr"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="Clear"/>
                                         <connections>
                                             <outlet property="serviceLabel" destination="Snz-vg-bDL" id="sms-Jm-1yI"/>
+                                            <outlet property="serviceLabelWidthConstraint" destination="LfD-YD-8Hy" id="GPm-q6-ewD"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -207,7 +213,9 @@
                             <constraint firstAttribute="trailing" secondItem="y3A-eA-Tmp" secondAttribute="trailing" id="JDi-3J-ELy"/>
                             <constraint firstAttribute="trailing" secondItem="dtV-HG-agM" secondAttribute="trailing" id="U7z-gI-dJC"/>
                             <constraint firstItem="Yy9-i2-EGh" firstAttribute="top" secondItem="nJF-Zf-jlr" secondAttribute="bottom" constant="8" id="UKf-ec-ayF"/>
-                            <constraint firstItem="dtV-HG-agM" firstAttribute="top" secondItem="Yy9-i2-EGh" secondAttribute="bottom" constant="32" id="V36-Hx-8xy"/>
+                            <constraint firstItem="dtV-HG-agM" firstAttribute="top" secondItem="Yy9-i2-EGh" secondAttribute="bottom" constant="32" id="V36-Hx-8xy">
+                                <variation key="heightClass=compact" constant="0.0"/>
+                            </constraint>
                             <constraint firstItem="Yy9-i2-EGh" firstAttribute="centerX" secondItem="hFM-Q5-ViO" secondAttribute="centerX" id="Xsg-4T-qtK"/>
                             <constraint firstItem="RyR-aM-WNg" firstAttribute="centerX" secondItem="hFM-Q5-ViO" secondAttribute="centerX" id="aFn-SI-nVo"/>
                             <constraint firstItem="y3A-eA-Tmp" firstAttribute="leading" secondItem="hFM-Q5-ViO" secondAttribute="leading" id="aXt-TM-Z5e"/>
@@ -225,7 +233,6 @@
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="T3J-B5-Pwe" appends="YES" id="7Ru-7d-OWw"/>
                             <outletCollection property="gestureRecognizers" destination="chC-Hk-f6N" appends="YES" id="06o-xA-rf1"/>
-                            <outletCollection property="gestureRecognizers" destination="yTM-Wg-Qhd" appends="YES" id="TXh-Zw-2CC"/>
                         </connections>
                     </view>
                     <connections>
@@ -242,11 +249,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UDy-kc-SSJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="down" id="yTM-Wg-Qhd">
-                    <connections>
-                        <action selector="rightSwipeWithRecognizer:" destination="aZe-pG-rMs" id="eAO-gC-yxA"/>
-                    </connections>
-                </swipeGestureRecognizer>
                 <swipeGestureRecognizer direction="right" id="chC-Hk-f6N">
                     <connections>
                         <action selector="rightSwipeWithRecognizer:" destination="aZe-pG-rMs" id="RPw-mc-NfU"/>

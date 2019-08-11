@@ -129,7 +129,6 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         self.thumbnail.set(thumbnailAlpha: thumbnailAlpha)
     }
     
-    
     public func clear(initials: String? = nil) {
         self.inUse = false
         self.playerMO = nil
@@ -148,6 +147,10 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         if self.inUse {
             self.delegate?.playerViewWasTapped?(self)
         }
+    }
+    
+    public func removeFromSuperview() {
+        self.thumbnail.removeFromSuperview()
     }
     
     // MARK: - Drop delegate handlers ================================================================== -

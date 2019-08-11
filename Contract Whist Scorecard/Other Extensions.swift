@@ -55,6 +55,10 @@ class CustomViewController : UIViewController {
             return AppDelegate.applicationPrefersStatusBarHidden ?? true
         }
     }
+    
+    override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge {
+        return UIRectEdge.bottom
+    }
 }
 
 extension CGPoint {

@@ -73,7 +73,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var navigationTitle: UINavigationItem!
     @IBOutlet private weak var bannerContinuationView: BannerContinuation!
     @IBOutlet private weak var bannerContinuationHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var thisPlayerViewContainter: UIView!
+    @IBOutlet private weak var thisPlayerViewContainer: UIView!
     @IBOutlet private weak var thisPlayerViewContainerWidthConstraint: NSLayoutConstraint!
     
     // MARK: - IB Actions ============================================================================== -
@@ -184,9 +184,11 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         formatButtons(false)
     
         // Draw table
-        self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth)
-        self.selectedPlayersView.setHaloColor(color: Palette.halo)
-        self.selectedPlayersView.drawRoom(thumbnailWidth: self.width, thumbnailHeight: self.height, players: self.scorecard.numberPlayers, directions: (ScorecardUI.landscapePhone() ? .none : .up))
+        if self.selectionMode != .single {
+            self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth)
+            self.selectedPlayersView.setHaloColor(color: Palette.halo)
+            self.selectedPlayersView.drawRoom(thumbnailWidth: self.width, thumbnailHeight: self.height, players: self.scorecard.numberPlayers, directions: (ScorecardUI.landscapePhone() ? .none : .up))
+        }
         
         // Reload unselected player collection
         unselectedCollectionView.reloadData()
@@ -310,7 +312,11 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             continueButton.isHidden = hidden
             bannerContinueButton.isHidden = true
         }
-        slideOutButton.isHidden = (selectedList.count == 0 && self.selectionMode != .single)
+        if selectionMode == .single {
+            slideOutButton.isHidden = ScorecardUI.landscapePhone()
+        } else {
+            slideOutButton.isHidden = (selectedList.count == 0)
+        }
     }
     
     func setSize(size: CGSize) {
@@ -330,15 +336,16 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         let selectedWidth = (ScorecardUI.landscapePhone() ? (totalWidth / 2.0) : totalWidth)
         let totalHeight = size.height - view.safeAreaInsets.top - view.safeAreaInsets.bottom
         
-        let size = SelectionViewController.thumbnailSize(view: self.view, labelHeight: self.labelHeight)
+        let size = SelectionViewController.thumbnailSize(labelHeight: self.labelHeight)
         self.width = size.width
         self.height = size.height
         self.rowHeight = self.height + self.interRowSpacing
         
         if self.selectionMode == .single {
-            self.selectedViewHeight?.constant = 44.0 + 75.0 + self.view.safeAreaInsets.bottom
+            self.selectedViewHeight?.constant = 0.0
             self.selectedPlayersView.alpha = 0.0
             self.unselectedCollectionViewTopConstraint.constant = self.width + 16.0 + (self.labelHeight - 5.0) + self.interRowSpacing - self.bannerContinuationHeight
+            selectedViewWidth?.constant = 10.0
         } else {
             let selectedHeight = self.height * 3.0 + self.view.safeAreaInsets.bottom
             let unselectedHeight = totalHeight - selectedHeight - self.navigationBar.intrinsicContentSize.height - self.bannerContinuationHeight
@@ -357,16 +364,20 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     /// Function used in other views to get the same thumbnail size
     
-    class public func thumbnailSize(view: UIView, labelHeight: CGFloat) -> CGSize {
-        let totalWidth = view.bounds.width - view.safeAreaInsets.left - view.safeAreaInsets.right
-        let selectedWidth = (ScorecardUI.landscapePhone() ? (totalWidth / 2.0) : totalWidth)
-        let totalHeight = view.bounds.height - view.safeAreaInsets.top - view.safeAreaInsets.bottom
-        let numberThatFit = max(5, Int(selectedWidth / (min(totalWidth, totalHeight) > 450 ? 120 : 75)))
-        
-        let width = min((totalHeight - 170)/2, ((selectedWidth - (CGFloat(numberThatFit + 1) * 10.0)) / CGFloat(numberThatFit)))
-        let height = width + labelHeight - 5.0
-        
-        return CGSize(width: width, height: height)
+    class public func thumbnailSize(labelHeight: CGFloat) -> CGSize {
+        if let rootWindow = UIApplication.shared.keyWindow {
+            let totalWidth = rootWindow.bounds.width - rootWindow.safeAreaInsets.left - rootWindow.safeAreaInsets.right
+            let selectedWidth = (ScorecardUI.landscapePhone() ? (totalWidth / 2.0) : totalWidth)
+            let totalHeight = rootWindow.bounds.height - rootWindow.safeAreaInsets.top - rootWindow.safeAreaInsets.bottom
+            let numberThatFit = max(5, Int(selectedWidth / (min(totalWidth, totalHeight) > 450 ? 120 : 75)))
+            
+            let width = min((totalHeight - 170)/2, ((selectedWidth - (CGFloat(numberThatFit + 1) * 10.0)) / CGFloat(numberThatFit)))
+            let height = width + labelHeight - 5.0
+            
+            return CGSize(width: width, height: height)
+        } else {
+            return UIScreen.main.bounds.size
+        }
     }
     
     func finishAction() {
@@ -470,12 +481,13 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                     width = thisPlayerFrame.width
                     self.thisPlayerViewContainerWidthConstraint.constant = width + 10.0
                 }
-                    
-                self.thisPlayerView = PlayerView(type: .addPlayer, parent: self.thisPlayerViewContainter, width: width, height: width, tag: -2)
+                
+                self.thisPlayerView?.removeFromSuperview()
+                self.thisPlayerView = PlayerView(type: .addPlayer, parent: self.thisPlayerViewContainer, width: width, height: width, tag: -2)
                 self.thisPlayerView.delegate = self
                 self.thisPlayerView.set(playerMO: playerMO, nameHeight: 0.0)
                 self.thisPlayerView.set(textColor: UIColor.clear)
-                self.thisPlayerViewContainter.isHidden = false
+                self.thisPlayerViewContainer.isHidden = false
             }
         }
     }
@@ -510,12 +522,16 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         // Switch banner type
         self.bannerContinuationView.shape = .upArrow
         self.bannerAddPlayerButton.isHidden = true
-        // Change slide out button to add player
-        self.slideOutButton.title = "Add Player"
-        self.slideOutButton.isHidden = false
-        self.slideOutButton.buttonFillColor = UIColor.clear
-        self.slideOutButton.buttonStrokeColor = Palette.gameBanner
-        self.slideOutButton.buttonTextColor = Palette.gameBanner
+        if ScorecardUI.landscapePhone() {
+            self.slideOutButton.isHidden = true
+        } else {
+            // Change slide out button to add player
+            self.slideOutButton.title = "Add Player"
+            self.slideOutButton.isHidden = true
+            self.slideOutButton.buttonFillColor = UIColor.clear
+            self.slideOutButton.buttonStrokeColor = Palette.gameBanner
+            self.slideOutButton.buttonTextColor = Palette.gameBanner
+        }
     }
     
     func removeSelection(_ selectedSlot: Int, updateUnselected: Bool = true, updateUnselectedCollection: Bool = true, animate: Bool = true) {

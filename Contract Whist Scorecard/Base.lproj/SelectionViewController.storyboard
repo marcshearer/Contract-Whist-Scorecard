@@ -141,17 +141,11 @@
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="240" id="1T2-1s-8c6"/>
-                                    <constraint firstAttribute="width" constant="200" id="KfB-6p-mr0"/>
+                                    <constraint firstAttribute="width" priority="1" constant="200" id="KfB-6p-mr0"/>
                                 </constraints>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="KfB-6p-mr0"/>
-                                    </mask>
-                                </variation>
                                 <variation key="heightClass=compact">
                                     <mask key="constraints">
                                         <exclude reference="1T2-1s-8c6"/>
-                                        <include reference="KfB-6p-mr0"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -230,14 +224,14 @@
                             <constraint firstAttribute="bottom" secondItem="jtX-GA-7ms" secondAttribute="bottom" id="cKC-9I-Qfp"/>
                             <constraint firstItem="Mqr-Sp-LZb" firstAttribute="trailing" secondItem="jtX-GA-7ms" secondAttribute="trailing" id="dLb-ca-btv"/>
                             <constraint firstItem="Tlx-l1-ig7" firstAttribute="top" secondItem="YUd-84-9H5" secondAttribute="bottom" constant="24" id="eWw-q0-skm"/>
-                            <constraint firstItem="YUd-84-9H5" firstAttribute="leading" secondItem="Mqr-Sp-LZb" secondAttribute="leading" id="hH2-9o-mUk"/>
+                            <constraint firstItem="YUd-84-9H5" firstAttribute="leading" secondItem="Whs-Ka-Uxd" secondAttribute="leading" id="hH2-9o-mUk"/>
                             <constraint firstItem="d37-kV-uuP" firstAttribute="top" secondItem="Whs-Ka-Uxd" secondAttribute="top" id="hJb-1R-nUH"/>
                             <constraint firstItem="xnd-49-L9N" firstAttribute="centerX" secondItem="Whs-Ka-Uxd" secondAttribute="centerX" id="k75-bM-Lna"/>
                             <constraint firstAttribute="bottom" secondItem="Tlx-l1-ig7" secondAttribute="bottom" id="lTh-qj-dfR"/>
                             <constraint firstItem="jtX-GA-7ms" firstAttribute="leading" secondItem="Mqr-Sp-LZb" secondAttribute="leading" id="lde-MW-hLR"/>
                             <constraint firstItem="be7-aP-DEd" firstAttribute="leading" secondItem="jtX-GA-7ms" secondAttribute="leading" id="lzs-gh-jkl"/>
                             <constraint firstItem="Mqr-Sp-LZb" firstAttribute="trailing" secondItem="Tlx-l1-ig7" secondAttribute="trailing" constant="10" id="s3n-Cw-bEf"/>
-                            <constraint firstItem="YUd-84-9H5" firstAttribute="trailing" secondItem="Mqr-Sp-LZb" secondAttribute="trailing" id="ud8-XT-Xni"/>
+                            <constraint firstItem="YUd-84-9H5" firstAttribute="trailing" secondItem="Whs-Ka-Uxd" secondAttribute="trailing" id="ud8-XT-Xni"/>
                             <constraint firstItem="be7-aP-DEd" firstAttribute="trailing" secondItem="jtX-GA-7ms" secondAttribute="trailing" id="ufq-f9-nmb"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Mqr-Sp-LZb"/>
@@ -273,8 +267,8 @@
                         <outlet property="selectedViewWidth" destination="KfB-6p-mr0" id="1yK-LH-FS6"/>
                         <outlet property="selectionView" destination="Whs-Ka-Uxd" id="QAl-of-52o"/>
                         <outlet property="slideOutButton" destination="be7-aP-DEd" id="IcN-Br-mSQ"/>
+                        <outlet property="thisPlayerViewContainer" destination="xnd-49-L9N" id="yjc-o2-3Jz"/>
                         <outlet property="thisPlayerViewContainerWidthConstraint" destination="yYr-oC-cVs" id="tNh-Yi-Hxp"/>
-                        <outlet property="thisPlayerViewContainter" destination="xnd-49-L9N" id="yjc-o2-3Jz"/>
                         <outlet property="unselectedCollectionView" destination="Tlx-l1-ig7" id="vRw-k0-8iE"/>
                         <outlet property="unselectedCollectionViewTopConstraint" destination="eWw-q0-skm" id="phm-iK-kzp"/>
                         <segue destination="Vxp-SW-x6a" kind="unwind" identifier="hideSelectionSelectPlayers" unwindAction="hideSelectionSelectPlayersWithSegue:" id="UXW-YD-63I"/>

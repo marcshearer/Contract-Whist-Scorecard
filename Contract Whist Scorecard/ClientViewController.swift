@@ -819,7 +819,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     internal func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch section {
         case hostSection:
-            return 76
+            return (ScorecardUI.landscapePhone() ? 40 : 76)
         default:
             return 0
         }
@@ -829,7 +829,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         if section == hostSection {
             let headerView = UITableViewHeaderFooterView(frame: CGRect(origin: CGPoint(), size: CGSize(width: tableView.frame.width, height: 76.0)))
             let width: CGFloat = 150.0
-            let button = AngledButton(frame: CGRect(x: (headerView.frame.width - width) / 2.0, y: 40.0, width: width, height: 30))
+            let button = AngledButton(frame: CGRect(x: (headerView.frame.width - width) / 2.0, y: (ScorecardUI.landscapePhone() ? 4 : 40), width: width, height: 30))
             button.setTitle("Host a Game")
             button.fillColor = Palette.roomInterior
             button.strokeColor = Palette.roomInterior
@@ -846,11 +846,11 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         switch indexPath.section {
         case self.peerSection:
             // List of remote peers
-            return 100
+            return (ScorecardUI.landscapePhone() ? 80 : 100)
             
         case self.hostSection:
             // Hosting options
-            return 80
+            return (ScorecardUI.landscapePhone() ? 60 : 80)
             
         default:
             return 0
@@ -859,6 +859,10 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: ClientTableCell!
+        let labelWidth: CGFloat = min(ScorecardUI.screenWidth - 128, ScorecardUI.screenHeight)
+        let arrowWidth: CGFloat = 80.0 / 3.0
+        let hexagonInset: CGFloat = ((ScorecardUI.screenWidth - labelWidth) / 2.0) - arrowWidth
+        let hexagonWidth: CGFloat = labelWidth + (2 * arrowWidth)
         
         switch indexPath.section {
         case self.peerSection:
@@ -866,6 +870,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             
             cell = tableView.dequeueReusableCell(withIdentifier: "Service Cell", for: indexPath) as? ClientTableCell
             cell.hexagonLayer?.removeFromSuperlayer()
+            cell.serviceLabelWidthConstraint.constant = labelWidth
             
             if available.count == 0 {
                 
@@ -875,8 +880,9 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                 
             } else {
                 
-                let frame = CGRect(x: 40.0, y: cell.serviceButton.frame.midY, width: cell.frame.width - (2.0 * 40), height: cell.frame.height - cell.serviceButton.frame.midY - 2.0)
-                cell.hexagonLayer = Polygon.hexagonFrame(in: cell, frame: frame, strokeColor: Palette.tableTop, lineWidth: 3.5, radius: 10.0)
+                let lineWidth: CGFloat = 3.5
+                let frame = CGRect(x: hexagonInset, y: cell.serviceButton.frame.midY - (lineWidth / 2.0), width: hexagonWidth, height: cell.frame.height - cell.serviceButton.frame.midY - 2.0)
+                cell.hexagonLayer = Polygon.hexagonFrame(in: cell, frame: frame, strokeColor: Palette.tableTop, lineWidth: lineWidth, radius: 10.0)
                 
                 let availableFound = self.available[indexPath.row]
                 let name = availableFound.peer.playerName!
@@ -920,8 +926,9 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             
             cell = tableView.dequeueReusableCell(withIdentifier: "Host Cell", for: indexPath) as? ClientTableCell
             cell.hexagonLayer?.removeFromSuperlayer()
-           
-            let frame = CGRect(x: 40.0, y: 4.0, width: cell.frame.width - (2.0 * 40), height: cell.frame.height - 8.0)
+            cell.serviceLabelWidthConstraint.constant = min(ScorecardUI.screenWidth - 128, ScorecardUI.screenHeight)
+            
+            let frame = CGRect(x: hexagonInset, y: 4.0, width: hexagonWidth, height: cell.frame.height - 8.0)
             cell.hexagonLayer = Polygon.hexagonFrame(in: cell, frame: frame, strokeColor: Palette.roomInterior.withAlphaComponent((self.available.count == 0 ? 1.0 : 1.0)), lineWidth: (self.available.count == 0 ? 2.0 : 1.0), radius: 10.0)
             
             cell.serviceLabel.textColor = Palette.roomInterior
@@ -1072,7 +1079,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
 
     private func showThisPlayer() {
         if let playerMO = self.scorecard.findPlayerByEmail(self.thisPlayer) {
-            let size = SelectionViewController.thumbnailSize(view: self.view, labelHeight: 0.0)
+            let size = SelectionViewController.thumbnailSize(labelHeight: 0.0)
             self.thisPlayerThumbnailWidthConstraint.constant = size.width
             self.thisPlayerThumbnail.set(data: playerMO.thumbnail, name: playerMO.name!, nameHeight: 0.0, diameter: size.width)
             self.thisPlayerNameLabel.text = "Play as \(playerMO.name!)"
@@ -1449,6 +1456,7 @@ fileprivate class Available {
 class ClientTableCell: UITableViewCell {
     @IBOutlet weak var serviceButton: UIButton!
     @IBOutlet weak var serviceLabel: UILabel!
+    @IBOutlet weak var serviceLabelWidthConstraint: NSLayoutConstraint!
     public var hexagonLayer: CAShapeLayer!
 }
 

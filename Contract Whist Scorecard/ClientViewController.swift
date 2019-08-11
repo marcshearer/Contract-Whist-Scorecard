@@ -79,9 +79,10 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     // MARK: - IB Outlets ============================================================================== -
     
-    @IBOutlet weak var titleBar: UINavigationItem!
-    @IBOutlet weak var finishButton: RoundedButton!
-    @IBOutlet weak var clientTableView: UITableView!
+    @IBOutlet private weak var titleBar: UINavigationItem!
+    @IBOutlet private weak var finishButton: RoundedButton!
+    @IBOutlet private weak var clientTableView: UITableView!
+    @IBOutlet private weak var clientTableViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var thisPlayerThumbnail: ThumbnailView!
     @IBOutlet private weak var thisPlayerNameLabel: UILabel!
     @IBOutlet private weak var thisPlayerThumbnailWidthConstraint: NSLayoutConstraint!
@@ -952,6 +953,12 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             
         default:
             break
+        }
+        
+        let newHeight = cell.frame.maxY
+        if newHeight > self.clientTableView.frame.height {
+            self.clientTableViewHeightConstraint.constant = newHeight
+            print("Height: \(newHeight)")
         }
         
        return cell!

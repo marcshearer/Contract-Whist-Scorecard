@@ -294,7 +294,11 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             self.cutForDealerTrailingConstraint.isActive = true
             self.bannerContinueButton.isHidden = !ScorecardUI.landscapePhone() && !ScorecardUI.smallPhoneSize()
             self.continueButton.isHidden = ScorecardUI.landscapePhone() || ScorecardUI.smallPhoneSize()
-            self.cutForDealerTopConstraint.constant = (ScorecardUI.smallPhoneSize() ? 40 : 20)
+            if ScorecardUI.landscapePhone() {
+                self.cutForDealerTopConstraint.constant = (ScorecardUI.screenHeight - self.cutForDealerButton.frame.height - 50.0) / 2.0
+            } else {
+                self.cutForDealerTopConstraint.constant = (ScorecardUI.smallPhoneSize() ? 40 : 20)
+            }
             self.overrideSettingsButton.isHidden = false
             if self.scorecard.isHosting {
                 var topConstraint: CGFloat

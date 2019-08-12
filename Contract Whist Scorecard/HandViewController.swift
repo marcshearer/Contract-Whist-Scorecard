@@ -170,7 +170,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         self.currentCards = self.scorecard.roundCards(round, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
         
         // Put suit on summary button
-        self.roundSummaryButton.setTitle(self.scorecard.roundSuit(self.round, suits: self.state.suits).toString(), for: .normal)
+        self.roundSummaryButton.setTitle("NT" /*self.scorecard.roundSuit(self.round, suits: self.state.suits).toString()*/, for: .normal)
         self.roundSummaryButton.titleLabel?.adjustsFontSizeToFitWidth = true
         
         // Setup over under

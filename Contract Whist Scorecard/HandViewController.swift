@@ -1020,9 +1020,13 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     }
     
     func setInstructionsHighlight(to highlight: Bool) {
-        self.instructionView.backgroundColor = (highlight ? Palette.hand : Palette.tableTop)
-        self.instructionLabel.textColor = (highlight ? Palette.handText : Palette.tableTopText)
-        self.bannerPaddingView.backgroundColor = (highlight ? Palette.hand : Palette.tableTop)
+        let nonHighlightBackgroundColor = (highlight ? Palette.hand : (self.bidMode ? Palette.tableTop : Palette.tableTop))
+        let nonHighlightTextColor = (highlight ? Palette.handText : (self.bidMode ? Palette.tableTopTextContrast : Palette.tableTopText))
+        self.instructionView.backgroundColor = nonHighlightBackgroundColor
+        self.instructionLabel.textColor = nonHighlightTextColor
+        self.bannerPaddingView.backgroundColor = nonHighlightBackgroundColor
+        self.finishButton.imageView!.image = UIImage(named: (highlight || !self.bidMode ? "cross white" : "cross white"))
+        self.roundSummaryButton.setTitleColor(nonHighlightTextColor, for: .normal)
     }
 }
 

@@ -498,8 +498,8 @@
                         <outletCollection property="finishButton" destination="VGH-oE-ROK" collectionClass="NSMutableArray" id="oO5-Uu-b1y"/>
                         <outletCollection property="summaryButton" destination="7hl-zu-bZB" collectionClass="NSMutableArray" id="pe5-aY-5fh"/>
                         <outletCollection property="undoButton" destination="hUK-zs-I9p" collectionClass="NSMutableArray" id="H4a-NB-gKd"/>
-                        <outletCollection property="barTitle" destination="Imt-6d-trM" collectionClass="NSMutableArray" id="cht-eZ-FUD"/>
-                        <outletCollection property="barTitle" destination="mYF-x3-kAl" collectionClass="NSMutableArray" id="kbw-US-JUE"/>
+                        <outletCollection property="footerRoundTitle" destination="Imt-6d-trM" collectionClass="NSMutableArray" id="cht-eZ-FUD"/>
+                        <outletCollection property="footerRoundTitle" destination="mYF-x3-kAl" collectionClass="NSMutableArray" id="kbw-US-JUE"/>
                         <segue destination="Rwb-y8-jvq" kind="unwind" identifier="hideEntry" unwindAction="hideEntryWithSegue:" id="XKG-1q-g76"/>
                         <segue destination="Rwb-y8-jvq" kind="unwind" identifier="linkGameSummary" customClass="UIStoryboardSegueWithCompletion" customModule="Contract_Whist_Scorecard" customModuleProvider="target" animates="NO" unwindAction="linkGameSummaryWithSegue:" id="EuF-SC-abc"/>
                         <segue destination="nMs-gZ-i6r" kind="popoverPresentation" identifier="showRoundSummary" popoverAnchorView="pS0-jq-6eE" id="ZUj-17-gZD">

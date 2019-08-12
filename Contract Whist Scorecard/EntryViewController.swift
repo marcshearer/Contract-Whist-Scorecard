@@ -63,7 +63,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     @IBOutlet private weak var footerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var entryView: UIView!
     @IBOutlet private weak var entryTableView: UITableView!
-    @IBOutlet private var barTitle: [UILabel]!
+    @IBOutlet private var footerRoundTitle: [UILabel]!
     @IBOutlet private var undoButton: [RoundedButton]!
     @IBOutlet private var finishButton: [RoundedButton]!
     @IBOutlet private var errorsButton: [RoundedButton]!
@@ -261,8 +261,8 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     }
     
     func setupScreen() {
-        let title = scorecard.roundTitle(scorecard.selectedRound, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
-        barTitle.forEach { $0.attributedText = title }
+        let title = scorecard.roundTitle(scorecard.selectedRound, rankColor: Palette.roomInteriorText, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
+        footerRoundTitle.forEach { $0.attributedText = title }
         if ScorecardUI.screenHeight < 667.0 || !ScorecardUI.phoneSize() {
             // Smaller than an iPhone 7 portrait or on a tablet
             self.bannerHeightConstraint.constant = 0.0

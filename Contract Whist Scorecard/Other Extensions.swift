@@ -56,8 +56,8 @@ class CustomViewController : UIViewController {
         }
     }
     
-    override var preferredScreenEdgesDeferringSystemGestures: UIRectEdge {
-        return UIRectEdge.bottom
+    override var prefersHomeIndicatorAutoHidden: Bool {
+        return true
     }
 }
 

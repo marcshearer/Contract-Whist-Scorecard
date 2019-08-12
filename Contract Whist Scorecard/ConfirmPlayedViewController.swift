@@ -15,13 +15,14 @@ class ConfirmPlayedViewController : UIViewController, UIPopoverPresentationContr
     private var content: UIView!
     private var confirmText: String?
     private var cancelText: String?
+    private var backgroundColor: UIColor?
     private var confirmHandler: (()->())?
+    private var sourceView: UIView!
     
     @IBOutlet private weak var labelTitle: UILabel!
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet private weak var confirmButton: UIButton!
     @IBOutlet private weak var cancelButton: UIButton!
-    @IBOutlet private weak var sourceView: UIView!
     
     @IBAction func confirmPressed(_ sender: UIButton) {
         self.dismiss(animated: true, completion: {
@@ -47,8 +48,12 @@ class ConfirmPlayedViewController : UIViewController, UIPopoverPresentationContr
         ScorecardUI.roundCorners(view)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        Utility.mainThread {
+            // Have to wrap this in main thread for it to work!! Apparently fixed in iOS 13
+            self.contentView.backgroundColor = self.backgroundColor ?? Palette.background
+        }
         self.view.setNeedsLayout()
     }
     
@@ -70,11 +75,10 @@ class ConfirmPlayedViewController : UIViewController, UIPopoverPresentationContr
     }
     
     func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
-        // return UIModalPresentationStyle.FullScreen
         return UIModalPresentationStyle.none
     }
     
-    class func show(title: String, content: UIView, sourceView: UIView? = nil, confirmText: String? = nil, cancelText: String? = nil, minWidth: CGFloat = 240, minHeight: CGFloat = 200.0, handler: (()->())? = nil) {
+    class func show(title: String, content: UIView, sourceView: UIView? = nil, confirmText: String? = nil, cancelText: String? = nil, minWidth: CGFloat = 240, minHeight: CGFloat = 200.0, backgroundColor: UIColor? = nil, handler: (()->())? = nil) {
         let storyboard = UIStoryboard(name: "ConfirmPlayedViewController", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "ConfirmPlayedViewController") as! ConfirmPlayedViewController
         
@@ -83,6 +87,7 @@ class ConfirmPlayedViewController : UIViewController, UIPopoverPresentationContr
         viewController.content = content
         viewController.confirmText = confirmText
         viewController.cancelText = cancelText
+        viewController.backgroundColor = backgroundColor
         viewController.confirmHandler = handler
         let sourceView = sourceView ?? parentViewController.view
         viewController.sourceView = sourceView

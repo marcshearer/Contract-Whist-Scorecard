@@ -24,12 +24,12 @@
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7a6-UI-jEY">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="40"/>
-                                <color key="backgroundColor" name="Banner"/>
+                                <color key="backgroundColor" name="Room Interior"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="beD-3c-ukd"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="thin" pointSize="30"/>
-                                <color key="textColor" name="Banner Text"/>
+                                <color key="textColor" name="Room Interior Text"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2B9-kF-KFs">
@@ -45,14 +45,14 @@
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SAC-LY-LBW">
                                 <rect key="frame" x="120.5" y="161" width="119.5" height="39"/>
-                                <color key="backgroundColor" name="Banner"/>
+                                <color key="backgroundColor" name="Room Interior"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="119.5" id="DUD-qE-5aM"/>
                                     <constraint firstAttribute="height" constant="39" id="WMX-U4-Uzb"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <state key="normal" title="Cancel">
-                                    <color key="titleColor" name="Banner Text"/>
+                                    <color key="titleColor" name="Room Interior Text"/>
                                 </state>
                                 <connections>
                                     <action selector="cancelPressed:" destination="x2M-PG-c9N" eventType="touchUpInside" id="7L7-jZ-I1D"/>
@@ -67,17 +67,17 @@
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LbQ-qn-Vs4">
                                 <rect key="frame" x="0.0" y="161" width="119.5" height="39"/>
-                                <color key="backgroundColor" name="Banner"/>
+                                <color key="backgroundColor" name="Room Interior"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <state key="normal" title="Confirm">
-                                    <color key="titleColor" name="Banner Text"/>
+                                    <color key="titleColor" name="Room Interior Text"/>
                                 </state>
                                 <connections>
                                     <action selector="confirmPressed:" destination="x2M-PG-c9N" eventType="touchUpInside" id="Xtq-gA-x8e"/>
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" name="Highlight"/>
+                        <color key="backgroundColor" name="Background"/>
                         <constraints>
                             <constraint firstItem="SAC-LY-LBW" firstAttribute="top" secondItem="QjS-KC-W9a" secondAttribute="bottom" id="0O3-eb-luq"/>
                             <constraint firstItem="QjS-KC-W9a" firstAttribute="leading" secondItem="XJX-bP-Wnd" secondAttribute="leading" id="2hc-KL-oPp"/>
@@ -116,20 +116,20 @@
         </scene>
     </scenes>
     <resources>
-        <namedColor name="Banner">
-            <color red="0.89800000190734863" green="0.74900001287460327" blue="0.37299999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Banner Text">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <namedColor name="Background">
+            <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="Highlight">
-            <color red="0.92941176470588238" green="0.87450980392156863" blue="0.70588235294117652" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <namedColor name="Room Interior">
+            <color red="0.29411764705882354" green="0.6588235294117647" blue="0.6470588235294118" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Room Interior Text">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Separator">
-            <color white="0.67000001668930054" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </namedColor>
     </resources>
 </document>

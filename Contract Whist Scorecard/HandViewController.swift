@@ -712,9 +712,9 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     
     func bidEnable(_ bid: Int, _ enable: Bool) {
         if enable {
-            bidButton[bid]?.backgroundColor = Palette.highlight.withAlphaComponent(1.0)
+            bidButton[bid]?.backgroundColor = Palette.bidButton.withAlphaComponent(1.0)
         } else {
-            bidButton[bid]?.backgroundColor = Palette.highlight.withAlphaComponent(0.3)
+            bidButton[bid]?.backgroundColor = Palette.bidButton.withAlphaComponent(0.3)
         }
     }
     
@@ -822,7 +822,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         let card =  Card(fromNumber: cell!.tag)
         
         let cardWidth: CGFloat = 60
-        let label = UILabel()
+        let label = UILabel(frame: CGRect(x: 0.0, y: 0.0, width: cardWidth, height: cardWidth * 3.0/2.0))
         _ = Constraint.setWidth(control: label, width: cardWidth)
         _ = Constraint.setHeight(control: label, height: cardWidth * (3.0/2.0))
         label.attributedText = card.toAttributedString()
@@ -831,7 +831,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         label.textAlignment = .center
         ScorecardUI.roundCorners(label)
         
-        ConfirmPlayedViewController.show(title: "Confirm Card", content: label, sourceView: self.popoverPresentationController?.sourceView, confirmText: "Play card", cancelText: "Change card", handler: { self.playCard(card: card) } )
+        ConfirmPlayedViewController.show(title: "Confirm Card", content: label, sourceView: self.popoverPresentationController?.sourceView, confirmText: "Play card", cancelText: "Change card", backgroundColor: Palette.tableTop, handler: { self.playCard(card: card) } )
     }
     
     func playCard(card: Card) {
@@ -879,8 +879,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         _ = Constraint.setWidth(control: label, width: 50)
         _ = Constraint.setHeight(control: label, height: 50)
         label.text = "\(bid)"
-        label.backgroundColor = Palette.emphasis
-        label.textColor = Palette.emphasisText
+        Palette.bidButtonStyle(label)
         label.font = UIFont.systemFont(ofSize: 30)
         label.textAlignment = .center
         ScorecardUI.roundCorners(label)

@@ -111,6 +111,7 @@ Update Walkthrough - esp online game
 
 TODO
 -----------
+Sort out autoplay
 
 Medium-term
 -----------

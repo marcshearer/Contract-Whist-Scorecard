@@ -59,6 +59,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
     private var firstTime = true
     private var gamePreviewViewController: GamePreviewViewController!
     private var canProceed: Bool = false
+    private var lastMessage: String = ""
     private var recoveryMode: Bool = false    // Recovery mode as defined by where weve come from (largely ignored)
     
     private var connectedPlayers: Int {
@@ -377,6 +378,29 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
             
             self.scorecard.sendPlayers(players: players)
         }
+        _ = self.statusMessage()
+    }
+    
+    private func statusMessage() -> String {
+        var message: String
+        var remoteMessage: String?
+        if self.canProceed {
+            message = "Ready to start game"
+            remoteMessage = "Waiting for host\nto start game"
+        } else if self.recoveryMode {
+            message = "Waiting for other players\nto reconnect..."
+        } else if self.connectionMode == .online {
+            message = "Waiting for invited\nplayers to connect..."
+        } else {
+            message = "Waiting for other\nplayers to connect..."
+        }
+        remoteMessage = remoteMessage ?? message
+        if remoteMessage != lastMessage {
+            self.scorecard.sendStatus(message:remoteMessage!)
+            lastMessage = remoteMessage!
+        }
+        
+        return message
     }
     
     private func reflectState(peer: CommsPeer) {
@@ -435,191 +459,11 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
                 }
             }
             currentState = state
+            _ = self.statusMessage()
         }
     }
     
-    // MARK: - TableView Overrides ===================================================================== -
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        switch tableView.tag {
-        case 1:
-            // Host
-            return (self.scorecard.settingOnlinePlayerEmail != nil ? 2 : 1)
-        case 2:
-            // Guests
-            return 1
-        default:
-            return 0
-        }
-    }
-    
-    func tableView(_ tableView: UITableView,
-                   titleForHeaderInSection section: Int) -> String? {
-        switch tableView.tag {
-        case 1:
-            switch section {
-            case 0:
-                // Host
-                return "Host game as player"
-            case 1:
-                // Mode
-                return "Connection mode"
-            default:
-                return ""
-            }
-        case 2:
-            // Guests
-            return "Other participants"
-        default:
-            return ""
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        switch tableView.tag {
-        case 1:
-            switch section {
-            case 0:
-                // Host
-                return 1
-            case 1:
-                // Mode
-                return (self.connectionMode == .unknown ? 2 : 1)
-            default:
-                return 0
-            }
-        case 2:
-            // Guests
-            return self.visiblePlayers - 1
-        default:
-            return 0
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 40
-    }
-    
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        let header = view as! UITableViewHeaderFooterView
-        Palette.sectionHeadingStyle(view: header.backgroundView!)
-        header.textLabel!.textColor = Palette.sectionHeadingText
-        header.textLabel!.font = UIFont.boldSystemFont(ofSize: 18.0)
-    }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell: HostPlayerTableCell
-        var cellIdentifier = ""
-        var dataRow = -1
-        
-        if tableView.tag == 1 && indexPath.section == 1 {
-            // Mode
-            cell = tableView.dequeueReusableCell(withIdentifier: "Host Mode Table Cell", for: indexPath) as! HostPlayerTableCell
-            switch indexPath.row {
-            case 0:
-                // Nearby
-                cell.modeLabel.text = "Broadcast for nearby players"
-                cell.modeImageView.image = UIImage(named: "bluetooth")
-                cell.modeLabel.alpha = 1.0
-                cell.modeImageView.alpha = 1.0
-            case 1:
-                // Online
-                
-                cell.modeImageView.image = UIImage(named: "online")
-                if !self.scorecard.onlineEnabled {
-                    cell.modeLabel.text = "Invite players online (offline)"
-                    cell.modeLabel.alpha = 0.2
-                    cell.modeImageView.alpha = 0.2
-                } else {
-                    cell.modeLabel.text = "Invite players online"
-                    cell.modeLabel.alpha = 1.0
-                    cell.modeImageView.alpha = 1.0
-                }
-            default:
-                break
-            }
-            
-        } else {
-            // Player
-            switch tableView.tag {
-            case 1:
-                // Host
-                cellIdentifier = "Host Player Table Cell"
-                dataRow = 0
-            case 2:
-                // Guests
-                cellIdentifier = "Guest Player Table Cell"
-                dataRow = indexPath.row + 1
-            default:
-                break
-            }
-            
-            cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! HostPlayerTableCell
-            
-            self.playerData[dataRow].cell = cell
-            self.refreshPlayers()
-            
-        }
-        
-        let backgroundView = UIView()
-        backgroundView.backgroundColor = UIColor.clear
-        cell.selectedBackgroundView = backgroundView
-        
-        return cell
-        
-    }
-    
-    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        return (tableView.tag == 2)
-    }
-    
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        return .none
-    }
-    
-    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let sourcePlayerData = playerData[sourceIndexPath.row + 1]
-        playerData.remove(at: sourceIndexPath.row + 1)
-        playerData.insert(sourcePlayerData, at: destinationIndexPath.row + 1)
-    }
-    
-    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if self.connectionMode == .unknown && tableView.tag == 1 && indexPath.section == 1 {
-            // Mode - allow selection unless disabled
-            if indexPath.row == 1 && !self.scorecard.onlineEnabled {
-                return nil
-            } else {
-                return indexPath
-            }
-        } else {
-            return nil
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if tableView.tag == 1 && indexPath.section == 1 {
-            switch indexPath.row {
-            case 0:
-                self.setConnectionMode(.nearby)
-            case 1:
-                self.setConnectionMode(.online)
-            default:
-                break
-            }
-            tableView.reloadData()
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-    
-    // MARK: - Search return handler ================================================================ -
+   // MARK: - Search return handler ================================================================ -
     
     private func returnPlayer(complete: Bool, playerMO: [PlayerMO]?) {
         if complete {
@@ -663,19 +507,9 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
     private func refreshPlayers() {
         self.gamePreviewViewController?.selectedPlayers = self.playerData.map {$0.playerMO}
         self.gamePreviewViewController?.refreshPlayers()
+        _ = self.statusMessage()
     }
     
-    // MARK: - Popover Overrides ================================================================ -
-    
-    func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
-        let viewController = popoverPresentationController.presentedViewController
-        if viewController is SearchViewController {
-            if self.playerData.count == 0 {
-                self.exitHost()
-            }
-        }
-    }
-
     // MARK: - Game Preview Delegate handlers ============================================================================== -
     
     internal var gamePreviewCanStartGame: Bool {
@@ -686,13 +520,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
     
     internal var gamePreviewWaitMessage: NSAttributedString {
         get {
-            if self.canProceed {
-                return NSAttributedString(string: "Ready to start game")
-            } else if self.recoveryMode {
-                return NSAttributedString(string: "Waiting for other players\nto reconnect...")
-            } else {
-                return NSAttributedString(string: "Waiting for invited\nplayers to connect...")
-            }
+            return NSAttributedString(string: self.statusMessage())
         }
     }
     
@@ -732,6 +560,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
         self.setupPlayers()
         self.gameInProgress = true
         self.scorecard.sendPlayers()
+        _ = self.statusMessage()
     }
     
     internal func gamePreviewStopGame() {
@@ -1005,7 +834,6 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
 // MARK: - Utility classes ========================================================================= -
 
 class PlayerData {
-    public var cell: HostPlayerTableCell!
     public var name: String
     public var email: String
     public var playerMO: PlayerMO!
@@ -1028,17 +856,3 @@ class PlayerData {
         self.inviteStatus = inviteStatus
     }
 }
-
-// MARK: - Other UI Classes - e.g. Cells =========================================================== -
-
-class HostPlayerTableCell: UITableViewCell {
-    @IBOutlet weak var playerNameLabel: UILabel!
-    @IBOutlet weak var playerImage: UIImageView!
-    @IBOutlet weak var playerDisc: UILabel!
-    @IBOutlet weak var modeLabel: UILabel!
-    @IBOutlet weak var modeImageView: UIImageView!
-    @IBOutlet weak var deviceNameLabel: UILabel!
-    @IBOutlet weak var changeButton: UIButton!
-    @IBOutlet weak var disconnectButton: UIButton!
-}
-

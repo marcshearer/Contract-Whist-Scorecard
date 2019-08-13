@@ -264,7 +264,6 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 player["email"] = players[playerNumber - 1].email
                 player["connected"] = (players[playerNumber - 1].connected ? "true" : "false")
                 playerList["\(playerNumber)"] = player
-                Utility.debugMessage("sendPlayersPassed", player["name"]!)
             }
         } else {
             // Use defined players
@@ -275,12 +274,17 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 player["email"] = playerMO.email!
                 player["connected"] = "true"
                 playerList["\(playerNumber)"] = player
-                Utility.debugMessage("sendPlayers", player["name"]!)
             }
         }
         self.commsDelegate?.send(descriptor, playerList, to: commsPeer)
         self.sendDealer()
     }
+    
+    public func sendStatus(to commsPeer: CommsPeer! = nil, message: String) {
+        let status: [String: Any] = [ "status" : message ]
+        self.commsDelegate?.send("status", status, to: commsPeer)
+    }
+    
     
     public func sendDealer(to commsPeer: CommsPeer! = nil) {
         let dealer: [String: Any] = [ "dealer" : self.dealerIs ]

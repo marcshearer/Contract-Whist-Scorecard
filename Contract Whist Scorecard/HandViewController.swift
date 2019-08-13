@@ -88,6 +88,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     @IBOutlet private weak var handTableView: UITableView!
     @IBOutlet private weak var handHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var handTableViewTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var handSourceView: UIView!
     @IBOutlet private weak var tabletopView: UIView!
     @IBOutlet private weak var statusWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bidView: UIView!
@@ -831,7 +832,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         label.textAlignment = .center
         ScorecardUI.roundCorners(label)
         
-        ConfirmPlayedViewController.show(title: "Confirm Card", content: label, sourceView: self.popoverPresentationController?.sourceView, confirmText: "Play card", cancelText: "Change card", backgroundColor: Palette.tableTop, handler: { self.playCard(card: card) } )
+        ConfirmPlayedViewController.show(title: "Confirm Card", content: label, sourceView: self.handSourceView, confirmText: "Play card", cancelText: "Change card", offsets: (0.5, nil), backgroundColor: Palette.tableTop, handler: { self.playCard(card: card) } )
     }
     
     func playCard(card: Card) {
@@ -884,7 +885,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         label.textAlignment = .center
         ScorecardUI.roundCorners(label)
         
-        ConfirmPlayedViewController.show(title: "Confirm Bid", content: label, sourceView: self.popoverPresentationController?.sourceView, confirmText: "Confirm bid", cancelText: "Change bid", handler: { self.makeBid(bid) } )
+        ConfirmPlayedViewController.show(title: "Confirm Bid", content: label, sourceView: self.handSourceView, confirmText: "Confirm bid", cancelText: "Change bid", offsets: (0.5, nil), handler: { self.makeBid(bid) } )
     }
     
     func makeBid(_ bid: Int) {

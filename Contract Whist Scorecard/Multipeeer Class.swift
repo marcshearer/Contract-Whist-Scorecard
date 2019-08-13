@@ -183,7 +183,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
     internal func debugMessage(_ message: String, peerID: MCPeerID?) {
         var outputMessage = message
         if let peerID = peerID {
-            outputMessage = outputMessage + " Device: \(peerID.displayName) (\(peerID.self))"
+            outputMessage = outputMessage + " Device: \(peerID.displayName)"
         }
         self.debugMessage(outputMessage, device: nil, force: false)
     }

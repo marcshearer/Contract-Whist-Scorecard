@@ -17,20 +17,26 @@ class ConfirmPlayedViewController : UIViewController, UIPopoverPresentationContr
     private var cancelText: String?
     private var backgroundColor: UIColor?
     private var confirmHandler: (()->())?
-    private var sourceView: UIView!
-    
+    private var blurredBackgroundView: UIView!
+    static private var parentViewController: UIViewController!
+    static private var sourceView: UIView!
+    static private var preferredHeight: CGFloat!
+    static private var offsets: (portrait: CGFloat?, landscape: CGFloat?) = (0.0, 0.0)
+
     @IBOutlet private weak var labelTitle: UILabel!
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet private weak var confirmButton: UIButton!
     @IBOutlet private weak var cancelButton: UIButton!
     
     @IBAction func confirmPressed(_ sender: UIButton) {
+        self.removeBlurredBackgroundView()
         self.dismiss(animated: true, completion: {
             self.confirmHandler?()
         })
     }
     
     @IBAction func cancelPressed(_ sender: UIButton) {
+        self.removeBlurredBackgroundView()
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -59,30 +65,62 @@ class ConfirmPlayedViewController : UIViewController, UIPopoverPresentationContr
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        // Scorecard.shared.reCenterPopup(self, ignoreScorepad: true)
-        self.sourceView.layoutIfNeeded()
         self.view.setNeedsLayout()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        Scorecard.shared.reCenterPopup(self, ignoreScorepad: true)
+        self.removeBlurredBackgroundView()
+        ConfirmPlayedViewController.parentViewController.view.layoutIfNeeded()
+        ConfirmPlayedViewController.sourceView.layoutIfNeeded()
+        self.overlayBlurredBackgroundView()
+        self.reCenterPopup()
         Constraint.anchor(view: self.contentView, control: content, attributes: .centerX, .centerY)
     }
     
-    override func didRotate(from fromInterfaceOrientation: UIInterfaceOrientation) {
-        Scorecard.shared.reCenterPopup(self)
+    func overlayBlurredBackgroundView() {
+        
+        self.blurredBackgroundView = UIView(frame: CGRect(origin: CGPoint(), size: ConfirmPlayedViewController.sourceView.frame.size))
+        self.blurredBackgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        ConfirmPlayedViewController.sourceView.addSubview(blurredBackgroundView)
     }
+    
+    func removeBlurredBackgroundView() {
+        
+        self.blurredBackgroundView?.removeFromSuperview()
+    }
+    
+    class private func yOffset() -> CGFloat {
+        var yOffset: CGFloat = 0.0
+        if let sourceView = ConfirmPlayedViewController.sourceView {
+            let topSpace = (sourceView.frame.height - self.preferredHeight) / 2.0
+            if let offset = (ScorecardUI.landscapePhone() ? offsets.landscape : offsets.portrait) {
+                yOffset = topSpace * offset
+            }
+        }
+        return yOffset
+    }
+    
+    func reCenterPopup() {
+
+        if let sourceView = ConfirmPlayedViewController.sourceView {
+            
+            let verticalCenter: CGFloat = sourceView.bounds.midY - ConfirmPlayedViewController.yOffset()
+            self.popoverPresentationController?.sourceView = sourceView
+            self.popoverPresentationController?.sourceRect = CGRect(origin: CGPoint(x: sourceView.bounds.midX, y: verticalCenter), size: CGSize())
+        }
+    }
+    
     
     func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
         return UIModalPresentationStyle.none
     }
     
-    class func show(title: String, content: UIView, sourceView: UIView? = nil, confirmText: String? = nil, cancelText: String? = nil, minWidth: CGFloat = 240, minHeight: CGFloat = 200.0, backgroundColor: UIColor? = nil, handler: (()->())? = nil) {
+    class func show(title: String, content: UIView, sourceView: UIView? = nil, confirmText: String? = nil, cancelText: String? = nil, minWidth: CGFloat = 240, minHeight: CGFloat = 200.0, offsets: (portrait: CGFloat?, landscape: CGFloat?) = (0.0, nil), backgroundColor: UIColor? = nil, handler: (()->())? = nil) {
         let storyboard = UIStoryboard(name: "ConfirmPlayedViewController", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "ConfirmPlayedViewController") as! ConfirmPlayedViewController
         
-        let parentViewController = Utility.getActiveViewController()!
+        ConfirmPlayedViewController.parentViewController = Utility.getActiveViewController()!
         viewController.formTitle = title
         viewController.content = content
         viewController.confirmText = confirmText
@@ -90,17 +128,21 @@ class ConfirmPlayedViewController : UIViewController, UIPopoverPresentationContr
         viewController.backgroundColor = backgroundColor
         viewController.confirmHandler = handler
         let sourceView = sourceView ?? parentViewController.view
-        viewController.sourceView = sourceView
+        ConfirmPlayedViewController.sourceView = sourceView
+        ConfirmPlayedViewController.offsets = offsets
+        ConfirmPlayedViewController.preferredHeight = max(minHeight, content.frame.height + 100.0)
         
+            
         viewController.modalPresentationStyle = UIModalPresentationStyle.popover
         viewController.popoverPresentationController?.delegate = viewController
         viewController.isModalInPopover = true
         viewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
         viewController.popoverPresentationController?.sourceView = sourceView
-        viewController.preferredContentSize = CGSize(width: max(minWidth, content.frame.width), height: max(minHeight, content.frame.height + 100.0))
-        viewController.popoverPresentationController?.sourceRect = CGRect(origin: CGPoint(x: sourceView!.bounds.midX, y: sourceView!.bounds.midY), size: CGSize())
+        viewController.preferredContentSize = CGSize(width: max(minWidth, content.frame.width), height: ConfirmPlayedViewController.preferredHeight)
+        viewController.popoverPresentationController?.sourceRect = CGRect(origin: CGPoint(x: sourceView!.bounds.midX, y: sourceView!.bounds.midY - self.yOffset()), size: CGSize())
         
         parentViewController.present(viewController, animated: true, completion: nil)
     }
+    
 }
 

@@ -479,7 +479,7 @@ class RabbitMQClientService : RabbitMQService, CommsClientHandlerDelegate, Rabbi
     
     // MARK: - Online Invites - Client checking for current invites ========================================= -
     
-    private func clientCheckOnlineInvites(email: String, checkExpiry: Bool = true) {
+    public func clientCheckOnlineInvites(email: String, checkExpiry: Bool = true) {
         self.inviteEmail = email
         self.invite = Invite()
         self.invite.checkInvitations(to: self.inviteEmail, checkExpiry: checkExpiry, completion: self.clientCheckInvitationsCompletion)

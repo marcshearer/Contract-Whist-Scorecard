@@ -197,6 +197,10 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth)
         self.selectedPlayersView.setHaloColor(color: Palette.halo)
         self.selectedPlayersView.drawRoom(thumbnailWidth: thumbnailWidth, thumbnailHeight: thumbnailHeight, directions: (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.up), (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.down))
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         self.updateButtons(animate: false)
         if self.initialising {
             self.initialising = false
@@ -287,7 +291,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             self.cutForDealerTrailingConstraint.isActive = false
             self.cutForDealerTopConstraint.constant = (ScorecardUI.smallPhoneSize() ? 70 : 100)
             self.overrideSettingsButton.isHidden = true
-            self.bannerContinuationLabel.isHidden = true
+            self.selectedPlayersTopConstraint.constant = (UIScreen.main.bounds.height * 0.10) + navigationBar.intrinsicContentSize.height
         } else {
             self.cutForDealerCenterXConstraint.isActive = false
             self.cutForDealerLeadingConstraint.isActive = true
@@ -309,17 +313,19 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
                     self.cutForDealerButton.alpha = 1.0
                     self.nextDealerButton.isEnabled = true
                     self.nextDealerButton.alpha = 1.0
+                    self.overrideSettingsButton?.isHidden = false
                 } else {
                     topConstraint = (UIScreen.main.bounds.height * 0.10) + navigationBar.intrinsicContentSize.height
                     self.bannerContinueButton.isHidden = true
                     self.continueButton.isHidden = true
-                    self.bannerContinuationLabel.attributedText = self.delegate?.gamePreviewWaitMessage
                     self.bannerContinuationLabel.isHidden = false
                     self.cutForDealerButton.isEnabled = false
                     self.cutForDealerButton.alpha = 0.5
                     self.nextDealerButton.isEnabled = false
                     self.nextDealerButton.alpha = 0.5
+                    self.overrideSettingsButton?.isHidden = true
                 }
+                self.bannerContinuationLabel.attributedText = self.delegate?.gamePreviewWaitMessage
                 if self.selectedPlayersTopConstraint.constant != topConstraint {
                     self.selectedPlayersTopConstraint.constant = topConstraint
                     if animate {
@@ -374,6 +380,10 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         }
     }
     
+    public func showStatus(status: String) {
+        self.bannerContinuationLabel.text = status
+    }
+    
     private func goToScorepad() {
         if self.scorecard.overrideSelected {
             self.alertDecision("Overrides for the number of cards/rounds or stats/history inclusion have been selected. Are you sure you want to continue",
@@ -426,7 +436,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     // MARK: - Utility Routines ================================================================ -
 
-    func updateSelectedPlayers(_ selectedPlayers: [PlayerMO?]) {
+    private func updateSelectedPlayers(_ selectedPlayers: [PlayerMO?]) {
         scorecard.updateSelectedPlayers(selectedPlayers)
         scorecard.checkReady()
 
@@ -452,6 +462,8 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     public func executeCut(preCutCards: [Card]? = nil) {
         var cutCards: [Card]
+        let statusIsHidden = bannerContinuationLabel.isHidden
+        bannerContinuationLabel.isHidden = true
         
         // Remove current dealer halo
         self.showDealer(playerNumber: self.scorecard.dealerIs, forceHide: true)
@@ -467,7 +479,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
                 self.animateHideOthers(afterDuration: 0.5, stepDuration: 0.5, completion: {
                     self.animateOutcome(cards: cutCards, afterDuration: 0.0, stepDuration: 1.0, completion: {
                         self.animateClear(afterDuration: 2.0, stepDuration: 0.5, completion: {
-                            self.animateResume()
+                            self.animateResume(statusIsHidden: statusIsHidden)
                         })
                     })
                 })
@@ -651,7 +663,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         animation.startAnimation(afterDelay: afterDuration)
     }
     
-    private func animateResume() {
+    private func animateResume(statusIsHidden: Bool) {
         self.selectedPlayersView.message = NSAttributedString()
         self.showCurrentDealer()
         self.cutForDealerButton.isEnabled = !self.readOnly
@@ -661,6 +673,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             self.nextDealerButton.alpha = 1.0
         }
         self.selectedPlayersView.messageAlpha = 1.0
+        self.bannerContinuationLabel.isHidden = statusIsHidden
     }
     
     private func createCutCards() {

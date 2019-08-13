@@ -75,6 +75,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     private var invite: Invite!
     private var recoveryMode = false
     private let whisper = Whisper()
+    private var lastStatus = ""
     private var playerConnected: [String : Bool] = [:]
     
     // MARK: - IB Outlets ============================================================================== -
@@ -357,6 +358,14 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                         self.queue.insert(QueueEntry(descriptor: "playHand", data: nil, peer: peer), at: 0)
                     }
                     
+                case "status":
+                    if let status = data!["status"] as! String? {
+                        if status != self.lastStatus {
+                            self.gamePreviewViewController?.showStatus(status: status)
+                            self.lastStatus = status
+                        }
+                    }
+                    
                 case "cut":
                     if self.gamePreviewViewController != nil {
                         var preCutCards: [Card] = []
@@ -559,6 +568,10 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     // MARK: - Game Preview Delegate handlers ================================================================ -
     
+    internal func gamePreviewInitialisationComplete(gamePreviewViewController: GamePreviewViewController) {
+        self.gamePreviewViewController.showStatus(status: self.lastStatus)
+    }
+    
     internal func gamePreviewCompletion() {
         self.disconnectPressed()
         self.gamePreviewViewController = nil
@@ -682,12 +695,9 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     @objc private func refreshInvites(_ sender: Any? = nil) {
         // Refresh online game invites
-        if sender != nil {
-            Utility.debugMessage("client", "Timer")
-        }
         if self.scorecard.onlineEnabled && self.appState == .notConnected {
-            self.rabbitMQClient?.stop()
-            self.rabbitMQClient?.start(email: self.thisPlayer, name: self.thisPlayerName, recoveryMode: self.recoveryMode)
+            Utility.debugMessage("client", "Timer - refresh invites")
+            self.rabbitMQClient?.clientCheckOnlineInvites(email: self.thisPlayer)
             self.clientTableView.reloadData()
         }
     }

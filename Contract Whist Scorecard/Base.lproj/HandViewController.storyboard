@@ -589,6 +589,10 @@
                                     </mask>
                                 </variation>
                             </view>
+                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OBj-ch-rRU" userLabel="Hand Source View">
+                                <rect key="frame" x="0.0" y="594" width="375" height="218"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" name="Hand"/>
                         <gestureRecognizers/>
@@ -599,7 +603,9 @@
                             <constraint firstItem="ijI-CT-GH5" firstAttribute="trailing" secondItem="TTa-Ie-Ogs" secondAttribute="trailing" id="6Ps-Xs-ghH"/>
                             <constraint firstItem="u8M-4W-Wck" firstAttribute="bottom" secondItem="Nrt-LH-Xin" secondAttribute="bottom" id="6vo-Sh-zXa"/>
                             <constraint firstAttribute="bottom" secondItem="Wxh-DW-yHT" secondAttribute="bottom" id="9F6-HO-cN6"/>
+                            <constraint firstAttribute="bottom" secondItem="OBj-ch-rRU" secondAttribute="bottom" id="9bh-0s-QN2"/>
                             <constraint firstItem="ijI-CT-GH5" firstAttribute="leading" secondItem="QxM-M6-dW4" secondAttribute="leading" id="Bdh-zo-vtN"/>
+                            <constraint firstItem="OBj-ch-rRU" firstAttribute="top" secondItem="DJP-w2-bXe" secondAttribute="top" id="BiQ-di-dIo"/>
                             <constraint firstItem="u8M-4W-Wck" firstAttribute="top" secondItem="bHw-XW-Iiy" secondAttribute="bottom" id="Clr-s9-a7p"/>
                             <constraint firstAttribute="trailing" secondItem="TTa-Ie-Ogs" secondAttribute="trailing" id="GtV-tI-hmS"/>
                             <constraint firstItem="DJP-w2-bXe" firstAttribute="leading" secondItem="Wxh-DW-yHT" secondAttribute="leading" id="HIV-aW-seE"/>
@@ -620,6 +626,7 @@
                             <constraint firstItem="DJP-w2-bXe" firstAttribute="leading" secondItem="WOm-6F-AOV" secondAttribute="trailing" id="eqq-9j-fgs"/>
                             <constraint firstItem="ijI-CT-GH5" firstAttribute="bottom" secondItem="QxM-M6-dW4" secondAttribute="bottom" id="g7I-B6-Iv6"/>
                             <constraint firstItem="u8M-4W-Wck" firstAttribute="trailing" secondItem="Nrt-LH-Xin" secondAttribute="leading" id="g8Q-w0-A9M"/>
+                            <constraint firstItem="OBj-ch-rRU" firstAttribute="leading" secondItem="DJP-w2-bXe" secondAttribute="leading" id="gzE-BK-W5p"/>
                             <constraint firstItem="bHw-XW-Iiy" firstAttribute="trailing" secondItem="QxM-M6-dW4" secondAttribute="trailing" id="jOH-Im-PGI"/>
                             <constraint firstItem="Wxh-DW-yHT" firstAttribute="top" secondItem="Nrt-LH-Xin" secondAttribute="bottom" id="lLQ-pv-OOI"/>
                             <constraint firstItem="wNn-Ll-ZaQ" firstAttribute="leading" secondItem="QxM-M6-dW4" secondAttribute="leading" id="lf7-oV-ON5"/>
@@ -627,6 +634,7 @@
                             <constraint firstAttribute="trailing" secondItem="WOm-6F-AOV" secondAttribute="trailing" id="mrd-1t-4jp"/>
                             <constraint firstItem="qNK-3C-kZ9" firstAttribute="top" secondItem="Nrt-LH-Xin" secondAttribute="top" id="pHp-rt-ZSh"/>
                             <constraint firstItem="TTa-Ie-Ogs" firstAttribute="width" secondItem="WOm-6F-AOV" secondAttribute="width" id="tKS-wg-Yzy"/>
+                            <constraint firstAttribute="trailing" secondItem="OBj-ch-rRU" secondAttribute="trailing" id="u3r-SQ-cgN"/>
                             <constraint firstItem="qNK-3C-kZ9" firstAttribute="leading" secondItem="QxM-M6-dW4" secondAttribute="leading" id="uYQ-rs-P2H"/>
                             <constraint firstItem="DJP-w2-bXe" firstAttribute="leading" secondItem="QxM-M6-dW4" secondAttribute="leading" id="xKn-0t-L7j"/>
                             <constraint firstItem="Nrt-LH-Xin" firstAttribute="trailing" secondItem="DJP-w2-bXe" secondAttribute="trailing" id="xRI-B2-GgZ"/>
@@ -641,6 +649,8 @@
                             <mask key="constraints">
                                 <exclude reference="6Ps-Xs-ghH"/>
                                 <exclude reference="Bdh-zo-vtN"/>
+                                <exclude reference="Ptw-uC-5Cb"/>
+                                <exclude reference="g7I-B6-Iv6"/>
                                 <exclude reference="zae-oA-zeF"/>
                                 <exclude reference="GtV-tI-hmS"/>
                                 <exclude reference="d3Q-Jj-Ygi"/>
@@ -651,8 +661,6 @@
                                 <exclude reference="aQR-aa-ye0"/>
                                 <exclude reference="eqq-9j-fgs"/>
                                 <exclude reference="xKn-0t-L7j"/>
-                                <exclude reference="Ptw-uC-5Cb"/>
-                                <exclude reference="g7I-B6-Iv6"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=compact">
@@ -662,14 +670,14 @@
                             <mask key="constraints">
                                 <include reference="6Ps-Xs-ghH"/>
                                 <include reference="Bdh-zo-vtN"/>
+                                <include reference="Ptw-uC-5Cb"/>
+                                <include reference="g7I-B6-Iv6"/>
                                 <include reference="zae-oA-zeF"/>
                                 <include reference="d3Q-Jj-Ygi"/>
                                 <include reference="tKS-wg-Yzy"/>
                                 <include reference="5cp-aR-TTh"/>
                                 <include reference="aQR-aa-ye0"/>
                                 <include reference="eqq-9j-fgs"/>
-                                <include reference="Ptw-uC-5Cb"/>
-                                <include reference="g7I-B6-Iv6"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
@@ -692,6 +700,7 @@
                         <outlet property="bidView" destination="WOm-6F-AOV" id="Xu3-Yg-Bbf"/>
                         <outlet property="finishButton" destination="Bna-lC-tI3" id="4MW-oM-JM7"/>
                         <outlet property="handHeightConstraint" destination="5qd-B2-R8P" id="tkd-xt-XXU"/>
+                        <outlet property="handSourceView" destination="OBj-ch-rRU" id="LQn-Dh-ZZd"/>
                         <outlet property="handTableView" destination="bGt-JH-4so" id="Vy7-OY-ApE"/>
                         <outlet property="handTableViewTrailingConstraint" destination="dKX-wJ-xeQ" id="4t4-3O-PGX"/>
                         <outlet property="handView" destination="DJP-w2-bXe" id="nWz-0b-5Uh"/>

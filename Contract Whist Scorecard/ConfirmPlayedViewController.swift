@@ -64,6 +64,12 @@ class ConfirmPlayedViewController : UIViewController, UIPopoverPresentationContr
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        // Avoid animating
+        coordinator.animate(alongsideTransition: nil, completion:
+            {_ in
+                UIView.setAnimationsEnabled(true)
+        })
+        UIView.setAnimationsEnabled(false)
         super.viewWillTransition(to: size, with: coordinator)
         self.view.setNeedsLayout()
     }

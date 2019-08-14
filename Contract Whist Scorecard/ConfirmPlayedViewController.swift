@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ConfirmPlayedViewController : UIViewController, UIPopoverPresentationControllerDelegate {
+class ConfirmPlayedViewController : CustomViewController, UIPopoverPresentationControllerDelegate {
     
     private var message: String!
     private var formTitle: String!

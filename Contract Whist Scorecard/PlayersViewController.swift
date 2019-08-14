@@ -142,10 +142,10 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
                 self.leftPadView.isHidden = false
                 self.rightPadView.isHidden = true
             } else {
-                self.rightPadWidthConstraint.constant = (fillerWidth * 2.0) - arrowWidth + view.safeAreaInsets.right + 20.0 + 5.0
+                self.rightPadWidthConstraint.constant = (fillerWidth * 2.0) - arrowWidth + view.safeAreaInsets.right + 20.0
                 self.rightPadHeightConstraint.constant = fillerHeight
                 Polygon.angledBannerContinuationMask(view: rightPadView, frame: CGRect(x: 20.0, y: 0, width: fillerWidth, height: fillerHeight), type: .hexagon, arrowWidth: arrowWidth)
-                self.rightPadTextLeadingConstraint.constant = 80.0
+                self.rightPadTextLeadingConstraint.constant = 75.0
                 self.rightPadTextTrailingConstraint.constant = fillerWidth - arrowWidth + view.safeAreaInsets.right + 60.0
                 self.leftPadView.isHidden = true
                 self.rightPadView.isHidden = false

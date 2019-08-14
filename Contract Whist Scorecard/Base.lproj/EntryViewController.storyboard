@@ -39,11 +39,11 @@
                                                 <rect key="frame" x="16" y="22" width="0.0" height="0.0"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
-                                                    <stackView autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yiv-DE-A0X">
-                                                        <rect key="frame" x="0.0" y="0.0" width="52" height="0.0"/>
+                                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yiv-DE-A0X">
+                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="0.0"/>
                                                         <subviews>
                                                             <button autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pge-ad-xW7" userLabel="Errors Button" customClass="ErrorRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="0.0" width="22" height="0.0"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="30" height="0.0"/>
                                                                 <color key="backgroundColor" name="Error"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="30" id="PHL-Xz-e8E"/>
@@ -54,7 +54,7 @@
                                                                 </connections>
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VGH-oE-ROK" userLabel="Finish Button" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                                <rect key="frame" x="22" y="0.0" width="30" height="0.0"/>
+                                                                <rect key="frame" x="30" y="0.0" width="20" height="0.0"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="30" id="Awa-De-Kxt"/>
                                                                 </constraints>
@@ -64,7 +64,6 @@
                                                                 </connections>
                                                             </button>
                                                         </subviews>
-                                                        <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="1"/>
                                                     </stackView>
                                                 </subviews>
                                                 <color key="backgroundColor" name="Clear"/>
@@ -356,7 +355,7 @@
                                             <rect key="frame" x="16" y="22" width="0.0" height="0.0"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
-                                                <stackView autoresizesSubviews="NO" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5A9-ob-sf7">
+                                                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5A9-ob-sf7">
                                                     <rect key="frame" x="0.0" y="0.0" width="73" height="0.0"/>
                                                     <subviews>
                                                         <button autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IVB-I0-IfC" userLabel="Errors Button" customClass="ErrorRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
@@ -381,7 +380,6 @@
                                                             </connections>
                                                         </button>
                                                     </subviews>
-                                                    <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="1"/>
                                                 </stackView>
                                             </subviews>
                                             <color key="backgroundColor" name="Clear"/>
@@ -400,10 +398,10 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
                                                 <label opaque="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Round" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="mYF-x3-kAl">
-                                                    <rect key="frame" x="0.0" y="-18" width="50" height="36"/>
+                                                    <rect key="frame" x="0.0" y="-18" width="111.5" height="36"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="50" id="Cc4-fh-DqR"/>
+                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="Cc4-fh-DqR"/>
                                                         <constraint firstAttribute="height" constant="36" id="q1c-XC-Uof"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="40"/>

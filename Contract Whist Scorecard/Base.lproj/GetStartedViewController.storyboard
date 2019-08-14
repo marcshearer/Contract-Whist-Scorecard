@@ -91,7 +91,7 @@
                                                     </constraints>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="GYD-1T-tOX">
-                                                    <rect key="frame" x="30" y="45" width="315" height="130"/>
+                                                    <rect key="frame" x="345" y="45" width="0.0" height="130"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" name="Text"/>
@@ -111,7 +111,7 @@
                                             <color key="backgroundColor" name="Clear"/>
                                             <constraints>
                                                 <constraint firstItem="cWs-b2-QzK" firstAttribute="top" secondItem="GYD-1T-tOX" secondAttribute="bottom" constant="2" id="B99-ey-69W"/>
-                                                <constraint firstItem="GYD-1T-tOX" firstAttribute="leading" secondItem="7ge-Lc-4j1" secondAttribute="leading" constant="30" id="Hc4-he-LRP"/>
+                                                <constraint firstItem="GYD-1T-tOX" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="7ge-Lc-4j1" secondAttribute="leading" constant="30" id="Hc4-he-LRP"/>
                                                 <constraint firstItem="JLe-pr-2Cf" firstAttribute="top" secondItem="7ge-Lc-4j1" secondAttribute="topMargin" id="Iwt-ic-9aR"/>
                                                 <constraint firstItem="UKX-zP-rkK" firstAttribute="leading" secondItem="JLe-pr-2Cf" secondAttribute="trailing" constant="5" id="OAZ-fK-RoD"/>
                                                 <constraint firstItem="cWs-b2-QzK" firstAttribute="leading" relation="lessThanOrEqual" secondItem="7ge-Lc-4j1" secondAttribute="leading" constant="30" id="SRh-q6-MVq"/>

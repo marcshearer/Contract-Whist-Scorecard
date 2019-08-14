@@ -81,7 +81,7 @@
                                     <constraint firstItem="Tm3-ag-1o2" firstAttribute="width" secondItem="YUd-84-9H5" secondAttribute="width" multiplier="0.4" id="FKw-fM-XcE"/>
                                     <constraint firstItem="Tm3-ag-1o2" firstAttribute="leading" secondItem="YUd-84-9H5" secondAttribute="leading" constant="16" id="KsI-u7-bia"/>
                                     <constraint firstAttribute="trailing" secondItem="7SY-Bw-ahm" secondAttribute="trailing" constant="16" id="LnQ-Hj-P0G"/>
-                                    <constraint firstItem="7SY-Bw-ahm" firstAttribute="width" secondItem="Tm3-ag-1o2" secondAttribute="width" id="vUK-EG-F0k"/>
+                                    <constraint firstItem="7SY-Bw-ahm" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Tm3-ag-1o2" secondAttribute="trailing" priority="250" id="SL4-KM-4Cb"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="shapeType">
@@ -230,6 +230,7 @@
                             <constraint firstAttribute="bottom" secondItem="Tlx-l1-ig7" secondAttribute="bottom" id="lTh-qj-dfR"/>
                             <constraint firstItem="jtX-GA-7ms" firstAttribute="leading" secondItem="Mqr-Sp-LZb" secondAttribute="leading" id="lde-MW-hLR"/>
                             <constraint firstItem="be7-aP-DEd" firstAttribute="leading" secondItem="jtX-GA-7ms" secondAttribute="leading" id="lzs-gh-jkl"/>
+                            <constraint firstItem="7SY-Bw-ahm" firstAttribute="width" secondItem="Whs-Ka-Uxd" secondAttribute="width" multiplier="0.4" id="rGi-C0-dn8"/>
                             <constraint firstItem="Mqr-Sp-LZb" firstAttribute="trailing" secondItem="Tlx-l1-ig7" secondAttribute="trailing" constant="10" id="s3n-Cw-bEf"/>
                             <constraint firstItem="YUd-84-9H5" firstAttribute="trailing" secondItem="Whs-Ka-Uxd" secondAttribute="trailing" id="ud8-XT-Xni"/>
                             <constraint firstItem="be7-aP-DEd" firstAttribute="trailing" secondItem="jtX-GA-7ms" secondAttribute="trailing" id="ufq-f9-nmb"/>

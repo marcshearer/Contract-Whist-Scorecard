@@ -33,7 +33,30 @@
                                     <color key="textColor" name="Game Banner Text"/>
                                 </textAttributes>
                                 <items>
-                                    <navigationItem title="Override Settings" id="dVn-7M-hOl"/>
+                                    <navigationItem title="Override" id="dVn-7M-hOl">
+                                        <barButtonItem key="leftBarButtonItem" id="tZK-qD-Ccu">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="kCS-dn-rxk">
+                                                <rect key="frame" x="16" y="11" width="78" height="22"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="18"/>
+                                                <state key="normal" title="Cancel" image="back"/>
+                                                <connections>
+                                                    <action selector="revertPressed:" destination="oF9-Yc-WbQ" eventType="touchUpInside" id="gZ2-Ze-2yS"/>
+                                                </connections>
+                                            </button>
+                                        </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" id="R3K-Sy-Bna">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="5eL-j1-NvT" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <rect key="frame" x="272" y="11" width="87" height="22"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="18"/>
+                                                <state key="normal" title="Confirm" image="forward"/>
+                                                <connections>
+                                                    <action selector="confirmPressed:" destination="oF9-Yc-WbQ" eventType="touchUpInside" id="kHl-8z-AbB"/>
+                                                </connections>
+                                            </button>
+                                        </barButtonItem>
+                                    </navigationItem>
                                 </items>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
@@ -42,7 +65,7 @@
                                 </userDefinedRuntimeAttributes>
                             </navigationBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="DkQ-EB-XGS">
-                                <rect key="frame" x="0.0" y="64" width="375" height="541"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <color key="separatorColor" name="Clear"/>
                                 <prototypes>
@@ -223,13 +246,6 @@
                                     <outlet property="delegate" destination="oF9-Yc-WbQ" id="KiB-FD-dlA"/>
                                 </connections>
                             </tableView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kj0-Kr-tt5" userLabel="Horizontal Separator Above">
-                                <rect key="frame" x="0.0" y="605" width="375" height="1"/>
-                                <color key="backgroundColor" name="Separator"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="1" id="3Kn-KE-Yaf"/>
-                                </constraints>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wiu-MJ-nOh" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="667" width="375" height="0.0"/>
                                 <color key="backgroundColor" name="Background"/>
@@ -239,88 +255,31 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hd6-tu-kyD" customClass="DarkUnroundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="606" width="187" height="60"/>
-                                <color key="backgroundColor" name="Table Top"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="g8n-S9-cGr"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                <state key="normal" title="Reset to Settings">
-                                    <color key="titleColor" name="Table Top Text"/>
-                                </state>
-                                <connections>
-                                    <action selector="cancelPressed:" destination="oF9-Yc-WbQ" eventType="touchUpInside" id="d5I-mS-3Yr"/>
-                                </connections>
-                            </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FLE-Q0-nhR" userLabel="Vertical Separator">
-                                <rect key="frame" x="187" y="606" width="1" height="60"/>
-                                <color key="backgroundColor" name="Separator"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="1" id="8N4-XX-IzL"/>
-                                </constraints>
-                            </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3wP-X7-s0q" customClass="DarkUnroundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="188" y="606" width="187" height="60"/>
-                                <color key="backgroundColor" name="Table Top"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="bOi-I0-hHm"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
-                                <state key="normal" title="Confirm Override">
-                                    <color key="titleColor" name="Table Top Text Contrast"/>
-                                </state>
-                                <connections>
-                                    <action selector="confirmPressed:" destination="oF9-Yc-WbQ" eventType="touchUpInside" id="73e-FL-TDV"/>
-                                </connections>
-                            </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hvF-NC-hs2" userLabel="Horizontal Separator Below">
-                                <rect key="frame" x="0.0" y="666" width="375" height="1"/>
-                                <color key="backgroundColor" name="Separator"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="1" id="4MT-mH-wG5"/>
-                                </constraints>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" name="Background"/>
                         <constraints>
                             <constraint firstItem="DkQ-EB-XGS" firstAttribute="trailing" secondItem="hOp-TY-evR" secondAttribute="trailing" id="0p0-Oo-WrP"/>
                             <constraint firstItem="BMC-qc-qAk" firstAttribute="top" secondItem="XnD-Df-Iax" secondAttribute="top" id="28N-3j-o7v"/>
-                            <constraint firstItem="3wP-X7-s0q" firstAttribute="height" secondItem="FLE-Q0-nhR" secondAttribute="height" id="7kK-44-hnL"/>
                             <constraint firstAttribute="trailing" secondItem="BMC-qc-qAk" secondAttribute="trailing" id="AqE-0t-huX"/>
-                            <constraint firstItem="hvF-NC-hs2" firstAttribute="top" secondItem="3wP-X7-s0q" secondAttribute="bottom" id="BTY-LZ-3Ex"/>
                             <constraint firstItem="F6E-8M-LIy" firstAttribute="leading" secondItem="hOp-TY-evR" secondAttribute="leading" id="CoA-7t-p5s"/>
-                            <constraint firstItem="hvF-NC-hs2" firstAttribute="top" secondItem="FLE-Q0-nhR" secondAttribute="bottom" id="DHm-WQ-BqU"/>
-                            <constraint firstAttribute="trailing" secondItem="Kj0-Kr-tt5" secondAttribute="trailing" id="EBI-oF-wbC"/>
                             <constraint firstAttribute="trailing" secondItem="Wiu-MJ-nOh" secondAttribute="trailing" id="EZb-cX-qBd"/>
-                            <constraint firstItem="hvF-NC-hs2" firstAttribute="top" secondItem="Hd6-tu-kyD" secondAttribute="bottom" id="IXj-Y8-h6O"/>
                             <constraint firstAttribute="bottom" secondItem="Wiu-MJ-nOh" secondAttribute="bottom" id="M9k-XU-FgO"/>
                             <constraint firstItem="Wiu-MJ-nOh" firstAttribute="leading" secondItem="hOp-TY-evR" secondAttribute="leading" id="Qpy-jH-uad"/>
                             <constraint firstItem="Wiu-MJ-nOh" firstAttribute="top" secondItem="XnD-Df-Iax" secondAttribute="bottom" id="REA-eP-Gcq"/>
-                            <constraint firstItem="Hd6-tu-kyD" firstAttribute="width" secondItem="3wP-X7-s0q" secondAttribute="width" id="UIj-qZ-LM6"/>
-                            <constraint firstItem="3wP-X7-s0q" firstAttribute="leading" secondItem="FLE-Q0-nhR" secondAttribute="trailing" id="VQo-1x-LFM"/>
-                            <constraint firstItem="FLE-Q0-nhR" firstAttribute="leading" secondItem="Hd6-tu-kyD" secondAttribute="trailing" id="VxY-Zz-vUa"/>
                             <constraint firstItem="DkQ-EB-XGS" firstAttribute="top" secondItem="BMC-qc-qAk" secondAttribute="bottom" id="WPo-TI-R0y"/>
-                            <constraint firstItem="XnD-Df-Iax" firstAttribute="bottom" secondItem="hvF-NC-hs2" secondAttribute="bottom" id="WYV-Lj-zGR"/>
                             <constraint firstItem="DkQ-EB-XGS" firstAttribute="leading" secondItem="hOp-TY-evR" secondAttribute="leading" id="Wng-Rv-4ck"/>
-                            <constraint firstAttribute="trailing" secondItem="3wP-X7-s0q" secondAttribute="trailing" id="XIE-zM-Iqw"/>
-                            <constraint firstItem="XnD-Df-Iax" firstAttribute="trailing" secondItem="3wP-X7-s0q" secondAttribute="trailing" id="YNv-5b-pZ0"/>
                             <constraint firstItem="BMC-qc-qAk" firstAttribute="leading" secondItem="hOp-TY-evR" secondAttribute="leading" id="aRd-Ks-X7F"/>
-                            <constraint firstItem="Kj0-Kr-tt5" firstAttribute="top" secondItem="DkQ-EB-XGS" secondAttribute="bottom" id="duh-4Q-t4I"/>
+                            <constraint firstItem="XnD-Df-Iax" firstAttribute="bottom" secondItem="DkQ-EB-XGS" secondAttribute="bottom" id="e66-9Y-alX"/>
                             <constraint firstItem="F6E-8M-LIy" firstAttribute="top" secondItem="hOp-TY-evR" secondAttribute="top" id="ewV-30-8Z0"/>
-                            <constraint firstItem="Kj0-Kr-tt5" firstAttribute="leading" secondItem="hOp-TY-evR" secondAttribute="leading" id="ezx-d3-Cc3"/>
                             <constraint firstItem="F6E-8M-LIy" firstAttribute="trailing" secondItem="hOp-TY-evR" secondAttribute="trailing" id="hdf-kd-Ede"/>
-                            <constraint firstAttribute="trailing" secondItem="hvF-NC-hs2" secondAttribute="trailing" id="jdV-xr-hih"/>
-                            <constraint firstItem="Hd6-tu-kyD" firstAttribute="top" secondItem="Kj0-Kr-tt5" secondAttribute="bottom" id="llj-3i-0oV"/>
-                            <constraint firstItem="Hd6-tu-kyD" firstAttribute="leading" secondItem="hOp-TY-evR" secondAttribute="leading" id="pIr-ty-agB"/>
-                            <constraint firstItem="hvF-NC-hs2" firstAttribute="leading" secondItem="hOp-TY-evR" secondAttribute="leading" id="raL-Cj-1Hq"/>
                             <constraint firstItem="XnD-Df-Iax" firstAttribute="top" secondItem="F6E-8M-LIy" secondAttribute="bottom" id="tty-0g-KBD"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="XnD-Df-Iax"/>
                     </view>
                     <value key="contentSizeForViewInPopover" type="size" width="300" height="400"/>
                     <connections>
-                        <outlet property="confirmButton" destination="3wP-X7-s0q" id="VV5-JP-aaq"/>
+                        <outlet property="confirmButton" destination="5eL-j1-NvT" id="FLa-TW-APi"/>
+                        <outlet property="revertButton" destination="kCS-dn-rxk" id="RJQ-ms-lIo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eZp-rU-3lb" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -329,6 +288,8 @@
         </scene>
     </scenes>
     <resources>
+        <image name="back" width="22" height="22"/>
+        <image name="forward" width="22" height="22"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -343,18 +304,6 @@
         </namedColor>
         <namedColor name="Segmented Controls">
             <color red="0.89800000190734863" green="0.74900001287460327" blue="0.37299999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Separator">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </namedColor>
-        <namedColor name="Table Top">
-            <color red="0.53725490196078429" green="0.80392156862745101" blue="0.56470588235294117" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Table Top Text">
-            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Table Top Text Contrast">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Text">
             <color red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

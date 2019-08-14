@@ -8,25 +8,26 @@
 
 import UIKit
 
-class OverrideViewController : UIViewController, UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate {
+class OverrideViewController : CustomViewController, UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate {
     
     private let scorecard = Scorecard.shared
     
-    var message: String!
-    var formTitle: String!
-    var value = 1
-    var completion: (()->())?
+    private var message: String!
+    private var formTitle: String!
+    private var value = 1
+    private var completion: (()->())?
+    private var existingOverride = false
     
-    let instructionSection = 0
-    let cardsSection = 1
-    let excludeSection = 2
+    private let instructionSection = 0
+    private let cardsSection = 1
+    private let excludeSection = 2
     
-    let startSliderRow = 0
-    let endSliderRow = 1
-    let bounceRow = 2
+    private let startSliderRow = 0
+    private let endSliderRow = 1
+    private let bounceRow = 2
     
-    let excludeHistoryRow = 0
-    let excludeStatsRow = 1
+    private let excludeHistoryRow = 0
+    private let excludeStatsRow = 1
 
     // UI elements
     private var cardsSlider: [Int : UISlider] = [:]
@@ -36,7 +37,8 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
     private var excludeHistorySelection: UISegmentedControl!
     
     // MARK: - IB Outlets ============================================================================== -
-    @IBOutlet private weak var confirmButton: RoundedButton!
+    @IBOutlet private weak var confirmButton: UIButton!
+    @IBOutlet private weak var revertButton: UIButton!
     
     // MARK: - IB Actions ============================================================================== -
     @IBAction func confirmPressed(_ sender: UIButton) {
@@ -44,7 +46,7 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
         self.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func cancelPressed(_ sender: UIButton) {
+    @IBAction func revertPressed(_ sender: UIButton) {
         // Disable override
         self.scorecard.resetOverrideSettings()
         self.completion?()
@@ -55,7 +57,9 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
         super.viewDidLoad()
         ScorecardUI.roundCorners(view)
         
-        if !self.scorecard.overrideSelected {
+        self.existingOverride = self.scorecard.overrideSelected
+        
+        if !self.existingOverride {
             self.scorecard.overrideCards = self.scorecard.settingCards
             self.scorecard.overrideBounceNumberCards = self.scorecard.settingBounceNumberCards
             self.scorecard.overrideExcludeStats = true
@@ -63,13 +67,9 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
             self.scorecard.overrideSelected = true
         }
         
-        self.confirmButton.normalBackgroundColor = Palette.banner
-        self.confirmButton.normalTextColor = Palette.bannerText
-        self.confirmButton.normalAlpha = 1.0
-        self.confirmButton.disabledBackgroundColor = Palette.banner
-        self.confirmButton.disabledTextColor = Palette.bannerText
-        self.confirmButton.disabledAlpha = 0.2
-        
+        self.revertButton.setTitleColor(Palette.gameBannerText, for: .normal)
+        self.confirmButton.setTitleColor(Palette.gameBannerText, for: .normal)
+
         self.enableButtons()
     }
     
@@ -275,7 +275,8 @@ class OverrideViewController : UIViewController, UITableViewDelegate, UITableVie
     
     func enableButtons() {
         let enabled = self.scorecard.checkOverride()
-        self.confirmButton.isEnabled(enabled)
+        self.confirmButton.isHidden = !enabled
+        self.revertButton.setTitle((!enabled || !self.existingOverride ? "" : "Revert"), for: .normal)
     }
     
     // Mark: - Main instatiation routine =============================================================== -

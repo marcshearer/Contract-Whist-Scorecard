@@ -44,6 +44,21 @@ extension String {
         return string.range(of: contains) != nil
     }
     
+    func position(_ contains: String, caseless: Bool = false) -> Int? {
+        var string = self
+        var contains = contains
+        if caseless {
+            string = string.lowercased()
+            contains = contains.lowercased()
+        }
+        let range = string.range(of: contains)
+        if range == nil {
+            return nil
+        } else {
+            return self.distance(from: self.startIndex, to: range!.lowerBound)
+        }
+    }
+    
     
     func trim() -> String {
         return self.trimmingCharacters(in: .whitespaces)

@@ -23,45 +23,47 @@ class WatchManager: NSObject, WCSessionDelegate {
     }
     
     public func updateScores() {
-        if self.scorecard.commsDelegate?.connectionPurpose != .playing {
-            var dict: [String: Any] = [:]
-            var playerNames: [String] = []
-            var playerBids: [Int] = []
-            var playerMade: [Int] = []
-            var playerScores: [Int?] = []
-            var playerTotals: [Int] = []
-            var round:Int = scorecard.maxEnteredRound
-            var cards:Int = scorecard.roundCards(round)
-            let inProgress = (self.scorecard.gameInProgress && !self.scorecard.recovery.recoveryInProgress)
-            
-            dict["inProgress"] = inProgress
-            
-            if inProgress {
-                round = scorecard.maxEnteredRound
-                cards = scorecard.roundCards(round)
-                for playerNumber in 1...self.scorecard.currentPlayers {
-                    let player = self.scorecard.roundPlayer(playerNumber: playerNumber, round: round)
-                    playerNames.append(player.playerMO!.name!)
-                    playerBids.append(player.bid(round) ?? -1)
-                    playerMade.append(player.made(round) ?? -1)
-                    playerScores.append(player.score(round) ?? -1)
-                    playerTotals.append(player.totalScore())
+        if self.watchSession?.isPaired == true {
+            if self.scorecard.commsDelegate?.connectionPurpose != .playing {
+                var dict: [String: Any] = [:]
+                var playerNames: [String] = []
+                var playerBids: [Int] = []
+                var playerMade: [Int] = []
+                var playerScores: [Int?] = []
+                var playerTotals: [Int] = []
+                var round:Int = scorecard.maxEnteredRound
+                var cards:Int = scorecard.roundCards(round)
+                let inProgress = (self.scorecard.gameInProgress && !self.scorecard.recovery.recoveryInProgress)
+                
+                dict["inProgress"] = inProgress
+                
+                if inProgress {
+                    round = scorecard.maxEnteredRound
+                    cards = scorecard.roundCards(round)
+                    for playerNumber in 1...self.scorecard.currentPlayers {
+                        let player = self.scorecard.roundPlayer(playerNumber: playerNumber, round: round)
+                        playerNames.append(player.playerMO!.name!)
+                        playerBids.append(player.bid(round) ?? -1)
+                        playerMade.append(player.made(round) ?? -1)
+                        playerScores.append(player.score(round) ?? -1)
+                        playerTotals.append(player.totalScore())
+                    }
+                    
+                    dict["complete"] = (self.scorecard.gameInProgress && self.scorecard.gameComplete(rounds: scorecard.rounds))
+                    dict["round"] = round
+                    dict["cards"] = cards
+                    dict["trumpSuit"] = self.scorecard.roundSuit(round, suits: self.scorecard.suits).toString()
+                    dict["playerNames"] = playerNames
+                    dict["playerBids"] = playerBids
+                    dict["playerMade"] = playerMade
+                    dict["playerScores"] = playerScores
+                    dict["playerTotals"] = playerTotals
                 }
                 
-                dict["complete"] = (self.scorecard.gameInProgress && self.scorecard.gameComplete(rounds: scorecard.rounds))
-                dict["round"] = round
-                dict["cards"] = cards
-                dict["trumpSuit"] = self.scorecard.roundSuit(round, suits: self.scorecard.suits).toString()
-                dict["playerNames"] = playerNames
-                dict["playerBids"] = playerBids
-                dict["playerMade"] = playerMade
-                dict["playerScores"] = playerScores
-                dict["playerTotals"] = playerTotals
-            }
-            
-            do {
-                try self.watchSession?.updateApplicationContext(dict)
-            } catch {
+                do {
+                    try self.watchSession?.updateApplicationContext(dict)
+                } catch {
+                }
             }
         }
     }

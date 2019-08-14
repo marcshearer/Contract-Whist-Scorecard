@@ -124,15 +124,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             }
         }
         
-        // Check if in recovery mode - if so (and found all players) go straight to game setup
-        if scorecard.recoveryMode {
-            if selectedList.count == scorecard.currentPlayers {
-                self.continueAction()
-           } else {
-                scorecard.recoveryMode = false
-            }
-        }
-        
         // Set interline space
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = interRowSpacing
@@ -171,6 +162,15 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 self.showThisPlayer()
             }
         }
+        
+        // Check if in recovery mode - if so (and found all players) go straight to game setup
+        if scorecard.recoveryMode {
+            if selectedList.count == scorecard.currentPlayers {
+                self.continueAction()
+            } else {
+                scorecard.recoveryMode = false
+            }
+        }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -201,11 +201,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         
         // Reload unselected player collection
         unselectedCollectionView.reloadData()
-        
-        // If recovering go straight to preview
-        if self.scorecard.recoveryMode {
-            self.continueAction()
-        }
     }
     
     // MARK: - CollectionView Overrides ================================================================ -

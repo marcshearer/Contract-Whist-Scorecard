@@ -78,6 +78,10 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     private var lastStatus = ""
     private var playerConnected: [String : Bool] = [:]
     
+    private var hostingOptions: Int = 0
+    private var onlineRow: Int = -1
+    private var nearbyRow: Int = -1
+    
     // MARK: - IB Outlets ============================================================================== -
     
     @IBOutlet private weak var titleBar: UINavigationItem!
@@ -158,6 +162,9 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             peerSection = 0
             hostSection = -1
         }
+        
+        // Setup available hosting options
+        self.setupHostingOptions()
         
         // Get this player
         if self.commsPurpose == .playing {
@@ -821,7 +828,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         case peerSection:
             return max(1, available.count)
         case hostSection:
-            return 2
+            return self.hostingOptions
         default:
             return 0
         }
@@ -948,11 +955,11 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             var boldText: [NSAttributedString.Key : Any] = normalText
             boldText[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 18.0, weight: .black)
             switch indexPath.row {
-            case 0: 
+            case self.nearbyRow:
                 hostText.append(NSMutableAttributedString(string: "Host a", attributes: normalText))
                 hostText.append(NSMutableAttributedString(string: " local ", attributes: boldText))
                 hostText.append(NSMutableAttributedString(string: "bluetooth game for nearby players", attributes: normalText))
-            case 1:
+            case self.onlineRow:
                 hostText.append(NSMutableAttributedString(string: "Host an", attributes: normalText))
                 hostText.append(NSMutableAttributedString(string: " online ", attributes: boldText))
                 hostText.append(NSMutableAttributedString(string: "game to play over the internet", attributes: normalText))
@@ -1001,9 +1008,8 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             self.selectPeer(indexPath.row)
         case self.hostSection:
             var mode: ConnectionMode
-            // TODO Need to limit what is shown to settings
             switch indexPath.row {
-            case 0:
+            case nearbyRow:
                 mode = .nearby
             default:
                 mode = .online
@@ -1094,6 +1100,21 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     // MARK: - Utility Routines ======================================================================== -
 
+    private func setupHostingOptions() {
+        self.hostingOptions = 0
+        
+        if self.scorecard.settingNearbyPlaying {
+            self.nearbyRow = self.hostingOptions
+            self.hostingOptions += 1
+        }
+        
+        if self.scorecard.settingOnlinePlayerEmail != nil {
+            self.onlineRow = self.hostingOptions
+            self.hostingOptions += 1
+        }
+        
+    }
+    
     private func showThisPlayer() {
         if let playerMO = self.scorecard.findPlayerByEmail(self.thisPlayer) {
             let size = SelectionViewController.thumbnailSize(labelHeight: 0.0)

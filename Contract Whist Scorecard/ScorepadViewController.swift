@@ -952,7 +952,6 @@ class ScorepadViewController: CustomViewController,
                                              label: headerCell.scorepadDisc)
                         ScorecardUI.veryRoundCorners(headerCell.scorepadImage, radius: (imageRowHeight-9)/2)
                         ScorecardUI.veryRoundCorners(headerCell.scorepadDisc, radius: (imageRowHeight-9)/2)
-                        headerCell.scorepadDiscHeight.constant = 10000 // Force resize
                     }
                     headerCell.scorepadLeftLineGradientLayer = ScorecardUI.gradient(headerCell.scorepadLeftLine, color: Palette.grid, gradients: imageGradient)
                 }
@@ -1161,7 +1160,6 @@ class ScorepadCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var scorepadCellLabelHeight: NSLayoutConstraint!
     @IBOutlet weak var scorepadImage: UIImageView!
     @IBOutlet weak var scorepadDisc: UILabel!
-    @IBOutlet weak var scorepadDiscHeight: NSLayoutConstraint!
     @IBOutlet weak var scorepadLeftLine: UIView!
 }
 

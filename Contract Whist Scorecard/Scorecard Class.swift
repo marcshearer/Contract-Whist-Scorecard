@@ -442,6 +442,7 @@ class Scorecard {
             
             formatCell(round: round, playerNumber: playerLoop, mode: Mode.bid)
             formatCell(round: round, playerNumber: playerLoop, mode: Mode.made)
+            formatCell(round: round, playerNumber: playerLoop, mode: Mode.twos)
         }
     }
     
@@ -477,7 +478,6 @@ class Scorecard {
                         if player.bidCell[round-1] == nil{
                             // No bid label so don't need to differentiate
                             Palette.normalStyle(player.scoreCell[round-1]!.scorepadCellLabel, setFont: false)
-                            // TODO Remove player.scoreCell[round-1]!.backgroundColor = Palette.backgroundColor
                         } else {
                             Palette.highlightStyle(player.scoreCell[round-1]!.scorepadCellLabel)
                         }

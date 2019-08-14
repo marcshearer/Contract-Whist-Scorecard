@@ -35,6 +35,7 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     private var historyMode = false
     private var testMode = false
     private let rowHeight: CGFloat = 44.0
+    private var searchTextField: UITextField!
     
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet weak private var locationMapView: MKMapView!
@@ -65,6 +66,10 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
                 self.testMode = true
             }
         }
+        
+        // Setup search text field
+        self.searchTextField = searchBar.value(forKey: "searchField") as? UITextField
+        self.searchTextField.textColor = Palette.text
         
         self.gameLocation.copy(to: self.newLocation)
         
@@ -228,64 +233,69 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     }
 
     internal func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        var nearby = false
-        // Check this isn't the same location as last time
-        if self.newLocation.locationSet {
-            let distanceInMeters = self.newLocation.distance(from: locations[0])
-            nearby = (distanceInMeters <= 3000)
-        }
-        // Update the current location
-        
-        
-        // If nearby keep current description - otherwise reverse look up
-        if !nearby || self.newLocation.description == nil || self.newLocation.description == "" {
-            // Get text name for location
-            let geoCoder = CLGeocoder()
-            geoCoder.reverseGeocodeLocation(locations[0], completionHandler: { placemarks, error in
-                if error != nil {
-                    self.newLocation.description = ""
-                    self.searchBar.text = ""
-                    self.historyMode = true
-                    self.hideFinishButtons()
-                } else {
-                    if self.historyLocations != nil && self.historyLocations.count != 0 && self.currentLocation == nil {
-                        self.currentLocation = GameLocation(latitude: locations[0].coordinate.latitude, longitude: locations[0].coordinate.longitude, description: (placemarks?[0].locality)!)
-                        self.currentLocation.subDescription = "Current location"
-                        // Add it to the history list
-                        Utility.debugMessage("locationManager", "Inserting current location")
-                        self.historyLocations.insert(self.currentLocation, at: 0)
-                        if self.historyMode {
-                            self.updateSearch()
+        Utility.mainThread { [unowned self] in
+            var nearby = false
+            // Check this isn't the same location as last time
+            if self.newLocation.locationSet {
+                let distanceInMeters = self.newLocation.distance(from: locations[0])
+                nearby = (distanceInMeters <= 3000)
+            }
+            // Update the current location
+            
+            
+            // If nearby keep current description - otherwise reverse look up
+            if !nearby || self.newLocation.description == nil || self.newLocation.description == "" {
+                // Get text name for location
+                let geoCoder = CLGeocoder()
+                geoCoder.reverseGeocodeLocation(locations[0], completionHandler: { placemarks, error in
+                    Utility.mainThread { [unowned self] in
+                        if error != nil {
+                            self.newLocation.description = ""
+                            self.searchBar.text = ""
+                            self.historyMode = true
+                            self.hideFinishButtons()
+                        } else {
+                            if self.historyLocations != nil && self.historyLocations.count != 0 && self.currentLocation == nil {
+                                self.currentLocation = GameLocation(latitude: locations[0].coordinate.latitude, longitude: locations[0].coordinate.longitude, description: (placemarks?[0].locality)!)
+                                self.currentLocation.subDescription = "Current location"
+                                // Add it to the history list
+                                Utility.debugMessage("locationManager", "Inserting current location")
+                                self.historyLocations.insert(self.currentLocation, at: 0)
+                                if self.historyMode {
+                                    self.updateSearch()
+                                }
+                            } else {
+                                self.newLocation = GameLocation(latitude: locations[0].coordinate.latitude, longitude: locations[0].coordinate.longitude, description: (placemarks?[0].locality) ?? "")
+                                self.searchBar.text = placemarks?[0].locality
+                                self.dropPin()
+                                self.showFinishButtons()
+                            }
                         }
-                    } else {
-                        self.newLocation = GameLocation(latitude: locations[0].coordinate.latitude, longitude: locations[0].coordinate.longitude, description: (placemarks?[0].locality)!)
-                        self.searchBar.text = placemarks?[0].locality
-                        self.dropPin()
-                        self.showFinishButtons()
+                        self.resetPlaceholder()
                     }
-                }
+                })
+            } else {
+                self.searchBar.text = self.newLocation.description
+                self.historyMode = (self.searchBar.text == "")
+                self.showFinishButtons()
                 self.resetPlaceholder()
-            })
-        } else {
-            self.searchBar.text = self.newLocation.description
-            self.historyMode = (self.searchBar.text == "")
-            self.showFinishButtons()
-            self.resetPlaceholder()
+            }
         }
-        
     }
     
     internal func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         // Unable to get current location
-        self.searchBar.becomeFirstResponder()
-        resetPlaceholder()
+        Utility.mainThread { [unowned self] in
+            self.searchBar.becomeFirstResponder()
+            self.resetPlaceholder()
+        }
     }
     
     // MARK: - Form Presentation / Handling Routines =================================================== -
     
     private func showLocationList() {
         let availableHeight = locationMapView.frame.maxY - searchBar.frame.maxY
-        self.locationTableViewHeight.constant = CGFloat(Int(availableHeight / 2.0 / rowHeight)) * rowHeight
+        // self.locationTableViewHeight.constant = CGFloat(Int(availableHeight / 2.0 / rowHeight)) * rowHeight
         hideFinishButtons()
     }
     
@@ -296,7 +306,7 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     }
     
     private func hideLocationList() {
-        self.locationTableViewHeight.constant = 0.0
+        // self.locationTableViewHeight.constant = 0.0
     }
     
     private func showFinishButtons(autoSelect: Bool = false) {
@@ -311,7 +321,7 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     private func getCurrentLocation() -> Bool {
         var result = false
         
-        searchBar.placeholder = "Please wait - getting location"
+        searchTextField?.attributedPlaceholder = NSAttributedString(string: "Please wait - getting location", attributes: [NSAttributedString.Key.foregroundColor: Palette.textMessage])
         let authorizationStatus = CLLocationManager.authorizationStatus()
         if authorizationStatus == .restricted || authorizationStatus == .denied {
             // Not allowed to use location - go straight to input
@@ -418,7 +428,7 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     }
     
     private func resetPlaceholder() {
-        searchBar.placeholder = "Enter description of current location"
+        searchTextField.attributedPlaceholder = NSAttributedString(string: "Enter description of current location", attributes: [NSAttributedString.Key.foregroundColor: Palette.text.withAlphaComponent(0.6)])
         self.searchBar.isUserInteractionEnabled = true
         self.activityIndicator.stopAnimating()
     }

@@ -50,6 +50,20 @@ extension UIViewController {
 
 class CustomViewController : UIViewController {
     
+    override func viewDidLoad() {
+        Utility.mainThread {
+            super.viewDidLoad()
+            Utility.debugMessage(self.className(), "didLoad =========================================")
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        Utility.mainThread {
+            super.viewDidAppear(animated)
+            Utility.debugMessage(self.className(), "didAppear ---------------------------------------")
+        }
+    }
+    
     override var prefersStatusBarHidden: Bool {
         get {
             return AppDelegate.applicationPrefersStatusBarHidden ?? true
@@ -58,6 +72,15 @@ class CustomViewController : UIViewController {
     
     override var prefersHomeIndicatorAutoHidden: Bool {
         return true
+    }
+    
+    private func className() -> String {
+        let fullName = NSStringFromClass(self.classForCoder)
+        var tail = fullName.split(at: ".").last!
+        if let viewControllerPos = tail.position("viewController", caseless: true) {
+            tail = tail.left(viewControllerPos)
+        }
+        return tail
     }
 }
 

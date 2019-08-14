@@ -220,7 +220,7 @@
                                                                                     <constraint firstAttribute="width" constant="3" id="vpZ-Lr-rnK"/>
                                                                                 </constraints>
                                                                             </view>
-                                                                            <stackView opaque="NO" contentMode="bottom" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="YOW-YO-SFG">
+                                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="YOW-YO-SFG">
                                                                                 <rect key="frame" x="3" y="0.0" width="47" height="50"/>
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XYq-c4-gCU" userLabel="Top Line">
@@ -251,7 +251,6 @@
                                                                                                         <rect key="frame" x="0.0" y="0.0" width="36" height="36"/>
                                                                                                         <constraints>
                                                                                                             <constraint firstAttribute="width" secondItem="7Na-dy-Qwz" secondAttribute="height" multiplier="1:1" id="Mz2-HW-52B"/>
-                                                                                                            <constraint firstAttribute="height" constant="36" id="T3K-Fk-qFN"/>
                                                                                                         </constraints>
                                                                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                                                         <nil key="textColor"/>
@@ -320,7 +319,6 @@
                                                             </constraints>
                                                             <connections>
                                                                 <outlet property="scorepadDisc" destination="7Na-dy-Qwz" id="uR9-2L-ILc"/>
-                                                                <outlet property="scorepadDiscHeight" destination="T3K-Fk-qFN" id="Zoa-96-pCT"/>
                                                                 <outlet property="scorepadImage" destination="grq-ja-GuI" id="nI7-3r-oM0"/>
                                                                 <outlet property="scorepadLeftLine" destination="xgi-DP-c4v" id="lJq-s7-aCt"/>
                                                                 <outlet property="scorepadLeftLineWeight" destination="vpZ-Lr-rnK" id="87k-zc-u2C"/>
@@ -578,9 +576,6 @@
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="redraw" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="0hZ-si-j19" userLabel="Footer Collection View">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="44" id="Hzh-Hv-tmK"/>
-                                                    </constraints>
                                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="9JS-CU-O5C">
                                                         <size key="itemSize" width="50" height="50"/>
                                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -605,7 +600,7 @@
                                                                                     <constraint firstAttribute="width" constant="3" id="gLO-OB-NzD"/>
                                                                                 </constraints>
                                                                             </view>
-                                                                            <stackView opaque="NO" contentMode="top" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="lKL-XY-4ne">
+                                                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="lKL-XY-4ne">
                                                                                 <rect key="frame" x="3" y="0.0" width="47" height="50"/>
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7s4-i2-IBi" userLabel="Top Line">
@@ -670,12 +665,9 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="0hZ-si-j19" secondAttribute="trailing" id="55q-ho-Td6"/>
-                                                <constraint firstAttribute="trailing" secondItem="0hZ-si-j19" secondAttribute="trailing" id="DJy-tM-kem"/>
                                                 <constraint firstAttribute="bottom" secondItem="0hZ-si-j19" secondAttribute="bottom" id="NfR-Oo-Y5x"/>
                                                 <constraint firstItem="0hZ-si-j19" firstAttribute="leading" secondItem="UO8-xf-1Cf" secondAttribute="leading" id="a5J-oI-6XU"/>
                                                 <constraint firstItem="0hZ-si-j19" firstAttribute="top" secondItem="UO8-xf-1Cf" secondAttribute="top" id="c3G-kV-H7r"/>
-                                                <constraint firstAttribute="bottom" secondItem="0hZ-si-j19" secondAttribute="bottom" id="gv2-vi-ViW"/>
-                                                <constraint firstItem="0hZ-si-j19" firstAttribute="leading" secondItem="UO8-xf-1Cf" secondAttribute="leading" id="is3-Tz-sH7"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>

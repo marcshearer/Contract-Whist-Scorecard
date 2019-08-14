@@ -89,6 +89,11 @@ class BannerContinuation: UIView {
             points.append(PolygonPoint(x: rect.minX, y: rect.maxY, pointType: .point))
             points.append(PolygonPoint(x: rect.midX - (arrowWidth / 2.0), y: rect.maxY, radius: 10.0))
             points.append(PolygonPoint(x: rect.midX + (arrowWidth / 2.0), y: rect.minY, pointType: .smoothQuadRounded, radius: 5.0))
+        
+        case .downArrow:
+            points.append(PolygonPoint(x: rect.minX, y: rect.minY, pointType: .point))
+            points.append(PolygonPoint(x: rect.midX, y: rect.maxY, pointType: .quadRounded, radius: 20.0))
+            points.append(PolygonPoint(x: rect.maxX, y: rect.minY, pointType: .point))
             
         default:
             break

@@ -40,6 +40,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     // Local class variables
     var bidOnlyMode = false
     var instructionSection = true
+    var firstTime = true
     
     // Cell sizes
     let scoreWidth: CGFloat = 50.0
@@ -96,7 +97,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     
     @IBAction func summaryClicked(_ sender: Any) {
         // Round in toolbar - show summary
-        if scorecard.scorecardPlayer(scorecard.currentPlayers).bid(scorecard.selectedRound) != nil {
+        if self.scorecard.scorecardPlayer(self.scorecard.currentPlayers).bid(self.scorecard.selectedRound) != nil {
             self.performSegue(withIdentifier: "showRoundSummary", sender: self )
         }
     }
@@ -116,48 +117,51 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        self.setupColumns()
+        self.setupFlow()
+        self.getInitialState()
         
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
-        scorecard.reCenterPopup(self)
-        entryTableView.reloadData()
+        self.scorecard.reCenterPopup(self)
+        self.view.setNeedsLayout()
+        self.entryTableView.reloadData()
     }
 
     override func viewWillLayoutSubviews() {
         
-        setupScreen()
+        self.setupScreen()
         
-        bidOnlyMode = !scorecard.roundBiddingComplete(scorecard.selectedRound) ? true : false
-        setupColumns()
-        setupFlow()
-        getInitialState()
-        setForm(false)
+        self.bidOnlyMode = !self.scorecard.roundBiddingComplete(self.scorecard.selectedRound) ? true : false
+        self.setForm(!firstTime)
         
-        for _ in 1...self.scorecard.roundCards(scorecard.selectedRound, rounds: self.rounds, cards: self.cards, bounce: self.bounce) + 1 {
-            scoreCell.append(nil)
+        for _ in 1...self.scorecard.roundCards(self.scorecard.selectedRound, rounds: self.rounds, cards: self.cards, bounce: self.bounce) + 1 {
+            self.scoreCell.append(nil)
         }
-        for _ in 1...scorecard.currentPlayers {
-            playerBidCell.append(nil)
-            playerMadeCell.append(nil)
-            playerTwosCell.append(nil)
-            playerScoreCell.append(nil)
+        for _ in 1...self.scorecard.currentPlayers {
+            self.playerBidCell.append(nil)
+            self.playerMadeCell.append(nil)
+            self.playerTwosCell.append(nil)
+            self.playerScoreCell.append(nil)
         }
         
-        summaryButton.forEach { self.scorecard.showSummaryImage($0) }
+        self.summaryButton.forEach { self.scorecard.showSummaryImage($0) }
         
         // Send state to watch
         self.scorecard.watchManager.updateScores()
         
-        setupSize(to: entryView.safeAreaLayoutGuide.layoutFrame.size)
-               
+        self.setupSize(to: entryView.safeAreaLayoutGuide.layoutFrame.size)
+     
+        self.firstTime = false
+        
     }
 
     func setupSize(to size: CGSize) {
-        nameWidth = size.width - CGFloat(20 + (columns - 1) * 50)
-        buttonWidth = (ScorecardUI.landscapePhone() ? min(50.0, (ScorecardUI.screenWidth / 10.0) - 12.0) : 50.0)
+        self.nameWidth = size.width - CGFloat(20 + (columns - 1) * 50)
+        self.buttonWidth = (ScorecardUI.landscapePhone() ? min(50.0, (ScorecardUI.screenWidth / 10.0) - 12.0) : 50.0)
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -169,9 +173,9 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return scorecard.currentPlayers + 1
+            return self.scorecard.currentPlayers + 1
         case 1:
-            return (instructionSection ? 1 : 0)
+            return (self.instructionSection ? 1 : 0)
         case 2:
             return 1
         default:
@@ -207,7 +211,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             } else {
                 Palette.normalStyle(entryPlayerTableCell)
             }
-            playerCollection = entryPlayerTableCell.playerCollection
+            self.playerCollection = entryPlayerTableCell.playerCollection
             cell = entryPlayerTableCell as UITableViewCell
         
         case 1:
@@ -216,9 +220,9 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             let frame = CGRect(x: 8.0, y: 16.0, width: instructionCell.frame.width - 16.0, height: instructionCell.frame.height - 32.0)
             instructionCell.hexagonShapeLayer?.removeFromSuperlayer()
             instructionCell.hexagonShapeLayer = Polygon.hexagonFrame(in: instructionCell, frame: frame, strokeColor: Palette.instruction, fillColor: Palette.instruction, radius: 10.0)
-            instructionLabel = instructionCell.instructionLabel
-            instructionLabel.superview?.bringSubviewToFront(instructionLabel)
-            issueInstruction()
+            self.instructionLabel = instructionCell.instructionLabel
+            self.instructionLabel.superview?.bringSubviewToFront(instructionLabel)
+            self.issueInstruction()
             
             cell = instructionCell as UITableViewCell
 
@@ -226,7 +230,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             // Score buttons
             let scoreCell = tableView.dequeueReusableCell(withIdentifier: "Entry Score Table Cell", for: indexPath) as! EntryScoreTableCell
             scoreCell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row)
-            scoreCollection = scoreCell.scoreCollection
+            self.scoreCollection = scoreCell.scoreCollection
             cell = scoreCell as UITableViewCell
         }
         
@@ -236,24 +240,24 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     // MARK: - Form Presentation / Handling Routines =================================================== -
     func setupFlow() {
         // Set up flow of cursor round screen
-        flow = Flow()
+        self.flow = Flow()
         if self.reeditMode {
-            for player in 1...scorecard.currentPlayers {
-                flow.append(player: player, mode: Mode.bid)
-                flow.append(player: player, mode: Mode.made)
+            for player in 1...self.scorecard.currentPlayers {
+                self.flow.append(player: player, mode: Mode.bid)
+                self.flow.append(player: player, mode: Mode.made)
                 if self.bonus2 {
-                    flow.append(player: player, mode: Mode.twos)
+                    self.flow.append(player: player, mode: Mode.twos)
                 }
             }
         } else {
-            for player in 1...scorecard.currentPlayers {
-                flow.append(player: player, mode: Mode.bid)
+            for player in 1...self.scorecard.currentPlayers {
+                self.flow.append(player: player, mode: Mode.bid)
             }
             if !bidOnlyMode {
-                for player in 1...scorecard.currentPlayers {
-                    flow.append(player: player, mode: Mode.made)
+                for player in 1...self.scorecard.currentPlayers {
+                    self.flow.append(player: player, mode: Mode.made)
                     if self.bonus2 {
-                        flow.append(player: player, mode: Mode.twos)
+                        self.flow.append(player: player, mode: Mode.twos)
                     }
                 }
             }
@@ -261,7 +265,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     }
     
     func setupScreen() {
-        let title = scorecard.roundTitle(scorecard.selectedRound, rankColor: Palette.roomInteriorText, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
+        let title = self.scorecard.roundTitle(self.scorecard.selectedRound, rankColor: Palette.roomInteriorText, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
         footerRoundTitle.forEach { $0.attributedText = title }
         if ScorecardUI.screenHeight < 667.0 || !ScorecardUI.phoneSize() {
             // Smaller than an iPhone 7 portrait or on a tablet
@@ -277,77 +281,76 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             self.toolbarHeightConstraint.constant = 0.0
             instructionSection = true
         }
+        self.errorsButton.forEach { ScorecardUI.veryRoundCorners($0, radius: $0.frame.width / 2.0) }
     }
     
     func setupColumns() {
-        twosColumn = (!self.bonus2 ? -1 : 3)
-        scoreColumn = (!self.bonus2 ? 3 : 4)
-        columns = (bidOnlyMode ? 2 : (!self.bonus2 ? 4 : 5))
+        self.twosColumn = (!self.bonus2 ? -1 : 3)
+        self.scoreColumn = (!self.bonus2 ? 3 : 4)
+        self.columns = (bidOnlyMode ? 2 : (!self.bonus2 ? 4 : 5))
     }
     
     func issueInstruction() {
         if self.selection.player == 0 {
-            instructionLabel.text = "Tap a player to edit their score"
+            self.instructionLabel.text = "Tap a player to edit their score"
         } else {
             switch selection.mode {
             case Mode.bid:
-                instructionLabel.text = "Enter the bid for \(scorecard.entryPlayer(selection.player).playerMO!.name!)"
+                self.instructionLabel.text = "Enter the bid for \(self.scorecard.entryPlayer(selection.player).playerMO!.name!)"
             case Mode.made:
-                instructionLabel.text = "Enter the tricks made for \(scorecard.entryPlayer(selection.player).playerMO!.name!)"
+                self.instructionLabel.text = "Enter the tricks made for \(self.scorecard.entryPlayer(selection.player).playerMO!.name!)"
             case Mode.twos:
-                instructionLabel.text = "Enter the number of 2s for \(scorecard.entryPlayer(selection.player).playerMO!.name!)"
+                self.instructionLabel.text = "Enter the number of 2s for \(self.scorecard.entryPlayer(selection.player).playerMO!.name!)"
             }
         }
     }
     
     func enableMovementButtons() {
-        if undo.first == nil {
-            undoButton.forEach { $0.isHidden = true }
+        if self.undo.first == nil {
+            self.undoButton.forEach { $0.isHidden = true }
         } else {
-            undoButton.forEach { $0.isHidden = false }
+            self.undoButton.forEach { $0.isHidden = false }
         }
-        summaryButton.forEach { $0.isEnabled(!bidOnlyMode) }
+        self.summaryButton.forEach { $0.isEnabled(!bidOnlyMode) }
     }
     
     func setForm(_ tableLoaded: Bool) {
         
         if tableLoaded {
-            issueInstruction()
+            self.issueInstruction()
         }
         
-        if scoreCollection != nil {
+        if self.scoreCollection != nil {
             for scoreCell in scoreCollection?.visibleCells as! [EntryScoreCell] {
-                formatScore(scoreCell)
+                self.formatScore(scoreCell)
             }
         }
         
-        enableMovementButtons()
+        self.enableMovementButtons()
         
-        if tableLoaded && checkErrors() {
-            finishButton.forEach { $0.isHidden = true }
-            errorsButton.forEach { $0.isHidden = false }
+        if tableLoaded && self.checkErrors() {
+            self.finishButton.forEach { $0.isHidden = true }
+            self.errorsButton.forEach { $0.isHidden = false }
         } else {
-            finishButton.forEach { $0.isHidden = false }
-            errorsButton.forEach { $0.isHidden = true }
+            self.finishButton.forEach { $0.isHidden = false }
+            self.errorsButton.forEach { $0.isHidden = true }
         }
     }
     
     func errorHighlight(_ mode: Mode, _ highlight: Bool) -> Bool{
         var label: UILabel!
         
-        for playerCell: EntryPlayerCell? in self.playerBidCell {
+        for playerCell in self.playerBidCell {
             
-            if let playerCell = playerCell {
-                
-                let player = playerCell.tag
+            if let player = playerCell?.tag {
                 
                 switch mode {
                 case Mode.bid:
-                    label = playerBidCell[player - 1]?.entryPlayerLabel
+                    label = self.playerBidCell[player - 1]?.entryPlayerLabel
                 case Mode.made:
-                    label = playerMadeCell[player - 1]?.entryPlayerLabel
+                    label = self.playerMadeCell[player - 1]?.entryPlayerLabel
                 case Mode.twos:
-                    label = playerTwosCell[player - 1]?.entryPlayerLabel
+                    label = self.playerTwosCell[player - 1]?.entryPlayerLabel
                 }
                 
                 if let label = label {
@@ -370,17 +373,17 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             scoreCell.scoreButton.isHidden = true
             
         } else if selection.mode == Mode.twos &&
-            scorecard.entryPlayer(selection.player).made(scorecard.selectedRound) != nil &&
-            scoreCell.scoreButton.tag > scorecard.entryPlayer(selection.player).made(scorecard.selectedRound)! {
+            self.scorecard.entryPlayer(selection.player).made(self.scorecard.selectedRound) != nil &&
+            scoreCell.scoreButton.tag > self.scorecard.entryPlayer(selection.player).made(self.scorecard.selectedRound)! {
             // Never show more twos than made
             scoreCell.scoreButton.isHidden = true
             
-        } else if selection.mode == Mode.twos && scoreCell.scoreButton.tag > scorecard.numberSuits {
+        } else if selection.mode == Mode.twos && scoreCell.scoreButton.tag > self.scorecard.numberSuits {
             // Never show more than 4 twos
             scoreCell.scoreButton.isHidden = true
             
-        } else if (selection.mode == Mode.made && scoreCell.scoreButton.tag==scorecard.entryPlayer(selection.player).bid(scorecard.selectedRound) ||
-            selection.mode == Mode.twos && scoreCell.scoreButton.tag==0) {
+        } else if (selection.mode == Mode.made && scoreCell.scoreButton.tag==self.scorecard.entryPlayer(selection.player).bid(self.scorecard.selectedRound) ||
+            self.selection.mode == Mode.twos && scoreCell.scoreButton.tag==0) {
             // Highlight made exactly button and zeros twos button
             scoreCell.scoreButton.isHidden = false
             scoreCell.scoreButton.toCircle()
@@ -393,13 +396,13 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
         
         // Disable specific buttons to avoid error input
         
-        switch selection.mode {
+        switch self.selection.mode {
         case Mode.bid:
             // Last bid must not make bids add up to number of tricks
             
-            let remaining = scorecard.remaining(playerNumber: selection.player, round: scorecard.selectedRound, mode: selection.mode, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
+            let remaining = self.scorecard.remaining(playerNumber: self.selection.player, round: self.scorecard.selectedRound, mode: self.selection.mode, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
             
-            if  (self.selection.player == scorecard.currentPlayers
+            if  (self.selection.player == self.scorecard.currentPlayers
                 && scoreCell.scoreButton.tag == remaining) {
                 scoreCell.scoreButton.isEnabled(false)
             } else {
@@ -409,11 +412,11 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
         case Mode.made:
             // Last made must make total made add up to number of tricks and total made must never exceed number of tricks
             
-            let remaining = scorecard.remaining(playerNumber: selection.player, round: scorecard.selectedRound, mode: selection.mode, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
+            let remaining = self.scorecard.remaining(playerNumber: selection.player, round: self.scorecard.selectedRound, mode: selection.mode, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
             
-            if (self.selection.player == scorecard.currentPlayers
+            if (self.selection.player == self.scorecard.currentPlayers
                 && scoreCell.scoreButton.tag != remaining) ||
-                (scorecard.entryPlayer(scorecard.currentPlayers).made(scorecard.selectedRound) == nil && scoreCell.scoreButton.tag > remaining) {
+                (self.scorecard.entryPlayer(self.scorecard.currentPlayers).made(self.scorecard.selectedRound) == nil && scoreCell.scoreButton.tag > remaining) {
                 scoreCell.scoreButton.isEnabled(false)
             } else {
                 scoreCell.scoreButton.isEnabled(true)
@@ -422,9 +425,9 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
         case Mode.twos:
             // Total number of twos must never exceed the lower of 4 and the number of tricks
             
-            let remaining = scorecard.remaining(playerNumber: selection.player, round: scorecard.selectedRound, mode: selection.mode, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
+            let remaining = self.scorecard.remaining(playerNumber: selection.player, round: self.scorecard.selectedRound, mode: selection.mode, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
             
-            if (self.selection.player == scorecard.currentPlayers || scorecard.entryPlayer(scorecard.currentPlayers).twos(scorecard.selectedRound) == nil) && scoreCell.scoreButton.tag > remaining {
+            if (self.selection.player == self.scorecard.currentPlayers || self.scorecard.entryPlayer(self.scorecard.currentPlayers).twos(self.scorecard.selectedRound) == nil) && scoreCell.scoreButton.tag > remaining {
                 scoreCell.scoreButton.isEnabled(false)
             } else {
                 scoreCell.scoreButton.isEnabled(true)
@@ -435,14 +438,14 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     
     func highlightCursor(_ highlight: Bool) {
         var label: UILabel!
-        if selection.player != 0 {
-            switch selection.mode {
+        if self.selection.player != 0 {
+            switch self.selection.mode {
             case Mode.bid:
-                label = playerBidCell[selection.player-1]?.entryPlayerLabel
+                label = self.playerBidCell[selection.player-1]?.entryPlayerLabel
             case Mode.made:
-                label = playerMadeCell[selection.player-1]?.entryPlayerLabel
+                label = self.playerMadeCell[selection.player-1]?.entryPlayerLabel
             case Mode.twos:
-                label = playerTwosCell[selection.player-1]?.entryPlayerLabel
+                label = self.playerTwosCell[selection.player-1]?.entryPlayerLabel
             }
             
             if label != nil {
@@ -458,19 +461,19 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     // MARK: - Utility Routines ======================================================================== -
 
     func currentSelectionValue() -> Int? {
-        return selectionValue(selection)
+        return self.selectionValue(selection)
     }
     
     func selectionValue(_ selection: Selection?) -> Int? {
-        return selection == nil ? nil :
-            scorecard.entryPlayer(selection!.player).value(round: scorecard.selectedRound, mode: selection!.mode)
+        return (selection == nil ? nil :
+            self.scorecard.entryPlayer(selection!.player).value(round: self.scorecard.selectedRound, mode: selection!.mode))
     }
 
     func moveToNext() -> Bool{
     
         // Only move forward if current complete and next not end of list
-        if currentSelectionValue() != nil && selection.next != nil {
-            selection = selection.next!
+        if currentSelectionValue() != nil && self.selection.next != nil {
+            self.selection = self.selection.next!
             return true
         } else {
             return false
@@ -480,8 +483,8 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     func moveToPrevious() -> Bool {
         
         // Only move backward if current complete and previous not end of list
-        if selection.previous != nil {
-            selection = selection.previous!
+        if self.selection.previous != nil {
+            self.selection = self.selection.previous!
             return true
         } else {
             return false
@@ -491,45 +494,45 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     func undoLast() {
         
         // Move to the last value entered
-        if undo.last != nil {
-            selection = flow.find(player: undo.last!.player, mode: undo.last!.mode)
-            setScore(undo.last!.oldValue)
-            undo.removeLast()
-            enableMovementButtons()
+        if self.undo.last != nil {
+            self.selection = flow.find(player: self.undo.last!.player, mode: self.undo.last!.mode)
+            self.setScore(self.undo.last!.oldValue)
+            self.undo.removeLast()
+            self.enableMovementButtons()
         }
         
     }
     
     func setScore(_ value: Int!) {
         
-        switch selection.mode {
+        switch self.selection.mode {
         case Mode.bid:
-            scorecard.entryPlayer(selection.player).setBid(scorecard.selectedRound, value)
-            playerBidCell[selection.player-1]?.entryPlayerLabel.text = (value == nil  ? "" : "\(value!)")
+            self.scorecard.entryPlayer(selection.player).setBid(self.scorecard.selectedRound, value)
+            self.playerBidCell[self.selection.player-1]?.entryPlayerLabel.text = (value == nil  ? "" : "\(value!)")
         case Mode.made:
-            scorecard.entryPlayer(selection.player).setMade(scorecard.selectedRound, value)
-            playerMadeCell[selection.player-1]?.entryPlayerLabel.text = (value == nil  ? "" : "\(value!)")
+            self.scorecard.entryPlayer(selection.player).setMade(self.scorecard.selectedRound, value)
+            self.playerMadeCell[self.selection.player-1]?.entryPlayerLabel.text = (value == nil  ? "" : "\(value!)")
         case Mode.twos:
-            scorecard.entryPlayer(selection.player).setTwos(scorecard.selectedRound, value, bonus2: self.bonus2)
-            playerTwosCell[selection.player-1]?.entryPlayerLabel.text = (value == nil  ? "" : "\(value!)")
+            self.scorecard.entryPlayer(selection.player).setTwos(self.scorecard.selectedRound, value, bonus2: self.bonus2)
+            self.playerTwosCell[self.selection.player-1]?.entryPlayerLabel.text = (value == nil  ? "" : "\(value!)")
         }
         
         if !self.bidOnlyMode {
-            let score = scorecard.entryPlayer(selection.player).score(scorecard.selectedRound)
-            playerScoreCell[selection.player-1]?.entryPlayerLabel.text = (score == nil ? "" : "\(score!)")
+            let score = self.scorecard.entryPlayer(self.selection.player).score(self.scorecard.selectedRound)
+            self.playerScoreCell[self.selection.player-1]?.entryPlayerLabel.text = (score == nil ? "" : "\(score!)")
         }
     }
     
     func getScore() -> Int! {
         var score: Int!
         
-        switch selection.mode {
+        switch self.selection.mode {
         case Mode.bid:
-            score = scorecard.entryPlayer(selection.player).bid(scorecard.selectedRound)
+            score = self.scorecard.entryPlayer(self.selection.player).bid(self.scorecard.selectedRound)
         case Mode.made:
-            score = scorecard.entryPlayer(selection.player).made(scorecard.selectedRound)
+            score = self.scorecard.entryPlayer(self.selection.player).made(self.scorecard.selectedRound)
         case Mode.twos:
-            score = scorecard.entryPlayer(selection.player).twos(scorecard.selectedRound)
+            score = self.scorecard.entryPlayer(self.selection.player).twos(self.scorecard.selectedRound)
         }
         
         return score
@@ -538,11 +541,11 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     func canFinish() -> Bool {
         var canFinish = true
 
-            if scorecard.roundError(scorecard.selectedRound) {
+            if self.scorecard.roundError(self.scorecard.selectedRound) {
                 var message="This round does not satisfy the following conditions"
                 for loopMode in allModes {
-                    if checkError(loopMode) {
-                        message = "\(message)\n\n\(errorDescription(loopMode))"
+                    if self.checkError(loopMode) {
+                        message = "\(message)\n\n\(self.errorDescription(loopMode))"
                     }
                 }
                 message="\(message)\n\nYou must correct all errors before exiting"
@@ -560,55 +563,55 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
         
         if !self.reeditMode {
             // Move through cells to last one
-            selection = flow.first!
-            while moveToNext() {
+            self.selection = flow.first!
+            while self.moveToNext() {
             }
         }
     }
     
     func checkErrors() -> Bool {
         var roundError = false
-        roundError = errorHighlight(Mode.bid, checkError(Mode.bid))
+        roundError = errorHighlight(Mode.bid, self.checkError(Mode.bid))
         if !bidOnlyMode {
-            roundError = errorHighlight(Mode.made, checkError(Mode.made)) || roundError
+            roundError = errorHighlight(Mode.made, self.checkError(Mode.made)) || roundError
             if self.bonus2 {
-                roundError = errorHighlight(Mode.twos, checkError(Mode.twos)) || roundError
+                roundError = errorHighlight(Mode.twos, self.checkError(Mode.twos)) || roundError
             }
         }
-        scorecard.setRoundError(scorecard.selectedRound, roundError)
+        self.scorecard.setRoundError(self.scorecard.selectedRound, roundError)
         
         return roundError
         
     }
     
     func checkError(_ mode: Mode) -> Bool {
-        if scorecard.entryPlayer(scorecard.currentPlayers).value(round: scorecard.selectedRound, mode: mode) == nil {
+        if self.scorecard.entryPlayer(self.scorecard.currentPlayers).value(round: self.scorecard.selectedRound, mode: mode) == nil {
             // Column not yet complete - can't be an error
             return false
         } else {
             switch mode {
             case Mode.bid:
-                return scorecard.remaining(playerNumber: 0, round: scorecard.selectedRound, mode: Mode.bid, rounds: self.rounds, cards: self.cards, bounce: self.bounce) == 0
+                return self.scorecard.remaining(playerNumber: 0, round: self.self.scorecard.selectedRound, mode: Mode.bid, rounds: self.rounds, cards: self.cards, bounce: self.bounce) == 0
             case Mode.made:
-                return scorecard.remaining(playerNumber: 0, round: scorecard.selectedRound, mode: Mode.made, rounds: self.rounds, cards: self.cards, bounce: self.bounce) != 0
+                return self.scorecard.remaining(playerNumber: 0, round: self.scorecard.selectedRound, mode: Mode.made, rounds: self.rounds, cards: self.cards, bounce: self.bounce) != 0
             case Mode.twos:
-                return scorecard.remaining(playerNumber: 0, round: scorecard.selectedRound, mode: Mode.twos, rounds: self.rounds, cards: self.cards, bounce: self.bounce) < 0
+                return self.scorecard.remaining(playerNumber: 0, round: self.scorecard.selectedRound, mode: Mode.twos, rounds: self.rounds, cards: self.cards, bounce: self.bounce) < 0
             }
         }
     }
     
     func errorDescription(_ mode: Mode) -> String {
-        let cards = self.scorecard.roundCards(scorecard.selectedRound, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
+        let cards = self.scorecard.roundCards(self.scorecard.selectedRound, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
         
         switch mode {
         case Mode.bid:
             return "Total bids must not equal \(cards). Increase or reduce one of the bids."
         case Mode.made:
-            let madeVariance = -scorecard.remaining(playerNumber: 0, round: scorecard.selectedRound, mode: Mode.made, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
+            let madeVariance = -self.scorecard.remaining(playerNumber: 0, round: self.scorecard.selectedRound, mode: Mode.made, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
             return "Total tricks made must equal \(cards). \(madeVariance < 0 ? "Increase" : "Reduce") the number of tricks made by exactly \(abs(madeVariance))"
         case Mode.twos:
-            let twosVariance = -scorecard.remaining(playerNumber: 0, round: scorecard.selectedRound, mode: Mode.twos, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
-            return "Total twos made must be less than or equal to \(min(scorecard.numberSuits, cards)). Reduce the number of twos made by at least \(twosVariance)"
+            let twosVariance = -self.scorecard.remaining(playerNumber: 0, round: self.scorecard.selectedRound, mode: Mode.twos, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
+            return "Total twos made must be less than or equal to \(min(self.scorecard.numberSuits, cards)). Reduce the number of twos made by at least \(twosVariance)"
         }
     }
     
@@ -645,9 +648,9 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
                         numberOfItemsInSection section: Int) -> Int {
         if collectionView.tag < 1000000 {
         // Player summary
-            return columns
+            return self.columns
         } else {
-            return scorecard.roundCards(scorecard.selectedRound, rounds: self.rounds, cards: self.cards, bounce: self.bounce) + 1
+            return self.scorecard.roundCards(self.scorecard.selectedRound, rounds: self.rounds, cards: self.cards, bounce: self.bounce) + 1
         }
     }
     
@@ -662,19 +665,19 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
         if collectionView.tag < 1000000 {
             // Player score summary
             let column = indexPath.row
-            if column == playerColumn {
+            if column == self.playerColumn {
                 // Name
-                width = nameWidth
+                width = self.nameWidth
             } else {
                 // Values
-                width = scoreWidth
+                width = self.scoreWidth
             }
             height = totalHeight
         } else {
             // Score buttons
             
-            width = buttonWidth
-            height = buttonWidth
+            width = self.buttonWidth
+            height = self.buttonWidth
         }
         
         return CGSize(width: width, height: height)
@@ -697,14 +700,14 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
                 case playerColumn:
                     playerLabel.text="Player"
                     playerLabel.textAlignment = .left
-                    if !instructionSection {
+                    if !self.instructionSection {
                         self.instructionLabel = instructionLabel
-                        entryPlayerCell.entryPlayerWidthConstraint.constant = 64.0
+                        entryPlayerCell.entryPlayerWidthConstraint.constant = min(self.nameWidth - 6.0, 64.0)
                         Palette.tableTopStyle(instructionLabel)
                         instructionLabel.textAlignment = .center
                         self.issueInstruction()
                     } else {
-                        entryPlayerCell.entryPlayerWidthConstraint.constant = entryPlayerCell.frame.width - 4.0
+                        entryPlayerCell.entryPlayerWidthConstraint.constant = self.nameWidth - 6.0
                     }
                 case bidColumn:
                     playerLabel.text="Bid"
@@ -723,46 +726,46 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
                 let player = collectionView.tag
                 entryPlayerCell.tag = player
                 Palette.normalStyle(playerLabel, setFont: false)
-                entryPlayerCell.entryPlayerWidthConstraint.constant = entryPlayerCell.frame.width - 2.0
+                entryPlayerCell.entryPlayerWidthConstraint.constant = self.nameWidth - 6.0
                 
                 switch column {
                 case playerColumn:
-                    playerLabel.text = scorecard.entryPlayer(player).playerMO!.name!
+                    playerLabel.text = self.scorecard.entryPlayer(player).playerMO!.name!
                     playerLabel.textAlignment = .left
                 case bidColumn:
-                    let bid: Int? = scorecard.entryPlayer(player).bid(scorecard.selectedRound)
+                    let bid: Int? = self.scorecard.entryPlayer(player).bid(self.scorecard.selectedRound)
                     playerLabel.text = (bid==nil ? " " : "\(bid!)")
                     playerLabel.textAlignment = .center
                     ScorecardUI.roundCorners(playerLabel)
-                    playerBidCell[player-1] = entryPlayerCell
+                    self.playerBidCell[player-1] = entryPlayerCell
                     _ = self.checkErrors()
                     
                 case madeColumn:
-                    let made: Int? = scorecard.entryPlayer(player).made(scorecard.selectedRound)
+                    let made: Int? = self.scorecard.entryPlayer(player).made(self.scorecard.selectedRound)
                     playerLabel.text = (made==nil ? " " : "\(made!)")
                     playerLabel.textAlignment = .center
                     ScorecardUI.roundCorners(playerLabel)
-                    playerMadeCell[player-1] = entryPlayerCell
+                    self.playerMadeCell[player-1] = entryPlayerCell
                     _ = self.checkErrors()
 
                 case twosColumn:
-                    let twos: Int? = scorecard.entryPlayer(player).twos(scorecard.selectedRound)
+                    let twos: Int? = self.scorecard.entryPlayer(player).twos(self.scorecard.selectedRound)
                     playerLabel.textAlignment = .center
                     playerLabel.text = (twos==nil ? " " : "\(twos!)")
                     ScorecardUI.roundCorners(playerLabel)
-                    playerTwosCell[player-1] = entryPlayerCell
+                    self.playerTwosCell[player-1] = entryPlayerCell
                     _ = self.checkErrors()
                     
                 default:
-                    let score: Int? = scorecard.entryPlayer(player).score(scorecard.selectedRound)
+                    let score: Int? = self.scorecard.entryPlayer(player).score(self.scorecard.selectedRound)
                     playerLabel.textAlignment = .center
                     playerLabel.text = (score==nil ? " " : "\(score!)")
-                    playerScoreCell[player-1] = entryPlayerCell
+                    self.playerScoreCell[player-1] = entryPlayerCell
                 }
                 
                 let selectedMode = columnMode(indexPath.row)
-                if selectedMode != nil && player == selection.player && selection.mode == selectedMode! {
-                    highlightCursor(true)
+                if selectedMode != nil && player == self.selection.player && self.selection.mode == selectedMode! {
+                    self.highlightCursor(true)
                 } else {
                     Palette.normalStyle(playerLabel, setFont: false)
                 }
@@ -774,16 +777,16 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
         
         } else {
         
-            scoreCell[indexPath.row] = collectionView.dequeueReusableCell(withReuseIdentifier: "Entry Score Cell",for: indexPath) as? EntryScoreCell
-            ScorecardUI.roundCorners(scoreCell[indexPath.row]!.scoreButton)
-            scoreCell[indexPath.row]!.scoreButton.setTitle("\(indexPath.row)", for: .normal)
-            scoreCell[indexPath.row]!.scoreButton.addTarget(self, action: #selector(EntryViewController.scoreActionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
-            scoreCell[indexPath.row]!.scoreButton.tag = indexPath.row
-            scoreCell[indexPath.row]!.scoreButton.accessibilityIdentifier = "score\(indexPath.row)"
+            self.scoreCell[indexPath.row] = collectionView.dequeueReusableCell(withReuseIdentifier: "Entry Score Cell",for: indexPath) as? EntryScoreCell
+            ScorecardUI.roundCorners(self.scoreCell[indexPath.row]!.scoreButton)
+            self.scoreCell[indexPath.row]!.scoreButton.setTitle("\(indexPath.row)", for: .normal)
+            self.scoreCell[indexPath.row]!.scoreButton.addTarget(self, action: #selector(EntryViewController.scoreActionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
+            self.scoreCell[indexPath.row]!.scoreButton.tag = indexPath.row
+            self.scoreCell[indexPath.row]!.scoreButton.accessibilityIdentifier = "score\(indexPath.row)"
 
-            formatScore(scoreCell[indexPath.row]!)
+            self.formatScore(scoreCell[indexPath.row]!)
             
-            return scoreCell[indexPath.row]!
+            return self.scoreCell[indexPath.row]!
         }
     }
     
@@ -801,9 +804,9 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
             let previousSelection: Selection? = flow.find(player: tappedPlayer, mode: tappedMode!).previous
             
             if tappedMode != nil &&
-                    (scorecard.entryPlayer(tappedPlayer).value(round: scorecard.selectedRound, mode: tappedMode!) != nil ||
+                    (self.scorecard.entryPlayer(tappedPlayer).value(round: self.scorecard.selectedRound, mode: tappedMode!) != nil ||
                         (previousSelection != nil &&
-                            scorecard.entryPlayer(previousSelection!.player).value(round: scorecard.selectedRound, mode: previousSelection!.mode) != nil)) {
+                            self.scorecard.entryPlayer(previousSelection!.player).value(round: self.scorecard.selectedRound, mode: previousSelection!.mode) != nil)) {
                 return true
             } else {
                 return false
@@ -823,9 +826,9 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
             if mode == nil {
                 mode = Mode.bid
             }
-            selection = flow.find(player: collectionView.tag, mode: mode!)
-            highlightCursor(true)
-            setForm(true)
+            self.selection = flow.find(player: collectionView.tag, mode: mode!)
+            self.highlightCursor(true)
+            self.setForm(true)
         }
     }
     
@@ -844,19 +847,19 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
         
         highlightCursor(false)
         if !moveToNext() {
-            if !self.reeditMode && !scorecard.roundError(scorecard.selectedRound) {
+            if !self.reeditMode && !self.scorecard.roundError(self.scorecard.selectedRound) {
                 // Finished - return
                 if bidOnlyMode {
                     self.performSegue(withIdentifier: "showRoundSummary", sender: self )
-                } else if scorecard.gameComplete(rounds: self.rounds) {
-                    scorecard.formatRound(scorecard.selectedRound)
+                } else if self.scorecard.gameComplete(rounds: self.rounds) {
+                    self.scorecard.formatRound(self.scorecard.selectedRound)
                     self.performSegue(withIdentifier: "linkGameSummary", sender: self )
                 } else {
-                    scorecard.formatRound(scorecard.selectedRound)
+                    self.scorecard.formatRound(self.scorecard.selectedRound)
                     self.performSegue(withIdentifier: "hideEntry", sender: self )
                 }
             } else {
-                selection = Selection(player: 0, mode: Mode.bid)
+                self.selection = Selection(player: 0, mode: Mode.bid)
             }
         }
         highlightCursor(true)
@@ -870,11 +873,11 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
         var columnMode: Mode?
         
         switch column {
-        case bidColumn:
+        case self.bidColumn:
             columnMode = Mode.bid
-        case madeColumn:
+        case self.madeColumn:
             columnMode = Mode.made
-        case twosColumn:
+        case self.twosColumn:
             columnMode = Mode.twos
         default:
             columnMode = nil
@@ -894,10 +897,10 @@ class EntryPlayerTableCell: UITableViewCell {
         <D: UICollectionViewDataSource & UICollectionViewDelegate>
         (_ dataSourceDelegate: D, forRow row: Int) {
         
-        playerCollection.delegate = dataSourceDelegate
-        playerCollection.dataSource = dataSourceDelegate
-        playerCollection.tag = row
-        playerCollection.reloadData()
+        self.playerCollection.delegate = dataSourceDelegate
+        self.playerCollection.dataSource = dataSourceDelegate
+        self.playerCollection.tag = row
+        self.playerCollection.reloadData()
     }
     
 }
@@ -921,10 +924,10 @@ class EntryScoreTableCell: UITableViewCell {
         <D: UICollectionViewDataSource & UICollectionViewDelegate>
         (_ dataSourceDelegate: D, forRow row: Int) {
         
-        scoreCollection.delegate = dataSourceDelegate
-        scoreCollection.dataSource = dataSourceDelegate
-        scoreCollection.tag = 1000000 + row
-        scoreCollection.reloadData()
+        self.scoreCollection.delegate = dataSourceDelegate
+        self.scoreCollection.dataSource = dataSourceDelegate
+        self.scoreCollection.tag = 1000000 + row
+        self.scoreCollection.reloadData()
     }
 }
 
@@ -969,32 +972,32 @@ class Flow {
     func append(player: Int, mode: Mode, oldValue: Int! = nil) {
         let element = intMode(mode)
         
-        map[player-1][element-1] = Selection(player: player, mode: mode, oldValue: oldValue)
+        self.map[player-1][element-1] = Selection(player: player, mode: mode, oldValue: oldValue)
         
-        if let tailNode = tail {
+        if let tailNode = self.tail {
             
-            map[player-1][element-1].previous = tailNode
-            tailNode.next = map[player-1][element-1]
+            self.map[player-1][element-1].previous = tailNode
+            tailNode.next = self.map[player-1][element-1]
         }
         else {
-            head = map[player-1][element-1]
+            self.head = map[player-1][element-1]
         }
-        tail = map[player-1][element-1]
+        self.tail = map[player-1][element-1]
     }
     
     func removeLast() {
-        if let tailNode = tail {
-            tail = tailNode.previous
-            if tail == nil {
-                head = nil
+        if let tailNode = self.tail {
+            self.tail = tailNode.previous
+            if self.tail == nil {
+                self.head = nil
             } else {
-                tail!.next = nil
+                self.tail!.next = nil
             }
         }
     }
     
     func find(player: Int, mode: Mode) -> Selection {
-        return map[player-1][intMode(mode)-1]
+        return self.map[player-1][intMode(mode)-1]
     }
     
     func intMode(_ mode: Mode) -> Int {

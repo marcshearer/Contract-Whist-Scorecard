@@ -237,12 +237,10 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     }
     
     func updateImage(objectID: NSManagedObjectID) {
-        // Find any cells containing an image which has just been downloaded asynchronously
+        // Find any cells containing an image which has just been downloaded asynchronously and refresh it
         Utility.mainThread {
-            let index = self.scorecard.enteredIndex(objectID)
-            if index != nil {	
-                // Found it - reload the cell
-                //TODO Update selected image
+            if let slot = self.selectedPlayersView.playerViews.firstIndex(where: { $0.playerMO?.objectID == objectID } ) {
+                self.selectedPlayersView.set(slot: slot, playerMO: self.selectedPlayersView.playerViews[slot].playerMO!)
             }
         }
     }

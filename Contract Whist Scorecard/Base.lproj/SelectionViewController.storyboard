@@ -267,7 +267,6 @@
                         <outlet property="selectedPlayersView" destination="jtX-GA-7ms" id="pif-ug-DbZ"/>
                         <outlet property="selectedViewHeight" destination="1T2-1s-8c6" id="p6v-xf-NUZ"/>
                         <outlet property="selectedViewWidth" destination="KfB-6p-mr0" id="1yK-LH-FS6"/>
-                        <outlet property="selectionView" destination="Whs-Ka-Uxd" id="QAl-of-52o"/>
                         <outlet property="slideOutButton" destination="be7-aP-DEd" id="IcN-Br-mSQ"/>
                         <outlet property="thisPlayerViewContainer" destination="xnd-49-L9N" id="yjc-o2-3Jz"/>
                         <outlet property="thisPlayerViewContainerWidthConstraint" destination="yYr-oC-cVs" id="tNh-Yi-Hxp"/>

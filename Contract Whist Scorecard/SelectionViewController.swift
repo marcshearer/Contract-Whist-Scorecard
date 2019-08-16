@@ -36,6 +36,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private var showThisPlayerName = false
     private var formTitle = "Selection"
     private var bannerColor: UIColor?
+    private var refresh = true
     
     // Local class variables
     private var width: CGFloat = 0.0
@@ -62,7 +63,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var unselectedCollectionView: UICollectionView!
     @IBOutlet private weak var unselectedCollectionViewTopConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var selectionView: UIView!
     @IBOutlet private weak var cancelButton: UIButton!
     @IBOutlet private weak var bannerContinueButton: UIButton!
     @IBOutlet private weak var continueButton: UIButton!
@@ -179,9 +179,10 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         self.view.setNeedsLayout()
     }
     
-    override func viewWillLayoutSubviews() {
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
-        setSize(size: selectionView.frame.size)
+        setSize(size: self.view.frame.size)
         
         if firstTime {
             firstTime = false
@@ -201,6 +202,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         
         // Reload unselected player collection
         unselectedCollectionView.reloadData()
+        
+        self.refresh = false
     }
     
     // MARK: - CollectionView Overrides ================================================================ -
@@ -555,7 +558,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                     // Animation
                     
                     // Draw a new thumbnail over top of existing
-                    let selectedPoint = selectedPlayersView.origin(slot: selectedSlot, in: self.selectionView)
+                    let selectedPoint = selectedPlayersView.origin(slot: selectedSlot, in: self.view)
                     self.animationView.frame = CGRect(origin: selectedPoint, size: CGSize(width: self.width, height: self.height))
                     self.animationView.set(playerMO: selectedPlayerMO)
                     self.animationView.set(textColor: Palette.darkHighlightText)
@@ -572,7 +575,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                         
                         self.unselectedCollectionView.scrollToItem(at: IndexPath(item: unselectedPlayerIndex + (self.addPlayerThumbnail ? 1 : 0), section: 0), at: .centeredHorizontally, animated: true)
                         if let destinationCell = self.unselectedCollectionView.cellForItem(at: IndexPath(item: unselectedPlayerIndex + (self.addPlayerThumbnail ? 1 : 0), section: 0)) as? SelectionCell {
-                            let unselectedPoint = destinationCell.playerView.thumbnail.convert(CGPoint(x: 0, y: 0), to: self.selectionView)
+                            let unselectedPoint = destinationCell.playerView.thumbnail.convert(CGPoint(x: 0, y: 0), to: self.view)
                             self.animationView.frame = CGRect(origin: unselectedPoint, size: CGSize(width: self.width, height: self.height))
                             self.animationView.set(textColor: Palette.text)
                         }
@@ -617,7 +620,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 // Calculate offsets for available collection view cell
                 if let unselectedPlayerIndex = unselectedList.firstIndex(where: { $0 == selectedPlayerMO }) {
                     if let unselectedCell = unselectedCollectionView.cellForItem(at: IndexPath(item: unselectedPlayerIndex + (self.addPlayerThumbnail ? 1 : 0), section: 0)) as! SelectionCell? {
-                        let unselectedPoint = unselectedCell.convert(CGPoint(x: 0, y: 0), to: self.selectionView)
+                        let unselectedPoint = unselectedCell.convert(CGPoint(x: 0, y: 0), to: self.view)
                         
                         // Draw a new thumbnail over top of existing - add in views which are uninstalled in IB to avoid warnings of no constraints
                         self.animationView.frame = CGRect(origin: unselectedPoint, size: CGSize(width: unselectedCell.frame.width, height: unselectedCell.frame.height))
@@ -634,7 +637,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                         // Move animation thumbnail to the selected area
                         let animation = UIViewPropertyAnimator(duration: 0.5, curve: .easeIn) {
                             // Now move it to the selected area
-                            let selectedPoint = self.selectedPlayersView.origin(slot: slot, in: self.selectionView)
+                            let selectedPoint = self.selectedPlayersView.origin(slot: slot, in: self.view)
                             self.animationView.frame = CGRect(origin: selectedPoint, size: CGSize(width: self.width, height: self.height))
                             self.animationView.set(textColor: Palette.darkHighlightText)
                             self.selectedPlayersView.clear(slot: slot)
@@ -897,6 +900,9 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             selectionViewController!.transitioningDelegate = viewController
         }
         
+        // Let view controller know that this is a new 'instance' even though re-using
+        selectionViewController!.refresh = true
+        
         viewController.present(selectionViewController!, animated: true, completion: showCompletion)
         
         return selectionViewController!
@@ -927,8 +933,13 @@ class FadeAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
+        
         let containerView = transitionContext.containerView
         let toView = transitionContext.view(forKey: .to)!
+        
+        // Avoid layout bug if rotated since last shown
+        let toViewController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)!
+        toView.frame = transitionContext.finalFrame(for: toViewController)
     
         containerView.addSubview(toView)
         toView.alpha = 0.0
@@ -947,6 +958,7 @@ extension ClientViewController: UIViewControllerTransitioningDelegate {
     
     func animationController(
         forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        
         self.transition.presenting = true
         if presented is SelectionViewController {
             return self.transition

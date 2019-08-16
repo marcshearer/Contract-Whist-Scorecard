@@ -61,8 +61,8 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
     // Properties to control how viewer works
     private var recordList: [DataTableViewerDataSource]!
     private var delegate: DataTableViewerDelegate?
-    private var backText = "Back"
-    private var backImage = "back"
+    private var backText = ""
+    private var backImage = "home"
     
     // UI component pointers
     var headerCollectionView: UICollectionView!
@@ -78,40 +78,20 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
     @IBOutlet var leftPaddingHeightConstraint: NSLayoutConstraint!
     @IBOutlet var rightPaddingHeightConstraint: NSLayoutConstraint!
 
-    // MARK: - IB Unwind Segue Handlers ================================================================ -
-    
-    @IBAction func hideDataTableSync(segue:UIStoryboardSegue) {
-        // Refresh screen
-        self.delegate?.refreshData?(recordList: self.recordList)
-        bodyView.reloadData()
-    }
-
     // MARK: - IB Actions ============================================================================== -
 
     @IBAction func finishPressed(_ sender: UIButton) {
-        self.dismiss(animated: true, completion: self.delegate?.completion)
+        self.dismiss()
     }
     
     @IBAction func syncPressed(_ sender: UIButton) {
-        self.performSegue(withIdentifier: "showDataTableSync", sender: self)
+        self.showSync()
     }
     
     @IBAction func rightSwipe(recognizer:UISwipeGestureRecognizer) {
         if recognizer.state == .ended {
             finishPressed(finishButton)
         }
-    }
-    
-    // MARK: - method to show this view controller ============================================================================== -
-    
-    static public func show(from sourceViewController: UIViewController, delegate: DataTableViewerDelegate, recordList: [DataTableViewerDataSource], completion: (()->())? = nil) -> DataTableViewController {
-        let storyboard = UIStoryboard(name: "DataTableViewController", bundle: nil)
-        let dataTableviewController = storyboard.instantiateViewController(withIdentifier: "DataTableViewController") as! DataTableViewController
-        dataTableviewController.recordList = recordList
-        dataTableviewController.delegate = delegate
-        sourceViewController.present(dataTableviewController, animated: true, completion: nil)
-        
-        return dataTableviewController
     }
     
     // MARK: - View Overrides ========================================================================== -
@@ -158,10 +138,10 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+        // headerView.layoutIfNeeded()
         checkFieldDisplay(to: self.view.safeAreaLayoutGuide.layoutFrame.size)
         headerView.reloadData()
         bodyView.reloadData()
-        headerView.layoutIfNeeded()
         firstTime = true
     }
     
@@ -271,25 +251,32 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
         displayedFields.append(DataTableField("",  "", width: paddingWidth + widthRemaining, type: .string))
     }
     
-    // MARK: - Segue Prepare Handler =================================================================== -
+    // MARK: - Show other views =========================================================== -
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    private func showSync() {
+        SyncViewController.show(from: self, completion: {
+            // Refresh screen
+            self.delegate?.refreshData?(recordList: self.recordList)
+            self.bodyView.reloadData()
+        })
+    }
+    
+    // MARK: - methods to show/dismiss this view controller ======================================================= -
+    
+    static public func show(from sourceViewController: UIViewController, delegate: DataTableViewerDelegate, recordList: [DataTableViewerDataSource], completion: (()->())? = nil) -> DataTableViewController {
         
-        switch segue.identifier! {
+        let storyboard = UIStoryboard(name: "DataTableViewController", bundle: nil)
+        let dataTableviewController = storyboard.instantiateViewController(withIdentifier: "DataTableViewController") as! DataTableViewController
         
-        case "showDataTableSync":
-            let destination = segue.destination as! SyncViewController
-
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.isModalInPopover = true
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = self.view
-            destination.preferredContentSize = CGSize(width: 400, height: 523)
-            destination.returnSegue = "hideDataTableSync"
-            
-        default:
-            break
-        }
+        dataTableviewController.recordList = recordList
+        dataTableviewController.delegate = delegate
+        sourceViewController.present(dataTableviewController, animated: true, completion: nil)
+        
+        return dataTableviewController
+    }
+    
+    private func dismiss() {
+        self.dismiss(animated: true, completion: self.delegate?.completion)
     }
 }
 

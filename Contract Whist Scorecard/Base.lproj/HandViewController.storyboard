@@ -725,7 +725,6 @@
                         <outlet property="tableTopLongPress" destination="2u4-F1-aAc" id="Sep-3A-4fO"/>
                         <outlet property="tabletopView" destination="TTa-Ie-Ogs" id="Wb9-Mb-tLo"/>
                         <outlet property="titleBarLongPress" destination="Neb-kC-VQ8" id="mXA-xl-VFB"/>
-                        <segue destination="adb-au-lTb" kind="presentation" identifier="showHandRoundSummary" id="3or-cy-e8I"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VW0-YM-bJJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -746,14 +745,6 @@
                 </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="11357.6" y="950.37481259370327"/>
-        </scene>
-        <!--RoundSummaryViewController-->
-        <scene sceneID="QgD-e8-y1V">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="RoundSummary" storyboardName="RoundSummaryViewController" referencedIdentifier="RoundSummaryViewController" id="adb-au-lTb" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ywP-Nm-YRj" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="11995" y="950"/>
         </scene>
     </scenes>
     <resources>

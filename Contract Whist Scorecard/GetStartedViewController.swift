@@ -15,6 +15,9 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     // Main state properties
     private let scorecard = Scorecard.shared
     
+    // Variables to pass state
+    private var completion: (()->()?)!
+    
     // UI component pointers
     private var syncEnabledSelection: UISegmentedControl!
     private var syncEmailTextField: UITextField!
@@ -30,22 +33,10 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     
     @IBOutlet weak var finishButton: UIButton!
     
-    // MARK: - IB Unwind Segue Handlers ================================================================ -
-    
-    @IBAction func hideGetStartedSettings(segue:UIStoryboardSegue) {
-        if self.scorecard.settingSyncEnabled {
-            self.syncEnabledSelection.selectedSegmentIndex = 1
-        } else {
-            self.syncEnabledSelection.selectedSegmentIndex = 0
-        }
-        scorecard.checkNetworkConnection(button: self.downloadPlayersButton, label: self.syncLabel, labelHeightConstraint: self.syncLabelHeightConstraint, labelHeight: self.syncLabelHeight, disable: true)
-        enableButtons()
-    }
-    
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func finishPressed(_ sender: UIButton) {
-        self.performSegue(withIdentifier: "hideGetStarted", sender: self)
+        self.dismiss()
     }
 
     // MARK: - View Overrides ===================================================================== -
@@ -185,7 +176,7 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     }
     
     @objc func otherSettingsPressed(_ sender: UIButton) {
-        self.performSegue(withIdentifier: "showGetStartedSettings", sender: self)
+        self.showSettings()
     }
     
     @objc func gameWalkthroughPressed(_ sender: UIButton) {
@@ -193,7 +184,7 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     }
     
     @objc func startPlayingPressed(_ sender: UIButton) {
-        self.performSegue(withIdentifier: "hideGetStarted", sender: self)
+        self.dismiss()
     }
 
     @objc func syncInfoPressed(_ sender: UIButton) {
@@ -289,27 +280,42 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
         self.showSelectPlayers()
     }
     
-    // MARK: - Segue Prepare Handler =================================================================== -
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        switch segue.identifier! {
-            
-        case "showGetStartedSettings":
-            let destination = segue.destination as! SettingsViewController
-
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.isModalInPopover = true
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
-            destination.preferredContentSize = CGSize(width: 400, height: 600)
-
-            destination.returnSegue = "hideGetStartedSettings"
-            
-        default:
-            break
-        }
+    // MARK: - Show other views ================================================================== -
+    
+    private func showSettings() {
+        SettingsViewController.show(from: self, completion: {
+            if self.scorecard.settingSyncEnabled {
+                self.syncEnabledSelection.selectedSegmentIndex = 1
+            } else {
+                self.syncEnabledSelection.selectedSegmentIndex = 0
+            }
+            self.scorecard.checkNetworkConnection(button: self.downloadPlayersButton, label: self.syncLabel, labelHeightConstraint: self.syncLabelHeightConstraint, labelHeight: self.syncLabelHeight, disable: true)
+            self.enableButtons()
+        })
     }
+    
+    // MARK: - Function to present and dismiss this view ==============================================================
+    
+    class public func show(from viewController: UIViewController, completion: (()->())? = nil){
+        
+        let storyboard = UIStoryboard(name: "GetStartedViewController", bundle: nil)
+        let getStartedViewController: GetStartedViewController = storyboard.instantiateViewController(withIdentifier: "GetStartedViewController") as! GetStartedViewController
+        
+        getStartedViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+        getStartedViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        getStartedViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
+        getStartedViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
+        getStartedViewController.preferredContentSize = CGSize(width: 400, height: 700)
+        getStartedViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
+        getStartedViewController.completion = completion
+        
+        viewController.present(getStartedViewController, animated: true, completion: nil)
+    }
+    
+    private func dismiss() {
+        self.dismiss(animated: true, completion: { self.completion?() })
+    }
+    
 }
 
 class GetStartedCell: UITableViewCell {

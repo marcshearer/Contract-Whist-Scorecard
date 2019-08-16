@@ -29,7 +29,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     private var selected = 0
     private var completion: ((Int?, [PlayerDetail]?, [Bool]?)->())? = nil
  
-    // Properties to get state to/from calling segue
+    // Properties to pass state 
     public var specificEmail = ""
     public var descriptionMode: DescriptionMode = .none
     public var actionText = ""
@@ -89,9 +89,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         self.sync?.stop()
         
         // Return to calling program
-        self.dismiss(animated: true, completion: {
-            self.completion?(self.selected, self.playerList, self.selection)
-        })
+        self.dismiss(selected: self.selected, playerList: self.playerList, selection: self.selection)
         
     }
     
@@ -106,9 +104,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         self.sync?.stop()
         
         // Return to calling program
-        self.dismiss(animated: true, completion: {
-            self.completion?(nil, nil, nil)
-        })
+        self.dismiss()
         
     }
     
@@ -636,7 +632,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         return result
     }
     
-    // MARK: - Function to show this view  ============================================================================== -
+    // MARK: - Function to show and dismiss this view  ============================================================================== -
     
     public class func show(from viewController: UIViewController, specificEmail: String = "", descriptionMode: DescriptionMode = .none, backText: String = "Cancel", actionText: String = "Download", allowOtherPlayer: Bool = true, allowNewPlayer: Bool = true, completion: ((Int?, [PlayerDetail]?, [Bool]?)->())? = nil) {
         
@@ -658,6 +654,12 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         selectPlayersViewController.completion = completion
     
         viewController.present(selectPlayersViewController, animated: true, completion: nil)
+    }
+    
+    private func dismiss(selected: Int? = nil, playerList: [PlayerDetail]? = nil, selection: [Bool]? = nil)->() {
+        self.dismiss(animated: true, completion: {
+            self.completion?(selected, playerList, selection)
+        })
     }
     
 }

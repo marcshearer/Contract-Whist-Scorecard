@@ -41,7 +41,6 @@
 		B221EED5210B0DFE00F7FBA0 /* HandViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B221EED3210B0DFE00F7FBA0 /* HandViewController.storyboard */; };
 		B221EED7210B0E2D00F7FBA0 /* HandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B221EED6210B0E2D00F7FBA0 /* HandViewController.swift */; };
 		B22500F11F48425C0042D566 /* Scorecard Comms.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22500F01F48425C0042D566 /* Scorecard Comms.swift */; };
-		B22788EA1FB827A7009BABCA /* SearchViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22788E81FB827A7009BABCA /* SearchViewController.storyboard */; };
 		B22789001FB83AA7009BABCA /* GetStartedViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22788FA1FB83AA7009BABCA /* GetStartedViewController.storyboard */; };
 		B22789011FB83AA7009BABCA /* WelcomeViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22788FC1FB83AA7009BABCA /* WelcomeViewController.storyboard */; };
 		B22789021FB83AA7009BABCA /* SelectionViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22788FE1FB83AA7009BABCA /* SelectionViewController.storyboard */; };
@@ -85,7 +84,6 @@
 		B25FC7CA22D0733C00D2E651 /* OverrideViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B25FC7C522D0733C00D2E651 /* OverrideViewController.storyboard */; };
 		B25FC7CB22D0733C00D2E651 /* ReviewViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B25FC7C722D0733C00D2E651 /* ReviewViewController.storyboard */; };
 		B25FC7CD22D4868500D2E651 /* Rotation Gesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25FC7CC22D4868500D2E651 /* Rotation Gesture.swift */; };
-		B26104271EFA585B005AA63C /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26104261EFA585B005AA63C /* SearchViewController.swift */; };
 		B2666A1F1FADAC0700A34CB0 /* Test Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2666A1E1FADAC0700A34CB0 /* Test Extensions.swift */; };
 		B267DF75211F41FC0086D521 /* Admin Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B267DF74211F41FC0086D521 /* Admin Menu.swift */; };
 		B2693CCB22C78C0B00596D85 /* Statistics Viewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2693CCA22C78C0B00596D85 /* Statistics Viewer.swift */; };
@@ -237,7 +235,6 @@
 		B221EED4210B0DFE00F7FBA0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/HandViewController.storyboard; sourceTree = "<group>"; };
 		B221EED6210B0E2D00F7FBA0 /* HandViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandViewController.swift; sourceTree = "<group>"; };
 		B22500F01F48425C0042D566 /* Scorecard Comms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Scorecard Comms.swift"; sourceTree = "<group>"; };
-		B22788E91FB827A7009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SearchViewController.storyboard; sourceTree = "<group>"; };
 		B22788FB1FB83AA7009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/GetStartedViewController.storyboard; sourceTree = "<group>"; };
 		B22788FD1FB83AA7009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/WelcomeViewController.storyboard; sourceTree = "<group>"; };
 		B22788FF1FB83AA7009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SelectionViewController.storyboard; sourceTree = "<group>"; };
@@ -281,7 +278,6 @@
 		B25FC7C622D0733C00D2E651 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/OverrideViewController.storyboard; sourceTree = "<group>"; };
 		B25FC7C822D0733C00D2E651 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ReviewViewController.storyboard; sourceTree = "<group>"; };
 		B25FC7CC22D4868500D2E651 /* Rotation Gesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Rotation Gesture.swift"; sourceTree = "<group>"; };
-		B26104261EFA585B005AA63C /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		B2666A1E1FADAC0700A34CB0 /* Test Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Test Extensions.swift"; sourceTree = "<group>"; };
 		B267DF74211F41FC0086D521 /* Admin Menu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Admin Menu.swift"; sourceTree = "<group>"; };
 		B2693CCA22C78C0B00596D85 /* Statistics Viewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Statistics Viewer.swift"; sourceTree = "<group>"; };
@@ -575,15 +571,6 @@
 			name = Hand;
 			sourceTree = "<group>";
 		};
-		B221EEE6210B1AB100F7FBA0 /* Search */ = {
-			isa = PBXGroup;
-			children = (
-				B22788E81FB827A7009BABCA /* SearchViewController.storyboard */,
-				B26104261EFA585B005AA63C /* SearchViewController.swift */,
-			);
-			name = Search;
-			sourceTree = "<group>";
-		};
 		B221EEE7210B1AB700F7FBA0 /* Client */ = {
 			isa = PBXGroup;
 			children = (
@@ -808,7 +795,6 @@
 			isa = PBXGroup;
 			children = (
 				B221EEE7210B1AB700F7FBA0 /* Client */,
-				B221EEE6210B1AB100F7FBA0 /* Search */,
 				B221EEE5210B1AA900F7FBA0 /* Hand */,
 				B2361A3822D5B975007D88BB /* Confirm Played */,
 				B2B18016211862FF008D3BAA /* Review */,
@@ -974,11 +960,11 @@
 		CC86557A1E021503000AF391 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				B243385622E0A67C002EBD40 /* Custom Views */,
 				B221EEE3210B1A7000F7FBA0 /* Scorepad Views */,
 				B288FAB61FB801FC00633FD7 /* Online Game Views */,
 				B288FAB51FB801E200633FD7 /* Other Main Views */,
 				B288FAB71FB8024A00633FD7 /* Miscellaneous Views */,
+				B243385622E0A67C002EBD40 /* Custom Views */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -1214,7 +1200,6 @@
 				B2594E862251FEB2004398FB /* MyDevices.sh in Resources */,
 				B22789021FB83AA7009BABCA /* SelectionViewController.storyboard in Resources */,
 				B22789331FB88FA5009BABCA /* DataTableViewController.storyboard in Resources */,
-				B22788EA1FB827A7009BABCA /* SearchViewController.storyboard in Resources */,
 				B25FC7C922D0733C00D2E651 /* SelectPlayersViewController.storyboard in Resources */,
 				B227891B1FB84BA2009BABCA /* GameSummaryViewController.storyboard in Resources */,
 				B227892D1FB88BDD009BABCA /* HistoryDetailViewController.storyboard in Resources */,
@@ -1406,7 +1391,6 @@
 				B2C054781FB8B55700846F6E /* ConfirmCountViewController.swift in Sources */,
 				CC4CC0F91DEADC32007FB24F /* AppDelegate.swift in Sources */,
 				B2F7281D1F7199AE006F0941 /* RabbitMQ Class.swift in Sources */,
-				B26104271EFA585B005AA63C /* SearchViewController.swift in Sources */,
 				B243385E22E0AEA8002EBD40 /* PlayerView.swift in Sources */,
 				B25FC7CD22D4868500D2E651 /* Rotation Gesture.swift in Sources */,
 				CC9EF3F21DFEE54A006E8930 /* DataTableViewController.swift in Sources */,
@@ -1454,14 +1438,6 @@
 				B221EED4210B0DFE00F7FBA0 /* Base */,
 			);
 			name = HandViewController.storyboard;
-			sourceTree = "<group>";
-		};
-		B22788E81FB827A7009BABCA /* SearchViewController.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B22788E91FB827A7009BABCA /* Base */,
-			);
-			name = SearchViewController.storyboard;
 			sourceTree = "<group>";
 		};
 		B22788FA1FB83AA7009BABCA /* GetStartedViewController.storyboard */ = {

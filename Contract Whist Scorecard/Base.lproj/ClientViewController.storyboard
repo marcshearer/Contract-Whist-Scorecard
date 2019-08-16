@@ -256,9 +256,6 @@
                         <outlet property="thisPlayerThumbnail" destination="RyR-aM-WNg" id="i3h-jf-wsK"/>
                         <outlet property="thisPlayerThumbnailWidthConstraint" destination="38b-HW-L25" id="WT5-to-N1T"/>
                         <outlet property="titleBar" destination="9bb-Wg-XPQ" id="Iik-d7-aIX"/>
-                        <segue destination="xqo-YA-Qav" kind="unwind" identifier="hideClient" unwindAction="hideClientWithSegue:" id="fOe-cu-YCR"/>
-                        <segue destination="Plw-2P-Gw9" kind="show" identifier="showClientScorepad" id="D9t-VC-kIf"/>
-                        <segue destination="xqo-YA-Qav" kind="unwind" identifier="linkFinishGame" customClass="UIStoryboardSegueWithCompletion" customModule="Contract_Whist_Scorecard" customModuleProvider="target" unwindAction="linkFinishGameWithSegue:" id="HUC-JM-W3W"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UDy-kc-SSJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -267,7 +264,6 @@
                         <action selector="rightSwipeWithRecognizer:" destination="aZe-pG-rMs" id="RPw-mc-NfU"/>
                     </connections>
                 </swipeGestureRecognizer>
-                <exit id="xqo-YA-Qav" userLabel="Exit" sceneMemberID="exit"/>
                 <rotationGestureRecognizer id="T3J-B5-Pwe">
                     <connections>
                         <action selector="rotationGestureWithRecognizer:" destination="aZe-pG-rMs" id="QfO-QT-Kha"/>
@@ -275,14 +271,6 @@
                 </rotationGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="7156" y="999.85007496251887"/>
-        </scene>
-        <!--Scorepad-->
-        <scene sceneID="2Nr-jA-0tz">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="UIViewController-BYZ-38-t0r" storyboardName="ScorepadViewController" referencedIdentifier="ScorepadViewController" id="Plw-2P-Gw9" userLabel="Scorepad" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="URn-kb-KK2" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="7738" y="999"/>
         </scene>
     </scenes>
     <resources>

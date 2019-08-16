@@ -18,7 +18,7 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
     // Main state properties
     private let scorecard = Scorecard.shared
     
-    // Properties to pass state to / from segues
+    // Properties to pass state
     private var gameDetail: HistoryGame!
     private var callerCompletion: ((HistoryGame?)->())?
     
@@ -44,34 +44,14 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
     @IBOutlet weak var excludeStatsView: UIView!
     @IBOutlet weak var excludeStatsHeightConstraint: NSLayoutConstraint!
     
-    // MARK: - IB Unwind Segue Handlers ================================================================ -
-    
-    @IBAction func hideUpdateLocation(segue:UIStoryboardSegue) {
-        var complete = false
-        if let sourceViewController = segue.source as? LocationViewController {
-            if sourceViewController.complete {
-                complete = true
-            }
-        }
-        if complete {
-            saveLocation()
-            if locationText.text != gameDetail.gameLocation.description {
-                locationText.text = gameDetail.gameLocation.description
-                self.updated = true
-            }
-        
-            dropPin()
-        }
-    }
-    
     // MARK: - IB Actions ============================================================================== -
 
     @IBAction func finishPressed(_ sender: UIButton) {
-        self.dismiss(animated: true, completion: { self.callerCompletion?((self.updated ? self.gameDetail : nil)) })
+        self.dismiss()
     }
     
     @IBAction func updatePressed(_ sender: Any) {
-        self.performSegue(withIdentifier: "updateLocation", sender: self)
+        self.showLocation()
     }
     
     @IBAction func actionPressed(_ sender: UIBarButtonItem) {
@@ -80,21 +60,6 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
     
     @IBAction func allSwipe(recognizer:UISwipeGestureRecognizer) {
         finishPressed(finishButton)
-    }
-    
-    // MARK: - method to show this view controller ============================================================================== -
-    
-    static public func show(from sourceViewController: UIViewController, gameDetail: HistoryGame, sourceView: UIView?, completion: ((HistoryGame?)->())? = nil) {
-        let storyboard = UIStoryboard(name: "HistoryDetailViewController", bundle: nil)
-        let historyDetailViewController = storyboard.instantiateViewController(withIdentifier: "HistoryDetailViewController") as! HistoryDetailViewController
-        historyDetailViewController.modalPresentationStyle = UIModalPresentationStyle.popover
-        historyDetailViewController.isModalInPopover = true
-        historyDetailViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        historyDetailViewController.popoverPresentationController?.sourceView = sourceView
-        historyDetailViewController.preferredContentSize = CGSize(width: 400, height: 600)
-        historyDetailViewController.gameDetail = gameDetail
-        historyDetailViewController.callerCompletion = completion
-        sourceViewController.present(historyDetailViewController, animated: true, completion: nil)
     }
     
     // MARK: - View Overrides ========================================================================== -
@@ -390,29 +355,46 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
         
     }
     
-    // MARK: - Segue Prepare Handler =================================================================== -
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    // MARK: - Show other views ======================================================= -
+    
+    private func showLocation() {
         
-        switch segue.identifier! {
-            
-        case "updateLocation":
-            
-            let destination = segue.destination as! LocationViewController
-
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
-            destination.preferredContentSize = CGSize(width: 400, height: 554)
-
-            destination.gameLocation = self.gameDetail.gameLocation
-            destination.returnSegue = "hideUpdateLocation"
-            destination.useCurrentLocation = false
-            destination.mustChange = true
-            
-        default:
-            break
-        }
+        LocationViewController.show(from: self, gameLocation: self.gameDetail.gameLocation, useCurrentLocation: false, mustChange: true, completion: { (location) in
+            if let location = location {
+                // Copy location back
+                self.gameDetail.gameLocation = location
+                
+                // Save location
+                self.saveLocation()
+                if self.locationText.text != self.gameDetail.gameLocation.description {
+                    self.locationText.text = self.gameDetail.gameLocation.description
+                    self.updated = true
+                }
+                
+                self.dropPin()
+            }
+        })
     }
+    
+    // MARK: - method to show and dismiss this view controller ============================================================================== -
+    
+    static public func show(from sourceViewController: UIViewController, gameDetail: HistoryGame, sourceView: UIView?, completion: ((HistoryGame?)->())? = nil) {
+        let storyboard = UIStoryboard(name: "HistoryDetailViewController", bundle: nil)
+        let historyDetailViewController = storyboard.instantiateViewController(withIdentifier: "HistoryDetailViewController") as! HistoryDetailViewController
+        historyDetailViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+        historyDetailViewController.isModalInPopover = true
+        historyDetailViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        historyDetailViewController.popoverPresentationController?.sourceView = sourceView
+        historyDetailViewController.preferredContentSize = CGSize(width: 400, height: 600)
+        historyDetailViewController.gameDetail = gameDetail
+        historyDetailViewController.callerCompletion = completion
+        sourceViewController.present(historyDetailViewController, animated: true, completion: nil)
+    }
+    
+    private func dismiss() {
+        self.dismiss(animated: true, completion: { self.callerCompletion?((self.updated ? self.gameDetail : nil)) })
+    }
+    
 }
 
 class HistoryDetailTableCell: UITableViewCell {

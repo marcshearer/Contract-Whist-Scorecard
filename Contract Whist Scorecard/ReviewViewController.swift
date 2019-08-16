@@ -10,7 +10,7 @@ import UIKit
 
 class ReviewViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate {
 
-    // Properties passed to/from segues
+    // Properties passed
     private let scorecard = Scorecard.shared
     public var round: Int!
     public var thisPlayer: Int!
@@ -40,7 +40,7 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
     @IBOutlet private weak var titleViewHeight: NSLayoutConstraint!
     
     @IBAction func finishPressed(_ sender: UIButton) {
-        self.performSegue(withIdentifier: "hideReview", sender: self)
+        self.dismiss()
     }
    
     @IBAction func tapGesture(recognizer:UITapGestureRecognizer) {
@@ -271,6 +271,31 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
         self.tableView.append(self.hand3TableView)
         self.tableView.append(self.hand4TableView)
         
+    }
+    
+    // MARK: - Function to present and dismiss this view ==============================================================
+    
+    class public func show(from viewController: UIViewController, round: Int, thisPlayer: Int) {
+        
+        let storyboard = UIStoryboard(name: "ReviewViewController", bundle: nil)
+        let reviewViewController = storyboard.instantiateViewController(withIdentifier: "ReviewViewController") as! ReviewViewController
+        
+        reviewViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+        reviewViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        reviewViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
+        reviewViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
+        reviewViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
+        reviewViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
+        
+        reviewViewController.round = round
+        reviewViewController.thisPlayer = thisPlayer
+        
+        viewController.present(reviewViewController, animated: true, completion: nil)
+        
+    }
+    
+    private func dismiss(linkToGameSummary: Bool = false) {
+        self.dismiss(animated: true, completion: nil)
     }
 }
 

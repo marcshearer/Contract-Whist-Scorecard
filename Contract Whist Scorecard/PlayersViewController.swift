@@ -22,15 +22,14 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
     // Main state properties
     private let scorecard = Scorecard.shared
     
-    // Properties to get state from calling segue
-    public var detailMode: DetailMode = .amend // Also passed on to detail segue
-    public var returnSegue = ""
-    public var backText = "Back"
-    public var backImage = "back"
-    public var actionText = "Compare"
-    public var actionSegue = "showStatistics"
-    public var layoutComplete = false
-    public var refresh = true
+    // Properties to get state
+    private var completion: (()->())?
+    private var backText = ""
+    private var backImage = "home"
+
+    // Other properties
+    private var layoutComplete = false
+    private var refresh = true
 
     // Local class variables
     private var playerList: [PlayerDetail]!
@@ -76,7 +75,7 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
         
         NotificationCenter.default.removeObserver(playerObserver!)
         NotificationCenter.default.removeObserver(imageObserver!)
-        self.performSegue(withIdentifier: returnSegue, sender: self)
+        self.dismiss()
     }
     
     @IBAction func rightSwipe(recognizer:UISwipeGestureRecognizer) {
@@ -212,8 +211,8 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
         let relativeTapPosition = CGPoint(x: tapPosition.x - cell.frame.minX, y: tapPosition.y - cell.frame.minY)
         if let path = cell.path {
             if path.contains(relativeTapPosition) {
-                PlayerDetailViewController.show(from: self, playerDetail: self.playerList[cell.indexPath.item], mode: detailMode, sourceView: self.view, completion: { (playerDetail, deletePlayer) in
-                                                    if self.detailMode != .display && playerDetail != nil {
+                PlayerDetailViewController.show(from: self, playerDetail: self.playerList[cell.indexPath.item], mode: .amend, sourceView: self.view, completion: { (playerDetail, deletePlayer) in
+                                                    if playerDetail != nil {
                                                         if deletePlayer {
                                                             // Refresh all
                                                             self.refreshView()
@@ -338,6 +337,34 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
             if selected != nil {
                 self.refreshView()
             }
+        })
+    }
+    
+    // MARK: - Function to present and dismiss this view ==============================================================
+    
+    class public func show(from viewController: UIViewController, backText: String = "", backImage: String = "home", completion: (()->())?){
+        
+        let storyboard = UIStoryboard(name: "PlayersViewController", bundle: nil)
+        let playersViewController: PlayersViewController = storyboard.instantiateViewController(withIdentifier: "PlayersViewController") as! PlayersViewController
+        
+        playersViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+        playersViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        playersViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
+        playersViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
+        playersViewController.preferredContentSize = CGSize(width: 400, height: 700)
+        playersViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
+        
+        playersViewController.backText = backText
+        playersViewController.backImage = backImage
+        playersViewController.completion = completion
+        playersViewController.refresh = true
+        
+        viewController.present(playersViewController, animated: true, completion: nil)
+    }
+    
+    private func dismiss() {
+        self.dismiss(animated: true, completion: {
+            self.completion?()
         })
     }
     

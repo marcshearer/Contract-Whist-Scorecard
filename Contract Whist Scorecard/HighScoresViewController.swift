@@ -21,16 +21,15 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
     // Main state properties
     private let scorecard = Scorecard.shared
     
-    // Properties to pass state to / from segues
-    var returnSegue = ""
-    var backText = "Back"
-    var backImage = "back"
+    // Properties to pass state
+    private var backText = "Back"
+    private var backImage = "back"
     
     // Local class variables
-    var totalScoreParticipants: [ParticipantMO]!
-    var handsMadeParticipants: [ParticipantMO]!
-    var twosMadeParticipants: [ParticipantMO]!
-    var longestWinStreak: [(streak: Int, participantMO: ParticipantMO?)]!
+    private var totalScoreParticipants: [ParticipantMO]!
+    private var handsMadeParticipants: [ParticipantMO]!
+    private var twosMadeParticipants: [ParticipantMO]!
+    private var longestWinStreak: [(streak: Int, participantMO: ParticipantMO?)]!
     
     // MARK: - IB Outlets ============================================================================== -
 
@@ -40,7 +39,7 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func finishPressed(_ sender: UIButton) {
-        self.performSegue(withIdentifier: self.returnSegue, sender: self)
+        self.dismiss()
     }
     
     @IBAction func allSwipe(recognizer:UISwipeGestureRecognizer) {
@@ -266,6 +265,30 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
     
     func positionPopup() {
         scorecard.reCenterPopup(self)
+    }
+    
+    // MARK: - Function to present and dismiss this view ==============================================================
+    
+    class public func show(from viewController: UIViewController, backText: String = "Back", backImage: String = "back"){
+        
+        let storyboard = UIStoryboard(name: "HighScoresViewController", bundle: nil)
+        let highScoresViewController: HighScoresViewController = storyboard.instantiateViewController(withIdentifier: "HighScoresViewController") as! HighScoresViewController
+        
+        highScoresViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+        highScoresViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        highScoresViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
+        highScoresViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
+        highScoresViewController.preferredContentSize = CGSize(width: 400, height: 700)
+        highScoresViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
+        
+        highScoresViewController.backText = backText
+        highScoresViewController.backImage = backImage
+        
+        viewController.present(highScoresViewController, animated: true, completion: nil)
+    }
+    
+    private func dismiss() {
+        self.dismiss(animated: true, completion: nil)
     }
     
 }

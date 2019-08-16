@@ -23,13 +23,11 @@ class ConfirmCountViewController : UIViewController, UIPopoverPresentationContro
     @IBOutlet weak var stepperCount: UIStepper!
     
     @IBAction func confirmPressed(_ sender: UIButton) {
-        self.dismiss(animated: true, completion: {
-            self.confirmHandler(self.value)
-        })
+        self.dismiss(completion: { self.confirmHandler(self.value) })
     }
     
     @IBAction func cancelPressed(_ sender: UIButton) {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss()
     }
     
     @IBAction func stepperValueChanged(_ sender: UIStepper) {
@@ -80,5 +78,12 @@ class ConfirmCountViewController : UIViewController, UIPopoverPresentationContro
 
         parentViewController.present(viewController, animated: true, completion: nil)
     }
+    
+    private func dismiss(completion: (()->())? = nil) {
+        self.dismiss(animated: true, completion: {
+            completion?()
+        })
+    }
+    
 }
 

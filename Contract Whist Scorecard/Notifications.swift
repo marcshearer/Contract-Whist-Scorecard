@@ -189,9 +189,6 @@ class Notifications {
     }
     
     public static func launchOnlineGame(welcomeViewController: WelcomeViewController, matchDeviceName: String) {
-        welcomeViewController.clientTitle = "Join Online Game"
-        welcomeViewController.clientCommsPurpose = .playing
-        welcomeViewController.clientMatchDeviceName = matchDeviceName
-        welcomeViewController.performSegue(withIdentifier: "showClient", sender: welcomeViewController)
+       ClientViewController.show(from: welcomeViewController, backText: "", backImage: "home", formTitle: "Play a Game", purpose: .playing, matchDeviceName: matchDeviceName)
     }
 }

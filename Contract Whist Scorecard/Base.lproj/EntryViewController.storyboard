@@ -40,10 +40,8 @@
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yiv-DE-A0X">
-                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="0.0"/>
                                                         <subviews>
                                                             <button autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pge-ad-xW7" userLabel="Errors Button" customClass="ErrorRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="0.0" width="30" height="0.0"/>
                                                                 <color key="backgroundColor" name="Error"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="30" id="PHL-Xz-e8E"/>
@@ -54,7 +52,6 @@
                                                                 </connections>
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VGH-oE-ROK" userLabel="Finish Button" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                                <rect key="frame" x="30" y="0.0" width="20" height="0.0"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="30" id="Awa-De-Kxt"/>
                                                                 </constraints>
@@ -337,11 +334,11 @@
                                     <outlet property="delegate" destination="mEi-hH-CUE" id="TAG-8t-BzE"/>
                                 </connections>
                             </tableView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="navigationImage tabletop" translatesAutoresizingMaskIntoConstraints="NO" id="5OT-yU-e2V">
-                                <rect key="frame" x="142.5" y="0.0" width="90" height="54"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="navigationImage game banner" translatesAutoresizingMaskIntoConstraints="NO" id="5OT-yU-e2V">
+                                <rect key="frame" x="151" y="0.0" width="73" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="5OT-yU-e2V" secondAttribute="height" multiplier="90:54" id="IXy-gl-wJi"/>
-                                    <constraint firstAttribute="height" constant="54" id="npG-ro-RUa"/>
+                                    <constraint firstAttribute="height" constant="44" id="npG-ro-RUa"/>
                                 </constraints>
                             </imageView>
                             <toolbar clipsSubviews="YES" clearsContextBeforeDrawing="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y1H-0M-Egj">
@@ -356,10 +353,8 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5A9-ob-sf7">
-                                                    <rect key="frame" x="0.0" y="0.0" width="73" height="0.0"/>
                                                     <subviews>
                                                         <button autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IVB-I0-IfC" userLabel="Errors Button" customClass="ErrorRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="30" height="0.0"/>
                                                             <color key="backgroundColor" name="Error"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="30" id="8n7-22-CIA"/>
@@ -370,7 +365,6 @@
                                                             </connections>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8rw-oz-v5h" customClass="LightRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                            <rect key="frame" x="30" y="0.0" width="43" height="0.0"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="Kuj-6V-wtF"/>
                                                             </constraints>
@@ -501,11 +495,6 @@
                         <outletCollection property="undoButton" destination="hUK-zs-I9p" collectionClass="NSMutableArray" id="H4a-NB-gKd"/>
                         <outletCollection property="footerRoundTitle" destination="Imt-6d-trM" collectionClass="NSMutableArray" id="cht-eZ-FUD"/>
                         <outletCollection property="footerRoundTitle" destination="mYF-x3-kAl" collectionClass="NSMutableArray" id="kbw-US-JUE"/>
-                        <segue destination="Rwb-y8-jvq" kind="unwind" identifier="hideEntry" unwindAction="hideEntryWithSegue:" id="XKG-1q-g76"/>
-                        <segue destination="Rwb-y8-jvq" kind="unwind" identifier="linkGameSummary" customClass="UIStoryboardSegueWithCompletion" customModule="Contract_Whist_Scorecard" customModuleProvider="target" animates="NO" unwindAction="linkGameSummaryWithSegue:" id="EuF-SC-abc"/>
-                        <segue destination="nMs-gZ-i6r" kind="popoverPresentation" identifier="showRoundSummary" popoverAnchorView="pS0-jq-6eE" id="ZUj-17-gZD">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                        </segue>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qoh-28-xeD" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -514,7 +503,6 @@
                         <action selector="rightSwipeWithRecognizer:" destination="mEi-hH-CUE" id="Eu0-Yn-aTR"/>
                     </connections>
                 </swipeGestureRecognizer>
-                <exit id="Rwb-y8-jvq" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="8874" y="-544"/>
         </scene>
@@ -529,7 +517,7 @@
     </scenes>
     <resources>
         <image name="cross white" width="20" height="20"/>
-        <image name="navigationImage tabletop" width="73" height="44"/>
+        <image name="navigationImage game banner" width="73" height="43"/>
         <image name="undo" width="21.5" height="22"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

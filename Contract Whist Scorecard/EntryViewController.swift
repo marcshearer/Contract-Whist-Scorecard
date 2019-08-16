@@ -14,46 +14,48 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     
     private let scorecard = Scorecard.shared
         
-    // Properties to pass state to / from segues
-    var reeditMode = false
-    var rounds: Int!
-    var cards: [Int]!
-    var bounce: Bool!
-    var bonus2: Bool!
-    var suits: [Suit]!
+    // Properties to pass state
+    private var reeditMode = false
+    private var rounds: Int!
+    private var cards: [Int]!
+    private var bounce: Bool!
+    private var bonus2: Bool!
+    private var suits: [Suit]!
+    private var completion: ((Bool)->())? = nil
     
     // Main state properties
-    var selection = Selection(player: 0, mode: Mode.bid)
+    private var selection = Selection(player: 0, mode: Mode.bid)
 
     // UI component pointers
-    var playerBidCell = [EntryPlayerCell?]()
-    var playerMadeCell = [EntryPlayerCell?]()
-    var playerTwosCell = [EntryPlayerCell?]()
-    var playerScoreCell = [EntryPlayerCell?]()
-    var scoreCell = [EntryScoreCell?]()
-    var instructionLabel: UILabel!
-    var scoreCollection: UICollectionView?
-    var playerCollection: UICollectionView?
-    var flow: Flow!
-    var undo = Flow()
+    private var playerBidCell = [EntryPlayerCell?]()
+    private var playerMadeCell = [EntryPlayerCell?]()
+    private var playerTwosCell = [EntryPlayerCell?]()
+    private var playerScoreCell = [EntryPlayerCell?]()
+    private var scoreCell = [EntryScoreCell?]()
+    private var instructionLabel: UILabel!
+    private var scoreCollection: UICollectionView?
+    private var playerCollection: UICollectionView?
+    private var flow: Flow!
+    private var undo = Flow()
     
     // Local class variables
-    var bidOnlyMode = false
-    var instructionSection = true
-    var firstTime = true
+    private var bidOnlyMode = false
+    private var instructionSection = true
+    private var firstTime = true
+    private var roundSummaryViewController: RoundSummaryViewController!
     
     // Cell sizes
-    let scoreWidth: CGFloat = 50.0
-    var buttonWidth: CGFloat = 0.0
-    var nameWidth: CGFloat = 0.0
+    private let scoreWidth: CGFloat = 50.0
+    private var buttonWidth: CGFloat = 0.0
+    private var nameWidth: CGFloat = 0.0
     
     // Column descriptors
-    let playerColumn = 0
-    let bidColumn = 1
-    let madeColumn = 2
-    var twosColumn = 0
-    var scoreColumn = 0
-    var columns = 0
+    private let playerColumn = 0
+    private let bidColumn = 1
+    private let madeColumn = 2
+    private var twosColumn = 0
+    private var scoreColumn = 0
+    private var columns = 0
  
     // MARK: - IB Outlets ============================================================================== -
 
@@ -70,21 +72,6 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     @IBOutlet private var errorsButton: [RoundedButton]!
     @IBOutlet private var summaryButton: [RoundedButton]!
     
-    // MARK: - IB Unwind Segue Handlers ================================================================ -
-    
-    @IBAction func hideRoundSummary(segue:UIStoryboardSegue) {
-        let returningAuto = bidOnlyMode
-        if returningAuto {
-            bidOnlyMode = false
-            setupColumns()
-            setupFlow()
-            selection = flow.find(player: 1, mode: Mode.made)
-            setForm(false)
-            setupSize(to: CGSize(width: entryView.frame.width - entryView.safeAreaInsets.left - entryView.safeAreaInsets.right, height: entryView.frame.height))
-            entryTableView.reloadData()
-        }
-    }
-    
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func undoButtonClicked(_ sender: Any) {
@@ -98,13 +85,13 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     @IBAction func summaryClicked(_ sender: Any) {
         // Round in toolbar - show summary
         if self.scorecard.scorecardPlayer(self.scorecard.currentPlayers).bid(self.scorecard.selectedRound) != nil {
-            self.performSegue(withIdentifier: "showRoundSummary", sender: self )
+            self.showRoundSummary()
         }
     }
     
     @IBAction func saveScorePressed(_ sender: Any) {
         if canFinish() {
-            self.performSegue(withIdentifier: "hideEntry", sender: self )
+            self.dismiss()
         }
     }
     
@@ -115,12 +102,14 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
 // MARK: - View Overrides ========================================================================== -
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
-        self.setupColumns()
-        self.setupFlow()
-        self.getInitialState()
-        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.view.setNeedsLayout()
+        self.entryTableView.reloadData()
+        firstTime = true
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -135,7 +124,13 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
         
         self.setupScreen()
         
-        self.bidOnlyMode = !self.scorecard.roundBiddingComplete(self.scorecard.selectedRound) ? true : false
+        if firstTime {
+            self.bidOnlyMode = !self.scorecard.roundBiddingComplete(self.scorecard.selectedRound) ? true : false
+            self.setupColumns()
+            self.setupFlow()
+            self.getInitialState()
+        }
+        
         self.setForm(!firstTime)
         
         for _ in 1...self.scorecard.roundCards(self.scorecard.selectedRound, rounds: self.rounds, cards: self.cards, bounce: self.bounce) + 1 {
@@ -276,7 +271,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             instructionSection = ScorecardUI.portraitPhone()
         } else {
             self.bannerHeightConstraint.constant = 44.0
-            self.navigationImageHeightConstraint.constant = 44.0 + self.view.safeAreaInsets.top + 10.0
+            self.navigationImageHeightConstraint.constant = 44.0 + self.view.safeAreaInsets.top
             self.footerHeightConstraint.constant = 88.0
             self.toolbarHeightConstraint.constant = 0.0
             instructionSection = true
@@ -615,28 +610,49 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
         }
     }
     
-    // MARK: - Segue Prepare Handler =================================================================== -
+    // MARK: - Show round summary =================================================================== -
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    private func showRoundSummary() {
+    
+        self.roundSummaryViewController = RoundSummaryViewController.show(from: self, existing: roundSummaryViewController, rounds: self.rounds, cards: self.cards, bounce: self.bounce, suits: self.suits)
         
-        switch segue.identifier! {
-            
-        case "showRoundSummary":
-            
-            let destination = segue.destination as! RoundSummaryViewController
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
-            destination.preferredContentSize = CGSize(width: 400, height: self.scorecard.scorepadBodyHeight)
-            destination.returnSegue = "hideRoundSummary"
-            destination.rounds = self.rounds
-            destination.cards = self.cards
-            destination.bounce = self.bounce
-            destination.suits = self.suits
-            
-        default:
-            break
+    }
+    
+    // MARK: - Function to present and dismiss this view ==============================================================
+    
+    class public func show(from viewController: UIViewController, existing entryViewController: EntryViewController! = nil, reeditMode: Bool = false, rounds: Int? = nil, cards: [Int]? = nil, bounce: Bool? = nil, bonus2: Bool? = nil, suits: [Suit]? = nil, completion: ((Bool)->())? = nil) -> EntryViewController {
+        
+        var entryViewController: EntryViewController! = entryViewController
+        
+        if entryViewController == nil {
+            let storyboard = UIStoryboard(name: "EntryViewController", bundle: nil)
+            entryViewController = storyboard.instantiateViewController(withIdentifier: "EntryViewController") as? EntryViewController
         }
+        
+        entryViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+        entryViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        entryViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
+        entryViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
+        entryViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
+        entryViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
+        
+        entryViewController.reeditMode = reeditMode
+        entryViewController.rounds = rounds
+        entryViewController.cards = cards
+        entryViewController.bounce = bounce
+        entryViewController.bonus2 = bonus2
+        entryViewController.suits = suits
+        entryViewController.completion = completion
+        
+        viewController.present(entryViewController, animated: true, completion: nil)
+        
+        return entryViewController
+    }
+    
+    private func dismiss(linkToGameSummary: Bool = false) {
+        self.dismiss(animated: false, completion: {
+            self.completion?(linkToGameSummary)
+        })
     }
 }
 
@@ -850,13 +866,11 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
             if !self.reeditMode && !self.scorecard.roundError(self.scorecard.selectedRound) {
                 // Finished - return
                 if bidOnlyMode {
-                    self.performSegue(withIdentifier: "showRoundSummary", sender: self )
-                } else if self.scorecard.gameComplete(rounds: self.rounds) {
-                    self.scorecard.formatRound(self.scorecard.selectedRound)
-                    self.performSegue(withIdentifier: "linkGameSummary", sender: self )
+                    self.showRoundSummary()
+                    self.leaveBidOnlyMode()
                 } else {
                     self.scorecard.formatRound(self.scorecard.selectedRound)
-                    self.performSegue(withIdentifier: "hideEntry", sender: self )
+                    self.dismiss(linkToGameSummary: self.scorecard.gameComplete(rounds: self.rounds))
                 }
             } else {
                 self.selection = Selection(player: 0, mode: Mode.bid)
@@ -865,6 +879,16 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
         highlightCursor(true)
         setForm(true)
         
+    }
+    
+    private func leaveBidOnlyMode() {
+        bidOnlyMode = false
+        setupColumns()
+        setupFlow()
+        selection = flow.find(player: 1, mode: Mode.made)
+        setForm(false)
+        setupSize(to: CGSize(width: entryView.frame.width - entryView.safeAreaInsets.left - entryView.safeAreaInsets.right, height: entryView.frame.height))
+        entryTableView.reloadData()
     }
     
     // MARK: - Collection View Utility Routines ===================================================== -

@@ -138,12 +138,6 @@
                         <outlet property="rightPadTextTrailingConstraint" destination="aju-mO-scW" id="4kF-xE-Qq4"/>
                         <outlet property="rightPadView" destination="jNc-qk-XEu" id="KIh-39-fZx"/>
                         <outlet property="rightPadWidthConstraint" destination="wfy-iu-TLk" id="E0e-bc-weI"/>
-                        <segue destination="0aR-2H-gBg" kind="unwind" identifier="hidePlayers" unwindAction="hidePlayersWithSegue:" id="vRw-rF-DmI"/>
-                        <segue destination="jyU-H0-0Mr" kind="popoverPresentation" identifier="showSync" popoverAnchorView="dU2-44-xkb" id="F1T-bt-b75">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                        </segue>
-                        <segue destination="0aR-2H-gBg" kind="unwind" identifier="selectionHideCloudPlayers" unwindAction="selectionHideCloudPlayersWithSegue:" id="Gmx-Lv-AIj"/>
-                        <segue destination="0aR-2H-gBg" kind="unwind" identifier="hideGetStartedSelectPlayers" unwindAction="hideGetStartedSelectPlayersWithSegue:" id="9bK-Pz-fzp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pQb-Du-Rpn" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -152,7 +146,6 @@
                         <action selector="rightSwipeWithRecognizer:" destination="aCF-cU-Oeh" id="Pog-Vt-9bJ"/>
                     </connections>
                 </swipeGestureRecognizer>
-                <exit id="0aR-2H-gBg" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="4725.6000000000004" y="1000.7496251874064"/>
         </scene>

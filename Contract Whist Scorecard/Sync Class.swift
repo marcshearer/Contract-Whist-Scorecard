@@ -14,10 +14,22 @@ import CloudKit
 
 // If you ever decide to make some of the methods in the protocol optional just insert @objc in front of protocol and put ? after optional method calls
 
+@objc public enum SyncStage: Int, CaseIterable {
+    case started = -1
+    case initialise = 0
+    case downloadGames = 1
+    case uploadGames = 2
+    case downloadPlayers = 3
+    case uploadPlayers = 4
+}
+
 @objc protocol SyncDelegate: class {
     
     // A method to manage a message from the sync controller
     @objc optional func syncMessage(_ message: String)
+    
+    // A method to manage stage completion in all mode
+    @objc optional func syncStageComplete(_ stage: SyncStage)
     
     // A method to manage an error condition
     @objc optional func syncAlert(_ message: String, completion: @escaping () -> ())
@@ -62,7 +74,12 @@ private enum SyncPhase {
     case phaseGetPlayerList
     case phaseSendPlayers
     case phaseGetSendImages
-
+    case phaseStartedStageComplete
+    case phaseInitialiseStageComplete
+    case phaseDownloadGamesStageComplete
+    case phaseUploadGamesStageComplete
+    case phaseDownloadPlayersStageComplete
+    case phaseUploadPlayersStageComplete
 }
 
 private enum GetParticipantMode {
@@ -139,16 +156,23 @@ class Sync {
             case .syncGetVersion:
                 syncPhases = [.phaseGetVersion]
             case .syncAll:
-                syncPhases = [.phaseGetVersion,
+                syncPhases = [.phaseStartedStageComplete,
+                              .phaseGetVersion,
                               .phaseGetLastSyncDate,
+                              .phaseInitialiseStageComplete,
                               .phaseGetExistingParticipants, .phaseUpdateParticipants,
                               .phaseGetNewParticipants,      .phaseUpdateParticipants,
                               .phaseGetGames,                .phaseUpdateGames,
                               .phaseGetGameParticipants,     .phaseUpdateParticipants,
+                              .phaseDownloadGamesStageComplete,
                               .phaseSendGamesAndParticipants,
                               .phaseUpdateLastSyncDate,
-                              .phaseGetPlayers, .phaseSendPlayers,
-                              .phaseGetSendImages]
+                              .phaseUploadGamesStageComplete,
+                              .phaseGetPlayers,
+                              .phaseDownloadPlayersStageComplete,
+                              .phaseSendPlayers,
+                              .phaseGetSendImages,
+                              .phaseUploadPlayersStageComplete]
             case .syncUpdatePlayers:
                 // Synchronise players in list with cloud
                 syncPhases = [.phaseGetVersion,
@@ -261,8 +285,19 @@ class Sync {
                                                           specificEmail: self.specificEmail,
                                                           downloadAction: self.addPlayerList,
                                                           completeAction: self.completeGetPlayers)
+            case .phaseStartedStageComplete:
+                self.delegate?.syncStageComplete?(.started)
+            case .phaseInitialiseStageComplete:
+                self.delegate?.syncStageComplete?(.initialise)
+            case .phaseDownloadGamesStageComplete:
+                self.delegate?.syncStageComplete?(.downloadGames)
+            case .phaseUploadGamesStageComplete:
+                self.delegate?.syncStageComplete?(.uploadGames)
+            case .phaseDownloadPlayersStageComplete:
+                self.delegate?.syncStageComplete?(.downloadPlayers)
+            case .phaseUploadPlayersStageComplete:
+                self.delegate?.syncStageComplete?(.uploadPlayers)
             }
-            
             
             if !nextPhase {
                 break
@@ -1560,6 +1595,42 @@ class Sync {
             }
         }
         return observer
+    }
+    
+    // MARK: - Stage helper routines ================================================================ -
+    
+    class public func stageDescription(stage: SyncStage) -> String {
+        switch stage {
+        case .started:
+            return "Start"
+        case .initialise:
+            return "Initialise"
+        case .downloadGames:
+            return "Download game history"
+        case .uploadGames:
+            return "Upload games on this device"
+        case .downloadPlayers:
+            return "Download player details"
+        case .uploadPlayers:
+            return "Upload player details"
+        }
+    }
+    
+    class public func stageActionDescription(stage: SyncStage) -> String {
+        switch stage {
+        case .started:
+            return "Starting"
+        case .initialise:
+            return "Initialising"
+        case .downloadGames:
+            return "Downloading game history"
+        case .uploadGames:
+            return "Uploading games on this device"
+        case .downloadPlayers:
+            return "Downloading player details"
+        case .uploadPlayers:
+            return "Uploading player details"
+        }
     }
 }
 

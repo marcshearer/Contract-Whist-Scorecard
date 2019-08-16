@@ -237,24 +237,11 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="finishButton" destination="gto-c0-DqX" id="quD-Yi-hZ0"/>
-                        <segue destination="mUh-dg-q1z" kind="unwind" identifier="hideGetStarted" unwindAction="hideGetStartedWithSegue:" id="IRM-kh-2LK"/>
-                        <segue destination="qYQ-cc-0sq" kind="popoverPresentation" identifier="showGetStartedSettings" animates="NO" popoverAnchorView="gBX-K1-URm" id="VgC-Jo-Lqa">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                        </segue>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e9Q-MP-3gh" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="mUh-dg-q1z" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="6351.1999999999998" y="-545.57721139430294"/>
-        </scene>
-        <!--Settings-->
-        <scene sceneID="Vb3-z3-JKn">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="UIViewController-btt-Xo-OBG" storyboardName="SettingsViewController" referencedIdentifier="SettingsViewController" id="qYQ-cc-0sq" userLabel="Settings" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="z4c-iM-vvG" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="6986" y="-546"/>
         </scene>
     </scenes>
     <resources>

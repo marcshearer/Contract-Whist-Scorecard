@@ -24,21 +24,20 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func finishPressed(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss()
     }
     
-    // MARK: - IB Unwind Segue Handlers ================================================================ -
-
-    @IBAction func hideGraphHistoryDetail(segue:UIStoryboardSegue) {
-    }
-    
-    // MARK: - method to show this view controller ============================================================================== -
+    // MARK: - method to show and dismiss this view controller ========================================= -
     
     static public func show(from sourceViewController: UIViewController, playerDetail: PlayerDetail) {
         let storyboard = UIStoryboard(name: "GraphViewController", bundle: nil)
         let graphViewController = storyboard.instantiateViewController(withIdentifier: "GraphViewController") as! GraphViewController
         graphViewController.playerDetail = playerDetail
         sourceViewController.present(graphViewController, animated: true, completion: nil)
+    }
+    
+    private func dismiss() {
+        self.dismiss(animated: true, completion: nil)
     }
     
     // MARK: - View Overrides ========================================================================== -
@@ -75,7 +74,7 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
         
         if participantList.count == 0 {
             self.alertMessage("No games played since game history has been saved", okHandler: {
-                self.performSegue(withIdentifier: "hideStatisticsGraph", sender: self)
+                self.dismiss()
             })
         } else {
         

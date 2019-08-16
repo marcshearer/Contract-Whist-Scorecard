@@ -273,11 +273,9 @@
                         <outlet property="thisPlayerViewContainerWidthConstraint" destination="yYr-oC-cVs" id="tNh-Yi-Hxp"/>
                         <outlet property="unselectedCollectionView" destination="Tlx-l1-ig7" id="vRw-k0-8iE"/>
                         <outlet property="unselectedCollectionViewTopConstraint" destination="eWw-q0-skm" id="phm-iK-kzp"/>
-                        <segue destination="Vxp-SW-x6a" kind="unwind" identifier="hideSelectionSelectPlayers" unwindAction="hideSelectionSelectPlayersWithSegue:" id="UXW-YD-63I"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pg0-6i-AIz" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="Vxp-SW-x6a" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="6356.25" y="160.56338028169014"/>
         </scene>

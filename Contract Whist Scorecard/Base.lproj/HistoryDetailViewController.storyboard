@@ -30,10 +30,10 @@
                                 <items>
                                     <navigationItem title="History Detail" largeTitleDisplayMode="always" id="Seg-LW-F6o">
                                         <barButtonItem key="leftBarButtonItem" title="Item" id="8bf-Ea-ezt">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="C99-Bz-aQ9" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="16" y="11" width="56" height="22"/>
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="C99-Bz-aQ9" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <rect key="frame" x="16" y="11" width="30" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Back" image="back">
+                                                <state key="normal" image="back">
                                                     <color key="titleColor" name="Banner Text"/>
                                                 </state>
                                                 <connections>
@@ -246,9 +246,6 @@
                         <outlet property="participantTableViewHeightConstraint" destination="IZK-Am-B2Y" id="xMv-xC-kdK"/>
                         <outlet property="titleNavigationItem" destination="Seg-LW-F6o" id="S7u-oE-gbp"/>
                         <outlet property="updateButton" destination="Xcz-H4-UE0" id="fHf-kv-QyZ"/>
-                        <segue destination="exh-c3-YQa" kind="popoverPresentation" identifier="updateLocation" popoverAnchorView="BER-xO-Vlg" id="OZr-e6-PHR">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                        </segue>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nCi-c0-zuy" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -265,17 +262,9 @@
             </objects>
             <point key="canvasLocation" x="7988" y="-1292.2038980509747"/>
         </scene>
-        <!--Location-->
-        <scene sceneID="ZaL-vh-Iea">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="UIViewController-IhQ-um-kHy" storyboardName="LocationViewController" referencedIdentifier="LocationViewController" id="exh-c3-YQa" userLabel="Location" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="F2o-Gl-Fn3" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="8534" y="-1293"/>
-        </scene>
     </scenes>
     <resources>
-        <image name="back" width="14" height="20"/>
+        <image name="back" width="22" height="22"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -298,7 +287,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Text">
-            <color red="0.49799999594688416" green="0.49799999594688416" blue="0.49799999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

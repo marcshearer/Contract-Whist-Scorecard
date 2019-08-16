@@ -15,7 +15,6 @@ class RoundSummaryViewController: CustomViewController {
     private let scorecard = Scorecard.shared
     
     // Main state properties
-    public var returnSegue: String!
     public var rounds: Int!
     public var cards: [Int]!
     public var bounce: Bool!
@@ -45,15 +44,12 @@ class RoundSummaryViewController: CustomViewController {
     }
     
     // MARK: - View Overrides ========================================================================== -
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
+   
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+       
         setupOverUnder()
         setupBidText(bids: player1Bid, player2Bid, player3Bid, player4Bid)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
         
         if self.scorecard.commsHandlerMode == .roundSummary {
             // Notify client controller that round summary display complete
@@ -70,7 +66,7 @@ class RoundSummaryViewController: CustomViewController {
     // MARK: - Gesture Action Handlers ================================================================= -
 
     func finishPressed() {
-        self.performSegue(withIdentifier: returnSegue, sender: self)
+        self.dismiss()
     }
     
     // MARK: - Form Presentation / Handling Routines =================================================== -
@@ -107,5 +103,37 @@ class RoundSummaryViewController: CustomViewController {
                 bids[playerNumber-1]?.text = ""
             }
         }
+    }
+    
+    // MARK: - Function to present and dismiss this view ==============================================================
+    
+    class public func show(from viewController: UIViewController, existing roundSummaryViewController: RoundSummaryViewController! = nil, rounds: Int? = nil, cards: [Int]? = nil, bounce: Bool? = nil, suits: [Suit]? = nil) -> RoundSummaryViewController {
+        
+        var roundSummaryViewController: RoundSummaryViewController! = roundSummaryViewController
+        
+        if roundSummaryViewController == nil {
+            let storyboard = UIStoryboard(name: "RoundSummaryViewController", bundle: nil)
+            roundSummaryViewController = storyboard.instantiateViewController(withIdentifier: "RoundSummaryViewController") as? RoundSummaryViewController
+        }
+        
+        roundSummaryViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+        roundSummaryViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        roundSummaryViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
+        roundSummaryViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
+        roundSummaryViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
+        roundSummaryViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
+        
+        roundSummaryViewController.rounds = rounds
+        roundSummaryViewController.cards = cards
+        roundSummaryViewController.bounce = bounce
+        roundSummaryViewController.suits = suits
+        
+        viewController.present(roundSummaryViewController, animated: true, completion: nil)
+        
+        return roundSummaryViewController
+    }
+    
+    private func dismiss() {
+        self.dismiss(animated: false, completion: nil)
     }
 }

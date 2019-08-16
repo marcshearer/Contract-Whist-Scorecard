@@ -10,6 +10,7 @@ import UIKit
 
 class Palette {
     
+    static let alternateBackground = UIColor(named: "Alternate Background")!
     static let background = UIColor(named: "Background")!
     static let banner = UIColor(named: "Banner")!
     static let bannerText = UIColor(named: "Banner Text")!
@@ -246,6 +247,15 @@ class Palette {
     
     class func normalStyle(_ cell: UITableViewCell) {
         cell.backgroundColor = UIColor.clear
+    }
+    
+    class func alternateStyle(_ label: UILabel, setFont: Bool = true) {
+        label.backgroundColor = Palette.alternateBackground
+        label.textColor = Palette.text
+        if setFont {
+            label.font = UIFont.systemFont(ofSize: 15.0, weight: .thin)
+        }
+        label.adjustsFontSizeToFitWidth = true
     }
     
     class func madeContractStyle(_ label: UILabel, setFont: Bool = true) {

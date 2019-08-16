@@ -160,13 +160,9 @@
                         <outlet property="player4Bid" destination="p0z-M5-FE8" id="wer-fU-vd5"/>
                         <outlet property="roundSummaryView" destination="eJU-jx-Ao1" id="Hld-BC-mvQ"/>
                         <outlet property="trumpSuit" destination="r0e-On-sEv" id="WLI-Ax-q80"/>
-                        <segue destination="87s-SM-hFA" kind="unwind" identifier="hideRoundSummary" unwindAction="hideRoundSummaryWithSegue:" id="AE6-Pb-Vpx"/>
-                        <segue destination="87s-SM-hFA" kind="unwind" identifier="hideClientRoundSummary" unwindAction="hideClientRoundSummaryWithSegue:" id="7tj-4T-ue4"/>
-                        <segue destination="87s-SM-hFA" kind="unwind" identifier="hideHandRoundSummary" unwindAction="hideHandRoundSummaryWithSegue:" id="v8j-Hw-3zZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MdO-s3-Gwc" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="87s-SM-hFA" userLabel="Exit" sceneMemberID="exit"/>
                 <swipeGestureRecognizer direction="left" id="h0O-MI-FUq" userLabel="Left Swipe Gesture Recognizer">
                     <connections>
                         <action selector="rightSwipeWithRecognizer:" destination="FQp-co-xnK" id="8H8-oR-6Mx"/>

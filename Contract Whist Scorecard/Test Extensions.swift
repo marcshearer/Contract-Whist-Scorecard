@@ -283,7 +283,7 @@ extension GameSummaryViewController {
             if Scorecard.shared.autoPlayHands != 0 {
                 // Play another one
                 Utility.executeAfter(delay: 20 * Config.autoPlayTimeUnit, completion: {
-                    self.finishGame(from: self, toSegue: "newGame", advanceDealer: true, resetOverrides: false, confirm: false)
+                    self.finishGame(from: self, returnMode: .newGame, advanceDealer: true, resetOverrides: false, confirm: false)
                 })
             }
         }

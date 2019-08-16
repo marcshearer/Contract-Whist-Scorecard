@@ -40,12 +40,6 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     private let scorecard = Scorecard.shared
     private let sync = Sync()
     
-    // Properties to pass state to / from segues
-    public var clientTitle: String!
-    public var clientMatchDeviceName: String!
-    public var clientCommsPurpose: CommsConnectionPurpose!
-    public var playingComputer = false
-
     // Local state variables
     private var reconcile: Reconcile!
     private var firstTime = true
@@ -87,48 +81,10 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     @IBOutlet private weak var syncLabel: UILabel!
     @IBOutlet private weak var syncLabelHeightConstraint: NSLayoutConstraint!
     
-    // MARK: - IB Unwind Segue Handlers ================================================================ -
-    
-    @IBAction func hideSettings(segue:UIStoryboardSegue) {
-        scorecard.checkNetworkConnection(button: nil, label: syncLabel, labelHeightConstraint: syncLabelHeightConstraint, labelHeight: syncLabelHeight)
-        getCloudVersion(async: true)
-        setupButtons()
-    }
-    
-    @IBAction func hideClient(segue:UIStoryboardSegue) {
-        self.getCloudVersion(async: true)
-        self.setupButtons()
-    }
-    
-   @IBAction func hideGetStarted(segue:UIStoryboardSegue) {
-        self.scorecard.checkNetworkConnection(button: nil, label: syncLabel)
-        self.recoveryAvailable = false
-        self.getCloudVersion(async: true)
-        self.setupButtons()
-    }
-    
-    @IBAction func hidePlayers(segue:UIStoryboardSegue) {
-        self.scorecard.checkNetworkConnection(button: nil, label: syncLabel)
-        self.getCloudVersion(async: true)
-        self.checkButtons()
-    }
-    
-    @IBAction func hideHighScores(segue:UIStoryboardSegue) {
-        self.scorecard.checkNetworkConnection(button: nil, label: syncLabel)
-        self.getCloudVersion(async: true)
-    }
-    
-    @IBAction func finishGame(segue:UIStoryboardSegue) {
-        self.scorecard.checkNetworkConnection(button: nil, label: syncLabel)
-        self.recoveryAvailable = false
-        self.getCloudVersion(async: true)
-        self.checkButtons()
-    }
-    
     // MARK: - IB Actions ============================================================================== -
 
     @IBAction func settingsPressed(_ sender: UIButton) {
-        self.performSegue(withIdentifier: "showSettings", sender: self)
+        self.showSettings()
     }
     
      @IBAction func walkthroughPressed(_ sender: UIButton) {
@@ -145,7 +101,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     }
     
     @IBAction func viewOnlinePressed(_ sender: UIButton) {
-        self.viewGame()
+        self.showClient(purpose: .sharing, title: "View a Game")
     }
     
     @IBAction func rotationGesture(recognizer:UIRotationGestureRecognizer) {
@@ -256,7 +212,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         if scorecard.playerList.count == 0 && getStarted {
             // No players setup - go to Get Started
             getStarted = false
-            self.performSegue(withIdentifier: "showGetStarted", sender: self)
+            self.showGetStarted()
         }
         
         if self.firstTime {
@@ -402,7 +358,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         self.actionButtons = []
         
         self.addAction(section: mainSection, title: "Get Started", isHidden: {self.scorecard.playerList.count != 0}, action: { (_) in
-            self.performSegue(withIdentifier: "showGetStarted", sender: self)
+            self.showGetStarted()
         })
         
         self.addAction(section: mainSection, title: "Play Game", isHidden: {!self.scorecard.settingSyncEnabled || !(self.scorecard.settingNearbyPlaying || self.scorecard.onlineEnabled) || self.scorecard.playerList.count == 0}, action: newOnlineGame)
@@ -417,7 +373,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         })
         
         self.addAction(section: infoSection, title: "Players", isHidden: {self.scorecard.playerList.count == 0}, action: { (_) in
-            self.performSegue(withIdentifier: "showPlayers", sender: self)
+            self.showPlayers()
         })
         
         self.addAction(section: infoSection, title: "Statistics", isHidden: {self.scorecard.playerList.count == 0}, action: { (_) in
@@ -429,7 +385,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         })
         
         self.addAction(section: infoSection, title: "High Scores", isHidden: {!self.scorecard.settingSaveHistory || self.scorecard.playerList.count == 0}, action: { (_) in
-            self.performSegue(withIdentifier: "showHighScores", sender: self)
+            self.showHighScores()
         })
         
         self.addAction(section: adminSection, title: "Delete iCloud Database", isHidden: {!Scorecard.adminMode}, action: { (_) in
@@ -573,6 +529,54 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         self.actionButtons.append(ActionButton(tag: tag, section: section, title: title, highlight: highlight, sequence: self.actionButtons.count, isHidden: isHidden, action: action))
     }
     
+    // MARK: - Show other views =================================================== -
+    
+    private func scoreGame() {
+        if self.scorecard.recovery.checkRecovery() {
+            // Warn that this is irreversible
+            warnResumeGame(okHandler: {
+                self.startNewGame()
+            })
+        } else {
+            startNewGame()
+        }
+    }
+    
+    private func showSelection() {
+        self.selectionViewController = SelectionViewController.show(from: self, existing: self.selectionViewController, mode: .players, backText: "", backImage: "home", completion: { (_) in
+            self.scorecard.checkNetworkConnection(button: nil, label: self.syncLabel)
+            self.recoveryAvailable = false
+            self.getCloudVersion(async: true)
+            self.checkButtons()
+        })
+    }
+    
+    private func showSettings() {
+        SettingsViewController.show(from: self, backText: "", backImage: "home", completion: self.optionCompletion)
+    }
+    
+    private func showClient(purpose: CommsConnectionPurpose? = nil, title: String? = nil) {
+        ClientViewController.show(from: self, backText: "", backImage: "home", formTitle: title, purpose: purpose, completion: self.optionCompletion)
+    }
+    
+    private func showHighScores() {
+        HighScoresViewController.show(from: self, backText: "", backImage: "home")
+    }
+    
+    private func showGetStarted() {
+        GetStartedViewController.show(from: self, completion: self.optionCompletion)
+    }
+    
+    private func showPlayers() {
+        PlayersViewController.show(from: self, completion: self.optionCompletion)
+    }
+    
+    private func optionCompletion() {
+        scorecard.checkNetworkConnection(button: nil, label: syncLabel, labelHeightConstraint: syncLabelHeightConstraint, labelHeight: syncLabelHeight)
+        getCloudVersion(async: true)
+        setupButtons()
+    }
+    
     // MARK: - Popover Overrides ================================================================ -
     
     func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
@@ -597,17 +601,6 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         
     }
     
-    private func scoreGame() {
-        if self.scorecard.recovery.checkRecovery() {
-            // Warn that this is irreversible
-            warnResumeGame(okHandler: {
-                self.startNewGame()
-            })
-        } else {
-            startNewGame()
-        }
-    }
-    
     private func warnResumeGame(gameType: String = "", okHandler: @escaping ()->()) {
         let gameText = (gameType == "" ? "game" : "\(gameType) game")
         self.alertDecision("You appear to have an existing game in progress.\nStarting a new \(gameText) will mean that you cannot resume this game.\n\nAre you sure you want to continue", okButtonText: "Continue", okHandler: okHandler)
@@ -617,15 +610,6 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         self.scorecard.setGameInProgress(false)
         self.scorecard.reset()
         self.showSelection()
-    }
-    
-    private func showSelection() {
-        self.selectionViewController = SelectionViewController.show(from: self, existing: self.selectionViewController, mode: .players, backText: "", backImage: "home", completion: { (_) in
-            self.scorecard.checkNetworkConnection(button: nil, label: self.syncLabel)
-            self.recoveryAvailable = false
-            self.getCloudVersion(async: true)
-            self.checkButtons()
-        })
     }
     
     private func resumeGame(_ cell: WelcomeActionCell) {
@@ -638,12 +622,13 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
             if scorecard.recoveryOnlinePurpose != nil && scorecard.recoveryOnlinePurpose == .playing {
                 if scorecard.recoveryOnlineType == .server {
                     if self.scorecard.recoveryOnlineMode == .loopback {
-                        self.computerGame()
+                        self.showClient(purpose: .playing, title: "Play Computer")
                     } else {
                         self.hostGame()
                     }
                 } else {
-                    self.joinGame()
+                    self.showClient(purpose: .playing, title: "Play a Game")
+                    
                 }
             } else {
                 self.showSelection()
@@ -668,100 +653,15 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
                                    version2: self.scorecard.latestVersion) == .lessThan {
             self.alertMessage("You must upgrade to the latest version of the app to use this option")
         } else if self.scorecard.settingSyncEnabled && (self.scorecard.settingNearbyPlaying || self.scorecard.settingOnlinePlayerEmail != nil) {
-            self.joinGame()
+            self.showClient(purpose: .playing, title: "Play a Game")
         }
     }
     
     private func hostGame() -> Void {
-        self.playingComputer = false
         let hostController = HostController(from: self)
         hostController.start(recoveryMode: true, completion: {
-            self.getCloudVersion(async: true)
-            self.setupButtons()
+            self.optionCompletion()
         })
-    }
-    
-    private func joinGame() -> Void {
-        self.clientCommsPurpose = .playing
-        self.clientTitle = "Join a Game"
-        self.performSegue(withIdentifier: "showClient", sender: self)
-    }
-    
-    private func computerGame() -> Void {
-        self.playingComputer = true
-        self.performSegue(withIdentifier: "showHost", sender: self)
-    }
-    
-    private func viewGame() {
-        self.clientCommsPurpose = .sharing
-           self.clientTitle = "View a Game"
-        self.performSegue(withIdentifier: "showClient", sender: self)
-    }
-
-    // MARK: - Segue Prepare Handler ================================================================ -
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        switch segue.identifier! {
-        case "showSettings":
-            let destination = segue.destination as! SettingsViewController
-            
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.isModalInPopover = true
-            destination.popoverPresentationController?.sourceView = welcomeView
-            destination.preferredContentSize = CGSize(width: 400, height: 700)
-            
-            destination.returnSegue = "hideSettings"
-            destination.backImage = "home"
-            destination.backText = ""
-            
-        case "showClient":
-            let destination = segue.destination as! ClientViewController
-            
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.isModalInPopover = true
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = welcomeView
-            destination.preferredContentSize = CGSize(width: 400, height: 700)
-            
-            destination.returnSegue = "hideClient"
-            destination.backImage = "home"
-            destination.backText = ""
-            destination.formTitle = self.clientTitle
-            destination.commsPurpose = self.clientCommsPurpose
-            destination.matchDeviceName = self.clientMatchDeviceName
-            
-        case "showHighScores":
-            let destination = segue.destination as! HighScoresViewController
-            
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = welcomeView
-            destination.preferredContentSize = CGSize(width: 400, height: 700)
-            
-            destination.returnSegue = "hideHighScores"
-            destination.backImage = "home"
-            destination.backText = ""
-            
-        case "showPlayers":
-            let destination = segue.destination as! PlayersViewController
-            destination.detailMode = .amend
-            destination.refresh = true
-            destination.returnSegue = "hidePlayers"
-            destination.backImage = "home"
-            destination.backText = ""
-            
-        case "showGetStarted":
-            let destination = segue.destination as! GetStartedViewController
-            
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = welcomeView
-            destination.preferredContentSize = CGSize(width: 400, height: 700)
-            
-        default:
-            break
-        }
     }
     
     // MARK: - Send email and delegate methods =========================================================== -

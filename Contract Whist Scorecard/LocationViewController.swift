@@ -17,12 +17,10 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     // Main state properties
     private let scorecard = Scorecard.shared
     
-    // Properties to pass state to / from segues
-    public var gameLocation: GameLocation!
-    public var useCurrentLocation = true
-    public var returnSegue = ""
-    public var complete = false
-    public var mustChange = false
+    // Properties to pass state
+    private var useCurrentLocation = true
+    private var mustChange = false
+    private var completion: ((GameLocation?)->())?
 
     // Local class variables
     private var locationManager: CLLocationManager! = nil
@@ -48,13 +46,11 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     // MARK: - IB Actions ============================================================================== -
  
     @IBAction func finishPressed(_ sender: UIButton) {
-        self.performSegue(withIdentifier: self.returnSegue, sender: self)
+        self.dismiss()
     }
     
     @IBAction func continuePressed(_ sender: UIButton) {
-        self.complete = true
-        self.newLocation.copy(to: self.gameLocation)
-        self.performSegue(withIdentifier: self.returnSegue, sender: self)
+        self.dismiss(location: self.newLocation)
     }
 
      // MARK: - View Overrides ========================================================================== -
@@ -70,8 +66,6 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
         // Setup search text field
         self.searchTextField = searchBar.value(forKey: "searchField") as? UITextField
         self.searchTextField.textColor = Palette.text
-        
-        self.gameLocation.copy(to: self.newLocation)
         
         if self.newLocation.description != nil && self.newLocation.locationSet && self.newLocation.description != "" && self.newLocation.description != "Online" {
             // Save last location
@@ -195,6 +189,9 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
         cell.locationTopLabel.text = topRow
         cell.locationBottomLabel.text = bottomRow
         
+        cell.selectedBackgroundView = UIView()
+        cell.selectedBackgroundView?.backgroundColor = UIColor.clear
+        
         return cell
     }
     
@@ -295,7 +292,7 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     
     private func showLocationList() {
         let availableHeight = locationMapView.frame.maxY - searchBar.frame.maxY
-        // self.locationTableViewHeight.constant = CGFloat(Int(availableHeight / 2.0 / rowHeight)) * rowHeight
+        self.locationTableViewHeight.constant = CGFloat(Int(availableHeight / 2.0 / rowHeight)) * rowHeight
         hideFinishButtons()
     }
     
@@ -306,7 +303,7 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     }
     
     private func hideLocationList() {
-        // self.locationTableViewHeight.constant = 0.0
+        self.locationTableViewHeight.constant = 0.0
     }
     
     private func showFinishButtons(autoSelect: Bool = false) {
@@ -490,6 +487,35 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
             let region = MKCoordinateRegion.init(center: annotation.coordinate, latitudinalMeters: 2e5, longitudinalMeters: 2e5)
             self.locationMapView.setRegion(region, animated: false)
         }
+    }
+    
+    // MARK: - Function to present and dismiss this view ==============================================================
+    
+    class public func show(from viewController: UIViewController, gameLocation: GameLocation, useCurrentLocation: Bool = true, mustChange: Bool = false, completion: ((GameLocation?)->())? = nil) {
+        
+        let storyboard = UIStoryboard(name: "LocationViewController", bundle: nil)
+        let locationViewController = storyboard.instantiateViewController(withIdentifier: "LocationViewController") as! LocationViewController
+        
+        locationViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+        locationViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        locationViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
+        locationViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
+        locationViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
+        locationViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
+        
+        locationViewController.newLocation = gameLocation
+        locationViewController.useCurrentLocation = useCurrentLocation
+        locationViewController.mustChange = mustChange
+        locationViewController.completion = completion
+        
+        viewController.present(locationViewController, animated: true, completion: nil)
+        
+    }
+    
+    private func dismiss(location: GameLocation? = nil) {
+        self.dismiss(animated: true, completion: {
+            self.completion?(location)
+        })
     }
 }
 

@@ -17,7 +17,7 @@ import CoreData
     
     @objc optional func gamePreviewInitialisationComplete(gamePreviewViewController: GamePreviewViewController)
     
-    @objc optional func gamePreviewCompletion()
+    @objc optional func gamePreviewCompletion(returnHome: Bool)
     
     @objc optional func gamePreviewStartGame()
     
@@ -50,7 +50,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     private var readOnly = false
     private var formTitle = "Preview"
     private var backText = ""
-    private var completion: (()->())?
+    private var completion: ((Bool)->())?
     
     // Local class variables
     private var buttonMode = "Triangle"
@@ -86,14 +86,6 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     @IBOutlet private weak var cutForDealerCenterXConstraint: NSLayoutConstraint!
     @IBOutlet private weak var cutForDealerTopConstraint: NSLayoutConstraint!
 
-    // MARK: - IB Unwind Segue Handlers ================================================================ -
-
-    @IBAction func hideScorepad(segue:UIStoryboardSegue) {
-        self.delegate?.gamePreviewStopGame?()
-        self.showCurrentDealer()
-        self.scorecard.setGameInProgress(false)
-    }
-
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func finishGamePressed(_ sender: Any) {
@@ -102,7 +94,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             NotificationCenter.default.removeObserver(observer!)
             self.scorecard.resetOverrideSettings()
         }
-        self.dismiss(animated: true, completion: self.delegate?.gamePreviewCompletion)
+        self.dismiss()
     }
     
     @IBAction func continuePressed(_ sender: Any) {
@@ -405,7 +397,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         Utility.mainThread {
             self.alertMessage(if: self.scorecard.overrideSelected, "This game was being played with Override Settings", title: "Reminder", okHandler: {
                 self.delegate?.gamePreviewStartGame?()
-                self.performSegue(withIdentifier: "showScorepad", sender: self )
+                self.showScorepadViewController()
             })
         }
     }
@@ -414,7 +406,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         recovery.saveInitialValues()
         self.scorecard.setGameInProgress(true)
         self.delegate?.gamePreviewStartGame?()
-        self.performSegue(withIdentifier: "showScorepad", sender: self )
+        self.showScorepadViewController()
     }
     
     func showCurrentDealer() {
@@ -691,39 +683,38 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         }
     }
     
-    
-    // MARK: - Segue Prepare Handler ================================================================ -
+    // MARK: - Show scorepad ================================================================ -
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    private func showScorepadViewController() {
+        var cards: [Int]
+        var bounce: Bool
+        var rounds: Int
         
-        switch segue.identifier! {
-        case "showScorepad":
-            let destination = segue.destination as! ScorepadViewController
-            destination.scorepadMode = (self.scorecard.isHosting || self.scorecard.hasJoined ? .display : .amend)
-            if self.scorecard.checkOverride() {
-                destination.cards = scorecard.overrideCards
-                destination.bounce = scorecard.overrideBounceNumberCards
-                destination.rounds = scorecard.calculateRounds(cards: destination.cards,
-                                                               bounce: destination.bounce)
-            } else {
-                destination.cards = scorecard.settingCards
-                destination.bounce = scorecard.settingBounceNumberCards
-                destination.rounds = scorecard.rounds
-            }
-            destination.bonus2 = scorecard.settingBonus2
-            destination.suits = scorecard.suits
-            destination.returnSegue = "hideScorepad"
-            destination.rabbitMQService = self.rabbitMQService
-            destination.recoveryMode = self.scorecard.recoveryMode
-            destination.computerPlayerDelegate = self.computerPlayerDelegate
-            self.scorecard.recoveryMode = false
-            
-        default:
-            break
+        if self.scorecard.checkOverride() {
+            cards = scorecard.overrideCards
+            bounce = scorecard.overrideBounceNumberCards
+            rounds = scorecard.calculateRounds(cards: cards, bounce: bounce)
+        } else {
+            cards = scorecard.settingCards
+            bounce = scorecard.settingBounceNumberCards
+            rounds = scorecard.rounds
         }
+        
+        _ = ScorepadViewController.show(from: self, scorepadMode: (self.scorecard.isHosting || self.scorecard.hasJoined ? .display : .amend), rounds: rounds, cards: cards, bounce: bounce, bonus2: scorecard.settingBonus2, suits: scorecard.suits, rabbitMQService: self.rabbitMQService, recoveryMode: self.scorecard.recoveryMode, computerPlayerDelegate: self.computerPlayerDelegate, completion:
+                { (returnHome) in
+                    self.delegate?.gamePreviewStopGame?()
+                    if returnHome {
+                        self.dismiss(returnHome: true)
+                    } else {
+                        self.showCurrentDealer()
+                        self.scorecard.setGameInProgress(false)
+                    }
+                })
+        
+        self.scorecard.recoveryMode = false
     }
     
-    // MARK: - Function to present this view ==============================================================
+    // MARK: - Function to present and dismiss this view ==============================================================
     
     class func show(from viewController: UIViewController, selectedPlayers: [PlayerMO], title: String = "Preview", backText: String = "", readOnly: Bool = true, faceTimeAddress: [String] = [], rabbitMQService: RabbitMQService? = nil, computerPlayerDelegates: [Int : ComputerPlayerDelegate]? = nil, delegate: GamePreviewDelegate? = nil, showCompletion: (()->())? = nil) -> GamePreviewViewController {
         let storyboard = UIStoryboard(name: "GamePreviewViewController", bundle: nil)
@@ -750,19 +741,10 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         })
         return gamePreviewViewController
     }
-}
-
-// MARK: - Utility Classes ================================================================ -
-
-class UIStoryboardSegueWithCompletion: UIStoryboardSegue {
-    // This is an affectation to allow a segue to wait for its completion before doing something else - e.g. fire another segue
-    // For it to work the exit segue has to have this class filled in in the Storyboard
-    var completion: (() -> Void)?
     
-    override func perform() {
-        super.perform()
-        if let completion = completion {
-            completion()
-        }
+    private func dismiss(returnHome: Bool = false) {
+        self.dismiss(animated: true, completion: {
+            self.delegate?.gamePreviewCompletion?(returnHome: returnHome)
+        })
     }
 }

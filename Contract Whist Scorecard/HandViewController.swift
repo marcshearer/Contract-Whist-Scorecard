@@ -116,11 +116,6 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     @IBOutlet private weak var titleBarLongPress: UILongPressGestureRecognizer!
     @IBOutlet private weak var tableTopLongPress: UILongPressGestureRecognizer!
     
-    // MARK: - IB Unwind Segue Handlers ================================================================ -
-    
-    @IBAction private func hideHandRoundSummary(segue: UIStoryboardSegue) {
-    }
-    
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction private func finishPressed(_ sender: UIButton) {
@@ -128,7 +123,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     }
     
     @IBAction private func roundSummaryPressed(_ sender: UIButton) {
-        self.performSegue(withIdentifier: "showHandRoundSummary", sender: self)
+        self.showRoundSummary()
     }
     
     @IBAction func lastHandPressed(_ sender: Any) {
@@ -981,44 +976,6 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         self.collectionHand = self.scorecard.handState.hand.copy() as? Hand
     }
     
-    // MARK: - Segue Prepare Handler =================================================================== -
-    
-    override internal func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        switch segue.identifier! {
-        case "showHandRoundSummary":
-            
-            let destination  = segue.destination as! RoundSummaryViewController
- 
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
-            destination.preferredContentSize = CGSize(width: 400, height: 554)
-            
-            destination.returnSegue = "hideHandRoundSummary"
-            destination.rounds = self.state.rounds
-            destination.cards = self.state.cards
-            destination.bounce = self.state.bounce
-            destination.suits = self.state.suits
-            
-        case "showHandGameSummary":
-            
-            let destination = segue.destination as! GameSummaryViewController
-            
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
-            destination.preferredContentSize = CGSize(width: 400, height: 554)
-            
-            destination.firstGameSummary = false
-            destination.gameSummaryMode = .display
-            destination.rounds = self.state.rounds
-            
-        default:
-            break
-        }
-    }
-    
     func setInstructionsHighlight(to highlight: Bool) {
         let nonHighlightBackgroundColor = (highlight ? Palette.hand : (self.bidMode ? Palette.tableTop : Palette.tableTop))
         let nonHighlightTextColor = (highlight ? Palette.handText : (self.bidMode ? Palette.tableTopTextContrast : Palette.tableTopText))
@@ -1028,9 +985,13 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         self.finishButton.imageView!.image = UIImage(named: (highlight || !self.bidMode ? "cross white" : "cross white"))
         self.roundSummaryButton.setTitleColor(nonHighlightTextColor, for: .normal)
     }
+    
+    // MARK: - Show other views =================================================================== -
+    
+    private func showRoundSummary() {
+        _ = RoundSummaryViewController.show(from: self, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce, suits: self.state.suits)
+    }
 }
-
-
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
 

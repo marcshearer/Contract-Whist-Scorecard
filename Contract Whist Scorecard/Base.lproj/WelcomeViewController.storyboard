@@ -177,12 +177,7 @@
                         <outlet property="titleLabel" destination="GfL-2p-s30" id="dXZ-BM-nPN"/>
                         <outlet property="viewOnlineButton" destination="8Ox-3H-gw3" id="s53-aC-uhb"/>
                         <outlet property="welcomeView" destination="jyL-Wg-M4O" id="Xlq-wg-uBg"/>
-                        <segue destination="U6c-FM-uAn" kind="presentation" identifier="showHighScores" id="ZUv-5b-nth"/>
-                        <segue destination="Pc2-uI-Jfc" kind="presentation" identifier="showSettings" id="ogB-R1-XqM"/>
                         <segue destination="lvI-KL-xbx" kind="popoverPresentation" identifier="showGetStarted" popoverAnchorView="jyL-Wg-M4O" id="zF4-ui-zT9">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                        </segue>
-                        <segue destination="aof-hj-4vM" kind="popoverPresentation" identifier="showClient" popoverAnchorView="jyL-Wg-M4O" id="Ueo-VZ-u5x">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
                         <segue destination="gsX-G4-58w" kind="show" identifier="showPlayers" id="7ir-Fu-KYu"/>
@@ -210,22 +205,6 @@
             </objects>
             <point key="canvasLocation" x="6944" y="405"/>
         </scene>
-        <!--High Scores-->
-        <scene sceneID="PaO-X6-r1G">
-            <objects>
-                <viewControllerPlaceholder storyboardName="HighScoresViewController" referencedIdentifier="HighScoresViewController" id="U6c-FM-uAn" userLabel="High Scores" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="6gj-a3-ykG" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="6979" y="172"/>
-        </scene>
-        <!--Settings-->
-        <scene sceneID="KAw-EU-TKr">
-            <objects>
-                <viewControllerPlaceholder storyboardName="SettingsViewController" referencedIdentifier="SettingsViewController" id="Pc2-uI-Jfc" userLabel="Settings" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="uGN-Xv-Lfe" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="6961" y="-24"/>
-        </scene>
         <!--Get Started-->
         <scene sceneID="yIY-Rg-TgH">
             <objects>
@@ -233,14 +212,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SMb-UP-qcr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="6976" y="-83"/>
-        </scene>
-        <!--Client-->
-        <scene sceneID="Jlf-Zm-IjI">
-            <objects>
-                <viewControllerPlaceholder storyboardName="ClientViewController" referencedIdentifier="ClientViewController" id="aof-hj-4vM" userLabel="Client" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="4aR-Wc-6Vg" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="6970" y="290"/>
         </scene>
     </scenes>
     <resources>

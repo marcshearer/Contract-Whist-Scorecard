@@ -326,17 +326,12 @@
                         <outlet property="syncMessage" destination="9uo-b0-008" id="6JR-EO-y74"/>
                         <outlet property="tableView" destination="bHZ-lK-RLV" id="bGY-ED-cy4"/>
                         <outlet property="tapGesture" destination="RaZ-ty-O6E" id="LQ9-1i-eB5"/>
-                        <segue destination="7Z1-ua-FfW" kind="unwind" identifier="hideGameSummary" unwindAction="hideGameSummaryWithSegue:" id="hkQ-yi-YGM"/>
-                        <segue destination="7Z1-ua-FfW" kind="unwind" identifier="finishGame" unwindAction="finishGameWithSegue:" id="06m-fS-wsR"/>
-                        <segue destination="7Z1-ua-FfW" kind="unwind" identifier="newGame" unwindAction="newGameWithSegue:" id="Wco-se-drV"/>
                         <segue destination="RiA-dG-P72" kind="popoverPresentation" identifier="showHighScores" popoverAnchorView="bHZ-lK-RLV" id="zoC-PB-AWk">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
                         </segue>
-                        <segue destination="7Z1-ua-FfW" kind="unwind" identifier="linkFinishGame" customClass="UIStoryboardSegueWithCompletion" customModule="Contract_Whist_Scorecard" customModuleProvider="target" unwindAction="linkFinishGameWithSegue:" id="ZLq-9M-Wfs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EF2-rc-rJ8" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="7Z1-ua-FfW" userLabel="Exit" sceneMemberID="exit"/>
                 <swipeGestureRecognizer direction="left" id="zEq-NV-S5h" userLabel="Left Swipe Gesture Recognizer">
                     <connections>
                         <action selector="leftSwipeWithRecognizer:" destination="2Ye-nN-zMs" id="BBK-9q-laM"/>

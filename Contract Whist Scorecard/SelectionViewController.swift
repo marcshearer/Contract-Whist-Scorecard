@@ -387,9 +387,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     func finishAction() {
         NotificationCenter.default.removeObserver(observer!)
         self.preCompletion?(nil)
-        self.dismiss(animated: true, completion: {
-            self.completion?(nil)
-        })
+        self.dismiss()
     }
 
     func continueAction() {
@@ -430,9 +428,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         } else {
             if self.selectionMode == .single {
                 self.preCompletion?([playerView.playerMO!])
-                self.dismiss(animated: true, completion: {
-                    self.completion?([playerView.playerMO!])
-                })
+                self.dismiss([playerView.playerMO!])
             } else {
                 self.addSelection(playerView.playerMO!)
             }
@@ -750,9 +746,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                     if addToSelected {
                         if self.selectionMode == .single {
                             self.preCompletion?([playerMO])
-                            self.dismiss(animated: true, completion: {
-                                self.completion?([playerMO])
-                            })
+                            self.dismiss([playerMO])
                         } else {
                             self.addSelection(playerMO)
                         }
@@ -797,11 +791,14 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         self.gamePreviewDelegate?.gamePreviewInitialisationComplete?(gamePreviewViewController: gamePreviewViewController)
     }
     
-    internal func gamePreviewCompletion() {
+    internal func gamePreviewCompletion(returnHome: Bool) {
         self.scorecard.loadGameDefaults()
         self.selectedList = []
         self.assignPlayers()
-        self.gamePreviewDelegate?.gamePreviewCompletion?()
+        self.gamePreviewDelegate?.gamePreviewCompletion?(returnHome: returnHome)
+        if returnHome {
+            self.dismiss()
+        }
     }
     
     internal func gamePreview(isConnected playerMO: PlayerMO) -> Bool {
@@ -866,7 +863,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         }
     }
     
-    // MARK: - Function to present this view ==============================================================
+    // MARK: - Function to present and dismiss this view ==============================================================
     
     class func show(from viewController: UIViewController, existing selectionViewController: SelectionViewController? = nil, mode: SelectionMode, thisPlayer: String? = nil, thisPlayerFrame: CGRect? = nil, showThisPlayerName: Bool = false, formTitle: String = "Selection", backText: String = "Back", backImage: String = "", bannerColor: UIColor? = nil, preCompletion: (([PlayerMO]?)->())? = nil, completion: (([PlayerMO]?)->())? = nil, showCompletion: (()->())? = nil, gamePreviewDelegate: GamePreviewDelegate? = nil) -> SelectionViewController {
         var selectionViewController = selectionViewController
@@ -903,6 +900,12 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         viewController.present(selectionViewController!, animated: true, completion: showCompletion)
         
         return selectionViewController!
+    }
+    
+    private func dismiss(_ players: [PlayerMO]? = nil) {
+        self.dismiss(animated: true, completion: {
+            self.completion?(players)
+        })
     }
     
 }

@@ -34,13 +34,13 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     private var hostController: HostController!
     public let transition = FadeAnimator()
 
-    // Properties to pass state to / from segues
-    public var returnSegue = ""
-    public var backText = ""
-    public var backImage = "back"
-    public var formTitle: String!
+    // Properties to pass state
+    private var backText = ""
+    private var backImage = "back"
+    private var formTitle: String!
     public var commsPurpose: CommsConnectionPurpose!
-    public var matchDeviceName: String!
+    private var matchDeviceName: String!
+    private var completion: (()->())?
 
     // Queue
     private var queue: [QueueEntry] = []
@@ -92,21 +92,6 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     @IBOutlet private weak var thisPlayerNameLabel: UILabel!
     @IBOutlet private weak var thisPlayerThumbnailWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var changePlayerButton: UIButton!
-    
-    // MARK: - IB Unwind Segue Handlers ================================================================ -
-
-    @IBAction func hideClientScorepad(segue:UIStoryboardSegue) {
-        // Manual return - disconnect and refresh
-        self.restart()
-    }
-    
-    @IBAction private func linkFinishGame(segue:UIStoryboardSegue) {
-        if let segue = segue as? UIStoryboardSegueWithCompletion {
-            segue.completion = {
-                self.exitClient()
-            }
-        }
-    }
     
     // MARK: - IB Actions ============================================================================== -
     
@@ -533,6 +518,20 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         self.gamePreviewViewController = nil
     }
     
+    private func showScorepad() {
+        
+        scorepadViewController = ScorepadViewController.show(from: self, existing: scorepadViewController, scorepadMode: .display, rounds: self.rounds, cards: self.cards, bounce: self.bounce, bonus2: self.bonus2, suits: self.suits, rabbitMQService: self.rabbitMQClient, completion:
+            { (returnHome) in
+                if returnHome {
+                    self.exitClient()
+                } else {
+                    self.restart()
+                }
+        })
+        
+        self.scorecard.recoveryMode = false
+    }
+    
     private func playHand(peer: CommsPeer, dismiss: Bool = false, hand: Hand! = nil, round: Int! = nil, trick: Int! = nil, made: [Int]! = nil, twos: [Int]! = nil, trickCards: [Card]! = nil, toLead: Int! = nil, lastCards: [Card]! = nil, lastToLead: Int! = nil) {
         
         if self.commsPurpose == .sharing || (self.thisPlayerNumber != nil && hand != nil) {
@@ -570,7 +569,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         self.scorecard.commsHandlerMode = mode
         self.scorecard.recoveryMode = false
         self.recoveryMode = true
-        self.performSegue(withIdentifier: "showClientScorepad", sender: self)
+        self.showScorepad()
     }
     
     // MARK: - Game Preview Delegate handlers ================================================================ -
@@ -1089,15 +1088,6 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    // MARK: - Popover Overrides ================================================================ -
-    
-    internal func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
-        let viewController = popoverPresentationController.presentedViewController
-        if viewController is SearchViewController {
-            self.returnPlayers(playerMO: nil)
-        }
-    }
-    
     // MARK: - Utility Routines ======================================================================== -
 
     private func setupHostingOptions() {
@@ -1116,11 +1106,13 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     private func showThisPlayer() {
-        if let playerMO = self.scorecard.findPlayerByEmail(self.thisPlayer) {
-            let size = SelectionViewController.thumbnailSize(labelHeight: 0.0)
-            self.thisPlayerThumbnailWidthConstraint.constant = size.width
-            self.thisPlayerThumbnail.set(data: playerMO.thumbnail, name: playerMO.name!, nameHeight: 0.0, diameter: size.width)
-            self.thisPlayerNameLabel.text = "Play as \(playerMO.name!)"
+        if self.commsPurpose == .playing {
+            if let playerMO = self.scorecard.findPlayerByEmail(self.thisPlayer) {
+                let size = SelectionViewController.thumbnailSize(labelHeight: 0.0)
+                self.thisPlayerThumbnailWidthConstraint.constant = size.width
+                self.thisPlayerThumbnail.set(data: playerMO.thumbnail, name: playerMO.name!, nameHeight: 0.0, diameter: size.width)
+                self.thisPlayerNameLabel.text = "Play as \(playerMO.name!)"
+            }
         }
     }
     
@@ -1219,10 +1211,10 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                     // Need to create one
                     if self.scorepadViewController.gameSummaryViewController != nil {
                         self.scorepadViewController.gameSummaryViewController.dismiss(animated: true, completion: {
-                            self.segueToRoundSummary()
+                            self.showRoundSummary()
                         })
                     } else {
-                        self.segueToRoundSummary()
+                        self.showRoundSummary()
                     }
                 } else {
                     // Just need to refresh it
@@ -1234,9 +1226,9 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    private func segueToRoundSummary() {
+    private func showRoundSummary() {
         self.scorecard.commsHandlerMode = .roundSummary
-        scorepadViewController.performSegue(withIdentifier: "showClientRoundSummary", sender: scorepadViewController)
+        self.scorepadViewController.showRoundSummary()
     }
     
     private func showGameSummary() {
@@ -1245,10 +1237,10 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                 // Need to create one
                 if self.scorepadViewController.roundSummaryViewController != nil {
                     self.scorepadViewController.roundSummaryViewController.dismiss(animated: true, completion: {
-                        self.segueToGameSummary()
+                        self.showGameSummaryViewController()
                     })
                 } else {
-                    self.segueToGameSummary()
+                    self.showGameSummaryViewController()
                 }
             } else {
                 // Just need to refresh it
@@ -1257,12 +1249,12 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    private func segueToGameSummary() {
+    private func showGameSummaryViewController() {
         self.scorecard.commsHandlerMode = .gameSummary
         // Need to reset game in progress to avoid resume online game
         self.scorecard.setGameInProgress(false)
         self.scorecard.recoveryMode = false
-        scorepadViewController.performSegue(withIdentifier: "showGameSummary", sender: scorepadViewController)
+        self.scorepadViewController.showGameSummary()
     }
     
     public func finishClient(resetRecovery: Bool = true) {
@@ -1294,7 +1286,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     private func exitClient(resetRecovery: Bool = true) {
         self.finishClient(resetRecovery: resetRecovery)
-        self.performSegue(withIdentifier: self.returnSegue, sender: self)
+        self.dismiss()
     }
     
     private func removeEntry(peer: CommsPeer) {
@@ -1434,27 +1426,34 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    // MARK: - Segue Prepare Handler ================================================================ -
+    // MARK: - Function to present and dismiss this view ==============================================================
     
-    override internal func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    class public func show(from viewController: UIViewController, backText: String = "", backImage: String = "back", formTitle: String? = nil, purpose: CommsConnectionPurpose? = nil, matchDeviceName: String? = nil, completion: (()->())? = nil){
         
-        switch segue.identifier! {
-            
-        case "showClientScorepad":
-            scorepadViewController = segue.destination as? ScorepadViewController
-            scorepadViewController.scorepadMode = .display
-            scorepadViewController.rounds = self.rounds
-            scorepadViewController.cards = self.cards
-            scorepadViewController.bounce = self.bounce
-            scorepadViewController.bonus2 = self.bonus2
-            scorepadViewController.suits = self.suits
-            scorepadViewController.returnSegue = "hideClientScorepad"
-            scorepadViewController.parentView = view
-            scorepadViewController.rabbitMQService = self.rabbitMQClient
-            
-        default:
-            break
-        }
+        let storyboard = UIStoryboard(name: "ClientViewController", bundle: nil)
+        let clientViewController: ClientViewController = storyboard.instantiateViewController(withIdentifier: "ClientViewController") as! ClientViewController
+        
+        clientViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+        clientViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        clientViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
+        clientViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
+        clientViewController.preferredContentSize = CGSize(width: 400, height: 700)
+        clientViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
+        
+        clientViewController.backText = backText
+        clientViewController.backImage = backImage
+        clientViewController.formTitle = formTitle
+        clientViewController.commsPurpose = purpose
+        clientViewController.matchDeviceName = matchDeviceName
+        clientViewController.completion = completion
+        
+        viewController.present(clientViewController, animated: true, completion: nil)
+    }
+    
+    private func dismiss() {
+        self.dismiss(animated: true, completion: {
+            self.completion?()
+        })
     }
 }
 

@@ -89,12 +89,12 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             })
         case .create:
             // Player will be created in calling controller (selectPlayers)
-            self.dismiss(animated: true, completion: { self.callerCompletion?(self.playerDetail, false) })
+            self.dismiss(playerDetail: self.playerDetail)
         case .download:
             self.getCloudPlayerDetails()
         case .downloaded:
             // No further action required
-            self.dismiss(animated: true, completion: { self.callerCompletion?(self.playerDetail, false) })
+        self.dismiss(playerDetail: self.playerDetail)
         default:
             break
         }
@@ -106,7 +106,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         if self.mode != .display {
             playerDetail.name = ""
         }
-        self.dismiss(animated: true, completion: { self.callerCompletion?(nil, false) })
+        self.dismiss()
 
     }
 
@@ -129,6 +129,12 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         playerDetailViewController.sourceView = sourceView
         playerDetailViewController.callerCompletion = completion
         sourceViewController.present(playerDetailViewController, animated: true, completion: nil)
+    }
+    
+    private func dismiss(playerDetail: PlayerDetail? = nil, deletePlayer: Bool = false) {
+        self.dismiss(animated: true, completion: {
+            self.callerCompletion?(playerDetail, deletePlayer)
+        })
     }
     
     // MARK: - View Overrides ========================================================================== -
@@ -739,7 +745,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         } else if (mode == .amend && self.changed) || mode == .create {
             finishTitle = "Cancel"
         } else {
-            finishTitle = "Back"
+            finishTitle = ""
         }
         finishButton.setTitle(finishTitle, for: .normal)
         
@@ -796,7 +802,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             History.deleteDetachedGames()
 
             // Flag as deleted and return
-            self.dismiss(animated: true, completion: { self.callerCompletion?(self.playerDetail, true) })
+            self.dismiss(playerDetail: self.playerDetail, deletePlayer: true)
                                                     
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler:nil))
@@ -808,13 +814,13 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             self.alertDecision("If you change a player's unique ID this will separate them from their game history. Essentially this is the same as deleting the player and creating a new one.\n\nAre you sure you want to do this?", title: "Warning",
             okHandler: {
                 completion?()
-                self.dismiss(animated: true, completion: { self.callerCompletion?(self.playerDetail, false) })
+                self.dismiss(playerDetail: self.playerDetail)
             },
             cancelHandler: {
             })
         } else {
             completion?()
-            self.dismiss(animated: true, completion: { self.callerCompletion?(self.playerDetail, false) })
+            self.dismiss(playerDetail: self.playerDetail)
         }
     }
     

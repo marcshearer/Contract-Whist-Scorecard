@@ -17,10 +17,10 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     // Main state properties
     private let scorecard = Scorecard.shared
     
-    // Properties to pass state to / from segues
-    public var returnSegue = ""
-    public var backText = "Back"
-    public var backImage = "back"
+    // Properties to pass state
+    private var backText = "Back"
+    private var backImage = "back"
+    private var completion: (()->())?
     
     // Other properties
     private var onlineRow: Int!
@@ -81,7 +81,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func finishPressed(_ sender: UIButton) {
-        self.performSegue(withIdentifier: returnSegue, sender: self)
+        self.dismiss()
     }
        
     // MARK: - View Overrides ========================================================================== -
@@ -1030,6 +1030,33 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                 faceTimeAddressTextField.layer.borderWidth = 0.3
             }
         }
+    }
+    
+    // MARK: - Function to present and dismiss this view ==============================================================
+    
+    class public func show(from viewController: UIViewController, backText: String = "Back", backImage: String = "back", completion: (()->())?){
+        
+        let storyboard = UIStoryboard(name: "SettingsViewController", bundle: nil)
+        let settingsViewController: SettingsViewController = storyboard.instantiateViewController(withIdentifier: "SettingsViewController") as! SettingsViewController
+        
+        settingsViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+        settingsViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        settingsViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
+        settingsViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
+        settingsViewController.preferredContentSize = CGSize(width: 400, height: 700)
+        settingsViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
+        
+        settingsViewController.backText = backText
+        settingsViewController.backImage = backImage
+        settingsViewController.completion = completion
+        
+        viewController.present(settingsViewController, animated: true, completion: nil)
+    }
+    
+    private func dismiss() {
+        self.dismiss(animated: true, completion: {
+            self.completion?()
+        })
     }
 }
 

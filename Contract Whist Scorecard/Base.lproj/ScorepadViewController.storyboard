@@ -554,7 +554,7 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="Etu-uG-07S"/>
                                 </connections>
                             </tableView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="navigationImage tabletop" translatesAutoresizingMaskIntoConstraints="NO" id="5QO-gP-uIu">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="navigationImage game banner" translatesAutoresizingMaskIntoConstraints="NO" id="5QO-gP-uIu">
                                 <rect key="frame" x="133.5" y="0.0" width="147" height="88"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="5QO-gP-uIu" secondAttribute="height" multiplier="90:54" id="YgV-fZ-BJG"/>
@@ -747,19 +747,9 @@
                         <outlet property="tapGestureRecognizer" destination="AaK-e0-qgV" id="klw-dw-bMu"/>
                         <outletCollection property="paddingViewLines" destination="gJV-Ai-5A3" collectionClass="NSMutableArray" id="131-b6-hlp"/>
                         <outletCollection property="paddingViewLines" destination="SeV-1g-Tzl" collectionClass="NSMutableArray" id="gnN-Cm-Npx"/>
-                        <segue destination="0NF-0V-58Q" kind="unwind" identifier="hideScorepad" unwindAction="hideScorepadWithSegue:" id="WRV-wF-mTI"/>
-                        <segue destination="2kj-Q9-HHB" kind="popoverPresentation" identifier="showEntry" animates="NO" popoverAnchorView="8bC-Xf-vdC" id="6cj-gG-58b">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                        </segue>
-                        <segue destination="1P6-Yp-u4e" kind="presentation" identifier="showLocation" modalPresentationStyle="formSheet" id="qBk-Fo-fMf"/>
-                        <segue destination="0NF-0V-58Q" kind="unwind" identifier="hideClientScorepad" unwindAction="hideClientScorepadWithSegue:" id="5lo-qG-Ijd"/>
-                        <segue destination="pX9-oc-ySn" kind="presentation" identifier="showClientRoundSummary" id="vPO-zT-e4v"/>
-                        <segue destination="9d3-4Z-Nee" kind="presentation" identifier="showGameSummary" id="oKI-Me-0aw"/>
-                        <segue destination="5RA-CT-Qsg" kind="presentation" identifier="showReview" id="x0z-Nu-Fvk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-                <exit id="0NF-0V-58Q" userLabel="Exit" sceneMemberID="exit"/>
                 <swipeGestureRecognizer direction="left" id="c9d-p5-1s2" userLabel="Left Swipe Gesture Recognizer">
                     <connections>
                         <action selector="leftSwipeWithRecognizer:" destination="BYZ-38-t0r" id="xuC-UY-0LX"/>
@@ -783,51 +773,11 @@
             </objects>
             <point key="canvasLocation" x="8873" y="205"/>
         </scene>
-        <!--Entry-->
-        <scene sceneID="3lO-d6-9gj">
-            <objects>
-                <viewControllerPlaceholder storyboardName="EntryViewController" referencedIdentifier="EntryViewController" id="2kj-Q9-HHB" userLabel="Entry" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="yJE-GR-8WJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="9471" y="196"/>
-        </scene>
-        <!--Location-->
-        <scene sceneID="IMV-0b-On8">
-            <objects>
-                <viewControllerPlaceholder storyboardName="LocationViewController" referencedIdentifier="LocationViewController" id="1P6-Yp-u4e" userLabel="Location" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="NXO-BU-Up5" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="9486" y="143"/>
-        </scene>
-        <!--RoundSummaryViewController-->
-        <scene sceneID="VJK-wn-zH5">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="RoundSummary" storyboardName="RoundSummaryViewController" referencedIdentifier="RoundSummaryViewController" id="pX9-oc-ySn" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="eOT-rk-aXt" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="9594" y="249"/>
-        </scene>
-        <!--GameSummaryViewController-->
-        <scene sceneID="LqC-IV-pb7">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="GameSummary" storyboardName="GameSummaryViewController" referencedIdentifier="GameSummaryViewController" id="9d3-4Z-Nee" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="fXA-jd-5y5" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="9590" y="300"/>
-        </scene>
-        <!--ReviewViewController-->
-        <scene sceneID="FqN-e5-8Cf">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="Review" storyboardName="ReviewViewController" referencedIdentifier="ReviewViewController" id="5RA-CT-Qsg" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="anV-Wo-ZXv" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="9552" y="347"/>
-        </scene>
     </scenes>
     <resources>
         <image name="back" width="22" height="22"/>
         <image name="forward" width="22" height="22"/>
-        <image name="navigationImage tabletop" width="73" height="44"/>
+        <image name="navigationImage game banner" width="73" height="43"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

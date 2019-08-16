@@ -30,14 +30,12 @@ class ConfirmPlayedViewController : CustomViewController, UIPopoverPresentationC
     
     @IBAction func confirmPressed(_ sender: UIButton) {
         self.removeBlurredBackgroundView()
-        self.dismiss(animated: true, completion: {
-            self.confirmHandler?()
-        })
+        self.dismiss(completion: self.confirmHandler)
     }
     
     @IBAction func cancelPressed(_ sender: UIButton) {
         self.removeBlurredBackgroundView()
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss()
     }
     
     override func viewDidLoad() {
@@ -150,5 +148,10 @@ class ConfirmPlayedViewController : CustomViewController, UIPopoverPresentationC
         parentViewController.present(viewController, animated: true, completion: nil)
     }
     
+    private func dismiss(completion: (()->())? = nil) {
+        self.dismiss(animated: true, completion: {
+            completion?()
+        })
+    }
 }
 

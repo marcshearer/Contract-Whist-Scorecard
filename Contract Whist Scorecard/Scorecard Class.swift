@@ -479,7 +479,7 @@ class Scorecard {
                             // No bid label so don't need to differentiate
                             Palette.normalStyle(player.scoreCell[round-1]!.scorepadCellLabel, setFont: false)
                         } else {
-                            Palette.highlightStyle(player.scoreCell[round-1]!.scorepadCellLabel)
+                            Palette.alternateStyle(player.scoreCell[round-1]!.scorepadCellLabel)
                         }
                     }
                     let imageView = player.scoreCell[round-1]!.scorepadImage!
@@ -825,9 +825,9 @@ class Scorecard {
         }
     }
 
-    public func finishGame(from: UIViewController, toSegue: String, advanceDealer: Bool = false, rounds: Int, resetOverrides: Bool, completion: (()->())? = nil) {
+    public func finishGame(from: UIViewController, advanceDealer: Bool = false, rounds: Int, resetOverrides: Bool, returnHome: Bool = false, completion: (()->())? = nil) {
         if !self.gameInProgress {
-            exitScorecard(from: from, toSegue: toSegue, rounds: rounds, resetOverrides: resetOverrides, completion: completion)
+            exitScorecard(from: from, rounds: rounds, resetOverrides: resetOverrides, completion: completion)
         } else {
             var message: String
             if self.gameComplete(rounds: rounds) {
@@ -840,8 +840,9 @@ class Scorecard {
             let alertController = UIAlertController(title: "Finish Game", message: message + "\n\n Are you sure you want to do this?", preferredStyle: UIAlertController.Style.alert)
             alertController.addAction(UIAlertAction(title: "Confirm", style: UIAlertAction.Style.default,
                                                     handler: { (action:UIAlertAction!) -> Void in
-                                                        self.exitScorecard(from: from, toSegue: toSegue, advanceDealer: advanceDealer, rounds: rounds,
-                                                                           resetOverrides: resetOverrides , completion: completion)
+                                                        self.exitScorecard(from: from, advanceDealer: advanceDealer, rounds: rounds,
+                                                                           resetOverrides: resetOverrides,
+                                                                           completion: completion)
                 }))
             alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel,
                                                     handler:nil))
@@ -850,7 +851,7 @@ class Scorecard {
         }
     }
     
-    public func exitScorecard(from: UIViewController, toSegue: String, advanceDealer: Bool = false, rounds: Int, resetOverrides: Bool, completion: (()->())? = nil) {
+    public func exitScorecard(from: UIViewController, advanceDealer: Bool = false, rounds: Int, resetOverrides: Bool, completion: (()->())? = nil) {
         // Save current game (if complete)
         if self.savePlayers(rounds: rounds) {
             // Reset current game
@@ -861,17 +862,14 @@ class Scorecard {
             }
             // Store max scores ready for next game in case we don't go right back to home
             self.saveMaxScores()
-            // Clear game date
-            // Execute completion code
-            if completion != nil {
-                completion!()
-            }
-            if resetOverrides {
-                // Reset override setting
-                self.resetOverrideSettings()
-            }
-            // Link to destination
-            from.performSegue(withIdentifier: toSegue, sender: from)
+            
+            // Close form and execute completion code
+            from.dismiss(animated: true, completion: {
+                if resetOverrides {
+                    self.resetOverrideSettings()
+                }
+                completion?()
+            })
         } else {
             from.alertMessage("Error saving game")
         }

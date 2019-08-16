@@ -294,7 +294,6 @@
                         <outlet property="overrideSettingsButton" destination="rMq-tB-u4I" id="2VW-Ya-LH6"/>
                         <outlet property="selectedPlayersTopConstraint" destination="D2A-Qa-VDI" id="T7T-LS-kZX"/>
                         <outlet property="selectedPlayersView" destination="nKd-io-ud9" id="c8G-bf-FIe"/>
-                        <segue destination="6Hq-Pm-vP6" kind="show" identifier="showScorepad" id="OMl-3l-9zT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vNy-VM-1Ya" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -315,14 +314,6 @@
                 </rotationGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="7986.3999999999996" y="203.74812593703149"/>
-        </scene>
-        <!--Scorepad-->
-        <scene sceneID="avc-fZ-TSL">
-            <objects>
-                <viewControllerPlaceholder storyboardName="ScorepadViewController" referencedIdentifier="ScorepadViewController" id="6Hq-Pm-vP6" userLabel="Scorepad" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="jQv-Ji-PPJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="8627" y="203"/>
         </scene>
     </scenes>
     <resources>

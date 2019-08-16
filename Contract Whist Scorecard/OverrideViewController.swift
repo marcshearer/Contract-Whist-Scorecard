@@ -43,14 +43,14 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
     // MARK: - IB Actions ============================================================================== -
     @IBAction func confirmPressed(_ sender: UIButton) {
         self.completion?()
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss()
     }
     
     @IBAction func revertPressed(_ sender: UIButton) {
         // Disable override
         self.scorecard.resetOverrideSettings()
         self.completion?()
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss()
     }
     
     override func viewDidLoad() {
@@ -281,7 +281,7 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
     
     // Mark: - Main instatiation routine =============================================================== -
     
-    func show(completion: (()->())? = nil) {
+    public func show(completion: (()->())? = nil) {
         let storyboard = UIStoryboard(name: "OverrideViewController", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "OverrideViewController") as! OverrideViewController
         let parentViewController = Utility.getActiveViewController()!
@@ -297,6 +297,10 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
         viewController.preferredContentSize = CGSize(width: 400, height: 500)
 
         parentViewController.present(viewController, animated: true, completion: nil)
+    }
+    
+    private func dismiss() {
+        self.dismiss(animated: true, completion: nil)
     }
 }
 

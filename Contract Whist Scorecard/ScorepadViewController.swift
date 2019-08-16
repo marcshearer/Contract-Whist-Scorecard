@@ -13,7 +13,7 @@ enum ScorepadMode {
     case display
     case amend
 }
-
+    
 class ScorepadViewController: CustomViewController,
                               UITableViewDataSource, UITableViewDelegate,
                               UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,
@@ -25,19 +25,18 @@ class ScorepadViewController: CustomViewController,
     internal let scorecard = Scorecard.shared
     private var recovery: Recovery!
     
-    // Properties to pass state to / from segues
+    // Properties to pass state
     public var scorepadMode: ScorepadMode!
     public var rounds: Int!
     public var cards: [Int]!
     public var bounce: Bool!
     public var bonus2: Bool!
     public var suits: [Suit]!
-    public var returnSegue: String!
     public var parentView: UIView!
     public var rabbitMQService: RabbitMQService!
     public var recoveryMode = false
-    public var reviewRound: Int!
     public var computerPlayerDelegate: [Int : ComputerPlayerDelegate?]?
+    public var completion: ((Bool)->())? = nil
     
     // Cell dimensions
     private let minCellHeight: CGFloat = 30
@@ -50,6 +49,7 @@ class ScorepadViewController: CustomViewController,
     private var headerHeight: CGFloat = 0.0
     private var bannerContinuationHeight: CGFloat = 10.0
     private let combinedTriggerWidth: CGFloat = 80.0
+    private var scoresHeight: CGFloat = 0.0
     
     // Gradients
     let imageGradient: [(alpha: CGFloat, location: CGFloat)] =  [(0.0, 0.0), (0.0, 0.5), (0.8, 1.0)]
@@ -69,6 +69,7 @@ class ScorepadViewController: CustomViewController,
     private let thinLineWeight: CGFloat = 1.0
     
     // Local class variables
+    private var entryViewController: EntryViewController!
     private var lastNavBarHeight:CGFloat = 0.0
     private var lastViewHeight:CGFloat = 0.0
     private var firstTimeAppear = true
@@ -95,83 +96,6 @@ class ScorepadViewController: CustomViewController,
     @IBOutlet private weak var navigationBar: UINavigationBar!
     @IBOutlet private weak var tapGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet private var paddingViewLines: [UIView]!
-
-    // MARK: - IB Unwind Segue Handlers ================================================================ -
- 
-    @IBAction private func hideLocation(segue:UIStoryboardSegue) {
-        var complete = false
-                if let segue = segue as? UIStoryboardSegueWithCompletion {
-            segue.completion = {
-                if let sourceViewController = segue.source as? LocationViewController {
-                    if sourceViewController.complete {
-                        complete = true
-                    }
-                }
-                if complete {
-                    // Resave updated location
-                    self.saveLocationAndDate()
-                    // Play hand
-                    self.scorecard.playHand(from: self, sourceView: self.scorepadView, computerPlayerDelegate: self.computerPlayerDelegate)
-                } else {
-                    // Exit
-                    self.performSegue(withIdentifier: "hideScorepad", sender: self)
-                }
-            }
-        }
-    }
-    
-    @IBAction private func hideEntry(segue:UIStoryboardSegue) {
-        _ = scorecard.savePlayers(rounds: self.rounds)
-        highlightCurrentDealer(false)
-        scorecard.advanceMaximumRound(rounds: self.rounds)
-        highlightCurrentDealer(true)
-        returnEntry()
-    }
-    
-    @IBAction func hideClientRoundSummary(segue:UIStoryboardSegue) {
-        // Only used in client
-        roundSummaryViewController = nil
-        formatButtons()
-    }
-    
-    @IBAction private func hideGameSummary(segue:UIStoryboardSegue) {
-        firstGameSummary=false
-        gameSummaryViewController = nil
-        returnEntry()
-    }
-    
-    @IBAction private func hideReview(segue:UIStoryboardSegue) {
-    }
-    
-    @IBAction private func newGame(segue:UIStoryboardSegue) {
-        // New game started - refresh the screen
-        self.recovery.saveInitialValues()
-        self.scorecard.setGameInProgress(true)
-        self.firstGameSummary = true
-        self.headerTableView.reloadData()
-        self.bodyTableView.reloadData()
-        self.footerTableView.reloadData()
-        self.saveNewGame()
-        self.formatButtons()
-        if self.scorecard.isHosting {
-            // Start new game
-            self.playHand(setState: true)
-        } else {
-            // Re-send players to sharing device to trigger new game
-            self.scorecard.sendPlay(rounds: self.rounds, cards: self.cards, bounce: self.bounce, bonus2: self.bonus2, suits: self.suits)
-        }
-    }
-    
-    @IBAction private func linkGameSummary(segue:UIStoryboardSegue) {
-        if let segue = segue as? UIStoryboardSegueWithCompletion {
-            segue.completion = {
-                _ = self.scorecard.savePlayers(rounds: self.rounds)
-                self.scorecard.sendScores()
-                self.performSegue(withIdentifier: "showGameSummary", sender: self)
-            }
-        }
-        formatButtons()
-    }
     
     // MARK: - IB Actions ============================================================================== -
     
@@ -181,7 +105,7 @@ class ScorepadViewController: CustomViewController,
         } else if self.scorecard.isHosting || self.scorecard.hasJoined {
             if scorecard.gameComplete(rounds: self.rounds) {
                 // Online game complete - go to game summary
-                self.performSegue(withIdentifier: "showGameSummary", sender: self)
+                self.showGameSummary()
             } else {
                 // Online game in progress - go back to hand
                 self.playHand()
@@ -189,7 +113,7 @@ class ScorepadViewController: CustomViewController,
         } else if self.scorecard.isViewing {
             if scorecard.gameComplete(rounds: self.rounds) {
                 // Online game complete - go to game summary
-                self.performSegue(withIdentifier: "showGameSummary", sender: self)
+                self.showGameSummary()
             }
         }
     }
@@ -197,15 +121,16 @@ class ScorepadViewController: CustomViewController,
     @IBAction private func finishGamePressed(_ sender: Any) {
         NotificationCenter.default.removeObserver(self.observer!)
         if scorepadMode == .amend || self.scorecard.isHosting {
-            scorecard.finishGame(from: self, toSegue: returnSegue, rounds: self.rounds, resetOverrides: true, completion: tidyUp)
-        } else if self.scorecard.hasJoined {
-            self.alertDecision("Warning: This will mean you exit from the game. You can rejoin by selecting the 'Join a Game' option from 'Online Game' in the Home menu", okButtonText: "Exit",
-                okHandler: {
-                self.performSegue(withIdentifier: self.returnSegue, sender: self)
+            scorecard.finishGame(from: self, rounds: self.rounds, resetOverrides: true, completion: {
+                self.tidyUp()
+                self.completion?(false)
             })
-        } else {
-            tidyUp()
-            self.performSegue(withIdentifier: returnSegue, sender: self)
+        } else  {
+            self.alertDecision(if: self.scorecard.hasJoined, "Warning: This will mean you exit from the game. You can rejoin by selecting the 'Play Game' option in the Home menu", okButtonText: "Exit",
+                okHandler: {
+                    self.tidyUp()
+                    self.dismiss()
+                })
         }
     }
     
@@ -220,9 +145,9 @@ class ScorepadViewController: CustomViewController,
                 // Popup the round summary unless we have a made for the current round or we haven't got any bids yet
                 if self.scorecard.roundStarted(self.scorecard.maxEnteredRound) &&
                         !self.scorecard.roundMadeStarted(self.scorecard.maxEnteredRound) {
-                    self.performSegue(withIdentifier: "showClientRoundSummary", sender: self)
+                    self.showRoundSummary()
                 } else if scorecard.gameComplete(rounds: self.rounds) {
-                    self.performSegue(withIdentifier: "showGameSummary", sender: self)
+                    self.showGameSummary()
                 }
             }
         }
@@ -488,7 +413,8 @@ class ScorepadViewController: CustomViewController,
         headerViewHeightConstraint.constant = headerHeight - bannerContinuationHeight
         footerViewHeightConstraint.constant = CGFloat(cellHeight) + self.view.safeAreaInsets.bottom
 
-        scorecard.saveScorepadHeights(headerHeight: headerHeight + navigationBar.frame.height, bodyHeight: CGFloat(self.scorecard.rounds) * self.cellHeight, footerHeight: CGFloat(cellHeight) + self.view.safeAreaInsets.bottom)
+        scoresHeight = min(ScorecardUI.screenHeight, CGFloat(self.scorecard.rounds) * cellHeight, 600)
+        scorecard.saveScorepadHeights(headerHeight: headerHeight + navigationBar.frame.height, bodyHeight: scoresHeight, footerHeight: CGFloat(cellHeight) + self.view.safeAreaInsets.bottom)
         
         // If moving to 1 column clear out stored bid cell pointers
         if bodyColumns == 1 {
@@ -527,19 +453,21 @@ class ScorepadViewController: CustomViewController,
     private func makeEntry(_ fromButton: Bool = false) {
         if scorepadMode == .amend {
             if scorecard.gameComplete(rounds: self.rounds) && fromButton {
-                self.performSegue(withIdentifier: "showGameSummary", sender: self)
+                self.showGameSummary()
             } else {
-                self.performSegue(withIdentifier: "showEntry", sender: self)
+                self.showEntry()
             }
             rotated = false
         }
     }
     
-    private func returnEntry() {
+    private func returnFromEntry(editedRound: Int? = nil) {
         if rotated {
             headerTableView.reloadData()
             bodyTableView.reloadData()
             footerTableView.reloadData()
+        } else if let editedRound = editedRound {
+            bodyTableView.reloadRows(at: [IndexPath(row: editedRound - 1, section: 0)], with: .automatic)
         }
         formatButtons()
     }
@@ -647,15 +575,15 @@ class ScorepadViewController: CustomViewController,
                 self.saveNewGame()
                 self.playHand(setState: true, show: false)
                 // Link to location view
-                self.performSegue(withIdentifier: "showLocation", sender: self)
+                self.showLocation()
             }
         }
     }
     
     public func returnToCaller() {
         // Called from another view controller to return control
-        tidyUp()
-        self.performSegue(withIdentifier: returnSegue, sender: self)
+        self.tidyUp()
+        self.dismiss()
     }
     
     private func saveNewGame() {
@@ -731,7 +659,7 @@ class ScorepadViewController: CustomViewController,
                 if self.scorecard.isHosting {
                     _ = self.scorecard.savePlayers(rounds: self.rounds)
                 }
-                self.performSegue(withIdentifier: "showGameSummary", sender: self)
+                self.showGameSummary()
             } else if self.scorecard.handState.round != self.rounds {
                 // Reset state and prepare for next round
                 self.highlightCurrentDealer(false)
@@ -745,97 +673,127 @@ class ScorepadViewController: CustomViewController,
         }
     }
     
-    // MARK: - Segue Prepare Handler =================================================================== -
-    override internal func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        let scoresHeight: CGFloat = min(ScorecardUI.screenHeight, CGFloat(self.scorecard.rounds) * cellHeight, 600)
-        
-        switch segue.identifier! {
-            
-        case "showEntry":
-            
-            notAllowedInDisplay()
-            let destination = segue.destination as! EntryViewController
-
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = scorepadView
-            destination.preferredContentSize = CGSize(width: 400, height: scoresHeight)
-
-            destination.rounds = self.rounds
-            destination.cards = self.cards
-            destination.bounce = self.bounce
-            destination.bonus2 = self.bonus2
-            destination.suits = self.suits
-            destination.reeditMode = scorecard.roundPlayer(playerNumber: scorecard.currentPlayers, round: scorecard.selectedRound).score(scorecard.selectedRound) != nil ? true : false
-            
-        case "showClientRoundSummary":
-            
-            roundSummaryViewController  = segue.destination as? RoundSummaryViewController
-
-            roundSummaryViewController.modalPresentationStyle = UIModalPresentationStyle.popover
-            roundSummaryViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            roundSummaryViewController.popoverPresentationController?.sourceView = scorepadView
-            roundSummaryViewController.preferredContentSize = CGSize(width: 400, height: scoresHeight)
-
-            roundSummaryViewController.returnSegue = "hideClientRoundSummary"
-            roundSummaryViewController.rounds = self.rounds
-            roundSummaryViewController.cards = self.cards
-            roundSummaryViewController.bounce = self.bounce
-            roundSummaryViewController.suits = self.suits
-            
-        case "showGameSummary":
-            
-            gameSummaryViewController = segue.destination as? GameSummaryViewController
-
-            gameSummaryViewController.modalPresentationStyle = UIModalPresentationStyle.popover
-            gameSummaryViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            gameSummaryViewController.popoverPresentationController?.sourceView = scorepadView
-
-            gameSummaryViewController.preferredContentSize = CGSize(width: 400, height: scoresHeight)
-            gameSummaryViewController.firstGameSummary = self.firstGameSummary
-            gameSummaryViewController.gameSummaryMode = (self.scorecard.isHosting ? .amend : self.scorepadMode)
-            gameSummaryViewController.rounds = self.rounds
-            NotificationCenter.default.removeObserver(observer!)
-            
-        case "showLocation":
-            
-            let destination = segue.destination as! LocationViewController
-
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.isModalInPopover = true
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = scorepadView
-            destination.preferredContentSize = CGSize(width: 400, height: scoresHeight)
-
-            destination.gameLocation = self.scorecard.gameLocation
-            destination.returnSegue = "hideLocation"
-            destination.useCurrentLocation = true
-            
-        case "showReview":
-            
-            let destination = segue.destination as! ReviewViewController
-  
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = scorepadView
-            destination.preferredContentSize = CGSize(width: 400, height: scoresHeight)
-  
-            destination.round = self.reviewRound
-            destination.thisPlayer = self.scorecard.handState.enteredPlayerNumber
-            
-        default:
-            break
-        }
+    // MARK: - Show other views ======================================================= -
+    
+    private func showLocation() {
+        LocationViewController.show(from: self, gameLocation: self.scorecard.gameLocation, useCurrentLocation: true, completion: { (location) in
+            if let location = location {
+                // Copy location back
+                location.copy(to: self.scorecard.gameLocation)
+                // Resave updated location
+                self.saveLocationAndDate()
+                // Play hand
+                self.scorecard.playHand(from: self, sourceView: self.scorepadView, computerPlayerDelegate: self.computerPlayerDelegate)
+            } else {
+                // Exit
+                self.dismiss()
+            }
+        })
     }
     
-    func notAllowedInDisplay() {
+    private func showEntry() {
+        self.notAllowedInDisplay()
+        
+        let reeditMode = scorecard.roundPlayer(playerNumber: scorecard.currentPlayers, round: scorecard.selectedRound).score(scorecard.selectedRound) != nil ? true : false
+        
+        entryViewController = EntryViewController.show(from: self, existing: self.entryViewController, reeditMode: reeditMode, rounds: self.rounds, cards: self.cards, bounce: self.bounce, bonus2: self.bonus2, suits: self.suits, completion:
+            { (linkToGameSummary) in
+                if linkToGameSummary {
+                    self.formatButtons()
+                    _ = self.scorecard.savePlayers(rounds: self.rounds)
+                    self.scorecard.sendScores()
+                    self.showGameSummary()
+                } else {
+                    let editedRound = self.scorecard.selectedRound
+                    _ = self.scorecard.savePlayers(rounds: self.rounds)
+                    self.highlightCurrentDealer(false)
+                    self.scorecard.advanceMaximumRound(rounds: self.rounds)
+                    self.highlightCurrentDealer(true)
+                    self.returnFromEntry(editedRound: editedRound)
+                }
+            })
+    }
+    
+    private func showReview(round: Int) {
+        ReviewViewController.show(from: self, round: round, thisPlayer: self.scorecard.handState.enteredPlayerNumber)
+    }
+    
+    public func showRoundSummary() {
+        
+        self.roundSummaryViewController = RoundSummaryViewController.show(from: self, existing: roundSummaryViewController, rounds: self.rounds, cards: self.cards, bounce: self.bounce, suits: self.suits)
+    }
+    
+    public func showGameSummary() {
+        self.gameSummaryViewController = GameSummaryViewController.show(from: self, firstGameSummary: self.firstGameSummary, gameSummaryMode: (self.scorecard.isHosting ? .amend : self.scorepadMode), rounds: self.rounds, completion: { (returnMode) in
+            switch returnMode {
+            case .resume:
+                self.firstGameSummary=false
+                self.gameSummaryViewController = nil
+                self.returnFromEntry()
+            case .newGame:
+                // New game started - refresh the screen
+                self.recovery.saveInitialValues()
+                self.scorecard.setGameInProgress(true)
+                self.firstGameSummary = true
+                self.headerTableView.reloadData()
+                self.bodyTableView.reloadData()
+                self.footerTableView.reloadData()
+                self.saveNewGame()
+                self.formatButtons()
+                if self.scorecard.isHosting {
+                    // Start new game
+                    self.playHand(setState: true)
+                } else {
+                    // Re-send players to sharing device to trigger new game
+                    self.scorecard.sendPlay(rounds: self.rounds, cards: self.cards, bounce: self.bounce, bonus2: self.bonus2, suits: self.suits)
+                }
+            case .returnHome:
+                self.dismiss(returnHome: true)
+            }
+        })
+        
+    }
+    
+    private func notAllowedInDisplay() {
         if scorepadMode != .amend {
             // Shouldn't ever invoke this from display mode
             Utility.getActiveViewController()?.alertMessage("Unexpected action in scorepad display mode", title: "Error", okHandler: {
-                self.dismiss(animated: true, completion: nil)
+                self.dismiss(returnHome: true)
             })
         }
+    }
+   
+    // MARK: - Function to present this view ==============================================================
+    
+    class func show(from viewController: UIViewController, existing scorepadViewController: ScorepadViewController? = nil, scorepadMode: ScorepadMode? = nil, rounds: Int? = nil, cards: [Int]? = nil, bounce: Bool? = nil, bonus2: Bool!, suits: [Suit]? = nil, rabbitMQService: RabbitMQService? = nil, recoveryMode: Bool = false, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil ,completion: ((Bool)->())? = nil) -> ScorepadViewController {
+        var scorepadViewController: ScorepadViewController! = scorepadViewController
+        
+        if scorepadViewController == nil {
+            let storyboard = UIStoryboard(name: "ScorepadViewController", bundle: nil)
+            scorepadViewController = storyboard.instantiateViewController(withIdentifier: "ScorepadViewController") as? ScorepadViewController
+        }
+        
+        scorepadViewController.parentView = viewController.view
+        scorepadViewController.scorepadMode = scorepadMode
+        scorepadViewController.rounds = rounds
+        scorepadViewController.cards = cards
+        scorepadViewController.bounce = bounce
+        scorepadViewController.bonus2 = bonus2
+        scorepadViewController.suits = suits
+        scorepadViewController.rabbitMQService = rabbitMQService
+        scorepadViewController.recoveryMode = recoveryMode
+        scorepadViewController.computerPlayerDelegate = computerPlayerDelegate
+        scorepadViewController.completion = completion
+        
+        viewController.present(scorepadViewController, animated: true, completion: nil)
+        
+        return scorepadViewController
+    }
+    
+    private func dismiss(returnHome: Bool = false) {
+        self.dismiss(animated: true, completion: {
+            self.completion?(returnHome)
+        })
     }
 
     // MARK: - CollectionView Overrides ================================================================ -
@@ -941,7 +899,7 @@ class ScorepadViewController: CustomViewController,
                     // Setup label
                     headerCell.scorepadCellLabel.textColor = Palette.tableTopTextContrast
                     headerCell.scorepadCellLabel.text = scorecard.scorecardPlayer(player).playerMO!.name!
-                    headerCell.scorepadLeftLineGradientLayer = ScorecardUI.gradient(headerCell.scorepadLeftLine, color: Palette.grid, gradients: playerGradient)
+                    headerCell.scorepadLeftLineGradientLayer = ScorecardUI.gradient(headerCell.scorepadLeftLine, color: Palette.grid, gradients: playerGradient, overrideHeight: self.minCellHeight)
                     
                 } else {
                     // Setup the thumbnail picture / disc
@@ -953,7 +911,7 @@ class ScorepadViewController: CustomViewController,
                         ScorecardUI.veryRoundCorners(headerCell.scorepadImage, radius: (imageRowHeight-9)/2)
                         ScorecardUI.veryRoundCorners(headerCell.scorepadDisc, radius: (imageRowHeight-9)/2)
                     }
-                    headerCell.scorepadLeftLineGradientLayer = ScorecardUI.gradient(headerCell.scorepadLeftLine, color: Palette.grid, gradients: imageGradient)
+                    headerCell.scorepadLeftLineGradientLayer = ScorecardUI.gradient(headerCell.scorepadLeftLine, color: Palette.grid, gradients: imageGradient, overrideHeight: self.imageRowHeight)
                 }
     
             } else {
@@ -1110,8 +1068,7 @@ class ScorepadViewController: CustomViewController,
                     self.scorecard.selectedRound = round
                 }
             } else if self.scorecard.isHosting || self.scorecard.hasJoined { 
-                self.reviewRound = round
-                self.performSegue(withIdentifier: "showReview", sender: self)
+                self.showReview(round: round)
             }
         }
         makeEntry()

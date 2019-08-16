@@ -178,6 +178,15 @@ class NavigationBar: UINavigationBar {
         super.draw(rect)
     }
     
+    func setTitle(_ title: String) {
+        if let topItem = self.topItem {
+            topItem.title = title
+            if let titleLabel = topItem.titleView as? UILabel {
+                titleLabel.text = title
+            }
+        }
+    }
+    
     override func layoutSubviews() {
         
         super.layoutSubviews()

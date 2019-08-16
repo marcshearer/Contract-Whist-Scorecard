@@ -284,11 +284,9 @@
                         <outlet property="tableTopView" destination="EZf-wk-Pej" id="ePw-F5-DO4"/>
                         <outlet property="titleView" destination="wym-eE-JCq" id="x99-fG-a7d"/>
                         <outlet property="titleViewHeight" destination="MeZ-zx-Vfz" id="9l6-sa-YPr"/>
-                        <segue destination="UhH-ZR-1Is" kind="unwind" identifier="hideReview" unwindAction="hideReviewWithSegue:" id="CTZ-w5-GhQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K66-SZ-3aC" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="UhH-ZR-1Is" userLabel="Exit" sceneMemberID="exit"/>
                 <tapGestureRecognizer id="dMg-px-0h6">
                     <connections>
                         <action selector="tapGestureWithRecognizer:" destination="Mox-uR-fC4" id="w5s-tN-PlU"/>
@@ -315,7 +313,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Table Top">
-            <color red="0.0" green="0.63499999046325684" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.53725490196078429" green="0.80392156862745101" blue="0.56470588235294117" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

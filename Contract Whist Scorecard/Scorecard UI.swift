@@ -10,9 +10,9 @@ import UIKit
 
 class ScorecardUI {
     
-    class func gradient(_ view: UIView, color: UIColor, gradients: [(alpha: CGFloat, location: CGFloat)]) -> CAGradientLayer {
+    class func gradient(_ view: UIView, color: UIColor, gradients: [(alpha: CGFloat, location: CGFloat)], overrideHeight: CGFloat? = nil) -> CAGradientLayer {
         let gradient = CAGradientLayer()
-        gradient.frame = view.bounds
+        gradient.frame = CGRect(x: view.bounds.minX, y: view.bounds.minY, width: view.bounds.width, height: overrideHeight ?? view.bounds.height)
         gradient.colors = gradients.map { color.withAlphaComponent($0.alpha).cgColor }
         gradient.locations = gradients.map { $0.location as NSNumber }
         view.layer.insertSublayer(gradient, at: 0)

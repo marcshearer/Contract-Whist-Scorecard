@@ -9,16 +9,23 @@
 import UIKit
 import CoreData
 
+enum GameSummaryReturnMode {
+    case resume
+    case returnHome
+    case newGame
+}
+
 class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, SyncDelegate, UIPopoverControllerDelegate {
 
     // Main state properties
     internal let scorecard = Scorecard.shared
     private let sync = Sync()
     
-    // Properties to pass state to / from segues
-    public var firstGameSummary = false
-    public var gameSummaryMode: ScorepadMode!
-    public var rounds: Int!
+    // Properties to pass state
+    private var firstGameSummary = false
+    private var gameSummaryMode: ScorepadMode!
+    private var rounds: Int!
+    private var completion: ((GameSummaryReturnMode)->())?
     
     // Local class variables
     private var xref: [(playerNumber: Int, score: Int64, place: Int, ranking: Int, personalBest: Bool)] = []
@@ -32,18 +39,13 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
     private let othersHeight: CGFloat = 50
     private var trailerHeight: CGFloat = 80
     private let defaultTrailerHeight: CGFloat = 100
-    private var completionToSegue: String = ""
+    private var completionMode: GameSummaryReturnMode = .resume
     private var completionAdvanceDealer: Bool = false
     private var completionResetOverrides: Bool = false
     
     // Overrides
     var excludeHistory = false
     var excludeStats = false
-
-    // MARK: - IB Unwind Segue Handlers ================================================================ -
-    
-    @IBAction func returnGameSummary(segue:UIStoryboardSegue) {
-    }
 
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet weak var gameSummaryView: UIView!
@@ -58,26 +60,18 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
     
     @IBAction func scorecardPressed(_ sender: Any) {
         // Unwind to scorepad with current game intact
-        self.performSegue(withIdentifier: "hideGameSummary", sender: self)
+        self.dismiss()
     }
     
     @IBAction func homePressed(_ sender: Any) {
         // Unwind to home screen clearing current game
         if !self.scorecard.isViewing {
             UIApplication.shared.isIdleTimerDisabled = false
-            var toSegue: String
             if self.scorecard.hasJoined {
                 // Link to home via client (no sync)
-                self.performSegue(withIdentifier: "linkFinishGame", sender: self)
+                self.dismiss(returnMode: .returnHome)
             } else {
-                if self.scorecard.isHosting {
-                    // Sync and link to home screen via host
-                    toSegue = "linkFinishGame"
-                } else {
-                    // Sync and link straight to home screen
-                    toSegue = "finishGame"
-                }
-                finishGame(from: self, toSegue: toSegue, resetOverrides: true)
+                finishGame(from: self, returnMode: .returnHome, resetOverrides: true)
             }
         }
     }
@@ -85,7 +79,7 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
     @IBAction func newGamePressed(_ sender: Any) {
         // Unwind to scorepad clearing current game and advancing dealer
         if gameSummaryMode == .amend {
-            finishGame(from: self, toSegue: "newGame", advanceDealer: true, resetOverrides: false)
+            finishGame(from: self, returnMode: .newGame, advanceDealer: true, resetOverrides: false)
         }
     }
     
@@ -267,49 +261,44 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         if indexPath.section < 2 && gameSummaryMode == .amend && !self.scorecard.isPlayingComputer {
-            return indexPath
-        } else {
-            return nil
-        }
-    }
-   
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if gameSummaryMode == .amend {
-            if indexPath.section == 1 {
-                // Players section
-                let playerResults = xref[indexPath.row]
-                if playerResults.personalBest {
-                    let playerNumber = playerResults.playerNumber
-                    var message: String
-
-                    // New PB / First Timer
-                    let name = scorecard.enteredPlayer(playerNumber).playerMO?.name!
-                    if scorecard.enteredPlayer(playerNumber).previousMaxScore == 0 {
-                        // First timer
-                        message = "Congratulations \(name!) on completing your first game.\n\nYour score was \(playerResults.score)."
+            if gameSummaryMode == .amend {
+                if indexPath.section == 1 {
+                    // Players section
+                    let playerResults = xref[indexPath.row]
+                    if playerResults.personalBest {
+                        let playerNumber = playerResults.playerNumber
+                        var message: String
+                        
+                        // New PB / First Timer
+                        let name = scorecard.enteredPlayer(playerNumber).playerMO?.name!
+                        if scorecard.enteredPlayer(playerNumber).previousMaxScore == 0 {
+                            // First timer
+                            message = "Congratulations \(name!) on completing your first game.\n\nYour score was \(playerResults.score)."
+                        } else {
+                            // PB - - show previous one
+                            let formatter = DateFormatter()
+                            formatter.setLocalizedDateFormatFromTemplate("dd/MM/yyyy")
+                            let date = formatter.string(from: scorecard.enteredPlayer(playerNumber).previousMaxScoreDate)
+                            message = "Congratulations \(name!) on your new personal best of \(playerResults.score).\n\nYour previous best was \(scorecard.enteredPlayer(playerNumber).previousMaxScore) which you achieved on \(date)"
+                        }
+                        let alertController = UIAlertController(title: "Congratulations", message: message, preferredStyle: UIAlertController.Style.alert)
+                        alertController.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+                        present(alertController, animated: true, completion: nil)
                     } else {
-                        // PB - - show previous one
-                        let formatter = DateFormatter()
-                        formatter.setLocalizedDateFormatFromTemplate("dd/MM/yyyy")
-                        let date = formatter.string(from: scorecard.enteredPlayer(playerNumber).previousMaxScoreDate)
-                        message = "Congratulations \(name!) on your new personal best of \(playerResults.score).\n\nYour previous best was \(scorecard.enteredPlayer(playerNumber).previousMaxScore) which you achieved on \(date)"
+                        // Not a PB - Link to high scores
+                        if self.scorecard.settingSaveHistory {
+                            self.showHighScores()
+                        }
                     }
-                    let alertController = UIAlertController(title: "Congratulations", message: message, preferredStyle: UIAlertController.Style.alert)
-                    alertController.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-                    present(alertController, animated: true, completion: nil)
-                } else {
-                    // Not a PB - Link to high scores
+                } else if indexPath.section == 0 {
+                    // Crown image - Link to high scores
                     if self.scorecard.settingSaveHistory {
-                        self.performSegue(withIdentifier: "showHighScores", sender: self)
+                        self.showHighScores()
                     }
-                }
-            } else if indexPath.section == 0 {
-                // Crown image - Link to high scores
-                if self.scorecard.settingSaveHistory {
-                    self.performSegue(withIdentifier: "showHighScores", sender: self)
                 }
             }
         }
+        return nil
     }
     
     // MARK: - Form Presentation / Handling Routines =================================================== -
@@ -479,10 +468,10 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
         }
     }
     
-    func finishGame(from: UIViewController, toSegue: String, advanceDealer: Bool = false, resetOverrides: Bool = true, confirm: Bool = true) {
+    func finishGame(from: UIViewController, returnMode: GameSummaryReturnMode, advanceDealer: Bool = false, resetOverrides: Bool = true, confirm: Bool = true) {
         
         func finish() {
-            self.synchroniseAndSegueTo(toSegue: toSegue, advanceDealer: advanceDealer, resetOverrides: resetOverrides)
+            self.synchroniseAndReturn(returnMode: returnMode, advanceDealer: advanceDealer, resetOverrides: resetOverrides)
         }
         
         if confirm {
@@ -507,8 +496,8 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
 
     // MARK: - Sync routines including the delegate methods ======================================== -
     
-    func synchroniseAndSegueTo(toSegue: String, advanceDealer: Bool = false, resetOverrides: Bool) {
-        completionToSegue = toSegue
+    func synchroniseAndReturn(returnMode: GameSummaryReturnMode, advanceDealer: Bool = false, resetOverrides: Bool) {
+        completionMode = returnMode
         completionAdvanceDealer = advanceDealer
         completionResetOverrides = resetOverrides
         if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn && !self.excludeHistory && !self.scorecard.isPlayingComputer {
@@ -521,9 +510,12 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
         }
     }
     
-    internal func syncMessage(_ message: String) {
+    internal func syncStageComplete(_ stage: SyncStage) {
         Utility.mainThread {
-            self.syncMessage.text = "Syncing: \(message)"
+            if let nextStage = SyncStage(rawValue: stage.rawValue + 1) {
+                let message = Sync.stageActionDescription(stage: nextStage)
+                self.syncMessage.text = "Syncing: \(message)"
+            }
         }
     }
     
@@ -536,29 +528,46 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
     internal func syncCompletion(_ errors: Int) {
         Utility.mainThread {
             self.activityIndicator.stopAnimating()
-            self.scorecard.exitScorecard(from: self, toSegue: self.completionToSegue, advanceDealer: self.completionAdvanceDealer, rounds: self.rounds,                resetOverrides: self.completionResetOverrides)
+            self.scorecard.exitScorecard(from: self, advanceDealer: self.completionAdvanceDealer, rounds: self.rounds, resetOverrides: self.completionResetOverrides, completion: {
+                self.completion?(self.completionMode)
+            })
         }
     }
     
-    // MARK: - Segue Prepare Handler =================================================================== -
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    // MARK: - Show other views ============================================================= -
+    
+    private func showHighScores() {
+        HighScoresViewController.show(from: self, backText: "", backImage: "cross white")
+    }
+    
+    // MARK: - Function to present and dismiss this view ==============================================================
+    
+    class public func show(from viewController: UIViewController, firstGameSummary: Bool = false, gameSummaryMode: ScorepadMode? = nil, rounds: Int? = nil, completion: ((GameSummaryReturnMode)->())?) -> GameSummaryViewController {
         
-        switch segue.identifier! {
+        let storyboard = UIStoryboard(name: "GameSummaryViewController", bundle: nil)
+        let gameSummaryViewController: GameSummaryViewController = storyboard.instantiateViewController(withIdentifier: "GameSummaryViewController") as! GameSummaryViewController
+ 
+        gameSummaryViewController.modalPresentationStyle = UIModalPresentationStyle.popover
+        gameSummaryViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+        gameSummaryViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
+        gameSummaryViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
+        gameSummaryViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
+        gameSummaryViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
         
-        case "showHighScores":
-            
-            let destination = segue.destination as! HighScoresViewController
-
-            destination.modalPresentationStyle = UIModalPresentationStyle.popover
-            destination.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-            destination.popoverPresentationController?.sourceView = self.popoverPresentationController?.sourceView
-            destination.preferredContentSize = CGSize(width: 400, height: 554)
-
-            destination.returnSegue = "returnGameSummary"
-            
-        default:
-            break
-        }
+        gameSummaryViewController.firstGameSummary = firstGameSummary
+        gameSummaryViewController.gameSummaryMode = gameSummaryMode
+        gameSummaryViewController.rounds = rounds
+        gameSummaryViewController.completion = completion
+        
+        viewController.present(gameSummaryViewController, animated: true, completion: nil)
+        
+        return gameSummaryViewController
+    }
+    
+    private func dismiss(returnMode: GameSummaryReturnMode = .resume) {
+        self.dismiss(animated: false, completion: {
+            self.completion?(returnMode)
+        })
     }
 }
 

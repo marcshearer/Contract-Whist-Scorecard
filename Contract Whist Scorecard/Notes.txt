@@ -110,8 +110,16 @@ Update Walkthrough - esp online game
 
 
 TODO
------------
+----
 Sort out autoplay
+Game sharing not working - especially check round summary etc
+Check what happens if finish a recovered game - is resume cleared?
+
+Jack
+----
+Orange graph color
+Background color for scorepad in landscape
+Check sync
 
 Medium-term
 -----------

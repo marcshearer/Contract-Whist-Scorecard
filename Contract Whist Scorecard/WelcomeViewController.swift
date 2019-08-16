@@ -49,9 +49,10 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     private var sections: [Int:Int]!
     private var sectionActions: [Int : [(frame: CGRect, position: Position, action: ActionButton)]]!
     private var actionButtons: [ActionButton]!
-    private var mainSection = 1
-    private var infoSection = 2
-    private var adminSection = 3
+    private let mainSection = 1
+    private let infoSection = 2
+    private let adminSection = 3
+    
     
     private var recoveryAvailable = false
     private var recoverOnline = false
@@ -63,6 +64,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     private var lineWidth: CGFloat = 3.0
     private var sectionSpace: CGFloat = 20.0
     private var syncLabelHeight: CGFloat = 20.0
+    private var contentOffset: CGFloat = 0.0
     
     // Debug rotations code
     private let code: [CGFloat] = [ -1.0, -1.0, 1.0, -1.0, 1.0]
@@ -256,7 +258,8 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         let section = self.sections[indexPath.section]!
         let actionButtons = self.sectionActions[section]!
         let (frame, _, _) = actionButtons[indexPath.row]
-        return frame
+        let offsetFrame = CGRect(x: frame.minX, y: frame.minY + self.contentOffset, width: frame.width, height: frame.height)
+        return offsetFrame
     }
     
     internal func scrollView(_ scrollView: ScrollView, cellForItemAt indexPath: IndexPath) -> ScrollViewCell {
@@ -410,6 +413,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         
         self.checkButtons()
         
+        
         self.viewOnlineButton.isHidden = !self.scorecard.settingSyncEnabled || !self.scorecard.settingAllowBroadcast
         
     }
@@ -418,7 +422,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         var position: Position
         var columnData: [Position : (y: CGFloat, sections: Int)] = [:]
         var scrollViewSection = -1
-
+       
         columnData[.left] = (self.actionStart , 0)
         columnData[.right] = (self.actionStart, 0)
         
@@ -447,10 +451,12 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
                 }
                 
                 self.sectionActions[section]!.append((CGRect(), position, actionButton))
+                
             }
         }
         
         // Update frames
+        var contentHeight: CGFloat = 0.0
         let sorted = self.sectionActions!.sorted(by: {$0.key < $1.key})
         for (section, actions) in sorted {
             var newSection = true
@@ -518,8 +524,13 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
                 // Update data structures
                 self.sectionActions[section]![index].frame = CGRect(x: x, y: totalSectionSpace + offset + column.y, width: width, height: self.actionHeight)
                 columnData[action.position]!.y += self.actionHeight
+                
+                contentHeight = max(contentHeight, columnData[action.position]!.y)
             }
         }
+        
+        let freeSpace: CGFloat = self.actionScrollView.frame.height - contentHeight - 40.0
+        self.contentOffset = min(50.0, max(0.0, freeSpace))
         
         self.scrollView.reloadData()
     }

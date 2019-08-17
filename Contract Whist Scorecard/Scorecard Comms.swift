@@ -542,7 +542,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         let playerNumber = data["player"] as! Int
         let card = Card(fromNumber: data["card"] as! Int)
         
-        self.commsDelegate?.debugMessage("Processing card played \(card.toString())")
+        self.commsDelegate?.debugMessage("Processing card played \(card.toString()) from \(self.enteredPlayer(playerNumber).playerMO!.name!)")
         
         if self.handState == nil || playerNumber != self.handState.enteredPlayerNumber {
             // Ignore if from self since should know about it already

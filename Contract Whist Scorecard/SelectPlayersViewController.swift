@@ -642,8 +642,8 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         selectPlayersViewController.modalPresentationStyle = UIModalPresentationStyle.popover
         selectPlayersViewController.isModalInPopover = true
         selectPlayersViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        selectPlayersViewController.popoverPresentationController?.sourceView = viewController.view
-        selectPlayersViewController.preferredContentSize = CGSize(width: 400, height: 600)
+        selectPlayersViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
+        selectPlayersViewController.preferredContentSize = CGSize(width: 400, height: 700)
         
         selectPlayersViewController.specificEmail = specificEmail
         selectPlayersViewController.descriptionMode = descriptionMode

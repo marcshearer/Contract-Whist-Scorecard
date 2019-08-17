@@ -22,6 +22,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
     private var _connectionEmail: String?
     private var _connectionName: String?
     internal var _connectionDevice: String?
+    internal var started = false
     public var connectionEmail: String? {
         get {
             return _connectionEmail
@@ -73,11 +74,13 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
     internal func startService(email: String!, name: String!, recoveryMode: Bool, matchDeviceName: String! = nil) {
         self._connectionEmail = email
         self._connectionName = name
+        self.started = true
     }
     
     internal func stopService() {
         self._connectionEmail = nil
         self._connectionName = nil
+        self.started = false
     }
     
     internal func endSessions(matchDeviceName: String! = nil) {
@@ -154,7 +157,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
         return data
     }
     	
-    internal func reset() {
+    internal func reset(reason: String? = nil) {
         // Over-ridden in client
     }
 
@@ -339,7 +342,9 @@ class MultipeerServerService : MultipeerService, CommsServerHandlerDelegate, MCN
     }
     
     internal func stop(completion: (()->())?) {
-        self.debugMessage("Stop Server \(self.connectionPurpose)")
+        if super.started {
+            self.debugMessage("Stop Server \(self.connectionPurpose)")
+        }
         
         super.stopService()
         
@@ -451,7 +456,9 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
     }
     
     internal func stop() {
-        self.debugMessage("Stop Client \(self.connectionPurpose)")
+        if super.started {
+            self.debugMessage("Stop Client \(self.connectionPurpose)")
+        }
         
         super.stopService()
         
@@ -523,9 +530,9 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
         }
     }
     
-    internal override func reset() {
+    internal override func reset(reason: String? = nil) {
         self.debugMessage("Restart browsing")
-        self.disconnect(reason: "Reset", reconnect: true)
+        self.disconnect(reason: reason ?? "Reset", reconnect: true)
         self.client.browser.stopBrowsingForPeers()
         self.client.browser.startBrowsingForPeers()
     }

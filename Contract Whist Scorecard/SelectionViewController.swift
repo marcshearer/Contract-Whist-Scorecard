@@ -36,11 +36,10 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private var showThisPlayerName = false
     private var formTitle = "Selection"
     private var bannerColor: UIColor?
-    private var refresh = true
     
     // Local class variables
-    private var width: CGFloat = 0.0
-    private var height: CGFloat = 0.0
+    private var thumbnailWidth: CGFloat = 0.0
+    private var thumbnailHeight: CGFloat = 0.0
     private var rowHeight: CGFloat = 0.0
     private let labelHeight: CGFloat = 30.0
     private let interRowSpacing:CGFloat = 10.0
@@ -63,6 +62,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var unselectedCollectionView: UICollectionView!
     @IBOutlet private weak var unselectedCollectionViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var unselectedCollectionViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var cancelButton: UIButton!
     @IBOutlet private weak var bannerContinueButton: UIButton!
     @IBOutlet private weak var continueButton: UIButton!
@@ -123,11 +123,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 self.defaultOnlinePlayers()
             }
         }
-        
-        // Set interline space
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.minimumInteritemSpacing = interRowSpacing
-        
+                
         // Set cancel button and title
         self.navigationTitle.title = self.formTitle
         self.cancelButton.setImage(UIImage(named: self.backImage), for: .normal)
@@ -185,39 +181,42 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         setSize(size: self.view.frame.size)
         
         if firstTime {
-            firstTime = false
             self.setupAnimationView()
             self.setupDragAndDrop()
         }
         
         // Decide if buttons enabled
         formatButtons(false)
-    
+        
         // Draw table
         if self.selectionMode != .single {
             self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth)
             self.selectedPlayersView.setHaloColor(color: Palette.halo)
-            self.selectedPlayersView.drawRoom(thumbnailWidth: self.width, thumbnailHeight: self.height, players: self.scorecard.numberPlayers, directions: (ScorecardUI.landscapePhone() ? .none : .up))
+            self.selectedPlayersView.drawRoom(thumbnailWidth: self.thumbnailWidth, thumbnailHeight: self.thumbnailHeight, players: self.scorecard.numberPlayers, directions: (ScorecardUI.landscapePhone() ? .none : .up))
         }
-        
-        // Reload unselected player collection
-        unselectedCollectionView.reloadData()
-        
-        self.refresh = false
+
+        if self.firstTime {
+            Utility.mainThread {
+                // Need to do this on main thread to avoid crash
+                self.unselectedCollectionView.reloadData()
+            }
+
+        }
+        self.firstTime = false
     }
     
     // MARK: - CollectionView Overrides ================================================================ -
     
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        return unselectedList.count + (addPlayerThumbnail ? 1 : 0)
+        return (firstTime && false /* TODO remove */ ? 0 : unselectedList.count + (addPlayerThumbnail ? 1 : 0))
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        return CGSize(width: self.width, height: self.height)
+        return CGSize(width: self.thumbnailWidth, height: self.thumbnailHeight)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -235,7 +234,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             // Create add player thumbnail
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Add Player Cell", for: indexPath) as! SelectionCell
             if cell.playerView == nil {
-                cell.playerView = PlayerView(type: .addPlayer, parent: cell, width: self.width, height: self.height, tag: -1)
+                cell.playerView = PlayerView(type: .addPlayer, parent: cell, width: self.thumbnailWidth, height: self.thumbnailHeight, tag: -1)
                 cell.playerView.delegate = self
             }
             cell.playerView.set(name: "Add", initials: "", alpha: 1.0)
@@ -245,7 +244,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             // Create player thumbnail
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Unselected Cell", for: indexPath) as! SelectionCell
             if cell.playerView == nil {
-                cell.playerView = PlayerView(type: .unselected, parent: cell, width: self.width, height: self.height, tag: playerNumber-1, tapGestureDelegate: self)
+                cell.playerView = PlayerView(type: .unselected, parent: cell, width: self.thumbnailWidth, height: self.thumbnailHeight, tag: playerNumber-1, tapGestureDelegate: self)
                 cell.playerView.delegate = self
             }
             if let playerMO = unselectedList[playerNumber-1] {
@@ -256,7 +255,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             cell.playerView.set(imageName: nil)
         }
         
-        cell.playerView.frame = CGRect(x: 0.0, y: 0.0, width: self.width, height: self.height)
+        cell.playerView.frame = CGRect(x: 0.0, y: 0.0, width: self.thumbnailWidth, height: self.thumbnailHeight)
         cell.playerView.set(textColor: Palette.text)
 
         return cell
@@ -321,6 +320,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         }
         if selectionMode == .single {
             slideOutButton.isHidden = ScorecardUI.landscapePhone()
+            self.unselectedCollectionViewBottomConstraint.constant = self.slideOutButton.distanceFromBottom()
         } else {
             slideOutButton.isHidden = (selectedList.count == 0)
         }
@@ -343,24 +343,25 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         let selectedWidth = (ScorecardUI.landscapePhone() ? (totalWidth / 2.0) : totalWidth)
         let totalHeight = size.height - view.safeAreaInsets.top - view.safeAreaInsets.bottom
         
-        let size = SelectionViewController.thumbnailSize(labelHeight: self.labelHeight)
-        self.width = size.width
-        self.height = size.height
-        self.rowHeight = self.height + self.interRowSpacing
+        let thumbnailSize = SelectionViewController.thumbnailSize(view: self.view, labelHeight: self.labelHeight)
+        self.thumbnailWidth = thumbnailSize.width
+        self.thumbnailHeight = thumbnailSize.height
+        self.rowHeight = self.thumbnailHeight + self.interRowSpacing
         
         if self.selectionMode == .single {
             self.selectedViewHeight?.constant = 0.0
             self.selectedPlayersView.alpha = 0.0
-            self.unselectedCollectionViewTopConstraint.constant = self.width + 16.0 + (self.labelHeight - 5.0) + self.interRowSpacing - self.bannerContinuationHeight
+            self.unselectedCollectionViewTopConstraint.constant = self.thumbnailWidth + 16.0 + (self.labelHeight - 5.0) + self.interRowSpacing - self.bannerContinuationHeight
+            self.unselectedCollectionViewBottomConstraint.constant = self.slideOutButton.distanceFromBottom()
             selectedViewWidth?.constant = 10.0
         } else {
-            let selectedHeight = self.height * 3.0 + self.view.safeAreaInsets.bottom
-            let unselectedHeight = totalHeight - selectedHeight - self.navigationBar.intrinsicContentSize.height - self.bannerContinuationHeight
+            let selectedHeight = self.thumbnailHeight * 3.0 + self.view.safeAreaInsets.bottom
+            let unselectedHeight = totalHeight - (selectedHeight - self.view.safeAreaInsets.bottom) - self.navigationBar.intrinsicContentSize.height - self.bannerContinuationHeight
             let selectedTop = unselectedHeight + self.navigationBar.intrinsicContentSize.height + self.bannerContinuationHeight + view.safeAreaInsets.top
             selectedViewWidth?.constant = selectedWidth
             
             if ScorecardUI.landscapePhone() {
-                selectedViewHeight?.constant = totalHeight - navigationBar.intrinsicContentSize.height + view.safeAreaInsets.bottom
+                self.selectedViewHeight?.constant = totalHeight - navigationBar.intrinsicContentSize.height + view.safeAreaInsets.bottom
                 self.selectedPlayersView.frame = CGRect(x: size.width - view.safeAreaInsets.right - selectedWidth, y: navigationBar.intrinsicContentSize.height + view.safeAreaInsets.top, width: selectedWidth, height: totalHeight - navigationBar.intrinsicContentSize.height + view.safeAreaInsets.bottom)
             } else {
                 selectedViewHeight?.constant = selectedHeight
@@ -371,20 +372,24 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     /// Function used in other views to get the same thumbnail size
     
-    class public func thumbnailSize(labelHeight: CGFloat) -> CGSize {
-        if let rootWindow = UIApplication.shared.keyWindow {
-            let totalWidth = rootWindow.bounds.width - rootWindow.safeAreaInsets.left - rootWindow.safeAreaInsets.right
-            let selectedWidth = (ScorecardUI.landscapePhone() ? (totalWidth / 2.0) : totalWidth)
-            let totalHeight = rootWindow.bounds.height - rootWindow.safeAreaInsets.top - rootWindow.safeAreaInsets.bottom
-            let numberThatFit = max(5, Int(selectedWidth / (min(totalWidth, totalHeight) > 450 ? 120 : 75)))
-            
-            let width = min((totalHeight - 170)/2, ((selectedWidth - (CGFloat(numberThatFit + 1) * 10.0)) / CGFloat(numberThatFit)))
-            let height = width + labelHeight - 5.0
-            
-            return CGSize(width: width, height: height)
-        } else {
-            return UIScreen.main.bounds.size
+    class public func thumbnailSize(view: UIView, labelHeight: CGFloat) -> CGSize {
+        
+        var safeAreaInsets = UIEdgeInsets()
+        if view.bounds.width == UIScreen.main.bounds.width {
+            if let rootWindow = UIApplication.shared.keyWindow {
+                safeAreaInsets = rootWindow.safeAreaInsets
+            }
         }
+        
+        let totalWidth = view.bounds.width - safeAreaInsets.left - safeAreaInsets.right
+        let selectedWidth = (ScorecardUI.landscapePhone() ? (totalWidth / 2.0) : totalWidth)
+        let totalHeight = view.bounds.height - safeAreaInsets.top - safeAreaInsets.bottom
+        let numberThatFit = max(5, Int(selectedWidth / (min(totalWidth, totalHeight) > 450 ? 120 : 75)))
+        
+        let width = min((totalHeight - 170)/2, ((selectedWidth - (CGFloat(numberThatFit + 1) * 10.0)) / CGFloat(numberThatFit)))
+        let height = width + labelHeight - 5.0
+        
+        return CGSize(width: width, height: height)
     }
     
     func finishAction() {
@@ -481,7 +486,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 if let thisPlayerFrame = self.thisPlayerFrame {
                     size = thisPlayerFrame.size
                 } else {
-                    size = SelectionViewController.thumbnailSize(labelHeight: nameHeight)
+                    size = SelectionViewController.thumbnailSize(view: self.view, labelHeight: nameHeight)
                 }
                 self.thisPlayerViewContainerWidthConstraint.constant = size.width + 10.0
                 
@@ -510,8 +515,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     }
     
     func defaultOnlinePlayers() {
-        let host = self.selectedPlayersView.playerViews[0].playerMO!
-        if host.email != self.thisPlayer {
+        let host = self.selectedPlayersView.playerViews[0].playerMO
+        if host?.email != self.thisPlayer {
             for slot in 0..<self.scorecard.numberPlayers {
                 self.removeSelection(slot, updateUnselectedCollection: false, animate: false)
             }
@@ -559,7 +564,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                     
                     // Draw a new thumbnail over top of existing
                     let selectedPoint = selectedPlayersView.origin(slot: selectedSlot, in: self.view)
-                    self.animationView.frame = CGRect(origin: selectedPoint, size: CGSize(width: self.width, height: self.height))
+                    self.animationView.frame = CGRect(origin: selectedPoint, size: CGSize(width: self.thumbnailWidth, height: self.thumbnailHeight))
                     self.animationView.set(playerMO: selectedPlayerMO)
                     self.animationView.set(textColor: Palette.darkHighlightText)
                     self.animationView.alpha = 1.0
@@ -576,7 +581,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                         self.unselectedCollectionView.scrollToItem(at: IndexPath(item: unselectedPlayerIndex + (self.addPlayerThumbnail ? 1 : 0), section: 0), at: .centeredHorizontally, animated: true)
                         if let destinationCell = self.unselectedCollectionView.cellForItem(at: IndexPath(item: unselectedPlayerIndex + (self.addPlayerThumbnail ? 1 : 0), section: 0)) as? SelectionCell {
                             let unselectedPoint = destinationCell.playerView.thumbnail.convert(CGPoint(x: 0, y: 0), to: self.view)
-                            self.animationView.frame = CGRect(origin: unselectedPoint, size: CGSize(width: self.width, height: self.height))
+                            self.animationView.frame = CGRect(origin: unselectedPoint, size: CGSize(width: self.thumbnailWidth, height: self.thumbnailHeight))
                             self.animationView.set(textColor: Palette.text)
                         }
                     }
@@ -638,7 +643,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                         let animation = UIViewPropertyAnimator(duration: 0.5, curve: .easeIn) {
                             // Now move it to the selected area
                             let selectedPoint = self.selectedPlayersView.origin(slot: slot, in: self.view)
-                            self.animationView.frame = CGRect(origin: selectedPoint, size: CGSize(width: self.width, height: self.height))
+                            self.animationView.frame = CGRect(origin: selectedPoint, size: CGSize(width: self.thumbnailWidth, height: self.thumbnailHeight))
                             self.animationView.set(textColor: Palette.darkHighlightText)
                             self.selectedPlayersView.clear(slot: slot)
                         }
@@ -702,9 +707,9 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     }
     
     private func setupAnimationView() {
-        self.animationView = PlayerView(type: .animation, parent: self.view, width: self.width, height: self.height, tag: -1, haloWidth: self.haloWidth)
+        self.animationView = PlayerView(type: .animation, parent: self.view, width: self.thumbnailWidth, height: self.thumbnailHeight, tag: -1, haloWidth: self.haloWidth)
         // Move it off the screen
-        self.animationView.frame = CGRect(x: -self.width, y: -self.height, width: self.width, height: self.height)
+        self.animationView.frame = CGRect(x: -self.thumbnailWidth, y: -self.thumbnailHeight, width: self.thumbnailWidth, height: self.thumbnailHeight)
     }
     
     private func setupDragAndDrop() {
@@ -901,7 +906,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         }
         
         // Let view controller know that this is a new 'instance' even though re-using
-        selectionViewController!.refresh = true
+        selectionViewController!.firstTime = true
         
         viewController.present(selectionViewController!, animated: true, completion: showCompletion)
         

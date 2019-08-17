@@ -315,7 +315,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         } else {
             // Extend to the edge (and beyond)
             roomHeight = normalRoomHeight + adjustment
-            topAdjustment += max(0, min(adjustment - 50.0 - self.safeAreaInsets.bottom, adjustment * 0.75))
+            topAdjustment += max(0, min(adjustment - 50.0 - self.safeAreaInsets.bottom, adjustment * ((self.arrowDirections[.up] ?? false) ? 0.75 : 0.4)))
         }
         
         if roomHeight > self.frame.height {

@@ -48,7 +48,7 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="continuePressed:" destination="zGV-gf-a3n" eventType="touchUpInside" id="I6w-O7-ZvJ"/>
+                                            <action selector="addPlayerPressed:" destination="zGV-gf-a3n" eventType="touchUpInside" id="zd0-uI-o7f"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7SY-Bw-ahm" userLabel="Continue Button" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
@@ -186,10 +186,10 @@
                                             </button>
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" id="FL2-Z1-EDp">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Rmr-6u-jtL" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="337" y="11" width="22" height="22"/>
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Rmr-6u-jtL" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <rect key="frame" x="264" y="11" width="95" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" image="forward"/>
+                                                <state key="normal" title="Continue" image="forward"/>
                                                 <connections>
                                                     <action selector="continuePressed:" destination="zGV-gf-a3n" eventType="touchUpInside" id="6Xj-87-rms"/>
                                                 </connections>
@@ -271,6 +271,7 @@
                         <outlet property="thisPlayerViewContainer" destination="xnd-49-L9N" id="yjc-o2-3Jz"/>
                         <outlet property="thisPlayerViewContainerWidthConstraint" destination="yYr-oC-cVs" id="tNh-Yi-Hxp"/>
                         <outlet property="unselectedCollectionView" destination="Tlx-l1-ig7" id="vRw-k0-8iE"/>
+                        <outlet property="unselectedCollectionViewBottomConstraint" destination="H8w-QJ-hV0" id="REU-Kh-vmD"/>
                         <outlet property="unselectedCollectionViewTopConstraint" destination="eWw-q0-skm" id="phm-iK-kzp"/>
                     </connections>
                 </viewController>

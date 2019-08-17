@@ -101,10 +101,10 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
         if let handNumber = tableViewPlayer[tableView.tag] {
             if indexPath.row == 0 {
                 cell.label.font = UIFont.boldSystemFont(ofSize: 17.0)
-                cell.label.textColor = Palette.darkHighlightTextContrast
+                cell.label.textColor = Palette.roomInteriorTextContrast
             } else {
                 cell.label.font = UIFont.systemFont(ofSize: 17.0)
-                cell.label.textColor = Palette.darkHighlightText
+                cell.label.textColor = Palette.roomInteriorText
             }
             cell.label.text = self.text[handNumber-1][indexPath.row]
         }
@@ -136,7 +136,7 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
     
     private func setupTitle() {
         self.roundTitleLabel.textColor = UIColor.white
-        self.roundTitleLabel.attributedText = scorecard.roundTitle(round, rankColor: Palette.darkHighlightText)
+        self.roundTitleLabel.attributedText = scorecard.roundTitle(round, rankColor: Palette.roomInteriorText)
         let totalRemaining = self.scorecard.remaining(playerNumber: 0, round: self.round, mode: Mode.bid, rounds: self.scorecard.rounds, cards: self.scorecard.handState.cards, bounce: self.scorecard.handState.bounce)
         self.overUnderLabel.text = "\(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")"
         self.overUnderLabel.textColor = (totalRemaining == 0 ? Palette.contractEqual : (totalRemaining > 0 ? Palette.contractUnder : Palette.contractOver))
@@ -178,7 +178,7 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
             self.titleHeight = (ScorecardUI.landscapePhone() ? 35.0 : 44.0)
             self.roundTitleLabel.isHidden = false
             self.overUnderLabel.isHidden = false
-            self.titleView.backgroundColor = Palette.darkHighlight
+            self.titleView.backgroundColor = Palette.roomInterior
         }
         self.titleViewHeight.constant = self.titleHeight
         let useableHeight = totalHeight - 30.0 - titleHeight

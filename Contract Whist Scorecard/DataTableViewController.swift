@@ -30,7 +30,7 @@ import CoreData
     
     @objc optional func derivedField(field: String, record: DataTableViewerDataSource, sortValue: Bool) -> String
     
-    @objc optional func refreshData(recordList: [DataTableViewerDataSource])
+    @objc optional func refreshData(recordList: [DataTableViewerDataSource]) -> [DataTableViewerDataSource]
     
     @objc optional func isEnabled(button: String, record: DataTableViewerDataSource) -> Bool
     
@@ -66,8 +66,7 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
     
     // UI component pointers
     var headerCollectionView: UICollectionView!
-    var collectionView: [UICollectionView?] = []
-
+ 
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet var headerView: UITableView!
     @IBOutlet var bodyView: UITableView!
@@ -98,12 +97,6 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if recordList.count > 0 {
-            for _ in 1...recordList.count {
-                collectionView.append(nil)
-            }
-        }
         
         // Check for network / iCloud login
         if self.delegate?.allowSync ?? true {
@@ -198,7 +191,6 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
             Palette.normalStyle(cell)
             cell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row)
             cell.separatorHeightConstraint.constant = self.delegate?.separatorHeight ?? 1.0
-            collectionView[indexPath.row] = cell.dataTableCollection
         }
 
         return cell
@@ -256,8 +248,10 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
     private func showSync() {
         SyncViewController.show(from: self, completion: {
             // Refresh screen
-            self.delegate?.refreshData?(recordList: self.recordList)
-            self.bodyView.reloadData()
+            if let recordList = self.delegate?.refreshData?(recordList: self.recordList) {
+                self.recordList = recordList
+                self.bodyView.reloadData()
+            }
         })
     }
     

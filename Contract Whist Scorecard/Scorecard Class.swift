@@ -479,7 +479,7 @@ class Scorecard {
                             // No bid label so don't need to differentiate
                             Palette.normalStyle(player.scoreCell[round-1]!.scorepadCellLabel, setFont: false)
                         } else {
-                            Palette.alternateStyle(player.scoreCell[round-1]!.scorepadCellLabel)
+                            Palette.alternateStyle(player.scoreCell[round-1]!.scorepadCellLabel, setFont: false)
                         }
                     }
                     let imageView = player.scoreCell[round-1]!.scorepadImage!

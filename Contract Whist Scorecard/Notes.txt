@@ -99,27 +99,26 @@ Resume game doesn't seem to work during bidding phase - dealer gets out of line
 Short-term
 ----------
 Should re-send invitation from host
-Think about making sync class a singleton with a queue
 Make admin rotate options less available
 Add tests for temporary settings
 Add tests for history / location to check they're not saved if play a game
 Get location/notification/online game notification permission in settings (and disable options if permissions not granted)
 Auto-sync when download players in Get Started
-Host view controller doesn't scroll when rotate
 Update Walkthrough - esp online game
-
 
 TODO
 ----
-Sort out autoplay
 Game sharing not working - especially check round summary etc
-Check what happens if finish a recovered game - is resume cleared?
+Avoid re-deal if crash before first deal
+Thumbnail pictures seem to disappear (on host?)
 
 Jack
 ----
-Orange graph color
-Background color for scorepad in landscape
-Check sync
+Orange(?) graph color icon
+Background color for scorepad (not made) cells in landscape
+Check sync view is OK
+Layout for Game Summary
+Layout for Review
 
 Medium-term
 -----------

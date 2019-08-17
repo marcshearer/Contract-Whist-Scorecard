@@ -120,10 +120,10 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsS
         }
     }
     
-    internal func reset() {
+    internal func reset(reason: String? = nil) {
         // Note - overridden in client service
         self.debugMessage("Resetting")
-        self.disconnect(reason: "Reset", reconnect: true)
+        self.disconnect(reason: reason ?? "Reset", reconnect: true)
     }
     
     internal func connectionInfo() {
@@ -305,6 +305,7 @@ class RabbitMQServerService : RabbitMQService, CommsServerHandlerDelegate, Comms
         self.debugMessage("Stop Server \(self.connectionPurpose)")
         
         func cancelInvitationCompletion(_ success: Bool, _ message: String?, _ invited: [InviteReceived]?) {
+            self.debugMessage("Invitation cancelled")
             self.stopServerEnd()
             completion?()
         }
@@ -422,7 +423,7 @@ class RabbitMQClientService : RabbitMQService, CommsClientHandlerDelegate, Rabbi
         self.rabbitMQQueueList = [:]
     }
     
-    override func reset() {
+    override func reset(reason: String? = nil) {
         self.debugMessage("Resetting client")
         // Simulate reset on each queue
         self.forEachQueue { (rabbitMQQueue) in

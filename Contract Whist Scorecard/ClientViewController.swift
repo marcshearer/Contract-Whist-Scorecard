@@ -17,6 +17,7 @@ struct QueueEntry {
 enum AppState {
     case notConnected
     case connecting
+    case reconnecting
     case connected
     case waiting
 }
@@ -77,6 +78,8 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     private let whisper = Whisper()
     private var lastStatus = ""
     private var playerConnected: [String : Bool] = [:]
+    private var firstTime = true
+    private var rotated = false
     
     private var hostingOptions: Int = 0
     private var onlineRow: Int = -1
@@ -88,6 +91,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     @IBOutlet private weak var finishButton: RoundedButton!
     @IBOutlet private weak var clientTableView: UITableView!
     @IBOutlet private weak var clientTableViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var thisPlayerTitle: UILabel!
     @IBOutlet private weak var thisPlayerThumbnail: ThumbnailView!
     @IBOutlet private weak var thisPlayerNameLabel: UILabel!
     @IBOutlet private weak var thisPlayerThumbnailWidthConstraint: NSLayoutConstraint!
@@ -133,11 +137,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         self.recoveryMode = self.scorecard.recoveryMode
         
         // Update instructions / title
-        if Utility.isSimulator {
-            self.titleBar.title = Scorecard.deviceName
-        } else {
-            self.titleBar.title = self.formTitle
-        }
+        self.titleBar.title = self.formTitle
 
         // Set up sections
         if self.commsPurpose == .playing {
@@ -213,13 +213,19 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
+        self.rotated = true
         scorecard.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.clientTableView.reloadData()
+        self.clientTableView.layoutIfNeeded()
+        if self.firstTime || self.rotated {
+            self.firstTime = false
+            self.rotated = false
+            self.clientTableView.reloadData()
+        }
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
@@ -578,7 +584,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         self.gamePreviewViewController.showStatus(status: self.lastStatus)
     }
     
-    internal func gamePreviewCompletion() {
+    internal func gamePreviewCompletion(returnHome: Bool) {
         self.disconnectPressed()
         self.gamePreviewViewController = nil
     }
@@ -604,15 +610,22 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                     self.reflectState(peer: peer)
                 }
                 
-            } else {
+            } else  if self.appState != .reconnecting {
                 // New peer - add to list
                 self.clientTableView.beginUpdates()
                 self.available.append(Available(peer: peer))
                 if self.available.count == 1 {
-                    // Need to remove previous placeholder and refresh hosting options
-                    self.clientTableView.deleteRows(at: [IndexPath(row: 0, section: self.peerSection)], with: .automatic)
-                    for row in 0...1 {
-                        self.clientTableView.reloadRows(at: [IndexPath(row: row, section: self.hostSection)], with: .automatic)
+                    if self.clientTableView.numberOfRows(inSection: 0) >= 1 {
+                        // Need to remove previous placeholder and refresh hosting options
+                        self.clientTableView.deleteRows(at: [IndexPath(row: 0, section: self.peerSection)], with: .automatic)
+                        if self.hostingOptions > 0 {
+                            let hostingRows = self.clientTableView.numberOfRows(inSection: self.hostSection)
+                            if hostingRows > 0 {
+                                for row in 0..<hostingRows {
+                                    self.clientTableView.reloadRows(at: [IndexPath(row: row, section: self.hostSection)], with: .automatic)
+                                }
+                            }
+                        }
                     }
                 }
                 self.clientTableView.insertRows(at: [IndexPath(row: self.available.count - 1, section: self.peerSection)], with: .automatic)
@@ -647,9 +660,8 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             if peer.state == .notConnected {
                 self.appStateChange(to: .notConnected)
                 self.changePlayerAvailable()
-                self.dismissAll(reason != nil && reason != "" , reason: reason ?? "", completion: {
+                self.dismissAll(reason != nil && reason != "" && reason != "Reset" , reason: reason ?? "", completion: {
                     self.clientService?.start(email: self.thisPlayer, name: self.thisPlayerName)
-                    self.removeEntry(peer: peer)
                     UIApplication.shared.isIdleTimerDisabled = false
                 })
             } else {
@@ -658,10 +670,11 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                     // Can dismiss any whisper
                     self.whisper.hide()
                 } else if peer.state == .reconnecting {
+                    self.appStateChange(to: .reconnecting)
                     self.whisper.show("Connection lost. Trying to reconnect...")
                 }
                 
-                if peer.state != .recovering {
+                if peer.state != .recovering && peer.state != .reconnecting {
                     self.appStateChange(to: .waiting)
                 }
                 // Set framework based on this connection (for reconnect at lower level)
@@ -691,6 +704,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         self.scorepadViewController = nil
         self.clientService?.stop()
         self.clientService?.start(email: self.thisPlayer, name: self.thisPlayerName)
+        self.hostController = nil
         self.available = []
         self.clientTableView.reloadData()
         self.appStateChange(to: .notConnected)
@@ -701,8 +715,8 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     @objc private func refreshInvites(_ sender: Any? = nil) {
         // Refresh online game invites
-        if self.scorecard.onlineEnabled && self.appState == .notConnected {
-            Utility.debugMessage("client", "Timer - refresh invites")
+        if self.scorecard.onlineEnabled && (self.appState == .notConnected || self.appState == .reconnecting) {
+            // Utility.debugMessage("client", "Timer - refresh invites")
             self.rabbitMQClient?.clientCheckOnlineInvites(email: self.thisPlayer)
             self.clientTableView.reloadData()
         }
@@ -823,11 +837,12 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // Defer showing entries until view is fully loaded (i.e. firstTime is false)
         switch section {
         case peerSection:
-            return max(1, available.count)
+            return (self.firstTime ? 0 : max(1, available.count))
         case hostSection:
-            return self.hostingOptions
+            return (self.firstTime ? 0 : self.hostingOptions)
         default:
             return 0
         }
@@ -876,9 +891,9 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: ClientTableCell!
-        let labelWidth: CGFloat = min(ScorecardUI.screenWidth - 128, ScorecardUI.screenHeight)
+        let labelWidth: CGFloat = min(self.view.frame.width - 128, self.view.frame.height)
         let arrowWidth: CGFloat = 80.0 / 3.0
-        let hexagonInset: CGFloat = ((ScorecardUI.screenWidth - labelWidth) / 2.0) - arrowWidth
+        let hexagonInset: CGFloat = ((self.view.frame.width - labelWidth) / 2.0) - arrowWidth
         let hexagonWidth: CGFloat = labelWidth + (2 * arrowWidth)
         
         switch indexPath.section {
@@ -888,11 +903,16 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             cell = tableView.dequeueReusableCell(withIdentifier: "Service Cell", for: indexPath) as? ClientTableCell
             cell.hexagonLayer?.removeFromSuperlayer()
             cell.serviceLabelWidthConstraint.constant = labelWidth
-            
+            cell.serviceButton.setTitle((self.commsPurpose == .playing ? "Join a Game" : "View Scorecard"), for: .normal)
+
             if available.count == 0 {
                 
                 cell.serviceLabel.textColor = Palette.text
-                cell.serviceLabel.text = "There are no other devices currently offering to host a game for you to join"
+                if self.commsPurpose == .sharing {
+                    cell.serviceLabel.text = "There are no other devices currently offering to share with you"
+                } else {
+                    cell.serviceLabel.text = "There are no other players currently offering to host a game for you to join"
+                }
                 cell.serviceLabel.font = UIFont.systemFont(ofSize: 18.0, weight: .regular)
                 
             } else {
@@ -902,7 +922,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                 cell.hexagonLayer = Polygon.hexagonFrame(in: cell, frame: frame, strokeColor: Palette.tableTop, lineWidth: lineWidth, radius: 10.0)
                 
                 let availableFound = self.available[indexPath.row]
-                let name = availableFound.peer.playerName!
+                let name = availableFound.peer.playerName ?? availableFound.peer.deviceName
                 let state = availableFound.state
                 let oldState = availableFound.oldState
                 var serviceText: String
@@ -912,14 +932,18 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                     if oldState != .notConnected {
                         serviceText = "\(name) has disconnected"
                     } else if self.commsPurpose == .sharing {
-                        serviceText = "View \(name)'s scorecard"
+                        serviceText = "View scorecard on \(availableFound.peer.deviceName)"
                     } else if availableFound.connecting {
                         serviceText = "Connecting to \(name)..."
                     } else {
                         serviceText = "Join \(name)'s game"
                     }
                 case .connected, .recovering:
-                    serviceText = "Connected to \(name). Waiting to start..."
+                    if self.commsPurpose == .sharing {
+                        serviceText = "Viewing Scorecard on\n\(availableFound.peer.deviceName).\nWaiting to start..."
+                    } else {
+                        serviceText = "Connected to \(name). Waiting to start..."
+                    }
                 case .connecting:
                     if self.recoveryMode {
                         serviceText = "Trying to reconnect to \(name)..."
@@ -943,7 +967,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             
             cell = tableView.dequeueReusableCell(withIdentifier: "Host Cell", for: indexPath) as? ClientTableCell
             cell.hexagonLayer?.removeFromSuperlayer()
-            cell.serviceLabelWidthConstraint.constant = min(ScorecardUI.screenWidth - 128, ScorecardUI.screenHeight)
+            cell.serviceLabelWidthConstraint.constant = labelWidth
             
             let frame = CGRect(x: hexagonInset, y: 4.0, width: hexagonWidth, height: cell.frame.height - 8.0)
             cell.hexagonLayer = Polygon.hexagonFrame(in: cell, frame: frame, strokeColor: Palette.roomInterior.withAlphaComponent((self.available.count == 0 ? 1.0 : 1.0)), lineWidth: (self.available.count == 0 ? 2.0 : 1.0), radius: 10.0)
@@ -1019,8 +1043,12 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             if self.hostController == nil {
                 self.hostController = HostController(from: self)
             }
-            self.hostController.start(mode: mode, playerEmail: self.thisPlayer, completion: {
-                self.restart()
+            self.hostController.start(mode: mode, playerEmail: self.thisPlayer, completion: { (returnHome) in
+                if returnHome {
+                    self.dismiss()
+                } else {
+                    self.restart()
+                }
             })
             
         default:
@@ -1038,7 +1066,14 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         self.refreshStatus()
         
         self.checkFaceTime(peer: availableFound.peer, completion: { (faceTimeAddress) in
-            if !self.connect(peer: availableFound.peer, faceTimeAddress: faceTimeAddress) {
+            if self.connect(peer: availableFound.peer, faceTimeAddress: faceTimeAddress) {
+                for index in (0..<self.available.count).reversed() {
+                    if index != row {
+                        // Need to lose any other peers
+                        self.removeEntry(peer: self.available[index].peer)
+                    }
+                }
+            } else {
                 availableFound.connecting = false
             }
             self.refreshStatus()
@@ -1093,35 +1128,40 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     private func setupHostingOptions() {
         self.hostingOptions = 0
         
-        if self.scorecard.settingNearbyPlaying {
-            self.nearbyRow = self.hostingOptions
-            self.hostingOptions += 1
+        if self.commsPurpose == .playing {
+            if self.scorecard.settingNearbyPlaying {
+                self.nearbyRow = self.hostingOptions
+                self.hostingOptions += 1
+            }
+            
+            if self.scorecard.settingOnlinePlayerEmail != nil {
+                self.onlineRow = self.hostingOptions
+                self.hostingOptions += 1
+            }
         }
-        
-        if self.scorecard.settingOnlinePlayerEmail != nil {
-            self.onlineRow = self.hostingOptions
-            self.hostingOptions += 1
-        }
-        
     }
     
     private func showThisPlayer() {
         if self.commsPurpose == .playing {
             if let playerMO = self.scorecard.findPlayerByEmail(self.thisPlayer) {
-                let size = SelectionViewController.thumbnailSize(labelHeight: 0.0)
+                let size = SelectionViewController.thumbnailSize(view: self.view, labelHeight: 0.0)
                 self.thisPlayerThumbnailWidthConstraint.constant = size.width
                 self.thisPlayerThumbnail.set(data: playerMO.thumbnail, name: playerMO.name!, nameHeight: 0.0, diameter: size.width)
                 self.thisPlayerNameLabel.text = "Play as \(playerMO.name!)"
             }
+        } else {
+            self.thisPlayerTitle.isHidden = true
+            self.changePlayerButton.isHidden = true
         }
     }
     
     private func appStateChange(to newState: AppState) {
         if newState != self.appState {
             Utility.debugMessage("client", "Application state \(newState)")
-            
+
             self.appState = newState
-            if newState == .notConnected && !finishing {
+            
+            if (newState == .notConnected || newState == .reconnecting) && !finishing {
                 self.startIdleTimer()
             } else {
                 self.stopIdleTimer()
@@ -1298,8 +1338,13 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             if available.count == 0 {
                 // Just lost last one - need to insert placeholder and update hosting options
                 self.clientTableView.insertRows(at: [IndexPath(row: 0, section: peerSection)], with: .right)
-                for row in 0...1 {
-                    self.clientTableView.reloadRows(at: [IndexPath(row: row, section: hostSection)], with: .automatic)
+                if self.hostingOptions > 0 {
+                    let hostingRows = self.clientTableView.numberOfRows(inSection: self.hostSection)
+                    if hostingRows > 0 {
+                        for row in 0..<hostingRows {
+                            self.clientTableView.reloadRows(at: [IndexPath(row: row, section: hostSection)], with: .automatic)
+                        }
+                    }
                 }
             }
             self.clientTableView.endUpdates()
@@ -1446,6 +1491,8 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         clientViewController.commsPurpose = purpose
         clientViewController.matchDeviceName = matchDeviceName
         clientViewController.completion = completion
+        
+        clientViewController.firstTime = true
         
         viewController.present(clientViewController, animated: true, completion: nil)
     }

@@ -35,7 +35,7 @@ class SlideOutButtonView: UIView {
         }
         set(newValue) {
             self._isHidden = newValue
-            self.showToolbar(newValue)
+            self.showToolbar()
         }
         
     }
@@ -86,7 +86,7 @@ class SlideOutButtonView: UIView {
         self.superview!.addConstraint(bottomConstraint)
     }
     
-    private func showToolbar(_ isHidden: Bool, animated: Bool = true) {
+    private func showToolbar(animated: Bool = true) {
         if self.superview != nil {
             self.button.fillColor = self.buttonFillColor
             self.button.strokeColor = self.buttonStrokeColor
@@ -105,7 +105,7 @@ class SlideOutButtonView: UIView {
             self.buttonWidthConstraint?.constant = buttonWidth
             self.button.frame = CGRect(x: (self.toolbar.frame.width - buttonWidth) / 2.0, y: self.button.frame.minY, width: buttonWidth, height: self.button.frame.height)
             self.contentView.superview!.bringSubviewToFront(self.contentView)
-            let toolbarBottomOffset: CGFloat = (isHidden ? 0 : 88.0 + (self.contentView.superview!.safeAreaInsets.bottom * 0.4))
+            let toolbarBottomOffset: CGFloat = self.distanceFromBottom() + 44.0
             if toolbarBottomOffset != self.toolbarBottomConstraint.constant {
                 if animated {
                     Utility.animate(duration: 0.3) {
@@ -117,5 +117,12 @@ class SlideOutButtonView: UIView {
             }
         }
     }
-
+    
+    public func distanceFromBottom() -> CGFloat {
+        if self.isHidden {
+            return 0.0
+        } else {
+            return 44.0 + (self.contentView.superview!.safeAreaInsets.bottom * 0.4)
+        }
+    }
 }

@@ -65,6 +65,8 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     private var faceTimeAvailable = false
     private var initialising = true
     private var cutCardView: [UILabel] = []
+    private var firstTime = true
+    private var rotated = false
     
     // MARK: - IB Outlets ================================================================ -
     
@@ -141,13 +143,17 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         // Set title
         self.navigationTitle.title = self.formTitle
         
-       // Make sure dealer not too high
+        // Update players
+        self.updateSelectedPlayers(selectedPlayers)
+        
+        // Make sure dealer not too high
         if self.scorecard.dealerIs > self.scorecard.currentPlayers {
             self.scorecard.saveDealer(1)
         }
         
-        self.updateSelectedPlayers(selectedPlayers)
+        // Setup screen
         self.setupScreen(size: self.view.frame.size)
+        
         self.scorecard.saveMaxScores()
         
         // Set nofification for image download
@@ -179,20 +185,20 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
+        self.rotated = true
         self.scorecard.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
     
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        setupScreen(size: UIScreen.main.bounds.size)
-        self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth)
-        self.selectedPlayersView.setHaloColor(color: Palette.halo)
-        self.selectedPlayersView.drawRoom(thumbnailWidth: thumbnailWidth, thumbnailHeight: thumbnailHeight, directions: (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.up), (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.down))
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        self.setupScreen(size: self.view.bounds.size)
+        if self.rotated || self.firstTime {
+            self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth)
+            self.selectedPlayersView.setHaloColor(color: Palette.halo)
+            self.selectedPlayersView.drawRoom(thumbnailWidth: thumbnailWidth, thumbnailHeight: thumbnailHeight, directions: (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.up), (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.down))
+        }
+        
         self.updateButtons(animate: false)
         if self.initialising {
             self.initialising = false
@@ -200,6 +206,8 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         }
         self.refreshPlayers()
         self.showCurrentDealer()
+        self.rotated = false
+        self.firstTime = false
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
@@ -270,7 +278,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             buttonRowHeight = 160
         }
         
-        playerRowHeight = max(48, min(80, (size.height - buttonRowHeight - 100) / CGFloat(scorecard.currentPlayers)))
+        playerRowHeight = max(48, min(80, (size.height - buttonRowHeight - 100) / CGFloat(self.selectedPlayers.count)))
         
     }
     
@@ -524,13 +532,13 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         }
         
         // Hide thumbnails
-        for slot in 0..<self.scorecard.currentPlayers {
+        for slot in 0..<self.self.selectedPlayers.count {
             self.selectedPlayersView.setThumbnailAlpha(slot: slot, alpha: 0.0)
         }
         
         // Set up hidden cards
         var slot = 1
-        for _ in 0..<self.scorecard.currentPlayers {
+        for _ in 0..<self.self.selectedPlayers.count {
             // Position a card on the deck and show back (only subview)
             let cardView = self.cutCardView[slot]
             let button = self.cutForDealerButton!
@@ -543,7 +551,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             cardImageView.alpha = 1.0
             cardView.attributedText = cards[slot].toAttributedString()
             
-            slot = (slot + 1) % self.scorecard.currentPlayers
+            slot = (slot + 1) % self.self.selectedPlayers.count
         }
         
         // Show deck
@@ -555,7 +563,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         
         // Animate cards
         slot = 1
-        for sequence in 0..<self.scorecard.currentPlayers {
+        for sequence in 0..<self.self.selectedPlayers.count {
             
             let animation = UIViewPropertyAnimator(duration: stepDuration, curve: .easeIn) {
                 // Move card to player
@@ -577,7 +585,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             }
             animation.startAnimation(afterDelay: Double(sequence) * afterDuration)
             
-            slot = (slot + 1) % self.scorecard.currentPlayers
+            slot = (slot + 1) % self.self.selectedPlayers.count
         }
     }
     
@@ -598,7 +606,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
                 completion()
             } else {
                 // Next card
-                self.animateTurnCards(afterDuration: afterDuration, stepDuration: stepDuration, slot: (slot + 1) % self.scorecard.currentPlayers, completion: completion)
+                self.animateTurnCards(afterDuration: afterDuration, stepDuration: stepDuration, slot: (slot + 1) % self.self.selectedPlayers.count, completion: completion)
             }
         })
         animation.startAnimation(afterDelay: afterDuration)
@@ -606,7 +614,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     private func animateHideOthers(afterDuration: TimeInterval, stepDuration: TimeInterval, completion: @escaping ()->()) {
         let animation = UIViewPropertyAnimator(duration: stepDuration, curve: .easeIn) {
-            for slot in 0..<self.scorecard.currentPlayers {
+            for slot in 0..<self.self.selectedPlayers.count {
                 self.selectedPlayersView.setAlpha(slot: slot, alpha: 0.0)
                 if slot + 1 != self.scorecard.dealerIs {
                     self.cutCardView[slot].alpha = 0.0
@@ -641,7 +649,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         
         // Animate removal
         let animation = UIViewPropertyAnimator(duration: stepDuration, curve: .easeIn) {
-            for slot in 0..<self.scorecard.currentPlayers {
+            for slot in 0..<self.self.selectedPlayers.count {
                 self.cutCardView[slot].alpha = 0.0
                 self.selectedPlayersView.setAlpha(slot: slot, alpha: 1.0)
                 self.selectedPlayersView.setThumbnailAlpha(slot: slot, alpha: 1.0)
@@ -735,6 +743,8 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         gamePreviewViewController.rabbitMQService = rabbitMQService
         gamePreviewViewController.computerPlayerDelegate = computerPlayerDelegates
         gamePreviewViewController.delegate = delegate
+        
+        gamePreviewViewController.firstTime =  true
         
         viewController.present(gamePreviewViewController, animated: true, completion: {
             showCompletion?()

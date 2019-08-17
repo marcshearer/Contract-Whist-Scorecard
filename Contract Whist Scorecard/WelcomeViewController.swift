@@ -137,11 +137,8 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         
         scorecard.initialise(from: self, players: 4, maxRounds: 25)
         
-        (self.recoveryAvailable, self.recoverOnline) = scorecard.recovery.checkOnlineRecovery()
-        
-        if !recoveryAvailable {
-            scorecard.reset()
-        }
+        // Check if recovering
+        self.checkRecovery()
         
         // Setup scroll view
         self.scrollView = ScrollView(self.actionScrollView)
@@ -583,9 +580,10 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     }
     
     private func optionCompletion() {
-        scorecard.checkNetworkConnection(button: nil, label: syncLabel, labelHeightConstraint: syncLabelHeightConstraint, labelHeight: syncLabelHeight)
-        getCloudVersion(async: true)
-        setupButtons()
+        self.scorecard.checkNetworkConnection(button: nil, label: self.syncLabel, labelHeightConstraint: self.syncLabelHeightConstraint, labelHeight: self.syncLabelHeight)
+        self.getCloudVersion(async: true)
+        self.checkRecovery()
+        self.setupButtons()
     }
     
     // MARK: - Popover Overrides ================================================================ -
@@ -600,6 +598,15 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     }
 
     // MARK: - Utility Routines ======================================================================== -
+    
+    private func checkRecovery() {
+        
+        (self.recoveryAvailable, self.recoverOnline) = scorecard.recovery.checkOnlineRecovery()
+        
+        if !recoveryAvailable {
+            scorecard.reset()
+        }
+    }
     
     private func setTitle() {
         if Scorecard.adminMode {
@@ -651,7 +658,6 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         if self.scorecard.recovery.checkRecovery() {
             // Warn that this is irreversible
             self.warnResumeGame(gameType: "online", okHandler: {
-                self.scorecard.recoveryMode = false
                 self.onlineGame(cell)
             })
         } else {
@@ -670,7 +676,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     
     private func hostGame() -> Void {
         let hostController = HostController(from: self)
-        hostController.start(recoveryMode: true, completion: {
+        hostController.start(recoveryMode: true, completion: { (_) in
             self.optionCompletion()
         })
     }

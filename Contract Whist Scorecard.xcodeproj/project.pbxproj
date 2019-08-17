@@ -29,7 +29,7 @@
 		B20DA0441E142D1E0040221D /* SelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DA0431E142D1E0040221D /* SelectionViewController.swift */; };
 		B20DA04C1E179DC70040221D /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DA04B1E179DC70040221D /* WelcomeViewController.swift */; };
 		B20DA0521E1FED040040221D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B20DA0511E1FED040040221D /* CloudKit.framework */; };
-		B211E137224164FB00B48D64 /* SelectPlayers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211E136224164FB00B48D64 /* SelectPlayers.swift */; };
+		B211E137224164FB00B48D64 /* SelectPlayersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211E136224164FB00B48D64 /* SelectPlayersViewController.swift */; };
 		B214FB8C1FCADC7B00F4F39B /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B214FB8A1FCADC7B00F4F39B /* Interface.storyboard */; };
 		B214FB8E1FCADC7B00F4F39B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B214FB8D1FCADC7B00F4F39B /* Assets.xcassets */; };
 		B214FB951FCADC7B00F4F39B /* Contract Whist Watch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B214FB941FCADC7B00F4F39B /* Contract Whist Watch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -111,7 +111,7 @@
 		B2B7550B1E5DEA6A00B1313B /* Reconcile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B7550A1E5DEA6A00B1313B /* Reconcile.swift */; };
 		B2B7550D1E619A3F00B1313B /* DataAdmin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B7550C1E619A3F00B1313B /* DataAdmin.swift */; };
 		B2BC51C71F7B5E8C0065F07D /* String Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BC51C61F7B5E8C0065F07D /* String Extensions.swift */; };
-		B2C051041EDF194C009DE37F /* Multipeeer Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C051031EDF194C009DE37F /* Multipeeer Class.swift */; };
+		B2C051041EDF194C009DE37F /* Multipeer Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C051031EDF194C009DE37F /* Multipeer Class.swift */; };
 		B2C054781FB8B55700846F6E /* ConfirmCountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */; };
 		B2D2AAB01E1FF8A600E211A9 /* SyncViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D2AAAF1E1FF8A600E211A9 /* SyncViewController.swift */; };
 		B2D2D2DC1ED9975A00CA7B3A /* ClientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D2D2DB1ED9975A00CA7B3A /* ClientViewController.swift */; };
@@ -221,7 +221,7 @@
 		B20DA04B1E179DC70040221D /* WelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		B20DA04F1E1FEC5F0040221D /* Contract Whist Scorecard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Contract Whist Scorecard.entitlements"; sourceTree = "<group>"; };
 		B20DA0511E1FED040040221D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
-		B211E136224164FB00B48D64 /* SelectPlayers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPlayers.swift; sourceTree = "<group>"; };
+		B211E136224164FB00B48D64 /* SelectPlayersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPlayersViewController.swift; sourceTree = "<group>"; };
 		B214FB881FCADC7B00F4F39B /* Contract Whist Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Contract Whist Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B214FB8B1FCADC7B00F4F39B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		B214FB8D1FCADC7B00F4F39B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -305,7 +305,7 @@
 		B2B7550A1E5DEA6A00B1313B /* Reconcile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reconcile.swift; sourceTree = "<group>"; };
 		B2B7550C1E619A3F00B1313B /* DataAdmin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataAdmin.swift; sourceTree = "<group>"; };
 		B2BC51C61F7B5E8C0065F07D /* String Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String Extensions.swift"; sourceTree = "<group>"; };
-		B2C051031EDF194C009DE37F /* Multipeeer Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Multipeeer Class.swift"; sourceTree = "<group>"; };
+		B2C051031EDF194C009DE37F /* Multipeer Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Multipeer Class.swift"; sourceTree = "<group>"; };
 		B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmCountViewController.swift; sourceTree = "<group>"; };
 		B2D2AAAF1E1FF8A600E211A9 /* SyncViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncViewController.swift; sourceTree = "<group>"; };
 		B2D2D2DB1ED9975A00CA7B3A /* ClientViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ClientViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -441,7 +441,7 @@
 			isa = PBXGroup;
 			children = (
 				B25FC7C322D0733C00D2E651 /* SelectPlayersViewController.storyboard */,
-				B211E136224164FB00B48D64 /* SelectPlayers.swift */,
+				B211E136224164FB00B48D64 /* SelectPlayersViewController.swift */,
 			);
 			name = "Select Players";
 			sourceTree = "<group>";
@@ -872,7 +872,7 @@
 				B2F70E511EE8BC470092C19F /* Host Controller Class.swift */,
 				B2F7281A1F6D74F9006F0941 /* Invite.swift */,
 				B2767C1D2110061B0029155E /* Loopback Class.swift */,
-				B2C051031EDF194C009DE37F /* Multipeeer Class.swift */,
+				B2C051031EDF194C009DE37F /* Multipeer Class.swift */,
 				B2D8104D225AF7A7005A86A5 /* Multipeer logger.swift */,
 				B2F7281C1F7199AE006F0941 /* RabbitMQ Class.swift */,
 				B235D2BD1F82288A0019384B /* Notification Simulator.swift */,
@@ -1354,7 +1354,7 @@
 				49075FFC1E0E578E008E06FA /* PlayersViewController.swift in Sources */,
 				B250610020CD7F480030EE8F /* Recovery.swift in Sources */,
 				B267DF75211F41FC0086D521 /* Admin Menu.swift in Sources */,
-				B2C051041EDF194C009DE37F /* Multipeeer Class.swift in Sources */,
+				B2C051041EDF194C009DE37F /* Multipeer Class.swift in Sources */,
 				B243386322E57BE7002EBD40 /* ImageButton.swift in Sources */,
 				B2666A1F1FADAC0700A34CB0 /* Test Extensions.swift in Sources */,
 				B20DA0441E142D1E0040221D /* SelectionViewController.swift in Sources */,
@@ -1362,7 +1362,7 @@
 				B206A1381E50526100E26E96 /* LocationViewController.swift in Sources */,
 				B2B1802821196166008D3BAA /* Contract_Whist_Scorecard.xcdatamodeld in Sources */,
 				B2DD5D7C1ED1A87600725B55 /* Graph View Class.swift in Sources */,
-				B211E137224164FB00B48D64 /* SelectPlayers.swift in Sources */,
+				B211E137224164FB00B48D64 /* SelectPlayersViewController.swift in Sources */,
 				B2693CCD22C88B6900596D85 /* History Viewer.swift in Sources */,
 				B2DD5D7E1ED323F400725B55 /* GraphViewController.swift in Sources */,
 				B2361A3A22D5B9DD007D88BB /* ConfirmPlayedViewController.swift in Sources */,

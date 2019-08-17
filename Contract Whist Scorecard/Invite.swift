@@ -202,7 +202,7 @@ class Invite {
         
         // Assign a completion handler
         uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecord.ID]?, error: Error?) -> Void in
-            Utility.mainThread { [unowned self] in
+            Utility.mainThread {
                 if error != nil {
                     self.completion(false, "Unable to connect to iCloud")
                     return

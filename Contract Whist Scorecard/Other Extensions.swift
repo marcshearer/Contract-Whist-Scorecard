@@ -55,12 +55,20 @@ class CustomViewController : UIViewController {
             super.viewDidLoad()
             Utility.debugMessage(self.className(), "didLoad =========================================")
         }
+        self.isModalInPopover = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
         Utility.mainThread {
             super.viewDidAppear(animated)
             Utility.debugMessage(self.className(), "didAppear ---------------------------------------")
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        Utility.mainThread {
+            super.viewWillAppear(animated)
+            Utility.debugMessage(self.className(), "willAppear ---------------------------------------")
         }
     }
     

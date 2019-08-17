@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait">
+    <device id="retina4_0" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -16,11 +16,11 @@
             <objects>
                 <viewController storyboardIdentifier="RoundSummaryViewController" title="Round Summary" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FQp-co-xnK" customClass="RoundSummaryViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="eJU-jx-Ao1">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="120" translatesAutoresizingMaskIntoConstraints="NO" id="r0e-On-sEv">
-                                <rect key="frame" x="57" y="57" width="300" height="219"/>
+                                <rect key="frame" x="10" y="0.0" width="300" height="219"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="eQ5-fh-Hkw"/>
@@ -31,7 +31,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1 Under" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="40" translatesAutoresizingMaskIntoConstraints="NO" id="UAK-eu-59d">
-                                <rect key="frame" x="72" y="261" width="270" height="365.5"/>
+                                <rect key="frame" x="29" y="219" width="270" height="96"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="270" id="Vs7-P1-coH"/>
                                     <constraint firstAttribute="height" constant="96" id="ePW-W3-Xru"/>
@@ -41,7 +41,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player 1 bid x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="cld-jQ-HAn">
-                                <rect key="frame" x="87" y="634" width="240" height="36"/>
+                                <rect key="frame" x="306" y="88" width="240" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="fFp-Bi-8M5"/>
                                 </constraints>
@@ -50,7 +50,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player 2 bid x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="3wM-w4-4DI">
-                                <rect key="frame" x="87" y="678" width="240" height="36"/>
+                                <rect key="frame" x="306" y="132" width="240" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="FMl-43-FC4"/>
                                 </constraints>
@@ -59,7 +59,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player 3 bid x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="8aH-vc-6ie">
-                                <rect key="frame" x="87" y="722" width="240" height="36"/>
+                                <rect key="frame" x="306" y="176" width="240" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="rPz-oj-uoT"/>
                                 </constraints>
@@ -68,8 +68,9 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player 4 bid x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="p0z-M5-FE8">
-                                <rect key="frame" x="87" y="766" width="240" height="36"/>
+                                <rect key="frame" x="306" y="220" width="240" height="36"/>
                                 <constraints>
+                                    <constraint firstAttribute="height" constant="36" id="rdO-2S-Ixe"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="vra-Cb-QGn"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
@@ -77,7 +78,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aH9-sF-nma" userLabel="Finish Button" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="8" y="44" width="20" height="22"/>
+                                <rect key="frame" x="8" y="0.0" width="20" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="22" id="Tqv-Oy-Kqg"/>
                                     <constraint firstAttribute="width" constant="20" id="VEW-Cu-BFv"/>
@@ -94,24 +95,24 @@
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="HcB-aq-CP7" firstAttribute="bottom" secondItem="p0z-M5-FE8" secondAttribute="bottom" constant="60" id="1dd-lf-s4G"/>
-                            <constraint firstItem="UAK-eu-59d" firstAttribute="top" secondItem="HcB-aq-CP7" secondAttribute="top" constant="217.00000000000003" id="62D-bC-jCz"/>
+                            <constraint firstItem="r0e-On-sEv" firstAttribute="bottom" secondItem="UAK-eu-59d" secondAttribute="top" id="1uw-NE-sAE"/>
+                            <constraint firstItem="UAK-eu-59d" firstAttribute="centerY" secondItem="eJU-jx-Ao1" secondAttribute="centerY" id="5O4-t5-L10"/>
                             <constraint firstItem="r0e-On-sEv" firstAttribute="centerX" secondItem="HcB-aq-CP7" secondAttribute="centerX" id="6iy-NE-rEH"/>
                             <constraint firstItem="r0e-On-sEv" firstAttribute="leading" secondItem="HcB-aq-CP7" secondAttribute="leading" constant="10" id="9F3-zC-tKI"/>
                             <constraint firstItem="8aH-vc-6ie" firstAttribute="top" secondItem="3wM-w4-4DI" secondAttribute="bottom" constant="8" id="FEn-mc-ShZ"/>
                             <constraint firstItem="3wM-w4-4DI" firstAttribute="top" secondItem="cld-jQ-HAn" secondAttribute="bottom" constant="8" id="GS9-cg-eEM"/>
                             <constraint firstItem="cld-jQ-HAn" firstAttribute="centerX" secondItem="HcB-aq-CP7" secondAttribute="centerX" id="JqT-Kv-UDr"/>
-                            <constraint firstItem="r0e-On-sEv" firstAttribute="top" secondItem="eJU-jx-Ao1" secondAttribute="topMargin" constant="13" id="OC8-YX-WwJ"/>
+                            <constraint firstItem="r0e-On-sEv" firstAttribute="top" secondItem="eJU-jx-Ao1" secondAttribute="topMargin" id="OC8-YX-WwJ"/>
                             <constraint firstItem="p0z-M5-FE8" firstAttribute="top" secondItem="8aH-vc-6ie" secondAttribute="bottom" constant="8" id="QEc-iP-dIM"/>
                             <constraint firstItem="p0z-M5-FE8" firstAttribute="centerX" secondItem="HcB-aq-CP7" secondAttribute="centerX" id="SS5-7q-qXd"/>
-                            <constraint firstItem="8aH-vc-6ie" firstAttribute="leading" secondItem="eJU-jx-Ao1" secondAttribute="leadingMargin" constant="280" id="VD5-8t-GqZ"/>
+                            <constraint firstItem="8aH-vc-6ie" firstAttribute="centerX" secondItem="cld-jQ-HAn" secondAttribute="centerXWithinMargins" id="VD5-8t-GqZ"/>
                             <constraint firstItem="8aH-vc-6ie" firstAttribute="centerX" secondItem="HcB-aq-CP7" secondAttribute="centerX" id="Vw4-lY-1sS"/>
-                            <constraint firstItem="cld-jQ-HAn" firstAttribute="leading" secondItem="eJU-jx-Ao1" secondAttribute="leadingMargin" constant="280" id="YVD-JA-geo"/>
-                            <constraint firstItem="3wM-w4-4DI" firstAttribute="leading" secondItem="eJU-jx-Ao1" secondAttribute="leadingMargin" constant="280" id="acA-h3-0YE"/>
-                            <constraint firstItem="p0z-M5-FE8" firstAttribute="leading" secondItem="eJU-jx-Ao1" secondAttribute="leadingMargin" constant="280" id="c1e-S0-mvc"/>
+                            <constraint firstItem="cld-jQ-HAn" firstAttribute="centerX" secondItem="HcB-aq-CP7" secondAttribute="centerX" multiplier="1.5" id="YVD-JA-geo"/>
+                            <constraint firstItem="3wM-w4-4DI" firstAttribute="centerX" secondItem="cld-jQ-HAn" secondAttribute="centerXWithinMargins" id="acA-h3-0YE"/>
+                            <constraint firstItem="p0z-M5-FE8" firstAttribute="centerX" secondItem="cld-jQ-HAn" secondAttribute="centerXWithinMargins" id="c1e-S0-mvc"/>
                             <constraint firstItem="UAK-eu-59d" firstAttribute="centerX" secondItem="HcB-aq-CP7" secondAttribute="centerX" id="gB7-FO-AHy"/>
-                            <constraint firstItem="cld-jQ-HAn" firstAttribute="top" secondItem="HcB-aq-CP7" secondAttribute="top" constant="50" id="hG4-eN-jJV"/>
+                            <constraint firstItem="cld-jQ-HAn" firstAttribute="centerY" secondItem="HcB-aq-CP7" secondAttribute="centerY" constant="-54" id="hG4-eN-jJV"/>
                             <constraint firstItem="aH9-sF-nma" firstAttribute="leading" secondItem="HcB-aq-CP7" secondAttribute="leading" constant="8" id="i37-8t-l3r"/>
-                            <constraint firstItem="HcB-aq-CP7" firstAttribute="bottom" secondItem="UAK-eu-59d" secondAttribute="bottom" constant="235.33333333333326" id="kzl-Wd-JTe"/>
                             <constraint firstItem="UAK-eu-59d" firstAttribute="leading" secondItem="eJU-jx-Ao1" secondAttribute="leadingMargin" constant="9" id="oj8-dn-lgE"/>
                             <constraint firstItem="aH9-sF-nma" firstAttribute="top" secondItem="HcB-aq-CP7" secondAttribute="top" id="yca-zg-iZB"/>
                             <constraint firstItem="3wM-w4-4DI" firstAttribute="centerX" secondItem="HcB-aq-CP7" secondAttribute="centerX" id="zco-iQ-RQt"/>
@@ -125,7 +126,14 @@
                                 <exclude reference="hG4-eN-jJV"/>
                                 <exclude reference="acA-h3-0YE"/>
                                 <exclude reference="VD5-8t-GqZ"/>
+                                <exclude reference="1uw-NE-sAE"/>
                                 <exclude reference="c1e-S0-mvc"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=compact">
+                            <mask key="constraints">
+                                <exclude reference="5O4-t5-L10"/>
+                                <include reference="1uw-NE-sAE"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=compact-widthClass=compact">
@@ -179,7 +187,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="9825" y="204"/>
+            <point key="canvasLocation" x="9824.6376811594218" y="203.57142857142856"/>
         </scene>
     </scenes>
     <resources>

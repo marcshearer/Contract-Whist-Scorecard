@@ -47,6 +47,7 @@ class Palette {
     static let madeContractText = UIColor(named: "Made Contract Text")!
     static let roomInterior = UIColor(named: "Room Interior")!
     static let roomInteriorText = UIColor(named: "Room Interior Text")!
+    static let roomInteriorTextContrast = UIColor(named: "Room Interior Text Contrast")!
     static let sectionHeading = UIColor(named: "Section Heading")!
     static let sectionHeadingText = UIColor(named: "Section Heading Text")!
     static let sectionHeadingTextContrast = UIColor(named: "Section Heading Text Contrast")!

@@ -70,7 +70,7 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsServerHandlerDelegat
         completion?()
     }
     
-    func reset() {
+    func reset(reason: String?) {
         // Not implemented
     }
 

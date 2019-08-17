@@ -64,7 +64,7 @@ class Whisper {
                 self.label.layer.borderWidth = 1.0
                 self.label.font = UIFont.systemFont(ofSize: 16)
                 self.label.textAlignment = .center
-                ScorecardUI.roundCorners(self.label)
+                ScorecardUI.roundCorners(self.label, percent: 5.0)
                 
                 // Show label
                 self.view.addSubview(self.label)

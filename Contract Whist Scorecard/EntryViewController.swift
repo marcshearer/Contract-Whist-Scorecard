@@ -268,7 +268,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             self.navigationImageHeightConstraint.constant = 0.0
             self.footerHeightConstraint.constant = 0.0
             self.toolbarHeightConstraint.constant = 44.0
-            instructionSection = ScorecardUI.portraitPhone()
+            instructionSection = !ScorecardUI.landscapePhone()
         } else {
             self.bannerHeightConstraint.constant = 44.0
             self.navigationImageHeightConstraint.constant = 44.0 + self.view.safeAreaInsets.top

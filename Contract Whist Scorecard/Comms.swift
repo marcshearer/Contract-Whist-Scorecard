@@ -188,7 +188,7 @@ protocol CommsHandlerDelegate : class {
 
     func disconnect(from commsPeer: CommsPeer?, reason: String, reconnect: Bool)
     
-    func reset()
+    func reset(reason: String?)
 
     func connectionInfo()
     
@@ -215,6 +215,10 @@ extension CommsHandlerDelegate {
     
     func disconnect(reason: String, reconnect: Bool) {
         disconnect(from: nil, reason: reason, reconnect: reconnect)
+    }
+    
+    func reset() {
+        reset(reason: nil)
     }
     
     func debugMessage(_ message: String) {

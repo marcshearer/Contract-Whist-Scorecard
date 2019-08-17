@@ -41,7 +41,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
     private weak var parentViewController: UIViewController!
     private weak var selectionViewController: SelectionViewController!
     private var playerData: [PlayerData] = []
-    private var completion: (()->())?
+    private var completion: ((Bool)->())?
     private var startMode: ConnectionMode?
     private var unique = 0
     private var observer: NSObjectProtocol?
@@ -96,7 +96,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
         super.init()
     }
     
-    public func start(mode: ConnectionMode? = nil, playerEmail: String? = nil, recoveryMode: Bool = false, completion: (()->())? = nil) {
+    public func start(mode: ConnectionMode? = nil, playerEmail: String? = nil, recoveryMode: Bool = false, completion: ((Bool)->())? = nil) {
         
         self.startMode = mode
         self.playerData = []
@@ -157,7 +157,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
                         }
                     }
                 } else {
-                    self.exitHost()
+                    self.exitHost(returnHome: false)
                 }
             })
         } else {
@@ -317,6 +317,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
                         }
                         if !error {
                             self.scorecard.refreshState(to: peer)
+                            self.lastMessage = "" // Clear last message to force re-transmission
                             self.sendPlayers()
                             self.refreshPlayers()
                         }
@@ -386,7 +387,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
         var remoteMessage: String?
         if self.canProceed {
             message = "Ready to start game"
-            remoteMessage = "Waiting for host\nto start game"
+            remoteMessage = "Waiting for the host\nto start the game"
         } else if self.recoveryMode {
             message = "Waiting for other players\nto reconnect..."
         } else if self.connectionMode == .online {
@@ -427,7 +428,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
                 if defaultConnectionMode == .unknown {
                     self.setConnectionMode(.unknown)
                 } else if !exiting {
-                    self.exitHost()
+                    self.exitHost(returnHome: false)
                 }
             case .broadcasting:
                 break
@@ -533,10 +534,10 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
         }
     }
     
-    internal func gamePreviewCompletion() {
-        self.stopHostBroadcast()
+    internal func gamePreviewCompletion(returnHome: Bool) {
         self.gamePreviewViewController = nil
         self.gameInProgress = false
+        self.exitHost(returnHome: returnHome)
     }
     
     internal func gamePreview(isConnected playerMO: PlayerMO) -> Bool {
@@ -802,25 +803,22 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
         self.hostService?.start(email: email, queueUUID: queueUUID, name: name, invite: invite, recoveryMode: self.scorecard.recoveryMode)
     }
     
-    public func finishHost() {
+    public func exitHost(returnHome: Bool) {
+        self.exiting = true
         self.scorecard.sendScores = false
         self.scorecard.commsDelegate?.disconnect(reason: "\(self.playerData[0].name) has stopped hosting", reconnect: false)
         self.stopHostBroadcast(completion: {
+            Utility.debugMessage("host", "Completion") // TODO remove
             self.takeDelegates(nil)
             self.scorecard.commsDelegate = nil
             self.hostService = nil
             self.scorecard.resetSharing()
             self.clearHandlerCompleteNotification(observer: self.observer)
             self.scorecard.resetOverrideSettings()
-            self.completion?()
+            self.completion?(returnHome)
         })
     }
-    
-    private func exitHost() {
-        self.exiting = true
-        self.finishHost()
-    }
-    
+
     private func stopHostBroadcast(completion: (()->())? = nil) {
         // Revert to normal sharing (if enabled)
         if let service = self.hostService {

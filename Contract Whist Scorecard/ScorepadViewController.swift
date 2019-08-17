@@ -466,8 +466,6 @@ class ScorepadViewController: CustomViewController,
             headerTableView.reloadData()
             bodyTableView.reloadData()
             footerTableView.reloadData()
-        } else if let editedRound = editedRound {
-            bodyTableView.reloadRows(at: [IndexPath(row: editedRound - 1, section: 0)], with: .automatic)
         }
         formatButtons()
     }
@@ -800,12 +798,9 @@ class ScorepadViewController: CustomViewController,
 
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        if collectionView.tag >= 1000000
-        {
+        if collectionView.tag >= 1000000 {
             return scorecard.currentPlayers + 1
-        }
-        else
-        {
+        } else {
             return (scorecard.currentPlayers * bodyColumns) + 1
         }
     }

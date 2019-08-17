@@ -149,8 +149,9 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
         return result
     }
     
-    internal func refreshData(recordList: [DataTableViewerDataSource]) {
+    internal func refreshData(recordList: [DataTableViewerDataSource]) -> [DataTableViewerDataSource] {
         self.getHistory()
+        return history.games
     }
     
     internal func completion() {

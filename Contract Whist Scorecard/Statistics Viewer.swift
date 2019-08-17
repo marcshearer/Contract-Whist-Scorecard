@@ -115,8 +115,9 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
         return result
     }
     
-    internal func refreshData(recordList: [DataTableViewerDataSource]) {
+    internal func refreshData(recordList: [DataTableViewerDataSource])->[DataTableViewerDataSource] {
         scorecard.refreshPlayerDetailList(recordList as! [PlayerDetail])
+        return recordList
     }
     
     

@@ -703,6 +703,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     private func restart() {
         self.scorepadViewController = nil
         self.clientService?.stop()
+        self.scorecard.stopSharing()
         self.clientService?.start(email: self.thisPlayer, name: self.thisPlayerName)
         self.hostController = nil
         self.available = []
@@ -1150,7 +1151,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                 self.thisPlayerNameLabel.text = "Play as \(playerMO.name!)"
             }
         } else {
-            self.thisPlayerTitle.isHidden = true
+            self.thisPlayerNameLabel.text = "Choose Device to View"
             self.changePlayerButton.isHidden = true
         }
     }

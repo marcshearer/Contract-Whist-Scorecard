@@ -158,7 +158,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
     }
     	
     internal func reset(reason: String? = nil) {
-        // Over-ridden in client
+        // Over-ridden in client and server
     }
 
     internal func connectionInfo() {
@@ -251,7 +251,9 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
                             }
                             self.endSessions(matchDeviceName: deviceName)
                             broadcastPeer.state = .notConnected
-                            broadcastPeer.reconnect = false
+                            if reason != "Reset" {
+                                broadcastPeer.reconnect = false
+                            }
                             if stateDelegate != nil {
                                 stateDelegate?.stateChange(for: broadcastPeer.commsPeer, reason: reason)
                             }
@@ -361,6 +363,13 @@ class MultipeerServerService : MultipeerService, CommsServerHandlerDelegate, MCN
         changeState(to: .notStarted)
         completion?()
     }
+    
+    override internal func reset(reason: String? = nil) {
+        self.debugMessage("Resetting")
+        self.disconnect(reason: reason ?? "Reset", reconnect: true)
+    }
+    
+
     
     // MARK: - Comms Handler State handler =================================================================== -
 
@@ -531,7 +540,7 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
     }
     
     internal override func reset(reason: String? = nil) {
-        self.debugMessage("Restart browsing")
+        self.debugMessage("Restart nearby peer browsing")
         self.disconnect(reason: reason ?? "Reset", reconnect: true)
         self.client.browser.stopBrowsingForPeers()
         self.client.browser.startBrowsingForPeers()

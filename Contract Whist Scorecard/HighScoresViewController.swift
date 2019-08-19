@@ -30,6 +30,9 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
     private var handsMadeParticipants: [ParticipantMO]!
     private var twosMadeParticipants: [ParticipantMO]!
     private var longestWinStreak: [(streak: Int, participantMO: ParticipantMO?)]!
+    private var sections: Int = 0
+    private var sectionHeight: CGFloat = 0.0
+    private let sectionHeaderHeight: CGFloat = 18.0
     
     // MARK: - IB Outlets ============================================================================== -
 
@@ -56,17 +59,21 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
         finishButton.setImage(UIImage(named: self.backImage), for: .normal)
         finishButton.setTitle(self.backText)
         
+        self.sections = (self.scorecard.settingBonus2 ? 4 : 3)
+        
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         positionPopup()
+        self.tableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
         self.tableView.reloadData()
         view.setNeedsLayout()
     }
     
     override func viewDidLayoutSubviews() {
-        tableView.isScrollEnabled = self.tableView.frame.size.height <= ((self.scorecard.settingBonus2 ? 4 : 3) * 160)
+        self.sectionHeight = max(150.0, (self.tableView.frame.height - self.sectionHeaderHeight) / CGFloat(self.sections))
+        tableView.isScrollEnabled = self.tableView.frame.height < (CGFloat(self.sections) * self.sectionHeight) + self.sectionHeaderHeight
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -74,7 +81,7 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if tableView.tag == 1 {
             // Section table view
-            return 0
+            return sectionHeaderHeight
         } else {
             // Scores table view
             return 30
@@ -85,7 +92,7 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
         
         if tableView.tag == 1 {
             // Section table view - no sections
-            return nil
+            return UIView()
         } else {
             let view = UILabel(frame: CGRect(x: 0.0, y: 0.0, width: tableView.frame.width, height: 30.0))
             view.backgroundColor = UIColor.clear
@@ -128,6 +135,14 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
         }
     }
     
+    internal func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if tableView.tag == 1 {
+            return self.sectionHeight
+        } else {
+            return 36
+        }
+    }
+    
     internal func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath){
         if tableView.tag == 1 {
             // Main section table view
@@ -144,21 +159,23 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
             
             cell = tableView.dequeueReusableCell(withIdentifier: "High Scores Section Cell", for: indexPath) as! HighScoresSectionCell
             let rightJustify = (indexPath.row % 2 == 0)
-            let height = cell.leftFiller.frame.height
+            let height = self.sectionHeight - 10.0
             let width = height / 3.0
             
             if rightJustify {
                 cell.leftFillerWidthConstraint.constant = width
                 cell.rightFillerWidthConstraint.constant = 0.0
-                Polygon.roundedMask(to: cell.leftFiller, definedBy: [PolygonPoint(x: 0.0, y: 0.0),
-                                                                     PolygonPoint(x: 0.0, y: height),
-                                                                     PolygonPoint(x: width, y: height / 2.0)])
+                Polygon.roundedMask(to: cell.leftFiller,
+                                    definedBy: [PolygonPoint(x: 0.0, y: 0.0, radius: 3.0),
+                                                PolygonPoint(x: 0.0, y: height, radius: 3.0),
+                                                PolygonPoint(x: width, y: height / 2.0, pointType: .quadRounded, radius: 5.0)])
             } else {
                 cell.rightFillerWidthConstraint.constant = width
                 cell.leftFillerWidthConstraint.constant = 0.0
-                Polygon.roundedMask(to: cell.rightFiller, definedBy: [PolygonPoint(x: width, y: 0.0),
-                                                                      PolygonPoint(x: width, y: height),
-                                                                      PolygonPoint(x: 0.0, y: height / 2.0)])
+                Polygon.roundedMask(to: cell.rightFiller,
+                                    definedBy: [PolygonPoint(x: width, y: 0.0, radius: 3.0),
+                                                PolygonPoint(x: width, y: height, radius: 3.0),
+                                                PolygonPoint(x: 0.0, y: height / 2.0, pointType: .quadRounded, radius: 5.0)])
             }
             
             return cell
@@ -230,23 +247,27 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
         
         if tableView.tag != 1 {
             // Scores table view
-            switch tableView.tag % 1000000 {
-            case 0:
-                detailParticipantMO = totalScoreParticipants[indexPath.row]
-            case 1:
-                detailParticipantMO = handsMadeParticipants[indexPath.row]
-            case 2:
-                detailParticipantMO = longestWinStreak[indexPath.row].participantMO
-            case 3:
-                detailParticipantMO = twosMadeParticipants[indexPath.row]
-            default:
-                break
-            }
+            let highScoreType = tableView.tag % 1000000
+            if highScoreType == 2 {
+                // Win streak - special case
+                _ = HistoryViewer(from: self, winStreakPlayer: longestWinStreak[indexPath.row].participantMO?.email)
+            } else {
+                switch highScoreType {
+                case 0:
+                    detailParticipantMO = totalScoreParticipants[indexPath.row]
+                case 1:
+                    detailParticipantMO = handsMadeParticipants[indexPath.row]
+                case 3:
+                    detailParticipantMO = twosMadeParticipants[indexPath.row]
+                default:
+                    break
+                }
             
-            let history = History(gameUUID: detailParticipantMO.gameUUID)
-            
-            if history.games.count > 0 {
-                HistoryDetailViewController.show(from: self, gameDetail: history.games[0], sourceView: self.popoverPresentationController?.sourceView)
+                let history = History(gameUUID: detailParticipantMO.gameUUID)
+                
+                if history.games.count > 0 {
+                    HistoryDetailViewController.show(from: self, gameDetail: history.games[0], sourceView: self.popoverPresentationController?.sourceView)
+                }
             }
         }
         return nil

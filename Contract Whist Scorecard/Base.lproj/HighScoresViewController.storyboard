@@ -27,7 +27,7 @@
                                 <items>
                                     <navigationItem title="High Scores" id="dWQ-DL-biR">
                                         <barButtonItem key="leftBarButtonItem" style="plain" id="LP6-Kn-FfC">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="fbp-Rs-oKP" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="fbp-Rs-oKP" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                 <rect key="frame" x="20" y="4" width="62" height="24"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
@@ -51,12 +51,12 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Fm-gP-G4d" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="20"/>
                             </view>
-                            <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="150" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="f90-yc-tzF" userLabel="Section Table View">
-                                <rect key="frame" x="0.0" y="82" width="414" height="418"/>
-                                <color key="backgroundColor" name="Clear"/>
+                            <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="150" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="f90-yc-tzF" userLabel="Section Table View">
+                                <rect key="frame" x="0.0" y="64" width="414" height="436"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="High Scores Section Cell" id="vo8-kP-Ieg" customClass="HighScoresSectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="414" height="150"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="414" height="150"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vo8-kP-Ieg" id="gk3-Xc-hVq">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="150"/>
@@ -227,7 +227,7 @@
                             <constraint firstItem="6Fm-gP-G4d" firstAttribute="top" secondItem="2eD-VG-L3F" secondAttribute="top" id="KFx-za-948"/>
                             <constraint firstItem="oHd-a7-Guf" firstAttribute="top" secondItem="6Fm-gP-G4d" secondAttribute="bottom" id="QtY-6G-RFE"/>
                             <constraint firstAttribute="bottom" secondItem="f90-yc-tzF" secondAttribute="bottom" id="SQI-3R-xm4"/>
-                            <constraint firstItem="f90-yc-tzF" firstAttribute="top" secondItem="oHd-a7-Guf" secondAttribute="bottom" constant="18" id="aT4-fj-6ln"/>
+                            <constraint firstItem="f90-yc-tzF" firstAttribute="top" secondItem="oHd-a7-Guf" secondAttribute="bottom" id="aT4-fj-6ln"/>
                             <constraint firstItem="f90-yc-tzF" firstAttribute="leading" secondItem="2eD-VG-L3F" secondAttribute="leading" id="fk7-Nh-cJB"/>
                             <constraint firstAttribute="trailing" secondItem="6Fm-gP-G4d" secondAttribute="trailing" id="gLM-vH-Pux"/>
                             <constraint firstItem="CuJ-ck-a5r" firstAttribute="top" secondItem="6Fm-gP-G4d" secondAttribute="bottom" id="ith-sn-h2o"/>

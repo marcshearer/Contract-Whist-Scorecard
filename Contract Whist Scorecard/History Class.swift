@@ -25,7 +25,7 @@ class History {
     
     init(gameUUID: String!, getParticipants: Bool = true) {
         // Load a specific game given a participant
-        self.loadGames(getParticipants: getParticipants, gameUUID: gameUUID)
+        self.loadGames(getParticipants: getParticipants, gameUUIDs: [gameUUID])
     }
     
     init(unconfirmed: Bool, getParticipants: Bool = true) {
@@ -33,7 +33,16 @@ class History {
         self.loadGames(getParticipants: getParticipants, unconfirmed: unconfirmed)
     }
     
-    public func loadGames(getParticipants: Bool = false, unconfirmed: Bool = false, gameUUID: String! = nil, includeBF: Bool = false) {
+    init(winStreakFor playerEmail: String) {
+        // Load games making up players best win streak
+        let participants = History.getWinStreakParticipants(playerEmail: playerEmail)
+        if participants.count != 0 {
+            let gameUUIDs = participants.map{$0.gameUUID!}
+            self.loadGames(getParticipants: true, gameUUIDs: gameUUIDs)
+        }
+    }
+    
+    public func loadGames(getParticipants: Bool = false, unconfirmed: Bool = false, gameUUIDs: [String]! = nil, includeBF: Bool = false) {
         // Fetch list of games from data store
         var predicate: NSPredicate!
         var lastGameUUID: String!
@@ -41,9 +50,9 @@ class History {
         if unconfirmed {
             // Load all unconfirmed games
             predicate = NSPredicate(format: "syncRecordID = nil")
-        } else if gameUUID != nil {
-            // Limit to specific game - load participants
-            predicate = NSPredicate(format: "gameUUID = %@", gameUUID)
+        } else if gameUUIDs != nil {
+            // Limit to specific game(s) - load participants
+            predicate = NSPredicate(format: "gameUUID IN %@", gameUUIDs!)
         } else if !includeBF {
             // Exclude brought forward values from pre-history
             predicate = NSPredicate(format: "gameUUID <> 'B/F'")
@@ -239,25 +248,14 @@ class History {
     
     static public func getWinStreaks(playerEmailList: [String], limit: Int = 3) -> [(streak: Int, participantMO: ParticipantMO?)] {
         let nullDate = Date(timeIntervalSinceReferenceDate: 0)
-        var currentStreak = 0
         var longestStreak: [(streak: Int, participantMO: ParticipantMO?)] = []
         
         for (index, playerEmail) in playerEmailList.enumerated() {
             longestStreak.append((0, nil))
-            currentStreak = 0
-            let participants = History.getParticipantRecordsForPlayer(playerEmail: playerEmail)
-            if participants.count > 0 {
-                for participantMO in participants {
-                    if participantMO.place == 1 {
-                        currentStreak += 1
-                        if currentStreak > longestStreak[index].streak {
-                            longestStreak[index].streak = currentStreak
-                            longestStreak[index].participantMO = participantMO
-                        }
-                    } else {
-                        currentStreak = 0
-                    }
-                }
+            let streakParticipants = getWinStreakParticipants(playerEmail: playerEmail)
+            if streakParticipants.count > 0 {
+                longestStreak[index].streak = streakParticipants.count
+                longestStreak[index].participantMO = streakParticipants.last!
             }
         }
         
@@ -265,6 +263,25 @@ class History {
         longestStreak.sort(by: { $0.streak > $1.streak || ($0.streak == $1.streak && $0.participantMO!.datePlayed ?? nullDate > $1.participantMO!.datePlayed ?? nullDate) })
         
         return Array(longestStreak.prefix(3))
+    }
+    
+    static private func getWinStreakParticipants(playerEmail: String) -> [ParticipantMO] {
+        var longestStreak: [ParticipantMO] = []
+        var currentStreak: [ParticipantMO] = []
+        let participants = History.getParticipantRecordsForPlayer(playerEmail: playerEmail)
+        if participants.count > 0 {
+            for participantMO in participants {
+                if participantMO.place == 1 {
+                    currentStreak.append(participantMO)
+                    if currentStreak.count > longestStreak.count {
+                        longestStreak = currentStreak
+                    }
+                } else {
+                    currentStreak = []
+                }
+            }
+        }
+        return longestStreak
     }
     
     static public func getNewParticpantGames(cutoffDate: Date, specificEmail: [String] = []) -> [String] {

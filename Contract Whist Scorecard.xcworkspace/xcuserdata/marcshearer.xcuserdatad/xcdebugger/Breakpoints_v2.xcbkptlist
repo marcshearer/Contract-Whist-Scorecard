@@ -4,22 +4,6 @@
    version = "2.0">
    <Breakpoints>
       <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Contract Whist Scorecard/Invite.swift"
-            timestampString = "587797076.156278"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "259"
-            endingLineNumber = "259"
-            landmarkName = "checkInviteRecords(inviteEmails:checkExpiry:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.SymbolicBreakpoint">
          <BreakpointContent
             shouldBeEnabled = "No"
@@ -46,13 +30,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Contract Whist Scorecard/Multipeer Class.swift"
-            timestampString = "587797459.689376"
+            filePath = "Contract Whist Scorecard/RabbitMQ Class.swift"
+            timestampString = "587908100.280656"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "328"
-            endingLineNumber = "328"
-            landmarkName = "start(email:queueUUID:name:invite:recoveryMode:)"
+            startingLineNumber = "126"
+            endingLineNumber = "126"
+            landmarkName = "reset(reason:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

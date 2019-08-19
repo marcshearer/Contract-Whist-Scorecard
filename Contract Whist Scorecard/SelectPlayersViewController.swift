@@ -402,7 +402,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         }
     }
     
-    internal func syncCompletion(_ errors: Int) {
+    internal func syncCompletion(_ errors: Int, completion: @escaping ()->()) {
         Utility.mainThread {
             self.syncComplete {
                 self.syncFinished = true

@@ -32,7 +32,7 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     private var lastLocation: GameLocation!
     private var historyMode = false
     private var testMode = false
-    private let rowHeight: CGFloat = 44.0
+    private let rowHeight: CGFloat = 50.0
     private var searchTextField: UITextField!
     
     // MARK: - IB Outlets ============================================================================== -
@@ -62,6 +62,10 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
                 self.testMode = true
             }
         }
+       
+        // Make search bar transparent to pick up background - avoids slight translucence
+        self.searchBar.backgroundImage = UIImage()
+        self.searchBar.barTintColor = UIColor.clear
         
         // Setup search text field
         self.searchTextField = searchBar.value(forKey: "searchField") as? UITextField
@@ -318,7 +322,7 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     private func getCurrentLocation() -> Bool {
         var result = false
         
-        searchTextField?.attributedPlaceholder = NSAttributedString(string: "Please wait - getting location", attributes: [NSAttributedString.Key.foregroundColor: Palette.textMessage])
+        searchTextField?.attributedPlaceholder = NSAttributedString(string: "Please wait - getting location", attributes: [NSAttributedString.Key.foregroundColor: Palette.text.withAlphaComponent(0.7)])
         let authorizationStatus = CLLocationManager.authorizationStatus()
         if authorizationStatus == .restricted || authorizationStatus == .denied {
             // Not allowed to use location - go straight to input
@@ -425,7 +429,7 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     }
     
     private func resetPlaceholder() {
-        searchTextField.attributedPlaceholder = NSAttributedString(string: "Enter description of current location", attributes: [NSAttributedString.Key.foregroundColor: Palette.text.withAlphaComponent(0.6)])
+        searchTextField.attributedPlaceholder = NSAttributedString(string: "Enter description of current location", attributes: [NSAttributedString.Key.foregroundColor: Palette.text.withAlphaComponent(0.5)])
         self.searchBar.isUserInteractionEnabled = true
         self.activityIndicator.stopAnimating()
     }

@@ -146,7 +146,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     public func resetConnection() {
         if self.isHosting || self.isSharing {
             // Refresh state to all devices
-            self.refreshState()
+            self.commsDelegate?.reset()
             
         } else {
             // Disconnect (and reconnect)

@@ -34,9 +34,10 @@ import CloudKit
     // A method to manage an error condition
     @objc optional func syncAlert(_ message: String, completion: @escaping () -> ())
     
-    // A method to be called when synchronisation is complete
+    // Method to be called when synchronisation is complete
+    @objc optional func syncCompletionWait(_ errors: Int, completion: @escaping ()->())
     @objc optional func syncCompletion(_ errors: Int)
-    
+
     // A method to be called if the sync is queued
     @objc optional func syncQueued()
     
@@ -1546,19 +1547,29 @@ class Sync {
         let delegate = self.delegate
         // All done
         if Sync.syncInProgress {
-            // Stop timer
-            if self.timer != nil {
-                self.timer.invalidate()
+            // Call the synchronous completion if it is implemented
+            if delegate?.syncCompletionWait != nil {
+                delegate?.syncCompletionWait!(self.errors, completion: self.syncFinalCompletion)
+            } else {
+                // Call the normal delegate completion handler if there was one
+                delegate?.syncCompletion?(self.errors)
+                self.syncFinalCompletion()
             }
-            // Disconnect
-            Sync.syncInProgress = false
-            self.delegate = nil
-            // Call the delegate completion handler if there was one
-            delegate?.syncCompletion?(self.errors)
-            if self.observer != nil {
-                NotificationCenter.default.removeObserver(self.observer!)
-                NotificationCenter.default.post(name: .syncCompletion, object: self, userInfo: nil)
-            }
+        }
+    }
+    
+    private func syncFinalCompletion() {
+        // Stop timer
+        if self.timer != nil {
+            self.timer.invalidate()
+        }
+        // Disconnect
+        Sync.syncInProgress = false
+        self.delegate = nil
+        
+        if self.observer != nil {
+            NotificationCenter.default.removeObserver(self.observer!)
+            NotificationCenter.default.post(name: .syncCompletion, object: self, userInfo: nil)
         }
     }
     

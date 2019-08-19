@@ -28,11 +28,14 @@ class Whisper {
     }
     
      public func show(_ message: String, hideAfter: TimeInterval! = nil) {
-        var newLabel = true
         Utility.mainThread {
+            Utility.debugMessage("whisper", "Show '\(message)' - hide after \(hideAfter ?? 0)")
+            var newLabel = true
             if self.isShown {
+                Utility.debugMessage("whisper", "Shown")
                 if self.view == Utility.getActiveViewController(fullScreenOnly: true)!.view {
                     // Existing whisper on this view - just change label
+                    Utility.debugMessage("whisper", "Same view")
                     newLabel = false
                     self.label.text = message
                     if hideAfter != nil {
@@ -44,6 +47,11 @@ class Whisper {
             }
             
             if newLabel {
+                self.isShown = true
+                
+                // Remove label from any other view
+                self.label.removeFromSuperview()
+
                 // Setup view
                 let viewController = Utility.getActiveViewController(fullScreenOnly: true)!
                 self.view = viewController.view
@@ -71,8 +79,6 @@ class Whisper {
                 self.view.bringSubviewToFront(self.label)
                 self.label.addGestureRecognizer(self.tapGesture)
                 
-                self.isShown = true
-                
                 Utility.animate(duration: 0.5, animations: {
                     self.label.frame = self.frame
                     if hideAfter != nil {
@@ -90,6 +96,8 @@ class Whisper {
     }
     
     public func hide(_ message: String! = nil, after: TimeInterval! = nil) {
+        Utility.debugMessage("whisper", "Hide  - \(self.isShown ? (self.label.text ?? "") : "")")
+        
         if self.isShown {
             if message != nil {
                 self.label.text = message

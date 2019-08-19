@@ -89,6 +89,27 @@ Disconnect and reconnect on shake from client
 4.6 (16)
 Improve connection by implementing certificate received
 
+5.0 (1)
+New UI
+
+5.0 (2)
+White status icons
+Improved sync timings
+Change red in W to room interior in scorepad/entry
+Totals in scorepad bold
+Blank thumbnail if remove several players from selection quickly (lock interaction while animating)
+Blue text in location
+Move last played closer to location and make dark gray as opposed to black
+Separator line colour to background in location
+Line between nav bar and summary in location
+Add / remove player when rotated crashes
+Move suit down in Round Summary
+Defaults back if change 'Play As' and then go back in
+Stretch on High Scores on iPhone X
+Show games in high scores streak when drill
+Tidied up high scores view (especially scroll)
+Added win streak to player detail
+
 Bugs fix now
 ------------
 When initialise app - should make the email you type in your default - i.e. set date first
@@ -108,17 +129,18 @@ Update Walkthrough - esp online game
 
 TODO
 ----
-Game sharing not working - especially check round summary etc
 Avoid re-deal if crash before first deal
 Thumbnail pictures seem to disappear (on host?)
+New Game Summary view (in WhatsApp)
+Background color in Round Summary
 
 Jack
 ----
 Orange(?) graph color icon
 Background color for scorepad (not made) cells in landscape
 Check sync view is OK
-Layout for Game Summary
 Layout for Review
+Crown icon
 
 Medium-term
 -----------

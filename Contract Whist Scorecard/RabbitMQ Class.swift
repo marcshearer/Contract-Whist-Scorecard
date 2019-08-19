@@ -514,6 +514,8 @@ class RabbitMQClientService : RabbitMQService, CommsClientHandlerDelegate, Rabbi
                                     rabbitMQPeer.attach(queue)
                                 }
                                 peerFound = true
+                            } else if rabbitMQPeer.state == .notConnected {
+                                peerFound = true
                             }
                         } else {
                             // New peer - add to our list and notify delegate

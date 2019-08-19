@@ -46,6 +46,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private var bannerContinuationHeight: CGFloat = 44.0
     private var haloWidth: CGFloat = 0.0
     private var firstTime = true
+    private var loadedView = true
+    private var rotated = false
     private var selectedAlpha: CGFloat = 0.5
     private var testMode = false
     private var addPlayerThumbnail: Bool = false
@@ -154,7 +156,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 self.removeUnselected(playerMO!, updateUnselectedCollection: false)
             }
             // Show this player
-            if !self.firstTime {
+            if !self.loadedView {
                 self.showThisPlayer()
             }
         }
@@ -171,6 +173,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
+        self.rotated = true
         self.scorecard.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
@@ -195,7 +198,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             self.selectedPlayersView.drawRoom(thumbnailWidth: self.thumbnailWidth, thumbnailHeight: self.thumbnailHeight, players: self.scorecard.numberPlayers, directions: (ScorecardUI.landscapePhone() ? .none : .up))
         }
 
-        if self.firstTime {
+        if !self.loadedView || self.rotated {
             Utility.mainThread {
                 // Need to do this on main thread to avoid crash
                 self.unselectedCollectionView.reloadData()
@@ -203,6 +206,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
 
         }
         self.firstTime = false
+        self.rotated = false
+        self.loadedView = false
     }
     
     // MARK: - CollectionView Overrides ================================================================ -
@@ -574,6 +579,9 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                     
                     // Clear selected cell
                     self.selectedPlayersView.clear(slot: selectedSlot)
+                    
+                    // Lock the views until animation completes
+                    self.setUserInteraction(false)
                     
                     // Move animation thumbnail to the unselected area
                     let animation = UIViewPropertyAnimator(duration: 0.5, curve: .easeIn) {

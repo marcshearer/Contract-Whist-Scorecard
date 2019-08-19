@@ -974,9 +974,9 @@ class ScorepadViewController: CustomViewController,
             footerCell.scorepadTopLineWeight.constant = thinLineWeight
         
             if narrow {
-                footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 20.0)
+                footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 20.0, weight: .bold)
             } else {
-                footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 24.0)
+                footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 24.0, weight: .bold)
             }
            
             cell=footerCell

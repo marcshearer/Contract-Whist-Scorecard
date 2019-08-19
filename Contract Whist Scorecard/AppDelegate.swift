@@ -27,7 +27,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().barTintColor = Palette.emphasis
         UINavigationBar.appearance().tintColor = UIColor.white
         UINavigationBar.appearance().isOpaque = true
-        // UILabel.appearance().textColor = Palette.text
         UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = Palette.background
         
         registerDefaults()

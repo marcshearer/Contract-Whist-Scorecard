@@ -554,7 +554,7 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="Etu-uG-07S"/>
                                 </connections>
                             </tableView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="navigationImage game banner" translatesAutoresizingMaskIntoConstraints="NO" id="5QO-gP-uIu">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="navigationImage room interior" translatesAutoresizingMaskIntoConstraints="NO" id="5QO-gP-uIu">
                                 <rect key="frame" x="133.5" y="0.0" width="147" height="88"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="5QO-gP-uIu" secondAttribute="height" multiplier="90:54" id="YgV-fZ-BJG"/>
@@ -777,7 +777,7 @@
     <resources>
         <image name="back" width="22" height="22"/>
         <image name="forward" width="22" height="22"/>
-        <image name="navigationImage game banner" width="73" height="43"/>
+        <image name="navigationImage room interior" width="73" height="43"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

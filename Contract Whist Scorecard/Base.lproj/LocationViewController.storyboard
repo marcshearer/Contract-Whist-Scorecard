@@ -70,14 +70,17 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </navigationBar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nmy-2i-PqR" userLabel="Search Bar Background">
+                                <rect key="frame" x="0.0" y="64" width="375" height="60"/>
+                                <color key="backgroundColor" name="Table Top"/>
+                            </view>
                             <searchBar contentMode="redraw" text="Location" placeholder="Revised location for game" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qQB-iI-YgT">
                                 <rect key="frame" x="0.0" y="64" width="375" height="60"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="jgH-Mm-fUI"/>
                                 </constraints>
-                                <color key="tintColor" name="Clear"/>
-                                <color key="barTintColor" name="Table Top"/>
+                                <color key="barTintColor" name="Clear"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="searchBar"/>
@@ -86,49 +89,52 @@
                                     <outlet property="delegate" destination="IhQ-um-kHy" id="0pl-VS-oEi"/>
                                 </connections>
                             </searchBar>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="uko-az-7BL">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="uko-az-7BL">
                                 <rect key="frame" x="0.0" y="124" width="375" height="0.0"/>
                                 <color key="backgroundColor" name="Table Top"/>
                                 <constraints>
                                     <constraint firstAttribute="height" id="swJ-Ow-NCo"/>
                                 </constraints>
+                                <color key="separatorColor" name="Background"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Location Table Cell" id="G6K-I8-6o4" customClass="LocationTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="28" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="G6K-I8-6o4" id="El6-2N-yPd">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="49.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nm7-ff-f43">
-                                                    <rect key="frame" x="8" y="0.0" width="359" height="26.5"/>
+                                                    <rect key="frame" x="8" y="0.0" width="359" height="24"/>
                                                     <color key="backgroundColor" name="Clear"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="24" id="9OU-9j-zGI"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" name="Table Top Text Contrast"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dgU-Sd-uO4">
-                                                    <rect key="frame" x="8" y="26" width="359" height="17.5"/>
+                                                    <rect key="frame" x="8" y="24" width="359" height="16"/>
                                                     <color key="backgroundColor" name="Clear"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <color key="textColor" name="Table Top Text"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="16" id="Moo-7u-4iH"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <color key="textColor" name="Background"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="Nm7-ff-f43" firstAttribute="leading" secondItem="El6-2N-yPd" secondAttribute="leading" constant="8" id="2cB-nT-adc"/>
-                                                <constraint firstAttribute="bottom" secondItem="dgU-Sd-uO4" secondAttribute="bottom" id="E1l-iy-Rh6"/>
                                                 <constraint firstItem="dgU-Sd-uO4" firstAttribute="leading" secondItem="El6-2N-yPd" secondAttribute="leading" constant="8" id="Kgj-PX-li4"/>
                                                 <constraint firstItem="Nm7-ff-f43" firstAttribute="top" secondItem="El6-2N-yPd" secondAttribute="top" id="MX1-Ha-OII"/>
+                                                <constraint firstItem="dgU-Sd-uO4" firstAttribute="top" secondItem="Nm7-ff-f43" secondAttribute="bottom" id="Red-2u-O0J"/>
                                                 <constraint firstAttribute="trailing" secondItem="dgU-Sd-uO4" secondAttribute="trailing" constant="8" id="SAp-bu-cWT"/>
                                                 <constraint firstAttribute="trailing" secondItem="Nm7-ff-f43" secondAttribute="trailing" constant="8" id="lMi-Th-4GS"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="Clear"/>
-                                        <constraints>
-                                            <constraint firstItem="dgU-Sd-uO4" firstAttribute="height" secondItem="G6K-I8-6o4" secondAttribute="height" multiplier="2:5" id="b2b-kw-b6n"/>
-                                            <constraint firstItem="Nm7-ff-f43" firstAttribute="height" secondItem="G6K-I8-6o4" secondAttribute="height" multiplier="3:5" id="wL6-3M-cTI"/>
-                                        </constraints>
                                         <connections>
                                             <outlet property="locationBottomLabel" destination="dgU-Sd-uO4" id="qeV-tl-kZp"/>
                                             <outlet property="locationTopLabel" destination="Nm7-ff-f43" id="LcI-hl-DCS"/>
@@ -173,6 +179,7 @@
                             <constraint firstAttribute="trailing" secondItem="smV-Xs-9Xb" secondAttribute="trailing" id="MVM-nm-0gy"/>
                             <constraint firstItem="syy-j8-mMN" firstAttribute="trailing" secondItem="Od0-bd-l1r" secondAttribute="trailing" id="QAx-vw-oFX"/>
                             <constraint firstItem="X7E-aZ-m9h" firstAttribute="centerX" secondItem="H8a-EA-jDv" secondAttribute="centerX" id="Rwa-IO-ohp"/>
+                            <constraint firstItem="nmy-2i-PqR" firstAttribute="trailing" secondItem="H8a-EA-jDv" secondAttribute="trailing" id="USR-el-aWt"/>
                             <constraint firstItem="8qh-o6-LGR" firstAttribute="trailing" secondItem="Od0-bd-l1r" secondAttribute="trailing" id="UYo-3q-Rm6"/>
                             <constraint firstAttribute="trailing" secondItem="uko-az-7BL" secondAttribute="trailing" id="Umk-UY-Dk5"/>
                             <constraint firstItem="KRq-QD-SP0" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="bBu-uS-Tgq"/>
@@ -180,6 +187,7 @@
                             <constraint firstItem="smV-Xs-9Xb" firstAttribute="top" secondItem="H8a-EA-jDv" secondAttribute="top" id="fma-kJ-pyg"/>
                             <constraint firstAttribute="trailing" secondItem="qQB-iI-YgT" secondAttribute="trailing" id="hsN-Y1-716"/>
                             <constraint firstItem="syy-j8-mMN" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="i56-ib-LM7"/>
+                            <constraint firstItem="nmy-2i-PqR" firstAttribute="leading" secondItem="H8a-EA-jDv" secondAttribute="leading" id="mNZ-55-V9B"/>
                             <constraint firstItem="qQB-iI-YgT" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="mYr-WO-NNZ"/>
                             <constraint firstItem="smV-Xs-9Xb" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="mp5-lJ-9tF"/>
                             <constraint firstItem="8qh-o6-LGR" firstAttribute="top" secondItem="uko-az-7BL" secondAttribute="bottom" id="n7c-EW-izY"/>
@@ -187,6 +195,8 @@
                             <constraint firstItem="KRq-QD-SP0" firstAttribute="top" secondItem="8qh-o6-LGR" secondAttribute="top" id="pc0-c5-T6d"/>
                             <constraint firstItem="qQB-iI-YgT" firstAttribute="top" secondItem="smV-Xs-9Xb" secondAttribute="bottom" id="uP3-f7-Krf"/>
                             <constraint firstItem="uko-az-7BL" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="wgE-dw-hgW"/>
+                            <constraint firstItem="uko-az-7BL" firstAttribute="top" secondItem="nmy-2i-PqR" secondAttribute="bottom" id="wyb-d5-KUC"/>
+                            <constraint firstItem="nmy-2i-PqR" firstAttribute="top" secondItem="smV-Xs-9Xb" secondAttribute="bottom" id="yov-7U-kBI"/>
                             <constraint firstItem="H8a-EA-jDv" firstAttribute="top" secondItem="syy-j8-mMN" secondAttribute="bottom" id="zhO-DQ-rXK"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="H8a-EA-jDv"/>
@@ -222,9 +232,6 @@
         </namedColor>
         <namedColor name="Table Top">
             <color red="0.53725490196078429" green="0.80392156862745101" blue="0.56470588235294117" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Table Top Text">
-            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Table Top Text Contrast">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

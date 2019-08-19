@@ -71,7 +71,8 @@ class CustomViewController : UIViewController {
             Utility.debugMessage(self.className(), "willAppear ---------------------------------------")
         }
     }
-    
+
+    /*
     override func viewDidLayoutSubviews() {
         Utility.mainThread {
             super.viewDidLayoutSubviews()
@@ -85,11 +86,16 @@ class CustomViewController : UIViewController {
             Utility.debugMessage(self.className(), "willLayoutSubviews ------------------------------")
         }
     }
+    */
     
     override var prefersStatusBarHidden: Bool {
         get {
             return AppDelegate.applicationPrefersStatusBarHidden ?? true
         }
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
     
     override var prefersHomeIndicatorAutoHidden: Bool {

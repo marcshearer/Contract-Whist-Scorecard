@@ -349,7 +349,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
                         self.playerData[playerNumber - 1].whisper.show("Connection to \(peer.playerName!) lost. Recovering...")
                     }
                 }
-                if peer.state == .connected && playerNumber < self.playerData.count {
+                if peer.state == .connected && playerNumber <= self.playerData.count {
                     self.playerData[playerNumber - 1].whisper.hide("Connection to \(peer.playerName!) restored")
                 }
             }

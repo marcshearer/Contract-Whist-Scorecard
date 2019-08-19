@@ -27,6 +27,7 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
     private var stageComplete: [SyncStage : Bool] = [:]
     private var errors: Int = 0
     private var currentStage: SyncStage = SyncStage(rawValue: 0)!
+    private var lastStageFinish = Date(timeIntervalSinceReferenceDate: 0.0)
     
     // UI Constants
     private let stageTableView = 1
@@ -83,25 +84,32 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
     
     internal func syncStageComplete(_ stage: SyncStage) {
         Utility.mainThread {
-            // Mark as complete
-            self.stageComplete[stage] = true
             
-            // Update tick and stop activity indicator
-            if let completeCell = self.syncStageTableView.cellForRow(at: IndexPath(row: stage.rawValue, section: 0)) as? SyncStageTableCell {
-                completeCell.statusImage.image = UIImage(named: "boxtick")
-                completeCell.activityIndicator.stopAnimating()
+            if stage.rawValue >= 0 {
+                
+                // Mark as complete
+                self.stageComplete[stage] = true
+                
+                self.reportAfter(delay: 1.0, completion: {
+                    
+                    // Update tick and stop activity indicator
+                    if let completeCell = self.syncStageTableView.cellForRow(at: IndexPath(row: stage.rawValue, section: 0)) as? SyncStageTableCell {
+                        completeCell.statusImage.image = UIImage(named: "boxtick")
+                        completeCell.activityIndicator.stopAnimating()
+                    }
+                    
+                    // Start next activity indicator
+                    if let nextStage = SyncStage(rawValue: stage.rawValue + 1) {
+                        let indexPath = IndexPath(row: nextStage.rawValue, section: 0)
+                        if let nextCell = self.syncStageTableView.cellForRow(at: indexPath) as? SyncStageTableCell {
+                            nextCell.activityIndicator.startAnimating()
+                        }
+                        // Make sure we can see it (in landscape)
+                        self.syncStageTableView.scrollToRow(at: indexPath, at: .none, animated: true)
+                    }
+                    self.view.layoutIfNeeded()
+                })
             }
-            
-            // Start next activity indicator
-            if let nextStage = SyncStage(rawValue: stage.rawValue + 1) {
-                let indexPath = IndexPath(row: nextStage.rawValue, section: 0)
-                if let nextCell = self.syncStageTableView.cellForRow(at: indexPath) as? SyncStageTableCell {
-                    nextCell.activityIndicator.startAnimating()
-                }
-                // Make sure we can see it (in landscape)
-                self.syncStageTableView.scrollToRow(at: indexPath, at: .none, animated: true)
-            }
-            self.view.layoutIfNeeded()
         }
     }
     
@@ -118,9 +126,9 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
     internal func syncCompletion(_ errors: Int) {
         Utility.mainThread {
             self.errors=errors
-            self.stopAnimations(self.errors == 0)
             if self.errors > 0 {
                 // Warn user of errors
+                self.stopAnimations(self.errors == 0)
                 let alertController = UIAlertController(title: "Warning", message: "Warning: Errors occurred during synchronisation", preferredStyle: UIAlertController.Style.alert)
                 alertController.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler:  {
                     (action:UIAlertAction!) -> Void in
@@ -128,12 +136,16 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
                 }))
                 self.present(alertController, animated: true)
             } else if self.errors == 0 {
-                // All OK - return
-                Utility.executeAfter(delay: 3, completion: {
-                    self.returnToCaller()
+                // All OK - return but run out any backed up time first and then wait for 2 secs
+                self.reportAfter(delay: 0.0, completion: {
+                    self.stopAnimations(self.errors == 0)
+                    Utility.executeAfter(delay: 2.0, completion: {
+                        self.returnToCaller()
+                    })
                })
             } else {
                 // Error already notified
+                self.stopAnimations(self.errors == 0)
                 self.returnToCaller()
             }
         }
@@ -215,7 +227,18 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
             self.syncImage.image = UIImage(named: "big cross")
             self.navigationBar.setTitle("Sync Failed")
         }
-        
+        self.syncImage.layoutIfNeeded()
+    }
+    
+    private func reportAfter(delay: TimeInterval, completion: @escaping ()->()) {
+        let dateNow = Date()
+        let timeSinceLast = dateNow.timeIntervalSince(self.lastStageFinish)
+        let waitTime = max(0.0, delay - timeSinceLast)
+        self.lastStageFinish = dateNow + waitTime
+        Utility.executeAfter(delay: waitTime, completion: {
+            print(Date())
+            completion()
+        })
     }
     
     // MARK: - Function to present and dismiss this view ==============================================================

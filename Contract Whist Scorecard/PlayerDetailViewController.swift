@@ -148,7 +148,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             twosValueRow = baseRows + 1
             baseRows += 2
         }
-        tableRows = baseRows + (mode == .amend ? 10 : 8) // Exclude delete if not in amend mode
+        tableRows = baseRows + (mode == .amend ? 11 : 9) // Exclude delete if not in amend mode
         navigationBar.topItem?.title = playerDetail.name
         
         switch self.mode! {
@@ -210,7 +210,10 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return (indexPath.row == imageRow ? 80 :
                (indexPath.row == 0 ? 10 :
-               (indexPath.row % 2 == 1 ? 20 : 44)))
+               (indexPath.row >= baseRows+5 && indexPath.row <= baseRows+8 ? 30 :
+               (indexPath.row == baseRows+9 ? 20 :
+               (indexPath.row == baseRows+10 || indexPath.row == baseRows+10 ? 44 :
+               (indexPath.row % 2 == 1 ? 20 : 44))))))
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -221,7 +224,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         case 0:
             // blank row at the top
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Padding", for: indexPath) as? PlayerDetailCell
-        case nameTitleRow, emailTitleRow, baseRows, baseRows+2, baseRows+4, baseRows+8:
+        case nameTitleRow, emailTitleRow, baseRows, baseRows+2, baseRows+4, baseRows+9:
             // Single input title
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Header Single", for: indexPath) as? PlayerDetailCell
             title = true
@@ -249,10 +252,10 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Image", for: indexPath) as? PlayerDetailCell
             imageView = cell?.playerImage
             ScorecardUI.veryRoundCorners(imageView!)
-        case 8, 10, 12, twosValueRow, baseRows+1, baseRows+3, baseRows+5, baseRows+6, baseRows+7:
+        case 8, 10, 12, twosValueRow, baseRows+1, baseRows+3, baseRows+5, baseRows+6, baseRows+7, baseRows+8:
             // Triple value
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Body Triple", for: indexPath) as? PlayerDetailCell
-        case baseRows+9:
+        case baseRows+10:
             // Single action button
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Body Action Button", for: indexPath) as? PlayerDetailCell
             
@@ -443,6 +446,22 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             cell!.separator.isHidden = true
         case baseRows+7:
             cell!.playerDetailLabel1.textAlignment = .left
+            cell!.playerDetailLabel1.text = "Win streak"
+            let streaks = History.getWinStreaks(playerEmailList: [playerDetail.playerMO.email!])
+            if streaks.first?.streak ?? 0 == 0 {
+                cell?.playerDetailLabel2.text = "0"
+                cell?.playerDetailLabel3.text = ""
+            } else {
+                cell!.playerDetailLabel2.text = "\(streaks.first!.streak)"
+                if let participantMO = streaks.first?.participantMO {
+                    let formatter = DateFormatter()
+                    formatter.setLocalizedDateFormatFromTemplate("dd/MM/yyyy")
+                    cell!.playerDetailLabel3.text = formatter.string(from: participantMO.datePlayed!)
+                }
+            }
+            cell!.separator.isHidden = true
+        case baseRows+8:
+            cell!.playerDetailLabel1.textAlignment = .left
             cell!.playerDetailLabel1.text = "Twos made"
             cell!.playerDetailLabel2.text = "\(playerDetail.maxTwos)"
             if playerDetail.maxTwosDate != nil {
@@ -452,10 +471,10 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             } else {
                 cell!.playerDetailLabel3.text=""
             }
-        case baseRows+8:
+        case baseRows+9:
             // Personal Records Title
             cell!.playerDetailLabel1.text = "Actions"
-        case baseRows+9:
+        case baseRows+10:
             cell!.playerDetailActionButton.setTitle("Delete Player", for: .normal)
             cell!.playerDetailActionButton.addTarget(self, action: #selector(PlayerDetailViewController.actionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
             

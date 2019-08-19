@@ -13,8 +13,8 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
 
     private let scorecard = Scorecard.shared
     
-    public let viewTitle = "History"
-    public let allowSync = true
+    public var viewTitle = "History"
+    public var allowSync = true
     public let initialSortField = "datePlayed"
     public let initialSortDescending = true
     public let headerRowHeight: CGFloat = 54.0
@@ -23,6 +23,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
     public let separatorHeight: CGFloat = 0.5
     
     private var history: History!
+    private var winStreakPlayer: String?
     private var sourceViewController: UIViewController
     private var dataTableViewController: DataTableViewController!
     private var callerCompletion: (()->())?
@@ -46,11 +47,18 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
         DataTableField("datePlayed",    "",          sequence: 4,   width: 60,  type: .time,        combineHeading: "Date")
     ]
     
-    init(from viewController: UIViewController, completion: (()->())? = nil) {
+    init(from viewController: UIViewController, winStreakPlayer: String? = nil ,completion: (()->())? = nil) {
         self.sourceViewController = viewController
+        self.winStreakPlayer = winStreakPlayer
         super.init()
         self.getHistory()
         self.callerCompletion = completion
+        
+        if winStreakPlayer != nil {
+            // Just showing the win streak for a player
+            self.viewTitle = "Win Streak"
+            self.allowSync = false
+        }
         
         // Call the data table viewer
         dataTableViewController = DataTableViewController.show(from: viewController, delegate: self, recordList: history.games)
@@ -162,10 +170,16 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
     
     func getHistory() {
         // Load list of games from core data
-        if self.history == nil {
-            self.history = History(getParticipants: false, includeBF: Scorecard.adminMode)
+        if let winStreakPlayer = self.winStreakPlayer {
+            // Limiting to win streak for a player
+            self.history = History(winStreakFor: winStreakPlayer)
         } else {
-            self.history.loadGames(getParticipants: false, includeBF: Scorecard.adminMode)
+            // All games
+            if self.history == nil {
+                self.history = History(getParticipants: false, includeBF: Scorecard.adminMode)
+            } else {
+                self.history.loadGames(getParticipants: false, includeBF: Scorecard.adminMode)
+            }
         }
     }
     

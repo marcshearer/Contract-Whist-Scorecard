@@ -1505,6 +1505,29 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
 }
 
+extension ClientViewController: UIViewControllerTransitioningDelegate {
+    
+    func animationController(
+        forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        
+        self.transition.presenting = true
+        if presented is SelectionViewController {
+            return self.transition
+        } else {
+            return nil
+        }
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        if dismissed is SelectionViewController {
+            self.transition.presenting = false
+            return self.transition
+        } else {
+            return nil
+        }
+    }
+}
+
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
 
 fileprivate class Available {

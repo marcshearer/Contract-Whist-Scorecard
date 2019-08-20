@@ -117,6 +117,7 @@ Reduce size of NT in round summary and change colour of NT to black
 Changed red padding to yellow in override settings
 Tidied up game summary when rotated
 Got rid of funny red border when enabling/changing online games player
+Change the W to Continue Button color
 
 Bugs fix now
 ------------
@@ -143,6 +144,9 @@ Thumbnail pictures seem to disappear (on host?)
 Crash if go into High Scores repeatedly
 Mix up if go into game repeatedly with players not in order
 Move 'Choose Device to View' down a bit
+Arrows in high scores not consistent left- right
+Can remove self manually in online game
+
 
 Jack
 ----

@@ -334,7 +334,7 @@
                                     <outlet property="delegate" destination="mEi-hH-CUE" id="TAG-8t-BzE"/>
                                 </connections>
                             </tableView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="navigationImage room interior" translatesAutoresizingMaskIntoConstraints="NO" id="5OT-yU-e2V">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="navigationImage tabletop accent" translatesAutoresizingMaskIntoConstraints="NO" id="5OT-yU-e2V">
                                 <rect key="frame" x="151" y="0.0" width="73" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="5OT-yU-e2V" secondAttribute="height" multiplier="90:54" id="IXy-gl-wJi"/>
@@ -517,7 +517,7 @@
     </scenes>
     <resources>
         <image name="cross white" width="20" height="20"/>
-        <image name="navigationImage room interior" width="73" height="43"/>
+        <image name="navigationImage tabletop accent" width="73" height="43"/>
         <image name="undo" width="21.5" height="22"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

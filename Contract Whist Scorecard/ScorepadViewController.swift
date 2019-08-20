@@ -77,6 +77,7 @@ class ScorepadViewController: CustomViewController,
     private var observer: NSObjectProtocol?
     private var firstGameSummary = true
     private var paddingGradientLayer: [CAGradientLayer] = []
+    public let transition = FadeAnimator()
     
     // UI component pointers
     private var imageCollectionView: UICollectionView!
@@ -1077,6 +1078,29 @@ class ScorepadViewController: CustomViewController,
     }
 }
 
+    
+extension ScorepadViewController: UIViewControllerTransitioningDelegate {
+    
+    func animationController(
+        forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        
+        self.transition.presenting = true
+        if presented is EntryViewController {
+            return self.transition
+        } else {
+            return nil
+        }
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        if dismissed is EntryViewController {
+            self.transition.presenting = false
+            return self.transition
+        } else {
+            return nil
+        }
+    }
+}
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
 

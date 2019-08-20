@@ -644,6 +644,11 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
         entryViewController.suits = suits
         entryViewController.completion = completion
         
+        if let viewController = viewController as? ScorepadViewController {
+            // Animating from scorepad - use special view controller
+            entryViewController!.transitioningDelegate = viewController
+        }
+        
         viewController.present(entryViewController, animated: true, completion: nil)
         
         return entryViewController

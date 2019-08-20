@@ -122,6 +122,7 @@ Change the transition to entry from scorecard
 Can remove self manually in online game after select / deselect other players
 Arrows in high scores not consistent left-right
 Mix up if go into game repeatedly with players not in order
+Increased totals font in scorepad
 
 Bugs fix now
 ------------
@@ -139,6 +140,7 @@ Add tests for history / location to check they're not saved if play a game
 Get location/notification/online game notification permission in settings (and disable options if permissions not granted)
 Auto-sync when download players in Get Started
 Update Walkthrough - esp online game
+Rotate round summary wrong
 
 TODO
 ----
@@ -147,7 +149,6 @@ Thumbnail pictures seem to disappear (on host?)
 Crash if go into High Scores repeatedly
 History Detail layout constraints warnings
 High Scores layout constraints warnings
-Rotate round summary wrong
 
 Jack
 ----

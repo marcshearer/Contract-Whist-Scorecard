@@ -964,6 +964,11 @@ class ScorepadViewController: CustomViewController,
                 footerCell.scorepadLeftLineWeight.constant = 0
                 footerCell.scorepadCellLabel.numberOfLines = 1
                 footerCell.scorepadCellLabel.accessibilityIdentifier = ""
+                if narrow {
+                    footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 20.0)
+                } else {
+                    footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 24.0)
+                }
             } else {
                 // Row values
                 player = column
@@ -971,15 +976,10 @@ class ScorepadViewController: CustomViewController,
                 footerCell.scorepadLeftLineWeight.constant = thickLineWeight
                 scorecard.scorecardPlayer(player).setTotalLabel(label: footerCell.scorepadCellLabel)
                 footerCell.scorepadCellLabel.accessibilityIdentifier = "player\(indexPath.row)total"
+                footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 26.0)
             }
             footerCell.scorepadTopLineWeight.constant = thinLineWeight
         
-            if narrow {
-                footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 20.0, weight: .bold)
-            } else {
-                footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 24.0, weight: .bold)
-            }
-           
             cell=footerCell
             
         } else {

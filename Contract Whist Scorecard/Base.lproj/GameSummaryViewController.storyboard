@@ -113,8 +113,8 @@
                                                     <view contentMode="scaleToFill" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="bw4-mC-p9W" userLabel="Action Button View">
                                                         <rect key="frame" x="0.0" y="0.0" width="320" height="113.5"/>
                                                         <subviews>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zSr-Sg-tk4" userLabel="Left Side">
-                                                                <rect key="frame" x="0.0" y="0.0" width="160" height="113.5"/>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zSr-Sg-tk4" userLabel="Right Side">
+                                                                <rect key="frame" x="160" y="0.0" width="160" height="113.5"/>
                                                                 <subviews>
                                                                     <view tag="2" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OFe-jn-Bt6" userLabel="Play Again Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                                         <rect key="frame" x="37" y="0.0" width="86" height="91"/>
@@ -141,8 +141,8 @@
                                                                     <constraint firstItem="OFe-jn-Bt6" firstAttribute="top" secondItem="zSr-Sg-tk4" secondAttribute="top" id="vjI-JY-bD2"/>
                                                                 </constraints>
                                                             </view>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Om1-UX-kdo" userLabel="Right Side">
-                                                                <rect key="frame" x="160" y="0.0" width="160" height="113.5"/>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Om1-UX-kdo" userLabel="Left Side">
+                                                                <rect key="frame" x="0.0" y="0.0" width="160" height="113.5"/>
                                                                 <subviews>
                                                                     <view tag="1" contentMode="scaleToFill" verticalHuggingPriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="5J7-Q9-k63" userLabel="Stop Playing Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                                         <rect key="frame" x="37" y="0.0" width="86" height="91"/>
@@ -172,10 +172,10 @@
                                                         </subviews>
                                                         <color key="backgroundColor" name="Table Top"/>
                                                         <constraints>
-                                                            <constraint firstItem="zSr-Sg-tk4" firstAttribute="leading" secondItem="bw4-mC-p9W" secondAttribute="leading" id="9O2-WX-5Dv"/>
                                                             <constraint firstAttribute="bottom" secondItem="Om1-UX-kdo" secondAttribute="bottom" id="9RG-5D-J0n"/>
-                                                            <constraint firstAttribute="trailing" secondItem="Om1-UX-kdo" secondAttribute="trailing" id="KGV-cO-piw"/>
+                                                            <constraint firstItem="Om1-UX-kdo" firstAttribute="leading" secondItem="bw4-mC-p9W" secondAttribute="leading" id="TpN-Rt-nRR"/>
                                                             <constraint firstItem="Om1-UX-kdo" firstAttribute="width" secondItem="bw4-mC-p9W" secondAttribute="width" multiplier="0.5" id="fZ1-5W-Ryy"/>
+                                                            <constraint firstAttribute="trailing" secondItem="zSr-Sg-tk4" secondAttribute="trailing" id="hLe-5A-8Zr"/>
                                                             <constraint firstItem="zSr-Sg-tk4" firstAttribute="width" secondItem="bw4-mC-p9W" secondAttribute="width" multiplier="0.5" id="lVq-QL-UWC"/>
                                                             <constraint firstItem="Om1-UX-kdo" firstAttribute="top" secondItem="bw4-mC-p9W" secondAttribute="top" id="nza-9P-uX5"/>
                                                             <constraint firstAttribute="bottom" secondItem="zSr-Sg-tk4" secondAttribute="bottom" id="peJ-If-xXq"/>

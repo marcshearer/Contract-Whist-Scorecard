@@ -110,6 +110,8 @@ Show games in high scores streak when drill
 Tidied up high scores view (especially scroll)
 Added win streak to player detail
 New Game Summary view (in WhatsApp)
+Changed override settings background
+Reduce size of NT in round summary and change colour of NT to black
 
 Bugs fix now
 ------------

@@ -82,7 +82,7 @@ class RoundSummaryViewController: CustomViewController {
     
     func setupOverUnder() {
         self.trumpSuit.textColor = UIColor.white
-        self.trumpSuit.attributedText = scorecard.roundSuit(scorecard.selectedRound, suits: self.suits).toAttributedString()
+        self.trumpSuit.attributedText = scorecard.roundSuit(scorecard.selectedRound, suits: self.suits).toAttributedString(font: self.trumpSuit.font, noTrumpScale: 0.7)
         
         let totalRemaining = scorecard.remaining(playerNumber: 0, round: scorecard.selectedRound, mode: Mode.bid, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
         self.overUnder.text = "\(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")"

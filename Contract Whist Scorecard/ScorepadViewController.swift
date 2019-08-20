@@ -995,7 +995,7 @@ class ScorepadViewController: CustomViewController,
             if column == 0
             {
                 Palette.tableTopStyle(bodyCell.scorepadCellLabel)
-                bodyCell.scorepadCellLabel.attributedText = scorecard.roundTitle(round, rankColor: Palette.emphasisText, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
+                bodyCell.scorepadCellLabel.attributedText = scorecard.roundTitle(round, rankColor: Palette.emphasisText, font: bodyCell.scorepadCellLabel.font, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
                 bodyCell.scorepadLeftLineWeight.constant = 0
                 bodyCell.scorepadCellLabel.accessibilityIdentifier = ""
             } else {

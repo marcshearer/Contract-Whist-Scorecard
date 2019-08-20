@@ -113,6 +113,9 @@ New Game Summary view (in WhatsApp)
 Changed override settings background
 Reduce size of NT in round summary and change colour of NT to black
 
+5.0 (3)
+Changed red padding to yellow in override settings
+
 Bugs fix now
 ------------
 When initialise app - should make the email you type in your default - i.e. set date first

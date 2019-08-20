@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_0" orientation="portrait">
+    <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -15,21 +15,21 @@
         <scene sceneID="qJp-yc-8it">
             <objects>
                 <viewController storyboardIdentifier="GameSummaryViewController" title="Game Summary" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2Ye-nN-zMs" userLabel="Game" customClass="GameSummaryViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="dDC-WM-Jrb" userLabel="Game Summary View">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="dDC-WM-Jrb" userLabel="Game Summary View">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2d4-a6-rKy">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2d4-a6-rKy">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YUm-GK-DA2" userLabel="Content View">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                    <view contentMode="scaleToFill" misplaced="YES" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YUm-GK-DA2" userLabel="Content View">
+                                        <rect key="frame" x="1" y="0.0" width="812" height="562.66666666666663"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H46-u6-heu" userLabel="Top Area">
-                                                <rect key="frame" x="0.0" y="0.0" width="320" height="227"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="375" height="324.66666666666669"/>
                                                 <subviews>
                                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleAspectFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="pO6-Hc-ZdE" userLabel="Winners Collection View">
-                                                        <rect key="frame" x="100" y="47" width="120" height="180"/>
+                                                        <rect key="frame" x="127.66666666666669" y="144.66666666666666" width="120" height="179.99999999999997"/>
                                                         <color key="backgroundColor" name="Clear"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="180" id="cEm-EV-4cP"/>
@@ -90,10 +90,10 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Xn-Vn-q9j" userLabel="Bottom Area">
-                                                <rect key="frame" x="0.0" y="454.5" width="320" height="113.5"/>
+                                                <rect key="frame" x="0.0" y="649.66666666666663" width="375" height="162.33333333333337"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m4C-Bn-wVa" customClass="BannerContinuation" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="-80" width="320" height="80"/>
+                                                        <rect key="frame" x="0.0" y="-93.666666666666629" width="375" height="93.666666666666671"/>
                                                         <color key="backgroundColor" name="Table Top"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="m4C-Bn-wVa" secondAttribute="height" multiplier="4:1" id="96F-wU-6uM"/>
@@ -111,13 +111,13 @@
                                                         </userDefinedRuntimeAttributes>
                                                     </view>
                                                     <view contentMode="scaleToFill" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="bw4-mC-p9W" userLabel="Action Button View">
-                                                        <rect key="frame" x="0.0" y="0.0" width="320" height="113.5"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="375" height="162.33333333333334"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zSr-Sg-tk4" userLabel="Right Side">
-                                                                <rect key="frame" x="160" y="0.0" width="160" height="113.5"/>
+                                                                <rect key="frame" x="187.66666666666663" y="0.0" width="187.33333333333337" height="162.33333333333334"/>
                                                                 <subviews>
                                                                     <view tag="2" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OFe-jn-Bt6" userLabel="Play Again Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                                        <rect key="frame" x="37" y="0.0" width="86" height="91"/>
+                                                                        <rect key="frame" x="25.333333333333343" y="0.0" width="136.33333333333334" height="130"/>
                                                                         <color key="backgroundColor" name="Clear"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="width" secondItem="OFe-jn-Bt6" secondAttribute="height" multiplier="82:64" constant="-30" id="1Rh-pW-4v2"/>
@@ -142,10 +142,10 @@
                                                                 </constraints>
                                                             </view>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Om1-UX-kdo" userLabel="Left Side">
-                                                                <rect key="frame" x="0.0" y="0.0" width="160" height="113.5"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="187.66666666666666" height="162.33333333333334"/>
                                                                 <subviews>
                                                                     <view tag="1" contentMode="scaleToFill" verticalHuggingPriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="5J7-Q9-k63" userLabel="Stop Playing Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                                        <rect key="frame" x="37" y="0.0" width="86" height="91"/>
+                                                                        <rect key="frame" x="25.666666666666671" y="0.0" width="136.33333333333331" height="130"/>
                                                                         <color key="backgroundColor" name="Clear"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="width" secondItem="5J7-Q9-k63" secondAttribute="height" multiplier="82:64" constant="-30" id="ikx-kq-uUK"/>
@@ -183,7 +183,7 @@
                                                         </constraints>
                                                     </view>
                                                 </subviews>
-                                                <color key="backgroundColor" name="Clear"/>
+                                                <color key="backgroundColor" name="Table Top"/>
                                                 <constraints>
                                                     <constraint firstAttribute="bottom" secondItem="bw4-mC-p9W" secondAttribute="bottom" id="BSU-S8-clm"/>
                                                     <constraint firstAttribute="trailing" secondItem="m4C-Bn-wVa" secondAttribute="trailing" id="BdH-nI-AqB"/>
@@ -195,7 +195,7 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kar-Qx-XWq" userLabel="Middle Area">
-                                                <rect key="frame" x="0.0" y="227" width="320" height="227.5"/>
+                                                <rect key="frame" x="0.0" y="324.66666666666669" width="375" height="325.00000000000006"/>
                                                 <subviews>
                                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="2" contentMode="scaleAspectFill" misplaced="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2h7-Jf-CHY" userLabel="Others Collection View">
                                                         <rect key="frame" x="47.5" y="23.5" width="200" height="120"/>
@@ -252,7 +252,7 @@
                                                         </connections>
                                                     </collectionView>
                                                     <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="k0v-pi-t17">
-                                                        <rect key="frame" x="141.5" y="170.5" width="37" height="37"/>
+                                                        <rect key="frame" x="169" y="267.99999999999994" width="37" height="37"/>
                                                         <color key="color" name="Dark Highlight Text"/>
                                                     </activityIndicatorView>
                                                 </subviews>
@@ -304,7 +304,7 @@
                                 </variation>
                             </scrollView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="9uo-b0-008">
-                                <rect key="frame" x="32" y="28" width="256" height="21"/>
+                                <rect key="frame" x="32" y="52" width="311" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="xbe-TO-Br1"/>
                                 </constraints>
@@ -313,7 +313,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bhv-M4-Rmr" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="8" y="28" width="22" height="22"/>
+                                <rect key="frame" x="8" y="52" width="22" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="22" id="K7S-UN-Gbj"/>
                                     <constraint firstAttribute="height" constant="22" id="t5W-pI-1zq"/>

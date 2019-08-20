@@ -142,8 +142,6 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
             firstTime = false
             rotated = false
         }
-        
-        scrollView.contentSize = CGSize(width: self.view.frame.width, height: max(self.view.frame.width, self.view.frame.height))
     }
 
    // MARK: - TableView Overrides ================================================================ -

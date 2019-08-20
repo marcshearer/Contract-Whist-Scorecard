@@ -115,6 +115,7 @@ Reduce size of NT in round summary and change colour of NT to black
 
 5.0 (3)
 Changed red padding to yellow in override settings
+Tidied up game summary when rotated
 
 Bugs fix now
 ------------

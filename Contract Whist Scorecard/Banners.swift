@@ -41,9 +41,10 @@ class InsetPaddingView: InsetPaddingViewNoColor {
 
 class BannerContinuation: UIView {
     
-    private var shapeLayer: CAShapeLayer?
+    private var shapeLayer: [CAShapeLayer] = []
     
     @IBInspectable var bannerColor: UIColor
+    @IBInspectable var borderColor: UIColor
     @IBInspectable var shape: ContinuationShapeType
     
     @IBInspectable var shapeType:Int {
@@ -57,6 +58,7 @@ class BannerContinuation: UIView {
     
     required init?(coder aDecoder: NSCoder) {
         self.bannerColor = Palette.banner
+        self.borderColor = Palette.banner
         self.shape = .upArrow
         super.init(coder: aDecoder)
     }
@@ -68,37 +70,55 @@ class BannerContinuation: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        // Remove previous layer
-        if let layer = self.shapeLayer {
-            layer.removeFromSuperlayer()
-        }
+        // Remove previous layers
+        self.shapeLayer.forEach { $0.removeFromSuperlayer() }
         
-        let rect = CGRect(origin: CGPoint(), size: self.frame.size)
-        var points: [PolygonPoint] = []
-        switch self.shape {
-        case .upArrow:
-            points.append(PolygonPoint(x: rect.minX, y: rect.minY, pointType: .point))
-            points.append(PolygonPoint(x: rect.minX, y: rect.maxY, pointType: .point))
-            points.append(PolygonPoint(x: rect.midX, y: rect.minY, pointType: .quadRounded, radius: 20.0))
-            points.append(PolygonPoint(x: rect.maxX, y: rect.maxY, pointType: .point))
-            points.append(PolygonPoint(x: rect.maxX, y: rect.minY, pointType: .point))
+        for pass in 0...(self.bannerColor == self.borderColor ? 0 : 1) {
             
-        case .leftStep:
-            let arrowWidth: CGFloat = (rect.height / 1.5)
-            points.append(PolygonPoint(x: rect.minX, y: rect.minY, pointType: .point))
-            points.append(PolygonPoint(x: rect.minX, y: rect.maxY, pointType: .point))
-            points.append(PolygonPoint(x: rect.midX - (arrowWidth / 2.0), y: rect.maxY, radius: 10.0))
-            points.append(PolygonPoint(x: rect.midX + (arrowWidth / 2.0), y: rect.minY, pointType: .smoothQuadRounded, radius: 5.0))
-        
-        case .downArrow:
-            points.append(PolygonPoint(x: rect.minX, y: rect.minY, pointType: .point))
-            points.append(PolygonPoint(x: rect.midX, y: rect.maxY, pointType: .quadRounded, radius: 20.0))
-            points.append(PolygonPoint(x: rect.maxX, y: rect.minY, pointType: .point))
+            var color: UIColor
+            var points: [PolygonPoint] = []
+            var rect: CGRect
             
-        default:
-            break
+            if pass == 1 {
+                let offset: CGFloat = (self.shape == .upArrow ? 5.0 : 0.0)
+                rect = CGRect(x: 0, y: offset, width: self.frame.width, height: self.frame.height - offset)
+                color = self.borderColor
+            } else {
+                rect = CGRect(x: 0, y: 0.0, width: self.frame.width, height: self.frame.height - 5.0)
+                color = self.bannerColor
+            }
+            
+            switch self.shape {
+            case .upArrow:
+                points.append(PolygonPoint(x: rect.minX, y: rect.minY, pointType: .point))
+                points.append(PolygonPoint(x: rect.minX, y: rect.maxY, pointType: .point))
+                points.append(PolygonPoint(x: rect.midX, y: rect.minY, pointType: .quadRounded, radius: 20.0))
+                points.append(PolygonPoint(x: rect.maxX, y: rect.maxY, pointType: .point))
+                points.append(PolygonPoint(x: rect.maxX, y: rect.minY, pointType: .point))
+                
+            case .leftStep:
+                let arrowWidth: CGFloat = (rect.height / 1.5)
+                points.append(PolygonPoint(x: rect.minX, y: rect.minY, pointType: .point))
+                points.append(PolygonPoint(x: rect.minX, y: rect.maxY, pointType: .point))
+                points.append(PolygonPoint(x: rect.midX - (arrowWidth / 2.0), y: rect.maxY, radius: 10.0))
+                points.append(PolygonPoint(x: rect.midX + (arrowWidth / 2.0), y: rect.minY, pointType: .smoothQuadRounded, radius: 5.0))
+                
+            case .downArrow:
+                points.append(PolygonPoint(x: rect.minX, y: rect.minY, pointType: .point))
+                if pass == 1 {
+                    points.append(PolygonPoint(x: rect.minX, y: rect.minY + 5.0, pointType: .point))
+                }
+                points.append(PolygonPoint(x: rect.midX, y: rect.maxY, pointType: .quadRounded, radius: 20.0))
+                if pass == 1 {
+                    points.append(PolygonPoint(x: rect.maxX, y: rect.minY + 5.0, pointType: .point))
+                }
+                points.append(PolygonPoint(x: rect.maxX, y: rect.minY, pointType: .point))
+                
+            default:
+                break
+            }
+            self.shapeLayer.append(Polygon.roundedShapeLayer(in: self, definedBy: points, strokeColor: color, fillColor: color, lineWidth: 0.0))
         }
-        self.shapeLayer = Polygon.roundedShapeLayer(in: self, definedBy: points, strokeColor: self.bannerColor, fillColor: self.bannerColor, lineWidth: 0.0)
     }
     
 }

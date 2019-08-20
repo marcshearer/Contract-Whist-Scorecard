@@ -1068,6 +1068,8 @@ class Scorecard {
             self.scorepadHeaderHeight = headerHeight
             self.scorepadBodyHeight = bodyHeight
             self.scorepadFooterHeight = footerHeight
+        } else {
+            self.scorepadBodyHeight = 600
         }
     }
     

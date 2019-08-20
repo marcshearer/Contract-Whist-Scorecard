@@ -49,7 +49,7 @@
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CSk-0Z-taK" userLabel="AdditionalImage">
                     <rect key="frame" x="19" y="19" width="37.5" height="37.5"/>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="kXi-0g-avo">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="kXi-0g-avo">
                     <rect key="frame" x="0.0" y="70" width="75" height="30"/>
                     <color key="backgroundColor" name="Clear"/>
                     <constraints>
@@ -58,9 +58,6 @@
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
-                    <variation key="heightClass=compact-widthClass=regular">
-                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    </variation>
                 </label>
             </subviews>
             <color key="backgroundColor" name="Clear"/>
@@ -76,7 +73,7 @@
                 <constraint firstItem="PGG-ax-99W" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="gff-UU-Rnc"/>
                 <constraint firstItem="CSk-0Z-taK" firstAttribute="centerY" secondItem="PGG-ax-99W" secondAttribute="centerY" id="jDx-8i-xUW"/>
                 <constraint firstItem="CSk-0Z-taK" firstAttribute="centerY" secondItem="PGG-ax-99W" secondAttribute="centerY" id="mSo-eI-W2N"/>
-                <constraint firstItem="kXi-0g-avo" firstAttribute="top" secondItem="PGG-ax-99W" secondAttribute="bottom" constant="-5" id="rll-JV-Kma"/>
+                <constraint firstAttribute="bottom" secondItem="kXi-0g-avo" secondAttribute="bottom" id="q5r-ly-Vlc"/>
                 <constraint firstItem="CSk-0Z-taK" firstAttribute="width" secondItem="PGG-ax-99W" secondAttribute="width" multiplier="0.5" id="ulf-Vs-mck"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

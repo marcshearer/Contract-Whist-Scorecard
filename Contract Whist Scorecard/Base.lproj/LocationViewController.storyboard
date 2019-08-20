@@ -166,6 +166,9 @@
                                     <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
                                         <color key="value" name="Table Top"/>
                                     </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" name="Table Top"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
@@ -179,7 +182,7 @@
                             <constraint firstAttribute="trailing" secondItem="smV-Xs-9Xb" secondAttribute="trailing" id="MVM-nm-0gy"/>
                             <constraint firstItem="syy-j8-mMN" firstAttribute="trailing" secondItem="Od0-bd-l1r" secondAttribute="trailing" id="QAx-vw-oFX"/>
                             <constraint firstItem="X7E-aZ-m9h" firstAttribute="centerX" secondItem="H8a-EA-jDv" secondAttribute="centerX" id="Rwa-IO-ohp"/>
-                            <constraint firstItem="nmy-2i-PqR" firstAttribute="trailing" secondItem="H8a-EA-jDv" secondAttribute="trailing" id="USR-el-aWt"/>
+                            <constraint firstItem="nmy-2i-PqR" firstAttribute="trailing" secondItem="Od0-bd-l1r" secondAttribute="trailing" id="USR-el-aWt"/>
                             <constraint firstItem="8qh-o6-LGR" firstAttribute="trailing" secondItem="Od0-bd-l1r" secondAttribute="trailing" id="UYo-3q-Rm6"/>
                             <constraint firstAttribute="trailing" secondItem="uko-az-7BL" secondAttribute="trailing" id="Umk-UY-Dk5"/>
                             <constraint firstItem="KRq-QD-SP0" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="bBu-uS-Tgq"/>
@@ -187,7 +190,7 @@
                             <constraint firstItem="smV-Xs-9Xb" firstAttribute="top" secondItem="H8a-EA-jDv" secondAttribute="top" id="fma-kJ-pyg"/>
                             <constraint firstAttribute="trailing" secondItem="qQB-iI-YgT" secondAttribute="trailing" id="hsN-Y1-716"/>
                             <constraint firstItem="syy-j8-mMN" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="i56-ib-LM7"/>
-                            <constraint firstItem="nmy-2i-PqR" firstAttribute="leading" secondItem="H8a-EA-jDv" secondAttribute="leading" id="mNZ-55-V9B"/>
+                            <constraint firstItem="nmy-2i-PqR" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="mNZ-55-V9B"/>
                             <constraint firstItem="qQB-iI-YgT" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="mYr-WO-NNZ"/>
                             <constraint firstItem="smV-Xs-9Xb" firstAttribute="leading" secondItem="Od0-bd-l1r" secondAttribute="leading" id="mp5-lJ-9tF"/>
                             <constraint firstItem="8qh-o6-LGR" firstAttribute="top" secondItem="uko-az-7BL" secondAttribute="bottom" id="n7c-EW-izY"/>

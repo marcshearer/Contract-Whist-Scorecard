@@ -105,27 +105,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 self.testMode = true
             }
         }
-
-        // Add players to available and unselected list
-        for playerMO in scorecard.playerList {
-            availableList.append(playerMO)
-            unselectedList.append(playerMO)
-        }
         
-        // Setup form
-        if self.selectionMode == .single {
-            self.setupSingleScreen()
-            self.showThisPlayer()
-        } else {
-            // Try to find players from last time
-            self.scorecard.loadGameDefaults()
-            self.assignPlayers()
-            if self.selectionMode == .invitees {
-                // Make sure host is correct
-                self.defaultOnlinePlayers()
-            }
-        }
-                
         // Set cancel button and title
         self.navigationTitle.title = self.formTitle
         self.cancelButton.setImage(UIImage(named: self.backImage), for: .normal)
@@ -149,18 +129,28 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // Reset available players
+        
+        // Setup available players
+        self.setupAvailablePlayers()
+        self.unselectedList = self.availableList
+        
+        // Setup form
         if self.selectionMode == .single {
-            self.unselectedList = self.availableList
+            self.setupSingleScreen()
+            self.showThisPlayer()
             if let playerMO = self.unselectedList.first(where: {$0!.email == self.thisPlayer}) {
                 self.removeUnselected(playerMO!, updateUnselectedCollection: false)
             }
-            // Show this player
-            if !self.loadedView {
-                self.showThisPlayer()
+        } else {
+            // Try to find players from last time
+            self.scorecard.loadGameDefaults()
+            self.assignPlayers()
+            if self.selectionMode == .invitees {
+                // Make sure host is correct
+                self.defaultOnlinePlayers()
             }
         }
-        
+
         // Check if in recovery mode - if so (and found all players) go straight to game setup
         if scorecard.recoveryMode {
             if selectedList.count == scorecard.currentPlayers {
@@ -504,9 +494,19 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             }
         }
     }
+    
+    private func setupAvailablePlayers() {
+        // Add players to available and unselected list
+        self.availableList = []
+        for playerMO in scorecard.playerList {
+            availableList.append(playerMO)
+        }
+    }
 
-    func assignPlayers() {
+    private func assignPlayers() {
         // Run round player list trying to patch in players from last time
+        
+        self.selectedList = []
         
         for playerNumber in 1...scorecard.currentPlayers {
             
@@ -519,7 +519,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         }
     }
     
-    func defaultOnlinePlayers() {
+    private func defaultOnlinePlayers() {
         let host = self.selectedPlayersView.playerViews[0].playerMO
         if host?.email != self.thisPlayer {
             for slot in 0..<self.scorecard.numberPlayers {
@@ -531,7 +531,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         self.selectedPlayersView.setEnabled(slot: 0, enabled: false)
     }
     
-    func setupSingleScreen() {
+    private func setupSingleScreen() {
         // Switch banner type
         self.bannerContinuationView.shape = .upArrow
         self.bannerAddPlayerButton.isHidden = true
@@ -547,7 +547,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         }
     }
     
-    func removeSelection(_ selectedSlot: Int, updateUnselected: Bool = true, updateUnselectedCollection: Bool = true, animate: Bool = true) {
+    private func removeSelection(_ selectedSlot: Int, updateUnselected: Bool = true, updateUnselectedCollection: Bool = true, animate: Bool = true) {
         
         if  selectedPlayersView.inUse(slot: selectedSlot) {
             
@@ -612,7 +612,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         }
     }
     
-    func addSelection(_ selectedPlayerMO: PlayerMO, toSlot: Int? = nil, updateUnselected: Bool = true, updateUnselectedCollection: Bool = true, animate: Bool = true) {
+    private func addSelection(_ selectedPlayerMO: PlayerMO, toSlot: Int? = nil, updateUnselected: Bool = true, updateUnselectedCollection: Bool = true, animate: Bool = true) {
         
         if let slot = toSlot ?? self.selectedPlayersView.freeSlot() {
             

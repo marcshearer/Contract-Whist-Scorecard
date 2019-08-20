@@ -104,6 +104,10 @@ public class ThumbnailView: UIView {
         }
     }
     
+    public func set(playerMO: PlayerMO, nameHeight: CGFloat? = nil) {
+        self.set(data: playerMO.thumbnail, name: playerMO.name, nameHeight: nameHeight ?? 30.0)
+    }
+    
     public func set(imageName: String?) {
         if let imageName = imageName {
             self.additionalImage.isHidden = false
@@ -125,7 +129,7 @@ public class ThumbnailView: UIView {
         ScorecardUI.veryRoundCorners(self.discImage, radius: discSize / 2.0)
         self.discInitials.frame = self.discImage.frame
         ScorecardUI.veryRoundCorners(self.discInitials, radius: discSize / 2.0)
-        self.name.frame = (CGRect(x: 0.0, y: frame.width - 5.0, width: frame.width, height: frame.height - frame.width + 5.0))
+        // self.name.frame = (CGRect(x: 0.0, y: frame.height - frame.width, width: frame.width, height: frame.height - frame.width + 5.0))
     }
     
     public func set(textColor: UIColor) {
@@ -145,6 +149,10 @@ public class ThumbnailView: UIView {
     
     public func set(haloColor: UIColor) {
         self.discHalo.backgroundColor = haloColor
+    }
+    
+    public func set(font: UIFont) {
+        self.name.font = font
     }
     
 }

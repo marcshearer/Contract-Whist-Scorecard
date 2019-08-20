@@ -287,15 +287,15 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     
     func issueInstruction() {
         if self.selection.player == 0 {
-            self.instructionLabel.text = "Tap a player to edit their score"
+            self.instructionLabel?.text = "Tap a player to edit their score"
         } else {
             switch selection.mode {
             case Mode.bid:
-                self.instructionLabel.text = "Enter the bid for \(self.scorecard.entryPlayer(selection.player).playerMO!.name!)"
+                self.instructionLabel?.text = "Enter the bid for \(self.scorecard.entryPlayer(selection.player).playerMO!.name!)"
             case Mode.made:
-                self.instructionLabel.text = "Enter the tricks made for \(self.scorecard.entryPlayer(selection.player).playerMO!.name!)"
+                self.instructionLabel?.text = "Enter the tricks made for \(self.scorecard.entryPlayer(selection.player).playerMO!.name!)"
             case Mode.twos:
-                self.instructionLabel.text = "Enter the number of 2s for \(self.scorecard.entryPlayer(selection.player).playerMO!.name!)"
+                self.instructionLabel?.text = "Enter the number of 2s for \(self.scorecard.entryPlayer(selection.player).playerMO!.name!)"
             }
         }
     }

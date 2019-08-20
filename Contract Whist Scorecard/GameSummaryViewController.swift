@@ -15,7 +15,7 @@ enum GameSummaryReturnMode {
     case newGame
 }
 
-class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, SyncDelegate, UIPopoverControllerDelegate {
+class GameSummaryViewController: CustomViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SyncDelegate, UIPopoverControllerDelegate, ImageButtonDelegate {
 
     // Main state properties
     internal let scorecard = Scorecard.shared
@@ -27,18 +27,34 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
     private var rounds: Int!
     private var completion: ((GameSummaryReturnMode)->())?
     
+    // Constants
+    private let stopPlayingTag = 1
+    private let playAgainTag = 2
+    private let winnersTag = 1
+    private let othersTag = 2
+    
     // Local class variables
     private var xref: [(playerNumber: Int, score: Int64, place: Int, ranking: Int, personalBest: Bool)] = []
     private var firstTime = true
+    private var rotated = false
     private var winners = 0 // Allow for ties
+    private var others = 0
     
     // Control heights
-    private let headerHeight: CGFloat = 140
-    private let winnerHeight: CGFloat = 80
-    private let separatorHeight: CGFloat = 30
-    private let othersHeight: CGFloat = 50
-    private var trailerHeight: CGFloat = 80
-    private let defaultTrailerHeight: CGFloat = 100
+    private var winnerWidth: CGFloat = 0.0
+    private var winnerCellHeight: CGFloat = 0.0
+    private var winnerCellWidth: CGFloat = 0.0
+    private var otherWidth: CGFloat = 0.0
+    private var otherCellHeight: CGFloat = 0.0
+    private var otherCellWidth: CGFloat = 0.0
+    private let winnerNameHeight: CGFloat = 40.0
+    private let otherNameHeight: CGFloat = 30.0
+    private let winnerScoreHeight: CGFloat = 35.0
+    private let otherScoreHeight: CGFloat = 20.0
+    private let winnerSpacing: CGFloat = 30.0
+    private let otherSpacing: CGFloat = 20.0
+    
+    // Completion state
     private var completionMode: GameSummaryReturnMode = .resume
     private var completionAdvanceDealer: Bool = false
     private var completionResetOverrides: Bool = false
@@ -48,10 +64,16 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
     var excludeStats = false
 
     // MARK: - IB Outlets ============================================================================== -
-    @IBOutlet weak var gameSummaryView: UIView!
     @IBOutlet weak var syncMessage: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var winnerCollectionView: UICollectionView!
+    @IBOutlet weak var winnerCollectionViewWidth: NSLayoutConstraint!
+    @IBOutlet weak var otherCollectionView: UICollectionView!
+    @IBOutlet weak var otherCollectionViewWidth: NSLayoutConstraint!
+    @IBOutlet weak var stopPlayingButton: ImageButton!
+    @IBOutlet weak var playAgainButton: ImageButton!
+    @IBOutlet weak var scorecardButton: UIButton!
     @IBOutlet weak var leftSwipeGesture: UISwipeGestureRecognizer!
     @IBOutlet weak var rightSwipeGesture: UISwipeGestureRecognizer!
     @IBOutlet weak var tapGesture: UITapGestureRecognizer!
@@ -63,31 +85,11 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
         self.dismiss()
     }
     
-    @IBAction func homePressed(_ sender: Any) {
-        // Unwind to home screen clearing current game
-        if !self.scorecard.isViewing {
-            UIApplication.shared.isIdleTimerDisabled = false
-            if self.scorecard.hasJoined {
-                // Link to home via client (no sync)
-                self.dismiss(returnMode: .returnHome)
-            } else {
-                finishGame(from: self, returnMode: .returnHome, resetOverrides: true)
-            }
-        }
-    }
-    
-    @IBAction func newGamePressed(_ sender: Any) {
-        // Unwind to scorepad clearing current game and advancing dealer
-        if gameSummaryMode == .amend {
-            finishGame(from: self, returnMode: .newGame, advanceDealer: true, resetOverrides: false)
-        }
-    }
-    
-    @IBAction func leftSwipe(recognizer:UISwipeGestureRecognizer) {
-        self.newGamePressed(self)
-    }
-    
     @IBAction func rightSwipe(recognizer:UISwipeGestureRecognizer) {
+        self.playAgainPressed()
+    }
+    
+    @IBAction func lefttSwipe(recognizer:UISwipeGestureRecognizer) {
         self.scorecardPressed(self)
     }
     
@@ -128,200 +130,189 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
+        self.rotated = true
         scorecard.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
     
     override func viewWillLayoutSubviews() {
         
-        if firstTime {
-            // Calculate heights
-            calculateHeights(size: gameSummaryView.safeAreaLayoutGuide.layoutFrame.size)
+        if firstTime || rotated {
+            self.setupSize()
             firstTime = false
+            rotated = false
         }
+        
+        scrollView.contentSize = CGSize(width: self.view.frame.width, height: max(self.view.frame.width, self.view.frame.height))
     }
 
    // MARK: - TableView Overrides ================================================================ -
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        switch section{
-        case 0:
-            // Crown header
-            return 1
-        case 1:
-            // Players
-            return scorecard.currentPlayers
-        case 2:
-            // Footer
-            return 1
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        switch collectionView.tag {
+        case winnersTag:
+            return self.winners
+        case othersTag:
+            return self.scorecard.currentPlayers - winners
         default:
             return 0
         }
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.section {
-        case 0:
-            // Header
-            return headerHeight
-        case 1:
-            //Players
-            switch xref[indexPath.row].place {
-            case 1:
-                if indexPath.row + 1 == winners {
-                    // Last winner - add some extra height
-                    return winnerHeight + separatorHeight
-                } else {
-                    return winnerHeight
-                }
-            default:
-                return othersHeight
-            }
-        case 2:
-            // Footer
-            return trailerHeight
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        switch collectionView.tag {
+        case winnersTag:
+            return CGSize(width: self.winnerCellWidth,
+                          height: self.winnerCellHeight)
+        case othersTag:
+            return CGSize(width: self.otherCellWidth,
+                          height: self.otherCellHeight)
+        default:
+            return CGSize()
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        switch collectionView.tag {
+        case winnersTag:
+            return winnerSpacing
+        case othersTag:
+            return otherSpacing
         default:
             return 0
         }
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        var cell: GameSummaryCollectionCell
         
-        var cell: GameSummaryTableCell
+        let winnersCollection = (collectionView.tag == winnersTag)
+        let width = (winnersCollection ? self.winnerCellWidth : self.otherCellWidth)
+        let nameHeight = (winnersCollection ? self.winnerNameHeight : self.otherNameHeight)
+        let index = indexPath.row + (winnersCollection ? 0 : winners)
+        let playerResults = xref[index]
         
-        switch indexPath.section {
-        case 0: // Header
-            cell = tableView.dequeueReusableCell(withIdentifier: "Game Summary Header", for: indexPath) as! GameSummaryTableCell
-
-        case 1: // Players
-        // Player names
-            let playerResults = xref[indexPath.row]
-            let playerNumber = playerResults.playerNumber
-            
-            let reuseIdentifier = "Game Summary " + (playerResults.place == 1 ? "Winner" : "Others")
-            cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! GameSummaryTableCell
-            
-            // Setup the thumbnail picture
-            var thumbnail: Data?
-            if let playerDetail = scorecard.enteredPlayer(playerNumber).playerMO {
-                if playerDetail.thumbnail != nil {
-                    thumbnail = playerDetail.thumbnail! as Data
-                }
-            }
-            
-            Utility.setThumbnail(data: thumbnail,
-                                 imageView: cell.playerThumbnail,
-                                 initials: scorecard.enteredPlayer(playerNumber).playerMO!.name!,
-                                 label: cell.playerDisc)
-            // Setup name and score
-            cell.playerName.text  = scorecard.enteredPlayer(playerNumber).playerMO!.name!
-            cell.playerScore.text = "\(scorecard.enteredPlayer(playerNumber).totalScore())"
-            if !self.scorecard.isPlayingComputer {
-                // Setup high score / PB icon
-                if playerResults.ranking != 0 {
-                    cell.playerImage.image = UIImage(named: "high score \(playerResults.ranking)")
-                } else if playerResults.personalBest {
-                    cell.playerImage.image = UIImage(named: "personal best")
-                } else {
-                    cell.playerImage.image = nil
-                }
-            } else {
-                cell.playerImage.image = nil
-            }
-            cell.playerScore.accessibilityIdentifier = "player\(indexPath.row+1)total"
-            
-        default:
-            // Footer
-            cell = tableView.dequeueReusableCell(withIdentifier: "Game Summary Footer", for: indexPath) as! GameSummaryTableCell
-            if self.scorecard.isViewing {
-                // Don't allow exit if viewing
-                cell.homeButton.isEnabled = false
-            }
-            if self.gameSummaryMode != .amend {
-                // Only allow new game if hosting or ordinary scoring (not joining or viewing)
-                cell.newGameButton.isEnabled = false
-            }
-            
-        }
+        cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Game Summary Cell", for: indexPath) as! GameSummaryCollectionCell
         
+        cell.thumbnailView.set(frame: CGRect(origin: CGPoint(), size: CGSize(width: width, height: width + nameHeight)))
+        cell.thumbnailView.set(playerMO: self.scorecard.enteredPlayer(playerResults.playerNumber).playerMO!, nameHeight: nameHeight)
+        cell.thumbnailView.set(font: UIFont.systemFont(ofSize: nameHeight * 0.67, weight: .semibold))
+        cell.thumbnailView.set(textColor: Palette.roomInteriorTextContrast)
         
-        // Show selected cell in same color as deselected
-        let backgroundView = UIView()
-        backgroundView.backgroundColor = UIColor.clear
-        cell.selectedBackgroundView = backgroundView
-
+        cell.playerScoreButton.setTitle("\(playerResults.score)", for: .normal)
+        cell.playerScoreButton.addTarget(self, action: #selector(GameSummaryViewController.selectPlayer(_:)), for: UIControl.Event.touchUpInside)
+        cell.playerScoreButton.tag = index
+        
         return cell
-
+        
     }
     
-    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if indexPath.section < 2 && gameSummaryMode == .amend && !self.scorecard.isPlayingComputer {
-            if gameSummaryMode == .amend {
-                if indexPath.section == 1 {
-                    // Players section
-                    let playerResults = xref[indexPath.row]
-                    if playerResults.personalBest {
-                        let playerNumber = playerResults.playerNumber
-                        var message: String
-                        
-                        // New PB / First Timer
-                        let name = scorecard.enteredPlayer(playerNumber).playerMO?.name!
-                        if scorecard.enteredPlayer(playerNumber).previousMaxScore == 0 {
-                            // First timer
-                            message = "Congratulations \(name!) on completing your first game.\n\nYour score was \(playerResults.score)."
-                        } else {
-                            // PB - - show previous one
-                            let formatter = DateFormatter()
-                            formatter.setLocalizedDateFormatFromTemplate("dd/MM/yyyy")
-                            let date = formatter.string(from: scorecard.enteredPlayer(playerNumber).previousMaxScoreDate)
-                            message = "Congratulations \(name!) on your new personal best of \(playerResults.score).\n\nYour previous best was \(scorecard.enteredPlayer(playerNumber).previousMaxScore) which you achieved on \(date)"
-                        }
-                        let alertController = UIAlertController(title: "Congratulations", message: message, preferredStyle: UIAlertController.Style.alert)
-                        alertController.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-                        present(alertController, animated: true, completion: nil)
-                    } else {
-                        // Not a PB - Link to high scores
-                        if self.scorecard.settingSaveHistory {
-                            self.showHighScores()
-                        }
-                    }
-                } else if indexPath.section == 0 {
-                    // Crown image - Link to high scores
-                    if self.scorecard.settingSaveHistory {
-                        self.showHighScores()
-                    }
-                }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let index = indexPath.row + (collectionView.tag == winnersTag ? 0 : winners)
+        self.playerSelected(index: index)
+    }
+    
+    @objc private func selectPlayer(_ sender: UIButton) {
+        self.playerSelected(index: sender.tag)
+    }
+        
+    private func playerSelected(index: Int) {
+        let playerResults = xref[index]
+        
+        if playerResults.personalBest {
+            let playerNumber = playerResults.playerNumber
+            var message: String
+            
+            // New PB / First Timer
+            let name = scorecard.enteredPlayer(playerNumber).playerMO?.name!
+            if scorecard.enteredPlayer(playerNumber).previousMaxScore == 0 {
+                // First timer
+                message = "Congratulations \(name!) on completing your first game.\n\nYour score was \(playerResults.score)."
+            } else {
+                // PB - - show previous one
+                let formatter = DateFormatter()
+                formatter.setLocalizedDateFormatFromTemplate("dd/MM/yyyy")
+                let date = formatter.string(from: scorecard.enteredPlayer(playerNumber).previousMaxScoreDate)
+                message = "Congratulations \(name!) on your new personal best of \(playerResults.score).\n\nYour previous best was \(scorecard.enteredPlayer(playerNumber).previousMaxScore) which you achieved on \(date)"
+            }
+            let alertController = UIAlertController(title: "Congratulations", message: message, preferredStyle: UIAlertController.Style.alert)
+            alertController.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+            present(alertController, animated: true, completion: nil)
+        } else {
+            // Not a PB - Link to high scores
+            if self.scorecard.settingSaveHistory {
+                self.showHighScores()
             }
         }
-        return nil
     }
     
-    // MARK: - Form Presentation / Handling Routines =================================================== -
-
-    func calculateHeights(size: CGSize) {
-        let totalHeight = headerHeight + (CGFloat(winners) * winnerHeight) + separatorHeight + CGFloat(scorecard.currentPlayers - winners) * othersHeight + defaultTrailerHeight
-        if totalHeight < size.height {
-            // Just add it to the footer
-            trailerHeight = size.height - totalHeight + defaultTrailerHeight
-            tableView.isScrollEnabled = false
-        } else {
-            trailerHeight = defaultTrailerHeight
-            tableView.isScrollEnabled = true
+    // MARK: - Image Button delegate handlers ========================================================== -
+    
+    internal func imageButtonPressed(_ sender: ImageButton) {
+        switch sender.tag {
+        case stopPlayingTag:
+            self.stopPlayingPressed()
+            
+        case playAgainTag:
+            self.playAgainPressed()
+            
+        default:
+            break
+        }
+    }
+    
+    private func stopPlayingPressed() {
+        // Unwind to home screen clearing current game
+        if !self.scorecard.isViewing {
+            UIApplication.shared.isIdleTimerDisabled = false
+            if self.scorecard.hasJoined {
+                // Link to home via client (no sync)
+                self.dismiss(returnMode: .returnHome)
+            } else {
+                finishGame(from: self, returnMode: .returnHome, resetOverrides: true)
+            }
+        }
+    }
+    
+    private func playAgainPressed() {
+        // Unwind to scorepad clearing current game and advancing dealer
+        if gameSummaryMode == .amend {
+            finishGame(from: self, returnMode: .newGame, advanceDealer: true, resetOverrides: false)
         }
     }
     
     public func refresh() {
-        tableView.reloadData()
+        self.winnerCollectionView.reloadData()
+        self.otherCollectionView.reloadData()
     }
     
-    // MARK: - Utility Routines ======================================================================== -
+   // MARK: - Utility Routines ======================================================================== -
 
-    func calculateWinner() {
+    private func setupSize() {
+        
+        let totalWidth = self.view.safeAreaLayoutGuide.layoutFrame.width
+        
+        self.winnerCellWidth = min(100.0, (totalWidth - (self.winnerSpacing * (CGFloat(self.winners) + 1))) / CGFloat(self.winners))
+        self.winnerCellHeight = self.winnerCellWidth + self.winnerNameHeight + winnerScoreHeight
+        self.winnerWidth = (winnerCellWidth * CGFloat(self.winners)) + (winnerSpacing * CGFloat(self.winners - 1))
+        self.winnerCollectionViewWidth.constant = self.winnerWidth
+        
+        self.otherCellWidth = min(60.0, self.winnerCellWidth - 10.0, (totalWidth - (self.otherSpacing * (CGFloat(self.others) + 1))) / CGFloat(self.others))
+        self.otherCellHeight = self.otherCellWidth + self.otherNameHeight + otherScoreHeight
+        self.otherWidth = (otherCellWidth * CGFloat(self.others)) + (otherSpacing * CGFloat(self.others - 1))
+        self.otherCollectionViewWidth.constant = self.otherWidth
+        
+    }
+    
+    private func calculateWinner() {
         struct HighScoreEntry {
             var gameUUID: String
             var email: String
@@ -411,7 +402,7 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
         
         // Now fill in places
         var place = 0
-        winners = 0
+        self.winners = 0
         for playerNumber in 1...scorecard.currentPlayers {
             if playerNumber == 1 || xref[playerNumber - 2].score != xref[playerNumber - 1].score {
                 place = playerNumber
@@ -427,6 +418,8 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
                 }
             }
         }
+        self.others = self.scorecard.currentPlayers - winners
+        
         if firstGameSummary && gameSummaryMode == .amend {
             // Save notification message
             self.saveGameNotification(newHighScore: newHighScore, winnerEmail: winnerEmail, winner: winnerNames, winningScore: Int(xref[0].score))
@@ -573,13 +566,7 @@ class GameSummaryViewController: CustomViewController, UITableViewDelegate, UITa
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
 
-class GameSummaryTableCell: UITableViewCell {
-    @IBOutlet weak var playerThumbnail: UIImageView!
-    @IBOutlet weak var playerDisc: UILabel!
-    @IBOutlet weak var playerName: UILabel!
-    @IBOutlet weak var playerScore: UILabel!
-    @IBOutlet weak var playerImage: UIImageView!
-    @IBOutlet weak var scorecardButton: UIButton!
-    @IBOutlet weak var homeButton: UIButton!
-    @IBOutlet weak var newGameButton: UIButton!
+class GameSummaryCollectionCell: UICollectionViewCell {
+    @IBOutlet weak var thumbnailView: ThumbnailView!
+    @IBOutlet weak var playerScoreButton: UIButton!
 }

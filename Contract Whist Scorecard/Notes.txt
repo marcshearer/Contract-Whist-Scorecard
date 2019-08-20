@@ -109,6 +109,7 @@ Stretch on High Scores on iPhone X
 Show games in high scores streak when drill
 Tidied up high scores view (especially scroll)
 Added win streak to player detail
+New Game Summary view (in WhatsApp)
 
 Bugs fix now
 ------------
@@ -131,7 +132,6 @@ TODO
 ----
 Avoid re-deal if crash before first deal
 Thumbnail pictures seem to disappear (on host?)
-New Game Summary view (in WhatsApp)
 Background color in Round Summary
 
 Jack

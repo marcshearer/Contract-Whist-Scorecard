@@ -83,10 +83,6 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     @IBOutlet private weak var actionButtonView: UIView!
     @IBOutlet private weak var cutForDealerButton: ImageButton!
     @IBOutlet private weak var nextDealerButton: ImageButton!
-    @IBOutlet private weak var cutForDealerLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var cutForDealerTrailingConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var cutForDealerCenterXConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var cutForDealerTopConstraint: NSLayoutConstraint!
 
     // MARK: - IB Actions ============================================================================== -
     
@@ -284,23 +280,11 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     private func updateButtons(animate: Bool = true) {
         if self.readOnly {
-            self.cutForDealerCenterXConstraint.isActive = true
-            self.cutForDealerLeadingConstraint.isActive = false
-            self.cutForDealerTrailingConstraint.isActive = false
-            self.cutForDealerTopConstraint.constant = (ScorecardUI.smallPhoneSize() ? 70 : 100)
             self.overrideSettingsButton.isHidden = true
             self.selectedPlayersTopConstraint.constant = (UIScreen.main.bounds.height * 0.10) + navigationBar.intrinsicContentSize.height
         } else {
-            self.cutForDealerCenterXConstraint.isActive = false
-            self.cutForDealerLeadingConstraint.isActive = true
-            self.cutForDealerTrailingConstraint.isActive = true
             self.bannerContinueButton.isHidden = !ScorecardUI.landscapePhone() && !ScorecardUI.smallPhoneSize()
             self.continueButton.isHidden = ScorecardUI.landscapePhone() || ScorecardUI.smallPhoneSize()
-            if ScorecardUI.landscapePhone() {
-                self.cutForDealerTopConstraint.constant = (ScorecardUI.screenHeight - self.cutForDealerButton.frame.height - 50.0) / 2.0
-            } else {
-                self.cutForDealerTopConstraint.constant = (ScorecardUI.smallPhoneSize() ? 40 : 20)
-            }
             self.overrideSettingsButton.isHidden = false
             if self.scorecard.isHosting {
                 var topConstraint: CGFloat

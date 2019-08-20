@@ -362,12 +362,12 @@ public class Suit : Hashable {
         }
     }
     
-    func toAttributedString(font: UIFont? = nil, noTrumpScale: CGFloat = 0.9) -> NSAttributedString {
+    func toAttributedString(font: UIFont? = nil, noTrumpScale: CGFloat? = nil) -> NSAttributedString {
         var attributes: [NSAttributedString.Key : Any] = [NSAttributedString.Key.foregroundColor: self.color]
         if font != nil {
             var font = font!
             if self.suitEnum == .noTrump {
-                font = UIFont(descriptor: font.fontDescriptor, size: font.pointSize * noTrumpScale)
+                font = UIFont(descriptor: font.fontDescriptor, size: font.pointSize * (noTrumpScale ?? 0.9))
             }
             attributes[NSAttributedString.Key.font] = font
         }

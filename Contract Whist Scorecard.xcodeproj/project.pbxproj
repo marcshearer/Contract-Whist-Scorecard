@@ -1136,10 +1136,9 @@
 			};
 			buildConfigurationList = CC4CC0F01DEADC32007FB24F /* Build configuration list for PBXProject "Contract Whist Scorecard" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
 				Base,
 			);

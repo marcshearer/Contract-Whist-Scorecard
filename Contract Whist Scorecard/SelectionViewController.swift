@@ -114,6 +114,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             self.bannerPaddingView.bannerColor = bannerColor
             self.navigationBar.bannerColor = bannerColor
             self.bannerContinuationView.bannerColor = bannerColor
+            self.bannerContinuationView.borderColor = bannerColor
         }
         
         // Check network

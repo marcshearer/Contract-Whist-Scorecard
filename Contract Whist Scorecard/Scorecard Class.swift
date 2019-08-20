@@ -621,14 +621,14 @@ class Scorecard {
         }
     }
     
-    public func roundTitle(_ round: Int, rankColor: UIColor = UIColor.black, font: UIFont? = nil, rounds: Int! = nil, cards: [Int]! = nil, bounce: Bool! = nil, suits: [Suit]! = nil) -> NSMutableAttributedString {
+    public func roundTitle(_ round: Int, rankColor: UIColor = UIColor.black, font: UIFont? = nil, noTrumpScale: CGFloat? = nil, rounds: Int! = nil, cards: [Int]! = nil, bounce: Bool! = nil, suits: [Suit]! = nil) -> NSMutableAttributedString {
         
         let rankColor = [NSAttributedString.Key.foregroundColor: rankColor]
         let rank = NSMutableAttributedString(string: "\(self.roundCards(round, rounds: rounds, cards: cards, bounce: bounce))", attributes: rankColor)
         let suit = self.roundSuit(round, suits: suits)
         let roundTitle = NSMutableAttributedString()
         roundTitle.append(rank)
-        roundTitle.append(suit.toAttributedString(font: font))
+        roundTitle.append(suit.toAttributedString(font: font, noTrumpScale: noTrumpScale))
         
         return roundTitle
     }

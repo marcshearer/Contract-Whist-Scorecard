@@ -239,7 +239,7 @@
 		3C1CD8971CE864E3C7E0302F3FC19F7F /* RMQFramesetValidationResult.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQFramesetValidationResult.h; path = RMQClient/RMQFramesetValidationResult.h; sourceTree = "<group>"; };
 		3C4C9B4167D4CA76B2FEBE083D21FD01 /* RMQConnectionConfig.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQConnectionConfig.h; path = RMQClient/RMQConnectionConfig.h; sourceTree = "<group>"; };
 		3C89A1F02D1EA3E250273E76C5DBA255 /* RMQQueuingConnectionDelegateProxy.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQQueuingConnectionDelegateProxy.h; path = RMQClient/RMQQueuingConnectionDelegateProxy.h; sourceTree = "<group>"; };
-		3E0C9211CE6CA985ACA773C20E32654B /* RMQClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = RMQClient.framework; path = RMQClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E0C9211CE6CA985ACA773C20E32654B /* RMQClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RMQClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		432DD937E7C16C20A1926395D0463058 /* RMQMultipleChannelAllocator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RMQMultipleChannelAllocator.m; path = RMQClient/RMQMultipleChannelAllocator.m; sourceTree = "<group>"; };
 		44CA8CE2972BFE02379EA5D0D0CA5B20 /* CocoaAsyncSocket-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "CocoaAsyncSocket-dummy.m"; sourceTree = "<group>"; };
 		4596A6B717D6186BEBDB9C21DDF79EE6 /* RMQConnectionDelegate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQConnectionDelegate.h; path = RMQClient/RMQConnectionDelegate.h; sourceTree = "<group>"; };
@@ -279,7 +279,7 @@
 		768B2329B9B16E69EDBF269637F27826 /* RMQParser.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQParser.h; path = RMQClient/RMQParser.h; sourceTree = "<group>"; };
 		7692BBCFCF6770BB84869716D9C48147 /* GCDAsyncSocket.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = GCDAsyncSocket.m; path = Source/GCD/GCDAsyncSocket.m; sourceTree = "<group>"; };
 		78E2DEC44C3492F65A0F32A3DAD21FA4 /* RMQFrameset.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQFrameset.h; path = RMQClient/RMQFrameset.h; sourceTree = "<group>"; };
-		7967359E8CCDECF959EC43BE911784E1 /* JKVValue.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = JKVValue.framework; path = JKVValue.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7967359E8CCDECF959EC43BE911784E1 /* JKVValue.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = JKVValue.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A1323A0749FFDDEBB46E2F2604925DF /* RMQProtocolHeader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQProtocolHeader.h; path = RMQClient/RMQProtocolHeader.h; sourceTree = "<group>"; };
 		7CA7606392BE5F1FF8B3430579FD4D61 /* JKVKeyedEncoderVisitor.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JKVKeyedEncoderVisitor.m; path = JKVValue/Private/JKVKeyedEncoderVisitor.m; sourceTree = "<group>"; };
 		7CEA9368AE6BFA8457DA987FE5453BF2 /* RMQTransportDelegate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQTransportDelegate.h; path = RMQClient/RMQTransportDelegate.h; sourceTree = "<group>"; };
@@ -296,7 +296,7 @@
 		8F64103980EB0C9BA4BCE8D42EE76F55 /* RMQHeartbeatSender.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQHeartbeatSender.h; path = RMQClient/RMQHeartbeatSender.h; sourceTree = "<group>"; };
 		90DDED4BBDD7BFE4036D4F9BC21162EB /* RMQTable.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RMQTable.m; path = RMQClient/RMQTable.m; sourceTree = "<group>"; };
 		9372E4C6396CC170C2BE99FCCE449DA8 /* AsyncUdpSocket.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = AsyncUdpSocket.h; path = Source/RunLoop/AsyncUdpSocket.h; sourceTree = "<group>"; };
-		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		955DDB32D6CB245B9A983768419371E0 /* RMQProcessInfoNameGenerator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQProcessInfoNameGenerator.h; path = RMQClient/RMQProcessInfoNameGenerator.h; sourceTree = "<group>"; };
 		99727E9A07C3E9F84C88BB87E96C9085 /* RMQBasicProperties.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RMQBasicProperties.m; path = RMQClient/RMQBasicProperties.m; sourceTree = "<group>"; };
 		9D451C8DDD65DFDA460C01A01879DD86 /* RMQClient-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "RMQClient-umbrella.h"; sourceTree = "<group>"; };
@@ -312,7 +312,7 @@
 		AF35D8FD8A31B0BFFE29DC63E58BA888 /* RMQURI.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RMQURI.m; path = RMQClient/RMQURI.m; sourceTree = "<group>"; };
 		AF463A2CB5E1B6E07406C29D90AA772B /* RMQFramesetValidationResult.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RMQFramesetValidationResult.m; path = RMQClient/RMQFramesetValidationResult.m; sourceTree = "<group>"; };
 		B055D5774CCDD643182F937E72BBA677 /* RMQMethodDecoder.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RMQMethodDecoder.m; path = RMQClient/RMQMethodDecoder.m; sourceTree = "<group>"; };
-		B15D7BD4DE8990883A3FA40CF98DEF6F /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = CocoaAsyncSocket.framework; path = CocoaAsyncSocket.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B15D7BD4DE8990883A3FA40CF98DEF6F /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CocoaAsyncSocket.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B351EFE3E7D47674A6598D2F065D7CC6 /* JKVMutableValue.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JKVMutableValue.m; path = JKVValue/Public/JKVMutableValue.m; sourceTree = "<group>"; };
 		B479523FE52D235231E5B614B763B6C1 /* RMQConnectionDelegateLogger.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RMQConnectionDelegateLogger.m; path = RMQClient/RMQConnectionDelegateLogger.m; sourceTree = "<group>"; };
 		B92FDFBB75ABFA3F541F3C80E0CB86A9 /* RMQSender.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQSender.h; path = RMQClient/RMQSender.h; sourceTree = "<group>"; };
@@ -365,7 +365,7 @@
 		F7592BD822EA70004CEB172D0A78E473 /* JKVKeyedDecoderVisitor.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JKVKeyedDecoderVisitor.m; path = JKVValue/Private/JKVKeyedDecoderVisitor.m; sourceTree = "<group>"; };
 		F892347CCF3F47FC40187E5E703CDCDC /* CocoaAsyncSocket-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "CocoaAsyncSocket-umbrella.h"; sourceTree = "<group>"; };
 		F99AC6C10B0D19876E8C2DBC58907780 /* Pods-Contract Whist Scorecard-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Contract Whist Scorecard-frameworks.sh"; sourceTree = "<group>"; };
-		FA11454E621F3B3DFC479B5559D83AED /* Pods_Contract_Whist_Scorecard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Contract_Whist_Scorecard.framework; path = "Pods-Contract Whist Scorecard.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA11454E621F3B3DFC479B5559D83AED /* Pods_Contract_Whist_Scorecard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Contract_Whist_Scorecard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA239E97907670CD7793FBBE31C1FEDD /* RMQConnectionRecover.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RMQConnectionRecover.m; path = RMQClient/RMQConnectionRecover.m; sourceTree = "<group>"; };
 		FA62BDA008938BFCA9EF643FF7470255 /* RMQMethods+Convenience.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "RMQMethods+Convenience.m"; path = "RMQClient/RMQMethods+Convenience.m"; sourceTree = "<group>"; };
 		FAB6610AF00FB0ABC17FA5DA3EBE070F /* RMQConnectionDelegateLogger.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RMQConnectionDelegateLogger.h; path = RMQClient/RMQConnectionDelegateLogger.h; sourceTree = "<group>"; };
@@ -431,7 +431,6 @@
 				B679175A2E065F8003CB75E1989BE446 /* RunLoop */,
 				67D3409DF4F8EB760AB7A241195B0E22 /* Support Files */,
 			);
-			name = CocoaAsyncSocket;
 			path = CocoaAsyncSocket;
 			sourceTree = "<group>";
 		};
@@ -560,7 +559,6 @@
 				3A4F359C8483959A6B6EC52015923F4A /* JKVValueImpl.m */,
 				722100FE7EA133A01C5A71F824B460FB /* Support Files */,
 			);
-			name = JKVValue;
 			path = JKVValue;
 			sourceTree = "<group>";
 		};
@@ -686,7 +684,6 @@
 				A9A41E0552E670F7BB86744D589BA524 /* RMQWaiterFactory.h */,
 				7775B6960D1D45145EA5B620CC4C85D1 /* Support Files */,
 			);
-			name = RMQClient;
 			path = RMQClient;
 			sourceTree = "<group>";
 		};
@@ -912,10 +909,11 @@
 			};
 			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 7DB346D0F39D3F0E887471402A8071AB;
 			productRefGroup = FC01234BC6E71B4C52C8C19276ABE7C2 /* Products */;

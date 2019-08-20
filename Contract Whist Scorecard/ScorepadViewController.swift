@@ -992,10 +992,16 @@ class ScorepadViewController: CustomViewController,
             }
             
             bodyCell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ScorepadCollectionViewCell
-            if column == 0
-            {
+            
+            if narrow {
+                bodyCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 20.0)
+            } else {
+                bodyCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 24.0)
+            }
+            
+            if column == 0 {
                 Palette.tableTopStyle(bodyCell.scorepadCellLabel)
-                bodyCell.scorepadCellLabel.attributedText = scorecard.roundTitle(round, rankColor: Palette.emphasisText, font: bodyCell.scorepadCellLabel.font, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
+                bodyCell.scorepadCellLabel.attributedText = scorecard.roundTitle(round, rankColor: Palette.emphasisText, font: bodyCell.scorepadCellLabel.font, noTrumpScale: 0.8, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
                 bodyCell.scorepadLeftLineWeight.constant = 0
                 bodyCell.scorepadCellLabel.accessibilityIdentifier = ""
             } else {
@@ -1018,12 +1024,8 @@ class ScorepadViewController: CustomViewController,
                     bodyCell.scorepadCellLabel.accessibilityIdentifier = "player\(player)round\(round)"
                 }
             }
+           
             bodyCell.scorepadTopLineWeight.constant = thinLineWeight
-            if narrow {
-                bodyCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 20.0)
-            } else {
-                bodyCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 24.0)
-            }
             
             cell=bodyCell
         }

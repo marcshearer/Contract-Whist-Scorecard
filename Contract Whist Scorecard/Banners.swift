@@ -80,11 +80,10 @@ class BannerContinuation: UIView {
             var rect: CGRect
             
             if pass == 1 {
-                let offset: CGFloat = (self.shape == .upArrow ? 5.0 : 0.0)
-                rect = CGRect(x: 0, y: offset, width: self.frame.width, height: self.frame.height - offset)
+                rect = CGRect(x: 0.0, y: 0.0, width: self.frame.width, height: self.frame.height)
                 color = self.borderColor
             } else {
-                rect = CGRect(x: 0, y: 0.0, width: self.frame.width, height: self.frame.height - 5.0)
+                rect = CGRect(x: 0.0, y: 0.0, width: self.frame.width, height: self.frame.height - 5.0)
                 color = self.bannerColor
             }
             
@@ -92,7 +91,7 @@ class BannerContinuation: UIView {
             case .upArrow:
                 points.append(PolygonPoint(x: rect.minX, y: rect.minY, pointType: .point))
                 points.append(PolygonPoint(x: rect.minX, y: rect.maxY, pointType: .point))
-                points.append(PolygonPoint(x: rect.midX, y: rect.minY, pointType: .quadRounded, radius: 20.0))
+                points.append(PolygonPoint(x: rect.midX, y: rect.minY + (pass == 1 ? 5.0 : 0.0), pointType: .quadRounded, radius: 20.0))
                 points.append(PolygonPoint(x: rect.maxX, y: rect.maxY, pointType: .point))
                 points.append(PolygonPoint(x: rect.maxX, y: rect.minY, pointType: .point))
                 

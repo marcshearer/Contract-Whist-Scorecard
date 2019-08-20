@@ -22,8 +22,8 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2d4-a6-rKy">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" misplaced="YES" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YUm-GK-DA2" userLabel="Content View">
-                                        <rect key="frame" x="1" y="0.0" width="812" height="562.66666666666663"/>
+                                    <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YUm-GK-DA2" userLabel="Content View">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H46-u6-heu" userLabel="Top Area">
                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="324.66666666666669"/>
@@ -197,8 +197,8 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kar-Qx-XWq" userLabel="Middle Area">
                                                 <rect key="frame" x="0.0" y="324.66666666666669" width="375" height="325.00000000000006"/>
                                                 <subviews>
-                                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="2" contentMode="scaleAspectFill" misplaced="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2h7-Jf-CHY" userLabel="Others Collection View">
-                                                        <rect key="frame" x="47.5" y="23.5" width="200" height="120"/>
+                                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="2" contentMode="scaleAspectFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2h7-Jf-CHY" userLabel="Others Collection View">
+                                                        <rect key="frame" x="47.666666666666657" y="102.66666666666663" width="280" height="120"/>
                                                         <color key="backgroundColor" name="Clear"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="280" id="8L9-vx-Fqr"/>
@@ -223,8 +223,8 @@
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                             <color key="backgroundColor" name="Clear"/>
                                                                         </view>
-                                                                        <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aDW-MF-nlZ" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                                            <rect key="frame" x="0.0" y="90" width="60" height="25"/>
+                                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aDW-MF-nlZ" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                                            <rect key="frame" x="0.0" y="100" width="60" height="20"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="height" constant="20" id="Ngt-4D-3aG"/>
                                                                             </constraints>

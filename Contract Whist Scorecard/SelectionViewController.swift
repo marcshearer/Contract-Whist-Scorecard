@@ -318,7 +318,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             slideOutButton.isHidden = ScorecardUI.landscapePhone()
             self.unselectedCollectionViewBottomConstraint.constant = self.slideOutButton.distanceFromBottom()
         } else {
-            slideOutButton.isHidden = (selectedList.count == 0)
+            slideOutButton.isHidden = (selectedList.count <= (self.selectionMode == .invitees ? 1 : 0))
         }
     }
     
@@ -509,8 +509,13 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         
         self.selectedList = []
         
-        for playerNumber in 1...scorecard.currentPlayers {
-            
+        for slot in 0..<scorecard.numberPlayers {
+            // Clear any existing selection
+            self.selectedPlayersView.clear(slot: slot)
+        }
+        
+        for playerNumber in 1...self.scorecard.currentPlayers {
+            // Add in player if set up
             let playerURI = scorecard.playerURI(scorecard.enteredPlayer(playerNumber).playerMO)
             if playerURI != "" {
                 if let playerMO = availableList.first(where: { self.scorecard.playerURI($0) == playerURI }) {
@@ -712,6 +717,9 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private func setUserInteraction(_ enabled: Bool) {
         self.unselectedCollectionView.isUserInteractionEnabled = enabled
         self.selectedPlayersView.isEnabled = enabled
+        if enabled && self.selectionMode == .invitees {
+            self.selectedPlayersView.setEnabled(slot: 0, enabled: false)
+        }
         self.slideOutButton.isEnabled = enabled
     }
     

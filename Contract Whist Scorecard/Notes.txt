@@ -118,6 +118,10 @@ Changed red padding to yellow in override settings
 Tidied up game summary when rotated
 Got rid of funny red border when enabling/changing online games player
 Change the W to Continue Button color
+Change the transition to entry from scorecard
+Can remove self manually in online game after select / deselect other players
+Arrows in high scores not consistent left-right
+Mix up if go into game repeatedly with players not in order
 
 Bugs fix now
 ------------
@@ -135,18 +139,15 @@ Add tests for history / location to check they're not saved if play a game
 Get location/notification/online game notification permission in settings (and disable options if permissions not granted)
 Auto-sync when download players in Get Started
 Update Walkthrough - esp online game
-Rotate round summary wrong
 
 TODO
 ----
 Avoid re-deal if crash before first deal
 Thumbnail pictures seem to disappear (on host?)
 Crash if go into High Scores repeatedly
-Mix up if go into game repeatedly with players not in order
-Move 'Choose Device to View' down a bit
-Arrows in high scores not consistent left- right
-Can remove self manually in online game
-
+History Detail layout constraints warnings
+High Scores layout constraints warnings
+Rotate round summary wrong
 
 Jack
 ----

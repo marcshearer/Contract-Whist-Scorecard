@@ -55,7 +55,7 @@
                                 <rect key="frame" x="0.0" y="64" width="414" height="436"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="High Scores Section Cell" id="vo8-kP-Ieg" customClass="HighScoresSectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="High Scores Section Cell" id="vo8-kP-Ieg" customClass="HighScoresSectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="55.5" width="414" height="150"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vo8-kP-Ieg" id="gk3-Xc-hVq">
@@ -63,21 +63,21 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ls2-aW-5RM" userLabel="Left Filler">
-                                                    <rect key="frame" x="0.0" y="12" width="46" height="138"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="46" height="138"/>
                                                     <color key="backgroundColor" name="Banner"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="46" id="jlr-LD-DUj"/>
                                                     </constraints>
                                                 </view>
                                                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="36" sectionHeaderHeight="28" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="D4v-1C-Asf">
-                                                    <rect key="frame" x="96" y="0.0" width="9" height="150"/>
+                                                    <rect key="frame" x="96" y="0.0" width="262" height="150"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <prototypes>
                                                         <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="High Scores Score Cell" id="H8r-Bb-WYw" customClass="HighScoresScoreCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="28" width="9" height="36"/>
+                                                            <rect key="frame" x="0.0" y="28" width="262" height="36"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="H8r-Bb-WYw" id="vqT-P4-hoI">
-                                                                <rect key="frame" x="0.0" y="0.0" width="9" height="36"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="262" height="36"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
                                                                     <view contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="1Xd-94-HFG" userLabel="Thumbnail container">
@@ -183,7 +183,7 @@
                                                     </prototypes>
                                                 </tableView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kyn-uv-mY1" userLabel="Right Filler">
-                                                    <rect key="frame" x="115" y="0.0" width="46" height="138"/>
+                                                    <rect key="frame" x="368" y="0.0" width="46" height="138"/>
                                                     <color key="backgroundColor" name="Banner"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="46" id="RIB-qk-S6t"/>
@@ -191,9 +191,9 @@
                                                 </view>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="ls2-aW-5RM" firstAttribute="top" secondItem="gk3-Xc-hVq" secondAttribute="top" constant="12" id="HiA-kR-ndd"/>
+                                                <constraint firstItem="ls2-aW-5RM" firstAttribute="top" secondItem="gk3-Xc-hVq" secondAttribute="top" id="HiA-kR-ndd"/>
                                                 <constraint firstAttribute="bottom" secondItem="D4v-1C-Asf" secondAttribute="bottom" id="Iop-4Q-GKc"/>
-                                                <constraint firstAttribute="bottom" secondItem="ls2-aW-5RM" secondAttribute="bottom" id="LSv-0E-wAb"/>
+                                                <constraint firstAttribute="bottom" secondItem="ls2-aW-5RM" secondAttribute="bottom" constant="12" id="LSv-0E-wAb"/>
                                                 <constraint firstAttribute="bottom" secondItem="Kyn-uv-mY1" secondAttribute="bottom" constant="12" id="U11-FJ-7T4"/>
                                                 <constraint firstItem="Kyn-uv-mY1" firstAttribute="leading" secondItem="D4v-1C-Asf" secondAttribute="trailing" constant="10" id="V4b-Hn-n8u"/>
                                                 <constraint firstItem="ls2-aW-5RM" firstAttribute="leading" secondItem="gk3-Xc-hVq" secondAttribute="leading" id="WtL-o6-36l"/>

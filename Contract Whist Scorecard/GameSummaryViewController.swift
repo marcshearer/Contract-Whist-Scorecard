@@ -495,6 +495,7 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
             view.isUserInteractionEnabled = false
             activityIndicator.startAnimating()
             self.sync.delegate = self
+            self.scorecardButton.isHidden = true
             _ = self.sync.synchronise(waitFinish: true)
         } else {
             syncCompletion(0)

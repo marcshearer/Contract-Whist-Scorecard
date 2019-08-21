@@ -128,7 +128,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
     }
     
     public func origin(slot: Int, in view: UIView) -> CGPoint {
-        return self.playerViews[slot].thumbnail.convert(CGPoint(x: 0, y: 0), to: view)
+        return self.playerViews[slot].thumbnailView.convert(CGPoint(x: 0, y: 0), to: view)
     }
     
     public func freeSlot() -> Int? {

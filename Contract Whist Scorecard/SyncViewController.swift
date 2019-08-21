@@ -236,7 +236,6 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
         let waitTime = max(0.0, delay - timeSinceLast)
         self.lastStageFinish = dateNow + waitTime
         Utility.executeAfter(delay: waitTime, completion: {
-            print(Date())
             completion()
         })
     }

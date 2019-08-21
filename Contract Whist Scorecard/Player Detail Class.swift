@@ -145,7 +145,7 @@ import CoreData
     }
     
     
-    public func toManagedObject(playerMO: PlayerMO) {
+    public func toManagedObject(playerMO: PlayerMO, updateThumbnail: Bool = true) {
         // Doesn't set thumbnail or date as they are downloaded separately and update direct
         playerMO.name = self.name
         playerMO.nameDate = self.nameDate
@@ -162,7 +162,6 @@ import CoreData
         playerMO.handsMade = self.handsMade
         playerMO.twosMade = self.twosMade
         playerMO.totalScore = self.totalScore
-        playerMO.thumbnail = self.thumbnail
         playerMO.maxScore = self.maxScore
         playerMO.maxScoreDate = self.maxScoreDate
         playerMO.maxMade = self.maxMade
@@ -171,6 +170,15 @@ import CoreData
         playerMO.maxTwosDate = self.maxTwosDate
         playerMO.syncDate = self.syncDate
         playerMO.syncRecordID = self.syncRecordID
+        if updateThumbnail {
+            if self.name == "Emma" && self.thumbnail == nil {
+                print("STOP")
+            }
+            playerMO.thumbnail = self.thumbnail
+            playerMO.thumbnailDate = self.thumbnailDate
+        } else if self.name == "Emma" && !updateThumbnail && playerMO.thumbnail == nil {
+            print("STOP")
+        }
     }
     
     public func fromManagedObject(playerMO: PlayerMO) {
@@ -189,6 +197,9 @@ import CoreData
         self.handsMade = playerMO.handsMade
         self.twosMade = playerMO.twosMade
         self.totalScore = playerMO.totalScore
+        if self.name == "Emma" && playerMO.thumbnail == nil {
+            print("STOP")
+        }
         self.thumbnail = playerMO.thumbnail
         self.thumbnailDate = playerMO.thumbnailDate as Date?
         self.maxScore = playerMO.maxScore
@@ -203,6 +214,7 @@ import CoreData
     }
     
     public func fromCloudObject(cloudObject: CKRecord) {
+        // Doesn't set thumbnail as they are downloaded separately and update direct
         self.name = Utility.objectString(cloudObject: cloudObject, forKey: "name")
         self.nameDate = Utility.objectDate(cloudObject: cloudObject, forKey: "nameDate")
         self.email = Utility.objectString(cloudObject: cloudObject, forKey: "email")
@@ -228,6 +240,7 @@ import CoreData
     }
     
     public func toCloudObject(cloudObject: CKRecord) {
+        // Doesn't set thumbnail or date as they are downloaded separately and update direct
         cloudObject.setValue(self.name, forKey: "name")
         cloudObject.setValue(self.nameDate , forKey: "nameDate")
         cloudObject.setValue(self.email , forKey: "email")

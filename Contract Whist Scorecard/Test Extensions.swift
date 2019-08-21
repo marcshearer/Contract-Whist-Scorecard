@@ -158,7 +158,7 @@ extension HandViewController {
     }
     
     func autoBid() {
-        if Scorecard.shared.autoPlayHands > 0 && (Scorecard.shared.autoPlayHands > 1 || round <= Scorecard.shared.autoPlayRounds) {
+        if Scorecard.shared.autoPlayHands > 0 && (Scorecard.shared.autoPlayHands > 1 || round <= Scorecard.shared.autoPlayGames) {
             var bids: [Int] = []
             for playerNumber in 1...Scorecard.shared.currentPlayers {
                 let bid = Scorecard.shared.entryPlayer(playerNumber).bid(round)
@@ -191,12 +191,12 @@ extension HandViewController {
             }
         } else {
             Scorecard.shared.autoPlayHands = 0
-            Scorecard.shared.autoPlayRounds = 0
+            Scorecard.shared.autoPlayGames = 0
         }
     }
     
     func autoPlay() {
-        if Scorecard.shared.autoPlayHands > 0 && (Scorecard.shared.autoPlayHands > 1 || self.round <= Scorecard.shared.autoPlayRounds) {
+        if Scorecard.shared.autoPlayHands > 0 && (Scorecard.shared.autoPlayHands > 1 || self.round <= Scorecard.shared.autoPlayGames) {
             if self.state.toPlay == self.state.enteredPlayerNumber {
                 for suitNumber in 1...self.state.hand.handSuits.count {
                     if self.suitEnabled[suitNumber-1] {
@@ -213,7 +213,7 @@ extension HandViewController {
             }
         } else {
             Scorecard.shared.autoPlayHands = 0
-            Scorecard.shared.autoPlayRounds = 0
+            Scorecard.shared.autoPlayGames = 0
         }
     }
     
@@ -260,10 +260,21 @@ extension ClientViewController {
         switch descriptor {
         case "autoPlay":
             let dictionary = data as! [String : Int]
+            let hands = Scorecard.shared.autoPlayHands
+            let games = Scorecard.shared.autoPlayGames
             if let autoPlayHands = dictionary["hands"] {
                 Scorecard.shared.autoPlayHands = autoPlayHands
-                if let autoPlayRounds = dictionary["rounds"] {
-                    Scorecard.shared.autoPlayRounds = autoPlayRounds
+                if let autoPlayRounds = dictionary["games"] {
+                    Scorecard.shared.autoPlayGames = autoPlayRounds
+                }
+            }
+            if hands != Scorecard.shared.autoPlayHands || games != Scorecard.shared.autoPlayGames {
+                // Changed - need to play if can
+                if let handViewController = self.scorecard.handViewController {
+                    if handViewController.state?.toPlay == handViewController.enteredPlayerNumber {
+                        // Me to play
+                        handViewController.autoPlay()
+                    }
                 }
             }
         default:
@@ -295,8 +306,8 @@ extension Scorecard {
     public func getAutoPlayCount(completion: (()->())? = nil) {
         ConfirmCountViewController.show(title: "Auto-play", message: "Enter the number of games you want to simulate", minimumValue: 1, handler: { (value) in
             self.autoPlayHands = value
-            ConfirmCountViewController.show(title: "Auto-play", message: "Enter the number of hands you want to simulate in the final round", defaultValue: self.rounds, minimumValue: 1, maximumValue: self.rounds, handler: { (value) in
-                self.autoPlayRounds = value
+            ConfirmCountViewController.show(title: "Auto-play", message: "Enter the number of hands you want to complete in the \(self.autoPlayHands > 1 ? "final " : "")game", defaultValue: self.rounds, minimumValue: 1, maximumValue: self.rounds, handler: { (value) in
+                self.autoPlayGames = value
                     self.sendAutoPlay()
                     completion?()
             })
@@ -306,7 +317,7 @@ extension Scorecard {
     public func sendAutoPlay() {
         // Tell other players to enter Autoplay mode (for testing)
         self.commsDelegate?.send("autoPlay", ["hands"  : self.autoPlayHands,
-                                              "rounds" : self.autoPlayRounds])
+                                              "games" : self.autoPlayGames])
     }
     
     func testResetSettings() {

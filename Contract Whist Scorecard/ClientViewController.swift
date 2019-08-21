@@ -27,7 +27,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
-    private let scorecard = Scorecard.shared
+    internal let scorecard = Scorecard.shared
     private var recovery: Recovery!
     private weak var selectionViewController: SelectionViewController!
     private weak var scorepadViewController: ScorepadViewController!

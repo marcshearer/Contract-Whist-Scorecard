@@ -124,6 +124,13 @@ Arrows in high scores not consistent left-right
 Mix up if go into game repeatedly with players not in order
 Increased totals font in scorepad
 
+5.0 (4)
+Avoid half of continue button being inactive in preview after cut for dealer
+Avoid exit button being hidden in scorepad when start a new game after finishing a game
+Allow autoplay to start immediately even if not host to play
+Avoid crash if host a game when player is not the same as the 'self' player from previous game
+Hide scorecard button when syncing in game summary
+
 Bugs fix now
 ------------
 When initialise app - should make the email you type in your default - i.e. set date first
@@ -147,8 +154,8 @@ TODO
 Avoid re-deal if crash before first deal
 Thumbnail pictures seem to disappear (on host?)
 Crash if go into High Scores repeatedly
-History Detail layout constraints warnings
-High Scores layout constraints warnings
+When return to home after nearby game clients show "Connected to...""
+Doesn't automatically restart game after recovery as host
 
 Jack
 ----

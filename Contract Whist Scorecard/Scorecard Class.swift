@@ -73,7 +73,7 @@ class Scorecard {
     
     // Variables for test extensions
     public var autoPlayHands: Int = 0
-    public var autoPlayRounds: Int = 0
+    public var autoPlayGames: Int = 0
     
     // Variables to store scorepad header and body height to re-center popups correctly
     public var scorepadHeaderHeight: CGFloat = 0

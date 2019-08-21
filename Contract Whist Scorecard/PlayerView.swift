@@ -31,7 +31,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     public var parent: UIView
     public var tag: Int
     public var type: PlayerViewType
-    public var thumbnail: ThumbnailView!
+    public var thumbnailView: ThumbnailView!
     public var inUse = false
     public var playerMO: PlayerMO?
     public var haloWidth: CGFloat = 0.0
@@ -47,67 +47,67 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         super.init()
         
         // Setup thumbnail
-        self.thumbnail = ThumbnailView(frame: CGRect(x: 5.0, y: 5.0, width: width, height: height), haloWidth: haloWidth)
+        self.thumbnailView = ThumbnailView(frame: CGRect(x: 5.0, y: 5.0, width: width, height: height), haloWidth: haloWidth)
         self.haloWidth = haloWidth
-        self.thumbnail.tag = tag
+        self.thumbnailView.tag = tag
     
-        parent.addSubview(self.thumbnail)
-        parent.bringSubviewToFront(self.thumbnail)
+        parent.addSubview(self.thumbnailView)
+        parent.bringSubviewToFront(self.thumbnailView)
         
         // Setup tap gesture
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(PlayerView.tapSelector(_:)))
         tapGesture.delegate = tapGestureDelegate
-        self.thumbnail.addGestureRecognizer(tapGesture)
+        self.thumbnailView.addGestureRecognizer(tapGesture)
         
         // Setup drag and drop
         if self.type == .unselected || self.type == .selected {
             let dragInteraction = UIDragInteraction(delegate: self)
             dragInteraction.isEnabled = true
-            self.thumbnail.addInteraction(dragInteraction)
-            self.thumbnail.isUserInteractionEnabled = true
+            self.thumbnailView.addInteraction(dragInteraction)
+            self.thumbnailView.isUserInteractionEnabled = true
         }
     }
     
     public var alpha: CGFloat {
         get {
-            return self.thumbnail.alpha
+            return self.thumbnailView.alpha
         }
         set (newValue) {
-            self.thumbnail.alpha = newValue
+            self.thumbnailView.alpha = newValue
         }
     }
     
     public var frame: CGRect {
         get {
-            return self.thumbnail.frame
+            return self.thumbnailView.frame
         }
         set (newValue) {
-            self.thumbnail.set(frame: newValue)
+            self.thumbnailView.set(frame: newValue)
         }
     }
     
     public var isEnabled: Bool {
         get {
-            return self.thumbnail.isUserInteractionEnabled
+            return self.thumbnailView.isUserInteractionEnabled
         }
         set(newValue) {
-            self.thumbnail.isUserInteractionEnabled = newValue
+            self.thumbnailView.isUserInteractionEnabled = newValue
         }
     }
     
     public var isHidden: Bool {
         get {
-            return self.thumbnail.isHidden
+            return self.thumbnailView.isHidden
         }
         set(newValue) {
-            self.thumbnail.isHidden = newValue
+            self.thumbnailView.isHidden = newValue
         }
     }
     
     public func set(data: Data? = nil, name: String? = nil, initials: String? = nil, nameHeight: CGFloat? = nil, alpha: CGFloat? = nil) {
         self.inUse = true
         self.playerMO = nil
-        self.thumbnail.set(data: data, name: name, initials: initials, nameHeight: nameHeight ?? 30.0, alpha: alpha)
+        self.thumbnailView.set(data: data, name: name, initials: initials, nameHeight: nameHeight ?? 30.0, alpha: alpha)
     }
     
     public func set(playerMO: PlayerMO, nameHeight: CGFloat? = nil) {
@@ -117,30 +117,30 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     
     public func set(haloWidth: CGFloat) {
         self.haloWidth = haloWidth
-        self.thumbnail.set(haloWidth: haloWidth)
-        self.thumbnail.set(frame: self.frame)
+        self.thumbnailView.set(haloWidth: haloWidth)
+        self.thumbnailView.set(frame: self.frame)
     }
     
     public func set(haloColor: UIColor) {
-        self.thumbnail.set(haloColor: haloColor)
+        self.thumbnailView.set(haloColor: haloColor)
     }
     
     public func set(thumbnailAlpha: CGFloat) {
-        self.thumbnail.set(thumbnailAlpha: thumbnailAlpha)
+        self.thumbnailView.set(thumbnailAlpha: thumbnailAlpha)
     }
     
     public func clear(initials: String? = nil) {
         self.inUse = false
         self.playerMO = nil
-        self.thumbnail.set(initials: initials, nameHeight: 30.0, placeholder: true)
+        self.thumbnailView.set(initials: initials, nameHeight: 30.0, placeholder: true)
     }
     
     public func set(textColor: UIColor) {
-        self.thumbnail.set(textColor: textColor)
+        self.thumbnailView.set(textColor: textColor)
     }
     
     public func set(imageName: String?) {
-        self.thumbnail.set(imageName: imageName)
+        self.thumbnailView.set(imageName: imageName)
     }
     
     @objc private func tapSelector(_ sender: Any?) {
@@ -150,7 +150,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     }
     
     public func removeFromSuperview() {
-        self.thumbnail.removeFromSuperview()
+        self.thumbnailView.removeFromSuperview()
     }
     
     // MARK: - Drop delegate handlers ================================================================== -
@@ -197,7 +197,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         previewView.set(data: self.playerMO?.thumbnail, name: self.playerMO?.name)
         previewView.set(textColor: Palette.darkHighlightText)
         let center = CGPoint(x: self.frame.width / 2.0, y: self.frame.height / 2.0)
-        let target = UIDragPreviewTarget(container: self.thumbnail, center: center)
+        let target = UIDragPreviewTarget(container: self.thumbnailView, center: center)
         let previewParameters = UIDragPreviewParameters()
         previewParameters.backgroundColor = UIColor.clear
         return UITargetedDragPreview(view: previewView, parameters: previewParameters, target: target)

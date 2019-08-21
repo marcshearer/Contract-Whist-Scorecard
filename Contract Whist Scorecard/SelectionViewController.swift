@@ -531,7 +531,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             for slot in 0..<self.scorecard.numberPlayers {
                 self.removeSelection(slot, updateUnselectedCollection: false, animate: false)
             }
-            self.addSelection(self.scorecard.findPlayerByEmail(self.thisPlayer!)!, toSlot: 0, updateUnselected: true, updateUnselectedCollection: true, animate: false)
+            self.addSelection(self.scorecard.findPlayerByEmail(self.thisPlayer!)!, toSlot: 0, updateUnselected: true, updateUnselectedCollection: false, animate: false)
         }
         // Don't allow change of host player
         self.selectedPlayersView.setEnabled(slot: 0, enabled: false)
@@ -594,7 +594,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                         
                         self.unselectedCollectionView.scrollToItem(at: IndexPath(item: unselectedPlayerIndex + (self.addPlayerThumbnail ? 1 : 0), section: 0), at: .centeredHorizontally, animated: true)
                         if let destinationCell = self.unselectedCollectionView.cellForItem(at: IndexPath(item: unselectedPlayerIndex + (self.addPlayerThumbnail ? 1 : 0), section: 0)) as? SelectionCell {
-                            let unselectedPoint = destinationCell.playerView.thumbnail.convert(CGPoint(x: 0, y: 0), to: self.view)
+                            let unselectedPoint = destinationCell.playerView.thumbnailView.convert(CGPoint(x: 0, y: 0), to: self.view)
                             self.animationView.frame = CGRect(origin: unselectedPoint, size: CGSize(width: self.thumbnailWidth, height: self.thumbnailHeight))
                             self.animationView.set(textColor: Palette.text)
                         }

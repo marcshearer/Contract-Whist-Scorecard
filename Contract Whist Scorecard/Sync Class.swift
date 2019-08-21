@@ -178,7 +178,8 @@ class Sync {
                 // Synchronise players in list with cloud
                 syncPhases = [.phaseGetVersion,
                               .phaseGetPlayers,
-                              .phaseSendPlayers]
+                              .phaseSendPlayers,
+                              .phaseGetSendImages]
             case .syncGetPlayers:
                 if self.specificExternalId != nil {
                     // Got a specifc External Id - load players that match - not currently used
@@ -1064,11 +1065,8 @@ class Sync {
         self.downloadedPlayerRecordList.append(cloudRecord)
         
         // Try to match by email address
-        let found = Scorecard.shared.playerList.firstIndex(where: { $0.email?.lowercased() == cloudRecord.email.lowercased() })
-        if found != nil {
-
+        if let localMO = Scorecard.shared.playerList.first(where: { $0.email?.lowercased() == cloudRecord.email.lowercased() }) {
             // Merge the records
-            let localMO = Scorecard.shared.playerList[found!]
             localRecord.fromManagedObject(playerMO: localMO)
             localRecord.syncRecordID = cloudObject.recordID.recordName
             
@@ -1329,7 +1327,7 @@ class Sync {
                     if self.localPlayerRecordList[playerNumber-1].syncedOk {
                         
                         // Copy to managed object
-                        self.localPlayerRecordList[playerNumber-1].toManagedObject(playerMO: self.localPlayerMOList[playerNumber - 1])
+                        self.localPlayerRecordList[playerNumber-1].toManagedObject(playerMO: self.localPlayerMOList[playerNumber - 1], updateThumbnail: false)
                         
                         // Reset sync values
                         self.localPlayerMOList[playerNumber - 1].syncGamesPlayed = self.localPlayerMOList[playerNumber - 1].gamesPlayed
@@ -1372,6 +1370,7 @@ class Sync {
             let cloudContainer = CKContainer.default()
             let publicDatabase = cloudContainer.publicCloudDatabase
             var imageRecordID: [CKRecord.ID] = []
+            self.cloudObjectList = []
             
             for playerNumber in 1...playerImageFromCloud.count {
                 imageRecordID.append(CKRecord.ID(recordName: playerImageFromCloud[playerNumber-1].syncRecordID!))
@@ -1393,6 +1392,9 @@ class Sync {
                             if CoreData.update(updateLogic: {
                                 var thumbnail: Data?
                                 thumbnail = Utility.objectImage(cloudObject: cloudObject, forKey: "thumbnail") as Data?
+                                if playerMO.name == "Emma" && thumbnail == nil {
+                                    print("STOP")
+                                }
                                 playerMO.thumbnail = thumbnail
                                 playerMO.thumbnailDate = Utility.objectDate(cloudObject: cloudObject, forKey: "thumbnailDate")
                             }) {

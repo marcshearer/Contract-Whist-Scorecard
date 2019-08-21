@@ -89,7 +89,7 @@
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="bgf-Na-549" userLabel="Finish Button">
                                                 <rect key="frame" x="20" y="11" width="62" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Back" image="back"/>
+                                                <state key="normal" image="back"/>
                                                 <connections>
                                                     <action selector="finishGamePressed:" destination="BYZ-38-t0r" eventType="touchUpOutside" id="Qte-Us-usM"/>
                                                     <action selector="finishGamePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rjT-MV-7o1"/>

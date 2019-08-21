@@ -101,7 +101,7 @@
                                 </userDefinedRuntimeAttributes>
                             </navigationBar>
                             <view contentMode="scaleToFill" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="iDT-Xi-tM5" userLabel="Action Button View">
-                                <rect key="frame" x="0.0" y="473.33333333333331" width="375" height="244.66666666666669"/>
+                                <rect key="frame" x="0.0" y="473.33333333333331" width="375" height="214.66666666666669"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x89-xH-iQy" userLabel="Left View">
                                         <rect key="frame" x="0.0" y="0.0" width="187.66666666666666" height="214.66666666666666"/>
@@ -255,7 +255,6 @@
                             <constraint firstItem="PAW-t6-IPh" firstAttribute="height" secondItem="nKd-io-ud9" secondAttribute="height" multiplier="0.5" constant="44" id="Ny1-6X-Fnh"/>
                             <constraint firstItem="2QN-TN-Yp2" firstAttribute="top" secondItem="iUU-8s-ns4" secondAttribute="top" id="Pqs-06-AB9"/>
                             <constraint firstItem="KKW-id-DrE" firstAttribute="bottom" secondItem="iUU-8s-ns4" secondAttribute="bottom" constant="-74" id="Rvu-Kd-42G"/>
-                            <constraint firstItem="iDT-Xi-tM5" firstAttribute="bottom" secondItem="KKW-id-DrE" secondAttribute="top" constant="30" id="SzB-7v-AvI"/>
                             <constraint firstItem="PAW-t6-IPh" firstAttribute="leading" secondItem="wSn-mE-2UN" secondAttribute="leading" id="U6b-1a-Msr"/>
                             <constraint firstItem="2QN-TN-Yp2" firstAttribute="trailing" secondItem="iUU-8s-ns4" secondAttribute="trailing" id="VdM-H9-jKl"/>
                             <constraint firstItem="iDT-Xi-tM5" firstAttribute="leading" secondItem="wSn-mE-2UN" secondAttribute="leading" id="XcT-zv-E3Z"/>
@@ -279,6 +278,7 @@
                             <constraint firstItem="PAW-t6-IPh" firstAttribute="height" secondItem="iUU-8s-ns4" secondAttribute="height" multiplier="0.6" constant="44" id="wZV-ex-5I8"/>
                             <constraint firstItem="nKd-io-ud9" firstAttribute="width" secondItem="wSn-mE-2UN" secondAttribute="width" multiplier="0.5" id="wpQ-bJ-PLx"/>
                             <constraint firstItem="PUR-r5-ySO" firstAttribute="leading" secondItem="iDT-Xi-tM5" secondAttribute="leading" constant="32" id="yEG-p1-cC1"/>
+                            <constraint firstItem="KKW-id-DrE" firstAttribute="top" secondItem="iDT-Xi-tM5" secondAttribute="bottom" id="yod-P1-fbJ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="wSn-mE-2UN"/>
                         <variation key="default">

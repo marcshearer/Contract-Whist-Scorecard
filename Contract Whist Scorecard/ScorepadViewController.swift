@@ -543,6 +543,7 @@ class ScorepadViewController: CustomViewController,
             scoreEntryButton.isHidden = true
         }
         
+        finishButton.isHidden = false
         if self.scorecard.isHosting || self.scorecard.hasJoined {
             if scorecard.gameComplete(rounds: self.rounds) {
                 finishButton.isHidden = true

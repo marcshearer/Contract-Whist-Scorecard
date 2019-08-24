@@ -130,6 +130,9 @@ Avoid exit button being hidden in scorepad when start a new game after finishing
 Allow autoplay to start immediately even if not host to play
 Avoid crash if host a game when player is not the same as the 'self' player from previous game
 Hide scorecard button when syncing in game summary
+Thumbnail pictures seem to disappear (on host?)
+Doesn't automatically restart game after recovery as host
+When return to home after nearby game clients show "Connected to...""
 
 Bugs fix now
 ------------
@@ -152,10 +155,10 @@ Rotate round summary wrong
 TODO
 ----
 Avoid re-deal if crash before first deal
-Thumbnail pictures seem to disappear (on host?)
 Crash if go into High Scores repeatedly
-When return to home after nearby game clients show "Connected to...""
-Doesn't automatically restart game after recovery as host
+When resume client don't show hosting options and better 'no service' message and don't allow change player or show other hosts
+Disconnect option for host in game preview?
+Flashing reminder after n seconds when your turn
 
 Jack
 ----

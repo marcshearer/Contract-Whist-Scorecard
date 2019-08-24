@@ -130,7 +130,7 @@ class ScorepadViewController: CustomViewController,
             self.alertDecision(if: self.scorecard.hasJoined, "Warning: This will mean you exit from the game. You can rejoin by selecting the 'Play Game' option in the Home menu", okButtonText: "Exit",
                 okHandler: {
                     self.tidyUp()
-                    self.dismiss()
+                    self.dismiss(returnHome: true)
                 })
         }
     }

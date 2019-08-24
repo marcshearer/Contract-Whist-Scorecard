@@ -30,14 +30,46 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Contract Whist Scorecard/RabbitMQ Class.swift"
-            timestampString = "587914904.106518"
+            filePath = "Contract Whist Scorecard/GamePreviewViewController.swift"
+            timestampString = "588358392.389861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "126"
-            endingLineNumber = "126"
-            landmarkName = "reset(reason:)"
+            startingLineNumber = "394"
+            endingLineNumber = "394"
+            landmarkName = "recoveryScorepad()"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Contract_Whist_Scorecard.GamePreviewViewController.(recoveryScorepad in _B474B43190A26DA74C2CA663F437B5C8)() -&gt; ()"
+                  moduleName = "Contract Whist Scorecard"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/marcshearer/Documents/Xcode%20projects/Contract%20Whist%20Scorecard/Contract%20Whist%20Scorecard/GamePreviewViewController.swift"
+                  timestampString = "588358392.488004"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "394"
+                  endingLineNumber = "394"
+                  offsetFromSymbolStart = "71">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in Contract_Whist_Scorecard.GamePreviewViewController.(recoveryScorepad in _B474B43190A26DA74C2CA663F437B5C8)() -&gt; ()"
+                  moduleName = "Contract Whist Scorecard"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/marcshearer/Documents/Xcode%20projects/Contract%20Whist%20Scorecard/Contract%20Whist%20Scorecard/GamePreviewViewController.swift"
+                  timestampString = "588358392.4909149"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "395"
+                  endingLineNumber = "395"
+                  offsetFromSymbolStart = "25">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

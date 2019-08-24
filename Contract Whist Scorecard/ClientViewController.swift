@@ -587,11 +587,16 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     internal func gamePreviewCompletion(returnHome: Bool) {
         self.disconnectPressed()
         self.gamePreviewViewController = nil
+        if returnHome {
+            self.exitClient(resetRecovery: true)
+        }
     }
     
     internal func gamePreview(isConnected playerMO: PlayerMO) -> Bool {
         return self.playerConnected[playerMO.email!] ?? true
     }
+    
+    internal let gamePreviewCanStartGame = false
     
     // MARK: - Browser Delegate handlers ===================================================================== -
     
@@ -660,10 +665,13 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             if peer.state == .notConnected {
                 self.appStateChange(to: .notConnected)
                 self.changePlayerAvailable()
-                self.dismissAll(reason != nil && reason != "" && reason != "Reset" , reason: reason ?? "", completion: {
-                    self.clientService?.start(email: self.thisPlayer, name: self.thisPlayerName)
-                    UIApplication.shared.isIdleTimerDisabled = false
-                })
+                if !self.gameOver && !self.scorecard.isViewing {
+                    // Don't dismiss if game over - allow time to review
+                    self.dismissAll(reason != nil && reason != "" && reason != "Reset" , reason: reason ?? "", completion: {
+                        self.clientService?.start(email: self.thisPlayer, name: self.thisPlayerName)
+                        UIApplication.shared.isIdleTimerDisabled = false
+                    })
+                }
             } else {
                 self.changePlayerAvailable()
                 if peer.state == .connected {

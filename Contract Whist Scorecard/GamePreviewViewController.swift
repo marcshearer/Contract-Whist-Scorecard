@@ -173,7 +173,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         if self.scorecard.isHosting && self.scorecard.recoveryMode && self.delegate?.gamePreviewCanStartGame ?? true {
             // If recovering and controller is happy then go to scorepad
             self.recoveryScorepad()
-        } else if !self.scorecard.isHosting && !self.scorecard.hasJoined && self.scorecard.recoveryMode {
+        } else if self.scorecard.recoveryMode && self.scorecard.recoveryOnlineMode != nil {
             // If recovering in scorepad mode go to scorepad
             self.recoveryScorepad()
         }
@@ -288,7 +288,8 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             self.overrideSettingsButton.isHidden = false
             if self.scorecard.isHosting {
                 var topConstraint: CGFloat
-                if self.delegate?.gamePreviewCanStartGame ?? true {
+                let canStartGame = self.delegate?.gamePreviewCanStartGame ?? true
+                if canStartGame {
                     topConstraint = navigationBar.intrinsicContentSize.height
                     self.bannerContinuationLabel.isHidden = true
                     self.cutForDealerButton.isEnabled = true
@@ -316,6 +317,10 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
                         }
                         animation.startAnimation()
                     }
+                }
+                if canStartGame && self.scorecard.recoveryMode {
+                    // Controller happy for game to start in recovery mode - go straight to game
+                    self.recoveryScorepad()
                 }
             }
         }

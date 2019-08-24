@@ -107,6 +107,8 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
         if gameSummaryMode != .amend {
             leftSwipeGesture.isEnabled = false
             rightSwipeGesture.isEnabled = false
+            self.playAgainButton.isEnabled = false
+            self.playAgainButton.alpha = 0.3
         }
         if self.scorecard.hasJoined || self.gameSummaryMode == .amend {
             // Disable tap gesture as individual buttons active

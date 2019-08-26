@@ -105,9 +105,11 @@ class Player {
         return self.bid[round-1]
     }
     
-    public func setBid(_ round: Int,_ bid: Int!, bonus2: Bool! = nil) {
+    public func setBid(_ round: Int,_ bid: Int!, bonus2: Bool! = nil) -> Bool {
+        var changed = false
         if self.bid[round-1] != bid {
             self.bid[round-1] = bid
+            changed = true
             self.scorecard.sendScores(playerNumber: self.playerNumber, round: round, mode: .bid)
             if bidCell[round-1] != nil {
                 bidCell[round-1]!.scorepadCellLabel.text = (bid == nil ? "" : "\(bid!)")
@@ -116,6 +118,7 @@ class Player {
             recovery!.saveBid(round: round, playerNumber: self.playerNumber)
             self.scorecard.watchManager.updateScores()
         }
+        return changed
     }
     
     public func made(_ round: Int) -> Int? {

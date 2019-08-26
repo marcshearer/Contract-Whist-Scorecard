@@ -26,7 +26,7 @@
                                 </constraints>
                                 <items>
                                     <navigationItem title="High Scores" id="dWQ-DL-biR">
-                                        <barButtonItem key="leftBarButtonItem" style="plain" id="LP6-Kn-FfC">
+                                        <barButtonItem key="leftBarButtonItem" id="LP6-Kn-FfC">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="fbp-Rs-oKP" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                 <rect key="frame" x="20" y="4" width="62" height="24"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -39,7 +39,7 @@
                                                 </connections>
                                             </button>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" style="plain" id="5Hm-Dn-5bg">
+                                        <barButtonItem key="rightBarButtonItem" id="5Hm-Dn-5bg">
                                             <button key="customView" hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="A6a-fg-3o2">
                                                 <rect key="frame" x="302" y="1" width="92" height="30"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -55,7 +55,7 @@
                                 <rect key="frame" x="0.0" y="64" width="414" height="436"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="High Scores Section Cell" id="vo8-kP-Ieg" customClass="HighScoresSectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="High Scores Section Cell" id="vo8-kP-Ieg" customClass="HighScoresSectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="55.5" width="414" height="150"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="vo8-kP-Ieg" id="gk3-Xc-hVq">
@@ -70,14 +70,14 @@
                                                     </constraints>
                                                 </view>
                                                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="36" sectionHeaderHeight="28" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="D4v-1C-Asf">
-                                                    <rect key="frame" x="96" y="0.0" width="9" height="150"/>
+                                                    <rect key="frame" x="96" y="0.0" width="262" height="150"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <prototypes>
                                                         <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="High Scores Score Cell" id="H8r-Bb-WYw" customClass="HighScoresScoreCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="28" width="9" height="36"/>
+                                                            <rect key="frame" x="0.0" y="28" width="262" height="36"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="H8r-Bb-WYw" id="vqT-P4-hoI">
-                                                                <rect key="frame" x="0.0" y="0.0" width="9" height="36"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="262" height="36"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
                                                                     <view contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" translatesAutoresizingMaskIntoConstraints="NO" id="1Xd-94-HFG" userLabel="Thumbnail container">
@@ -111,7 +111,7 @@
                                                                         </constraints>
                                                                     </view>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="cLF-tp-RPP">
-                                                                        <rect key="frame" x="60" y="8" width="50" height="17.5"/>
+                                                                        <rect key="frame" x="60" y="8" width="50.5" height="17.5"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="CIG-Pe-vXY"/>
                                                                         </constraints>
@@ -120,31 +120,27 @@
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DqA-qr-TA9">
-                                                                        <rect key="frame" x="110" y="0.0" width="30" height="33.5"/>
+                                                                        <rect key="frame" x="110.5" y="0.0" width="41.5" height="33.5"/>
                                                                         <constraints>
-                                                                            <constraint firstAttribute="width" constant="30" id="wgm-hG-1fi"/>
+                                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="wgm-hG-1fi"/>
                                                                         </constraints>
                                                                         <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
                                                                         <color key="textColor" name="Text"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w31-6u-3eZ">
-                                                                        <rect key="frame" x="190" y="0.0" width="120" height="33.5"/>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="w31-6u-3eZ">
+                                                                        <rect key="frame" x="202" y="0.0" width="120" height="33.5"/>
                                                                         <constraints>
-                                                                            <constraint firstAttribute="width" constant="120" id="HTV-Pr-aj7">
-                                                                                <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
-                                                                            </constraint>
+                                                                            <constraint firstAttribute="width" constant="120" id="HTV-Pr-aj7"/>
                                                                         </constraints>
                                                                         <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
                                                                         <color key="textColor" name="Text"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x9T-f9-P7E">
-                                                                        <rect key="frame" x="310" y="0.0" width="150" height="33.5"/>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="x9T-f9-P7E">
+                                                                        <rect key="frame" x="322" y="0.0" width="150" height="33.5"/>
                                                                         <constraints>
-                                                                            <constraint firstAttribute="width" constant="150" id="1ot-96-fSB">
-                                                                                <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
-                                                                            </constraint>
+                                                                            <constraint firstAttribute="width" constant="150" id="1ot-96-fSB"/>
                                                                         </constraints>
                                                                         <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
                                                                         <color key="textColor" name="Text"/>
@@ -172,6 +168,7 @@
                                                             <color key="backgroundColor" name="Clear"/>
                                                             <connections>
                                                                 <outlet property="date" destination="w31-6u-3eZ" id="eS9-Ng-6nd"/>
+                                                                <outlet property="dateWidthConstraint" destination="HTV-Pr-aj7" id="n8i-52-zda"/>
                                                                 <outlet property="disc" destination="OqF-cN-7Nz" id="oys-y8-wYl"/>
                                                                 <outlet property="location" destination="x9T-f9-P7E" id="fRv-4K-Q4v"/>
                                                                 <outlet property="locationWidthConstraint" destination="1ot-96-fSB" id="eGA-Oc-jgM"/>
@@ -183,7 +180,7 @@
                                                     </prototypes>
                                                 </tableView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kyn-uv-mY1" userLabel="Right Filler">
-                                                    <rect key="frame" x="115" y="0.0" width="46" height="138"/>
+                                                    <rect key="frame" x="368" y="0.0" width="46" height="138"/>
                                                     <color key="backgroundColor" name="Banner"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="46" id="RIB-qk-S6t"/>

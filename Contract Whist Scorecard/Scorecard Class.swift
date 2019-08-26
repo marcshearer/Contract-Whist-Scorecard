@@ -66,6 +66,8 @@ class Scorecard {
     public var notificationSimulator: NotificationSimulator!
     internal var lastRefresh: Date?
     internal var lastPeerRefresh: [String : Date] = [:]
+    public var alertDelegate: ScorecardAlertDelegate?
+    internal var reminderTimer: Timer?
     
     // Remote logging
     public var logService: RabbitMQClientService!

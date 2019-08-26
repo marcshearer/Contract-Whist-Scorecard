@@ -71,7 +71,14 @@ extension UIViewController {
     
     public func alertVibrate() {
         
+        if Utility.isSimulator {
+            if Scorecard.shared.autoPlayGames == 0 {
+                let whisper = Whisper(backgroundColor: UIColor(red: 0.8, green: 0.8, blue: 1.0, alpha: 1.0))
+                whisper.show("Buzzzzz!", hideAfter: 3)
+            }
+        } else {
             AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        }
     }
     
     public func alertSound() {
@@ -112,14 +119,34 @@ extension UIAlertController {
 
 extension UIView {
 
-    public func alertFlash(duration: TimeInterval = 0.2) {
+    public func alertFlash(duration: TimeInterval = 0.2, after: Double = 0.0, repeatCount: Int = 1, backgroundColor: UIColor? = nil) {
         let oldAlpha = self.alpha
+        let oldBackgroundColor = self.backgroundColor
         
-        UIView.animate(withDuration: duration, animations: {
-            self.alpha = 0
-        }) { _ in
-            self.alpha = oldAlpha
+        let animation = UIViewPropertyAnimator(duration: duration / 2.0, curve: .easeIn) {
+            if backgroundColor != nil {
+                self.backgroundColor = backgroundColor
+            } else {
+                self.alpha = 0.0
+            }
         }
+        animation.addCompletion { (_) in
+            let animation = UIViewPropertyAnimator(duration: duration / 2.0, curve: .easeIn) {
+                if backgroundColor != nil {
+                    self.backgroundColor = oldBackgroundColor
+                } else {
+                    self.alpha = oldAlpha
+                }
+            }
+            animation.addCompletion { (_) in
+                if repeatCount > 1 {
+                    self.alertFlash(duration: duration, after: duration / 2.0, repeatCount: repeatCount - 1, backgroundColor: backgroundColor)
+                }
+            }
+            animation.startAnimation()
+        }
+        
+        animation.startAnimation()
     }
 }
 

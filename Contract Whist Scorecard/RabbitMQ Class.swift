@@ -695,6 +695,11 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
                 let propertyList: [String : Any?] = try JSONSerialization.jsonObject(with: data, options: []) as! [String : Any]
                 if let type = propertyList["type"] as! String? {
                     if let fromDeviceName = propertyList["fromDeviceName"] as! String? {
+                        var content = ""
+                        if !propertyList.isEmpty {
+                            content = "(\(Scorecard.serialise(propertyList)))"
+                        }
+                        self.parent?.debugMessage("Received \(type)\(content) from \(fromDeviceName)")
                         switch type {
                         case "connectRequest":
                             if self.parent.connectionType == .server {

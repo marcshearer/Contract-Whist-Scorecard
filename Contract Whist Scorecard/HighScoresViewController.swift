@@ -234,6 +234,7 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
 
             cell.date?.text = DateFormatter.localizedString(from: participantMO.datePlayed!, dateStyle: .medium, timeStyle: .none)
             cell.location?.text = game.gameLocation.description
+            cell.dateWidthConstraint.constant = (ScorecardUI.landscapePhone() ? 120 : 0)
             cell.locationWidthConstraint.constant = (view.frame.width > 600 ? 150 : 0)
             cell.value.text = "\(value!)"
             cell.selectionStyle = .none
@@ -340,6 +341,7 @@ class HighScoresScoreCell: UITableViewCell {
     @IBOutlet weak var name: UILabel!
     @IBOutlet weak var location: UILabel!
     @IBOutlet weak var locationWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var dateWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var date: UILabel!
     @IBOutlet weak var value: UILabel!
     @IBOutlet weak var separator: UIView!

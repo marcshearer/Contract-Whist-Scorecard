@@ -502,7 +502,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
         
         switch self.selection.mode {
         case Mode.bid:
-            self.scorecard.entryPlayer(selection.player).setBid(self.scorecard.selectedRound, value)
+            _ = self.scorecard.entryPlayer(selection.player).setBid(self.scorecard.selectedRound, value)
             self.playerBidCell[self.selection.player-1]?.entryPlayerLabel.text = (value == nil  ? "" : "\(value!)")
         case Mode.made:
             self.scorecard.entryPlayer(selection.player).setMade(self.scorecard.selectedRound, value)

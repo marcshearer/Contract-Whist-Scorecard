@@ -209,6 +209,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.showThisPlayer()
+        self.changePlayerAvailable()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -245,7 +246,6 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     internal func didReceiveData(descriptor: String, data: [String : Any?]?, from peer: CommsPeer) {
         Utility.mainThread { [unowned self] in
-            self.clientService?.debugMessage("\(descriptor) received from \(peer.deviceName)")
             self.queue.append(QueueEntry(descriptor: descriptor, data: data, peer: peer))
         }
         self.processQueue()
@@ -440,7 +440,6 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                         if let dealCards = data!["deal"] as? [[Int]] {
                             let deal = Deal(fromNumbers: dealCards)
                             let hand = deal.hands[self.thisPlayerNumber - 1].copy() as! Hand
-                            self.clientService?.debugMessage("Hand: \(hand.toString())")
                             self.playHand(peer: peer, dismiss: self.newGame, hand: hand)
                             self.newGame = false
                             
@@ -615,26 +614,32 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                     self.reflectState(peer: peer)
                 }
                 
-            } else  if self.appState != .reconnecting {
+            } else  if self.appState != .reconnecting && !(self.recoveryMode && peer.deviceName != self.matchDeviceName) {
                 // New peer - add to list
-                self.clientTableView.beginUpdates()
-                self.available.append(Available(peer: peer))
-                if self.available.count == 1 {
-                    if self.clientTableView.numberOfRows(inSection: 0) >= 1 {
-                        // Need to remove previous placeholder and refresh hosting options
-                        self.clientTableView.deleteRows(at: [IndexPath(row: 0, section: self.peerSection)], with: .automatic)
-                        if self.hostingOptions > 0 {
-                            let hostingRows = self.clientTableView.numberOfRows(inSection: self.hostSection)
-                            if hostingRows > 0 {
-                                for row in 0..<hostingRows {
-                                    self.clientTableView.reloadRows(at: [IndexPath(row: row, section: self.hostSection)], with: .automatic)
+                if self.firstTime {
+                    // UI not ready yet - just put it in list
+                    self.available.append(Available(peer: peer))
+                } else {
+                    // Add to list and table
+                    self.clientTableView.beginUpdates()
+                    self.available.append(Available(peer: peer))
+                    if self.available.count == 1 {
+                        if self.clientTableView.numberOfRows(inSection: 0) >= 1 {
+                            // Need to remove previous placeholder and refresh hosting options
+                            self.clientTableView.deleteRows(at: [IndexPath(row: 0, section: self.peerSection)], with: .automatic)
+                            if !self.recoveryMode && self.hostingOptions > 0 {
+                                let hostingRows = self.clientTableView.numberOfRows(inSection: self.hostSection)
+                                if hostingRows > 0 {
+                                    for row in 0..<hostingRows {
+                                        self.clientTableView.reloadRows(at: [IndexPath(row: row, section: self.hostSection)], with: .automatic)
+                                    }
                                 }
                             }
                         }
                     }
+                    self.clientTableView.insertRows(at: [IndexPath(row: self.available.count - 1, section: self.peerSection)], with: .automatic)
+                    self.clientTableView.endUpdates()
                 }
-                self.clientTableView.insertRows(at: [IndexPath(row: self.available.count - 1, section: self.peerSection)], with: .automatic)
-                self.clientTableView.endUpdates()
             }
             if self.matchDeviceName != nil && peer.deviceName == self.matchDeviceName {
                 // Recovering/reacting to notification and this is the device I'm waiting for!
@@ -838,7 +843,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     // MARK: - TableView Overrides ===================================================================== -
     
     internal func numberOfSections(in tableView: UITableView) -> Int {
-        if commsPurpose == .playing {
+        if commsPurpose == .playing && !recoveryMode {
             return 2
         } else {
             return 1
@@ -940,6 +945,8 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                 case .notConnected:
                     if oldState != .notConnected {
                         serviceText = "\(name) has disconnected"
+                    } else if self.recoveryMode {
+                        serviceText = "Trying to reconnect to \(name)..."
                     } else if self.commsPurpose == .sharing {
                         serviceText = "View scorecard on \(availableFound.peer.deviceName)"
                     } else if availableFound.connecting {
@@ -1004,10 +1011,10 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             break
         }
         
-        let newHeight = cell.frame.maxY
+        // Make sure all off table view is shown without scrolling - scrolling handled by underlying scroll view
+        let newHeight = self.clientTableView.contentSize.height
         if newHeight > self.clientTableView.frame.height {
             self.clientTableViewHeightConstraint.constant = newHeight
-            print("Height: \(newHeight)")
         }
         
        return cell!
@@ -1341,22 +1348,28 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     private func removeEntry(peer: CommsPeer) {
         let index = available.firstIndex(where: {$0.deviceName == peer.deviceName && $0.framework == peer.framework})
         if index != nil {
-            self.clientTableView.beginUpdates()
-            self.available.remove(at: index!)
-            self.clientTableView.deleteRows(at: [IndexPath(row: index!, section: peerSection)], with: .left)
-            if available.count == 0 {
-                // Just lost last one - need to insert placeholder and update hosting options
-                self.clientTableView.insertRows(at: [IndexPath(row: 0, section: peerSection)], with: .right)
-                if self.hostingOptions > 0 {
-                    let hostingRows = self.clientTableView.numberOfRows(inSection: self.hostSection)
-                    if hostingRows > 0 {
-                        for row in 0..<hostingRows {
-                            self.clientTableView.reloadRows(at: [IndexPath(row: row, section: hostSection)], with: .automatic)
+            if self.firstTime {
+                // UI not ready yet - just update list
+                self.available.remove(at: index!)
+            } else {
+                // UI ready - update list and table
+                self.clientTableView.beginUpdates()
+                self.available.remove(at: index!)
+                self.clientTableView.deleteRows(at: [IndexPath(row: index!, section: peerSection)], with: .left)
+                if available.count == 0 {
+                    // Just lost last one - need to insert placeholder and update hosting options
+                    self.clientTableView.insertRows(at: [IndexPath(row: 0, section: peerSection)], with: .right)
+                    if self.hostingOptions > 0 {
+                        let hostingRows = self.clientTableView.numberOfRows(inSection: self.hostSection)
+                        if hostingRows > 0 {
+                            for row in 0..<hostingRows {
+                                self.clientTableView.reloadRows(at: [IndexPath(row: row, section: hostSection)], with: .automatic)
+                            }
                         }
                     }
                 }
+                self.clientTableView.endUpdates()
             }
-            self.clientTableView.endUpdates()
         }
     }
     

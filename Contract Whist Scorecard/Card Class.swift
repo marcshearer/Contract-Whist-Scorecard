@@ -269,6 +269,18 @@ class Deal: NSObject, NSCopying {
         return result
     }
     
+    public func toString() -> String {
+        var result = "["
+        for (index, hand) in self.hands.enumerated() {
+            if index != 0 {
+                result += ", "
+            }
+            result += "[\(hand.toString())]"
+        }
+        result += "]"
+        return result
+    }
+    
     public func fromNumbers(_ cardNumbers: [[Int]]) {
         self.hands = []
         for cardNumber in cardNumbers {

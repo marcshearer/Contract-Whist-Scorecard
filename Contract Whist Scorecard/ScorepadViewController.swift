@@ -17,7 +17,7 @@ enum ScorepadMode {
 class ScorepadViewController: CustomViewController,
                               UITableViewDataSource, UITableViewDelegate,
                               UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,
-                              HandStatusDelegate {
+                              HandStatusDelegate, ScorecardAlertDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     
@@ -221,6 +221,8 @@ class ScorepadViewController: CustomViewController,
             NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
         }
         self.view.setNeedsLayout()
+        
+        self.scorecard.alertDelegate = self
     }
     
     override internal func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -241,6 +243,11 @@ class ScorepadViewController: CustomViewController,
             lastViewHeight = scorepadView.frame.height
             self.setupBorders()
         }
+    }
+    
+    override internal func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.scorecard.alertDelegate = nil
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
@@ -328,6 +335,12 @@ class ScorepadViewController: CustomViewController,
             guard let tableViewCell = cell as? ScorepadTableViewCell else { return }
             tableViewCell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row + 2000000)
         }
+    }
+    
+    // MARK: - Alert delegate handlers =================================================== -
+    
+    internal func alertUser(reminder: Bool) {
+        self.scoreEntryButton.alertFlash(duration: 0.3, repeatCount: 3)
     }
     
     // MARK: - Image download handlers =================================================== -
@@ -573,7 +586,7 @@ class ScorepadViewController: CustomViewController,
             Utility.mainThread {
                 // Get the other hands started
                 self.saveNewGame()
-                self.playHand(setState: true, show: false)
+                self.playHand(setState: true, recoveryMode: self.recoveryMode, show: false)
                 // Link to location view
                 self.showLocation()
             }
@@ -633,7 +646,7 @@ class ScorepadViewController: CustomViewController,
                 scorecard.handState.hand = nil
             }
         }
-        self.scorecard.setGameInProgress(true)
+        self.scorecard.setGameInProgress(true, save: true)
         self.scorecard.dealHand()
         if show {
             self.scorecard.playHand(from: self, sourceView: self.scorepadView, computerPlayerDelegate: self.computerPlayerDelegate)

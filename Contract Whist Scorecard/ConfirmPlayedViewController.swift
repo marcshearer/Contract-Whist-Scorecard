@@ -17,6 +17,7 @@ class ConfirmPlayedViewController : CustomViewController, UIPopoverPresentationC
     private var cancelText: String?
     private var backgroundColor: UIColor?
     private var confirmHandler: (()->())?
+    private var cancelHandler: (()->())?
     private var blurredBackgroundView: UIView!
     static private var parentViewController: UIViewController!
     static private var sourceView: UIView!
@@ -35,7 +36,7 @@ class ConfirmPlayedViewController : CustomViewController, UIPopoverPresentationC
     
     @IBAction func cancelPressed(_ sender: UIButton) {
         self.removeBlurredBackgroundView()
-        self.dismiss()
+        self.dismiss(completion: self.cancelHandler)
     }
     
     override func viewDidLoad() {
@@ -120,7 +121,7 @@ class ConfirmPlayedViewController : CustomViewController, UIPopoverPresentationC
         return UIModalPresentationStyle.none
     }
     
-    class func show(title: String, content: UIView, sourceView: UIView? = nil, confirmText: String? = nil, cancelText: String? = nil, minWidth: CGFloat = 240, minHeight: CGFloat = 200.0, offsets: (portrait: CGFloat?, landscape: CGFloat?) = (0.0, nil), backgroundColor: UIColor? = nil, handler: (()->())? = nil) {
+    class func show(title: String, content: UIView, sourceView: UIView? = nil, confirmText: String? = nil, cancelText: String? = nil, minWidth: CGFloat = 240, minHeight: CGFloat = 200.0, offsets: (portrait: CGFloat?, landscape: CGFloat?) = (0.0, nil), backgroundColor: UIColor? = nil, confirmHandler: (()->())? = nil, cancelHandler: (()->())? = nil) {
         let storyboard = UIStoryboard(name: "ConfirmPlayedViewController", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "ConfirmPlayedViewController") as! ConfirmPlayedViewController
         
@@ -130,7 +131,8 @@ class ConfirmPlayedViewController : CustomViewController, UIPopoverPresentationC
         viewController.confirmText = confirmText
         viewController.cancelText = cancelText
         viewController.backgroundColor = backgroundColor
-        viewController.confirmHandler = handler
+        viewController.confirmHandler = confirmHandler
+        viewController.cancelHandler = cancelHandler
         let sourceView = sourceView ?? parentViewController.view
         ConfirmPlayedViewController.sourceView = sourceView
         ConfirmPlayedViewController.offsets = offsets

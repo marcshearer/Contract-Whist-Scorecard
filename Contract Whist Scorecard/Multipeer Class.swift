@@ -120,7 +120,11 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
             toDeviceName = commsPeer.deviceName
         }
         if descriptor != "log" {
-            self.debugMessage("Sending \(descriptor)", device: toDeviceName)
+            var content = ""
+            if let dictionary = dictionary {
+                content = "(\(Scorecard.serialise(dictionary)))"
+            }
+            self.debugMessage("Sending \(descriptor)\(content)", device: toDeviceName)
         }
         
         let data = prepareData(descriptor, dictionary)
@@ -238,9 +242,9 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
             let deviceName = peerID.displayName
             if let broadcastPeer = broadcastPeerList[deviceName] {
                 let propertyList: [String : Any?] = try JSONSerialization.jsonObject(with: data, options: []) as! [String : Any]
-                if propertyList.count != 0 {
+                self.debugMessage("Received \(Scorecard.serialise(propertyList)) from \(peerID.displayName)")
+                if !propertyList.isEmpty {
                     for (descriptor, values) in propertyList {
-                        debugMessage("Received \(descriptor)")
                         if descriptor == "disconnect" {
                             var reason = ""
                             if values != nil {

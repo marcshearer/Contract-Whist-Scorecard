@@ -14,7 +14,7 @@ protocol HandStatusDelegate {
     
 }
 
-class HandViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class HandViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ScorecardAlertDelegate {
 
     // MARK: - Class Properties ======================================================================== -
     
@@ -186,6 +186,9 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
         }
         
+        // Take responsibility for alerts
+        self.scorecard.alertDelegate = self
+        
         self.stateController()
         
     }
@@ -197,8 +200,8 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         view.setNeedsLayout()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
         viewHeight = view.safeAreaLayoutGuide.layoutFrame.height
         viewWidth = view.safeAreaLayoutGuide.layoutFrame.width
         self.instructionViewLeadingConstraint.constant = self.view.safeAreaInsets.left
@@ -212,6 +215,13 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             self.stateController()
         }
         self.resizing = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // Give up responsibility for alerts
+        self.scorecard.alertDelegate = nil
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
@@ -462,7 +472,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
                 bidsEnable(true, blockRemaining: bids.count == self.scorecard.currentPlayers - 1)
                 self.instructionLabel.text = "You to bid"
                 self.setInstructionsHighlight(to: true)
-                self.alertUser()
+                self.scorecard.alertUser(remindAfter: 10.0)
                 self.autoBid()
             } else {
                 bidsEnable(false)
@@ -480,7 +490,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             let currentTrickCards = self.state.trickCards.count
 
             // Update state
-            self.scorecard.updateState()
+            self.scorecard.updateState(alertUser: false)
             
             if currentTrickCards == self.scorecard.currentPlayers && self.state.trick > 1 {
                 // Hand complete - update tricks made on screen
@@ -547,7 +557,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             }
             self.instructionLabel.text = "You to play"
             self.setInstructionsHighlight(to: true)
-            self.alertUser()
+            self.scorecard.alertUser(remindAfter: 10.0)
             self.autoPlay()
         } else {
             self.cardsEnable(false)
@@ -814,6 +824,8 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     
     func confirmCard(_ collectionView: UICollectionView, _ indexPath: IndexPath) {
         
+        let timeLeft = self.scorecard.cancelReminder()
+        
         let cell = collectionView.cellForItem(at: indexPath)
         let card =  Card(fromNumber: cell!.tag)
         
@@ -827,7 +839,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         label.textAlignment = .center
         ScorecardUI.roundCorners(label)
         
-        ConfirmPlayedViewController.show(title: "Confirm Card", content: label, sourceView: self.handSourceView, confirmText: "Play card", cancelText: "Change card", offsets: (0.5, nil), backgroundColor: Palette.tableTop, handler: { self.playCard(card: card) } )
+        ConfirmPlayedViewController.show(title: "Confirm Card", content: label, sourceView: self.handSourceView, confirmText: "Play card", cancelText: "Change card", offsets: (0.5, nil), backgroundColor: Palette.tableTop, confirmHandler: { self.playCard(card: card) }, cancelHandler: { self.scorecard.restartReminder(remindAfter: timeLeft) })
     }
     
     func playCard(card: Card) {
@@ -871,6 +883,9 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     }
     
     func confirmBid(bid: Int) {
+        
+        let timeLeft = self.scorecard.cancelReminder()
+        
         let label = UILabel()
         _ = Constraint.setWidth(control: label, width: 50)
         _ = Constraint.setHeight(control: label, height: 50)
@@ -880,11 +895,11 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         label.textAlignment = .center
         ScorecardUI.roundCorners(label)
         
-        ConfirmPlayedViewController.show(title: "Confirm Bid", content: label, sourceView: self.handSourceView, confirmText: "Confirm bid", cancelText: "Change bid", offsets: (0.5, nil), handler: { self.makeBid(bid) } )
+        ConfirmPlayedViewController.show(title: "Confirm Bid", content: label, sourceView: self.handSourceView, confirmText: "Confirm bid", cancelText: "Change bid", offsets: (0.5, nil), confirmHandler: { self.makeBid(bid) }, cancelHandler: { self.scorecard.restartReminder(remindAfter: timeLeft) })
     }
     
     func makeBid(_ bid: Int) {
-        self.scorecard.enteredPlayer(enteredPlayerNumber).setBid(round, bid)
+        _ = self.scorecard.enteredPlayer(enteredPlayerNumber).setBid(round, bid)
         let entryPlayerNumber = self.scorecard.entryPlayerNumber(enteredPlayerNumber, round: self.round)
         setupPlayerBidText(entryPlayerNumber: entryPlayerNumber, animate: true)
         if moreMode {
@@ -964,9 +979,10 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         })
     }
     
-    private func alertUser() {
-        if self.scorecard.settingAlertVibrate {
-            self.alertVibrate()
+    internal func alertUser(reminder: Bool) {
+        if reminder {
+            self.instructionView.alertFlash(duration: 0.3, repeatCount: 3, backgroundColor: Palette.tableTop)
+            self.bannerPaddingView.alertFlash(duration: 0.3, repeatCount: 3, backgroundColor: Palette.tableTop)
         }
     }
     

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ReviewViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate {
+class ReviewViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, ScorecardAlertDelegate {
 
     // Properties passed
     private let scorecard = Scorecard.shared
@@ -61,6 +61,11 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
         self.setupText()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.scorecard.alertDelegate = self
+    }
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         scorecard.reCenterPopup(self)
@@ -76,6 +81,11 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
             tableView.reloadData()
         }
         self.view.setNeedsLayout()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.scorecard.alertDelegate = nil
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
@@ -116,6 +126,12 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
         cell.separatorInset = UIEdgeInsets.zero
         cell.preservesSuperviewLayoutMargins = false
         cell.layoutMargins = UIEdgeInsets.zero
+    }
+    
+    // MARK: - Alert delegate handlers =================================================== -
+    
+    internal func alertUser(reminder: Bool) {
+        self.finishButton.alertFlash(duration: 0.3, repeatCount: 3)
     }
     
     // MARK: - Utility Routines ======================================================================== -

@@ -71,7 +71,7 @@ Change the way downloading of users works
 Access to download/add users in Players and online game
 Change color of online image to match bluetooth	
 Renamed various components
-∫∫
+
 4.6 (10-11) -------
 Restructured client/server
 Introduced whispers for network errors
@@ -132,7 +132,14 @@ Avoid crash if host a game when player is not the same as the 'self' player from
 Hide scorecard button when syncing in game summary
 Thumbnail pictures seem to disappear (on host?)
 Doesn't automatically restart game after recovery as host
-When return to home after nearby game clients show "Connected to...""
+When return to home after nearby game clients show "Connected to..."
+Flashing reminder after n seconds when your turn
+When resume client don't show hosting options and better 'no service' message and don't allow change player or show other hosts
+
+5.0 (5)
+Better logging
+Better alerts
+Fixed crash on entry in client
 
 Bugs fix now
 ------------
@@ -156,9 +163,8 @@ TODO
 ----
 Avoid re-deal if crash before first deal
 Crash if go into High Scores repeatedly
-When resume client don't show hosting options and better 'no service' message and don't allow change player or show other hosts
 Disconnect option for host in game preview?
-Flashing reminder after n seconds when your turn
+Hand jumps on entry - set to wrong size before layout
 
 Jack
 ----

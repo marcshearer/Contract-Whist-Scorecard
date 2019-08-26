@@ -87,7 +87,7 @@ extension ScorepadViewController {
                 if playerNumber == Scorecard.shared.currentPlayers && totalBid == cards {
                     bid = (bid == 0 ? 1 : bid-1)
                 }
-                Scorecard.shared.entryPlayer(playerNumber).setBid(round, bid)
+                _ = Scorecard.shared.entryPlayer(playerNumber).setBid(round, bid)
             }
             
             if round != self.rounds {
@@ -127,12 +127,12 @@ extension ScorepadViewController {
     
     func autoDeal() {
         if Scorecard.shared.autoPlayHands != 0 && Scorecard.shared.isHosting {
+            // Automatically start the hand
             Utility.executeAfter(delay: 10 * Config.autoPlayTimeUnit, completion: {
                 self.scorePressed(self)
             })
         }
     }
-    
 }
 
 extension HandViewController {

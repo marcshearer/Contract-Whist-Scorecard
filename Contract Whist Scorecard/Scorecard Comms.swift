@@ -8,9 +8,15 @@
 
 import UIKit
 
+protocol ScorecardAlertDelegate: UIViewController {
+    
+    func alertUser(reminder: Bool)
+    
+}
+
 extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     
-    // MARK: - Comms mode helpers ======================================================= -
+    // MARK: - Comms mode helpers ======================================================== -
     
     public var isSharing: Bool {
         get {
@@ -129,6 +135,50 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 break
             }
         })
+    }
+    
+    // MARK: - Alert handlers ================================================================= -
+    
+    public func alertUser(vibrate: Bool = true, remindAfter: TimeInterval? = nil, remindVibrate: Bool? = nil, reminder: Bool = false) {
+        if vibrate && self.settingAlertVibrate {
+            Utility.getActiveViewController()?.alertVibrate()
+        }
+        self.alertDelegate?.alertUser(reminder: reminder)
+        if let remindAfter = remindAfter {
+            self.startReminderTimer(interval: remindAfter, vibrate: remindVibrate ?? vibrate)
+        }
+    }
+    
+    public func cancelReminder() -> TimeInterval {
+        return self.stopReminderTimer()
+    }
+    
+    public func restartReminder(remindAfter: TimeInterval) {
+        self.startReminderTimer(interval: remindAfter)
+    }
+    
+    private func startReminderTimer(interval: TimeInterval, vibrate: Bool = true) {
+        Utility.debugMessage("Timer", "Timer started")
+        _ = self.stopReminderTimer(hideMessage: true)
+        self.reminderTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: false, block: { (_) in
+            Utility.debugMessage("Timer", "Timer fired")
+            self.alertUser(vibrate: vibrate, reminder: true)
+        })
+    }
+    
+    private func stopReminderTimer(hideMessage: Bool = false) -> TimeInterval {
+        var timeLeft: TimeInterval = 0.0
+        
+        if !hideMessage {
+            Utility.debugMessage("Timer", "Timer stopped")
+        }
+        
+        if let timer = self.reminderTimer {
+            timeLeft = timer.fireDate.timeIntervalSinceNow
+            timer.invalidate()
+            self.reminderTimer = nil
+        }
+        return timeLeft
     }
     
     // MARK: - Utility routines =============================================================== -
@@ -297,8 +347,6 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         var roundRange: CountableClosedRange<Int>
         
         if self.sendScores {
-            
-            self.commsDelegate?.debugMessage("Sending scores, player: \(playerNumber == nil ? "All" : "\(playerNumber!)"), round: \(round == nil ? "All" : "\(round!)"), mode: \(mode == nil ? "All" : "\(mode == .bid ? "bid" : (mode == .made ? "made" : "twos"))")", device: commsPeer?.deviceName, force: false)
             
             // Set up ranges
             if playerNumber == nil {
@@ -488,12 +536,13 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             if descriptor == "allscores" {
                 self.enteredPlayer(playerNumber).reset()
             }
+            
             for (roundNumberData, roundData) in (playerData as! [String : [String : Any]]).sorted(by: {Int($0.key)! < Int($1.key)!}) {
                 let roundNumber = Int(roundNumberData)!
                 maxRound = max(maxRound, roundNumber)
                 
-                // Ignore if player is on this device
                 if roundData["bid"] != nil {
+                    // Ignore if player is on this device - only doing this for bids which are entered locally - scores come down from host
                     if descriptor == "allscores" || (self.handState == nil || playerNumber != self.handState.enteredPlayerNumber) {
                         var bid: Int!
                         if roundData["bid"] is NSNull {
@@ -501,16 +550,18 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                         } else {
                             bid = roundData["bid"] as! Int?
                         }
-                        self.enteredPlayer(playerNumber).setBid(roundNumber, bid, bonus2: bonus2)
-                        self.commsDelegate?.debugMessage("Processing score, player: \(playerNumber), round: \(roundNumber), mode: bid")
-                        if self.handViewController != nil {
-                            self.handViewController.reflectBid(round: roundNumber, enteredPlayerNumber: playerNumber)
+                        if self.enteredPlayer(playerNumber).setBid(roundNumber, bid, bonus2: bonus2) {
+                            if self.handViewController != nil {
+                                self.handViewController.reflectBid(round: roundNumber, enteredPlayerNumber: playerNumber)
+                            } else {
+                                if descriptor == "scores" && self.handState != nil {
+                                    // Check if this makes it your bid
+                                    if (playerNumber % self.currentPlayers) + 1 == self.handState.enteredPlayerNumber {
+                                        self.alertUser(remindAfter: 10.0)
+                                    }
+                                }
+                            }
                         }
-                    }
-                    if self.sendScores {
-                        Utility.executeAfter(delay: 0.1, completion: {
-                            self.sendScores(playerNumber: playerNumber, round: roundNumber, mode: .bid)
-                        })
                     }
                 }
                 if roundData["made"] != nil {
@@ -532,6 +583,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                     self.enteredPlayer(playerNumber).setTwos(roundNumber, twos, bonus2: bonus2)
                 }
             }
+            
         }
         return maxRound
     }
@@ -598,7 +650,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         return (winner, win2)
     }
     
-    public func updateState() {
+    public func updateState(alertUser: Bool = true) {
         if self.handState.trickCards.count == self.currentPlayers {
             // Hand complete - check who won
             var win2: Bool
@@ -643,6 +695,9 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         } else {
             // Work out who should play
             self.handState.toPlay = self.handState.playerNumber(self.handState.trickCards.count + 1)
+        }
+        if alertUser && self.handState.toPlay == self.handState.enteredPlayerNumber {
+            self.alertUser(remindAfter: 10.0)
         }
         if self.isHosting {
             // Save current and last trick for recovery
@@ -707,5 +762,50 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     func entryPlayerNumber(_ enteredPlayerNumber: Int, round: Int) -> Int {
         // Everything in data is in entered player sequence but bids will be in entry player sequence this converts between them
         return self.enteredPlayer(enteredPlayerNumber).entryPlayerNumber(round: round)
+    }
+    
+    class public func serialise(_ data: [String : Any?]) -> String {
+        var result = ""
+        var first = true
+        for (descriptor, value) in data {
+            if !first {
+                result += ", "
+            }
+            first = false
+            result += "\(descriptor)="
+            if descriptor.right(5).lowercased() == "cards" {
+                // Special case - cards array
+                if let handCards = value as? [Int] {
+                    let hand = Hand(fromNumbers: handCards, sorted: true)
+                    result += "[\(hand.toString())]"
+                }
+             
+            } else if descriptor == "deal" {
+                if let dealCards = value as? [[Int]] {
+                    let deal = Deal(fromNumbers: dealCards)
+                    result += deal.toString()
+                }
+            } else if let array = value as? [Any] {
+                // Other array
+                result += "["
+                for (index, element) in array.enumerated() {
+                    if index != 0 {
+                        result += ", "
+                    }
+                    result += "\(element)"
+                }
+                result += "]"
+                
+            } else if let dictionary = value as? [String : Any?] {
+                // Sub-dictionary
+                result += "(\(Scorecard.serialise(dictionary)))"
+                
+            } else {
+                // Plain value
+                result += "\(value ?? "")"
+                
+            }
+        }
+        return result
     }
 }

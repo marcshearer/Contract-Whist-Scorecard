@@ -10,6 +10,9 @@ import UIKit
 
 class Whisper {
     
+    private let backgroundColor: UIColor
+    private let textColor: UIColor
+    private let borderColor: UIColor
     private let height:CGFloat = 50.0
     private let sideIndent:CGFloat = 40.0
     private let bottomIndent: CGFloat = 4.0
@@ -21,7 +24,10 @@ class Whisper {
     private var hiddenFrame: CGRect!
     private var isShown = false
     
-    init() {
+    init(backgroundColor: UIColor? = nil, textColor: UIColor? = nil, borderColor: UIColor? = nil) {
+        self.backgroundColor = backgroundColor ?? UIColor(red: 1.0, green: 1.0, blue: 0.5, alpha: 1.0)
+        self.textColor = textColor ?? UIColor.black
+        self.borderColor = borderColor ?? UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0)
         self.label = UILabel()
         self.label.isUserInteractionEnabled = true
         self.label.adjustsFontSizeToFitWidth = true
@@ -67,8 +73,9 @@ class Whisper {
                 self.label.adjustsFontSizeToFitWidth = true
                 self.label.numberOfLines = 0
                 self.label.text = message
-                self.label.backgroundColor = UIColor(red: 1.0, green: 1.0, blue: 0.5, alpha: 1.0)
-                self.label.layer.borderColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1.0).cgColor
+                self.label.backgroundColor = self.backgroundColor
+                self.label.textColor = self.textColor
+                self.label.layer.borderColor = self.borderColor.cgColor
                 self.label.layer.borderWidth = 1.0
                 self.label.font = UIFont.systemFont(ofSize: 16)
                 self.label.textAlignment = .center

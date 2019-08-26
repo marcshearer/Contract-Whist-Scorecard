@@ -161,7 +161,7 @@ class Recovery {
             for playerNumber in 1...scorecard.currentPlayers {
                 let bid = UserDefaults.standard.integer(forKey: "recoveryBid\(round)-\(playerNumber)")
                 if bid >= 0 {
-                    scorecard.enteredPlayer(playerNumber).setBid(round, bid)
+                    _ = scorecard.enteredPlayer(playerNumber).setBid(round, bid)
                     scorecard.maxEnteredRound = max(round, scorecard.maxEnteredRound)
                 }
                 let made = UserDefaults.standard.integer(forKey: "recoveryMade\(round)-\(playerNumber)")

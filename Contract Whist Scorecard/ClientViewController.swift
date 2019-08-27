@@ -1254,7 +1254,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     private func changePlayerAvailable() {
-        let available = (self.appState == .notConnected && !self.recoveryMode)
+        let available = (self.appState == .notConnected && !self.recoveryMode && self.commsPurpose == .playing)
         self.changePlayerButton?.isHidden = !available
     }
     

@@ -20,6 +20,7 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     // Properties to pass state
     private var useCurrentLocation = true
     private var mustChange = false
+    private var bannerColor: UIColor?
     private var completion: ((GameLocation?)->())?
 
     // Local class variables
@@ -37,7 +38,11 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet weak private var locationMapView: MKMapView!
+    @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
+    @IBOutlet private weak var navigationBar: NavigationBar!
     @IBOutlet weak private var searchBar: UISearchBar!
+    @IBOutlet private weak var searchBarBackgroundView: UIView!
+    @IBOutlet private weak var bannerContinuationView: BannerContinuation!
     @IBOutlet weak private var locationTableView: UITableView!
     @IBOutlet weak private var continueButton: UIButton!
     @IBOutlet weak private var activityIndicator: UIActivityIndicatorView!
@@ -62,9 +67,10 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
                 self.testMode = true
             }
         }
-       
+        
         // Make search bar transparent to pick up background - avoids slight translucence
         self.searchBar.backgroundImage = UIImage()
+        self.searchBar.backgroundColor = UIColor.clear
         self.searchBar.barTintColor = UIColor.clear
         
         // Setup search text field
@@ -117,6 +123,17 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+        // Set colors of banner
+        if let bannerColor = self.bannerColor {
+            self.bannerPaddingView.bannerColor = bannerColor
+            self.navigationBar.bannerColor = bannerColor
+            self.bannerContinuationView.bannerColor = bannerColor
+            self.bannerContinuationView.borderColor = bannerColor
+            self.searchBarBackgroundView.backgroundColor = bannerColor
+            self.locationTableView.backgroundColor = bannerColor
+        }
+        
         
         if self.locationTableViewHeight.constant != 0.0 {
             self.showLocationList()
@@ -341,8 +358,7 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
                 self.activityIndicator.startAnimating()
                 self.activityIndicator.isHidden = false
                 self.activityIndicator.superview!.bringSubviewToFront(self.activityIndicator)
-                // self.searchBar.isUserInteractionEnabled = false
-                self.locationManager.requestLocation()
+                 self.locationManager.requestLocation()
             }
             result = true
         }
@@ -495,7 +511,7 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: UIViewController, gameLocation: GameLocation, useCurrentLocation: Bool = true, mustChange: Bool = false, completion: ((GameLocation?)->())? = nil) {
+    class public func show(from viewController: UIViewController, gameLocation: GameLocation, useCurrentLocation: Bool = true, mustChange: Bool = false, bannerColor: UIColor? = nil, completion: ((GameLocation?)->())? = nil) {
         
         let storyboard = UIStoryboard(name: "LocationViewController", bundle: nil)
         let locationViewController = storyboard.instantiateViewController(withIdentifier: "LocationViewController") as! LocationViewController
@@ -510,6 +526,7 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
         locationViewController.newLocation = gameLocation
         locationViewController.useCurrentLocation = useCurrentLocation
         locationViewController.mustChange = mustChange
+        locationViewController.bannerColor = bannerColor
         locationViewController.completion = completion
         
         viewController.present(locationViewController, animated: true, completion: nil)

@@ -466,7 +466,7 @@ class Scorecard {
                 if self.roundError[round-1] {
                     Palette.inverseErrorStyle(player.bidCell[round-1]!.scorepadCellLabel, errorCondtion: true)
                 } else {
-                    Palette.normalStyle(player.bidCell[round-1]!.scorepadCellLabel, setFont: false)
+                    Palette.alternateStyle(player.bidCell[round-1]!.scorepadCellLabel, setFont: false)
                 }
             }
         case Mode.made:
@@ -481,7 +481,7 @@ class Scorecard {
                             // No bid label so don't need to differentiate
                             Palette.normalStyle(player.scoreCell[round-1]!.scorepadCellLabel, setFont: false)
                         } else {
-                            Palette.alternateStyle(player.scoreCell[round-1]!.scorepadCellLabel, setFont: false)
+                            Palette.normalStyle(player.scoreCell[round-1]!.scorepadCellLabel, setFont: false)
                         }
                     }
                     let imageView = player.scoreCell[round-1]!.scorepadImage!

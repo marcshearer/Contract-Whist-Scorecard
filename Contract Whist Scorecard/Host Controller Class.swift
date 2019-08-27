@@ -513,6 +513,8 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
     
     // MARK: - Game Preview Delegate handlers ============================================================================== -
     
+    internal let gamePreviewHosting: Bool = true
+    
     internal var gamePreviewCanStartGame: Bool {
         get {
             return self.canProceed

@@ -25,6 +25,8 @@ import CoreData
     @objc optional var headerTopSpacingHeight: CGFloat { get }
     @objc optional var bodyRowHeight: CGFloat { get }
     @objc optional var separatorHeight: CGFloat { get }
+    @objc optional var backImage: String { get }
+    @objc optional var backText: String { get }
     
     @objc optional func didSelect(record: DataTableViewerDataSource, field: String)
     
@@ -56,13 +58,11 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
     private var padColumn = -1
     
     // Cell sizes
-    let paddingWidth: CGFloat = 20.0
+    let paddingWidth: CGFloat = 6.0
     
     // Properties to control how viewer works
     private var recordList: [DataTableViewerDataSource]!
     private var delegate: DataTableViewerDelegate?
-    private var backText = ""
-    private var backImage = "home"
     
     // UI component pointers
     var headerCollectionView: UICollectionView!
@@ -106,8 +106,8 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
         }
         
         // Format finish button
-        finishButton.setImage(UIImage(named: self.backImage), for: .normal)
-        finishButton.setTitle(self.backText, for: .normal)
+        finishButton.setImage(UIImage(named: self.delegate?.backImage ?? "home"), for: .normal)
+        finishButton.setTitle(self.delegate?.backText ?? "", for: .normal)
         
         // Set initial sort (if any)
         self.lastSortField = self.delegate?.initialSortField ?? ""
@@ -190,7 +190,7 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
             cell = tableView.dequeueReusableCell(withIdentifier: "Data Table Body Cell", for: indexPath) as! DataTableCell
             Palette.normalStyle(cell)
             cell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row)
-            cell.separatorHeightConstraint.constant = self.delegate?.separatorHeight ?? 1.0
+            cell.separatorHeightConstraint.constant = self.delegate?.separatorHeight ?? 0.3
         }
 
         return cell
@@ -234,8 +234,8 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
         // Find and expand pad column
         if widthRemaining > 0 {
             if let index = displayedFields.firstIndex(where: { $0.pad }) {
-                displayedFields[index].width += min(100, widthRemaining)
-                widthRemaining = max(0, widthRemaining - 100)
+                displayedFields[index].width += min(120, widthRemaining)
+                widthRemaining = max(0, widthRemaining - 120)
             }
         }
         
@@ -330,7 +330,7 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
             cell.topSpacingHeightConstraint.constant = self.delegate?.headerTopSpacingHeight ?? 0.0
             cell.headerUpArrowView.backgroundColor = Palette.sectionHeading
             cell.textLabel.text = column.title
-            cell.textLabel.textAlignment = column.align
+            cell.textLabel.textAlignment = .center
             
             // Sort arrow
             cell.setupArrows()
@@ -525,14 +525,14 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
                         let valueString = "\(Int((object as! Date).timeIntervalSinceReferenceDate))"
                         return String(repeating: " ", count: 20 - valueString.count) + valueString
                     } else {
-                        return Utility.dateString(object as! Date)
+                        return Utility.dateString(object as! Date, format: "dd MMM yy",localized: false)
                     }
                 case .dateTime:
                     if sortValue {
                         let valueString = "\(Int((object as! Date).timeIntervalSinceReferenceDate))"
                         return String(repeating: " ", count: 20 - valueString.count) + valueString
                     } else {
-                        return Utility.dateString(object as! Date, format: "dd/MM/yyyy HH:mm")
+                        return Utility.dateString(object as! Date, format: "dd/MM/yy HH:mm")
                     }
                 case .time:
                     if sortValue {

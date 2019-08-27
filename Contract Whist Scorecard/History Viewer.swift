@@ -13,15 +13,15 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
 
     private let scorecard = Scorecard.shared
     
-    public var viewTitle = "History"
+    public var viewTitle = "Game History"
     public var allowSync = true
     public let initialSortField = "datePlayed"
     public let initialSortDescending = true
     public let headerRowHeight: CGFloat = 54.0
     public let headerTopSpacingHeight: CGFloat = 10.0
     public let bodyRowHeight: CGFloat = 40.0
-    public let separatorHeight: CGFloat = 0.5
-    
+    public var backImage: String = "home"
+   
     private var history: History!
     private var winStreakPlayer: String?
     private var sourceViewController: UIViewController
@@ -30,7 +30,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
     
     // Local class variables
     let availableFields: [DataTableField] = [
-        DataTableField("",              "",          sequence: 0,   width: 10,  type: .string),
+        DataTableField("",              "",          sequence: 0,   width: 16,  type: .string),
         DataTableField("=count",        "Count",     sequence: 1,   width: 60,  type: .int),
         DataTableField("=location",     "Location",  sequence: 2,   width: 100, type: .string,      align: NSTextAlignment.left, pad: true),
         DataTableField("info",          "",          sequence: 14,  width: 40,  type: .button),
@@ -47,18 +47,21 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
         DataTableField("datePlayed",    "",          sequence: 4,   width: 60,  type: .time,        combineHeading: "Date")
     ]
     
-    init(from viewController: UIViewController, winStreakPlayer: String? = nil ,completion: (()->())? = nil) {
+    init(from viewController: UIViewController, winStreakPlayer: String? = nil, completion: (()->())? = nil) {
         self.sourceViewController = viewController
         self.winStreakPlayer = winStreakPlayer
-        super.init()
-        self.getHistory()
-        self.callerCompletion = completion
         
         if winStreakPlayer != nil {
             // Just showing the win streak for a player
             self.viewTitle = "Win Streak"
             self.allowSync = false
+            self.backImage = "back"
         }
+        
+        super.init()
+        self.getHistory()
+        self.callerCompletion = completion
+        
         
         // Call the data table viewer
         dataTableViewController = DataTableViewController.show(from: viewController, delegate: self, recordList: history.games)

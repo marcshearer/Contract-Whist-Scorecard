@@ -13,6 +13,8 @@ import CoreData
     
     @objc optional var gamePreviewCanStartGame: Bool { get }
     
+    @objc optional var gamePreviewHosting: Bool { get }
+    
     @objc optional var gamePreviewWaitMessage: NSAttributedString { get }
     
     @objc optional func gamePreviewInitialisationComplete(gamePreviewViewController: GamePreviewViewController)
@@ -170,7 +172,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if self.scorecard.isHosting && self.scorecard.recoveryMode && self.delegate?.gamePreviewCanStartGame ?? true {
+        if (self.delegate?.gamePreviewHosting ?? false) && self.scorecard.recoveryMode && self.delegate?.gamePreviewCanStartGame ?? true {
             // If recovering and controller is happy then go to scorepad
             self.recoveryScorepad()
         } else if self.scorecard.recoveryMode && self.scorecard.recoveryOnlineMode != nil {
@@ -286,7 +288,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             self.bannerContinueButton.isHidden = !ScorecardUI.landscapePhone() && !ScorecardUI.smallPhoneSize()
             self.continueButton.isHidden = ScorecardUI.landscapePhone() || ScorecardUI.smallPhoneSize()
             self.overrideSettingsButton.isHidden = false
-            if self.scorecard.isHosting {
+            if (self.delegate?.gamePreviewHosting ?? false) {
                 var topConstraint: CGFloat
                 let canStartGame = self.delegate?.gamePreviewCanStartGame ?? true
                 if canStartGame {
@@ -296,7 +298,6 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
                     self.cutForDealerButton.alpha = 1.0
                     self.nextDealerButton.isEnabled = true
                     self.nextDealerButton.alpha = 1.0
-                    self.overrideSettingsButton?.isHidden = false
                 } else {
                     topConstraint = (UIScreen.main.bounds.height * 0.10) + navigationBar.intrinsicContentSize.height
                     self.bannerContinueButton.isHidden = true
@@ -306,8 +307,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
                     self.cutForDealerButton.alpha = 0.5
                     self.nextDealerButton.isEnabled = false
                     self.nextDealerButton.alpha = 0.5
-                    self.overrideSettingsButton?.isHidden = true
-                }
+               }
                 self.bannerContinuationLabel.attributedText = self.delegate?.gamePreviewWaitMessage
                 if self.selectedPlayersTopConstraint.constant != topConstraint {
                     self.selectedPlayersTopConstraint.constant = topConstraint
@@ -341,7 +341,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             self.cutForDealerButton.alpha = 1.0
             self.nextDealerButton.isHidden = false
             self.selectedPlayersView.isEnabled = true
-            if self.scorecard.isHosting {
+            if (self.delegate?.gamePreviewHosting ?? false) {
                 self.selectedPlayersView.setEnabled(slot: 0, enabled: false)
             }
         }
@@ -431,7 +431,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     private func checkFaceTimeAvailable() {
         self.faceTimeAvailable = false
-        if self.scorecard.isHosting && self.scorecard.commsDelegate?.connectionProximity == .online && Utility.faceTimeAvailable() {
+        if (self.delegate?.gamePreviewHosting ?? false) && self.scorecard.commsDelegate?.connectionProximity == .online && Utility.faceTimeAvailable() {
             var allBlank = true
             if self.faceTimeAddress.count > 0 {
                 for address in self.faceTimeAddress {

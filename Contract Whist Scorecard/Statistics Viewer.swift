@@ -29,14 +29,14 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
     
     // Local class variables
     public let availableFields: [DataTableField] = [
-        DataTableField("",             "",                 sequence: 0,     width: 10,    type: .string),
-        DataTableField("name",         "Player\nName",     sequence: 2,     width: 80,    type: .string,    pad: true),
+        DataTableField("",             "",                 sequence: 0,     width: 16,    type: .string),
+        DataTableField("name",         "Player\nName",     sequence: 2,     width: 80,    type: .string,    align: .left,   pad: true),
         DataTableField("info",         "",                 sequence: 14,    width: 40.0,  type: .button),
         DataTableField("gamesPlayed",  "Games Played",     sequence: 3,     width: 75.0,  type: .int),
         DataTableField("=gamesWon%",   "Games Won %",      sequence: 5,     width: 75.0,  type: .double),
         DataTableField("gamesWon",     "Games Won",        sequence: 4,     width: 75.0,  type: .int),
         DataTableField("graph",        "",                 sequence: 13,    width: 50.0,  type: .button),
-        DataTableField("thumbnail",    "",                 sequence: 1,     width: 60.0,  type: .thumbnail, combineHeading: "Player Name"),
+        DataTableField("thumbnail",    "",                 sequence: 1,     width: 60.0,  type: .thumbnail, combineHeading: "Player\nName"),
         DataTableField("=averageScore","Average Score",    sequence: 7,     width: 75.0,  type: .int),
         DataTableField("=handsMade%",  "Hands Made %",     sequence: 10,    width: 75.0,  type: .double),
         DataTableField("=twosMade%",   "Twos Made %",      sequence: 12,    width: 75.0,  type: .double),

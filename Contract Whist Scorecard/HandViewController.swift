@@ -26,6 +26,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     internal var bidMode: Bool!
     private var firstBidRefresh = true
     private var firstHandRefresh = true
+    private var firstTime = true
     private var resizing = false
     internal var state: HandState!                  // local pointer to hand state object
     internal var enteredPlayerNumber: Int!          // local version of player number
@@ -188,9 +189,6 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         
         // Take responsibility for alerts
         self.scorecard.alertDelegate = self
-        
-        self.stateController()
-        
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -212,9 +210,12 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             self.bidMode = nil
             self.firstBidRefresh = true
             self.firstHandRefresh = true
+        }
+        if self.firstTime || self.resizing {
             self.stateController()
         }
         self.resizing = false
+        self.firstTime = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -451,13 +452,13 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
                 self.instructionLabel.adjustsFontForContentSizeCategory = true
                 self.finishButton.isHidden = true
                 self.scorecard.commsHandlerMode = .viewTrick
-                Utility.executeAfter("bidComplete", delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 1.0), completion: {
+                self.executeAfter(delay: 1.0) {
                     self.finishButton.isHidden = false
                     self.scorecard.commsHandlerMode = .none
                     NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
                     self.bidMode(newBidMode)
                     self.stateController()
-                })
+                }
                 return
             } else {
                 self.bidMode(newBidMode)
@@ -510,21 +511,21 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
                         // Don't refresh (or exit) for at least 1 second
                         self.scorecard.commsHandlerMode = .viewTrick
                         self.finishButton.isHidden = true
-                        Utility.executeAfter("trickComplete", delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 1.0), completion: {
+                        self.executeAfter(delay: 1.0) {
                             self.finishButton.isHidden = false
                             self.scorecard.commsHandlerMode = .none
                             NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
-                        })
+                        }
                     }	
                 } else {
                     // Hand finished
                     self.finishButton.isHidden = true
                     self.scorecard.commsHandlerMode = .viewTrick
-                    Utility.executeAfter("handFinished", delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : 2.0), completion: {
+                    self.executeAfter(delay: 2.0) {
                         // Return to scorepad after 2 seconds
                             self.scorecard.commsHandlerMode = .dismiss
                             self.dismissHand()
-                    })
+                    }
                 }
             } else {
                 // Work out who should play
@@ -535,6 +536,15 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
 
                 self.nextCard()
             }
+        }
+    }
+    
+    private func executeAfter(delay: TimeInterval, closure: @escaping ()->()) {
+        if self.firstTime {
+            // Not finished layout - do it immediately
+            closure()
+        } else {
+            Utility.executeAfter(delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : delay), completion: closure)
         }
     }
     
@@ -993,8 +1003,8 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     }
     
     func setInstructionsHighlight(to highlight: Bool) {
-        let nonHighlightBackgroundColor = (highlight ? Palette.hand : (self.bidMode ? Palette.tableTop : Palette.tableTop))
-        let nonHighlightTextColor = (highlight ? Palette.handText : (self.bidMode ? Palette.tableTopTextContrast : Palette.tableTopText))
+        let nonHighlightBackgroundColor = (highlight ? Palette.hand : Palette.tableTop)
+        let nonHighlightTextColor = (highlight ? Palette.handText : Palette.tableTopTextContrast)
         self.instructionView.backgroundColor = nonHighlightBackgroundColor
         self.instructionLabel.textColor = nonHighlightTextColor
         self.bannerPaddingView.backgroundColor = nonHighlightBackgroundColor

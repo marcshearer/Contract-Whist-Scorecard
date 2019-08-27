@@ -96,16 +96,17 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        
         scorecard.reCenterPopup(self)
+        self.view.setNeedsLayout()
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         
         // Allow for safe area in layout indents
-        locationBackgroundLeadingConstraint.constant = view.safeAreaInsets.left + 8
+        locationBackgroundLeadingConstraint.constant = view.safeAreaInsets.left + 88
         locationBackgroundTrailingConstraint.constant = view.safeAreaInsets.right + 8
+        self.participantTableView.reloadData()
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -141,6 +142,7 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
             } else {
                 cell.otherValue.text = "Made%"
             }
+            
         default:
             // Player values
             let playerNumber = indexPath.row
@@ -169,6 +171,11 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
                 cell.otherValue.text = "\(handsMadePercent) %"
             }
             
+        }
+        
+        if indexPath.row == 0 || indexPath.row == self.players {
+            // Hide separator on top row and bottom row
+            cell.separatorInset = UIEdgeInsets(top: 0.0, left: max(ScorecardUI.screenWidth, ScorecardUI.screenHeight), bottom: 0.0, right: 0.0)
         }
         
         return cell
@@ -359,7 +366,7 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
     
     private func showLocation() {
         
-        LocationViewController.show(from: self, gameLocation: self.gameDetail.gameLocation, useCurrentLocation: false, mustChange: true, completion: { (location) in
+        LocationViewController.show(from: self, gameLocation: self.gameDetail.gameLocation, useCurrentLocation: false, mustChange: true, bannerColor: Palette.banner, completion: { (location) in
             if let location = location {
                 // Copy location back
                 self.gameDetail.gameLocation = location

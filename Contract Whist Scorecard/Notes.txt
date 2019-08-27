@@ -140,6 +140,16 @@ When resume client don't show hosting options and better 'no service' message an
 Better logging
 Better alerts
 Fixed crash on entry in client
+Black text in hand title
+Hand jumps on entry - set to wrong size before layout
+
+5.0 (6)
+View game change player button
+Stop playing icon
+Home button in win streak detail
+Background color of location from history -> Yellow
+Don't flash start button on entry to preview - actually got rid of bounce!
+Always show override button in preview
 
 Bugs fix now
 ------------
@@ -157,22 +167,29 @@ Add tests for history / location to check they're not saved if play a game
 Get location/notification/online game notification permission in settings (and disable options if permissions not granted)
 Auto-sync when download players in Get Started
 Update Walkthrough - esp online game
-Rotate round summary wrong
+Resume scoring doesn't auto start in preview
 
 TODO
 ----
 Avoid re-deal if crash before first deal
 Crash if go into High Scores repeatedly
 Disconnect option for host in game preview?
-Hand jumps on entry - set to wrong size before layout
+Color of bid tiles
+Gradient totals of scorecard to tableTop in landscape
+Totals in landscape moved down slightly
+Avoid message text blue color
+Redo graph
 
 Jack
 ----
 Orange(?) graph color icon
+Graph view
 Background color for scorepad (not made) cells in landscape
 Check sync view is OK
 Layout for Review
 Crown icon
+Stop playing icon
+Rotating sync icon
 
 Medium-term
 -----------

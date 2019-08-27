@@ -44,7 +44,7 @@
                                 <items>
                                     <navigationItem id="gXM-gM-Eqi">
                                         <barButtonItem key="leftBarButtonItem" id="OKi-M2-DFj">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="aKf-ti-7PN" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="aKf-ti-7PN" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                 <rect key="frame" x="16" y="11" width="62" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Back" image="back">
@@ -85,16 +85,17 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="iyq-LE-4la">
-                                                        <size key="itemSize" width="0.0" height="0.0"/>
+                                                        <size key="itemSize" width="50" height="44"/>
                                                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                         <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                     </collectionViewFlowLayout>
                                                     <cells>
                                                         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Data Table Body Normal Cell" id="gRd-bz-jud" userLabel="Body Normal Cell" customClass="DataTableCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                            <rect key="frame" x="187.5" y="0.0" width="0.0" height="0.0"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="44"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="44"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="saY-dq-bW5">
@@ -117,13 +118,14 @@
                                                             </connections>
                                                         </collectionViewCell>
                                                         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Data Table Body Button Cell" id="1Vj-9t-Vjc" userLabel="Body Button Cell" customClass="DataTableCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                            <rect key="frame" x="187.5" y="0.0" width="0.0" height="0.0"/>
+                                                            <rect key="frame" x="54" y="0.0" width="50" height="44"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="44"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
                                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ceh-ei-v9a" userLabel="Body Button" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                                        <rect key="frame" x="8" y="8" width="16" height="22"/>
+                                                                        <rect key="frame" x="8" y="8" width="34" height="28"/>
                                                                         <color key="backgroundColor" name="Clear"/>
                                                                         <state key="normal" image="graph">
                                                                             <color key="titleColor" name="Text"/>
@@ -143,9 +145,10 @@
                                                             </connections>
                                                         </collectionViewCell>
                                                         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Data Table Body Thumbnail Cell" id="OqO-Rh-cDg" userLabel="Body Thumbnail Cell" customClass="DataTableCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                            <rect key="frame" x="187.5" y="0.0" width="0.0" height="0.0"/>
+                                                            <rect key="frame" x="108.5" y="0.0" width="50" height="44"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="44"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
                                                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="W86-P7-fmw" userLabel="Vertical Stack View">
@@ -247,17 +250,17 @@
                                                     </cells>
                                                 </collectionView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ppf-Ml-K5S" userLabel="Separator">
-                                                    <rect key="frame" x="0.0" y="43" width="375" height="1"/>
+                                                    <rect key="frame" x="16" y="44" width="343" height="0.0"/>
                                                     <color key="backgroundColor" name="Separator"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="1" id="aPQ-ro-IsC"/>
+                                                        <constraint firstAttribute="height" constant="0.25" id="aPQ-ro-IsC"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="Ppf-Ml-K5S" secondAttribute="bottom" id="93O-eW-M0t"/>
-                                                <constraint firstAttribute="trailing" secondItem="Ppf-Ml-K5S" secondAttribute="trailing" id="95x-Ox-e90"/>
-                                                <constraint firstItem="Ppf-Ml-K5S" firstAttribute="leading" secondItem="ggU-xh-ecH" secondAttribute="leading" id="Fvt-1I-RkC"/>
+                                                <constraint firstAttribute="trailing" secondItem="Ppf-Ml-K5S" secondAttribute="trailing" constant="16" id="95x-Ox-e90"/>
+                                                <constraint firstItem="Ppf-Ml-K5S" firstAttribute="leading" secondItem="ggU-xh-ecH" secondAttribute="leading" constant="16" id="Fvt-1I-RkC"/>
                                                 <constraint firstItem="fy8-Zj-CwR" firstAttribute="top" secondItem="ggU-xh-ecH" secondAttribute="top" id="J2Y-yg-Dkk"/>
                                                 <constraint firstAttribute="trailing" secondItem="fy8-Zj-CwR" secondAttribute="trailing" id="LfX-Dc-n18"/>
                                                 <constraint firstAttribute="bottom" secondItem="fy8-Zj-CwR" secondAttribute="bottom" id="eJj-Ct-2Hu"/>
@@ -295,7 +298,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gXG-S6-tvf" userLabel="Header Collection View">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="MWO-G1-p4t">
                                                         <size key="itemSize" width="50" height="44"/>
@@ -305,7 +308,7 @@
                                                     </collectionViewFlowLayout>
                                                     <cells>
                                                         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" reuseIdentifier="Data Table Header Cell" id="1av-63-VO8" userLabel="Header Collection Cell" customClass="DataTableCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="-0.5" width="50" height="44"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="44"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="44"/>
@@ -466,10 +469,10 @@
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Section Heading">
-            <color red="0.92941176470588238" green="0.87450980392156863" blue="0.70588235294117652" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.89803921568627454" green="0.74901960784313726" blue="0.37254901960784315" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Separator">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Text">
             <color red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

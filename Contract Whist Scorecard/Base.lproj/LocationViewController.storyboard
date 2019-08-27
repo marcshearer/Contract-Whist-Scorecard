@@ -206,11 +206,15 @@
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="X7E-aZ-m9h" id="hwZ-Q7-Jtm"/>
+                        <outlet property="bannerContinuationView" destination="8qh-o6-LGR" id="vu4-bh-WkT"/>
+                        <outlet property="bannerPaddingView" destination="syy-j8-mMN" id="tPN-EV-RuL"/>
                         <outlet property="continueButton" destination="Zb2-G3-4jd" id="gni-2H-THW"/>
                         <outlet property="locationMapView" destination="KRq-QD-SP0" id="FCf-Od-HV5"/>
                         <outlet property="locationTableView" destination="uko-az-7BL" id="xwd-Kw-i6P"/>
                         <outlet property="locationTableViewHeight" destination="swJ-Ow-NCo" id="T6L-fD-S52"/>
+                        <outlet property="navigationBar" destination="smV-Xs-9Xb" id="qxU-WR-Os3"/>
                         <outlet property="searchBar" destination="qQB-iI-YgT" id="Iae-ha-og2"/>
+                        <outlet property="searchBarBackgroundView" destination="nmy-2i-PqR" id="cbD-LT-GRT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AIX-En-fx9" userLabel="First Responder" sceneMemberID="firstResponder"/>

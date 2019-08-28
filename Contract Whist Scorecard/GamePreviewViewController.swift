@@ -27,6 +27,8 @@ import CoreData
     
     @objc optional func gamePreview(isConnected playerMO: PlayerMO) -> Bool
     
+    @objc optional func gamePreview(disconnect playerMO: PlayerMO)
+    
     @objc optional func gamePreview(moved playerMO: PlayerMO, to slot: Int)
     
     @objc optional func gamePreviewShakeGestureHandler()
@@ -250,6 +252,19 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         self.selectedPlayers[slot] = playerMO
         self.updateSelectedPlayers(selectedPlayers)
         self.delegate?.gamePreview?(moved: playerMO, to: slot)
+    }
+    
+    func selectedPlayersView(wasTappedOn slot: Int) {
+        if slot > 0 && self.delegate?.gamePreviewHosting ?? false && self.selectedPlayersView.playerViews[slot].inUse && self.scorecard.commsDelegate?.connectionProximity == .nearby {
+            // Allow disconnection of players if this is a 'nearby' host
+            self.selectedPlayersView.startDeleteWiggle(slot: slot)
+        }
+    }
+    
+    func selectedPlayersView(wasDeleted slot: Int) {
+        if let playerMO = self.selectedPlayersView.playerViews[slot].playerMO {
+            self.delegate?.gamePreview?(disconnect: playerMO)
+        }
     }
     
     // MARK: - Slide out button delegate handlers ==================================================== -

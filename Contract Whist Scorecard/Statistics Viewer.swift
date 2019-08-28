@@ -37,7 +37,7 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
         DataTableField("gamesWon",     "Games Won",        sequence: 4,     width: 75.0,  type: .int),
         DataTableField("graph",        "",                 sequence: 13,    width: 50.0,  type: .button),
         DataTableField("thumbnail",    "",                 sequence: 1,     width: 60.0,  type: .thumbnail, combineHeading: "Player\nName"),
-        DataTableField("=averageScore","Average Score",    sequence: 7,     width: 75.0,  type: .int),
+        DataTableField("=averageScore","Average Score",    sequence: 7,     width: 75.0,  type: .double),
         DataTableField("=handsMade%",  "Hands Made %",     sequence: 10,    width: 75.0,  type: .double),
         DataTableField("=twosMade%",   "Twos Made %",      sequence: 12,    width: 75.0,  type: .double),
         DataTableField("totalScore",   "Total Score",      sequence: 6,     width: 75.0,  type: .int),
@@ -84,32 +84,31 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
     }
     
     internal func derivedField(field: String, record: DataTableViewerDataSource, sortValue: Bool) -> String {
-        var numericResult: Int?
+        var numericResult: Double?
         var result: String
+        let format = (ScorecardUI.landscapePhone() ? "%.1f" : "%.0f")
         
         let record = record as! PlayerDetail
         switch field  {
         case "gamesWon%":
-            numericResult = Utility.roundPercent(record.gamesWon, record.gamesPlayed)
-            result = "\(numericResult!) %"
+            numericResult = Double(record.gamesWon) / Double(record.gamesPlayed) * 100.0
+            result = "\(String(format: format, numericResult!)) %"
         case "averageScore":
-            numericResult = Int(Utility.roundQuotient(record.totalScore,record.gamesPlayed))
-            result = "\(numericResult!)"
+            numericResult = Double(record.totalScore) / Double(record.gamesPlayed)
+            result = String(format: format, numericResult!)
         case "handsMade%":
-            numericResult = Utility.roundPercent(record.handsMade, record.handsPlayed)
-            result = "\(numericResult!) %"
+            numericResult = Double(record.handsMade) / Double(record.handsPlayed) * 100.0
+            result = "\(Int(numericResult!.rounded())) %"
         case "twosMade%":
-            numericResult = Utility.roundPercent(record.twosMade, record.handsPlayed)
-            result = "\(numericResult!) %"
+            numericResult = Double(record.twosMade) / Double(record.handsPlayed) * 100.0
+            result = "\(Int(numericResult!.rounded())) %"
         default:
             result = ""
         }
         
         if numericResult != nil && sortValue {
-            if sortValue {
-                let valueString = String(format: "%.4f", Double(numericResult!) + 1e14)
-                result = String(repeating: " ", count: 20 - valueString.count) + valueString
-            }
+            let valueString = String(format: "%.4f", Double(numericResult!) + 1e14)
+            result = String(repeating: " ", count: 20 - valueString.count) + valueString
         }
         
         return result

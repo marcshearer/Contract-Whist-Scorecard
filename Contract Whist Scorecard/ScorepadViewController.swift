@@ -54,6 +54,7 @@ class ScorepadViewController: CustomViewController,
     // Gradients
     let imageGradient: [(alpha: CGFloat, location: CGFloat)] =  [(0.0, 0.0), (0.0, 0.5), (0.8, 1.0)]
     let playerGradient: [(alpha: CGFloat, location: CGFloat)] = [(0.8, 0.0), (1.0, 0.5), (1.0, 1.0)]
+    let footerGradient: [(alpha: CGFloat, location: CGFloat)] = [(1.0, 0.0), (1.0, 0.3), (0.0, 0.9), (0.0, 1.0)]
     
     // Header description variables
     private let showThumbnail = true
@@ -236,6 +237,9 @@ class ScorepadViewController: CustomViewController,
         if lastNavBarHeight != navigationBar.frame.height || lastViewHeight != scorepadView.frame.height {
             setupSize(to: scorepadView.safeAreaLayoutGuide.layoutFrame.size)
             self.headerTableView.layoutIfNeeded()
+            self.paddingViewLines.forEach {
+                $0.layoutIfNeeded()
+            }
             self.headerTableView.reloadData()
             self.bodyTableView.reloadData()
             self.footerTableView.reloadData()
@@ -453,7 +457,12 @@ class ScorepadViewController: CustomViewController,
         for element in self.playerGradient {
             gradient.append((element.alpha, (tableViewTop + bannerContinuationHeight + imageRowHeight + (element.location * minCellHeight)) / height))
         }
-        gradient.append((1.0, 1.0))
+        
+        let footerTop = tableViewTop + bannerContinuationHeight + imageRowHeight + minCellHeight + bodyTableView.frame.height
+        let footerHeight = height - footerTop
+        for element in self.footerGradient {
+            gradient.append((element.alpha, (footerTop + (element.location * footerHeight)) / height))
+        }
         
         self.paddingGradientLayer.forEach {
             $0.removeFromSuperlayer()
@@ -909,7 +918,9 @@ class ScorepadViewController: CustomViewController,
                     // Setup label
                     headerCell.scorepadCellLabel.textColor = Palette.tableTopTextContrast
                     headerCell.scorepadCellLabel.text = scorecard.scorecardPlayer(player).playerMO!.name!
-                    headerCell.scorepadLeftLineGradientLayer = ScorecardUI.gradient(headerCell.scorepadLeftLine, color: Palette.grid, gradients: playerGradient, overrideHeight: self.minCellHeight)
+                    if column != 0 {
+                        headerCell.scorepadLeftLineGradientLayer = ScorecardUI.gradient(headerCell.scorepadLeftLine, color: Palette.grid, gradients: playerGradient, overrideWidth: thickLineWeight, overrideHeight: self.minCellHeight)
+                    }
                     
                 } else {
                     // Setup the thumbnail picture / disc
@@ -921,7 +932,9 @@ class ScorepadViewController: CustomViewController,
                         ScorecardUI.veryRoundCorners(headerCell.scorepadImage, radius: (imageRowHeight-9)/2)
                         ScorecardUI.veryRoundCorners(headerCell.scorepadDisc, radius: (imageRowHeight-9)/2)
                     }
-                    headerCell.scorepadLeftLineGradientLayer = ScorecardUI.gradient(headerCell.scorepadLeftLine, color: Palette.grid, gradients: imageGradient, overrideHeight: self.imageRowHeight)
+                    if column != 0 {
+                        headerCell.scorepadLeftLineGradientLayer = ScorecardUI.gradient(headerCell.scorepadLeftLine, color: Palette.grid, gradients: imageGradient, overrideWidth: thickLineWeight, overrideHeight: self.imageRowHeight)
+                    }
                 }
     
             } else {
@@ -968,9 +981,11 @@ class ScorepadViewController: CustomViewController,
             
             footerCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Footer Collection Cell",for: indexPath) as! ScorepadCollectionViewCell
         
-            footerCell.scorepadCellLabel.backgroundColor = Palette.roomInterior
+            footerCell.scorepadLeftLineGradientLayer?.removeFromSuperlayer()
+            footerCell.scorepadLeftLineGradientLayer = nil
             footerCell.scorepadCellLabel.textColor = Palette.roomInteriorText
-            footerCell.scorepadCellLabelHeight.constant = cellHeight - thickLineWeight
+            footerCell.scorepadCellLabelHeight.constant = cellHeight - thickLineWeight + (ScorecardUI.landscapePhone() ? self.view.safeAreaInsets.bottom / 2.0 : 0.0)
+            footerCell.layoutIfNeeded()
             
             if column == 0 {
                 // Row titles
@@ -992,6 +1007,22 @@ class ScorepadViewController: CustomViewController,
                 footerCell.scorepadCellLabel.accessibilityIdentifier = "player\(indexPath.row)total"
                 footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 26.0)
             }
+            if column != 0 {
+                footerCell.scorepadLeftLineGradientLayer = ScorecardUI.gradient(footerCell.scorepadLeftLine, color: Palette.grid, gradients: footerGradient, overrideWidth: thickLineWeight, overrideHeight: CGFloat(cellHeight) + self.view.safeAreaInsets.bottom)
+            }
+
+            // Fade out at bottom if there is a safe area inset at the side
+            footerCell.scorepadCellGradientLayer?.removeFromSuperlayer()
+            if self.view.safeAreaInsets.left != 0 {
+                footerCell.backgroundColor = Palette.tableTop
+                footerCell.scorepadFooterPadding.backgroundColor = UIColor.clear
+                footerCell.scorepadLeftLine.backgroundColor = Palette.tableTop
+                footerCell.scorepadCellGradientLayer = ScorecardUI.gradient(footerCell, color: Palette.roomInterior, gradients: self.footerGradient)
+            } else {
+                footerCell.backgroundColor = Palette.roomInterior
+                footerCell.scorepadLeftLine.backgroundColor = Palette.grid
+            }
+            
             footerCell.scorepadTopLineWeight.constant = thinLineWeight
         
             cell=footerCell
@@ -1144,9 +1175,11 @@ class ScorepadTableViewCell: UITableViewCell {
 class ScorepadCollectionViewCell: UICollectionViewCell {
 
     var scorepadCellGradientLayer: CAGradientLayer!
+    var scorepadCellPaddingGradientLayer: CAGradientLayer!
     var scorepadLeftLineGradientLayer: CAGradientLayer!
     
     @IBOutlet weak var scorepadCellLabel: UILabel!
+    @IBOutlet weak var scorepadFooterPadding: UIView!
     @IBOutlet weak var scorepadLeftLineWeight: NSLayoutConstraint!
     @IBOutlet weak var scorepadTopLineWeight: NSLayoutConstraint!
     @IBOutlet weak var scorepadCellLabelHeight: NSLayoutConstraint!

@@ -46,7 +46,8 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     
     // Cell sizes
     private let scoreWidth: CGFloat = 50.0
-    private var buttonWidth: CGFloat = 0.0
+    private var buttonSize: CGFloat = 0.0
+    private var buttonSpacing: CGFloat = 10.0
     private var nameWidth: CGFloat = 0.0
     
     // Column descriptors
@@ -155,8 +156,10 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     }
 
     func setupSize(to size: CGSize) {
-        self.nameWidth = size.width - CGFloat(20 + (columns - 1) * 50)
-        self.buttonWidth = (ScorecardUI.landscapePhone() ? min(50.0, (ScorecardUI.screenWidth / 10.0) - 12.0) : 50.0)
+        self.nameWidth = (size.width - 20.0) - (CGFloat(columns - 1) * self.scoreWidth) - (CGFloat(columns) * 2.0)
+        self.buttonSize = (ScorecardUI.landscapePhone() ? min(50.0, (ScorecardUI.screenWidth / 10.0) - 12.0) : 50.0)
+        let buttonsAcross = Int((ScorecardUI.screenWidth - self.buttonSpacing) / (self.buttonSize + self.buttonSpacing))
+        self.buttonSize = ((ScorecardUI.screenWidth - self.buttonSpacing) / CGFloat(buttonsAcross)) - self.buttonSpacing
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -185,7 +188,10 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
         case 1:
             return 96.0
         case 2:
-            return 180.0
+            let buttons = self.scorecard.roundCards(self.scorecard.selectedRound, rounds: self.rounds, cards: self.cards, bounce: self.bounce) + 1
+            let buttonsAcross = Int((ScorecardUI.screenWidth - self.buttonSpacing) / (self.buttonSize + self.buttonSpacing))
+            let buttonRows = (CGFloat(buttons) / CGFloat(buttonsAcross)).rounded(.up)
+            return (buttonRows * (buttonSize + buttonSpacing)) + 16.0
         default:
             return 0
         }
@@ -697,13 +703,16 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
         } else {
             // Score buttons
             
-            width = self.buttonWidth
-            height = self.buttonWidth
+            width = self.buttonSize
+            height = self.buttonSize
         }
         
         return CGSize(width: width, height: height)
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return self.buttonSpacing
+    }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView.tag<1000000 {

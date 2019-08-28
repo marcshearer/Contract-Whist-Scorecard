@@ -150,6 +150,15 @@ Home button in win streak detail
 Background color of location from history -> Yellow
 Don't flash start button on entry to preview - actually got rid of bounce!
 Always show override button in preview
+Make drag view just the disc
+Disconnect option for host in game preview?
+Avoid re-deal if crash before first deal
+Color of bid tiles
+Totals in landscape moved down slightly
+Tidied up button sizes in entry
+Show dp in stats
+Gradient totals of scorecard to tableTop in landscape
+
 
 Bugs fix now
 ------------
@@ -171,12 +180,7 @@ Resume scoring doesn't auto start in preview
 
 TODO
 ----
-Avoid re-deal if crash before first deal
 Crash if go into High Scores repeatedly
-Disconnect option for host in game preview?
-Color of bid tiles
-Gradient totals of scorecard to tableTop in landscape
-Totals in landscape moved down slightly
 Avoid message text blue color
 Redo graph
 

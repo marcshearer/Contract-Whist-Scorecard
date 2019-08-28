@@ -595,7 +595,7 @@
                                                                         <subviews>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bke-dz-ngP" userLabel="Left Line">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="3" height="50"/>
-                                                                                <color key="backgroundColor" name="Grid"/>
+                                                                                <color key="backgroundColor" name="Room Interior"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="width" constant="3" id="gLO-OB-NzD"/>
                                                                                 </constraints>
@@ -656,6 +656,8 @@
                                                             <connections>
                                                                 <outlet property="scorepadCellLabel" destination="bjf-fA-s3i" id="OUB-ba-i6g"/>
                                                                 <outlet property="scorepadCellLabelHeight" destination="iXv-vR-ZdG" id="Nif-Fj-9I9"/>
+                                                                <outlet property="scorepadFooterPadding" destination="eAN-Ja-B4W" id="YaY-FK-xUw"/>
+                                                                <outlet property="scorepadLeftLine" destination="bke-dz-ngP" id="sBS-ix-5i2"/>
                                                                 <outlet property="scorepadLeftLineWeight" destination="gLO-OB-NzD" id="y7l-yq-hB4"/>
                                                                 <outlet property="scorepadTopLineWeight" destination="EEh-na-JUx" id="VQH-Zp-A6h"/>
                                                             </connections>

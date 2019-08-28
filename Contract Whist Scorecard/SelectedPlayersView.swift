@@ -14,6 +14,8 @@ import UIKit
     
     @objc optional func selectedPlayersView(wasTappedOn slot: Int)
     
+    @objc optional func selectedPlayersView(wasDeleted slot: Int)
+    
     @objc optional func selectedPlayersView(wasDroppedOn slot: Int, from source: PlayerViewType, playerMO: PlayerMO)
     
     @objc optional func selectedPlayersView(moved playerMO: PlayerMO, to slot: Int)
@@ -191,6 +193,22 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         self.drawRoomComponents()
     }
     
+    public func startDeleteWiggle(slot: Int? = nil) {
+        for index in 0..<self.playerViews.count {
+            if slot == nil || slot == index {
+                self.playerViews[index].startDeleteWiggle()
+            }
+        }
+    }
+    
+    public func stopDeleteWiggle(slot: Int? = nil) {
+        for index in 0..<self.playerViews.count {
+            if slot == nil || slot == index {
+                self.playerViews[index].stopDeleteWiggle()
+            }
+        }
+    }
+    
     // MARK: - Load view and setup objects ============================================================================== -
     
     private func loadSelectedPlayersView() {
@@ -211,6 +229,16 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         self.messageLabel.numberOfLines = 0
         self.messageLabel.textAlignment = .center
         self.messageLabel.textColor = Palette.roomInteriorText
+        
+        // Setup tap gesture
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(SelectedPlayersView.tapSelector(_:)))
+        self.contentView.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc internal func tapSelector(_ sender: Any) {
+        self.playerViews.forEach { (playerView) in
+            playerView.stopDeleteWiggle()
+        }
     }
     
     private func setupSelectedPlayers(dropAction: ((PlayerView?, CGPoint?, PlayerViewType, String)->())? = nil, tapAction: ((PlayerView)->())? = nil) {
@@ -246,8 +274,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
     }
     
     // MARK: - Main methods to draw room components ======================================================================= -
-
-   
+    
     private func drawRoomComponents() {
         
         // Remove previous layers
@@ -597,6 +624,12 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         
         self.delegate?.selectedPlayersView?(wasTappedOn: playerView.tag)
         
+    }
+    
+    internal func playerViewWasDeleted(_ playerView: PlayerView) {
+        // Can't handle here - pass back
+        
+        self.delegate?.selectedPlayersView?(wasDeleted: playerView.tag)
     }
     
     // MARK: - Main drag/drop handling method ====================================================================== -

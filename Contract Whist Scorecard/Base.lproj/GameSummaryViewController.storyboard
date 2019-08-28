@@ -116,7 +116,7 @@
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zSr-Sg-tk4" userLabel="Right Side">
                                                                 <rect key="frame" x="187.66666666666663" y="0.0" width="187.33333333333337" height="162.33333333333334"/>
                                                                 <subviews>
-                                                                    <view tag="2" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OFe-jn-Bt6" userLabel="Play Again Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                                    <view tag="2" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="OFe-jn-Bt6" userLabel="Play Again Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                                         <rect key="frame" x="25.333333333333343" y="0.0" width="136.33333333333334" height="130"/>
                                                                         <color key="backgroundColor" name="Clear"/>
                                                                         <constraints>
@@ -144,7 +144,7 @@
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Om1-UX-kdo" userLabel="Left Side">
                                                                 <rect key="frame" x="0.0" y="0.0" width="187.66666666666666" height="162.33333333333334"/>
                                                                 <subviews>
-                                                                    <view tag="1" contentMode="scaleToFill" verticalHuggingPriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="5J7-Q9-k63" userLabel="Stop Playing Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                                    <view tag="1" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="5J7-Q9-k63" userLabel="Stop Playing Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                                         <rect key="frame" x="25.666666666666671" y="0.0" width="136.33333333333331" height="130"/>
                                                                         <color key="backgroundColor" name="Clear"/>
                                                                         <constraints>

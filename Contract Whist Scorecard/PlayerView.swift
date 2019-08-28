@@ -20,6 +20,8 @@ import UIKit
     
     @objc optional func playerViewWasTapped(_ playerView: PlayerView)
     
+    @objc optional func playerViewWasDeleted(_ playerView: PlayerView)
+    
     @objc optional func playerViewWasDroppedOn(_ playerView: PlayerView, from source: PlayerViewType, withEmail: String)
     
 }
@@ -32,6 +34,8 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     public var tag: Int
     public var type: PlayerViewType
     public var thumbnailView: ThumbnailView!
+    private var deleteView: UIView!
+    private var deleteOnTap = false
     public var inUse = false
     public var playerMO: PlayerMO?
     public var haloWidth: CGFloat = 0.0
@@ -108,6 +112,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         self.inUse = true
         self.playerMO = nil
         self.thumbnailView.set(data: data, name: name, initials: initials, nameHeight: nameHeight ?? 30.0, alpha: alpha)
+        self.stopDeleteWiggle()
     }
     
     public func set(playerMO: PlayerMO, nameHeight: CGFloat? = nil) {
@@ -145,12 +150,47 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     
     @objc private func tapSelector(_ sender: Any?) {
         if self.inUse {
-            self.delegate?.playerViewWasTapped?(self)
+            if self.deleteOnTap {
+                self.stopDeleteWiggle()
+                self.delegate?.playerViewWasDeleted?(self)
+            } else {
+                self.delegate?.playerViewWasTapped?(self)
+            }
         }
     }
     
     public func removeFromSuperview() {
         self.thumbnailView.removeFromSuperview()
+    }
+    
+    public func startDeleteWiggle() {
+        if let view = self.thumbnailView {
+            if self.inUse {
+                let animation  = CAKeyframeAnimation(keyPath:"transform")
+                animation.values  = [NSValue(caTransform3D: CATransform3DMakeRotation(0.05, 0.0, 0.0, 1.0)),
+                                     NSValue(caTransform3D: CATransform3DMakeRotation(-0.05 , 0, 0, 1))]
+                animation.autoreverses = true
+                animation.duration  = 0.1
+                animation.repeatCount = Float.infinity
+                view.layer.add(animation, forKey: "transform")
+                self.deleteView = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 20.0, height: 20.0))
+                let deleteImageView = UIImageView(frame: CGRect(x: 5.0, y: 5.0, width: 10.0, height: 10.0))
+                deleteImageView.image = UIImage(named: "cross red")
+                deleteView.backgroundColor = Palette.background
+                deleteView.addSubview(deleteImageView)
+                ScorecardUI.veryRoundCorners(deleteView, radius: 10.0)
+                view.addSubview(deleteView)
+                self.deleteOnTap = true
+            }
+        }
+    }
+    
+    public func stopDeleteWiggle() {
+        if let view = self.thumbnailView {
+            view.layer.removeAllAnimations()
+            self.deleteView?.removeFromSuperview()
+            self.deleteOnTap = false
+        }
     }
     
     // MARK: - Drop delegate handlers ================================================================== -
@@ -193,9 +233,9 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     
     public func dragInteraction(_ interaction: UIDragInteraction, previewForLifting item: UIDragItem, session: UIDragSession) -> UITargetedDragPreview? {
         // Create a new view to display the image as a drag preview.
-        let previewView = ThumbnailView(frame: CGRect(origin: CGPoint(), size: self.frame.size), haloWidth: self.haloWidth)
-        previewView.set(data: self.playerMO?.thumbnail, name: self.playerMO?.name)
-        previewView.set(textColor: Palette.darkHighlightText)
+        let previewView = ThumbnailView(frame: CGRect(origin: CGPoint(), size: CGSize(width: self.frame.width, height: self.frame.width)), haloWidth: self.haloWidth)
+        previewView.set(data: self.playerMO?.thumbnail)
+        ScorecardUI.veryRoundCorners(previewView)
         let center = CGPoint(x: self.frame.width / 2.0, y: self.frame.height / 2.0)
         let target = UIDragPreviewTarget(container: self.thumbnailView, center: center)
         let previewParameters = UIDragPreviewParameters()

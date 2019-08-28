@@ -550,6 +550,12 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
         }
     }
     
+    internal func gamePreview(disconnect playerMO: PlayerMO) {
+        if let currentSlot = self.playerData.firstIndex(where: {$0.email == playerMO.email}) {
+            self.disconnectPlayer(playerNumber: currentSlot + 1, reason: "Disconnected by host")
+        }
+    }
+    
     internal func gamePreview(moved playerMO: PlayerMO, to slot: Int) {
         if let currentSlot = self.playerData.firstIndex(where: {$0.email == playerMO.email}) {
             let keepPlayerData = self.playerData[slot]

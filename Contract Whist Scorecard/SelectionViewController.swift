@@ -343,13 +343,19 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             bannerContinueButton.isHidden = hidden
             if self.selectionMode != .single {
                 bannerContinueButton.setTitle("Continue", for: .normal)
-                self.unselectedCollectionViewBottomConstraint?.constant = 0.0
             }
+            self.unselectedCollectionViewBottomConstraint?.constant = 0.0
         } else {
             // Main continue button used on other devices
             bannerContinueButton.setTitle("X", for: .normal)
             self.continueButton(isHidden: hidden, animate: true)
             bannerContinueButton.isHidden = true
+            if self.selectionMode != .single {
+                self.unselectedCollectionViewBottomConstraint?.constant = -40.0
+                let collectionViewLayout = self.unselectedCollectionView.collectionViewLayout as? UICollectionViewFlowLayout
+                collectionViewLayout?.sectionInset = UIEdgeInsets(top: 62.5, left: 0.0, bottom: 80.0, right: 0.0)
+                collectionViewLayout?.invalidateLayout()
+            }
         }
         if selectionMode == .single {
             clearAllButton.isHidden = true
@@ -908,6 +914,20 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 }
             })
         }
+    }
+    
+    // MARK: - Tap gesture delegate handlers =========================================================== -
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if touch.view == self.selectedPlayersView {
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
     
     // MARK: - Function to present and dismiss this view ==============================================================

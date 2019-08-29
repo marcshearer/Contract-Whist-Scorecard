@@ -31,7 +31,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Contract Whist Scorecard/GamePreviewViewController.swift"
-            timestampString = "588781417.71706"
+            timestampString = "588782792.876995"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "328"
@@ -47,12 +47,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Contract Whist Scorecard/GamePreviewViewController.swift"
-            timestampString = "588781417.7173311"
+            timestampString = "588782792.87764"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "356"
             endingLineNumber = "356"
             landmarkName = "setupButtons(animate:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Contract Whist Scorecard/SelectionViewController.swift"
+            timestampString = "588784712.3114949"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "922"
+            endingLineNumber = "922"
+            landmarkName = "gestureRecognizer(_:shouldReceive:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

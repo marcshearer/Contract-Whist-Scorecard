@@ -9,7 +9,7 @@
 import UIKit
 
 @objc protocol SlideOutButtonDelegate {
-    func slideOutButtonPressed(_ sender: SlideOutButtonView)
+    func overrideButtonPressed(_ sender: SlideOutButtonView)
 }
 
 class SlideOutButtonView: UIView {
@@ -50,7 +50,7 @@ class SlideOutButtonView: UIView {
     }
     
     @IBAction func buttonPressed(_ sender: UIButton) {
-        self.delegate?.slideOutButtonPressed(self)
+        self.delegate?.overrideButtonPressed(self)
     }
     
     override init(frame: CGRect) {
@@ -107,11 +107,7 @@ class SlideOutButtonView: UIView {
             self.contentView.superview!.bringSubviewToFront(self.contentView)
             let toolbarBottomOffset: CGFloat = self.distanceFromBottom() + 44.0
             if toolbarBottomOffset != self.toolbarBottomConstraint.constant {
-                if animated {
-                    Utility.animate(duration: 0.3) {
-                        self.toolbarBottomConstraint.constant = toolbarBottomOffset
-                    }
-                } else {
+                Utility.animate(if: animated, duration: 0.3) {
                     self.toolbarBottomConstraint.constant = toolbarBottomOffset
                 }
             }

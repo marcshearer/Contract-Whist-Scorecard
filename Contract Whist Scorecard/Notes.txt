@@ -158,7 +158,7 @@ Totals in landscape moved down slightly
 Tidied up button sizes in entry
 Show dp in stats
 Gradient totals of scorecard to tableTop in landscape
-
+Color of thumbnails to reflect surroundings
 
 Bugs fix now
 ------------
@@ -183,6 +183,8 @@ TODO
 Crash if go into High Scores repeatedly
 Avoid message text blue color
 Redo graph
+Tiles in selection not all active
+Tiles in selection flow under tabletop
 
 Jack
 ----

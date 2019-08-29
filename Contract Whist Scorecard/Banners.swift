@@ -34,6 +34,7 @@ class InsetPaddingView: InsetPaddingViewNoColor {
 }
 
 @objc enum ContinuationShapeType: Int {
+    case rectangle = 0
     case upArrow = 1
     case downArrow = 2
     case leftStep = 3
@@ -88,6 +89,12 @@ class BannerContinuation: UIView {
             }
             
             switch self.shape {
+            case .rectangle:
+                points.append(PolygonPoint(x: rect.minX, y: rect.minY, pointType: .point))
+                points.append(PolygonPoint(x: rect.minX, y: rect.maxY, pointType: .point))
+                points.append(PolygonPoint(x: rect.maxX, y: rect.maxY, pointType: .point))
+                points.append(PolygonPoint(x: rect.maxX, y: rect.minY, pointType: .point))
+                
             case .upArrow:
                 points.append(PolygonPoint(x: rect.minX, y: rect.minY, pointType: .point))
                 points.append(PolygonPoint(x: rect.minX, y: rect.maxY, pointType: .point))
@@ -124,9 +131,10 @@ class BannerContinuation: UIView {
 
 class Footer: UIView {
     
-    private var shapeLayer: CAShapeLayer?
+    private var shapeLayer: [CAShapeLayer] = []
     
     @IBInspectable var footerColor: UIColor
+    @IBInspectable var borderColor: UIColor
     @IBInspectable var shape: ContinuationShapeType
     
     @IBInspectable var shapeType:Int {
@@ -140,6 +148,7 @@ class Footer: UIView {
     
     required init?(coder aDecoder: NSCoder) {
         self.footerColor = Palette.banner
+        self.borderColor = Palette.bannerText
         self.shape = .upArrow
         super.init(coder: aDecoder)
     }
@@ -152,21 +161,40 @@ class Footer: UIView {
         super.layoutSubviews()
         
         // Remove previous layer
-        self.shapeLayer?.removeFromSuperlayer()
+        self.shapeLayer.forEach { $0.removeFromSuperlayer() }
         
-        // Add new layer
-        let rect = CGRect(origin: CGPoint(), size: self.frame.size)
-        var points: [PolygonPoint] = []
-        switch self.shape {
-        case .upArrow:
-            points.append(PolygonPoint(x: rect.minX, y: rect.maxY, pointType: .point))
-            points.append(PolygonPoint(x: rect.midX, y: rect.minY, pointType: .quadRounded, radius: 20.0))
-            points.append(PolygonPoint(x: rect.maxX, y: rect.maxY, pointType: .point))
+        for pass in 0...(self.footerColor == self.borderColor ? 0 : 1) {
             
-        default:
-            break
+            var color: UIColor
+            var points: [PolygonPoint] = []
+            var rect: CGRect
+            
+            if pass == 1 {
+                rect = CGRect(x: 0.0, y: 0.0, width: self.frame.width, height: self.frame.height)
+                color = self.borderColor
+            } else {
+                rect = CGRect(x: 0.0, y: 5.0, width: self.frame.width, height: self.frame.height - 5.0)
+                color = self.footerColor
+            }
+            
+            // Add new layer
+            switch self.shape {
+            case .upArrow:
+                points.append(PolygonPoint(x: rect.minX, y: rect.maxY, pointType: .point))
+                if pass == 1 {
+                    points.append(PolygonPoint(x: rect.minX, y: rect.maxY - 5.0, pointType: .point))
+                }
+                points.append(PolygonPoint(x: rect.midX, y: rect.minY, pointType: .quadRounded, radius: 20.0))
+                if pass == 1 {
+                    points.append(PolygonPoint(x: rect.maxX, y: rect.maxY - 5.0, pointType: .point))
+                }
+                points.append(PolygonPoint(x: rect.maxX, y: rect.maxY, pointType: .point))
+                
+            default:
+                break
+            }
+            self.shapeLayer.append(Polygon.roundedShapeLayer(in: self, definedBy: points, strokeColor: color, fillColor: color, lineWidth: 0.0))
         }
-        self.shapeLayer = Polygon.roundedShapeLayer(in: self, definedBy: points, strokeColor: self.footerColor, fillColor: self.footerColor, lineWidth: 0.0)
     }
     
 }

@@ -11,6 +11,7 @@ import UIKit
 public class ThumbnailView: UIView {
 
     private var haloWidth: CGFloat = 0.0
+    private var allowHaloWidth: CGFloat = 0.0 // Used to avoid disc changing size if halo changes
     
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet public weak var discImage: UIImageView!
@@ -31,9 +32,9 @@ public class ThumbnailView: UIView {
         self.loadThumbnailView()
     }
     
-    convenience init(frame: CGRect, haloWidth: CGFloat) {
+    convenience init(frame: CGRect, haloWidth: CGFloat, allowHaloWidth: CGFloat = 0.0) {
         self.init(frame: frame)
-        self.set(haloWidth: haloWidth)
+        self.set(haloWidth: haloWidth, allowHaloWidth: allowHaloWidth)
     }
     
     private func loadThumbnailView() {
@@ -119,21 +120,26 @@ public class ThumbnailView: UIView {
     
     public func set(frame: CGRect) {
         self.frame = frame
-        
+        let allowHaloWidth = max(self.allowHaloWidth, self.haloWidth)
         // Adjust components
-        self.discHalo.frame = CGRect(origin: CGPoint(), size: CGSize(width: self.frame.width, height: self.frame.width))
-        ScorecardUI.veryRoundCorners(self.discHalo, radius: (self.discHalo.frame.width - 0.0) / 2.0)
+        let haloInset = allowHaloWidth - haloWidth
+        let haloSize = self.frame.width - (2.0 * haloInset)
+        self.discHalo.frame = CGRect(x: haloInset, y: haloInset, width: haloSize , height: haloSize)
+        ScorecardUI.veryRoundCorners(self.discHalo, radius: self.discHalo.frame.width / 2.0)
         
-        let discSize: CGFloat = frame.width - (2 * self.haloWidth)
+        let discSize: CGFloat = frame.width - (2 * allowHaloWidth)
         self.discImage.frame = CGRect(x: haloWidth, y: haloWidth, width: discSize, height: discSize)
         ScorecardUI.veryRoundCorners(self.discImage, radius: discSize / 2.0)
         self.discInitials.frame = self.discImage.frame
         ScorecardUI.veryRoundCorners(self.discInitials, radius: discSize / 2.0)
-        // self.name.frame = (CGRect(x: 0.0, y: frame.height - frame.width, width: frame.width, height: frame.height - frame.width + 5.0))
     }
     
     public func set(textColor: UIColor) {
         self.name.textColor = textColor
+    }
+    
+    public func set(backgroundColor: UIColor) {
+        self.discInitials.backgroundColor = backgroundColor
     }
     
     public func set(thumbnailAlpha: CGFloat) {
@@ -142,8 +148,9 @@ public class ThumbnailView: UIView {
         self.discInitials.alpha = thumbnailAlpha
     }
     
-    public func set(haloWidth: CGFloat) {
+    public func set(haloWidth: CGFloat, allowHaloWidth: CGFloat = 0.0) {
         self.haloWidth = haloWidth
+        self.allowHaloWidth = allowHaloWidth
         self.set(frame: frame)
     }
     

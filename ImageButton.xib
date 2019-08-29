@@ -48,15 +48,7 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
-            <connections>
-                <outletCollection property="gestureRecognizers" destination="UBY-cP-JFj" appends="YES" id="paq-Ba-IZU"/>
-            </connections>
             <point key="canvasLocation" x="34.782608695652179" y="34.821428571428569"/>
         </view>
-        <tapGestureRecognizer id="UBY-cP-JFj">
-            <connections>
-                <action selector="tapGestureWithRecognizer:" destination="-1" id="QIF-WQ-4ku"/>
-            </connections>
-        </tapGestureRecognizer>
     </objects>
 </document>

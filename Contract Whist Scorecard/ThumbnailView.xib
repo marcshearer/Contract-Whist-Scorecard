@@ -47,7 +47,7 @@
                     </constraints>
                 </view>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CSk-0Z-taK" userLabel="AdditionalImage">
-                    <rect key="frame" x="19" y="19" width="37.5" height="37.5"/>
+                    <rect key="frame" x="9.5" y="9.5" width="56" height="56"/>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="kXi-0g-avo">
                     <rect key="frame" x="0.0" y="70" width="75" height="30"/>
@@ -68,13 +68,13 @@
                 <constraint firstAttribute="trailing" secondItem="kXi-0g-avo" secondAttribute="trailing" id="JjY-0J-bic"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="PGG-ax-99W" secondAttribute="trailing" id="SWp-vX-PiI"/>
                 <constraint firstItem="PGG-ax-99W" firstAttribute="width" secondItem="PGG-ax-99W" secondAttribute="height" multiplier="1:1" id="aUA-DG-TuD"/>
-                <constraint firstItem="CSk-0Z-taK" firstAttribute="height" secondItem="PGG-ax-99W" secondAttribute="height" multiplier="0.5" id="ck3-LR-EJR"/>
+                <constraint firstItem="CSk-0Z-taK" firstAttribute="height" secondItem="PGG-ax-99W" secondAttribute="height" multiplier="0.75" id="ck3-LR-EJR"/>
                 <constraint firstItem="kXi-0g-avo" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="eoF-bM-Q6N"/>
                 <constraint firstItem="PGG-ax-99W" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="gff-UU-Rnc"/>
                 <constraint firstItem="CSk-0Z-taK" firstAttribute="centerY" secondItem="PGG-ax-99W" secondAttribute="centerY" id="jDx-8i-xUW"/>
                 <constraint firstItem="CSk-0Z-taK" firstAttribute="centerY" secondItem="PGG-ax-99W" secondAttribute="centerY" id="mSo-eI-W2N"/>
                 <constraint firstAttribute="bottom" secondItem="kXi-0g-avo" secondAttribute="bottom" id="q5r-ly-Vlc"/>
-                <constraint firstItem="CSk-0Z-taK" firstAttribute="width" secondItem="PGG-ax-99W" secondAttribute="width" multiplier="0.5" id="ulf-Vs-mck"/>
+                <constraint firstItem="CSk-0Z-taK" firstAttribute="width" secondItem="PGG-ax-99W" secondAttribute="width" multiplier="0.75" id="ulf-Vs-mck"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>

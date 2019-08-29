@@ -50,6 +50,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
     private var width: CGFloat! = 50.0
     private var height: CGFloat! = 75.0
     private var haloWidth: CGFloat = 0.0
+    private var allowHaloWidth: CGFloat = 0.0
     private let lineWidth: CGFloat = 5.0
     private let tableInset: CGFloat = 20.0
     private var additionalAdjustment: CGFloat = 0.0
@@ -110,9 +111,10 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         self.loadSelectedPlayersView()
     }
     
-    convenience init(frame: CGRect, haloWidth: CGFloat) {
+    convenience init(frame: CGRect, haloWidth: CGFloat, allowHaloWidth: CGFloat = 0.0) {
         self.init(frame: frame)
         self.haloWidth = haloWidth
+        self.allowHaloWidth = allowHaloWidth
     }
     
     // MARK: - Public methods ============================================================================== -
@@ -157,10 +159,10 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         }
     }
     
-    public func setHaloWidth(slot: Int? = nil, haloWidth: CGFloat) {
+    public func setHaloWidth(slot: Int? = nil, haloWidth: CGFloat, allowHaloWidth: CGFloat = 0.0) {
         for index in 0..<self.playerViews.count {
             if slot == nil || slot == index {
-                self.playerViews[index].set(haloWidth: haloWidth)
+                self.playerViews[index].set(haloWidth: haloWidth, allowHaloWidth: allowHaloWidth)
             }
         }
     }
@@ -177,7 +179,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         return CGRect(origin: self.contentView.convert(CGPoint(x: self.tableFrame.midX - (size.width / 2.0), y: self.tableFrame.midY - 16 - size.height), to: view), size: size)
     }
     
-    public func drawRoom(thumbnailWidth: CGFloat? = nil, thumbnailHeight: CGFloat? = nil, players: Int? = nil, directions: ArrowDirection...) {
+    public func drawRoom(thumbnailWidth: CGFloat? = nil, thumbnailHeight: CGFloat? = nil, players: Int? = nil, directions: ArrowDirection...) -> CGRect{
         
         // Save leg height and thumbnail sizes etc
         self.setThumbnailSize(width: thumbnailWidth ?? 60.0, height: thumbnailHeight ?? 90.0)
@@ -191,6 +193,8 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         
         // Draw room components
         self.drawRoomComponents()
+        
+        return self.roomFrame
     }
     
     public func startDeleteWiggle(slot: Int? = nil) {
@@ -248,7 +252,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         
         for index in 0..<self.scorecard.numberPlayers {
             
-            let playerView = PlayerView(type: .selected, parent: self.contentView, width: self.width, height: self.height, tag: index, haloWidth: self.haloWidth)
+            let playerView = PlayerView(type: .selected, parent: self.contentView, width: self.width, height: self.height, tag: index, haloWidth: self.haloWidth, allowHaloWidth: self.allowHaloWidth)
             playerView.delegate = self
             playerView.set(textColor: Palette.roomInteriorText)
             self.clear(playerView: playerView, slot: index)
@@ -321,7 +325,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         }
         
         let widthComponent = self.frame.width / widthElements
-        let heightComponent = widthComponent * tableRatio
+        let heightComponent = widthComponent * self.tableRatio
         let heightInset = tableInset * heightComponent / widthComponent
         
         let unadjustedHeight: CGFloat = 2.0 * heightComponent

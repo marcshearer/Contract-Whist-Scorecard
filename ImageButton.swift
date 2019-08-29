@@ -23,10 +23,6 @@ class ImageButton: UIView {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     
-    @IBAction private func tapGesture(recognizer: UITapGestureRecognizer) {
-        self.delegate?.imageButtonPressed(self)
-    }
-    
     public var isEnabled: Bool {
         get {
             return self.contentView.isUserInteractionEnabled
@@ -61,6 +57,14 @@ class ImageButton: UIView {
         self.addSubview(contentView)
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        // Setup tap gesture
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(ImageButton.tapSelector(_:)))
+        self.contentView.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func tapSelector(_ sender: Any) {
+        self.delegate?.imageButtonPressed(self)
     }
     
     override func layoutSubviews() {

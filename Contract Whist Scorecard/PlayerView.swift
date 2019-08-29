@@ -39,8 +39,9 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     public var inUse = false
     public var playerMO: PlayerMO?
     public var haloWidth: CGFloat = 0.0
+    public var allowHaloWidth: CGFloat = 0.0
     
-    init(type: PlayerViewType, parent: UIView, width: CGFloat, height: CGFloat, tag: Int = 0, haloWidth: CGFloat = 0.0, tapGestureDelegate: UIGestureRecognizerDelegate? = nil) {
+    init(type: PlayerViewType, parent: UIView, width: CGFloat, height: CGFloat, tag: Int = 0, haloWidth: CGFloat = 0.0, allowHaloWidth: CGFloat = 0.0, tapGestureDelegate: UIGestureRecognizerDelegate? = nil) {
         
         // Save properties
         self.parent = parent
@@ -51,7 +52,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         super.init()
         
         // Setup thumbnail
-        self.thumbnailView = ThumbnailView(frame: CGRect(x: 5.0, y: 5.0, width: width, height: height), haloWidth: haloWidth)
+        self.thumbnailView = ThumbnailView(frame: CGRect(x: 5.0, y: 5.0, width: width, height: height), haloWidth: haloWidth, allowHaloWidth: allowHaloWidth)
         self.haloWidth = haloWidth
         self.thumbnailView.tag = tag
     
@@ -120,9 +121,10 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         self.playerMO = playerMO
     }
     
-    public func set(haloWidth: CGFloat) {
+    public func set(haloWidth: CGFloat, allowHaloWidth: CGFloat) {
         self.haloWidth = haloWidth
-        self.thumbnailView.set(haloWidth: haloWidth)
+        self.allowHaloWidth = allowHaloWidth
+        self.thumbnailView.set(haloWidth: haloWidth, allowHaloWidth: allowHaloWidth)
         self.thumbnailView.set(frame: self.frame)
     }
     
@@ -142,6 +144,10 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     
     public func set(textColor: UIColor) {
         self.thumbnailView.set(textColor: textColor)
+    }
+    
+    public func set(backgroundColor: UIColor) {
+        self.thumbnailView.set(backgroundColor: backgroundColor)
     }
     
     public func set(imageName: String?) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina5_9" orientation="portrait">
+    <device id="retina5_9" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -16,11 +16,11 @@
             <objects>
                 <viewController storyboardIdentifier="GamePreviewViewController" title="Game Preview" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="M5N-Yi-C04" userLabel="Game Preview" customClass="GamePreviewViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iUU-8s-ns4" userLabel="Game Preview View">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2QN-TN-Yp2" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="812" height="0.0"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
                                         <color key="value" name="Game Banner"/>
@@ -28,10 +28,10 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="PAW-t6-IPh" userLabel="Banner continuation">
-                                <rect key="frame" x="0.0" y="87.999999999999986" width="375" height="226.66666666666663"/>
+                                <rect key="frame" x="44" y="32" width="768" height="0.0"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="PUR-r5-ySO">
-                                        <rect key="frame" x="32" y="40" width="311" height="40"/>
+                                        <rect key="frame" x="32" y="24" width="298" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="aF4-bC-pDj"/>
                                         </constraints>
@@ -59,11 +59,19 @@
                                 </variation>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nKd-io-ud9" customClass="SelectedPlayersView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="107.99999999999997" width="375" height="365.33333333333326"/>
+                                <rect key="frame" x="406" y="32" width="362" height="355"/>
                                 <color key="backgroundColor" name="Clear"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="250" id="DA8-jS-kkq"/>
+                                </constraints>
+                                <variation key="heightClass=compact">
+                                    <mask key="constraints">
+                                        <exclude reference="DA8-jS-kkq"/>
+                                    </mask>
+                                </variation>
                             </view>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ffW-WE-f4E" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="44" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="812" height="32"/>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" name="Game Banner Text"/>
                                 </textAttributes>
@@ -71,7 +79,7 @@
                                     <navigationItem title="Preview" id="wLJ-Vj-HuD">
                                         <barButtonItem key="leftBarButtonItem" id="oX5-VT-Cds">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="GbG-JI-mmO">
-                                                <rect key="frame" x="16" y="11" width="62" height="22"/>
+                                                <rect key="frame" x="64" y="5" width="62" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" image="back"/>
                                                 <connections>
@@ -81,7 +89,7 @@
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" width="40" id="fgj-MW-RhM">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="wbi-Gg-AL4" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="297" y="9.6666666666666643" width="62" height="25"/>
+                                                <rect key="frame" x="686" y="3.6666666666666679" width="62" height="25"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Start" image="forward"/>
                                                 <userDefinedRuntimeAttributes>
@@ -101,16 +109,16 @@
                                 </userDefinedRuntimeAttributes>
                             </navigationBar>
                             <view contentMode="scaleToFill" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="iDT-Xi-tM5" userLabel="Action Button View">
-                                <rect key="frame" x="0.0" y="473.33333333333331" width="375" height="214.66666666666669"/>
+                                <rect key="frame" x="44" y="32" width="362" height="222"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="x89-xH-iQy" userLabel="Left View">
-                                        <rect key="frame" x="0.0" y="0.0" width="187.66666666666666" height="214.66666666666666"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="181" height="222"/>
                                         <subviews>
                                             <view tag="2" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FyF-vn-V6o" userLabel="Next Dealer Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="26.333333333333329" y="43.000000000000057" width="135" height="128.66666666666666"/>
+                                                <rect key="frame" x="33.666666666666664" y="66.666666666666657" width="113.66666666666669" height="88.666666666666657"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="FyF-vn-V6o" secondAttribute="height" multiplier="82:64" constant="-30" id="Bas-9R-8IF"/>
+                                                    <constraint firstAttribute="width" secondItem="FyF-vn-V6o" secondAttribute="height" multiplier="82:64" id="Bas-9R-8IF"/>
                                                 </constraints>
                                                 <viewLayoutGuide key="safeArea" id="Epv-wr-w77"/>
                                                 <userDefinedRuntimeAttributes>
@@ -121,7 +129,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <outlet property="delegate" destination="M5N-Yi-C04" id="qDM-wR-3Gt"/>
+                                                    <outlet property="delegate" destination="M5N-Yi-C04" id="eIc-PH-LPM"/>
                                                 </connections>
                                             </view>
                                         </subviews>
@@ -129,8 +137,8 @@
                                         <constraints>
                                             <constraint firstItem="FyF-vn-V6o" firstAttribute="centerY" secondItem="x89-xH-iQy" secondAttribute="centerY" id="Dz2-mX-WIv"/>
                                             <constraint firstItem="FyF-vn-V6o" firstAttribute="centerX" secondItem="x89-xH-iQy" secondAttribute="centerX" id="PQt-mG-1M0"/>
-                                            <constraint firstItem="FyF-vn-V6o" firstAttribute="height" secondItem="x89-xH-iQy" secondAttribute="height" multiplier="0.6" id="W4f-MD-vui"/>
-                                            <constraint firstItem="FyF-vn-V6o" firstAttribute="height" secondItem="x89-xH-iQy" secondAttribute="height" multiplier="0.5" id="wLb-Ur-kOW"/>
+                                            <constraint firstItem="FyF-vn-V6o" firstAttribute="height" secondItem="x89-xH-iQy" secondAttribute="height" multiplier="0.5" id="W4f-MD-vui"/>
+                                            <constraint firstItem="FyF-vn-V6o" firstAttribute="height" secondItem="x89-xH-iQy" secondAttribute="height" multiplier="0.4" id="wLb-Ur-kOW"/>
                                         </constraints>
                                         <variation key="default">
                                             <mask key="constraints">
@@ -145,13 +153,13 @@
                                         </variation>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bs3-BT-kuE" userLabel="Right View">
-                                        <rect key="frame" x="187.66666666666663" y="0.0" width="187.33333333333337" height="214.66666666666666"/>
+                                        <rect key="frame" x="181" y="0.0" width="181" height="222"/>
                                         <subviews>
                                             <view tag="1" contentMode="scaleToFill" verticalHuggingPriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="xXV-k4-gfB" userLabel="Cut for Dealer Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="26" y="43.000000000000057" width="135" height="128.66666666666666"/>
+                                                <rect key="frame" x="33.666666666666693" y="66.666666666666657" width="113.66666666666669" height="88.666666666666657"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="xXV-k4-gfB" secondAttribute="height" multiplier="82:64" constant="-30" id="dJB-et-5Yx"/>
+                                                    <constraint firstAttribute="width" secondItem="xXV-k4-gfB" secondAttribute="height" multiplier="82:64" id="dJB-et-5Yx"/>
                                                 </constraints>
                                                 <viewLayoutGuide key="safeArea" id="oxI-0X-Fyz"/>
                                                 <userDefinedRuntimeAttributes>
@@ -162,15 +170,15 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <outlet property="delegate" destination="M5N-Yi-C04" id="5Nv-qg-OSH"/>
+                                                    <outlet property="delegate" destination="M5N-Yi-C04" id="2Rx-cQ-jBf"/>
                                                 </connections>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstItem="xXV-k4-gfB" firstAttribute="centerY" secondItem="Bs3-BT-kuE" secondAttribute="centerY" id="SKl-cK-UIY"/>
-                                            <constraint firstItem="xXV-k4-gfB" firstAttribute="height" secondItem="Bs3-BT-kuE" secondAttribute="height" multiplier="0.5" id="Uaq-ld-t4P"/>
-                                            <constraint firstItem="xXV-k4-gfB" firstAttribute="height" secondItem="Bs3-BT-kuE" secondAttribute="height" multiplier="0.6" id="Xc0-3D-VIy"/>
+                                            <constraint firstItem="xXV-k4-gfB" firstAttribute="height" secondItem="Bs3-BT-kuE" secondAttribute="height" multiplier="0.4" id="Uaq-ld-t4P"/>
+                                            <constraint firstItem="xXV-k4-gfB" firstAttribute="height" secondItem="Bs3-BT-kuE" secondAttribute="height" multiplier="0.4" id="Xc0-3D-VIy"/>
                                             <constraint firstItem="xXV-k4-gfB" firstAttribute="centerX" secondItem="Bs3-BT-kuE" secondAttribute="centerX" id="gX3-3Y-0Cd"/>
                                         </constraints>
                                         <variation key="default">
@@ -190,6 +198,8 @@
                                 <constraints>
                                     <constraint firstItem="x89-xH-iQy" firstAttribute="leading" secondItem="iDT-Xi-tM5" secondAttribute="leading" id="5v8-TK-isx"/>
                                     <constraint firstItem="Bs3-BT-kuE" firstAttribute="width" secondItem="iDT-Xi-tM5" secondAttribute="width" multiplier="0.5" id="GI5-v2-aeb"/>
+                                    <constraint firstAttribute="bottom" secondItem="x89-xH-iQy" secondAttribute="bottom" id="Jo6-Oq-0Le"/>
+                                    <constraint firstAttribute="bottom" secondItem="Bs3-BT-kuE" secondAttribute="bottom" id="KIW-55-9zN"/>
                                     <constraint firstItem="x89-xH-iQy" firstAttribute="width" secondItem="iDT-Xi-tM5" secondAttribute="width" multiplier="0.5" id="Ke2-f2-fUD"/>
                                     <constraint firstAttribute="trailing" secondItem="Bs3-BT-kuE" secondAttribute="trailing" id="Tzc-o7-9e9"/>
                                     <constraint firstItem="x89-xH-iQy" firstAttribute="top" secondItem="iDT-Xi-tM5" secondAttribute="top" id="boN-TS-ja4"/>
@@ -197,11 +207,12 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KKW-id-DrE" userLabel="Continue Button" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="75" y="688" width="225" height="50"/>
+                                <rect key="frame" x="203" y="305" width="406" height="50"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="RHC-Y9-q5u"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="thin" pointSize="24"/>
                                 <state key="normal" title="Start Game">
                                     <color key="titleColor" name="Continue Button Text"/>
                                 </state>
@@ -210,62 +221,63 @@
                                         <color key="value" name="Continue Button"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="strokeColor">
-                                        <color key="value" name="Continue Button Text"/>
+                                        <color key="value" name="Continue Button"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="continuePressed:" destination="M5N-Yi-C04" eventType="touchUpInside" id="Qnt-Jo-yaK"/>
                                 </connections>
                             </button>
-                            <view tag="-3" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rMq-tB-u4I" customClass="SlideOutButtonView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="724" width="375" height="88"/>
-                                <color key="backgroundColor" name="Clear"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sgD-KU-UYi" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="185" y="270" width="80" height="25"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="M9A-lO-OWQ"/>
+                                    <constraint firstAttribute="height" constant="25" id="MGG-QJ-e0N"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="thin" pointSize="15"/>
+                                <state key="normal" title="Override">
+                                    <color key="titleColor" name="Table Top Text Contrast"/>
+                                </state>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="title" value="Override Settings"/>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="buttonFillColor">
+                                    <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
                                         <color key="value" name="Table Top"/>
                                     </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="buttonStrokeColor">
+                                    <userDefinedRuntimeAttribute type="color" keyPath="strokeColor">
                                         <color key="value" name="Table Top Text Contrast"/>
                                     </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="buttonTextColor">
-                                        <color key="value" name="Table Top Text Contrast"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="viewBackgroundColor">
-                                        <color key="value" name="Clear"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="lineWidth">
+                                        <real key="value" value="0.5"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <outlet property="delegate" destination="M5N-Yi-C04" id="wKk-Oo-Qd6"/>
+                                    <action selector="overrideSettingsButtonPressed:" destination="M5N-Yi-C04" eventType="touchUpInside" id="olp-K9-6rO"/>
                                 </connections>
-                            </view>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" name="Table Top"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="nKd-io-ud9" firstAttribute="height" secondItem="iUU-8s-ns4" secondAttribute="height" multiplier="0.45" id="12F-Gb-UL3"/>
                             <constraint firstItem="2QN-TN-Yp2" firstAttribute="leading" secondItem="iUU-8s-ns4" secondAttribute="leading" id="5eh-QL-LSx"/>
+                            <constraint firstItem="sgD-KU-UYi" firstAttribute="top" secondItem="iDT-Xi-tM5" secondAttribute="bottom" constant="16" id="8Th-pB-T2g"/>
                             <constraint firstItem="ffW-WE-f4E" firstAttribute="top" secondItem="wSn-mE-2UN" secondAttribute="top" id="CEF-D5-lth"/>
                             <constraint firstItem="nKd-io-ud9" firstAttribute="top" secondItem="PAW-t6-IPh" secondAttribute="top" constant="20" id="D2A-Qa-VDI"/>
-                            <constraint firstItem="Bs3-BT-kuE" firstAttribute="bottom" secondItem="KKW-id-DrE" secondAttribute="top" id="Gq5-yy-spO"/>
-                            <constraint firstItem="KKW-id-DrE" firstAttribute="width" secondItem="iUU-8s-ns4" secondAttribute="width" multiplier="0.6" id="IQ6-ju-Djw"/>
+                            <constraint firstItem="KKW-id-DrE" firstAttribute="width" secondItem="iUU-8s-ns4" secondAttribute="width" multiplier="0.5" id="IQ6-ju-Djw"/>
                             <constraint firstAttribute="trailing" secondItem="PAW-t6-IPh" secondAttribute="trailing" id="JFY-zz-N9f"/>
                             <constraint firstItem="ffW-WE-f4E" firstAttribute="leading" secondItem="iUU-8s-ns4" secondAttribute="leading" id="JzB-y0-eHa"/>
                             <constraint firstItem="nKd-io-ud9" firstAttribute="trailing" secondItem="wSn-mE-2UN" secondAttribute="trailing" id="LVw-q5-pJC"/>
                             <constraint firstItem="PAW-t6-IPh" firstAttribute="height" secondItem="nKd-io-ud9" secondAttribute="height" multiplier="0.5" constant="44" id="Ny1-6X-Fnh"/>
                             <constraint firstItem="2QN-TN-Yp2" firstAttribute="top" secondItem="iUU-8s-ns4" secondAttribute="top" id="Pqs-06-AB9"/>
-                            <constraint firstItem="KKW-id-DrE" firstAttribute="bottom" secondItem="iUU-8s-ns4" secondAttribute="bottom" constant="-74" id="Rvu-Kd-42G"/>
+                            <constraint firstItem="sgD-KU-UYi" firstAttribute="centerX" secondItem="iDT-Xi-tM5" secondAttribute="centerX" id="QjB-Ar-lgb"/>
+                            <constraint firstAttribute="bottom" secondItem="KKW-id-DrE" secondAttribute="bottom" constant="20" id="Rvu-Kd-42G"/>
                             <constraint firstItem="PAW-t6-IPh" firstAttribute="leading" secondItem="wSn-mE-2UN" secondAttribute="leading" id="U6b-1a-Msr"/>
                             <constraint firstItem="2QN-TN-Yp2" firstAttribute="trailing" secondItem="iUU-8s-ns4" secondAttribute="trailing" id="VdM-H9-jKl"/>
                             <constraint firstItem="iDT-Xi-tM5" firstAttribute="leading" secondItem="wSn-mE-2UN" secondAttribute="leading" id="XcT-zv-E3Z"/>
                             <constraint firstItem="PAW-t6-IPh" firstAttribute="top" secondItem="ffW-WE-f4E" secondAttribute="bottom" id="bjx-vj-TAk"/>
-                            <constraint firstItem="x89-xH-iQy" firstAttribute="bottom" secondItem="KKW-id-DrE" secondAttribute="top" id="css-eL-xgS"/>
                             <constraint firstItem="iDT-Xi-tM5" firstAttribute="top" secondItem="nKd-io-ud9" secondAttribute="bottom" id="dJ9-ru-3tX"/>
                             <constraint firstItem="nKd-io-ud9" firstAttribute="leading" secondItem="iDT-Xi-tM5" secondAttribute="trailing" id="ghX-1A-Ew3"/>
-                            <constraint firstItem="rMq-tB-u4I" firstAttribute="leading" secondItem="iDT-Xi-tM5" secondAttribute="leading" id="glu-OA-94z"/>
-                            <constraint firstItem="rMq-tB-u4I" firstAttribute="trailing" secondItem="iDT-Xi-tM5" secondAttribute="trailing" id="hhg-Cp-nt5"/>
+                            <constraint firstAttribute="bottom" secondItem="sgD-KU-UYi" secondAttribute="bottom" constant="80" id="hcC-KG-rnF"/>
                             <constraint firstItem="nKd-io-ud9" firstAttribute="leading" secondItem="wSn-mE-2UN" secondAttribute="leading" id="iYh-gR-dF2"/>
-                            <constraint firstItem="nKd-io-ud9" firstAttribute="top" secondItem="ffW-WE-f4E" secondAttribute="bottom" id="mvr-Ru-v6f"/>
+                            <constraint firstItem="nKd-io-ud9" firstAttribute="top" secondItem="PAW-t6-IPh" secondAttribute="top" id="mvr-Ru-v6f"/>
                             <constraint firstItem="wSn-mE-2UN" firstAttribute="top" secondItem="2QN-TN-Yp2" secondAttribute="bottom" id="nSJ-Fw-9tK"/>
                             <constraint firstItem="iDT-Xi-tM5" firstAttribute="top" secondItem="PAW-t6-IPh" secondAttribute="bottom" id="oaF-eq-Jqe"/>
                             <constraint firstItem="PUR-r5-ySO" firstAttribute="trailing" secondItem="iDT-Xi-tM5" secondAttribute="trailing" constant="-32" id="qt8-oF-dds"/>
@@ -278,7 +290,6 @@
                             <constraint firstItem="PAW-t6-IPh" firstAttribute="height" secondItem="iUU-8s-ns4" secondAttribute="height" multiplier="0.6" constant="44" id="wZV-ex-5I8"/>
                             <constraint firstItem="nKd-io-ud9" firstAttribute="width" secondItem="wSn-mE-2UN" secondAttribute="width" multiplier="0.5" id="wpQ-bJ-PLx"/>
                             <constraint firstItem="PUR-r5-ySO" firstAttribute="leading" secondItem="iDT-Xi-tM5" secondAttribute="leading" constant="32" id="yEG-p1-cC1"/>
-                            <constraint firstItem="KKW-id-DrE" firstAttribute="top" secondItem="iDT-Xi-tM5" secondAttribute="bottom" id="yod-P1-fbJ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="wSn-mE-2UN"/>
                         <variation key="default">
@@ -294,7 +305,6 @@
                         <variation key="heightClass=compact">
                             <mask key="constraints">
                                 <exclude reference="thd-wQ-VbB"/>
-                                <exclude reference="12F-Gb-UL3"/>
                                 <exclude reference="D2A-Qa-VDI"/>
                                 <include reference="ghX-1A-Ew3"/>
                                 <exclude reference="iYh-gR-dF2"/>
@@ -311,8 +321,6 @@
                             </mask>
                         </variation>
                         <connections>
-                            <outletCollection property="gestureRecognizers" destination="nmb-H1-Bc3" appends="YES" id="tXd-xD-PK6"/>
-                            <outletCollection property="gestureRecognizers" destination="lM9-Xe-2y0" appends="YES" id="Ozh-gZ-y0l"/>
                             <outletCollection property="gestureRecognizers" destination="bOf-Ep-qSS" appends="YES" id="CeK-Fw-ThR"/>
                         </connections>
                     </view>
@@ -328,22 +336,14 @@
                         <outlet property="navigationBar" destination="ffW-WE-f4E" id="jtq-Pd-rXm"/>
                         <outlet property="navigationTitle" destination="wLJ-Vj-HuD" id="Eq5-xP-X01"/>
                         <outlet property="nextDealerButton" destination="FyF-vn-V6o" id="BOx-ik-bpV"/>
-                        <outlet property="overrideSettingsButton" destination="rMq-tB-u4I" id="2VW-Ya-LH6"/>
+                        <outlet property="overrideSettingsBottomConstraint" destination="hcC-KG-rnF" id="h0U-hP-IYr"/>
+                        <outlet property="overrideSettingsButton" destination="sgD-KU-UYi" id="b2X-TC-9Yy"/>
+                        <outlet property="selectedPlayersHeightConstraint" destination="DA8-jS-kkq" id="lnN-8q-3PO"/>
                         <outlet property="selectedPlayersTopConstraint" destination="D2A-Qa-VDI" id="T7T-LS-kZX"/>
                         <outlet property="selectedPlayersView" destination="nKd-io-ud9" id="c8G-bf-FIe"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vNy-VM-1Ya" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="left" id="nmb-H1-Bc3" userLabel="Left Swipe Gesture Recognizer">
-                    <connections>
-                        <action selector="leftSwipeWithRecognizer:" destination="M5N-Yi-C04" id="HRT-7L-PY4"/>
-                    </connections>
-                </swipeGestureRecognizer>
-                <swipeGestureRecognizer direction="right" id="lM9-Xe-2y0" userLabel="Right Swipe Gesture Recognizer">
-                    <connections>
-                        <action selector="rightSwipeWithRecognizer:" destination="M5N-Yi-C04" id="eSY-SQ-Tos"/>
-                    </connections>
-                </swipeGestureRecognizer>
                 <rotationGestureRecognizer rotation="90" id="bOf-Ep-qSS">
                     <connections>
                         <action selector="rotationGestureWithRecognizer:" destination="M5N-Yi-C04" id="umN-HD-5uH"/>

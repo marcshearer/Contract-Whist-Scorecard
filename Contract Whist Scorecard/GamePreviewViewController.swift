@@ -35,7 +35,7 @@ import CoreData
     
 }
 
-class GamePreviewViewController: CustomViewController, ImageButtonDelegate, SelectedPlayersViewDelegate, SlideOutButtonDelegate {
+class GamePreviewViewController: CustomViewController, ImageButtonDelegate, SelectedPlayersViewDelegate {
     
     // MARK: - Class Properties ================================================================ -
     
@@ -62,9 +62,11 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     private var playerRowHeight:CGFloat = 0.0
     private var thumbnailWidth: CGFloat!
     private var thumbnailHeight: CGFloat!
+    private let labelHeight: CGFloat = 30.0
     private var cutCardWidth: CGFloat!
     private var cutCardHeight: CGFloat!
     private var haloWidth: CGFloat = 3.0
+    private var dealerHaloWidth: CGFloat = 5.0
     private var observer: NSObjectProtocol?
     private var faceTimeAvailable = false
     private var initialising = true
@@ -83,7 +85,9 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     @IBOutlet private weak var cancelButton: UIButton!
     @IBOutlet private weak var selectedPlayersView: SelectedPlayersView!
     @IBOutlet private weak var selectedPlayersTopConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var overrideSettingsButton: SlideOutButtonView!
+    @IBOutlet private weak var selectedPlayersHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var overrideSettingsButton: UIButton!
+    @IBOutlet private weak var overrideSettingsBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var actionButtonView: UIView!
     @IBOutlet private weak var cutForDealerButton: ImageButton!
     @IBOutlet private weak var nextDealerButton: ImageButton!
@@ -101,6 +105,11 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     @IBAction func continuePressed(_ sender: Any) {
         self.goToScorepad()
+    }
+    
+    @IBAction func overrideSettingsButtonPressed(_ sender: Any) {
+        let overrideViewController = OverrideViewController()
+        overrideViewController.show()
     }
     
     internal func imageButtonPressed(_ sender: ImageButton) {
@@ -194,9 +203,12 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         super.viewDidLayoutSubviews()
         self.setupScreen(size: self.view.bounds.size)
         if self.rotated || self.firstTime {
-            self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth)
+            self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth, allowHaloWidth: self.dealerHaloWidth)
             self.selectedPlayersView.setHaloColor(color: Palette.halo)
-            self.selectedPlayersView.drawRoom(thumbnailWidth: thumbnailWidth, thumbnailHeight: thumbnailHeight, directions: (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.up), (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.down))
+            print("preview before selectedFrame: \(self.selectedPlayersView.frame)")
+            let selectedFrame = self.selectedPlayersView.drawRoom(thumbnailWidth: thumbnailWidth, thumbnailHeight: thumbnailHeight, directions: (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.up), (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.down))
+            print("preview selectedFrame: \(selectedFrame)")
+            selectedPlayersHeightConstraint?.constant = selectedFrame.height
         }
         
         self.updateButtons(animate: false)
@@ -267,18 +279,12 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         }
     }
     
-    // MARK: - Slide out button delegate handlers ==================================================== -
-    
-    func slideOutButtonPressed(_ sender: SlideOutButtonView) {
-        let overrideViewController = OverrideViewController()
-        overrideViewController.show()
-    }
-    
     // MARK: - Form Presentation / Handling Routines ================================================================ -
     
     func setupScreen(size: CGSize) {
         
-        self.thumbnailWidth = min(75.0, (size.width / (ScorecardUI.landscapePhone() ? 2.0 : 1.0)) / 5.0)
+        let thumbnailSize = SelectionViewController.thumbnailSize(view: self.view, labelHeight: self.labelHeight)
+        self.thumbnailWidth = thumbnailSize.width
         self.thumbnailHeight = self.thumbnailWidth + 25.0
         self.cutCardHeight = self.thumbnailWidth
         self.cutCardWidth = self.cutCardHeight * 2.0 / 3.0
@@ -303,6 +309,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             self.bannerContinueButton.isHidden = !ScorecardUI.landscapePhone() && !ScorecardUI.smallPhoneSize()
             self.continueButton.isHidden = ScorecardUI.landscapePhone() || ScorecardUI.smallPhoneSize()
             self.overrideSettingsButton.isHidden = false
+            self.overrideSettingsBottomConstraint?.constant = (self.continueButton.isHidden ? 20.0 : 80.0)
             if (self.delegate?.gamePreviewHosting ?? false) {
                 var topConstraint: CGFloat
                 let canStartGame = self.delegate?.gamePreviewCanStartGame ?? true
@@ -429,10 +436,10 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         
         if forceHide {
             self.selectedPlayersView.setHaloColor(slot: playerNumber - 1, color: Palette.halo)
-            self.selectedPlayersView.setHaloWidth(slot: playerNumber - 1, haloWidth: 3.0)
+            self.selectedPlayersView.setHaloWidth(slot: playerNumber - 1, haloWidth: haloWidth, allowHaloWidth: dealerHaloWidth)
         } else {
             self.selectedPlayersView.setHaloColor(slot: playerNumber - 1, color: Palette.haloDealer)
-            self.selectedPlayersView.setHaloWidth(slot: playerNumber - 1, haloWidth: 5.0)
+            self.selectedPlayersView.setHaloWidth(slot: playerNumber - 1, haloWidth: dealerHaloWidth)
         }
     }
     
@@ -747,6 +754,11 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         gamePreviewViewController.rabbitMQService = rabbitMQService
         gamePreviewViewController.computerPlayerDelegate = computerPlayerDelegates
         gamePreviewViewController.delegate = delegate
+        
+        if let viewController = viewController as? SelectionViewController {
+            // Animating from selection - use special view controller
+            gamePreviewViewController.transitioningDelegate = viewController
+        }
         
         gamePreviewViewController.firstTime =  true
         

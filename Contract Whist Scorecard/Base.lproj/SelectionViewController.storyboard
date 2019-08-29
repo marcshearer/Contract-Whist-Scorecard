@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina5_9" orientation="portrait">
+    <device id="retina5_9" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -16,11 +16,11 @@
             <objects>
                 <viewController storyboardIdentifier="SelectionViewController" title="Selection" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zGV-gf-a3n" userLabel="Selection " customClass="SelectionViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Whs-Ka-Uxd">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d37-kV-uuP" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="812" height="0.0"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
                                         <color key="value" name="Shape Highlight Fill"/>
@@ -28,75 +28,25 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YUd-84-9H5" customClass="BannerContinuation" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="88" width="375" height="60"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tm3-ag-1o2" userLabel="Add Player Button" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="16" y="15" width="150" height="30"/>
-                                        <color key="backgroundColor" name="Clear"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="gXp-J2-DDG"/>
-                                        </constraints>
-                                        <state key="normal" title="Add Player">
-                                            <color key="titleColor" name="Game Banner Text"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
-                                                <color key="value" name="Clear"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="strokeColor">
-                                                <color key="value" name="Game Banner Text"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="addPlayerPressed:" destination="zGV-gf-a3n" eventType="touchUpInside" id="zd0-uI-o7f"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7SY-Bw-ahm" userLabel="Continue Button" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="209" y="15" width="150" height="30"/>
-                                        <color key="backgroundColor" name="Clear"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="lcc-Fx-5g7"/>
-                                        </constraints>
-                                        <state key="normal" title="Continue">
-                                            <color key="titleColor" name="Game Banner Text"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
-                                                <color key="value" name="Game Banner"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="strokeColor">
-                                                <color key="value" name="Game Banner"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="continuePressed:" destination="zGV-gf-a3n" eventType="touchUpInside" id="RW6-EI-NNf"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
+                                <rect key="frame" x="0.0" y="32" width="812" height="60"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
-                                    <constraint firstItem="7SY-Bw-ahm" firstAttribute="centerY" secondItem="YUd-84-9H5" secondAttribute="centerY" id="39Y-ga-xmL"/>
-                                    <constraint firstItem="Tm3-ag-1o2" firstAttribute="centerY" secondItem="YUd-84-9H5" secondAttribute="centerY" id="BP6-Mm-7P4"/>
                                     <constraint firstAttribute="height" constant="60" id="EQX-m4-CCM"/>
-                                    <constraint firstItem="Tm3-ag-1o2" firstAttribute="width" secondItem="YUd-84-9H5" secondAttribute="width" multiplier="0.4" id="FKw-fM-XcE"/>
-                                    <constraint firstItem="Tm3-ag-1o2" firstAttribute="leading" secondItem="YUd-84-9H5" secondAttribute="leading" constant="16" id="KsI-u7-bia"/>
-                                    <constraint firstAttribute="trailing" secondItem="7SY-Bw-ahm" secondAttribute="trailing" constant="16" id="LnQ-Hj-P0G"/>
-                                    <constraint firstItem="7SY-Bw-ahm" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Tm3-ag-1o2" secondAttribute="trailing" priority="250" id="SL4-KM-4Cb"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="shapeType">
-                                        <integer key="value" value="3"/>
-                                    </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
                                         <color key="value" name="Game Banner"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
                                         <color key="value" name="Game Banner"/>
                                     </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="shapeType">
+                                        <integer key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xnd-49-L9N">
-                                <rect key="frame" x="162.66666666666666" y="99" width="50" height="50"/>
+                                <rect key="frame" x="381" y="43" width="50" height="50"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="xnd-49-L9N" secondAttribute="height" multiplier="1:1" id="Ppt-15-xTi"/>
@@ -104,7 +54,7 @@
                                 </constraints>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" indicatorStyle="black" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Tlx-l1-ig7" userLabel="Unselected Collection View">
-                                <rect key="frame" x="10" y="172" width="355" height="475"/>
+                                <rect key="frame" x="54" y="96" width="504" height="292"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="gIj-Vz-0t7">
                                     <size key="itemSize" width="75" height="100"/>
@@ -122,7 +72,7 @@
                                         </view>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="Unselected Cell" id="Rab-qC-bur" customClass="SelectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="93.333333333333329" y="0.0" width="75" height="100"/>
+                                        <rect key="frame" x="85.666666666666671" y="0.0" width="75" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="75" height="100"/>
@@ -135,48 +85,107 @@
                                     <outlet property="delegate" destination="zGV-gf-a3n" id="P4a-La-Pxg"/>
                                 </connections>
                             </collectionView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jtX-GA-7ms" customClass="SelectedPlayersView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="572" width="375" height="240"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JiD-Ie-jwK" userLabel="Continue Button View">
+                                <rect key="frame" x="44" y="261" width="724" height="114"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7SY-Bw-ahm" userLabel="Continue Button" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="181" y="44" width="362" height="50"/>
+                                        <color key="backgroundColor" name="Clear"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="lcc-Fx-5g7"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="24"/>
+                                        <state key="normal" title="Continue">
+                                            <color key="titleColor" name="Continue Button Text"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
+                                                <color key="value" name="Continue Button"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="strokeColor">
+                                                <color key="value" name="Continue Button"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="continuePressed:" destination="zGV-gf-a3n" eventType="touchUpInside" id="RW6-EI-NNf"/>
+                                        </connections>
+                                    </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ETT-tR-NhL" customClass="Footer" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="724" height="60"/>
+                                        <color key="backgroundColor" name="Clear"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="60" id="KbI-6L-DbE"/>
+                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="60" id="h52-cS-mKb"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="footerColor">
+                                                <color key="value" name="Table Top"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="shapeType">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                <color key="value" name="Game Banner Text"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Lb-i4-lla" userLabel="Footer Padding">
+                                        <rect key="frame" x="0.0" y="60" width="724" height="54"/>
+                                        <color key="backgroundColor" name="Table Top"/>
+                                    </view>
+                                </subviews>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="240" id="1T2-1s-8c6"/>
-                                    <constraint firstAttribute="width" priority="1" constant="200" id="KfB-6p-mr0"/>
+                                    <constraint firstItem="ETT-tR-NhL" firstAttribute="leading" secondItem="JiD-Ie-jwK" secondAttribute="leading" id="42R-Ua-oDz"/>
+                                    <constraint firstAttribute="trailing" secondItem="ETT-tR-NhL" secondAttribute="trailing" id="6Zs-Ua-FZI"/>
+                                    <constraint firstItem="ETT-tR-NhL" firstAttribute="top" secondItem="JiD-Ie-jwK" secondAttribute="top" id="BTY-Nr-LrH"/>
+                                    <constraint firstItem="7SY-Bw-ahm" firstAttribute="centerX" secondItem="JiD-Ie-jwK" secondAttribute="centerX" id="GNs-AB-6Um"/>
+                                    <constraint firstAttribute="bottom" secondItem="2Lb-i4-lla" secondAttribute="bottom" id="PAs-oq-mCC"/>
+                                    <constraint firstItem="2Lb-i4-lla" firstAttribute="top" secondItem="JiD-Ie-jwK" secondAttribute="top" constant="60" id="UNI-pQ-6nW"/>
+                                    <constraint firstAttribute="bottom" secondItem="7SY-Bw-ahm" secondAttribute="bottom" constant="20" id="ZAu-yd-64y"/>
+                                    <constraint firstAttribute="height" constant="114" id="nh0-5C-EPY"/>
+                                    <constraint firstAttribute="trailing" secondItem="2Lb-i4-lla" secondAttribute="trailing" id="qkN-L0-95v"/>
+                                    <constraint firstItem="2Lb-i4-lla" firstAttribute="leading" secondItem="JiD-Ie-jwK" secondAttribute="leading" id="vuS-gp-0mJ"/>
+                                    <constraint firstItem="7SY-Bw-ahm" firstAttribute="width" secondItem="JiD-Ie-jwK" secondAttribute="width" multiplier="0.5" id="zJK-FN-w7L"/>
                                 </constraints>
-                                <variation key="heightClass=compact">
-                                    <mask key="constraints">
-                                        <exclude reference="1T2-1s-8c6"/>
-                                    </mask>
-                                </variation>
                             </view>
-                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="be7-aP-DEd" customClass="SlideOutButtonView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="724" width="375" height="88"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jtX-GA-7ms" customClass="SelectedPlayersView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="568" y="21.666666666666657" width="200" height="365.33333333333337"/>
+                                <color key="backgroundColor" name="Clear"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" priority="1" constant="200" id="KfB-6p-mr0"/>
+                                    <constraint firstAttribute="height" constant="365.32999999999998" id="uK6-wA-1NC"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Eyy-DC-T6m" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="623" y="342" width="90" height="26"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="26" id="C98-Yc-X2g"/>
+                                    <constraint firstAttribute="width" constant="90" id="t63-QR-IQx"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="thin" pointSize="15"/>
+                                <state key="normal" title="Clear All">
+                                    <color key="titleColor" name="Room Interior Text"/>
+                                </state>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="buttonFillColor">
+                                    <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
                                         <color key="value" name="Room Interior"/>
                                     </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="buttonStrokeColor">
+                                    <userDefinedRuntimeAttribute type="color" keyPath="strokeColor">
                                         <color key="value" name="Room Interior Text"/>
                                     </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="buttonTextColor">
-                                        <color key="value" name="Room Interior Text"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="viewBackgroundColor">
-                                        <color key="value" name="Clear"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="title" value="Clear All"/>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
-                                    <outlet property="delegate" destination="zGV-gf-a3n" id="bOR-bu-xjf"/>
+                                    <action selector="clearAllButtonPressed:" destination="zGV-gf-a3n" eventType="touchUpInside" id="Xd0-C4-7FG"/>
                                 </connections>
-                            </view>
+                            </button>
                             <navigationBar contentMode="redraw" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UgO-yy-CRO" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="44" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="812" height="32"/>
                                 <items>
                                     <navigationItem title="Selection" id="sxd-YE-KrL">
                                         <barButtonItem key="leftBarButtonItem" id="t32-EF-2FA">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="eQy-4V-yYX">
-                                                <rect key="frame" x="16" y="11" width="60" height="22"/>
+                                                <rect key="frame" x="64" y="5" width="60" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" image="home"/>
                                                 <connections>
@@ -186,9 +195,9 @@
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" id="FL2-Z1-EDp">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Rmr-6u-jtL" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="264" y="11" width="95" height="22"/>
+                                                <rect key="frame" x="653" y="5" width="95" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Continue" image="forward"/>
+                                                <state key="normal" image="forward"/>
                                                 <connections>
                                                     <action selector="continuePressed:" destination="zGV-gf-a3n" eventType="touchUpInside" id="6Xj-87-rms"/>
                                                 </connections>
@@ -209,74 +218,79 @@
                             <constraint firstItem="UgO-yy-CRO" firstAttribute="top" secondItem="Mqr-Sp-LZb" secondAttribute="top" id="0i8-wY-Gqx"/>
                             <constraint firstItem="jtX-GA-7ms" firstAttribute="leading" secondItem="Tlx-l1-ig7" secondAttribute="trailing" constant="10" id="3fJ-n6-owC"/>
                             <constraint firstAttribute="trailing" secondItem="UgO-yy-CRO" secondAttribute="trailing" id="5xx-Y9-ccZ"/>
+                            <constraint firstItem="Eyy-DC-T6m" firstAttribute="bottom" secondItem="jtX-GA-7ms" secondAttribute="bottom" constant="-19" id="8NC-ra-xWw"/>
                             <constraint firstItem="d37-kV-uuP" firstAttribute="trailing" secondItem="Whs-Ka-Uxd" secondAttribute="trailing" id="C8x-Cb-zvX"/>
                             <constraint firstItem="d37-kV-uuP" firstAttribute="width" secondItem="Whs-Ka-Uxd" secondAttribute="width" id="ERQ-vt-gi1"/>
                             <constraint firstItem="xnd-49-L9N" firstAttribute="top" secondItem="UgO-yy-CRO" secondAttribute="bottom" constant="11" id="GBs-0N-yHS"/>
-                            <constraint firstItem="jtX-GA-7ms" firstAttribute="top" secondItem="Tlx-l1-ig7" secondAttribute="bottom" constant="-75" id="H8w-QJ-hV0"/>
-                            <constraint firstItem="jtX-GA-7ms" firstAttribute="top" secondItem="UgO-yy-CRO" secondAttribute="bottom" id="JVX-q3-S1I"/>
                             <constraint firstItem="Tlx-l1-ig7" firstAttribute="leading" secondItem="Mqr-Sp-LZb" secondAttribute="leading" constant="10" id="JrV-bw-eHF"/>
                             <constraint firstItem="Mqr-Sp-LZb" firstAttribute="top" secondItem="d37-kV-uuP" secondAttribute="bottom" id="Jwa-Oe-FW0"/>
+                            <constraint firstItem="jtX-GA-7ms" firstAttribute="bottom" secondItem="Whs-Ka-Uxd" secondAttribute="bottom" constant="12" id="KrL-41-z3g"/>
+                            <constraint firstItem="Tlx-l1-ig7" firstAttribute="top" secondItem="YUd-84-9H5" secondAttribute="bottom" constant="4" id="MjA-Ay-6dS"/>
                             <constraint firstItem="UgO-yy-CRO" firstAttribute="width" secondItem="Whs-Ka-Uxd" secondAttribute="width" id="NEH-7n-oSh"/>
                             <constraint firstItem="d37-kV-uuP" firstAttribute="leading" secondItem="Whs-Ka-Uxd" secondAttribute="leading" id="O3j-dg-Flv"/>
                             <constraint firstItem="UgO-yy-CRO" firstAttribute="leading" secondItem="Whs-Ka-Uxd" secondAttribute="leading" id="PtH-W2-tvn"/>
+                            <constraint firstItem="JiD-Ie-jwK" firstAttribute="leading" secondItem="Mqr-Sp-LZb" secondAttribute="leading" id="Uie-Zw-FNJ"/>
+                            <constraint firstItem="Mqr-Sp-LZb" firstAttribute="trailing" secondItem="JiD-Ie-jwK" secondAttribute="trailing" id="Usf-Zh-kdi"/>
                             <constraint firstItem="YUd-84-9H5" firstAttribute="top" secondItem="UgO-yy-CRO" secondAttribute="bottom" id="Uum-4s-dGu"/>
-                            <constraint firstAttribute="bottom" secondItem="jtX-GA-7ms" secondAttribute="bottom" id="cKC-9I-Qfp"/>
                             <constraint firstItem="Mqr-Sp-LZb" firstAttribute="trailing" secondItem="jtX-GA-7ms" secondAttribute="trailing" id="dLb-ca-btv"/>
-                            <constraint firstItem="Tlx-l1-ig7" firstAttribute="top" secondItem="YUd-84-9H5" secondAttribute="bottom" constant="24" id="eWw-q0-skm"/>
+                            <constraint firstItem="Eyy-DC-T6m" firstAttribute="centerX" secondItem="jtX-GA-7ms" secondAttribute="centerX" id="fIs-Dp-FEl"/>
                             <constraint firstItem="YUd-84-9H5" firstAttribute="leading" secondItem="Whs-Ka-Uxd" secondAttribute="leading" id="hH2-9o-mUk"/>
                             <constraint firstItem="d37-kV-uuP" firstAttribute="top" secondItem="Whs-Ka-Uxd" secondAttribute="top" id="hJb-1R-nUH"/>
+                            <constraint firstItem="Tlx-l1-ig7" firstAttribute="top" secondItem="jtX-GA-7ms" secondAttribute="bottom" constant="4" id="ibA-ic-hBT"/>
                             <constraint firstItem="xnd-49-L9N" firstAttribute="centerX" secondItem="Whs-Ka-Uxd" secondAttribute="centerX" id="k75-bM-Lna"/>
-                            <constraint firstAttribute="bottom" secondItem="Tlx-l1-ig7" secondAttribute="bottom" id="lTh-qj-dfR"/>
+                            <constraint firstItem="Mqr-Sp-LZb" firstAttribute="bottom" secondItem="Tlx-l1-ig7" secondAttribute="bottom" constant="-34" id="lTh-qj-dfR"/>
                             <constraint firstItem="jtX-GA-7ms" firstAttribute="leading" secondItem="Mqr-Sp-LZb" secondAttribute="leading" id="lde-MW-hLR"/>
-                            <constraint firstItem="be7-aP-DEd" firstAttribute="leading" secondItem="jtX-GA-7ms" secondAttribute="leading" id="lzs-gh-jkl"/>
-                            <constraint firstItem="7SY-Bw-ahm" firstAttribute="width" secondItem="Whs-Ka-Uxd" secondAttribute="width" multiplier="0.4" id="rGi-C0-dn8"/>
+                            <constraint firstItem="jtX-GA-7ms" firstAttribute="top" secondItem="YUd-84-9H5" secondAttribute="top" constant="20" id="ofs-94-MZ4"/>
                             <constraint firstItem="Mqr-Sp-LZb" firstAttribute="trailing" secondItem="Tlx-l1-ig7" secondAttribute="trailing" constant="10" id="s3n-Cw-bEf"/>
                             <constraint firstItem="YUd-84-9H5" firstAttribute="trailing" secondItem="Whs-Ka-Uxd" secondAttribute="trailing" id="ud8-XT-Xni"/>
-                            <constraint firstItem="be7-aP-DEd" firstAttribute="trailing" secondItem="jtX-GA-7ms" secondAttribute="trailing" id="ufq-f9-nmb"/>
+                            <constraint firstAttribute="bottom" secondItem="JiD-Ie-jwK" secondAttribute="bottom" id="wWz-vU-Rvp"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Mqr-Sp-LZb"/>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="lTh-qj-dfR"/>
                                 <exclude reference="3fJ-n6-owC"/>
-                                <exclude reference="JVX-q3-S1I"/>
+                                <exclude reference="KrL-41-z3g"/>
+                                <exclude reference="MjA-Ay-6dS"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=compact">
                             <mask key="constraints">
                                 <exclude reference="s3n-Cw-bEf"/>
-                                <include reference="lTh-qj-dfR"/>
                                 <include reference="3fJ-n6-owC"/>
-                                <exclude reference="H8w-QJ-hV0"/>
-                                <include reference="JVX-q3-S1I"/>
+                                <include reference="KrL-41-z3g"/>
                                 <exclude reference="lde-MW-hLR"/>
+                                <exclude reference="ofs-94-MZ4"/>
+                                <include reference="MjA-Ay-6dS"/>
+                                <exclude reference="ibA-ic-hBT"/>
                             </mask>
                         </variation>
                     </view>
                     <connections>
-                        <outlet property="bannerAddPlayerButton" destination="Tm3-ag-1o2" id="1Mg-NG-Q6M"/>
                         <outlet property="bannerContinuationHeightConstraint" destination="EQX-m4-CCM" id="M9L-QW-Gan"/>
                         <outlet property="bannerContinuationView" destination="YUd-84-9H5" id="Way-u1-kSi"/>
                         <outlet property="bannerContinueButton" destination="Rmr-6u-jtL" id="biA-oB-Ecf"/>
                         <outlet property="bannerPaddingView" destination="d37-kV-uuP" id="lw0-fB-ywF"/>
                         <outlet property="cancelButton" destination="eQy-4V-yYX" id="SEw-Oj-5yl"/>
+                        <outlet property="clearAllButton" destination="Eyy-DC-T6m" id="qqj-cw-TrH"/>
                         <outlet property="continueButton" destination="7SY-Bw-ahm" id="JM3-ek-6LL"/>
+                        <outlet property="continueButtonView" destination="JiD-Ie-jwK" id="24I-Oj-q0H"/>
+                        <outlet property="continueButtonViewBottomConstraint" destination="wWz-vU-Rvp" id="Ofc-DP-1td"/>
                         <outlet property="navigationBar" destination="UgO-yy-CRO" id="Diq-OI-UgL"/>
                         <outlet property="navigationTitle" destination="sxd-YE-KrL" id="q3q-cv-akX"/>
                         <outlet property="selectedPlayersView" destination="jtX-GA-7ms" id="pif-ug-DbZ"/>
-                        <outlet property="selectedViewHeight" destination="1T2-1s-8c6" id="p6v-xf-NUZ"/>
+                        <outlet property="selectedViewHeight" destination="uK6-wA-1NC" id="cir-tL-8yE"/>
                         <outlet property="selectedViewWidth" destination="KfB-6p-mr0" id="1yK-LH-FS6"/>
-                        <outlet property="slideOutButton" destination="be7-aP-DEd" id="IcN-Br-mSQ"/>
                         <outlet property="thisPlayerViewContainer" destination="xnd-49-L9N" id="yjc-o2-3Jz"/>
                         <outlet property="thisPlayerViewContainerWidthConstraint" destination="yYr-oC-cVs" id="tNh-Yi-Hxp"/>
                         <outlet property="unselectedCollectionView" destination="Tlx-l1-ig7" id="vRw-k0-8iE"/>
-                        <outlet property="unselectedCollectionViewBottomConstraint" destination="H8w-QJ-hV0" id="REU-Kh-vmD"/>
-                        <outlet property="unselectedCollectionViewTopConstraint" destination="eWw-q0-skm" id="phm-iK-kzp"/>
+                        <outlet property="unselectedCollectionViewBottomConstraint" destination="lTh-qj-dfR" id="8vT-GI-9r8"/>
+                        <outlet property="unselectedCollectionViewLandscapeTopConstraint" destination="MjA-Ay-6dS" id="So1-Su-Q2x"/>
+                        <outlet property="unselectedCollectionViewTopConstraint" destination="ibA-ic-hBT" id="dq6-JX-1Sk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pg0-6i-AIz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6356.25" y="160.56338028169014"/>
+            <point key="canvasLocation" x="6356" y="159.60591133004928"/>
         </scene>
     </scenes>
     <resources>
@@ -287,6 +301,12 @@
         </namedColor>
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Continue Button">
+            <color red="0.45490196078431372" green="0.70196078431372544" blue="0.45490196078431372" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Continue Button Text">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Game Banner">
             <color red="0.92549019607843142" green="0.45882352941176469" blue="0.45490196078431372" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -302,6 +322,9 @@
         </namedColor>
         <namedColor name="Shape Highlight Fill">
             <color red="0.92549019607843142" green="0.45882352941176469" blue="0.45490196078431372" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Table Top">
+            <color red="0.53725490196078429" green="0.80392156862745101" blue="0.56470588235294117" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

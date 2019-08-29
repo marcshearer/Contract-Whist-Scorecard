@@ -209,6 +209,7 @@ class AngledButton: ClearButton {
     
     @IBInspectable var fillColor: UIColor!
     @IBInspectable var strokeColor: UIColor!
+    @IBInspectable var lineWidth: CGFloat = 1.0
     
     private var layers: [CAShapeLayer] = []
     
@@ -219,8 +220,7 @@ class AngledButton: ClearButton {
         self.strokeColor = self.strokeColor ?? self.titleColor(for: .normal)
         
         var points: [PolygonPoint] = []
-        let lineWidth: CGFloat = 1.0
-        let frame = CGRect(x: lineWidth / 2.0, y: lineWidth / 2.0, width: self.frame.width - lineWidth, height: self.frame.height - lineWidth)
+        let frame = CGRect(x: self.lineWidth / 2.0, y: self.lineWidth / 2.0, width: self.frame.width - self.lineWidth, height: self.frame.height - self.lineWidth)
         let angleSize: CGFloat = self.frame.height / 3.0
         points.append(PolygonPoint(x: frame.minX , y: frame.midY))
         points.append(PolygonPoint(x: frame.minX + angleSize, y: frame.minY))
@@ -235,7 +235,7 @@ class AngledButton: ClearButton {
         }
         
         // Add new shape
-        let layer = Polygon.roundedShapeLayer(in: self, definedBy: points, strokeColor: self.strokeColor, fillColor: self.fillColor, lineWidth: 1.0)
+        let layer = Polygon.roundedShapeLayer(in: self, definedBy: points, strokeColor: self.strokeColor, fillColor: self.fillColor, lineWidth: self.lineWidth)
         layers.append(layer)
         
         // Set button properties

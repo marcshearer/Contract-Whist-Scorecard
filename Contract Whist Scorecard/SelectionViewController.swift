@@ -150,7 +150,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         
         // Set up selected players view delegate
         self.selectedPlayersView.delegate = self
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -209,11 +208,10 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             self.bannerContinuationView.layoutIfNeeded()
             self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth, allowHaloWidth: dealerHaloWidth)
             self.selectedPlayersView.setHaloColor(color: Palette.halo)
+            self.selectedPlayersView.setTapDelegate(self)
             self.selectedPlayersView.frame = CGRect(x: max(0, self.selectedPlayersView.frame.minX), y: max(0, self.selectedPlayersView.frame.minY), width: self.selectedWidth, height: self.selectedHeight)
-            print("selection before selectedFrame: \(self.selectedPlayersView.frame)")
             let selectedFrame = self.selectedPlayersView.drawRoom(thumbnailWidth: self.thumbnailWidth, thumbnailHeight: self.thumbnailHeight, players: self.scorecard.numberPlayers, directions: (ScorecardUI.landscapePhone() ? .none : .up), (ScorecardUI.landscapePhone() ? .none : .down))
             self.selectedHeight = selectedFrame.height
-            print("selection selectedFrame: \(selectedFrame)")
             self.selectedViewHeight?.constant = self.selectedHeight
         }
 
@@ -828,6 +826,12 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     // MARK: - Game Preview Delegate handlers ============================================================================== -
     
+    internal var gamePreviewHosting: Bool {
+        get {
+            return self.gamePreviewDelegate?.gamePreviewHosting ?? true
+        }
+    }
+    
     internal var gamePreviewCanStartGame: Bool {
         get {
             return self.gamePreviewDelegate?.gamePreviewCanStartGame ?? true
@@ -1007,4 +1011,16 @@ extension SelectionViewController: UIViewControllerTransitioningDelegate {
 
 class SelectionCell: UICollectionViewCell {
     fileprivate var playerView: PlayerView!
+}
+
+class TaplessView: UIView {
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let hitView = super.hitTest(point, with: event)
+        if hitView == self {
+            return nil
+        } else {
+            return hitView
+        }
+    }
 }

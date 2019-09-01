@@ -80,7 +80,6 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     private var playerMadeLabel: [UILabel?] = []
     private var statusPlayerBidLabel: [UILabel?] = []
     internal var suitCollectionView = [UICollectionView?](repeating: nil, count: 6)
-    private var bidButton = [UILabel?](repeating: nil, count: 15)
     private var bidButtonEnabled = [Bool](repeating: false, count: 15)
     
     // MARK: - IB Outlets -
@@ -311,8 +310,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             }
             cell.bidButton.tag = indexPath.row
             ScorecardUI.roundCorners(cell.bidButton)
-            bidButton[indexPath.row] = cell.bidButton
-            self.bidEnable(indexPath.row, bidButtonEnabled[indexPath.row])
+            self.bidEnable(cell, bidButtonEnabled[indexPath.row])
             return cell
             
         } else if collectionView.tag == playedCardCollectionTag {
@@ -716,7 +714,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     
     func bidsEnable(_ enable: Bool, blockRemaining: Bool = false) {
         let remaining = scorecard.remaining(playerNumber: self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round), round: self.round, mode: .bid, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
-        for bid in 0...bidButton.count - 1 {
+        for bid in 0..<bidButtonEnabled.count {
             if !enable || (blockRemaining && (bid == remaining && (moreMode || bid <= maxBidButton))) {
                 bidButtonEnabled[bid] = false
             } else {
@@ -727,10 +725,16 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     }
     
     func bidEnable(_ bid: Int, _ enable: Bool) {
+        if let bidCell = bidCollectionView.cellForItem(at: IndexPath(item: bid, section: 0)) as? BidCollectionCell {
+            self.bidEnable(bidCell,enable)
+        }
+    }
+    
+    func bidEnable(_ bidCell: BidCollectionCell, _ enable: Bool) {
         if enable {
-            bidButton[bid]?.backgroundColor = Palette.bidButton.withAlphaComponent(1.0)
+            bidCell.bidButton.backgroundColor = Palette.bidButton
         } else {
-            bidButton[bid]?.backgroundColor = Palette.bidButton.withAlphaComponent(0.3)
+            bidCell.bidButton.backgroundColor = Palette.bidButton.withAlphaComponent(0.25)
         }
     }
     

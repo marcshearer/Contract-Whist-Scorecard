@@ -143,7 +143,7 @@ Fixed crash on entry in client
 Black text in hand title
 Hand jumps on entry - set to wrong size before layout
 
-5.0 (6)
+5.0 (6-7)
 View game change player button
 Stop playing icon
 Home button in win streak detail
@@ -160,12 +160,17 @@ Show dp in stats
 Gradient totals of scorecard to tableTop in landscape
 Color of thumbnails to reflect surroundings
 
+5.0 (8)
+Line up table tops in selection and game preview
+
 Bugs fix now
 ------------
 When initialise app - should make the email you type in your default - i.e. set date first
 In search dialogue (on iPad) if filter search any users who don't have a picture sometimes get changed to squares
 Refresh always leaves "last trick" disabled
 Resume game doesn't seem to work during bidding phase - dealer gets out of line
+Tiles in selection not all active
+Tiles in selection flow under tabletop
 
 Short-term
 ----------
@@ -183,8 +188,6 @@ TODO
 Crash if go into High Scores repeatedly
 Avoid message text blue color
 Redo graph
-Tiles in selection not all active
-Tiles in selection flow under tabletop
 
 Jack
 ----

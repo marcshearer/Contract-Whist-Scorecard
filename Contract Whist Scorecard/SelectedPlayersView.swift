@@ -56,6 +56,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
     private var additionalAdjustment: CGFloat = 0.0
     private var players: Int!
     private var arrowDirections: [ArrowDirection : Bool]!
+    private var tapGesture: UIGestureRecognizer!
 
     // MARK: - IB Outlets ============================================================================== -
     
@@ -175,6 +176,10 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         }
     }
     
+    public func setTapDelegate(_ delegate: UIGestureRecognizerDelegate) {
+        self.tapGesture.delegate = delegate
+    }
+    
     public func getMessageViewFrame(size: CGSize, in view: UIView) -> CGRect {
         return CGRect(origin: self.contentView.convert(CGPoint(x: self.tableFrame.midX - (size.width / 2.0), y: self.tableFrame.midY - 16 - size.height), to: view), size: size)
     }
@@ -235,8 +240,8 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         self.messageLabel.textColor = Palette.roomInteriorText
         
         // Setup tap gesture
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(SelectedPlayersView.tapSelector(_:)))
-        self.contentView.addGestureRecognizer(tapGesture)
+        self.tapGesture = UITapGestureRecognizer(target: self, action: #selector(SelectedPlayersView.tapSelector(_:)))
+        self.contentView.addGestureRecognizer(self.tapGesture)
     }
     
     @objc internal func tapSelector(_ sender: Any) {

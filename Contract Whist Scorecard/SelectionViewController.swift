@@ -35,6 +35,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private var thisPlayerFrame: CGRect?
     private var showThisPlayerName = false
     private var formTitle = "Selection"
+    private var smallFormTitle: String?
     private var bannerColor: UIColor?
     
     // Local class variables
@@ -84,6 +85,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var navigationBar: NavigationBar!
     @IBOutlet private weak var navigationBarHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var navigationTitle: UINavigationItem!
+    @IBOutlet private weak var continueButtonItem: UIBarButtonItem!
     @IBOutlet private weak var bannerContinuationView: BannerContinuation!
     @IBOutlet private weak var bannerContinuationHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var thisPlayerViewContainer: UIView!
@@ -306,12 +308,15 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             bannerContinueButton.isHidden = hidden
             if self.selectionMode != .single {
                 bannerContinueButton.setTitle("Continue", for: .normal)
+                continueButtonItem.width = 95.0
             }
         } else {
             // Main continue button used on other devices
             bannerContinueButton.setTitle("X", for: .normal)
             self.continueButton(isHidden: hidden, animate: true)
             bannerContinueButton.isHidden = true
+            continueButtonItem.width = 0.0
+            self.navigationBar.layoutIfNeeded()
         }
         if selectionMode == .single {
             clearAllButton.isHidden = true
@@ -330,9 +335,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     }
     
     func setSize() {
-        
-        // Check if need to restrict bottom because of screen size
-        self.smallScreen = (ScorecardUI.screenHeight < 800 || ScorecardUI.landscapePhone())
         
         // Set nav bar height - need to do this as otherwise gets compressed by layout
         self.navigationBarHeight = (ScorecardUI.landscapePhone() ? 32 : 44)
@@ -385,12 +387,12 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         self.selectedHeight = (ScorecardUI.landscapePhone() ? totalHeight : 0.5 * self.selectedWidth)
         self.selectedViewHeight?.constant = self.selectedHeight
         
-        if self.smallScreen {
+        if self.smallScreen || selectedList.count < 3 {
             // No bottom arrow - anchor to superview
             self.unselectedCollectionViewBottomConstraint?.constant = 0.0
         } else {
             // Allow collection view to flow under bottom arrow
-            self.unselectedCollectionViewBottomConstraint?.constant = self.view.safeAreaInsets.bottom
+            self.unselectedCollectionViewBottomConstraint?.constant = 0.0
         }
 
         // Set colecction view insets
@@ -400,7 +402,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             collectionViewLayout?.sectionInset = UIEdgeInsets()
         } else {
             // Allow collection view to flow under other table top
-            collectionViewLayout?.sectionInset = UIEdgeInsets(top: 62.5, left: 0.0, bottom: (smallScreen ? 0.0 : 80.0), right: 0.0)
+            collectionViewLayout?.sectionInset = UIEdgeInsets(top: 62.5, left: 0.0, bottom: (smallScreen || selectedList.count < 3 ? 0.0 : 80.0), right: 0.0)
         }
         collectionViewLayout?.invalidateLayout()
     }
@@ -458,21 +460,16 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     /// Function used in other views to get the same thumbnail size
     
-    class public func thumbnailSize(view: UIView, labelHeight: CGFloat) -> CGSize {
+    class public func thumbnailSize(view: UIView, labelHeight: CGFloat, landscapeWidthFraction: CGFloat = 1.0) -> CGSize {
         
-        var safeAreaInsets = UIEdgeInsets()
-        if view.bounds.width == UIScreen.main.bounds.width {
-            if let rootWindow = UIApplication.shared.keyWindow {
-                safeAreaInsets = rootWindow.safeAreaInsets
-            }
-        }
+        let viewSize = view.frame.size
+        let totalWidth = viewSize.width
+        let totalHeight = viewSize.height
+        let availableWidth = min(totalWidth, totalHeight) // Get portrait height - relies on no side safe area insets in portrait
         
-        let totalWidth = view.bounds.width - safeAreaInsets.left - safeAreaInsets.right
-        let selectedWidth = (ScorecardUI.landscapePhone() ? (totalWidth / 2.0) : totalWidth)
-        let totalHeight = view.bounds.height - safeAreaInsets.top - safeAreaInsets.bottom
-        let numberThatFit = max(5, Int(selectedWidth / (min(totalWidth, totalHeight) > 450 ? 120 : 75)))
+        let numberThatFit = max(5, Int(availableWidth / (min(totalWidth, totalHeight) > 450 ? 120 : 75)))
         
-        let width = min((totalHeight - 170)/2, ((selectedWidth - (CGFloat(numberThatFit + 1) * 10.0)) / CGFloat(numberThatFit)))
+        let width = ((availableWidth - (CGFloat(numberThatFit + 1) * 10.0)) / CGFloat(numberThatFit))
         let height = width + labelHeight - 5.0
         
         return CGSize(width: width, height: height)
@@ -493,8 +490,12 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     // MARK: - Initial setup routines ======================================================================== -
     
     private func setupButtons() {
+        
+        // Check if need to restrict bottom because of screen size
+        self.smallScreen = (ScorecardUI.screenHeight < 800 || ScorecardUI.landscapePhone())
+        
         // Set cancel button and title
-        self.navigationTitle.title = self.formTitle
+        self.navigationTitle.title = (self.smallScreen && !ScorecardUI.landscapePhone() ? (smallFormTitle ?? self.formTitle) : self.formTitle)
         self.cancelButton.setImage(UIImage(named: self.backImage), for: .normal)
         self.cancelButton.setTitle(self.backText, for: .normal)
         if let bannerColor = self.bannerColor {
@@ -978,7 +979,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class func show(from viewController: UIViewController, existing selectionViewController: SelectionViewController? = nil, mode: SelectionMode, thisPlayer: String? = nil, thisPlayerFrame: CGRect? = nil, showThisPlayerName: Bool = false, formTitle: String = "Selection", backText: String = "Back", backImage: String = "", bannerColor: UIColor? = nil, preCompletion: (([PlayerMO]?)->())? = nil, completion: (([PlayerMO]?)->())? = nil, showCompletion: (()->())? = nil, gamePreviewDelegate: GamePreviewDelegate? = nil) -> SelectionViewController {
+    class func show(from viewController: UIViewController, existing selectionViewController: SelectionViewController? = nil, mode: SelectionMode, thisPlayer: String? = nil, thisPlayerFrame: CGRect? = nil, showThisPlayerName: Bool = false, formTitle: String = "Selection", smallFormTitle: String? = nil, backText: String = "Back", backImage: String = "", bannerColor: UIColor? = nil, preCompletion: (([PlayerMO]?)->())? = nil, completion: (([PlayerMO]?)->())? = nil, showCompletion: (()->())? = nil, gamePreviewDelegate: GamePreviewDelegate? = nil) -> SelectionViewController {
         var selectionViewController = selectionViewController
         
         if selectionViewController == nil {
@@ -998,6 +999,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         selectionViewController!.thisPlayerFrame = thisPlayerFrame
         selectionViewController!.showThisPlayerName = showThisPlayerName
         selectionViewController!.formTitle = formTitle
+        selectionViewController!.smallFormTitle = smallFormTitle
         selectionViewController!.bannerColor = bannerColor
         selectionViewController!.backText = backText
         selectionViewController!.backImage = backImage

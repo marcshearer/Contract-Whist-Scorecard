@@ -157,7 +157,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Eyy-DC-T6m" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="142.66666666666663" y="428.33333333333331" width="90" height="26"/>
+                                <rect key="frame" x="142.66666666666666" y="428.33333333333331" width="90" height="26"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="26" id="C98-Yc-X2g"/>
                                     <constraint firstAttribute="width" constant="90" id="t63-QR-IQx"/>
@@ -184,7 +184,7 @@
                                     <constraint firstAttribute="height" constant="44" id="EWz-lt-FIi"/>
                                 </constraints>
                                 <items>
-                                    <navigationItem title="Selection" id="sxd-YE-KrL">
+                                    <navigationItem title="Select" id="sxd-YE-KrL">
                                         <barButtonItem key="leftBarButtonItem" id="t32-EF-2FA">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="eQy-4V-yYX">
                                                 <rect key="frame" x="16" y="11" width="60" height="22"/>
@@ -195,9 +195,9 @@
                                                 </connections>
                                             </button>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" id="FL2-Z1-EDp">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Rmr-6u-jtL" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="264" y="11" width="95" height="22"/>
+                                        <barButtonItem key="rightBarButtonItem" width="22" id="FL2-Z1-EDp">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Rmr-6u-jtL" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <rect key="frame" x="337" y="11" width="22" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" image="forward"/>
                                                 <connections>
@@ -278,6 +278,7 @@
                         <outlet property="cancelButton" destination="eQy-4V-yYX" id="SEw-Oj-5yl"/>
                         <outlet property="clearAllButton" destination="Eyy-DC-T6m" id="qqj-cw-TrH"/>
                         <outlet property="continueButton" destination="7SY-Bw-ahm" id="JM3-ek-6LL"/>
+                        <outlet property="continueButtonItem" destination="FL2-Z1-EDp" id="8BS-ib-PMm"/>
                         <outlet property="continueButtonView" destination="JiD-Ie-jwK" id="24I-Oj-q0H"/>
                         <outlet property="continueButtonViewBottomConstraint" destination="wWz-vU-Rvp" id="Ofc-DP-1td"/>
                         <outlet property="navigationBar" destination="UgO-yy-CRO" id="Diq-OI-UgL"/>

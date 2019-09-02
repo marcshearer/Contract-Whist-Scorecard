@@ -551,7 +551,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     }
     
     private func showSelection() {
-        self.selectionViewController = SelectionViewController.show(from: self, existing: self.selectionViewController, mode: .players, backText: "", backImage: "home", completion: { (_) in
+        self.selectionViewController = SelectionViewController.show(from: self, existing: self.selectionViewController, mode: .players, formTitle: "Selection", smallFormTitle: "Select", backText: "", backImage: "home", completion: { (_) in
             self.scorecard.checkNetworkConnection(button: nil, label: self.syncLabel)
             self.recoveryAvailable = false
             self.getCloudVersion(async: true)

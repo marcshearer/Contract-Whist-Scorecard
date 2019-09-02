@@ -621,7 +621,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
     }
     
     private func showSelection(showCompletion: (()->())? = nil, completion: (([PlayerMO]?)->())? = nil) {
-        self.selectionViewController = SelectionViewController.show(from: parentViewController, existing: self.selectionViewController, mode: .invitees, thisPlayer: self.playerData[0].email, formTitle: "Choose Players", backText: "", backImage: "back", completion: completion, showCompletion: showCompletion, gamePreviewDelegate: self)
+        self.selectionViewController = SelectionViewController.show(from: parentViewController, existing: self.selectionViewController, mode: .invitees, thisPlayer: self.playerData[0].email, formTitle: "Choose Players", smallFormTitle: "Select", backText: "", backImage: "back", completion: completion, showCompletion: showCompletion, gamePreviewDelegate: self)
     }
     
     

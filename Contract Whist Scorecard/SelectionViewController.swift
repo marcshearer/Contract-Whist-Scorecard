@@ -363,8 +363,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         self.selectedPlayersView.alpha = 0.0
         
         // Attach selected view to top of form below this player
-        self.unselectedCollectionViewLandscapeTopConstraint?.constant = rowHeight + 11.0
-        self.unselectedCollectionViewTopConstraint?.constant = rowHeight + 11.0
+        self.unselectedCollectionViewLandscapeTopConstraint?.constant = rowHeight + 20.0
+        self.unselectedCollectionViewTopConstraint?.constant = rowHeight
         
     }
     

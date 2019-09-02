@@ -74,6 +74,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     private var firstTime = true
     private var rotated = false
     private var cutting = false
+    private var waitAnimation = true
     
     // MARK: - IB Outlets ================================================================ -
     
@@ -151,6 +152,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         super.viewDidLoad()
         
         recovery = scorecard.recovery
+        self.waitAnimation = !ScorecardUI.landscapePhone() && self.delegate?.gamePreviewHosting ?? false
         
         // Set title
         self.navigationTitle.title = self.formTitle
@@ -226,6 +228,15 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         }
         self.refreshPlayers()
         self.showCurrentDealer()
+        
+        if self.waitAnimation {
+            Utility.executeAfter(delay: 1.0) {
+                if self.waitAnimation {
+                    self.waitAnimation = false
+                    self.updateButtons(animate: true)
+                }
+            }
+        }
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
@@ -328,43 +339,62 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     private func updateButtons(animate: Bool = true) {
         if self.readOnly {
             self.overrideSettingsButton.isHidden = true
-            self.selectedPlayersTopConstraint.constant = (UIScreen.main.bounds.height * 0.10) + navigationBar.intrinsicContentSize.height
+            self.selectedPlayersTopConstraint.constant = (UIScreen.main.bounds.height * 0.15) + navigationBar.intrinsicContentSize.height
+            
         } else if !cutting {
+            // Hide / show buttons dependent on format
             self.bannerContinueButton.isHidden = !ScorecardUI.landscapePhone() && !ScorecardUI.smallPhoneSize()
             self.continueButton.isHidden = ScorecardUI.landscapePhone() || ScorecardUI.smallPhoneSize()
             self.overrideSettingsButton.isHidden = false
+            
             if (self.delegate?.gamePreviewHosting ?? false) {
+                
                 var topConstraint: CGFloat
                 let canStartGame = self.delegate?.gamePreviewCanStartGame ?? true
+                
                 if canStartGame {
+                    // Ready to start (or suppressing message) - enable dealer buttons and no need for top message
                     topConstraint = 20.0
                     self.bannerContinuationLabel.isHidden = true
                     self.cutForDealerButton.isEnabled = true
                     self.cutForDealerButton.alpha = 1.0
                     self.nextDealerButton.isEnabled = true
                     self.nextDealerButton.alpha = 1.0
-                } else {
-                    topConstraint = (UIScreen.main.bounds.height * 0.15)
+                    self.bannerContinuationLabel.attributedText = NSAttributedString()
+                    
+                } else  {
+                    // Not ready - Hide continue and dealer buttons and slide down space for message at top
                     self.bannerContinueButton.isHidden = true
                     self.continueButton.isHidden = true
-                    self.bannerContinuationLabel.isHidden = false
-                    self.cutForDealerButton.isEnabled = false
-                    self.cutForDealerButton.alpha = 0.5
-                    self.nextDealerButton.isEnabled = false
-                    self.nextDealerButton.alpha = 0.5
-               }
-                self.bannerContinuationLabel.attributedText = self.delegate?.gamePreviewWaitMessage
+                    if waitAnimation {
+                        topConstraint = 20.0
+                    } else {
+                        topConstraint = UIScreen.main.bounds.height * 0.15
+                        self.bannerContinuationLabel.isHidden = false
+                        self.cutForDealerButton.isEnabled = false
+                        self.cutForDealerButton.alpha = 0.5
+                        self.nextDealerButton.isEnabled = false
+                        self.nextDealerButton.alpha = 0.5
+                        self.bannerContinuationLabel.attributedText = self.delegate?.gamePreviewWaitMessage
+                    }
+                }
+                
+                // Animate in / out area for message at top
                 if self.selectedPlayersTopConstraint.constant != topConstraint {
-                    Utility.animate(if: animate) {
+                    Utility.animate(if: animate, duration: 1.0) {
                         self.selectedPlayersTopConstraint.constant = topConstraint
                     }
                 }
+                
+                // Auto-start in recovery mode
                 if canStartGame && self.scorecard.recoveryMode {
                     // Controller happy for game to start in recovery mode - go straight to game
                     self.recoveryScorepad()
                 }
             }
         }
+        
+        // Position bottom buttons
         self.overrideSettingsBottomConstraint?.constant = (self.continueButton.isHidden ? 20.0 : 80.0)
         self.continueButtonHeightConstraint.constant = (self.continueButton.isHidden ? 0.0 : 50.0)
     }
@@ -393,18 +423,20 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     public func refreshPlayers() {
         if !self.initialising {
-            self.selectedPlayersView.setAlpha(alpha: 1.0)
             for slot in 0..<self.scorecard.numberPlayers {
                 if slot < self.selectedPlayers.count {
                     self.selectedPlayersView.set(slot: slot, playerMO: self.selectedPlayers[slot]!)
                     if !(self.delegate?.gamePreview?(isConnected: self.selectedPlayers[slot]!) ?? true) {
                         self.selectedPlayersView.setAlpha(slot: slot, alpha: 0.3)
+                    } else {
+                        self.selectedPlayersView.setAlpha(slot: slot, alpha: 1.0)
                     }
                 } else {
                     self.selectedPlayersView.clear(slot: slot)
                 }
             }
             self.selectedPlayersView.positionSelectedPlayers(players: self.selectedPlayers.count)
+            self.showCurrentDealer()
             self.updateButtons()
         }
     }
@@ -467,6 +499,8 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
 
     private func updateSelectedPlayers(_ selectedPlayers: [PlayerMO?]) {
         scorecard.updateSelectedPlayers(selectedPlayers)
+        self.selectedPlayersView.setAlpha(alpha: 0.3)
+        self.selectedPlayersView.setAlpha(slot: 0, alpha: 1.0)
         scorecard.checkReady()
 
     }

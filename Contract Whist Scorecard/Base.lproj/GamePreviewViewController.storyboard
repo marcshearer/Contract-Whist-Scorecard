@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina5_9" orientation="portrait">
+    <device id="retina5_9" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -16,11 +16,11 @@
             <objects>
                 <viewController storyboardIdentifier="GamePreviewViewController" title="Game Preview" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="M5N-Yi-C04" userLabel="Game Preview" customClass="GamePreviewViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iUU-8s-ns4" userLabel="Game Preview View">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2QN-TN-Yp2" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="812" height="0.0"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
                                         <color key="value" name="Game Banner"/>
@@ -28,10 +28,10 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="PAW-t6-IPh" userLabel="Banner continuation">
-                                <rect key="frame" x="0.0" y="88" width="375" height="169"/>
+                                <rect key="frame" x="0.0" y="32" width="812" height="0.0"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="PUR-r5-ySO">
-                                        <rect key="frame" x="0.0" y="40" width="375" height="40"/>
+                                        <rect key="frame" x="44" y="24" width="362" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="aF4-bC-pDj"/>
                                         </constraints>
@@ -58,8 +58,8 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nKd-io-ud9" customClass="SelectedPlayersView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="108" width="375" height="250"/>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nKd-io-ud9" customClass="SelectedPlayersView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                <rect key="frame" x="406" y="32" width="362" height="354"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="250" id="DA8-jS-kkq"/>
@@ -71,7 +71,12 @@
                                 </variation>
                             </view>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ffW-WE-f4E" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="44" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="812" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="JDP-BB-jwy">
+                                        <variation key="heightClass=compact" constant="32"/>
+                                    </constraint>
+                                </constraints>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" name="Game Banner Text"/>
                                 </textAttributes>
@@ -79,7 +84,7 @@
                                     <navigationItem title="Preview" id="wLJ-Vj-HuD">
                                         <barButtonItem key="leftBarButtonItem" id="oX5-VT-Cds">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="GbG-JI-mmO">
-                                                <rect key="frame" x="16" y="11" width="62" height="22"/>
+                                                <rect key="frame" x="64" y="5" width="62" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" image="back"/>
                                                 <connections>
@@ -89,7 +94,7 @@
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" width="40" id="fgj-MW-RhM">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="wbi-Gg-AL4" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="297" y="9.6666666666666643" width="62" height="25"/>
+                                                <rect key="frame" x="686" y="3.6666666666666679" width="62" height="25"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Start" image="forward"/>
                                                 <userDefinedRuntimeAttributes>
@@ -109,13 +114,13 @@
                                 </userDefinedRuntimeAttributes>
                             </navigationBar>
                             <view contentMode="scaleToFill" verticalHuggingPriority="1" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="iDT-Xi-tM5" userLabel="Action Button View">
-                                <rect key="frame" x="0.0" y="358" width="375" height="333"/>
+                                <rect key="frame" x="44" y="82" width="362" height="172"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="x89-xH-iQy" userLabel="Left View">
-                                        <rect key="frame" x="0.0" y="0.0" width="187.66666666666666" height="333"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="181" height="172"/>
                                         <subviews>
                                             <view tag="2" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FyF-vn-V6o" userLabel="Next Dealer Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="-13" y="83.333333333333329" width="213.33333333333334" height="166.33333333333337"/>
+                                                <rect key="frame" x="46.333333333333336" y="51.666666666666664" width="88.333333333333314" height="68.666666666666686"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="FyF-vn-V6o" secondAttribute="height" multiplier="82:64" id="Bas-9R-8IF"/>
@@ -153,10 +158,10 @@
                                         </variation>
                                     </view>
                                     <view contentMode="scaleToFill" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="Bs3-BT-kuE" userLabel="Right View">
-                                        <rect key="frame" x="187.66666666666663" y="0.0" width="187.33333333333337" height="333"/>
+                                        <rect key="frame" x="181" y="0.0" width="181" height="172"/>
                                         <subviews>
                                             <view tag="1" contentMode="scaleToFill" verticalHuggingPriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="xXV-k4-gfB" userLabel="Cut for Dealer Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="-13" y="83.333333333333329" width="213.33333333333334" height="166.33333333333337"/>
+                                                <rect key="frame" x="46.333333333333307" y="51.666666666666664" width="88.333333333333314" height="68.666666666666686"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="xXV-k4-gfB" secondAttribute="height" multiplier="82:64" id="dJB-et-5Yx"/>
@@ -207,7 +212,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KKW-id-DrE" userLabel="Continue Button" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="93.666666666666671" y="742" width="187.66666666666663" height="50"/>
+                                <rect key="frame" x="203" y="305" width="406" height="50"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="RHC-Y9-q5u"/>
@@ -229,7 +234,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sgD-KU-UYi" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="147.66666666666666" y="707" width="80" height="25"/>
+                                <rect key="frame" x="185" y="270" width="80" height="25"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="80" id="M9A-lO-OWQ"/>
                                     <constraint firstAttribute="height" constant="25" id="MGG-QJ-e0N"/>
@@ -269,7 +274,7 @@
                             <constraint firstItem="2QN-TN-Yp2" firstAttribute="top" secondItem="iUU-8s-ns4" secondAttribute="top" id="Pqs-06-AB9"/>
                             <constraint firstItem="sgD-KU-UYi" firstAttribute="centerX" secondItem="iDT-Xi-tM5" secondAttribute="centerX" id="QjB-Ar-lgb"/>
                             <constraint firstAttribute="bottom" secondItem="KKW-id-DrE" secondAttribute="bottom" constant="20" id="Rvu-Kd-42G"/>
-                            <constraint firstItem="PAW-t6-IPh" firstAttribute="leading" secondItem="wSn-mE-2UN" secondAttribute="leading" id="U6b-1a-Msr"/>
+                            <constraint firstItem="PAW-t6-IPh" firstAttribute="leading" secondItem="iUU-8s-ns4" secondAttribute="leading" id="U6b-1a-Msr"/>
                             <constraint firstItem="2QN-TN-Yp2" firstAttribute="trailing" secondItem="iUU-8s-ns4" secondAttribute="trailing" id="VdM-H9-jKl"/>
                             <constraint firstItem="iDT-Xi-tM5" firstAttribute="leading" secondItem="wSn-mE-2UN" secondAttribute="leading" id="XcT-zv-E3Z"/>
                             <constraint firstItem="PAW-t6-IPh" firstAttribute="top" secondItem="ffW-WE-f4E" secondAttribute="bottom" id="bjx-vj-TAk"/>
@@ -277,14 +282,14 @@
                             <constraint firstItem="nKd-io-ud9" firstAttribute="leading" secondItem="iDT-Xi-tM5" secondAttribute="trailing" id="ghX-1A-Ew3"/>
                             <constraint firstAttribute="bottom" secondItem="sgD-KU-UYi" secondAttribute="bottom" constant="80" id="hcC-KG-rnF"/>
                             <constraint firstItem="nKd-io-ud9" firstAttribute="leading" secondItem="wSn-mE-2UN" secondAttribute="leading" id="iYh-gR-dF2"/>
-                            <constraint firstItem="nKd-io-ud9" firstAttribute="top" secondItem="PAW-t6-IPh" secondAttribute="top" id="mvr-Ru-v6f"/>
+                            <constraint firstItem="nKd-io-ud9" firstAttribute="top" secondItem="ffW-WE-f4E" secondAttribute="bottom" id="mvr-Ru-v6f"/>
                             <constraint firstItem="wSn-mE-2UN" firstAttribute="top" secondItem="2QN-TN-Yp2" secondAttribute="bottom" id="nSJ-Fw-9tK"/>
-                            <constraint firstItem="iDT-Xi-tM5" firstAttribute="top" secondItem="PAW-t6-IPh" secondAttribute="bottom" id="oaF-eq-Jqe"/>
+                            <constraint firstItem="iDT-Xi-tM5" firstAttribute="top" secondItem="PAW-t6-IPh" secondAttribute="bottom" constant="50" id="oaF-eq-Jqe"/>
                             <constraint firstItem="PUR-r5-ySO" firstAttribute="trailing" secondItem="iDT-Xi-tM5" secondAttribute="trailing" id="qt8-oF-dds"/>
                             <constraint firstAttribute="trailing" secondItem="ffW-WE-f4E" secondAttribute="trailing" id="t8j-bC-T7F"/>
                             <constraint firstItem="wSn-mE-2UN" firstAttribute="trailing" secondItem="iDT-Xi-tM5" secondAttribute="trailing" id="thd-wQ-VbB"/>
                             <constraint firstItem="nKd-io-ud9" firstAttribute="bottom" secondItem="iUU-8s-ns4" secondAttribute="bottom" id="u5S-gs-3xy">
-                                <variation key="heightClass=compact" constant="12"/>
+                                <variation key="heightClass=compact" constant="0.0"/>
                             </constraint>
                             <constraint firstItem="KKW-id-DrE" firstAttribute="centerX" secondItem="iUU-8s-ns4" secondAttribute="centerX" id="v6Q-Jj-W1f"/>
                             <constraint firstItem="PAW-t6-IPh" firstAttribute="height" secondItem="iUU-8s-ns4" secondAttribute="height" multiplier="0.6" constant="44" id="wZV-ex-5I8"/>
@@ -328,12 +333,14 @@
                     <connections>
                         <outlet property="actionButtonView" destination="iDT-Xi-tM5" id="ap6-VS-csr"/>
                         <outlet property="bannerContinuationLabel" destination="PUR-r5-ySO" id="Oax-pa-IKs"/>
+                        <outlet property="bannerContinuationView" destination="PAW-t6-IPh" id="vJH-TR-WIw"/>
                         <outlet property="bannerContinueButton" destination="wbi-Gg-AL4" id="IWZ-mh-5PH"/>
                         <outlet property="cancelButton" destination="GbG-JI-mmO" id="L8E-Cd-Nbr"/>
                         <outlet property="continueButton" destination="KKW-id-DrE" id="w3U-cG-4iF"/>
                         <outlet property="continueButtonHeightConstraint" destination="RHC-Y9-q5u" id="36a-lS-lAo"/>
                         <outlet property="cutForDealerButton" destination="xXV-k4-gfB" id="j7P-na-Kb8"/>
                         <outlet property="navigationBar" destination="ffW-WE-f4E" id="jtq-Pd-rXm"/>
+                        <outlet property="navigationBarHeightConstraint" destination="JDP-BB-jwy" id="ArM-pX-4OU"/>
                         <outlet property="navigationTitle" destination="wLJ-Vj-HuD" id="Eq5-xP-X01"/>
                         <outlet property="nextDealerButton" destination="FyF-vn-V6o" id="BOx-ik-bpV"/>
                         <outlet property="overrideSettingsBottomConstraint" destination="hcC-KG-rnF" id="h0U-hP-IYr"/>

@@ -78,7 +78,9 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     // MARK: - IB Outlets ================================================================ -
     
     @IBOutlet private weak var navigationBar: UINavigationBar!
+    @IBOutlet private weak var navigationBarHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var navigationTitle: UINavigationItem!
+    @IBOutlet private weak var bannerContinuationView: UIView!
     @IBOutlet private weak var bannerContinueButton: UIButton!
     @IBOutlet private weak var bannerContinuationLabel: UILabel!
     @IBOutlet private weak var continueButton: UIButton!
@@ -201,18 +203,20 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     }
     
     override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
         let rotated = self.rotated
         let firstTime = self.firstTime
         self.rotated = false
         self.firstTime = false
         
-        super.viewDidLayoutSubviews()
         self.setupScreen(size: self.view.bounds.size)
+        
+        // Draw room
+        self.drawRoom()
+        
         if rotated || firstTime {
-            self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth, allowHaloWidth: self.dealerHaloWidth)
-            self.selectedPlayersView.setHaloColor(color: Palette.halo)
-            let selectedFrame = self.selectedPlayersView.drawRoom(thumbnailWidth: thumbnailWidth, thumbnailHeight: thumbnailHeight, directions: (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.up), (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.down))
-            selectedPlayersHeightConstraint?.constant = selectedFrame.height
+            // Update buttons
             self.updateButtons(animate: false)
         }
         
@@ -285,6 +289,8 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     func setupScreen(size: CGSize) {
         
+        navigationBarHeightConstraint.constant = (ScorecardUI.landscapePhone() ? 32 : 44)
+        
         let thumbnailSize = SelectionViewController.thumbnailSize(view: self.view, labelHeight: self.labelHeight)
         self.thumbnailWidth = thumbnailSize.width
         self.thumbnailHeight = self.thumbnailWidth + 25.0
@@ -301,6 +307,22 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         
         playerRowHeight = max(48, min(80, (size.height - buttonRowHeight - 100) / CGFloat(self.selectedPlayers.count)))
         
+    }
+    
+    private func drawRoom() {
+        
+        // Configure selected players view
+        self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth, allowHaloWidth: self.dealerHaloWidth)
+        self.selectedPlayersView.setHaloColor(color: Palette.halo)
+        
+        // Update layout to get correct size
+        self.view.layoutIfNeeded()
+        
+        // Draw room
+        let selectedFrame = self.selectedPlayersView.drawRoom(thumbnailWidth: thumbnailWidth, thumbnailHeight: thumbnailHeight, directions: (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.up), (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.down))
+        
+        // Reset height
+        selectedPlayersHeightConstraint?.constant = selectedFrame.height
     }
     
     private func updateButtons(animate: Bool = true) {
@@ -693,6 +715,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             ScorecardUI.roundCorners(cardView)
             cardView.textAlignment = .center
             cardView.font = UIFont.systemFont(ofSize: 22.0)
+            cardView.adjustsFontSizeToFitWidth = true
             let cardImageView = UIImageView(frame: cardView.frame)
             cardImageView.image = UIImage(named: "card back")
             cardView.addSubview(cardImageView)

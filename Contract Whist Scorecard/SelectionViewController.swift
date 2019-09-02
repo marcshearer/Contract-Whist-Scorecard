@@ -45,14 +45,15 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private var rowHeight: CGFloat = 0.0
     private let labelHeight: CGFloat = 30.0
     private let interRowSpacing:CGFloat = 10.0
-    private var bannerContinuationHeight: CGFloat = 60.0
+    private var navigationBarHeight: CGFloat = 0.0
+    private var smallScreen = false
     private var haloWidth: CGFloat = 3.0
     private var dealerHaloWidth: CGFloat = 5.0
     private var firstTime = true
     private var loadedView = true
     private var rotated = false
     private var selectedAlpha: CGFloat = 0.5
-    private var testMode = false
+    internal var testMode = false
     private var addPlayerThumbnail: Bool = true
     private var thisPlayerView: PlayerView!
     private var lastPlayerMO: PlayerMO!
@@ -81,6 +82,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var clearAllButton: UIButton!
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
     @IBOutlet private weak var navigationBar: NavigationBar!
+    @IBOutlet private weak var navigationBarHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var navigationTitle: UINavigationItem!
     @IBOutlet private weak var bannerContinuationView: BannerContinuation!
     @IBOutlet private weak var bannerContinuationHeightConstraint: NSLayoutConstraint!
@@ -120,35 +122,19 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        if let testModeValue = ProcessInfo.processInfo.environment["TEST_MODE"] {
-            if testModeValue.lowercased() == "true" {
-                self.testMode = true
-            }
-        }
+        // Set test mode
+        self.setTestMode()
         
-        // Set cancel button and title
-        self.navigationTitle.title = self.formTitle
-        self.cancelButton.setImage(UIImage(named: self.backImage), for: .normal)
-        self.cancelButton.setTitle(self.backText, for: .normal)
-        if let bannerColor = self.bannerColor {
-            self.bannerPaddingView.bannerColor = bannerColor
-            self.navigationBar.bannerColor = bannerColor
-            self.bannerContinuationView.bannerColor = bannerColor
-            self.bannerContinuationView.borderColor = bannerColor
-        }
-        
-        // Switch banner mode
-        if self.selectionMode != .single {
-            bannerContinuationView.shape = .rectangle
-        }
-        
+        // Setup buttons and nav bar
+        self.setupButtons()
+
         // Check network
         scorecard.checkNetworkConnection(button: nil, label: nil)
         
         // Set nofification for image download
         observer = setImageDownloadNotification()
         
-        // Set up selected players view delegate
+        // Setup selected players view delegate
         self.selectedPlayersView.delegate = self
     }
     
@@ -160,21 +146,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         self.unselectedList = self.availableList
         
         // Setup form
-        if self.selectionMode == .single {
-            self.setupSingleScreen()
-            self.showThisPlayer()
-            if let playerMO = self.unselectedList.first(where: {$0!.email == self.thisPlayer}) {
-                self.removeUnselected(playerMO!, updateUnselectedCollection: false)
-            }
-        } else {
-            // Try to find players from last time
-            self.scorecard.loadGameDefaults()
-            self.assignPlayers()
-            if self.selectionMode == .invitees {
-                // Make sure host is correct
-                self.defaultOnlinePlayers()
-            }
-        }
+        self.setupForm()
 
         // Check if in recovery mode - if so (and found all players) go straight to game setup
         if scorecard.recoveryMode {
@@ -196,23 +168,16 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        setSize(size: self.view.frame.size)
+        self.setSize()
         
         if firstTime {
             self.setupAnimationView()
             self.setupDragAndDrop()
         }
         
-        // Draw table
+        // Draw selected players room
         if self.selectionMode != .single {
-            self.bannerContinuationView.layoutIfNeeded()
-            self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth, allowHaloWidth: dealerHaloWidth)
-            self.selectedPlayersView.setHaloColor(color: Palette.halo)
-            self.selectedPlayersView.setTapDelegate(self)
-            self.selectedPlayersView.frame = CGRect(x: max(0, self.selectedPlayersView.frame.minX), y: max(0, self.selectedPlayersView.frame.minY), width: self.selectedWidth, height: self.selectedHeight)
-            let selectedFrame = self.selectedPlayersView.drawRoom(thumbnailWidth: self.thumbnailWidth, thumbnailHeight: self.thumbnailHeight, players: self.scorecard.numberPlayers, directions: (ScorecardUI.landscapePhone() ? .none : .up), (ScorecardUI.landscapePhone() ? .none : .down))
-            self.selectedHeight = selectedFrame.height
-            self.selectedViewHeight?.constant = self.selectedHeight
+            self.drawRoom()
         }
 
         if !self.loadedView || self.rotated {
@@ -237,7 +202,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        return (firstTime && false /* TODO remove */ ? 0 : unselectedList.count + (addPlayerThumbnail ? 1 : 0))
+        return (unselectedList.count + (addPlayerThumbnail ? 1 : 0))
     }
 
     func collectionView(_ collectionView: UICollectionView,
@@ -333,27 +298,20 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     func formatButtons(_ animated: Bool = true) {
         
-        self.view.layoutIfNeeded()
         let hidden = (selectedList.count >= 3 || testMode ? false : true)
-        if (ScorecardUI.screenHeight < 800 || ScorecardUI.landscapePhone()) {
+        
+        if self.smallScreen {
             // Banner continuation button used on small or landscape phone
             self.continueButton(isHidden: true)
             bannerContinueButton.isHidden = hidden
             if self.selectionMode != .single {
                 bannerContinueButton.setTitle("Continue", for: .normal)
             }
-            self.unselectedCollectionViewBottomConstraint?.constant = 0.0
         } else {
             // Main continue button used on other devices
             bannerContinueButton.setTitle("X", for: .normal)
             self.continueButton(isHidden: hidden, animate: true)
             bannerContinueButton.isHidden = true
-            if self.selectionMode != .single {
-                self.unselectedCollectionViewBottomConstraint?.constant = -40.0
-                let collectionViewLayout = self.unselectedCollectionView.collectionViewLayout as? UICollectionViewFlowLayout
-                collectionViewLayout?.sectionInset = UIEdgeInsets(top: 62.5, left: 0.0, bottom: 80.0, right: 0.0)
-                collectionViewLayout?.invalidateLayout()
-            }
         }
         if selectionMode == .single {
             clearAllButton.isHidden = true
@@ -371,51 +329,132 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         }
     }
     
-    func setSize(size: CGSize) {
+    func setSize() {
         
-        self.bannerContinuationHeight = 60.0 + (self.selectionMode == .single ? 0.0 : (self.selectedHeight / 2.0))
-        if ScorecardUI.landscapePhone() {
-            if self.selectionMode != .single {
-                self.bannerContinuationHeight = 0.0
-            }
-        }
-        self.bannerContinuationHeightConstraint.constant = self.bannerContinuationHeight
+        // Check if need to restrict bottom because of screen size
+        self.smallScreen = (ScorecardUI.screenHeight < 800 || ScorecardUI.landscapePhone())
         
-        let totalWidth = size.width - view.safeAreaInsets.left - view.safeAreaInsets.right
-        self.selectedWidth = (ScorecardUI.landscapePhone() ? (totalWidth / 2.0) : totalWidth)
-        let totalHeight = size.height - view.safeAreaInsets.top - view.safeAreaInsets.bottom
+        // Set nav bar height - need to do this as otherwise gets compressed by layout
+        self.navigationBarHeight = (ScorecardUI.landscapePhone() ? 32 : 44)
+        self.navigationBarHeightConstraint?.constant = self.navigationBarHeight
         
+        // Setup sizes of thumbnail and a row in the collection
         let thumbnailSize = SelectionViewController.thumbnailSize(view: self.view, labelHeight: self.labelHeight)
         self.thumbnailWidth = thumbnailSize.width
         self.thumbnailHeight = thumbnailSize.height
         self.rowHeight = self.thumbnailHeight + self.interRowSpacing
         
+        // Mode specific setup
         if self.selectionMode == .single {
-            self.selectedViewHeight?.constant = 0.0
-            self.selectedViewWidth?.constant = 0.0
-            self.selectedPlayersView.alpha = 0.0
-           
-            var unselectedTop: CGFloat
-            if ScorecardUI.landscapePhone() {
-                unselectedTop = self.thumbnailWidth + (self.labelHeight - 5.0) + self.interRowSpacing - self.bannerContinuationHeight + 11.0
-            } else {
-                unselectedTop = self.thumbnailWidth + (self.labelHeight - 5.0) + self.interRowSpacing - 20.0 + 11.0
-            }
-            self.unselectedCollectionViewTopConstraint?.constant = unselectedTop
-            self.unselectedCollectionViewLandscapeTopConstraint?.constant = unselectedTop
-            selectedViewWidth?.constant = 0.0
+            self.setSingleModeSize()
         } else {
-            // Set height to half width to compress out any excess space - it will stretch to the space it needs when we draw it
-            self.selectedHeight = (ScorecardUI.landscapePhone() ? totalHeight : 0.5 * self.selectedWidth)
-            self.selectedViewHeight?.constant = self.selectedHeight
-            selectedViewWidth?.constant = self.selectedWidth
-            
-            if ScorecardUI.landscapePhone() {
-                self.selectedViewHeight?.constant = totalHeight - navigationBar.intrinsicContentSize.height + view.safeAreaInsets.bottom
-                self.selectedPlayersView.frame = CGRect(x: size.width - view.safeAreaInsets.right - self.selectedWidth, y: navigationBar.intrinsicContentSize.height + view.safeAreaInsets.top, width: self.selectedWidth, height: totalHeight - navigationBar.intrinsicContentSize.height + view.safeAreaInsets.bottom)
+            self.setOtherModeSize()
+        }
+    }
+    
+    func setSingleModeSize() {
+        
+        // Banner continuation is always 60.0 up arrow
+        self.bannerContinuationHeightConstraint.constant = 60.0
+        
+        // Selected view not shown in this mode
+        self.selectedViewHeight?.constant = 0.0
+        self.selectedViewWidth?.constant = 0.0
+        self.selectedPlayersView.alpha = 0.0
+        
+        // Attach selected view to top of form below this player
+        self.unselectedCollectionViewLandscapeTopConstraint?.constant = rowHeight + 11.0
+        self.unselectedCollectionViewTopConstraint?.constant = rowHeight + 11.0
+        
+    }
+    
+    func setOtherModeSize() {
+        
+        // No banner continuation on landscape phone
+        self.bannerContinuationHeightConstraint.constant  = (ScorecardUI.landscapePhone() ? 0 : 60.0 + (self.selectedHeight / 2.0))
+        
+        // Set total size inside safe area
+        let totalWidth = self.view.safeAreaLayoutGuide.layoutFrame.width
+        let totalHeight = self.view.safeAreaLayoutGuide.layoutFrame.height
+    
+        // Set widht of selected view to full width (portrait) or half width (landscape)
+        self.selectedWidth = (ScorecardUI.landscapePhone() ? (totalWidth / 2.0) : totalWidth)
+        selectedViewWidth?.constant = self.selectedWidth
+
+        // Set selected view height to half width in portrait to compress out any excess space - it will stretch to the space it needs when we draw it
+        self.selectedHeight = (ScorecardUI.landscapePhone() ? totalHeight : 0.5 * self.selectedWidth)
+        self.selectedViewHeight?.constant = self.selectedHeight
+        
+        if self.smallScreen {
+            // No bottom arrow - anchor to superview
+            self.unselectedCollectionViewBottomConstraint?.constant = 0.0
+        } else {
+            // Allow collection view to flow under bottom arrow
+            self.unselectedCollectionViewBottomConstraint?.constant = self.view.safeAreaInsets.bottom
+        }
+
+        // Set colecction view insets
+        let collectionViewLayout = self.unselectedCollectionView.collectionViewLayout as? UICollectionViewFlowLayout
+        if ScorecardUI.landscapePhone() {
+            // No insets in landscape
+            collectionViewLayout?.sectionInset = UIEdgeInsets()
+        } else {
+            // Allow collection view to flow under other table top
+            collectionViewLayout?.sectionInset = UIEdgeInsets(top: 62.5, left: 0.0, bottom: (smallScreen ? 0.0 : 80.0), right: 0.0)
+        }
+        collectionViewLayout?.invalidateLayout()
+    }
+    
+    private func drawRoom() {
+        
+        // Configure selected players view
+        self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth, allowHaloWidth: dealerHaloWidth)
+        self.selectedPlayersView.setHaloColor(color: Palette.halo)
+        self.selectedPlayersView.setTapDelegate(self)
+        
+        // Update layout to get correct size
+        self.view.layoutIfNeeded()
+        
+        // Draw room
+        let selectedFrame = self.selectedPlayersView.drawRoom(thumbnailWidth: self.thumbnailWidth, thumbnailHeight: self.thumbnailHeight, players: self.scorecard.numberPlayers, directions: (ScorecardUI.landscapePhone() ? .none : .up), (ScorecardUI.landscapePhone() ? .none : .down))
+        
+        // Reset height
+        self.selectedHeight = selectedFrame.height
+        self.selectedViewHeight?.constant = self.selectedHeight
+    }
+    
+    private func showThisPlayer() {
+        if let thisPlayer = self.thisPlayer {
+            if let playerMO = self.scorecard.findPlayerByEmail(thisPlayer) {
+                var size: CGSize
+                let nameHeight: CGFloat = (self.showThisPlayerName ? 30.0 : 0.0)
+                self.lastPlayerMO = playerMO
+                if let thisPlayerFrame = self.thisPlayerFrame {
+                    size = thisPlayerFrame.size
+                } else {
+                    size = SelectionViewController.thumbnailSize(view: self.view, labelHeight: nameHeight)
+                }
+                self.thisPlayerViewContainerWidthConstraint.constant = size.width + 10.0
+                
+                self.thisPlayerView?.removeFromSuperview()
+                self.thisPlayerView = PlayerView(type: .addPlayer, parent: self.thisPlayerViewContainer, width: size.width, height: size.height, tag: -2)
+                self.thisPlayerView.delegate = self
+                self.thisPlayerView.set(playerMO: playerMO, nameHeight: nameHeight)
+                self.thisPlayerView.set(textColor: Palette.text)
+                self.thisPlayerViewContainer.isHidden = false
             }
         }
     }
+    
+    private func setUserInteraction(_ enabled: Bool) {
+        self.unselectedCollectionView.isUserInteractionEnabled = enabled
+        self.selectedPlayersView.isEnabled = enabled
+        if enabled && self.selectionMode == .invitees {
+            self.selectedPlayersView.setEnabled(slot: 0, enabled: false)
+        }
+        self.clearAllButton.isEnabled = enabled
+    }
+    
     
     /// Function used in other views to get the same thumbnail size
     
@@ -451,82 +490,38 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         self.showGamePreview()
     }
     
-    // MARK: - Selected Players View delegate handlers =============================================== -
+    // MARK: - Initial setup routines ======================================================================== -
     
-    func selectedPlayersView(wasTappedOn slot: Int) {
-        self.removeSelection(slot)
-    }
-    
-    func selectedPlayersView(wasDroppedOn slot: Int, from source: PlayerViewType, playerMO: PlayerMO) {
-        
-        if self.selectedPlayersView.playerViews[slot].inUse {
-            self.removeSelection(slot, updateUnselected: true, animate: false)
-        }
-        
-        self.addSelection(playerMO, toSlot: slot, updateUnselected: true, animate: false)
-    }
-    
-    func selectedPlayersView(moved playerMO: PlayerMO, to slot: Int) {
-        // Update related list element
-        if let listIndex = self.selectedList.firstIndex(where: { $0.playerMO == playerMO }) {
-            self.selectedList[listIndex].slot = slot
+    private func setupButtons() {
+        // Set cancel button and title
+        self.navigationTitle.title = self.formTitle
+        self.cancelButton.setImage(UIImage(named: self.backImage), for: .normal)
+        self.cancelButton.setTitle(self.backText, for: .normal)
+        if let bannerColor = self.bannerColor {
+            self.bannerPaddingView.bannerColor = bannerColor
+            self.navigationBar.bannerColor = bannerColor
+            self.bannerContinuationView.bannerColor = bannerColor
+            self.bannerContinuationView.borderColor = bannerColor
         }
     }
     
-    // MARK: - Player view delegate handlers =========================================================== -
-
-    internal func playerViewWasTapped(_ playerView: PlayerView) {
-        let tag = playerView.tag
-        if tag == -1 {
-            // New player button
-            self.addNewPlayer()
+    private func setupForm() {
+        // Setup form
+        if self.selectionMode == .single {
+            self.showThisPlayer()
+            if let playerMO = self.unselectedList.first(where: {$0!.email == self.thisPlayer}) {
+                self.removeUnselected(playerMO!, updateUnselectedCollection: false)
+            }
         } else {
-            if self.selectionMode == .single {
-                self.preCompletion?([playerView.playerMO!])
-                self.dismiss([playerView.playerMO!])
-            } else {
-                self.addSelection(playerView.playerMO!)
-            }
-        }
-    }
-    
-    // MARK: - Utility Routines ======================================================================== -
-    
-    private func showSelectPlayers() {
-        SelectPlayersViewController.show(from: self, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: true, completion: { (selected, playerList, selection) in
-            if let selected = selected, let playerList = playerList, let selection = selection {
-                if selected > 0 {
-                    var createPlayerList: [PlayerDetail] = []
-                    for playerNumber in 1...playerList.count {
-                        if selection[playerNumber-1] {
-                            createPlayerList.append(playerList[playerNumber-1])
-                        }
-                    }
-                    self.createPlayers(newPlayers: createPlayerList, createMO: false)
-                }
-            }
-        })
-    }
-    
-    private func showThisPlayer() {
-        if let thisPlayer = self.thisPlayer {
-            if let playerMO = self.scorecard.findPlayerByEmail(thisPlayer) {
-                var size: CGSize
-                let nameHeight: CGFloat = (self.showThisPlayerName ? 30.0 : 0.0)
-                self.lastPlayerMO = playerMO
-                if let thisPlayerFrame = self.thisPlayerFrame {
-                    size = thisPlayerFrame.size
-                } else {
-                    size = SelectionViewController.thumbnailSize(view: self.view, labelHeight: nameHeight)
-                }
-                self.thisPlayerViewContainerWidthConstraint.constant = size.width + 10.0
-                
-                self.thisPlayerView?.removeFromSuperview()
-                self.thisPlayerView = PlayerView(type: .addPlayer, parent: self.thisPlayerViewContainer, width: size.width, height: size.height, tag: -2)
-                self.thisPlayerView.delegate = self
-                self.thisPlayerView.set(playerMO: playerMO, nameHeight: nameHeight)
-                self.thisPlayerView.set(textColor: Palette.text)
-                self.thisPlayerViewContainer.isHidden = false
+            // Switch banner mode
+            bannerContinuationView.shape = .rectangle
+
+            // Try to find players from last time
+            self.scorecard.loadGameDefaults()
+            self.assignPlayers()
+            if self.selectionMode == .invitees {
+                // Make sure host is correct
+                self.defaultOnlinePlayers()
             }
         }
     }
@@ -538,7 +533,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             availableList.append(playerMO)
         }
     }
-
+    
     private func assignPlayers() {
         // Run round player list trying to patch in players from last time
         
@@ -572,10 +567,20 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         self.selectedPlayersView.setEnabled(slot: 0, enabled: false)
     }
     
-    private func setupSingleScreen() {
-        // Switch banner type
-        // Need a button with Add Player down the bottom in portrait mode only
+   private func setupAnimationView() {
+        self.animationView = PlayerView(type: .animation, parent: self.view, width: self.thumbnailWidth, height: self.thumbnailHeight, tag: -1, haloWidth: self.haloWidth, allowHaloWidth: self.dealerHaloWidth)
+        // Move it off the screen
+        self.animationView.frame = CGRect(x: -self.thumbnailWidth, y: -self.thumbnailHeight, width: self.thumbnailWidth, height: self.thumbnailHeight)
     }
+    
+    private func setupDragAndDrop() {
+        if self.selectionMode != .single {
+            let unselectedDropInteraction = UIDropInteraction(delegate: self)
+            self.unselectedCollectionView.addInteraction(unselectedDropInteraction)
+        }
+    }
+    
+   // MARK: - Add / remove player from selection ============================================================== -
     
     private func removeSelection(_ selectedSlot: Int, updateUnselected: Bool = true, updateUnselectedCollection: Bool = true, animate: Bool = true) {
         
@@ -740,27 +745,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         return insertIndex
     }
     
-    private func setUserInteraction(_ enabled: Bool) {
-        self.unselectedCollectionView.isUserInteractionEnabled = enabled
-        self.selectedPlayersView.isEnabled = enabled
-        if enabled && self.selectionMode == .invitees {
-            self.selectedPlayersView.setEnabled(slot: 0, enabled: false)
-        }
-        self.clearAllButton.isEnabled = enabled
-    }
-    
-    private func setupAnimationView() {
-        self.animationView = PlayerView(type: .animation, parent: self.view, width: self.thumbnailWidth, height: self.thumbnailHeight, tag: -1, haloWidth: self.haloWidth, allowHaloWidth: self.dealerHaloWidth)
-        // Move it off the screen
-        self.animationView.frame = CGRect(x: -self.thumbnailWidth, y: -self.thumbnailHeight, width: self.thumbnailWidth, height: self.thumbnailHeight)
-    }
-    
-    private func setupDragAndDrop() {
-        if self.selectionMode != .single {
-            let unselectedDropInteraction = UIDropInteraction(delegate: self)
-            self.unselectedCollectionView.addInteraction(unselectedDropInteraction)
-        }
-    }
+    // MARK: - Create players on return from Add Player ================================================================ -
     
     private func createPlayers(newPlayers: [PlayerDetail], createMO: Bool) {
         let addToSelected = (self.selectionMode == .single ? (newPlayers.count == 1) :
@@ -807,6 +792,12 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         }
     }
     
+    // MARK: - Show other views ============================================================================================ -
+    
+    private func showGamePreview() {
+        _ = GamePreviewViewController.show(from: self, selectedPlayers: selectedList.map{ $0.playerMO }, readOnly: false, delegate: self)
+    }
+    
     func addNewPlayer() {
         if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
             self.showSelectPlayers()
@@ -816,12 +807,63 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                                                 if playerDetail != nil {
                                                     self.createPlayers(newPlayers: [playerDetail!], createMO: true)
                                                 }
-                                            })
+            })
         }
     }
     
-    private func showGamePreview() {
-        _ = GamePreviewViewController.show(from: self, selectedPlayers: selectedList.map{ $0.playerMO }, readOnly: false, delegate: self)
+    private func showSelectPlayers() {
+        SelectPlayersViewController.show(from: self, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: true, completion: { (selected, playerList, selection) in
+            if let selected = selected, let playerList = playerList, let selection = selection {
+                if selected > 0 {
+                    var createPlayerList: [PlayerDetail] = []
+                    for playerNumber in 1...playerList.count {
+                        if selection[playerNumber-1] {
+                            createPlayerList.append(playerList[playerNumber-1])
+                        }
+                    }
+                    self.createPlayers(newPlayers: createPlayerList, createMO: false)
+                }
+            }
+        })
+    }
+    
+    // MARK: - Selected Players View delegate handlers =============================================== -
+    
+    func selectedPlayersView(wasTappedOn slot: Int) {
+        self.removeSelection(slot)
+    }
+    
+    func selectedPlayersView(wasDroppedOn slot: Int, from source: PlayerViewType, playerMO: PlayerMO) {
+        
+        if self.selectedPlayersView.playerViews[slot].inUse {
+            self.removeSelection(slot, updateUnselected: true, animate: false)
+        }
+        
+        self.addSelection(playerMO, toSlot: slot, updateUnselected: true, animate: false)
+    }
+    
+    func selectedPlayersView(moved playerMO: PlayerMO, to slot: Int) {
+        // Update related list element
+        if let listIndex = self.selectedList.firstIndex(where: { $0.playerMO == playerMO }) {
+            self.selectedList[listIndex].slot = slot
+        }
+    }
+    
+    // MARK: - Player view delegate handlers =========================================================== -
+    
+    internal func playerViewWasTapped(_ playerView: PlayerView) {
+        let tag = playerView.tag
+        if tag == -1 {
+            // New player button
+            self.addNewPlayer()
+        } else {
+            if self.selectionMode == .single {
+                self.preCompletion?([playerView.playerMO!])
+                self.dismiss([playerView.playerMO!])
+            } else {
+                self.addSelection(playerView.playerMO!)
+            }
+        }
     }
     
     // MARK: - Game Preview Delegate handlers ============================================================================== -

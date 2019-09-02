@@ -283,6 +283,17 @@ extension ClientViewController {
     }
 }
 
+extension SelectionViewController {
+    
+    internal func setTestMode() {
+        if let testModeValue = ProcessInfo.processInfo.environment["TEST_MODE"] {
+            if testModeValue.lowercased() == "true" {
+                self.testMode = true
+            }
+        }
+    }
+}
+
 extension GameSummaryViewController {
     
     internal func autoNewGame() {

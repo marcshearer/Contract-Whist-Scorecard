@@ -256,7 +256,9 @@ extension HandViewController {
 
 extension ClientViewController {
     
-    func checkTestMessages(descriptor: String, data: [String : Any?]?, peer: CommsPeer) {
+    func checkTestMessages(descriptor: String, data: [String : Any?]?, peer: CommsPeer) -> Bool {
+        var handled = false
+        
         switch descriptor {
         case "autoPlay":
             let dictionary = data as! [String : Int]
@@ -277,9 +279,11 @@ extension ClientViewController {
                     }
                 }
             }
+            handled = true
         default:
             break
         }
+        return handled
     }
 }
 
@@ -325,10 +329,11 @@ extension Scorecard {
         })
     }
     
-    public func sendAutoPlay() {
+    public func sendAutoPlay(to peer: CommsPeer? = nil) {
         // Tell other players to enter Autoplay mode (for testing)
         self.commsDelegate?.send("autoPlay", ["hands"  : self.autoPlayHands,
-                                              "games" : self.autoPlayGames])
+                                              "games" : self.autoPlayGames],
+                                 to: peer)
     }
     
     func testResetSettings() {

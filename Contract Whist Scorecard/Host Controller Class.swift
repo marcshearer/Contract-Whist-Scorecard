@@ -214,7 +214,8 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
                     // Remote device wants a refresh of the currentstate
                     self.scorecard.refreshState(to: peer)
                 default:
-                    break
+                    // Try scorecard generic handler
+                    self.scorecard.didReceiveData(descriptor: descriptor, data: data, from: peer!)
                 }
             }
         }
@@ -311,7 +312,11 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
                         if self.connectionMode == .nearby {
                             // Nearby connection - Check if duplicate from a different device
                             if let _ = self.playerData.firstIndex(where: {($0.peer == nil || $0.peer.deviceName != peer.deviceName) && $0.email == self.playerData[playerNumber - 1].email}) {
+                                print(self.playerData.count)
+                                self.playerData.forEach { print("\($0.email) - \($0.peer?.deviceName ?? "No device")") }
                                 self.disconnectPlayer(playerNumber: playerNumber, reason: "\(peer.playerName ?? "This player") has already connected from another device")
+                                print(self.playerData.count)
+                                self.playerData.forEach { print("\($0.email) - \($0.peer?.deviceName ?? "No device")") }
                                 error = true
                             }
                         }

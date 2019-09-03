@@ -131,6 +131,11 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             switch descriptor {
             case "requestThumbnail":
                 self.sendPlayerThumbnail(playerEmail: data!["email"] as! String, to: commsPeer)
+            case "testConnection":
+                self.commsDelegate?.send("testResponse", nil, to: commsPeer)
+                Utility.getActiveViewController()?.alertMessage("Connection test received from \(commsPeer.playerName!).\nResponse sent", title: "Connection Test")
+            case "testResponse":
+                Utility.getActiveViewController()?.alertMessage("Connection test response received from \(commsPeer.playerName!)", title: "Connection Test")
             default:
                 break
             }
@@ -472,7 +477,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                                           to: commsPeer,
                                           matchEmail: self.enteredPlayer(playerNumber).playerMO!.email!)
                 Utility.debugMessage("sendHandState", "\(playerNumber) \(commsPeer?.deviceName ?? "all") \(self.enteredPlayer(playerNumber).playerMO!.email!)")
-                self.sendAutoPlay()
+                self.sendAutoPlay(to: commsPeer)
             }
         }
     }
@@ -504,7 +509,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 if !self.gameInProgress || self.handState == nil {
                     // Game not started yet - wait
                     self.sendInstruction("wait", to: commsPeer)
-                    self.sendAutoPlay()
+                    self.sendAutoPlay(to: commsPeer)
                 } else {
                     // Game in progress - need to resend state - luckily have what we need in handState
                     self.sendPlay(rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce, bonus2: self.handState.bonus2, suits: self.handState.suits, to: commsPeer)
@@ -757,6 +762,10 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     public func sendInstruction(_ instruction: String, to commsPeer: CommsPeer? = nil) {
         // No game running - send a wait message
         self.commsDelegate?.send(instruction, nil, to: commsPeer)
+    }
+    
+    public func sendTestConnection() {
+        self.commsDelegate?.send("testConnection", nil)
     }
     
     func entryPlayerNumber(_ enteredPlayerNumber: Int, round: Int) -> Int {

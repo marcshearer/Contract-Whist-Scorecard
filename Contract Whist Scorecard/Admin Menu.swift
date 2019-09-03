@@ -41,6 +41,9 @@ class AdminMenu {
                 actionSheet.add("Reset connection", handler: {
                     Scorecard.shared.resetConnection()
                 })
+                actionSheet.add("Test connection", handler: {
+                    Scorecard.shared.sendTestConnection()
+                })
                 actionSheet.add("Show connections", handler: {
                     Scorecard.shared.commsDelegate?.connectionInfo()
                 })

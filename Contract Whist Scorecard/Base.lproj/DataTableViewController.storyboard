@@ -99,6 +99,7 @@
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="saY-dq-bW5">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="44"/>
                                                                         <color key="backgroundColor" name="Clear"/>
                                                                         <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
                                                                         <color key="textColor" name="Text"/>
@@ -151,30 +152,35 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="44"/>
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
-                                                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="W86-P7-fmw" userLabel="Vertical Stack View">
+                                                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="W86-P7-fmw" userLabel="Vertical Stack View">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                                                                         <subviews>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wgI-v7-r1A" userLabel="Padding above">
+                                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="3"/>
                                                                                 <color key="backgroundColor" name="Clear"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="3" id="EBP-Wf-I11"/>
                                                                                 </constraints>
                                                                             </view>
                                                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalCentering" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="vnV-4q-PCe" userLabel="Horizontal Stack View">
+                                                                                <rect key="frame" x="0.0" y="3" width="50" height="38"/>
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FrM-hG-Ibp" userLabel="Padding left">
+                                                                                        <rect key="frame" x="0.0" y="0.0" width="3" height="38"/>
                                                                                         <color key="backgroundColor" name="Clear"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="width" constant="3" id="fOX-Te-lCf"/>
                                                                                         </constraints>
                                                                                     </view>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Lh-dg-sBT">
+                                                                                        <rect key="frame" x="3" y="0.0" width="40" height="38"/>
                                                                                         <subviews>
                                                                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="aIh-3j-wpO">
-                                                                                                <rect key="frame" x="0.0" y="0.0" width="42" height="0.0"/>
+                                                                                                <rect key="frame" x="0.0" y="0.0" width="40" height="38"/>
                                                                                                 <color key="backgroundColor" name="Clear"/>
                                                                                             </imageView>
                                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iNT-wA-HGU">
-                                                                                                <rect key="frame" x="0.0" y="0.0" width="42" height="0.0"/>
+                                                                                                <rect key="frame" x="0.0" y="0.0" width="40" height="38"/>
                                                                                                 <color key="backgroundColor" name="Clear"/>
                                                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                                                 <color key="textColor" name="Text"/>
@@ -194,6 +200,7 @@
                                                                                         </constraints>
                                                                                     </view>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TdW-J5-VUg" userLabel="Padding right">
+                                                                                        <rect key="frame" x="43" y="0.0" width="7" height="38"/>
                                                                                         <color key="backgroundColor" name="Clear"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="width" constant="7" id="iRz-EV-qcP"/>
@@ -214,6 +221,7 @@
                                                                                 </constraints>
                                                                             </stackView>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e6B-8D-NgD" userLabel="Padding below">
+                                                                                <rect key="frame" x="0.0" y="41" width="50" height="3"/>
                                                                                 <color key="backgroundColor" name="Clear"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="3" id="xxe-tR-r9V"/>
@@ -298,7 +306,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gXG-S6-tvf" userLabel="Header Collection View">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="MWO-G1-p4t">
                                                         <size key="itemSize" width="50" height="44"/>
@@ -308,7 +316,7 @@
                                                     </collectionViewFlowLayout>
                                                     <cells>
                                                         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" reuseIdentifier="Data Table Header Cell" id="1av-63-VO8" userLabel="Header Collection Cell" customClass="DataTableCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="44"/>
+                                                            <rect key="frame" x="0.0" y="-0.5" width="50" height="44"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="44"/>

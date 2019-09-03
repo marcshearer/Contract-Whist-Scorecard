@@ -247,6 +247,9 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     internal func didReceiveData(descriptor: String, data: [String : Any?]?, from peer: CommsPeer) {
         Utility.mainThread { [unowned self] in
             self.queue.append(QueueEntry(descriptor: descriptor, data: data, peer: peer))
+            if self.scorecard.commsHandlerMode != .none {
+                Utility.debugMessage("client", "Comms handler mode queuing \(self.scorecard.commsHandlerMode)")
+            }
         }
         self.processQueue()
     }
@@ -493,7 +496,12 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                     self.showGameSummary()
                     
                 default:
-                    self.checkTestMessages(descriptor: descriptor, data: data, peer: peer)
+                    // Try test messages
+                    if !self.checkTestMessages(descriptor: descriptor, data: data, peer: peer) {
+                        // Try generic scorecard handler
+                        Utility.debugMessage("client", "Trying generic for \(descriptor) from \(peer.playerName!)")
+                        self.scorecard.didReceiveData(descriptor: descriptor, data: data, from: peer)
+                    }
                 }
             }
         }
@@ -827,12 +835,13 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     @objc private func checkConnecting(_ sender: Any? = nil) {
-        // Periodically check that a peer that thinks it is connecting has not gone quiescent for more than 10 secs
+        // Periodically check that a peer that thinks it is connecting has not gone quiescent for more than 3 secs
         
         for available in self.available {
             if available.connecting {
-                if available.lastConnect?.timeIntervalSinceNow ?? TimeInterval(-11.0) < TimeInterval(-10.0) {
+                if available.lastConnect?.timeIntervalSinceNow ?? TimeInterval(-4.0) < TimeInterval(-3.0) {
                     Utility.mainThread {
+                        Utility.debugMessage("client", "Firing connection timer")
                         self.clientService?.reset()
                     }
                 }
@@ -1172,6 +1181,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     private func appStateChange(to newState: AppState) {
+        self.titleBar.title = "\(newState)" // TODO Remove
         if newState != self.appState {
             Utility.debugMessage("client", "Application state \(newState)")
 
@@ -1191,7 +1201,8 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     private func startIdleTimer() {
-        self.stopIdleTimer()
+        self.stopIdleTimer(report: false)
+        Utility.debugMessage("client", "Starting idle timer")
         self.idleTimer = Timer.scheduledTimer(
             timeInterval: TimeInterval(10),
             target: self,
@@ -1200,9 +1211,11 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             repeats: true)
     }
     
-    private func stopIdleTimer() {
+    private func stopIdleTimer(report: Bool = true) {
         if let timer = self.idleTimer {
-            Utility.debugMessage("client", "Stopping idle timer")
+            if report {
+                Utility.debugMessage("client", "Stopping idle timer")
+            }
             timer.invalidate()
             self.idleTimer = nil
         }
@@ -1210,15 +1223,19 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     private func startConnectingTimer() {
         self.stopConnectingTimer()
+        Utility.debugMessage("client", "Starting connection timer")
         self.connectingTimer = Timer.scheduledTimer(
-            timeInterval: TimeInterval(2),
+            timeInterval: TimeInterval(3),
             target: self,
             selector: #selector(ClientViewController.checkConnecting(_:)),
             userInfo: nil,
             repeats: true)
     }
     
-    private func stopConnectingTimer() {
+    private func stopConnectingTimer(report: Bool = true) {
+        if report {
+            Utility.debugMessage("client", "Stopping connection timer")
+        }
         self.connectingTimer?.invalidate()
         self.connectingTimer = nil
     }

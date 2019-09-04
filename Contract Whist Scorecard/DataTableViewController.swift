@@ -389,7 +389,7 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
         
         let column = displayedFields[indexPath.row]
         
-        return (column.type != .button)
+        return (column.type != .button && column.field != "")
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -399,11 +399,11 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
         if collectionView.tag >= 1000000 {
             // Header row - sort
 
-            self.clearSortArrows()
-
             let cell = collectionView.cellForItem(at: indexPath) as! DataTableCollectionCell
             
             let column = displayedFields[indexPath.row]
+            
+            self.clearSortArrows()
             
             sortColumn = indexPath.row
             
@@ -425,7 +425,7 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
             lastSortField = column.field
             
             self.showSortArrow(cell)
-
+            
             sortList(column: indexPath.row, descending: lastSortDescending)
             bodyView.reloadData()
             

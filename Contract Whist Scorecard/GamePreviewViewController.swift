@@ -93,6 +93,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     @IBOutlet private weak var overrideSettingsButton: UIButton!
     @IBOutlet private weak var overrideSettingsBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var actionButtonView: UIView!
+    @IBOutlet private weak var rightViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var cutForDealerButton: ImageButton!
     @IBOutlet private weak var nextDealerButton: ImageButton!
 
@@ -332,20 +333,23 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         // Draw room
         let selectedFrame = self.selectedPlayersView.drawRoom(thumbnailWidth: thumbnailWidth, thumbnailHeight: thumbnailHeight, directions: (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.up), (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.down))
         
-        // Reset height
+        // Reset heights
         selectedPlayersHeightConstraint?.constant = selectedFrame.height
     }
     
     private func updateButtons(animate: Bool = true) {
         if self.readOnly {
             self.overrideSettingsButton.isHidden = true
-            self.selectedPlayersTopConstraint.constant = (UIScreen.main.bounds.height * 0.15) + navigationBar.intrinsicContentSize.height
+            self.selectedPlayersTopConstraint.constant = max(40,(UIScreen.main.bounds.height * 0.30) - 120.0)
+            self.rightViewTrailingConstraint.constant = actionButtonView.frame.width * 0.25
             
         } else if !cutting {
             // Hide / show buttons dependent on format
             self.bannerContinueButton.isHidden = !ScorecardUI.landscapePhone() && !ScorecardUI.smallPhoneSize()
             self.continueButton.isHidden = ScorecardUI.landscapePhone() || ScorecardUI.smallPhoneSize()
             self.overrideSettingsButton.isHidden = false
+            
+            self.rightViewTrailingConstraint.constant = 0.0
             
             if (self.delegate?.gamePreviewHosting ?? false) {
                 
@@ -369,12 +373,12 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
                     if waitAnimation {
                         topConstraint = 20.0
                     } else {
-                        topConstraint = UIScreen.main.bounds.height * 0.15
+                        topConstraint = max(40,(UIScreen.main.bounds.height * 0.30) - 120.0)
                         self.bannerContinuationLabel.isHidden = false
                         self.cutForDealerButton.isEnabled = false
-                        self.cutForDealerButton.alpha = 0.5
+                        self.cutForDealerButton.alpha = 0.7
                         self.nextDealerButton.isEnabled = false
-                        self.nextDealerButton.alpha = 0.5
+                        self.nextDealerButton.alpha = 0.7
                         self.bannerContinuationLabel.attributedText = self.delegate?.gamePreviewWaitMessage
                     }
                 }
@@ -404,7 +408,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             self.bannerContinueButton.isHidden = true
             self.continueButton.isHidden = true
             self.cutForDealerButton.isEnabled = false
-            self.cutForDealerButton.alpha = 0.0
+            self.cutForDealerButton.alpha = 0.7
             self.cutForDealerButton.title = ""
             self.nextDealerButton.isHidden = true
             self.selectedPlayersView.isEnabled = false
@@ -643,8 +647,8 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
                 animation.addCompletion({ _ in
                     // Fade buttons
                     if !self.readOnly {
-                        self.cutForDealerButton.alpha = 0.5
-                        self.nextDealerButton.alpha = 0.5
+                        self.cutForDealerButton.alpha = 0.7
+                        self.nextDealerButton.alpha = 0.7
                     }
                     completion()
                 })
@@ -662,7 +666,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             // Fade out the back
             if slot == 1 && self.readOnly {
                 // Hide pack
-                self.cutForDealerButton.alpha = 0.0
+                self.cutForDealerButton.alpha = 0.7
             }
             // Hide card back (revealing front)
             self.cutCardView[slot].subviews.first!.alpha = 0.0
@@ -743,8 +747,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     private func createCutCards() {
         for _ in 0..<self.scorecard.numberPlayers {
-            let cardView = UILabel(frame: CGRect(origin: CGPoint(x: 100, y: 100), size: CGSize(width: cutCardWidth, height: cutCardHeight)))
-            cardView.isUserInteractionEnabled = false
+            let cardView = UILabel(frame: CGRect(origin: CGPoint(), size: CGSize(width: cutCardWidth, height: cutCardHeight)))
             cardView.backgroundColor = Palette.cardFace
             ScorecardUI.roundCorners(cardView)
             cardView.textAlignment = .center

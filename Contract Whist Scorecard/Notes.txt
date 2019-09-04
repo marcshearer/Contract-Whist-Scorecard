@@ -188,6 +188,7 @@ TODO
 Crash if go into High Scores repeatedly
 Avoid message text blue color
 Redo graph
+Looks like it is still in recovery mode even when play game and override warning
 
 Jack
 ----

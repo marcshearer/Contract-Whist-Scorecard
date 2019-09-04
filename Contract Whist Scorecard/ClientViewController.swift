@@ -672,50 +672,67 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     // MARK: - State Delegate handlers ===================================================================== -
     
     internal func stateChange(for peer: CommsPeer, reason: String?) {
+        
         Utility.mainThread { [unowned self] in
             let currentState = self.currentState(peer: peer)
-            Utility.debugMessage("client", "Changing from \(currentState) to \(peer.state)")
-            if peer.state == .notConnected {
-                self.appStateChange(to: .notConnected)
-                self.changePlayerAvailable()
-                if !self.gameOver && !self.scorecard.isViewing {
-                    // Don't dismiss if game over - allow time to review
-                    self.dismissAll(reason != nil && reason != "" && reason != "Reset" , reason: reason ?? "", completion: {
-                        self.clientService?.start(email: self.thisPlayer, name: self.thisPlayerName)
-                        UIApplication.shared.isIdleTimerDisabled = false
-                    })
-                }
-            } else {
-                self.changePlayerAvailable()
-                if peer.state == .connected {
-                    // Can dismiss any whisper
-                    self.whisper.hide()
-                } else if peer.state == .reconnecting {
+            
+            if peer.state != currentState {
+                // State changing
+                Utility.debugMessage("client", "Changing from \(currentState) to \(peer.state)")
+                
+                switch peer.state {
+                case .notConnected:
+                    // Disconnected
+                    
+                    self.appStateChange(to: .notConnected)
+                    
+                    if !self.gameOver && !self.scorecard.isViewing {
+                        // Don't dismiss if game over - allow time to review
+                        self.dismissAll(reason != nil && reason != "" && reason != "Reset" , reason: reason ?? "", completion: {
+                            self.clientService?.start(email: self.thisPlayer, name: self.thisPlayerName)
+                            UIApplication.shared.isIdleTimerDisabled = false
+                        })
+                    }
+                    
+                    if peer.autoReconnect {
+                        self.appStateChange(to: .reconnecting)
+                        self.whisper.show("Connection lost. Recovering...")
+                    }
+                    
+                case .connected :
+                    // Connected
+                    self.appStateChange(to: .waiting)
+                    
+                    self.whisper.hide("Connection restored")
+                    
+                    if self.scorecard.gameInProgress {
+                        // Get up-to-date
+                        self.scorecard.sendRefreshRequest(to: peer)
+                    }
+                    
+                case .connecting:
+                    // Connecting
+                    self.appStateChange(to: .connecting)
+                    
+                default:
+                    // Recovering or re-connecting
                     self.appStateChange(to: .reconnecting)
+                    
                     self.whisper.show("Connection lost. Trying to reconnect...")
                 }
                 
-                if peer.state != .recovering && peer.state != .reconnecting {
-                    self.appStateChange(to: .waiting)
-                }
-                // Set framework based on this connection (for reconnect at lower level)
-                self.selectFramework(framework: peer.framework)
-                self.reflectState(peer: peer)
-                UIApplication.shared.isIdleTimerDisabled = true
-                if peer.state == .connected && currentState != .connected && self.scorecard.gameInProgress {
-                    // Get up-to-date
-                    self.scorecard.sendRefreshRequest(to: peer)
+                if peer.state != .notConnected {
+                    // Set framework based on this connection (for reconnect at lower level)
+                    self.selectFramework(framework: peer.framework)
+                    self.reflectState(peer: peer)
+                    
+                    // Don't allow device to timeout
+                    UIApplication.shared.isIdleTimerDisabled = true
                 }
             }
-            // Update whisper
-            if currentState != peer.state {
-                if (peer.state == .notConnected && peer.autoReconnect) || peer.state == .recovering {
-                    self.whisper.show("Connection lost. Recovering...")
-                }
-            }
-            if peer.state == .connected {
-                self.whisper.hide("Connection restored")
-            }
+            
+            // Check if can change player
+            self.changePlayerAvailable()
         }
     }
    
@@ -1181,7 +1198,6 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     private func appStateChange(to newState: AppState) {
-        self.titleBar.title = "\(newState)" // TODO Remove
         if newState != self.appState {
             Utility.debugMessage("client", "Application state \(newState)")
 

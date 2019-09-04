@@ -337,8 +337,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     func setSize() {
         
         // Set nav bar height - need to do this as otherwise gets compressed by layout
-        self.navigationBarHeight = (ScorecardUI.landscapePhone() ? 32 : 44)
-        self.navigationBarHeightConstraint?.constant = self.navigationBarHeight
+        self.navigationBarHeightConstraint?.constant = ScorecardUI.navigationBarHeight
         
         // Setup sizes of thumbnail and a row in the collection
         let thumbnailSize = SelectionViewController.thumbnailSize(view: self.view, labelHeight: self.labelHeight)
@@ -987,7 +986,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             selectionViewController = storyboard.instantiateViewController(withIdentifier: "SelectionViewController") as? SelectionViewController
         }
         
-        selectionViewController!.modalPresentationStyle = UIModalPresentationStyle.popover
         selectionViewController!.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
         selectionViewController!.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
         selectionViewController!.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
@@ -1012,7 +1010,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             selectionViewController!.transitioningDelegate = viewController
         }
         
-        // Let view controller know that this is a new 'instance' even though re-using
+        // Let view controller know that this is a new 'instance' even though possibly re-using
         selectionViewController!.firstTime = true
         
         viewController.present(selectionViewController!, animated: true, completion: showCompletion)

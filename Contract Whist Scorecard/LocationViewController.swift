@@ -516,7 +516,6 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
         let storyboard = UIStoryboard(name: "LocationViewController", bundle: nil)
         let locationViewController = storyboard.instantiateViewController(withIdentifier: "LocationViewController") as! LocationViewController
         
-        locationViewController.modalPresentationStyle = UIModalPresentationStyle.popover
         locationViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
         locationViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
         locationViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)

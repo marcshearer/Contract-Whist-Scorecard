@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina5_9" orientation="landscape">
+    <device id="retina6_5" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -16,11 +16,11 @@
             <objects>
                 <viewController storyboardIdentifier="RoundSummaryViewController" title="Round Summary" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FQp-co-xnK" customClass="RoundSummaryViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="eJU-jx-Ao1">
-                        <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
+                        <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="120" translatesAutoresizingMaskIntoConstraints="NO" id="r0e-On-sEv">
-                                <rect key="frame" x="54" y="28" width="300" height="219"/>
+                                <rect key="frame" x="54" y="47.666666666666657" width="300" height="218.99999999999997"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="eQ5-fh-Hkw"/>
@@ -31,7 +31,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1 Under" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="40" translatesAutoresizingMaskIntoConstraints="NO" id="UAK-eu-59d">
-                                <rect key="frame" x="73" y="247" width="270" height="96"/>
+                                <rect key="frame" x="73" y="266.66666666666669" width="270" height="96"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="270" id="Vs7-P1-coH"/>
                                     <constraint firstAttribute="height" constant="96" id="ePW-W3-Xru"/>
@@ -41,7 +41,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player 1 bid x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="cld-jQ-HAn">
-                                <rect key="frame" x="489" y="105" width="240" height="36"/>
+                                <rect key="frame" x="552" y="124.66666666666669" width="240" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="fFp-Bi-8M5"/>
                                 </constraints>
@@ -50,7 +50,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player 2 bid x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="3wM-w4-4DI">
-                                <rect key="frame" x="489" y="149" width="240" height="36"/>
+                                <rect key="frame" x="552" y="168.66666666666666" width="240" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="FMl-43-FC4"/>
                                 </constraints>
@@ -59,7 +59,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player 3 bid x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="8aH-vc-6ie">
-                                <rect key="frame" x="489" y="193" width="240" height="36"/>
+                                <rect key="frame" x="552" y="212.66666666666666" width="240" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="rPz-oj-uoT"/>
                                 </constraints>
@@ -68,7 +68,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player 4 bid x" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="p0z-M5-FE8">
-                                <rect key="frame" x="489" y="237" width="240" height="36"/>
+                                <rect key="frame" x="552" y="256.66666666666669" width="240" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="36" id="rdO-2S-Ixe"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="vra-Cb-QGn"/>
@@ -134,15 +134,11 @@
                         </variation>
                         <variation key="heightClass=compact">
                             <mask key="constraints">
-                                <include reference="1uw-NE-sAE"/>
-                                <exclude reference="5O4-t5-L10"/>
-                            </mask>
-                        </variation>
-                        <variation key="heightClass=compact-widthClass=compact">
-                            <mask key="constraints">
                                 <exclude reference="1dd-lf-s4G"/>
+                                <include reference="1uw-NE-sAE"/>
                                 <exclude reference="6iy-NE-rEH"/>
                                 <include reference="9F3-zC-tKI"/>
+                                <exclude reference="5O4-t5-L10"/>
                                 <exclude reference="gB7-FO-AHy"/>
                                 <include reference="oj8-dn-lgE"/>
                                 <exclude reference="JqT-Kv-UDr"/>

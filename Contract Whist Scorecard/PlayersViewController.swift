@@ -347,7 +347,6 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
         let storyboard = UIStoryboard(name: "PlayersViewController", bundle: nil)
         let playersViewController: PlayersViewController = storyboard.instantiateViewController(withIdentifier: "PlayersViewController") as! PlayersViewController
         
-        playersViewController.modalPresentationStyle = UIModalPresentationStyle.popover
         playersViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
         playersViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
         playersViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)

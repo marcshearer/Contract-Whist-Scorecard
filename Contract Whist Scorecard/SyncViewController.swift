@@ -247,7 +247,6 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
         let storyboard = UIStoryboard(name: "SyncViewController", bundle: nil)
         let SyncViewController: SyncViewController = storyboard.instantiateViewController(withIdentifier: "SyncViewController") as! SyncViewController
         
-        SyncViewController.modalPresentationStyle = UIModalPresentationStyle.popover
         SyncViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
         SyncViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
         SyncViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)

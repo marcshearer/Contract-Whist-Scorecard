@@ -301,7 +301,6 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
         let storyboard = UIStoryboard(name: "GetStartedViewController", bundle: nil)
         let getStartedViewController: GetStartedViewController = storyboard.instantiateViewController(withIdentifier: "GetStartedViewController") as! GetStartedViewController
         
-        getStartedViewController.modalPresentationStyle = UIModalPresentationStyle.popover
         getStartedViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
         getStartedViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
         getStartedViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)

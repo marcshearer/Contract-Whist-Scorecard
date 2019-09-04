@@ -388,7 +388,6 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
     static public func show(from sourceViewController: UIViewController, gameDetail: HistoryGame, sourceView: UIView?, completion: ((HistoryGame?)->())? = nil) {
         let storyboard = UIStoryboard(name: "HistoryDetailViewController", bundle: nil)
         let historyDetailViewController = storyboard.instantiateViewController(withIdentifier: "HistoryDetailViewController") as! HistoryDetailViewController
-        historyDetailViewController.modalPresentationStyle = UIModalPresentationStyle.popover
         historyDetailViewController.isModalInPopover = true
         historyDetailViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
         historyDetailViewController.popoverPresentationController?.sourceView = sourceView

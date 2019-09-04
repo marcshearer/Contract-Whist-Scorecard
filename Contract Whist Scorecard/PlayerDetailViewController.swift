@@ -119,7 +119,6 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     static public func show(from sourceViewController: UIViewController, playerDetail: PlayerDetail, mode: DetailMode, sourceView: UIView, completion: ((PlayerDetail?,Bool)->())? = nil) {
         let storyboard = UIStoryboard(name: "PlayerDetailViewController", bundle: nil)
         let playerDetailViewController = storyboard.instantiateViewController(withIdentifier: "PlayerDetailViewController") as! PlayerDetailViewController
-        playerDetailViewController.modalPresentationStyle = UIModalPresentationStyle.popover
         playerDetailViewController.isModalInPopover = true
         playerDetailViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
         playerDetailViewController.popoverPresentationController?.sourceView = sourceView

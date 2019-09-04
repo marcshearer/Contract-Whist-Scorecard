@@ -289,7 +289,6 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
         viewController.formTitle = title
         viewController.message = message
 
-        viewController.modalPresentationStyle = UIModalPresentationStyle.popover
         viewController.popoverPresentationController?.delegate = self
         viewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
         viewController.popoverPresentationController?.sourceView = parentViewController.view

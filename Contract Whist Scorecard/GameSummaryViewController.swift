@@ -541,7 +541,6 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
         let storyboard = UIStoryboard(name: "GameSummaryViewController", bundle: nil)
         let gameSummaryViewController: GameSummaryViewController = storyboard.instantiateViewController(withIdentifier: "GameSummaryViewController") as! GameSummaryViewController
  
-        gameSummaryViewController.modalPresentationStyle = UIModalPresentationStyle.popover
         gameSummaryViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
         gameSummaryViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
         gameSummaryViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)

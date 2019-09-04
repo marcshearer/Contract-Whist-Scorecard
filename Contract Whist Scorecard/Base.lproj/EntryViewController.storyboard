@@ -14,7 +14,7 @@
         <!--Entry-->
         <scene sceneID="IEG-Cv-abN">
             <objects>
-                <viewController storyboardIdentifier="EntryViewController" title="Entry" modalPresentationStyle="formSheet" useStoryboardIdentifierAsRestorationIdentifier="YES" id="mEi-hH-CUE" customClass="EntryViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EntryViewController" title="Entry" useStoryboardIdentifierAsRestorationIdentifier="YES" id="mEi-hH-CUE" customClass="EntryViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="pS0-jq-6eE" userLabel="Scores View">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -476,7 +476,6 @@
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <toolbarItems/>
-                    <value key="contentSizeForViewInPopover" type="size" width="320" height="568"/>
                     <connections>
                         <outlet property="bannerHeightConstraint" destination="ObX-hJ-jYj" id="03E-xR-8iu"/>
                         <outlet property="entryTableView" destination="jGM-gE-2rv" id="Gak-Rp-AWB"/>

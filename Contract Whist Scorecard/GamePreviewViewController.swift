@@ -301,7 +301,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     func setupScreen(size: CGSize) {
         
-        navigationBarHeightConstraint.constant = (ScorecardUI.landscapePhone() ? 32 : 44)
+        navigationBarHeightConstraint.constant = ScorecardUI.navigationBarHeight
         
         let thumbnailSize = SelectionViewController.thumbnailSize(view: self.view, labelHeight: self.labelHeight)
         self.thumbnailWidth = thumbnailSize.width
@@ -340,7 +340,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     private func updateButtons(animate: Bool = true) {
         if self.readOnly {
             self.overrideSettingsButton.isHidden = true
-            self.selectedPlayersTopConstraint.constant = max(40,(UIScreen.main.bounds.height * 0.30) - 120.0)
+            self.selectedPlayersTopConstraint.constant = max(40,(UIScreen.main.bounds.height * 0.20) - 40.0)
             self.rightViewTrailingConstraint.constant = actionButtonView.frame.width * 0.25
             
             // Position (hidden) bottom buttons
@@ -376,7 +376,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
                     if waitAnimation {
                         topConstraint = 20.0
                     } else {
-                        topConstraint = max(40,(UIScreen.main.bounds.height * 0.30) - 120.0)
+                        topConstraint = max(40,(UIScreen.main.bounds.height * 0.20) - 40.0)
                         self.bannerContinuationLabel.isHidden = false
                         self.cutForDealerButton.isEnabled = false
                         self.cutForDealerButton.alpha = 0.7
@@ -802,7 +802,6 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         let storyboard = UIStoryboard(name: "GamePreviewViewController", bundle: nil)
         let gamePreviewViewController = storyboard.instantiateViewController(withIdentifier: "GamePreviewViewController") as! GamePreviewViewController
         
-        gamePreviewViewController.modalPresentationStyle = UIModalPresentationStyle.popover
         gamePreviewViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
         gamePreviewViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
         gamePreviewViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)

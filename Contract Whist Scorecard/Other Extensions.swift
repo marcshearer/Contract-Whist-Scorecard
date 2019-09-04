@@ -50,6 +50,7 @@ extension UIViewController {
 
 class CustomViewController : UIViewController {
     
+    /*
     override func viewDidLoad() {
         Utility.mainThread {
             super.viewDidLoad()
@@ -72,7 +73,6 @@ class CustomViewController : UIViewController {
         }
     }
 
-    /*
     override func viewDidLayoutSubviews() {
         Utility.mainThread {
             super.viewDidLayoutSubviews()
@@ -87,6 +87,17 @@ class CustomViewController : UIViewController {
         }
     }
     */
+    
+    func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, popoverNonPhone: Bool = true, completion: (() -> Void)? = nil) {
+        // Avoid silly popups on max sized phones
+       
+        if !ScorecardUI.phoneSize() && popoverNonPhone {
+            viewControllerToPresent.modalPresentationStyle = UIModalPresentationStyle.popover
+        }
+        
+        super.present(viewControllerToPresent, animated: flag, completion: completion)
+    }
+    
     override var prefersStatusBarHidden: Bool {
         get {
             return AppDelegate.applicationPrefersStatusBarHidden ?? true

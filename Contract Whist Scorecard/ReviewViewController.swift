@@ -296,7 +296,6 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
         let storyboard = UIStoryboard(name: "ReviewViewController", bundle: nil)
         let reviewViewController = storyboard.instantiateViewController(withIdentifier: "ReviewViewController") as! ReviewViewController
         
-        reviewViewController.modalPresentationStyle = UIModalPresentationStyle.popover
         reviewViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
         reviewViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
         reviewViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)

@@ -639,7 +639,6 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         let storyboard = UIStoryboard(name: "SelectPlayersViewController", bundle: nil)
         let selectPlayersViewController = storyboard.instantiateViewController(withIdentifier: "SelectPlayersViewController") as! SelectPlayersViewController
         
-        selectPlayersViewController.modalPresentationStyle = UIModalPresentationStyle.popover
         selectPlayersViewController.isModalInPopover = true
         selectPlayersViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
         selectPlayersViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view

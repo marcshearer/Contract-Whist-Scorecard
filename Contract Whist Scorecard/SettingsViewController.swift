@@ -1039,7 +1039,6 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
         let storyboard = UIStoryboard(name: "SettingsViewController", bundle: nil)
         let settingsViewController: SettingsViewController = storyboard.instantiateViewController(withIdentifier: "SettingsViewController") as! SettingsViewController
         
-        settingsViewController.modalPresentationStyle = UIModalPresentationStyle.popover
         settingsViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
         settingsViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
         settingsViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)

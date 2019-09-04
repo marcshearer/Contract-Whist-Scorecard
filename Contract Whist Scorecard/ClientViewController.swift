@@ -1533,7 +1533,6 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         let storyboard = UIStoryboard(name: "ClientViewController", bundle: nil)
         let clientViewController: ClientViewController = storyboard.instantiateViewController(withIdentifier: "ClientViewController") as! ClientViewController
         
-        clientViewController.modalPresentationStyle = UIModalPresentationStyle.popover
         clientViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
         clientViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
         clientViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)

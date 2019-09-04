@@ -626,7 +626,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: UIViewController, existing entryViewController: EntryViewController! = nil, reeditMode: Bool = false, rounds: Int? = nil, cards: [Int]? = nil, bounce: Bool? = nil, bonus2: Bool? = nil, suits: [Suit]? = nil, completion: ((Bool)->())? = nil) -> EntryViewController {
+    class public func show(from viewController: CustomViewController, existing entryViewController: EntryViewController! = nil, reeditMode: Bool = false, rounds: Int? = nil, cards: [Int]? = nil, bounce: Bool? = nil, bonus2: Bool? = nil, suits: [Suit]? = nil, completion: ((Bool)->())? = nil) -> EntryViewController {
         
         var entryViewController: EntryViewController! = entryViewController
         
@@ -635,7 +635,6 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             entryViewController = storyboard.instantiateViewController(withIdentifier: "EntryViewController") as? EntryViewController
         }
         
-        entryViewController.modalPresentationStyle = UIModalPresentationStyle.popover
         entryViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
         entryViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
         entryViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
@@ -655,7 +654,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             entryViewController!.transitioningDelegate = viewController
         }
         
-        viewController.present(entryViewController, animated: true, completion: nil)
+        viewController.present(entryViewController, animated: true, popoverNonPhone: true, completion: nil)
         
         return entryViewController
     }

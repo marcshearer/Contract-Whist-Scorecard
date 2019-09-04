@@ -296,7 +296,6 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
         let storyboard = UIStoryboard(name: "HighScoresViewController", bundle: nil)
         let highScoresViewController: HighScoresViewController = storyboard.instantiateViewController(withIdentifier: "HighScoresViewController") as! HighScoresViewController
         
-        highScoresViewController.modalPresentationStyle = UIModalPresentationStyle.popover
         highScoresViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
         highScoresViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
         highScoresViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)

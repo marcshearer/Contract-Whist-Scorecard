@@ -92,7 +92,7 @@ class ScorecardUI {
     }
     
     class func landscapePhone() -> Bool {
-        return UIScreen.main.traitCollection.verticalSizeClass == .compact && UIScreen.main.traitCollection.horizontalSizeClass == .compact
+        return UIScreen.main.traitCollection.verticalSizeClass == .compact
     }
     
     class func portraitPhone() -> Bool {
@@ -109,6 +109,14 @@ class ScorecardUI {
     
     class func landscape() -> Bool {
         return UIScreen.main.bounds.height < UIScreen.main.bounds.width
+    }
+    
+    class var navigationBarHeight: CGFloat {
+        if  UIScreen.main.traitCollection.verticalSizeClass == .compact &&  UIScreen.main.traitCollection.horizontalSizeClass == .compact {
+            return 32
+        } else {
+            return 44
+        }
     }
     
     static var screenWidth: CGFloat {

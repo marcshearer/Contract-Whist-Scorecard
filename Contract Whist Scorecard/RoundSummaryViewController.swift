@@ -116,7 +116,6 @@ class RoundSummaryViewController: CustomViewController {
             roundSummaryViewController = storyboard.instantiateViewController(withIdentifier: "RoundSummaryViewController") as? RoundSummaryViewController
         }
         
-        roundSummaryViewController.modalPresentationStyle = UIModalPresentationStyle.popover
         roundSummaryViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
         roundSummaryViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
         roundSummaryViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)

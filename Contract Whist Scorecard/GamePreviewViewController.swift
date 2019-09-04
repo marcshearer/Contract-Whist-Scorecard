@@ -343,6 +343,9 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             self.selectedPlayersTopConstraint.constant = max(40,(UIScreen.main.bounds.height * 0.30) - 120.0)
             self.rightViewTrailingConstraint.constant = actionButtonView.frame.width * 0.25
             
+            // Position (hidden) bottom buttons
+            self.overrideSettingsBottomConstraint?.constant = -60.0
+            
         } else if !cutting {
             // Hide / show buttons dependent on format
             self.bannerContinueButton.isHidden = !ScorecardUI.landscapePhone() && !ScorecardUI.smallPhoneSize()
@@ -396,11 +399,10 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
                     self.recoveryScorepad()
                 }
             }
+            // Position bottom buttons
+            self.overrideSettingsBottomConstraint?.constant = (self.continueButton.isHidden ? 20.0 : 80.0)
+            self.continueButtonHeightConstraint.constant = (self.continueButton.isHidden ? 0.0 : 50.0)
         }
-        
-        // Position bottom buttons
-        self.overrideSettingsBottomConstraint?.constant = (self.continueButton.isHidden ? 20.0 : 80.0)
-        self.continueButtonHeightConstraint.constant = (self.continueButton.isHidden ? 0.0 : 50.0)
     }
     
     private func setupButtons(animate: Bool = true) {

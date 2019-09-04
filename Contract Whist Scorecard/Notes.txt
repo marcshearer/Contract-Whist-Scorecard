@@ -162,6 +162,11 @@ Color of thumbnails to reflect surroundings
 
 5.0 (8)
 Line up table tops in selection and game preview
+Improve reconnection
+Better animation of game preview
+
+5.0 (9)
+Fix deal bugs
 
 Bugs fix now
 ------------

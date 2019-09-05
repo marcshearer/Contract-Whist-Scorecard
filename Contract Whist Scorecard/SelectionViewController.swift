@@ -128,6 +128,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         self.setTestMode()
         
         // Setup buttons and nav bar
+        self.setupScreenSize()
         self.setupButtons()
 
         // Check network
@@ -170,6 +171,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        self.setupScreenSize()
         self.setSize()
         
         if firstTime {
@@ -490,9 +492,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     private func setupButtons() {
         
-        // Check if need to restrict bottom because of screen size
-        self.smallScreen = (ScorecardUI.screenHeight < 800 || ScorecardUI.landscapePhone()) && ScorecardUI.phoneSize()
-        
         // Set cancel button and title
         self.navigationTitle.title = (self.smallScreen && !ScorecardUI.landscapePhone() ? (smallFormTitle ?? self.formTitle) : self.formTitle)
         self.cancelButton.setImage(UIImage(named: self.backImage), for: .normal)
@@ -503,6 +502,11 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             self.bannerContinuationView.bannerColor = bannerColor
             self.bannerContinuationView.borderColor = bannerColor
         }
+    }
+    
+    private func setupScreenSize() {
+        // Check if need to restrict bottom because of screen size
+        self.smallScreen = (ScorecardUI.screenHeight < 800 || ScorecardUI.landscapePhone()) && ScorecardUI.phoneSize()
     }
     
     private func setupForm() {

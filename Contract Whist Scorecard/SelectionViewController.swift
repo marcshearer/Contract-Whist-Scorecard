@@ -491,7 +491,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private func setupButtons() {
         
         // Check if need to restrict bottom because of screen size
-        self.smallScreen = (ScorecardUI.screenHeight < 800 || ScorecardUI.landscapePhone())
+        self.smallScreen = (ScorecardUI.screenHeight < 800 || ScorecardUI.landscapePhone()) && ScorecardUI.phoneSize()
         
         // Set cancel button and title
         self.navigationTitle.title = (self.smallScreen && !ScorecardUI.landscapePhone() ? (smallFormTitle ?? self.formTitle) : self.formTitle)
@@ -978,19 +978,14 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class func show(from viewController: UIViewController, existing selectionViewController: SelectionViewController? = nil, mode: SelectionMode, thisPlayer: String? = nil, thisPlayerFrame: CGRect? = nil, showThisPlayerName: Bool = false, formTitle: String = "Selection", smallFormTitle: String? = nil, backText: String = "Back", backImage: String = "", bannerColor: UIColor? = nil, preCompletion: (([PlayerMO]?)->())? = nil, completion: (([PlayerMO]?)->())? = nil, showCompletion: (()->())? = nil, gamePreviewDelegate: GamePreviewDelegate? = nil) -> SelectionViewController {
+    class func show(from viewController: CustomViewController, existing selectionViewController: SelectionViewController? = nil, mode: SelectionMode, thisPlayer: String? = nil, thisPlayerFrame: CGRect? = nil, showThisPlayerName: Bool = false, formTitle: String = "Selection", smallFormTitle: String? = nil, backText: String = "Back", backImage: String = "", bannerColor: UIColor? = nil, preCompletion: (([PlayerMO]?)->())? = nil, completion: (([PlayerMO]?)->())? = nil, showCompletion: (()->())? = nil, gamePreviewDelegate: GamePreviewDelegate? = nil) -> SelectionViewController {
         var selectionViewController = selectionViewController
         
         if selectionViewController == nil {
             let storyboard = UIStoryboard(name: "SelectionViewController", bundle: nil)
             selectionViewController = storyboard.instantiateViewController(withIdentifier: "SelectionViewController") as? SelectionViewController
         }
-        
-        selectionViewController!.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        selectionViewController!.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
-        selectionViewController!.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
         selectionViewController!.preferredContentSize = CGSize(width: 400, height: min(viewController.view.frame.height, 700))
-        selectionViewController!.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
         
         selectionViewController!.selectionMode = mode
         selectionViewController!.thisPlayer = thisPlayer ?? ""
@@ -1013,7 +1008,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         // Let view controller know that this is a new 'instance' even though possibly re-using
         selectionViewController!.firstTime = true
         
-        viewController.present(selectionViewController!, animated: true, completion: showCompletion)
+        viewController.present(selectionViewController!, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: showCompletion)
         
         return selectionViewController!
     }

@@ -342,23 +342,19 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: UIViewController, backText: String = "", backImage: String = "home", completion: (()->())?){
+    class public func show(from viewController: CustomViewController, backText: String = "", backImage: String = "home", completion: (()->())?){
         
         let storyboard = UIStoryboard(name: "PlayersViewController", bundle: nil)
         let playersViewController: PlayersViewController = storyboard.instantiateViewController(withIdentifier: "PlayersViewController") as! PlayersViewController
         
-        playersViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        playersViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
-        playersViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
         playersViewController.preferredContentSize = CGSize(width: 400, height: 700)
-        playersViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
         
         playersViewController.backText = backText
         playersViewController.backImage = backImage
         playersViewController.completion = completion
         playersViewController.refresh = true
         
-        viewController.present(playersViewController, animated: true, completion: nil)
+        viewController.present(playersViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
     }
     
     private func dismiss() {

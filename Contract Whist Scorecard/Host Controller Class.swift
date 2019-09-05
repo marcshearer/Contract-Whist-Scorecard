@@ -622,11 +622,15 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
     
     private func showGamePreview(selectedPlayers: [PlayerMO], showCompletion: (()->())? = nil) {
         
-        self.gamePreviewViewController = GamePreviewViewController.show(from: parentViewController, selectedPlayers: selectedPlayers, title: "Host a Game", backText: "", readOnly: false, faceTimeAddress: self.faceTimeAddress, rabbitMQService: self.rabbitMQHost, computerPlayerDelegates: self.computerPlayers, delegate: self, showCompletion: showCompletion)
+        if let viewController = parentViewController as? CustomViewController {
+            self.gamePreviewViewController = GamePreviewViewController.show(from: viewController, selectedPlayers: selectedPlayers, title: "Host a Game", backText: "", readOnly: false, faceTimeAddress: self.faceTimeAddress, rabbitMQService: self.rabbitMQHost, computerPlayerDelegates: self.computerPlayers, delegate: self, showCompletion: showCompletion)
+        }
     }
     
     private func showSelection(showCompletion: (()->())? = nil, completion: (([PlayerMO]?)->())? = nil) {
-        self.selectionViewController = SelectionViewController.show(from: parentViewController, existing: self.selectionViewController, mode: .invitees, thisPlayer: self.playerData[0].email, formTitle: "Choose Players", smallFormTitle: "Select", backText: "", backImage: "back", completion: completion, showCompletion: showCompletion, gamePreviewDelegate: self)
+        if let viewController = parentViewController as? CustomViewController {
+            self.selectionViewController = SelectionViewController.show(from: viewController, existing: self.selectionViewController, mode: .invitees, thisPlayer: self.playerData[0].email, formTitle: "Choose Players", smallFormTitle: "Select", backText: "", backImage: "back", completion: completion, showCompletion: showCompletion, gamePreviewDelegate: self)
+        }
     }
     
     

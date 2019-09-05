@@ -1034,22 +1034,18 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: UIViewController, backText: String = "Back", backImage: String = "back", completion: (()->())?){
+    class public func show(from viewController: CustomViewController, backText: String = "Back", backImage: String = "back", completion: (()->())?){
         
         let storyboard = UIStoryboard(name: "SettingsViewController", bundle: nil)
         let settingsViewController: SettingsViewController = storyboard.instantiateViewController(withIdentifier: "SettingsViewController") as! SettingsViewController
         
-        settingsViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        settingsViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
-        settingsViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
         settingsViewController.preferredContentSize = CGSize(width: 400, height: 700)
-        settingsViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
         
         settingsViewController.backText = backText
         settingsViewController.backImage = backImage
         settingsViewController.completion = completion
         
-        viewController.present(settingsViewController, animated: true, completion: nil)
+        viewController.present(settingsViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
     }
     
     private func dismiss() {

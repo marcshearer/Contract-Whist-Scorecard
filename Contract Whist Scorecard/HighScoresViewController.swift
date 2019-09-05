@@ -291,21 +291,17 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: UIViewController, backText: String = "Back", backImage: String = "back"){
+    class public func show(from viewController: CustomViewController, backText: String = "Back", backImage: String = "back"){
         
         let storyboard = UIStoryboard(name: "HighScoresViewController", bundle: nil)
         let highScoresViewController: HighScoresViewController = storyboard.instantiateViewController(withIdentifier: "HighScoresViewController") as! HighScoresViewController
         
-        highScoresViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        highScoresViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
-        highScoresViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
         highScoresViewController.preferredContentSize = CGSize(width: 400, height: 700)
-        highScoresViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
         
         highScoresViewController.backText = backText
         highScoresViewController.backImage = backImage
         
-        viewController.present(highScoresViewController, animated: true, completion: nil)
+        viewController.present(highScoresViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
     }
     
     private func dismiss() {

@@ -291,21 +291,17 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: UIViewController, round: Int, thisPlayer: Int) {
+    class public func show(from viewController: CustomViewController, round: Int, thisPlayer: Int) {
         
         let storyboard = UIStoryboard(name: "ReviewViewController", bundle: nil)
         let reviewViewController = storyboard.instantiateViewController(withIdentifier: "ReviewViewController") as! ReviewViewController
         
-        reviewViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        reviewViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
-        reviewViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
         reviewViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
-        reviewViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
         
         reviewViewController.round = round
         reviewViewController.thisPlayer = thisPlayer
         
-        viewController.present(reviewViewController, animated: true, completion: nil)
+        viewController.present(reviewViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
         
     }
     

@@ -1528,16 +1528,12 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: UIViewController, backText: String = "", backImage: String = "back", formTitle: String? = nil, purpose: CommsConnectionPurpose? = nil, matchDeviceName: String? = nil, completion: (()->())? = nil){
+    class public func show(from viewController: CustomViewController, backText: String = "", backImage: String = "back", formTitle: String? = nil, purpose: CommsConnectionPurpose? = nil, matchDeviceName: String? = nil, completion: (()->())? = nil){
         
         let storyboard = UIStoryboard(name: "ClientViewController", bundle: nil)
         let clientViewController: ClientViewController = storyboard.instantiateViewController(withIdentifier: "ClientViewController") as! ClientViewController
         
-        clientViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        clientViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
-        clientViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
         clientViewController.preferredContentSize = CGSize(width: 400, height: 700)
-        clientViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
         
         clientViewController.backText = backText
         clientViewController.backImage = backImage
@@ -1548,7 +1544,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         
         clientViewController.firstTime = true
         
-        viewController.present(clientViewController, animated: true, completion: nil)
+        viewController.present(clientViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
     }
     
     private func dismiss() {

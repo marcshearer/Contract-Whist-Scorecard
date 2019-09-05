@@ -88,11 +88,18 @@ class CustomViewController : UIViewController {
     }
     */
     
-    func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, popoverNonPhone: Bool = true, completion: (() -> Void)? = nil) {
+    func present(_ viewControllerToPresent: UIViewController, sourceView: UIView? = nil, animated flag: Bool, completion: (() -> Void)? = nil) {
         // Avoid silly popups on max sized phones
        
-        if !ScorecardUI.phoneSize() && popoverNonPhone {
+        if !ScorecardUI.phoneSize() && sourceView != nil {
             viewControllerToPresent.modalPresentationStyle = UIModalPresentationStyle.popover
+            viewControllerToPresent.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+            viewControllerToPresent.popoverPresentationController?.sourceView = sourceView
+            viewControllerToPresent.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
+            viewControllerToPresent.isModalInPopover = true
+            if let delegate = self as? UIPopoverPresentationControllerDelegate {
+                viewControllerToPresent.popoverPresentationController?.delegate = delegate
+            }
         }
         
         super.present(viewControllerToPresent, animated: flag, completion: completion)

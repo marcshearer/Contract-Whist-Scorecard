@@ -220,7 +220,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         }
     }
     
-    public func playHand(from viewController: UIViewController, sourceView: UIView, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil) {
+    public func playHand(from viewController: CustomViewController, sourceView: UIView, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil) {
         if self.isHosting || self.hasJoined {
             // Now play the hand
             if self.isHosting {
@@ -240,20 +240,13 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 let storyboard = UIStoryboard(name: "HandViewController", bundle: nil)
                 let handViewController = storyboard.instantiateViewController(withIdentifier: "HandViewController") as! HandViewController
 
-                if !ScorecardUI.phoneSize() {
-                    handViewController.isModalInPopover = true
-                    handViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-                    handViewController.popoverPresentationController?.sourceView = sourceView
-                    handViewController.preferredContentSize = CGSize(width: 400, height: 554)
-                } else {
-                    handViewController.isModalInPopover = false
-                }
-                
+                handViewController.preferredContentSize = CGSize(width: 400, height: 554)
+               
                 handViewController.delegate = viewController as? HandStatusDelegate
                 handViewController.computerPlayerDelegate = computerPlayerDelegate
                 
                 Utility.mainThread("playHand", execute: {
-                    viewController.present(handViewController, animated: true, completion: nil)
+                    viewController.present(handViewController, sourceView: sourceView, animated: true, completion: nil)
                 })
                 self.handViewController = handViewController
             } else if self.commsHandlerMode == .playHand {

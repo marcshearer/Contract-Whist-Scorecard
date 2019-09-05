@@ -107,7 +107,7 @@ class RoundSummaryViewController: CustomViewController {
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: UIViewController, existing roundSummaryViewController: RoundSummaryViewController! = nil, rounds: Int? = nil, cards: [Int]? = nil, bounce: Bool? = nil, suits: [Suit]? = nil) -> RoundSummaryViewController {
+    class public func show(from viewController: CustomViewController, existing roundSummaryViewController: RoundSummaryViewController! = nil, rounds: Int? = nil, cards: [Int]? = nil, bounce: Bool? = nil, suits: [Suit]? = nil) -> RoundSummaryViewController {
         
         var roundSummaryViewController: RoundSummaryViewController! = roundSummaryViewController
         
@@ -116,18 +116,14 @@ class RoundSummaryViewController: CustomViewController {
             roundSummaryViewController = storyboard.instantiateViewController(withIdentifier: "RoundSummaryViewController") as? RoundSummaryViewController
         }
         
-        roundSummaryViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        roundSummaryViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
-        roundSummaryViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
         roundSummaryViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
-        roundSummaryViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
         
         roundSummaryViewController.rounds = rounds
         roundSummaryViewController.cards = cards
         roundSummaryViewController.bounce = bounce
         roundSummaryViewController.suits = suits
         
-        viewController.present(roundSummaryViewController, animated: true, completion: nil)
+        viewController.present(roundSummaryViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
         
         return roundSummaryViewController
     }

@@ -787,7 +787,7 @@ class ScorepadViewController: CustomViewController,
    
     // MARK: - Function to present this view ==============================================================
     
-    class func show(from viewController: UIViewController, existing scorepadViewController: ScorepadViewController? = nil, scorepadMode: ScorepadMode? = nil, rounds: Int? = nil, cards: [Int]? = nil, bounce: Bool? = nil, bonus2: Bool!, suits: [Suit]? = nil, rabbitMQService: RabbitMQService? = nil, recoveryMode: Bool = false, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil ,completion: ((Bool)->())? = nil) -> ScorepadViewController {
+    class func show(from viewController: CustomViewController, existing scorepadViewController: ScorepadViewController? = nil, scorepadMode: ScorepadMode? = nil, rounds: Int? = nil, cards: [Int]? = nil, bounce: Bool? = nil, bonus2: Bool!, suits: [Suit]? = nil, rabbitMQService: RabbitMQService? = nil, recoveryMode: Bool = false, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil ,completion: ((Bool)->())? = nil) -> ScorepadViewController {
         var scorepadViewController: ScorepadViewController! = scorepadViewController
         
         if scorepadViewController == nil {

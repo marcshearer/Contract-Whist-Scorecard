@@ -511,16 +511,12 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: UIViewController, gameLocation: GameLocation, useCurrentLocation: Bool = true, mustChange: Bool = false, bannerColor: UIColor? = nil, completion: ((GameLocation?)->())? = nil) {
+    class public func show(from viewController: CustomViewController, gameLocation: GameLocation, useCurrentLocation: Bool = true, mustChange: Bool = false, bannerColor: UIColor? = nil, completion: ((GameLocation?)->())? = nil) {
         
         let storyboard = UIStoryboard(name: "LocationViewController", bundle: nil)
         let locationViewController = storyboard.instantiateViewController(withIdentifier: "LocationViewController") as! LocationViewController
         
-        locationViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        locationViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
-        locationViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
         locationViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
-        locationViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
         
         locationViewController.newLocation = gameLocation
         locationViewController.useCurrentLocation = useCurrentLocation
@@ -528,7 +524,7 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
         locationViewController.bannerColor = bannerColor
         locationViewController.completion = completion
         
-        viewController.present(locationViewController, animated: true, completion: nil)
+        viewController.present(locationViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
         
     }
     

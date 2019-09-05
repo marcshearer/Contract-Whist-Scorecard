@@ -634,14 +634,11 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     
     // MARK: - Function to show and dismiss this view  ============================================================================== -
     
-    public class func show(from viewController: UIViewController, specificEmail: String = "", descriptionMode: DescriptionMode = .none, backText: String = "Cancel", actionText: String = "Download", allowOtherPlayer: Bool = true, allowNewPlayer: Bool = true, completion: ((Int?, [PlayerDetail]?, [Bool]?)->())? = nil) {
+    public class func show(from viewController: CustomViewController, specificEmail: String = "", descriptionMode: DescriptionMode = .none, backText: String = "Cancel", actionText: String = "Download", allowOtherPlayer: Bool = true, allowNewPlayer: Bool = true, completion: ((Int?, [PlayerDetail]?, [Bool]?)->())? = nil) {
         
         let storyboard = UIStoryboard(name: "SelectPlayersViewController", bundle: nil)
         let selectPlayersViewController = storyboard.instantiateViewController(withIdentifier: "SelectPlayersViewController") as! SelectPlayersViewController
         
-        selectPlayersViewController.isModalInPopover = true
-        selectPlayersViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        selectPlayersViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
         selectPlayersViewController.preferredContentSize = CGSize(width: 400, height: 700)
         
         selectPlayersViewController.specificEmail = specificEmail
@@ -652,7 +649,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         selectPlayersViewController.allowNewPlayer = allowNewPlayer
         selectPlayersViewController.completion = completion
     
-        viewController.present(selectPlayersViewController, animated: true, completion: nil)
+        viewController.present(selectPlayersViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
     }
     
     private func dismiss(selected: Int? = nil, playerList: [PlayerDetail]? = nil, selection: [Bool]? = nil)->() {

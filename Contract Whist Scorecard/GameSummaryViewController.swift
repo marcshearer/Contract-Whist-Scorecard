@@ -536,23 +536,19 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: UIViewController, firstGameSummary: Bool = false, gameSummaryMode: ScorepadMode? = nil, rounds: Int? = nil, completion: ((GameSummaryReturnMode)->())?) -> GameSummaryViewController {
+    class public func show(from viewController: CustomViewController, firstGameSummary: Bool = false, gameSummaryMode: ScorepadMode? = nil, rounds: Int? = nil, completion: ((GameSummaryReturnMode)->())?) -> GameSummaryViewController {
         
         let storyboard = UIStoryboard(name: "GameSummaryViewController", bundle: nil)
         let gameSummaryViewController: GameSummaryViewController = storyboard.instantiateViewController(withIdentifier: "GameSummaryViewController") as! GameSummaryViewController
  
-        gameSummaryViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        gameSummaryViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
-        gameSummaryViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
         gameSummaryViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
-        gameSummaryViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
         
         gameSummaryViewController.firstGameSummary = firstGameSummary
         gameSummaryViewController.gameSummaryMode = gameSummaryMode
         gameSummaryViewController.rounds = rounds
         gameSummaryViewController.completion = completion
         
-        viewController.present(gameSummaryViewController, animated: true, completion: nil)
+        viewController.present(gameSummaryViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
         
         return gameSummaryViewController
     }

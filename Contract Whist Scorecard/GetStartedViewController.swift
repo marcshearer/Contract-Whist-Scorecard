@@ -296,19 +296,15 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: UIViewController, completion: (()->())? = nil){
+    class public func show(from viewController: CustomViewController, completion: (()->())? = nil){
         
         let storyboard = UIStoryboard(name: "GetStartedViewController", bundle: nil)
         let getStartedViewController: GetStartedViewController = storyboard.instantiateViewController(withIdentifier: "GetStartedViewController") as! GetStartedViewController
         
-        getStartedViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        getStartedViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
-        getStartedViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
         getStartedViewController.preferredContentSize = CGSize(width: 400, height: 700)
-        getStartedViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
         getStartedViewController.completion = completion
         
-        viewController.present(getStartedViewController, animated: true, completion: nil)
+        viewController.present(getStartedViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
     }
     
     private func dismiss() {

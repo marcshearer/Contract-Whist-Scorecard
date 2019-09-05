@@ -242,20 +242,16 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: UIViewController, completion: (()->())? = nil){
+    class public func show(from viewController: CustomViewController, completion: (()->())? = nil){
         
         let storyboard = UIStoryboard(name: "SyncViewController", bundle: nil)
         let SyncViewController: SyncViewController = storyboard.instantiateViewController(withIdentifier: "SyncViewController") as! SyncViewController
         
-        SyncViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        SyncViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
-        SyncViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
         SyncViewController.preferredContentSize = CGSize(width: 400, height: 700)
-        SyncViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
         
         SyncViewController.completion = completion
         
-        viewController.present(SyncViewController, animated: true, completion: nil)
+        viewController.present(SyncViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
     }
     
     private func dismiss() {

@@ -798,15 +798,11 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class func show(from viewController: UIViewController, selectedPlayers: [PlayerMO], title: String = "Preview", backText: String = "", readOnly: Bool = true, faceTimeAddress: [String] = [], rabbitMQService: RabbitMQService? = nil, computerPlayerDelegates: [Int : ComputerPlayerDelegate]? = nil, delegate: GamePreviewDelegate? = nil, showCompletion: (()->())? = nil) -> GamePreviewViewController {
+    class func show(from viewController: CustomViewController, selectedPlayers: [PlayerMO], title: String = "Preview", backText: String = "", readOnly: Bool = true, faceTimeAddress: [String] = [], rabbitMQService: RabbitMQService? = nil, computerPlayerDelegates: [Int : ComputerPlayerDelegate]? = nil, delegate: GamePreviewDelegate? = nil, showCompletion: (()->())? = nil) -> GamePreviewViewController {
         let storyboard = UIStoryboard(name: "GamePreviewViewController", bundle: nil)
         let gamePreviewViewController = storyboard.instantiateViewController(withIdentifier: "GamePreviewViewController") as! GamePreviewViewController
         
-        gamePreviewViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        gamePreviewViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
-        gamePreviewViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
         gamePreviewViewController.preferredContentSize = CGSize(width: 400, height: 700)
-        gamePreviewViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
         
         gamePreviewViewController.selectedPlayers = selectedPlayers
         gamePreviewViewController.formTitle = title
@@ -824,7 +820,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         
         gamePreviewViewController.firstTime =  true
         
-        viewController.present(gamePreviewViewController, animated: true, completion: {
+        viewController.present(gamePreviewViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: {
             showCompletion?()
         })
         return gamePreviewViewController

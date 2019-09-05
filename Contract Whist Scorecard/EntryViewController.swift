@@ -109,7 +109,6 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
     override func viewWillAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.view.setNeedsLayout()
-        self.entryTableView.reloadData()
         firstTime = true
     }
     
@@ -118,7 +117,6 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
         
         self.scorecard.reCenterPopup(self)
         self.view.setNeedsLayout()
-        self.entryTableView.reloadData()
     }
 
     override func viewWillLayoutSubviews() {
@@ -151,15 +149,19 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
         
         self.setupSize(to: entryView.safeAreaLayoutGuide.layoutFrame.size)
      
+        if firstTime {
+            self.entryTableView.reloadData()
+        }
+        
         self.firstTime = false
         
     }
 
     func setupSize(to size: CGSize) {
         self.nameWidth = (size.width - 20.0) - (CGFloat(columns - 1) * self.scoreWidth) - (CGFloat(columns) * 2.0)
-        self.buttonSize = (ScorecardUI.landscapePhone() ? min(50.0, (ScorecardUI.screenWidth / 10.0) - 12.0) : 50.0)
-        let buttonsAcross = Int((ScorecardUI.screenWidth - self.buttonSpacing) / (self.buttonSize + self.buttonSpacing))
-        self.buttonSize = ((ScorecardUI.screenWidth - self.buttonSpacing) / CGFloat(buttonsAcross)) - self.buttonSpacing
+        self.buttonSize = (ScorecardUI.landscapePhone() ? min(50.0, (self.view.safeAreaLayoutGuide.layoutFrame.width / 10.0) - 12.0) : 50.0)
+        let buttonsAcross = Int((self.view.safeAreaLayoutGuide.layoutFrame.width - self.buttonSpacing) / (self.buttonSize + self.buttonSpacing))
+        self.buttonSize = ((self.view.safeAreaLayoutGuide.layoutFrame.width - self.buttonSpacing) / CGFloat(buttonsAcross)) - self.buttonSpacing
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -189,7 +191,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             return 96.0
         case 2:
             let buttons = self.scorecard.roundCards(self.scorecard.selectedRound, rounds: self.rounds, cards: self.cards, bounce: self.bounce) + 1
-            let buttonsAcross = Int((ScorecardUI.screenWidth - self.buttonSpacing) / (self.buttonSize + self.buttonSpacing))
+            let buttonsAcross = Int((self.view.safeAreaLayoutGuide.layoutFrame.width - self.buttonSpacing) / (self.buttonSize + self.buttonSpacing))
             let buttonRows = (CGFloat(buttons) / CGFloat(buttonsAcross)).rounded(.up)
             return (buttonRows * (buttonSize + buttonSpacing)) + 16.0
         default:
@@ -635,11 +637,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             entryViewController = storyboard.instantiateViewController(withIdentifier: "EntryViewController") as? EntryViewController
         }
         
-        entryViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        entryViewController.popoverPresentationController?.sourceView = viewController.popoverPresentationController?.sourceView ?? viewController.view
-        entryViewController.popoverPresentationController?.sourceRect = CGRect(x: UIScreen.main.bounds.midX, y: UIScreen.main.bounds.midY, width: 0 ,height: 0)
         entryViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
-        entryViewController.popoverPresentationController?.delegate = viewController as? UIPopoverPresentationControllerDelegate
         
         entryViewController.reeditMode = reeditMode
         entryViewController.rounds = rounds
@@ -654,7 +652,7 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             entryViewController!.transitioningDelegate = viewController
         }
         
-        viewController.present(entryViewController, animated: true, popoverNonPhone: true, completion: nil)
+        viewController.present(entryViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
         
         return entryViewController
     }

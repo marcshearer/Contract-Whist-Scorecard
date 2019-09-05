@@ -116,18 +116,18 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     
     // MARK: - method to show this view controller ============================================================================== -
     
-    static public func show(from sourceViewController: UIViewController, playerDetail: PlayerDetail, mode: DetailMode, sourceView: UIView, completion: ((PlayerDetail?,Bool)->())? = nil) {
+    static public func show(from sourceViewController: CustomViewController, playerDetail: PlayerDetail, mode: DetailMode, sourceView: UIView, completion: ((PlayerDetail?,Bool)->())? = nil) {
         let storyboard = UIStoryboard(name: "PlayerDetailViewController", bundle: nil)
         let playerDetailViewController = storyboard.instantiateViewController(withIdentifier: "PlayerDetailViewController") as! PlayerDetailViewController
-        playerDetailViewController.isModalInPopover = true
-        playerDetailViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        playerDetailViewController.popoverPresentationController?.sourceView = sourceView
+
         playerDetailViewController.preferredContentSize = CGSize(width: 400, height: 600)
+
         playerDetailViewController.playerDetail = playerDetail
         playerDetailViewController.mode = mode
         playerDetailViewController.sourceView = sourceView
         playerDetailViewController.callerCompletion = completion
-        sourceViewController.present(playerDetailViewController, animated: true, completion: nil)
+        
+        sourceViewController.present(playerDetailViewController, sourceView: sourceView, animated: true, completion: nil)
     }
     
     private func dismiss(playerDetail: PlayerDetail? = nil, deletePlayer: Bool = false) {

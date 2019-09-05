@@ -385,16 +385,16 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
     
     // MARK: - method to show and dismiss this view controller ============================================================================== -
     
-    static public func show(from sourceViewController: UIViewController, gameDetail: HistoryGame, sourceView: UIView?, completion: ((HistoryGame?)->())? = nil) {
+    static public func show(from sourceViewController: CustomViewController, gameDetail: HistoryGame, sourceView: UIView?, completion: ((HistoryGame?)->())? = nil) {
         let storyboard = UIStoryboard(name: "HistoryDetailViewController", bundle: nil)
         let historyDetailViewController = storyboard.instantiateViewController(withIdentifier: "HistoryDetailViewController") as! HistoryDetailViewController
-        historyDetailViewController.isModalInPopover = true
-        historyDetailViewController.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
-        historyDetailViewController.popoverPresentationController?.sourceView = sourceView
+
         historyDetailViewController.preferredContentSize = CGSize(width: 400, height: 600)
+
         historyDetailViewController.gameDetail = gameDetail
         historyDetailViewController.callerCompletion = completion
-        sourceViewController.present(historyDetailViewController, animated: true, completion: nil)
+
+        sourceViewController.present(historyDetailViewController, sourceView: sourceView, animated: true, completion: nil)
     }
     
     private func dismiss() {

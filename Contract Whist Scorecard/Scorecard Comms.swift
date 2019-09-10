@@ -199,6 +199,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     }
     
     public func resetConnection() {
+        self.commsHandlerMode = .none
         if self.isHosting || self.isSharing {
             // Refresh state to all devices
             self.commsDelegate?.reset()
@@ -479,48 +480,49 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     }
     
     public func refreshState(to commsPeer: CommsPeer! = nil) {
-        
-        var lastRefresh = self.lastRefresh
-        if commsPeer != nil {
-            if let lastPeerRefresh = self.lastPeerRefresh[commsPeer.deviceName] {
-                if lastRefresh == nil || lastPeerRefresh > lastRefresh! {
-                    lastRefresh = lastPeerRefresh
-                }
-            } else {
-                // No previous refresh to this device
-                lastRefresh = Date(timeIntervalSinceReferenceDate: 0.0)
-            }
-         }
-        
-        // Only send 1 refresh a second to a particular device!
-        if lastRefresh?.timeIntervalSinceNow ?? TimeInterval(-2.0) < TimeInterval(-1.0) {
-        
-            if self.isHosting {
-                // Hosting online game
-                
-                if !self.gameInProgress || self.handState == nil {
-                    // Game not started yet - wait
-                    self.sendInstruction("wait", to: commsPeer)
-                    self.sendAutoPlay(to: commsPeer)
+        Utility.mainThread {
+            var lastRefresh = self.lastRefresh
+            if commsPeer != nil {
+                if let lastPeerRefresh = self.lastPeerRefresh[commsPeer.deviceName] {
+                    if lastRefresh == nil || lastPeerRefresh > lastRefresh! {
+                        lastRefresh = lastPeerRefresh
+                    }
                 } else {
-                    // Game in progress - need to resend state - luckily have what we need in handState
-                    self.sendPlay(rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce, bonus2: self.handState.bonus2, suits: self.handState.suits, to: commsPeer)
-                    self.sendScores(to: commsPeer)
-                    self.sendHandState(to: commsPeer)
+                    // No previous refresh to this device
+                    lastRefresh = Date(timeIntervalSinceReferenceDate: 0.0)
                 }
-                
-            } else if self.isSharing {
-                // Sharing
-            
-                self.sendScores(to: commsPeer)
             }
             
-            // Update last refresh
-            if commsPeer == nil {
-                // Have updated all peers
-                self.lastRefresh = Date()
-            } else {
-                self.lastPeerRefresh[commsPeer.deviceName] = Date()
+            // Only send 1 refresh a second to a particular device!
+            if lastRefresh?.timeIntervalSinceNow ?? TimeInterval(-2.0) < TimeInterval(-1.0) {
+                
+                if self.isHosting {
+                    // Hosting online game
+                    
+                    if !self.gameInProgress || self.handState == nil {
+                        // Game not started yet - wait
+                        self.sendInstruction("wait", to: commsPeer)
+                        self.sendAutoPlay(to: commsPeer)
+                    } else {
+                        // Game in progress - need to resend state - luckily have what we need in handState
+                        self.sendPlay(rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce, bonus2: self.handState.bonus2, suits: self.handState.suits, to: commsPeer)
+                        self.sendScores(to: commsPeer)
+                        self.sendHandState(to: commsPeer)
+                    }
+                    
+                } else if self.isSharing {
+                    // Sharing
+                    
+                    self.sendScores(to: commsPeer)
+                }
+                
+                // Update last refresh
+                if commsPeer == nil {
+                    // Have updated all peers
+                    self.lastRefresh = Date()
+                } else {
+                    self.lastPeerRefresh[commsPeer.deviceName] = Date()
+                }
             }
         }
     }

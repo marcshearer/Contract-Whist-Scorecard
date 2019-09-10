@@ -102,7 +102,7 @@ class CoreData {
         return results
     }
     
-    class func update(errorHandler: (() -> ())! = nil, updateLogic: () -> ()) -> Bool {
+    class func update(errorHandler: (() -> ())! = nil, updateLogic: () -> (), calledFrom: String = #function) -> Bool {
         
         if let context = CoreData.context {
 
@@ -117,7 +117,7 @@ class CoreData {
                         if errorHandler != nil {
                             errorHandler()
                         } else {
-                            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+                            fatalError("Unresolved error \(nserror) when called from \(calledFrom), \(nserror.userInfo)")
                         }
                     }
                 }

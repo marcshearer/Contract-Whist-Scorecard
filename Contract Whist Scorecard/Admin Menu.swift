@@ -10,7 +10,7 @@ import UIKit
 
 class AdminMenu {
     
-    class func present(options: [(String, ()->(), Bool)]? = nil) {
+    class func present(message: String, options: [(String, ()->(), Bool)]? = nil) {
        
         // Check if any additional options
         var availableOptions = false
@@ -45,7 +45,7 @@ class AdminMenu {
                     Scorecard.shared.sendTestConnection()
                 })
                 actionSheet.add("Show connections", handler: {
-                    Scorecard.shared.commsDelegate?.connectionInfo()
+                    Scorecard.shared.commsDelegate?.connectionInfo(message: message)
                 })
             }
             

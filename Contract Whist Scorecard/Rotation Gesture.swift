@@ -10,9 +10,9 @@ import UIKit
 
 class RotationGesture {
     
-    class func adminMenu(recognizer:UIRotationGestureRecognizer, options: [(String, ()->(), Bool)]? = nil) {
+    class func adminMenu(recognizer:UIRotationGestureRecognizer, message: String = "", options: [(String, ()->(), Bool)]? = nil) {
         if recognizer.state == .ended {
-            AdminMenu.present(options: options)
+            AdminMenu.present(message: message, options: options)
         }
     }
 }
@@ -44,7 +44,7 @@ extension HandViewController {
 extension ClientViewController {
     
     @IBAction internal func rotationGesture(recognizer:UIRotationGestureRecognizer) {
-        RotationGesture.adminMenu(recognizer: recognizer)
+        RotationGesture.adminMenu(recognizer: recognizer, message: "App state: \(self.appState?.rawValue ?? "Unknown")")
     }
 }
 

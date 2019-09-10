@@ -124,7 +124,7 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsServerHandlerDelegat
         }
     }
     
-    public func connectionInfo() {
+    public func connectionInfo(message: String) {
     }
     
     public func debugMessage(_ message: String, device: String?, force: Bool = false) {

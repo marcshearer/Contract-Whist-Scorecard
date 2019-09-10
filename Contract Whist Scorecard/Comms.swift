@@ -190,7 +190,7 @@ protocol CommsHandlerDelegate : class {
     
     func reset(reason: String?)
 
-    func connectionInfo()
+    func connectionInfo(message: String)
     
     func debugMessage(_ message: String, device: String?, force: Bool)
 }

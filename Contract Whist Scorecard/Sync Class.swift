@@ -1392,9 +1392,6 @@ class Sync {
                             if CoreData.update(updateLogic: {
                                 var thumbnail: Data?
                                 thumbnail = Utility.objectImage(cloudObject: cloudObject, forKey: "thumbnail") as Data?
-                                if playerMO.name == "Emma" && thumbnail == nil {
-                                    print("STOP")
-                                }
                                 playerMO.thumbnail = thumbnail
                                 playerMO.thumbnailDate = Utility.objectDate(cloudObject: cloudObject, forKey: "thumbnailDate")
                             }) {

@@ -121,13 +121,13 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsS
     }
     
     internal func reset(reason: String? = nil) {
-        // Note - overridden in client service
+        // Note - overridden in client service - just disconnect and wait for client to reconnect
         self.debugMessage("Resetting")
         self.disconnect(reason: reason ?? "Reset", reconnect: true)
     }
     
-    internal func connectionInfo() {
-        var message = "Peers"
+    internal func connectionInfo(message: String) {
+        var message = message + "\n\nPeers"
         self.forEachPeer { (rabbitMQPeer) in
             message = message + "\nDevice: \(rabbitMQPeer.deviceName), Player: \(rabbitMQPeer.playerName!), state: \(rabbitMQPeer.state), sessionUUID: \((rabbitMQPeer.sessionUUID == nil ? "nil" : rabbitMQPeer.sessionUUID!))"
         }

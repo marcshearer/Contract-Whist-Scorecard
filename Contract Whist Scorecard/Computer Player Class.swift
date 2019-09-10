@@ -41,9 +41,7 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
     private let autoPlayTimeUnit = 1.0
     
    init(email: String, name: String, deviceName: String, hostPeer: CommsPeer, playerNumber: Int) {
-        
-        // Config.autoPlayTimeUnit = 0.05 // TODO Remove this
-        
+                
         // Store properties
         self.thisPlayer = email
         self.thisPlayerName = name

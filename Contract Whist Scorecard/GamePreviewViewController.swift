@@ -448,7 +448,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     }
     
     public func showStatus(status: String) {
-        self.bannerContinuationLabel.text = status
+        self.bannerContinuationLabel?.text = status
     }
     
     private func goToScorepad() {

@@ -253,7 +253,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
                 addPlayer(name: name, email: peer.playerEmail!, playerMO: playerMO, peer: peer, inviteStatus: .none, disconnectReason: "\(name ?? "This player") has not been invited to a game on this device")
             }
         } else {
-            addPlayer(name: name, email: peer.playerEmail!, playerMO: playerMO, peer: peer)
+            addPlayer(name: peer.playerName!, email: peer.playerEmail!, playerMO: playerMO, peer: peer)
         }
         return true
     }
@@ -284,6 +284,10 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
         
         // Add to list
         self.unique += 1
+        var playerMO = playerMO
+        if playerMO == nil {
+            playerMO = self.createLocalPlayer(name: name, email: email, peer: peer)
+        }
         playerData.insert(PlayerData(name: name, email: email, playerMO: playerMO, peer: peer, unique: self.unique, disconnectReason: disconnectReason, inviteStatus: inviteStatus),
                           at: self.visiblePlayers)
         self.refreshPlayers()
@@ -321,6 +325,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
                             }
                         }
                         if !error {
+                            Utility.debugMessage("Host", "Connected to \(peer.playerName!)")
                             self.scorecard.refreshState(to: peer)
                             self.lastMessage = "" // Clear last message to force re-transmission
                             self.sendPlayers()
@@ -776,21 +781,29 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
             var playerMO = playerData.playerMO
             if playerMO == nil {
                 // Not found - need to create the player locally
-                let playerDetail = PlayerDetail()
-                playerDetail.name = playerData.name
-                playerDetail.email = playerData.email
-                playerDetail.dedupName()
-                playerMO = playerDetail.createMO()
-                // Get picture
-                if let peer = playerData.peer {
-                    self.scorecard.requestPlayerThumbnail(from: peer, playerEmail: playerDetail.email)
-                }
+                playerMO = self.createLocalPlayer(name: playerData.name, email: playerData.email, peer: playerData.peer)
             }
             playerNumber += 1
             self.selectedPlayers.append(playerMO!)
             self.faceTimeAddress.append(playerData.faceTimeAddress ?? "")
         }
         self.scorecard.updateSelectedPlayers(self.selectedPlayers)
+    }
+    
+    private func createLocalPlayer(name: String, email: String, peer: CommsPeer? = nil) -> PlayerMO! {
+        let playerDetail = PlayerDetail()
+        playerDetail.name = name
+        playerDetail.email = email
+        playerDetail.dedupName()
+        if let playerMO = playerDetail.createMO() {
+            // Get picture
+            if let peer = peer {
+                self.scorecard.requestPlayerThumbnail(from: peer, playerEmail: playerDetail.email)
+            }
+            return playerMO
+        } else {
+            return nil
+        }
     }
     
     private func resetResumedPlayers() {
@@ -825,7 +838,6 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
         self.scorecard.sendScores = false
         self.scorecard.commsDelegate?.disconnect(reason: "\(self.playerData[0].name) has stopped hosting", reconnect: false)
         self.stopHostBroadcast(completion: {
-            Utility.debugMessage("host", "Completion") // TODO remove
             self.takeDelegates(nil)
             self.scorecard.commsDelegate = nil
             self.hostService = nil

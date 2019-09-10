@@ -14,12 +14,12 @@ struct QueueEntry {
     let peer: CommsPeer?
 }
 
-enum AppState {
-    case notConnected
-    case connecting
-    case reconnecting
-    case connected
-    case waiting
+enum AppState: String {
+    case notConnected = "Not connected"
+    case connecting = "Connecting"
+    case reconnecting = "Re-connecting"
+    case connected = "Connected"
+    case waiting = "Waiting to start"
 }
 
 class ClientViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate, GamePreviewDelegate, UIPopoverPresentationControllerDelegate {
@@ -61,6 +61,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
 
     private var idleTimer: Timer!
     private var connectingTimer: Timer!
+    private var refreshTimer: Timer!
     private var finishing = false
 
     private var newGame: Bool!
@@ -72,9 +73,10 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     private var multipeerClient: MultipeerClientService?
     private var rabbitMQClient: RabbitMQClientService?
     private var clientService: CommsClientHandlerDelegate?
-    private var appState: AppState!
+    internal var appState: AppState!
     private var invite: Invite!
     private var recoveryMode = false
+    private var recoveryOnlineMode: CommsConnectionMode!
     private let whisper = Whisper()
     private var lastStatus = ""
     private var playerConnected: [String : Bool] = [:]
@@ -135,6 +137,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         
         // Set recovery mode
         self.recoveryMode = self.scorecard.recoveryMode
+        self.recoveryOnlineMode = self.scorecard.recoveryOnlineMode
         
         // Update instructions / title
         self.titleBar.title = self.formTitle
@@ -158,7 +161,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                 self.thisPlayer = self.scorecard.recoveryConnectionEmail
                 self.thisPlayerName = self.scorecard.findPlayerByEmail(self.thisPlayer)?.name
                 self.matchDeviceName = self.scorecard.recoveryConnectionDevice
-                if self.scorecard.recoveryOnlineMode == .invite {
+                if self.recoveryOnlineMode == .invite {
                     if self.thisPlayer == nil {
                         self.alertMessage("Error recovering game", okHandler: {
                             self.exitClient()
@@ -239,7 +242,10 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         self.available = []
         self.appStateChange(to: .notConnected)
         self.refreshStatus()
-        self.createConnections()
+        self.scorecard.commsHandlerMode = .none
+        Utility.executeAfter(delay: 1.0) {
+            self.createConnections()
+        }
     }
 
     // MARK: - Data Delegate Handlers ==================================================== -
@@ -280,10 +286,10 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                 case "wait":
                     // No game running - need to wait for it to start
                     if self.appState != .waiting {
-                        self.dismissAll(completion: {
+                        self.dismissAll(includeGamePreview: false) {
                             self.appStateChange(to: .waiting)
                             self.reflectState(peer: peer)
-                        })
+                        }
                     }
                    
                 case "settings":
@@ -462,6 +468,11 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                     if self.commsPurpose == .playing {
                         var lastCards: [Card]!
                         var lastToLead: Int!
+                        
+                        // Stop any refresh request pending
+                        self.refreshTimer?.invalidate()
+                        self.refreshTimer = nil
+                        
                         let cardNumbers = data!["cards"] as! [Int]
                         let hand = Hand(fromNumbers: cardNumbers, sorted: true)
                         let trick = data!["trick"] as! Int
@@ -582,6 +593,8 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         self.scorecard.commsHandlerMode = mode
         self.scorecard.recoveryMode = false
         self.recoveryMode = true
+        self.recoveryOnlineMode = peer.mode
+        self.matchDeviceName = peer.deviceName
         self.showScorepad()
     }
     
@@ -650,11 +663,14 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                 }
             }
             if self.matchDeviceName != nil && peer.deviceName == self.matchDeviceName {
-                // Recovering/reacting to notification and this is the device I'm waiting for!
-                self.checkFaceTime(peer: peer, completion: { (faceTimeAddress) in
-                    _ = self.connect(peer: peer, faceTimeAddress: faceTimeAddress)
+                // Recovering/reacting to notification and this is the device I'm waiting for
+                if !peer.autoReconnect {
+                    // Not trying to reconnect at a lower level so reconnect here
+
+                    // Assume that FaceTime connection had already been sent
+                    _ = self.connect(peer: peer, faceTimeAddress: nil)
                     self.reflectState(peer: peer)
-                })
+                }
             }
         }
     }
@@ -689,7 +705,6 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                     if !self.gameOver && !self.scorecard.isViewing {
                         // Don't dismiss if game over - allow time to review
                         self.dismissAll(reason != nil && reason != "" && reason != "Reset" , reason: reason ?? "", completion: {
-                            self.clientService?.start(email: self.thisPlayer, name: self.thisPlayerName)
                             UIApplication.shared.isIdleTimerDisabled = false
                         })
                     }
@@ -699,16 +714,11 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                         self.whisper.show("Connection lost. Recovering...")
                     }
                     
-                case .connected :
+                case .connected:
                     // Connected
                     self.appStateChange(to: .waiting)
                     
                     self.whisper.hide("Connection restored")
-                    
-                    if self.scorecard.gameInProgress {
-                        // Get up-to-date
-                        self.scorecard.sendRefreshRequest(to: peer)
-                    }
                     
                 case .connecting:
                     // Connecting
@@ -724,11 +734,13 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                 if peer.state != .notConnected {
                     // Set framework based on this connection (for reconnect at lower level)
                     self.selectFramework(framework: peer.framework)
-                    self.reflectState(peer: peer)
                     
                     // Don't allow device to timeout
                     UIApplication.shared.isIdleTimerDisabled = true
                 }
+                
+                // Reflect state in data structure
+                self.reflectState(peer: peer)
             }
             
             // Check if can change player
@@ -768,7 +780,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     private func createConnections() {
         // Create nearby comms service, take delegates and start listening
-        if !self.recoveryMode || self.scorecard.recoveryOnlineMode == .broadcast {
+        if !self.recoveryMode || self.recoveryOnlineMode == .broadcast {
             self.multipeerClient = MultipeerClientService(purpose: self.commsPurpose, serviceID: self.scorecard.serviceID(self.commsPurpose), deviceName: Scorecard.deviceName)
             self.multipeerClient?.stateDelegate = self
             self.multipeerClient?.dataDelegate = self
@@ -777,7 +789,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
         
         // Create online comms service, take delegates and start listening
-        if self.commsPurpose == .playing && self.scorecard.onlineEnabled && (!self.recoveryMode || self.scorecard.recoveryOnlineMode == .invite) {
+        if self.commsPurpose == .playing && self.scorecard.onlineEnabled && (!self.recoveryMode || self.recoveryOnlineMode == .invite) {
             self.rabbitMQClient = RabbitMQClientService(purpose: self.commsPurpose, serviceID: nil, deviceName: Scorecard.deviceName)
             self.rabbitMQClient?.stateDelegate = self
             self.rabbitMQClient?.dataDelegate = self
@@ -863,6 +875,14 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                     }
                 }
             }
+        }
+    }
+    
+    private func sendRefreshRequest(to peer: CommsPeer) {
+        // Send refresh if don't receive response in next second
+        self.refreshTimer = Timer(timeInterval: 1.0, repeats: false) { (_) in
+            Utility.debugMessage("client", "Refresh request")
+            self.scorecard.sendRefreshRequest(to: peer)
         }
     }
     
@@ -980,12 +1000,14 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                     } else {
                         serviceText = "Join \(name)'s game"
                     }
-                case .connected, .recovering:
+                case .connected:
                     if self.commsPurpose == .sharing {
                         serviceText = "Viewing Scorecard on\n\(availableFound.peer.deviceName).\nWaiting to start..."
                     } else {
                         serviceText = "Connected to \(name). Waiting to start..."
                     }
+                case .recovering:
+                    serviceText = "Trying to recover connection to \(name)..."
                 case .connecting:
                     if self.recoveryMode {
                         serviceText = "Trying to reconnect to \(name)..."
@@ -1411,7 +1433,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         self.clientTableView.reloadData()
     }
     
-    private func dismissAll(_ alert: Bool = false, reason: String = "", completion: (()->())? = nil) {
+    private func dismissAll(_ alert: Bool = false, reason: String = "", includeGamePreview: Bool = true, completion: (()->())? = nil) {
         var reason = reason
         if reason == "" {
             reason = "Connection with remote device lost"
@@ -1428,7 +1450,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                 self.alertCompletion(alert: alert, message: reason, completion: completion)
             }
         } else {
-            self.dismissAllInternal(reason: reason, completion: completion)
+            self.dismissAllInternal(reason: reason, includeGamePreview: includeGamePreview, completion: completion)
         }
     }
     
@@ -1441,7 +1463,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    private func dismissAllInternal(reason: String, completion: (()->())? = nil) {
+    private func dismissAllInternal(reason: String, includeGamePreview: Bool = true, completion: (()->())? = nil) {
         
         func doCompletion() {
             Utility.mainThread {
@@ -1456,10 +1478,10 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
         
         func dismissScorepad() {
-            self.scorepadViewController.roundSummaryViewController = nil
-            self.scorepadViewController.gameSummaryViewController = nil
+            self.scorepadViewController?.roundSummaryViewController = nil
+            self.scorepadViewController?.gameSummaryViewController = nil
             self.scorecard.handViewController = nil
-            self.scorepadViewController.dismiss(animated: true, completion: {
+            self.scorepadViewController?.dismiss(animated: true, completion: {
                 self.scorepadViewController = nil
                 doCompletion()
             })
@@ -1490,16 +1512,18 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         if self.scorepadViewController == nil && self.gamePreviewViewController == nil{
             doCompletion()
         } else {
-            if self.gamePreviewViewController != nil {
+            if self.gamePreviewViewController != nil && includeGamePreview {
                 dismissGamePreview()
-            } else if self.scorepadViewController.roundSummaryViewController != nil {
+            } else if self.scorepadViewController != nil && self.scorepadViewController.roundSummaryViewController != nil {
                 self.scorepadViewController.roundSummaryViewController.dismiss(animated: true, completion: dismissScorepad)
             } else if self.scorepadViewController != nil && self.scorepadViewController.gameSummaryViewController != nil {
                 self.scorepadViewController.gameSummaryViewController.dismiss(animated: true, completion: dismissScorepad)
             } else if self.scorecard.handViewController != nil {
                 self.scorecard.handViewController.dismiss(animated: true, completion: dismissScorepad)
-            } else {
+            } else if self.scorepadViewController != nil {
                 dismissScorepad()
+            } else {
+                doCompletion()
             }
         }
     }

@@ -171,13 +171,8 @@ import CoreData
         playerMO.syncDate = self.syncDate
         playerMO.syncRecordID = self.syncRecordID
         if updateThumbnail {
-            if self.name == "Emma" && self.thumbnail == nil {
-                print("STOP")
-            }
             playerMO.thumbnail = self.thumbnail
             playerMO.thumbnailDate = self.thumbnailDate
-        } else if self.name == "Emma" && !updateThumbnail && playerMO.thumbnail == nil {
-            print("STOP")
         }
     }
     
@@ -197,9 +192,6 @@ import CoreData
         self.handsMade = playerMO.handsMade
         self.twosMade = playerMO.twosMade
         self.totalScore = playerMO.totalScore
-        if self.name == "Emma" && playerMO.thumbnail == nil {
-            print("STOP")
-        }
         self.thumbnail = playerMO.thumbnail
         self.thumbnailDate = playerMO.thumbnailDate as Date?
         self.maxScore = playerMO.maxScore

@@ -10,13 +10,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Contract Whist Scorecard/Multipeer Class.swift"
-            timestampString = "589796829.2979161"
+            timestampString = "589900516.668708"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "482"
             endingLineNumber = "482"
-            landmarkName = "unknown"
-            landmarkType = "0">
+            landmarkName = "start(email:name:recoveryMode:matchDeviceName:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

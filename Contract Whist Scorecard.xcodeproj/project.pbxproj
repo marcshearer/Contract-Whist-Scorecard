@@ -111,6 +111,7 @@
 		B2B755091E5B363200B1313B /* History Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B755081E5B363200B1313B /* History Class.swift */; };
 		B2B7550B1E5DEA6A00B1313B /* Reconcile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B7550A1E5DEA6A00B1313B /* Reconcile.swift */; };
 		B2B7550D1E619A3F00B1313B /* DataAdmin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B7550C1E619A3F00B1313B /* DataAdmin.swift */; };
+		B2BBCCAA2327ECD0005678B2 /* SelectedPlayersHexagonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BBCCA92327ECD0005678B2 /* SelectedPlayersHexagonView.swift */; };
 		B2BC51C71F7B5E8C0065F07D /* String Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BC51C61F7B5E8C0065F07D /* String Extensions.swift */; };
 		B2C051041EDF194C009DE37F /* Multipeer Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C051031EDF194C009DE37F /* Multipeer Class.swift */; };
 		B2C054781FB8B55700846F6E /* ConfirmCountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */; };
@@ -306,6 +307,7 @@
 		B2B755081E5B363200B1313B /* History Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History Class.swift"; sourceTree = "<group>"; };
 		B2B7550A1E5DEA6A00B1313B /* Reconcile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reconcile.swift; sourceTree = "<group>"; };
 		B2B7550C1E619A3F00B1313B /* DataAdmin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataAdmin.swift; sourceTree = "<group>"; };
+		B2BBCCA92327ECD0005678B2 /* SelectedPlayersHexagonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedPlayersHexagonView.swift; sourceTree = "<group>"; };
 		B2BC51C61F7B5E8C0065F07D /* String Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String Extensions.swift"; sourceTree = "<group>"; };
 		B2C051031EDF194C009DE37F /* Multipeer Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Multipeer Class.swift"; sourceTree = "<group>"; };
 		B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmCountViewController.swift; sourceTree = "<group>"; };
@@ -444,6 +446,7 @@
 			children = (
 				B25FC7C322D0733C00D2E651 /* SelectPlayersViewController.storyboard */,
 				B211E136224164FB00B48D64 /* SelectPlayersViewController.swift */,
+				B2BBCCA92327ECD0005678B2 /* SelectedPlayersHexagonView.swift */,
 			);
 			name = "Select Players";
 			sourceTree = "<group>";
@@ -1355,6 +1358,7 @@
 				B2B180142114AD92008D3BAA /* (null) in Sources */,
 				49075FFC1E0E578E008E06FA /* PlayersViewController.swift in Sources */,
 				B250610020CD7F480030EE8F /* Recovery.swift in Sources */,
+				B2BBCCAA2327ECD0005678B2 /* SelectedPlayersHexagonView.swift in Sources */,
 				B267DF75211F41FC0086D521 /* Admin Menu.swift in Sources */,
 				B2C051041EDF194C009DE37F /* Multipeer Class.swift in Sources */,
 				B243386322E57BE7002EBD40 /* ImageButton.swift in Sources */,

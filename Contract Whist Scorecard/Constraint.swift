@@ -29,8 +29,22 @@ class Constraint {
         control.autoresizingMask = [.flexibleTopMargin, .flexibleBottomMargin, .flexibleLeftMargin, .flexibleRightMargin]
         for attribute in attributes {
             let toAttribute = toAttribute ?? attribute
-            let constraint = NSLayoutConstraint(item: control, attribute: attribute, relatedBy: .equal, toItem: to, attribute: toAttribute, multiplier: multiplier, constant: constant)
+            let sign: CGFloat = (attribute == .trailing || attribute == .bottom ? -1.0 : 1.0)
+            let constraint = NSLayoutConstraint(item: control, attribute: attribute, relatedBy: .equal, toItem: to, attribute: toAttribute, multiplier: multiplier, constant: constant * sign)
             view.addConstraint(constraint)
         }
+    }
+
+    public static func proportionalWidth(view: UIView, control: UIView, to: UIView? = nil, multiplier: CGFloat = 1.0) {
+        let to = to ?? view
+        let constraint = NSLayoutConstraint(item: control, attribute: .width, relatedBy: .equal, toItem: to, attribute: .width, multiplier: multiplier, constant: 0.0)
+        view.addConstraint(constraint)
+    }
+
+    
+    public static func proportionalHeight(view: UIView, control: UIView, to: UIView? = nil, multiplier: CGFloat = 1.0) {
+        let to = to ?? view
+        let constraint = NSLayoutConstraint(item: control, attribute: .height, relatedBy: .equal, toItem: to, attribute: .height, multiplier: multiplier, constant: 0.0)
+        view.addConstraint(constraint)
     }
 }

@@ -41,16 +41,18 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     // Local class variables
     private var combinedPlayerList: [Int : [PlayerDetail]] = [:]
     private var combinedSelection: [Int : [Bool]] = [:]
+    private var selectedPlayerHexagonView: [Int: SelectedPlayersHexagonView] = [:]
     private var selectedPlayer: IndexPath!
     private var syncStarted = false
     private var syncFinished = false
     private var otherPlayerRow = -1
     private var newPlayerRow = -1
-    private var createdPlayerSection = 1
-    private var downloadedPlayerSection = 2
-    private var actionSection = 0
-    private var relatedPlayerSection = 3
+    private var createdPlayerSection = -1
+    private var downloadedPlayerSection = -1
+    private var actionSection = -1
+    private var relatedPlayerSection = -1
     private var actionRows = 0
+    private var sections = 0
 
     // Alert controller while waiting for cloud download
     private var cloudAlertController: UIAlertController!
@@ -60,23 +62,11 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var backButton: RoundedButton!
     @IBOutlet private weak var continueButton: RoundedButton!
-    @IBOutlet private weak var changeAllButton: RoundedButton!
     @IBOutlet private weak var navigationBar: UINavigationBar!
     @IBOutlet private weak var toolbarViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var footerPaddingTopConstraint: NSLayoutConstraint!
     
     // MARK: - IB Actions ============================================================================== -
-
-    @IBAction private func changeAllPressed(sender: UIButton) {
-        if self.selected == 0 {
-            // Select all
-            selectAll(true)
-        } else {
-            // Clear selection
-            selectAll(false)
-        }
-        formatButtons()
-    }
     
     @IBAction private func continuePressed(sender: UIButton) {
         
@@ -140,41 +130,64 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     // MARK: - TableView Overrides ================================================================ -
 
     internal func numberOfSections(in tableView: UITableView) -> Int {
-        return relatedPlayerSection + 1
+        return self.sections
     }
     
     internal func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if relatedPlayerSection > 0 && section == relatedPlayerSection {
-            return 60
-        } else if (section == createdPlayerSection || section == downloadedPlayerSection) && combinedPlayerList[section]!.count > 0 {
-            return 30
-        } else {
-            return 0
-        }
+        return sectionHeaderHeight(for: section)
     }
     
     internal func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let frame = CGRect(x: 10.0, y: 0.0, width: tableView.frame.width - 15.0, height: (relatedPlayerSection > 0 && section == relatedPlayerSection ? 60 : 30))
-        let view = UIView(frame: frame)
-        view.backgroundColor = Palette.sectionHeading
-        let title = UILabel(frame: frame)
-        title.font = UIFont.boldSystemFont(ofSize: 20.0)
-        title.textColor = Palette.sectionHeadingText
-        if relatedPlayerSection > 0 {
+        let height = self.sectionHeaderHeight(for: section)
+        if height != 0.0 {
+            var titleText = ""
+            var detailText = ""
+            var buttonText = ""
+            let frame = CGRect(x:0.0, y: 0.0, width: tableView.frame.width, height: height)
             switch section {
             case createdPlayerSection:
-                title.text = "Created players"
+                titleText = "Created players"
+                detailText = "who have just been created"
             case downloadedPlayerSection:
-                title.text = "Downloaded players"
+                titleText = "Downloaded players"
+                detailText = "who have just been downloaded"
             case relatedPlayerSection:
-                title.text =  "Add players who have previously played with those on this device"
-                title.numberOfLines = 0
+                titleText =  "Add existing players"
+                detailText = "who have played players on this device"
+                buttonText = "Select all"
             default:
                 return nil
             }
-            view.addSubview(title)
+            self.selectedPlayerHexagonView[section] = SelectedPlayersHexagonView(frame: frame, titleText: titleText, detailText: detailText, buttonText: buttonText, separator: true, bannerColor: (section == relatedPlayerSection ? Palette.banner : Palette.background), fillColor: (section == relatedPlayerSection ? Palette.banner : Palette.banner), textColor: (section == relatedPlayerSection ? Palette.bannerText : Palette.bannerText), buttonAction: self.changeAllPressed)
+        
+            return self.selectedPlayerHexagonView[section]
+            
+        } else {
+            return nil
         }
-        return view
+    }
+    
+    private func sectionHeaderHeight(for section: Int) -> CGFloat {
+        if section == relatedPlayerSection {
+            return 101.0
+        } else if (section == createdPlayerSection || section == downloadedPlayerSection) && combinedPlayerList[section]!.count > 0 {
+            return 86.0
+        } else {
+            return 0.0
+        }
+    }
+    
+    internal func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch indexPath.section {
+        case actionSection:
+            return 86.0
+        case relatedPlayerSection:
+            return 60.0
+        case createdPlayerSection, downloadedPlayerSection:
+            return 60.0
+        default:
+            return 0.0
+        }
     }
     
     internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -200,17 +213,15 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
             // Create cell
             cell = tableView.dequeueReusableCell(withIdentifier: "Action Cell", for: indexPath) as! SelectPlayersCell
             
+            // Fill in text
             switch indexPath.row {
             case newPlayerRow:
-                cell.playerName.text = "Create new player"
-                cell.playerDescription.text = "Enter details manually"
+                cell.actionHexagonView.setText(titleText: "Create new player", detailText: "entering details manually")
             case otherPlayerRow:
-                cell.playerName.text = "Download player"
-                cell.playerDescription.text = "Download player using Unique ID"
+                cell.actionHexagonView.setText(titleText: "Download player", detailText: "using their Unique ID")
             default:
                 break
             }
-            cell.playerName.textColor = Palette.text
 
         case relatedPlayerSection, createdPlayerSection, downloadedPlayerSection:
             // Players
@@ -237,6 +248,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
                 cell.playerTick.isHidden = true
                 cell.playerDetail.isHidden = true
                 cell.playerName.textColor = Palette.text.withAlphaComponent(0.5)
+                cell.playerSeparatorView.isHidden = true
 
             } else {
                 if let playerDetail = combinedPlayerList[indexPath.section]?[indexPath.row] {
@@ -257,6 +269,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
                     cell.playerDetail.tag = indexPath.section * 100000 + indexPath.row
                     cell.playerDetail.isHidden = false
                     cell.playerName.textColor = Palette.text
+                    cell.playerSeparatorView.isHidden = false
                     cell.selectionStyle = .none
                     
                 }
@@ -408,7 +421,9 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
                 self.syncFinished = true
                 self.cloudAlertController = nil
                 self.formatButtons()
+                self.tableView.beginUpdates()
                 self.tableView.reloadData()
+                self.tableView.endUpdates()
             }
         }
     }
@@ -474,10 +489,16 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         }
         if actionRows > 0 {
             actionSection = 0
-            relatedPlayerSection = 3
+            relatedPlayerSection = 1
+            createdPlayerSection = 2
+            downloadedPlayerSection = 3
+            self.sections = 4
         } else {
             actionSection = -1
             relatedPlayerSection = 0
+            createdPlayerSection = -1
+            downloadedPlayerSection = -1
+            sections = 1
         }
         
         // Set up lists / selection
@@ -495,32 +516,24 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     }
     
     private func formatButtons() {
-        var toolbarHeight:CGFloat = 0.0
-        
+        let relatedHexagonView = self.selectedPlayerHexagonView[relatedPlayerSection]
+
         if self.combinedPlayerList[relatedPlayerSection]!.count > 0 {
             if selected == 0 {
                 // Can't action - can select all
-                changeAllButton.setTitle("Select all", for: .normal)
+                relatedHexagonView?.setButton(isHidden: false, buttonText: "Select all")
                 continueButton.isHidden = true
-                toolbarHeight = 44
             } else {
                 // Can action - can clear all
-                changeAllButton.setTitle("Clear all", for: .normal)
+                relatedHexagonView?.setButton(isHidden: false, buttonText: "Clear all")
                 continueButton.isHidden = false
-                toolbarHeight = 44
             }
             continueButton.setTitle("Confirm")
             backButton.setTitle("Cancel")
         } else {
+            relatedHexagonView?.setButton(isHidden: true)
             continueButton.setTitle("Add")
             backButton.setTitle(self.backText)
-        }
-        
-        let newToolbarTop = (toolbarHeight == 0 ? 44 : 44 + view.safeAreaInsets.bottom + toolbarHeight)
-        if newToolbarTop != self.toolbarViewHeightConstraint.constant {
-            Utility.animate {
-                self.toolbarViewHeightConstraint.constant = newToolbarTop
-            }
         }
     }
     
@@ -528,9 +541,9 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         var imageName: String
         
         if to {
-            imageName = "boxtick"
+            imageName = "on"
         } else {
-            imageName = "box"
+            imageName = "off"
         }
         cell.playerTick.image = UIImage(named: imageName)
         cell.playerTick.isHidden = false
@@ -613,7 +626,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         
         let opponents = History.findOpponentNames(playerEmail: playerDetail.email)
         if opponents.count > 0 {
-            result = "Played " + Utility.toString(opponents)
+            result = "played " + Utility.toString(opponents)
         } else {
             result = "No opponents on device"
         }
@@ -630,6 +643,19 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         }
     
         return result
+    }
+    
+    // MARK: - Utility Routines ======================================================================== -
+    
+    private func changeAllPressed() {
+        if self.selected == 0 {
+            // Select all
+            selectAll(true)
+        } else {
+            // Clear selection
+            selectAll(false)
+        }
+        formatButtons()
     }
     
     // MARK: - Function to show and dismiss this view  ============================================================================== -
@@ -669,4 +695,6 @@ class SelectPlayersCell: UITableViewCell {
     @IBOutlet public weak var playerDetail: UIButton!
     @IBOutlet public weak var playerNameBottomConstraint: NSLayoutConstraint!
     @IBOutlet public weak var playerDescriptionHeightConstraint: NSLayoutConstraint!
+    @IBOutlet public weak var playerSeparatorView: UIView!
+    @IBOutlet public weak var actionHexagonView: SelectedPlayersHexagonView!
 }

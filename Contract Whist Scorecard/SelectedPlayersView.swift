@@ -124,12 +124,16 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         self.playerViews[slot].set(playerMO: playerMO)
     }
     
-    public func clear(slot: Int) {
-        self.clear(playerView: self.playerViews[slot], slot: slot)
+    public func clear(slot: Int, keepInUse: Bool = false) {
+        self.clear(playerView: self.playerViews[slot], slot: slot, keepInUse: keepInUse)
     }
     
     public func inUse(slot: Int) -> Bool {
         return self.playerViews[slot].inUse
+    }
+    
+    public func setInUse(slot: Int, to inUse: Bool = true) {
+        self.playerViews[slot].inUse = inUse
     }
     
     public func origin(slot: Int, in view: UIView) -> CGPoint {
@@ -265,7 +269,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         }
     }
     
-    private func clear(playerView: PlayerView, slot: Int) {
+    private func clear(playerView: PlayerView, slot: Int, keepInUse: Bool = false) {
         var initials = ""
         switch slot {
         case 0:
@@ -279,7 +283,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         default:
             break
         }
-        playerView.clear(initials: initials)
+        playerView.clear(initials: initials, keepInUse: keepInUse)
     }
     
     // MARK: - Main methods to draw room components ======================================================================= -

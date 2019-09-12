@@ -94,7 +94,7 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
                     
                     // Update tick and stop activity indicator
                     if let completeCell = self.syncStageTableView.cellForRow(at: IndexPath(row: stage.rawValue, section: 0)) as? SyncStageTableCell {
-                        completeCell.statusImage.image = UIImage(named: "boxtick")
+                        completeCell.statusImage.image = UIImage(named: "box tick")
                         completeCell.activityIndicator.stopAnimating()
                     }
                     
@@ -179,7 +179,7 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
             let stage = SyncStage(rawValue: indexPath.row)!
             
             stageCell.label.text = Sync.stageDescription(stage: stage)
-            stageCell.statusImage.image = UIImage(named: ((stageComplete[stage] ?? false) ? "boxtick" : "box"))
+            stageCell.statusImage.image = UIImage(named: ((stageComplete[stage] ?? false) ? "box tick" : "box"))
             
             cell = stageCell
             

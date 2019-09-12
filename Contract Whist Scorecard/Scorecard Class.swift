@@ -403,7 +403,7 @@ class Scorecard {
                     
                 }
                 
-                if self.player![player-1].playerMO == nil && !self.isPlayingComputer {
+                if self.player![player-1].playerMO == nil && !self.isPlayingComputer && self.recoveryMode {
                     // Might be recovering - recreate player if necessary
                     self.player![player-1].playerMO = CoreData.create(from: "Player") as? PlayerMO
                     self.player![player-1].playerMO!.name = UserDefaults.standard.string(forKey: "\(prefix)\(player)name")

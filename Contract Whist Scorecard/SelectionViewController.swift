@@ -59,6 +59,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private var thisPlayerView: PlayerView!
     private var lastPlayerMO: PlayerMO!
     public let transition = FadeAnimator()
+    private var refreshCollection = true
 
     // Main local state handlers
     private var availableList: [PlayerMO] = []
@@ -144,12 +145,16 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // Setup available players
-        self.setupAvailablePlayers()
-        self.unselectedList = self.availableList
-        
-        // Setup form
-        self.setupForm()
+        if self.firstTime {
+            // Setup available players
+            self.setupAvailablePlayers()
+            self.unselectedList = self.availableList
+            
+            // Setup form
+            self.setupForm()
+            self.refreshCollection = true
+            self.view.setNeedsLayout()
+        }
 
         // Check if in recovery mode - if so (and found all players) go straight to game setup
         if scorecard.recoveryMode {
@@ -184,10 +189,11 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             self.drawRoom()
         }
 
-        if !self.loadedView || self.rotated {
+        if !self.loadedView || self.rotated || self.refreshCollection {
             Utility.mainThread {
                 // Need to do this on main thread to avoid crash
                 self.unselectedCollectionView.reloadData()
+                self.refreshCollection = false
             }
 
         }
@@ -655,6 +661,10 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         
         if let slot = toSlot ?? self.selectedPlayersView.freeSlot() {
             
+            // Flag this slot as in use to avoid overwrite while animation ongoing
+            self.selectedPlayersView.setInUse(slot: slot)
+            
+            // Add to selected list
             selectedList.append((slot, selectedPlayerMO))
         
             if !self.firstTime {
@@ -694,7 +704,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                             let selectedPoint = self.selectedPlayersView.origin(slot: slot, in: self.view)
                             self.animationView.frame = CGRect(origin: selectedPoint, size: CGSize(width: self.thumbnailWidth, height: self.thumbnailHeight))
                             self.animationView.set(textColor: Palette.darkHighlightText)
-                            self.selectedPlayersView.clear(slot: slot)
+                            self.selectedPlayersView.clear(slot: slot, keepInUse: true)
                         }
                         animation.addCompletion( {_ in
                             
@@ -768,19 +778,23 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                     playerMO = newPlayerDetail.playerMO
                 }
                 if let playerMO = playerMO {
-                    // Add to available list
-                    availableList.append(playerMO)
                     
-                    // Add to unselected list and collection view
-                    var unselectedIndex: Int! = self.unselectedList.firstIndex(where: {($0!.name! > newPlayerDetail.name)})
-                    if unselectedIndex == nil {
-                        // Insert at end
-                        unselectedIndex = unselectedList.count
+                    // Add to available list and unselected list if not there already
+                    if self.availableList.firstIndex(where: { $0.email! == newPlayerDetail.email } ) == nil {
+                        
+                        availableList.append(playerMO)
+                        
+                        // Add to unselected list and collection view
+                        var unselectedIndex: Int! = self.unselectedList.firstIndex(where: {($0!.name! > newPlayerDetail.name)})
+                        if unselectedIndex == nil {
+                            // Insert at end
+                            unselectedIndex = unselectedList.count
+                        }
+                        unselectedCollectionView.performBatchUpdates({
+                            unselectedList.insert(playerMO, at: unselectedIndex)
+                            unselectedCollectionView.insertItems(at: [IndexPath(row: unselectedIndex + (self.addPlayerThumbnail ? 1 : 0), section: 0)])
+                        })
                     }
-                    unselectedCollectionView.performBatchUpdates({
-                        unselectedList.insert(playerMO, at: unselectedIndex)
-                        unselectedCollectionView.insertItems(at: [IndexPath(row: unselectedIndex + (self.addPlayerThumbnail ? 1 : 0), section: 0)])
-                    })
                     
                     // Add to selection if there is space
                     if addToSelected {

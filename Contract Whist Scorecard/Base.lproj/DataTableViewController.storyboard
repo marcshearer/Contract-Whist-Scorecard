@@ -57,9 +57,9 @@
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" width="30" id="dVQ-Do-UuF">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="6Q0-4S-yhc" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="269" y="5" width="90" height="34"/>
+                                                <rect key="frame" x="259" y="0.0" width="100" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Sync...">
+                                                <state key="normal" image="cloud">
                                                     <color key="titleColor" name="Banner Text"/>
                                                 </state>
                                                 <connections>
@@ -463,7 +463,8 @@
     </scenes>
     <resources>
         <image name="back" width="22" height="22"/>
-        <image name="graph" width="49" height="32"/>
+        <image name="cloud" width="33" height="22"/>
+        <image name="graph" width="30" height="30"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

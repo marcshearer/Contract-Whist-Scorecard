@@ -192,21 +192,21 @@ TODO
 ----
 Crash if go into High Scores repeatedly
 Avoid message text blue color
-Redo graph
+Redo graph - grey background - no banner - yellow line - hollow circles for data points (shown fully)- gradient? - start near minimum
+             remove min/max (words) and lines white - axes dark gray - lines thicker - 100 line dashed
 Looks like it is still in recovery mode even when play game and override warning
 Color of done button in entry
 Problem if reset when in confirm window
+Add crowns and confetti to game summary
+Player detail screen
+Settings screen
+Change icons on sync completion
+Gradients wrong on and after rotation of scorepad
 
 Jack
 ----
-Orange(?) graph color icon
-Graph view
-Background color for scorepad (not made) cells in landscape
-Check sync view is OK
-Layout for Review
-Crown icon
-Stop playing icon
-Rotating sync icon
+Sync icons
+Layout for review
 
 Medium-term
 -----------

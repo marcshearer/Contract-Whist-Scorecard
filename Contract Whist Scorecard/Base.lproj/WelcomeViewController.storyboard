@@ -57,70 +57,65 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XlQ-ht-Cyf" userLabel="Left Banner">
                                 <rect key="frame" x="0.0" y="44" width="167.66666666666666" height="44"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Ox-3H-gw3" userLabel="Online View Button" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="8" y="8.6666666666666643" width="27" height="27"/>
+                                    <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QP0-uS-vsK" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="8" y="4.6666666666666643" width="35" height="35"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" secondItem="8Ox-3H-gw3" secondAttribute="height" multiplier="1:1" id="ffg-YW-dY4"/>
-                                            <constraint firstAttribute="width" constant="27" id="tQl-mE-1D7">
-                                                <variation key="heightClass=regular-widthClass=regular" constant="54"/>
-                                            </constraint>
+                                            <constraint firstAttribute="width" secondItem="QP0-uS-vsK" secondAttribute="height" multiplier="1:1" id="328-JZ-WMQ"/>
+                                            <constraint firstAttribute="width" constant="35" id="rJV-BI-6eb"/>
                                         </constraints>
-                                        <color key="tintColor" name="Banner Text"/>
                                         <state key="normal" image="broadcast"/>
                                         <connections>
-                                            <action selector="viewOnlinePressed:" destination="s50-DJ-DGN" eventType="touchUpInside" id="uPS-GT-e0c"/>
+                                            <action selector="viewOnlinePressed:" destination="s50-DJ-DGN" eventType="touchUpInside" id="H4e-Gk-TeY"/>
                                         </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" name="Banner"/>
                                 <constraints>
-                                    <constraint firstItem="8Ox-3H-gw3" firstAttribute="centerY" secondItem="XlQ-ht-Cyf" secondAttribute="centerY" id="W88-6p-iWv"/>
+                                    <constraint firstItem="QP0-uS-vsK" firstAttribute="leading" secondItem="XlQ-ht-Cyf" secondAttribute="leading" constant="8" id="eXQ-wO-MPj"/>
                                     <constraint firstAttribute="height" constant="44" id="xfp-sN-eUK">
                                         <variation key="heightClass=regular-widthClass=regular" constant="100"/>
                                     </constraint>
+                                    <constraint firstItem="QP0-uS-vsK" firstAttribute="centerY" secondItem="XlQ-ht-Cyf" secondAttribute="centerY" id="y2g-Vs-qMd"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pE1-ST-peb" userLabel="Right Banner">
                                 <rect key="frame" x="207.66666666666663" y="44" width="167.33333333333337" height="44"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iC9-CO-hun" userLabel="Walkthrough Button" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="92.333333333333343" y="11" width="22" height="22"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iC9-CO-hun" userLabel="Walkthrough Button" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="81.333333333333343" y="4.6666666666666643" width="35" height="35"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="iC9-CO-hun" secondAttribute="height" multiplier="1:1" id="EKR-I9-10q"/>
-                                            <constraint firstAttribute="width" constant="22" id="ieG-pe-pSq">
+                                            <constraint firstAttribute="width" constant="35" id="ieG-pe-pSq">
                                                 <variation key="heightClass=regular-widthClass=regular" constant="44"/>
                                             </constraint>
                                         </constraints>
                                         <color key="tintColor" name="Banner Text"/>
+                                        <state key="normal" image="banner info"/>
                                         <connections>
                                             <action selector="walkthroughPressed:" destination="s50-DJ-DGN" eventType="touchUpInside" id="eFx-S2-jvc"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zsb-T2-UXP" userLabel="Settings Button">
-                                        <rect key="frame" x="134.33333333333334" y="9.6666666666666643" width="25" height="25"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="282-wV-NAZ" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="124.33333333333334" y="4.6666666666666643" width="35" height="35"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" secondItem="Zsb-T2-UXP" secondAttribute="height" multiplier="1:1" id="3Tn-qH-8sl"/>
-                                            <constraint firstAttribute="width" constant="25" id="tMh-dv-Fuj">
-                                                <variation key="heightClass=regular-widthClass=regular" constant="50"/>
-                                            </constraint>
+                                            <constraint firstAttribute="height" constant="35" id="nue-iI-lWJ"/>
+                                            <constraint firstAttribute="width" secondItem="282-wV-NAZ" secondAttribute="height" multiplier="1:1" id="siR-oZ-jR8"/>
                                         </constraints>
-                                        <color key="tintColor" name="Banner Text"/>
                                         <state key="normal" image="settings"/>
                                         <connections>
-                                            <action selector="settingsPressed:" destination="s50-DJ-DGN" eventType="touchUpInside" id="94B-aq-gOq"/>
+                                            <action selector="settingsPressed:" destination="s50-DJ-DGN" eventType="touchUpInside" id="lZ8-w7-j8G"/>
                                         </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" name="Banner"/>
                                 <constraints>
-                                    <constraint firstItem="Zsb-T2-UXP" firstAttribute="leading" secondItem="iC9-CO-hun" secondAttribute="trailing" constant="20" id="WDf-hO-f3W">
-                                        <variation key="heightClass=regular-widthClass=regular" constant="40"/>
-                                    </constraint>
-                                    <constraint firstItem="Zsb-T2-UXP" firstAttribute="centerY" secondItem="pE1-ST-peb" secondAttribute="centerY" id="WhH-Vj-jf9"/>
+                                    <constraint firstAttribute="trailing" secondItem="282-wV-NAZ" secondAttribute="trailing" constant="8" id="K1g-qn-pTD"/>
+                                    <constraint firstItem="282-wV-NAZ" firstAttribute="centerY" secondItem="pE1-ST-peb" secondAttribute="centerY" id="VHk-6h-Fxg"/>
                                     <constraint firstAttribute="height" constant="44" id="Zhh-nR-Kr5">
                                         <variation key="heightClass=regular-widthClass=regular" constant="100"/>
                                     </constraint>
                                     <constraint firstItem="iC9-CO-hun" firstAttribute="centerY" secondItem="pE1-ST-peb" secondAttribute="centerY" id="c05-6T-Mp7"/>
+                                    <constraint firstItem="282-wV-NAZ" firstAttribute="leading" secondItem="iC9-CO-hun" secondAttribute="trailing" constant="8" id="w2o-PS-3E1"/>
                                 </constraints>
                             </view>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="navigationImage banner" translatesAutoresizingMaskIntoConstraints="NO" id="tYH-SB-xrl">
@@ -139,17 +134,11 @@
                             <constraint firstItem="RwW-IW-wzd" firstAttribute="bottom" secondItem="jyL-Wg-M4O" secondAttribute="bottom" id="K8y-Oq-ovQ"/>
                             <constraint firstItem="Ivm-JK-J61" firstAttribute="trailing" secondItem="jyL-Wg-M4O" secondAttribute="trailing" id="Ncp-aC-uPb"/>
                             <constraint firstItem="XlQ-ht-Cyf" firstAttribute="top" secondItem="Ivm-JK-J61" secondAttribute="bottom" id="OHc-aK-U0n"/>
-                            <constraint firstItem="Zsb-T2-UXP" firstAttribute="trailing" secondItem="9e5-uf-7bY" secondAttribute="trailing" constant="-8" id="Pou-12-gOi">
-                                <variation key="heightClass=regular-widthClass=regular" constant="-16"/>
-                            </constraint>
                             <constraint firstItem="tYH-SB-xrl" firstAttribute="bottom" secondItem="XlQ-ht-Cyf" secondAttribute="bottom" constant="16" id="PzP-O8-2mH">
                                 <variation key="heightClass=regular-widthClass=regular" constant="20"/>
                             </constraint>
                             <constraint firstItem="tYH-SB-xrl" firstAttribute="centerX" secondItem="jyL-Wg-M4O" secondAttribute="centerX" id="QsD-nb-icW"/>
                             <constraint firstItem="RwW-IW-wzd" firstAttribute="top" secondItem="Ivm-JK-J61" secondAttribute="bottom" id="Ts7-zm-801"/>
-                            <constraint firstItem="9e5-uf-7bY" firstAttribute="leading" secondItem="8Ox-3H-gw3" secondAttribute="leading" constant="-8" id="WCZ-lG-Ydf">
-                                <variation key="heightClass=regular-widthClass=regular" constant="-16"/>
-                            </constraint>
                             <constraint firstAttribute="trailing" secondItem="RwW-IW-wzd" secondAttribute="trailing" id="Z6m-56-ROQ"/>
                             <constraint firstItem="Ivm-JK-J61" firstAttribute="leading" secondItem="jyL-Wg-M4O" secondAttribute="leading" id="Zt3-zz-lbU"/>
                             <constraint firstItem="RwW-IW-wzd" firstAttribute="leading" secondItem="jyL-Wg-M4O" secondAttribute="leading" id="hRR-eZ-AcU"/>
@@ -175,7 +164,7 @@
                         <outlet property="syncLabel" destination="xhn-Yh-ogb" id="Rse-qo-dlT"/>
                         <outlet property="syncLabelHeightConstraint" destination="UMP-1N-3q2" id="1kB-LZ-v9p"/>
                         <outlet property="titleLabel" destination="GfL-2p-s30" id="dXZ-BM-nPN"/>
-                        <outlet property="viewOnlineButton" destination="8Ox-3H-gw3" id="s53-aC-uhb"/>
+                        <outlet property="viewOnlineButton" destination="QP0-uS-vsK" id="XOr-dJ-w33"/>
                         <outlet property="welcomeView" destination="jyL-Wg-M4O" id="Xlq-wg-uBg"/>
                         <segue destination="lvI-KL-xbx" kind="popoverPresentation" identifier="showGetStarted" popoverAnchorView="jyL-Wg-M4O" id="zF4-ui-zT9">
                             <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
@@ -215,9 +204,10 @@
         </scene>
     </scenes>
     <resources>
-        <image name="broadcast" width="26.666666030883789" height="26.666666030883789"/>
+        <image name="banner info" width="22" height="22"/>
+        <image name="broadcast" width="22" height="22"/>
         <image name="navigationImage banner" width="73" height="44"/>
-        <image name="settings" width="25" height="25"/>
+        <image name="settings" width="44" height="44"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

@@ -70,7 +70,8 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
         
         // Initialise the view
         graphView.reset()
-        graphView.backgroundColor = Palette.darkHighlight
+        graphView.backgroundColor = Palette.background
+        graphView.setColors(axis: Palette.text, gradient: [Palette.background, Palette.emphasis])
         
         if participantList.count == 0 {
             self.alertMessage("No games played since game history has been saved", okHandler: {
@@ -85,48 +86,58 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
                 xAxisLabels.append(Utility.dateString(participantList[participant].datePlayed! as Date))
             }
             
-            // Add main dataset - score per game
-            graphView.addDataset(values: values, weight: 3.0, color: Palette.darkHighlightText, gradient: true, pointSize: 6.0, tag: 1, drillRef: drillRef)
-            graphView.detailDelegate = self
-            
-            // Add average score line
+            let maximum = values.max()!
+            let minimum = values.min()!
             var average = CGFloat(playerDetail.totalScore) / CGFloat(playerDetail.gamesPlayed)
             average.round()
-            graphView.addDataset(values: [average, average], weight: 1.0, color: Palette.darkHighlightTextContrast.withAlphaComponent(0.2))
-            graphView.addYaxisLabel(text: "\(Int(average))", value: average, position: .right, color: Palette.darkHighlightTextContrast)
-            if !portraitPhoneSize {
-                graphView.addYaxisLabel(text: "Average", value: average, position: .left, color: Palette.darkHighlightTextContrast)
-            }
             
             // Add maximum score line
-            let maximum = values.max()!
-            if maximum >= average + 6 {
-                graphView.addDataset(values: [maximum, maximum], weight: 1.0, color: Palette.darkHighlightText.withAlphaComponent(0.2))
-                graphView.addYaxisLabel(text: "\(Int(maximum))", value: maximum, position: .right)
+            if maximum >= average + 10 {
+                graphView.addDataset(values: [maximum, maximum], weight: 2.0, color: Palette.emphasis.withAlphaComponent(0.4))
+                graphView.addYaxisLabel(text: "\(Int(maximum))", value: maximum, position: .right, color: Palette.text)
                 if !portraitPhoneSize {
-                    graphView.addYaxisLabel(text: "Max", value: maximum, position: .left)
+                    graphView.addYaxisLabel(text: "Max", value: maximum, position: .left, color: Palette.text)
                 }
             }
             
             // Add minimum score line
-            let minimum = values.min()!
             if minimum <= average - 6 {
-                graphView.addDataset(values: [minimum, minimum], weight: 1.0, color: Palette.darkHighlightText.withAlphaComponent(0.2))
-                graphView.addYaxisLabel(text: "\(Int(minimum))", value: minimum, position: .right)
+                graphView.addDataset(values: [minimum, minimum], weight: 2.0, color: Palette.emphasis.withAlphaComponent(0.4))
+                graphView.addYaxisLabel(text: "\(Int(minimum))", value: minimum, position: .right, color: Palette.text)
                 if !portraitPhoneSize {
-                    graphView.addYaxisLabel(text: "Min", value: minimum, position: .left)
+                    graphView.addYaxisLabel(text: "Min", value: minimum, position: .left, color: Palette.text)
                 }
+            }
+            
+            // Add average score line
+            graphView.addDataset(values: [average, average], weight: 3.0, color: Palette.emphasis.withAlphaComponent(0.4))
+            graphView.addYaxisLabel(text: "\(Int(average))", value: average, position: .right, color: Palette.textEmphasised)
+            if !portraitPhoneSize {
+                graphView.addYaxisLabel(text: "Average", value: average, position: .left, color: Palette.textEmphasised)
             }
             
             // Add 100 line
             if abs(average-100) > 2 && abs(minimum-100) > 2 && abs(maximum-100) > 2 {
-                graphView.addDataset(values: [100, 100], weight: 0.5, color: Palette.darkHighlightText.withAlphaComponent(0.2))
+                graphView.addDataset(values: [100, 100], weight: 1.0, color: UIColor.white)
                 if abs(average-100) > 6 && abs(minimum-100) > 6 && abs(maximum-100) > 6 {
-                    graphView.addYaxisLabel(text: "100", value: 100, position: .right, color: Palette.darkHighlightText)
+                    graphView.addYaxisLabel(text: "100", value: 100, position: .right, color: UIColor.white)
                 }
             }
             
-            graphView.addTitle(title: "Game Score History for \(playerDetail.name)")
+            // Add main dataset - score per game
+            graphView.addDataset(values: values, weight: 3.0, color: Palette.emphasis, gradient: false, pointSize: 12.0, tag: 1, drillRef: drillRef)
+            graphView.detailDelegate = self
+            
+            // Set title
+            let attributedTitle = NSMutableAttributedString()
+            var attributes: [NSAttributedString.Key : Any] = [:]
+            attributes[NSAttributedString.Key.foregroundColor] = Palette.textEmphasised
+            attributes[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 28.0, weight: .light)
+            attributedTitle.append(NSAttributedString(string: "Game Score History for ", attributes: attributes))
+            attributes[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 28.0, weight: .bold)
+            attributedTitle.append(NSAttributedString(string: self.playerDetail.name, attributes: attributes))
+            
+            graphView.add(attributedTitle: attributedTitle)
         }
     }
     

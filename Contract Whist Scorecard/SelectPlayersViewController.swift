@@ -47,8 +47,6 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     private var syncFinished = false
     private var otherPlayerRow = -1
     private var newPlayerRow = -1
-    private var createdPlayerSection = -1
-    private var downloadedPlayerSection = -1
     private var actionSection = -1
     private var relatedPlayerSection = -1
     private var actionRows = 0
@@ -145,12 +143,6 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
             var buttonText = ""
             let frame = CGRect(x:0.0, y: 0.0, width: tableView.frame.width, height: height)
             switch section {
-            case createdPlayerSection:
-                titleText = "Created players"
-                detailText = "who have just been created"
-            case downloadedPlayerSection:
-                titleText = "Downloaded players"
-                detailText = "who have just been downloaded"
             case relatedPlayerSection:
                 titleText =  "Add existing players"
                 detailText = "who have played players on this device"
@@ -170,8 +162,6 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     private func sectionHeaderHeight(for section: Int) -> CGFloat {
         if section == relatedPlayerSection {
             return 101.0
-        } else if (section == createdPlayerSection || section == downloadedPlayerSection) && combinedPlayerList[section]!.count > 0 {
-            return 86.0
         } else {
             return 0.0
         }
@@ -182,8 +172,6 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         case actionSection:
             return 86.0
         case relatedPlayerSection:
-            return 60.0
-        case createdPlayerSection, downloadedPlayerSection:
             return 60.0
         default:
             return 0.0
@@ -196,8 +184,6 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
             return actionRows
         case relatedPlayerSection:
             return max(1, self.combinedPlayerList[relatedPlayerSection]!.count)
-        case createdPlayerSection, downloadedPlayerSection:
-            return self.combinedPlayerList[section]?.count ?? 0
         default:
             return 0
         }
@@ -223,7 +209,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
                 break
             }
 
-        case relatedPlayerSection, createdPlayerSection, downloadedPlayerSection:
+        case relatedPlayerSection:
             // Players
             
             // Create cell
@@ -255,9 +241,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
                     
                     // Update cell text / format
                     cell.playerName.text = playerDetail.name
-                    if indexPath.section == createdPlayerSection {
-                        cell.playerDescription.text = "Manually created"
-                    } else if indexPath.section == relatedPlayerSection && self.descriptionMode == .opponents {
+                    if indexPath.section == relatedPlayerSection && self.descriptionMode == .opponents {
                         cell.playerDescription.text = self.getOpponents(playerDetail)
                     } else {
                         cell.playerDescription.text = self.getLastPlayed(playerDetail)
@@ -319,7 +303,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
                                                                 switch selectedMode {
                                                                 case .create, .download:
                                                                     if let newPlayerDetail = playerDetail {
-                                                                        self.addNewPlayer(playerDetail: newPlayerDetail, section: (selectedMode == .download ? self.downloadedPlayerSection : self.createdPlayerSection))
+                                                                        self.addNewPlayer(playerDetail: newPlayerDetail)
                                                                     }
                                                                 default:
                                                                     break
@@ -490,24 +474,16 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         if actionRows > 0 {
             actionSection = 0
             relatedPlayerSection = 1
-            createdPlayerSection = 2
-            downloadedPlayerSection = 3
-            self.sections = 4
+            self.sections = 2
         } else {
             actionSection = -1
             relatedPlayerSection = 0
-            createdPlayerSection = -1
-            downloadedPlayerSection = -1
-            sections = 1
+            self.sections = 1
         }
         
         // Set up lists / selection
         self.combinedPlayerList[relatedPlayerSection] = []
         self.combinedSelection[relatedPlayerSection] = []
-        self.combinedPlayerList[createdPlayerSection] = []
-        self.combinedSelection[createdPlayerSection] = []
-        self.combinedPlayerList[downloadedPlayerSection] = []
-        self.combinedSelection[downloadedPlayerSection] = []
 
         // Set back button image and text
         self.backButton.setImage(UIImage(named: self.backImage), for: .normal)
@@ -593,31 +569,21 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         
     }
     
-    func addNewPlayer(playerDetail: PlayerDetail, section: Int) {
-        var found = false
-        for (sectionIndex, list) in self.combinedPlayerList {
-            if let index = list.firstIndex(where: { $0.email == playerDetail.email}) {
-                // Already in list - just select it (if not already)
-                if !self.combinedSelection[sectionIndex]![index] {
-                    self.selected += 1
-                    self.combinedSelection[sectionIndex]![index] = true
-                    self.tableView.reloadRows(at: [IndexPath(row: index, section: sectionIndex)], with: .automatic)
-                    found = true
-                }
+    func addNewPlayer(playerDetail: PlayerDetail) {
+        // Add new player to local database and return
+        
+        if let playerMO = playerDetail.createMO() {
+            if playerDetail.thumbnailDate != nil {
+                self.getImages([playerMO])
             }
-        }
-        if !found {
-            // Add to list
-            var index = self.combinedPlayerList[section]!.firstIndex(where: { $0.email > playerDetail.email})
-            if index == nil {
-                index = combinedPlayerList[section]!.count
-            }
-            self.tableView.beginUpdates()
-            self.combinedPlayerList[section]!.insert(playerDetail, at: index!)
-            self.combinedSelection[section]!.insert(true, at: index!)
-            self.tableView.insertRows(at: [IndexPath(row: index!, section: section)], with: .automatic)
-            self.selected += 1
-            self.tableView.endUpdates()
+            
+            // Abandon any sync in progress
+            self.sync?.stop()
+            
+            // Return to calling program
+            self.dismiss(animated: true, completion: {
+                self.completion?(1, [playerDetail], [true])
+            })
         }
     }
     

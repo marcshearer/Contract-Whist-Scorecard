@@ -351,7 +351,6 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
                 cell.bodyButton.tag = (collectionView.tag * 1000) + indexPath.row
                 cell.bodyButton.addTarget(self, action: #selector(DataTableViewController.buttonPressed(_:)), for: UIControl.Event.touchUpInside)
                 cell.bodyButton.setImage(UIImage(named: column.field), for: .normal)
-                cell.bodyButton.setTitle(column.field, for: .normal)
                 cell.bodyButton.contentMode = .scaleAspectFill
                 cell.bodyButton.isEnabled = self.delegate?.isEnabled?(button: column.field, record: recordList[collectionView.tag]) ?? true
             case .thumbnail:

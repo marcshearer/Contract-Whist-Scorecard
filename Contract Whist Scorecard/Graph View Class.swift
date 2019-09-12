@@ -41,8 +41,7 @@ class GraphView: UIView {
     private var datasets: [Dataset] = []
     private var yAxisLabels: [Label] = []
     private var yAxisLimit: Int!
-    private var title: String!
-    private var titleColor = Palette.darkHighlightText
+    private var attributedTitle: NSAttributedString!
     private var axisColor = Palette.darkHighlightText
     private var gradientColors = [Palette.darkHighlightText.cgColor, Palette.darkHighlight.cgColor] as CFArray
     private var leftMaxLen: Int = 0
@@ -72,7 +71,7 @@ class GraphView: UIView {
         datasets = []
         yAxisLabels = []
         yAxisLimit = nil
-        title = nil
+        attributedTitle = nil
         leftMaxLen = 0
         rightMaxLen = 0
         
@@ -87,9 +86,15 @@ class GraphView: UIView {
         }
     }
     
-    public func addTitle(title: String, color: UIColor = UIColor.white) {
-        self.title = title
-        self.titleColor = color
+    public func add(title: String, color: UIColor = UIColor.white) {
+        var attributes: [NSAttributedString.Key : Any] = [:]
+        attributes[NSAttributedString.Key.foregroundColor] = Palette.text.withAlphaComponent(0.5).cgColor
+        attributes[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 28.0, weight: .light)
+        self.attributedTitle = NSAttributedString(string: title, attributes: attributes)
+    }
+    
+    public func add(attributedTitle: NSAttributedString) {
+        self.attributedTitle = attributedTitle
     }
     
     public func setColors(axis: UIColor, gradient: [UIColor]) {
@@ -109,12 +114,14 @@ class GraphView: UIView {
     internal override func draw(_ rect: CGRect) {
         let height:CGFloat = self.frame.height
         let width:CGFloat = self.frame.width
-        var leftMargin: CGFloat = 20.0 + (8.0 * CGFloat(leftMaxLen))
+        var leftMargin: CGFloat = 4.0 + (8.0 * CGFloat(leftMaxLen))
         let rightMargin: CGFloat = 20.0 + (8.0 * CGFloat(rightMaxLen))
-        let topBorder:CGFloat = (title == nil ? 50 : 70)
-        let bottomBorder:CGFloat = 20 + (8.0 * CGFloat(bottomMaxLen))
+        let topBorder:CGFloat = (attributedTitle == nil ? 50 : 70)
+        let bottomBorder:CGFloat = 4 + (8.0 * CGFloat(bottomMaxLen))
         let graphHeight = height - topBorder - bottomBorder
         var maxValue: CGFloat!
+        var minValue: CGFloat!
+        var xAxisPosition: CGFloat!
         let context = UIGraphicsGetCurrentContext()
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         let colorLocations: [CGFloat] = [0.0, 1.0]
@@ -137,8 +144,8 @@ class GraphView: UIView {
         
         // Calculate y position
         let columnYPoint = { (graphPoint: CGFloat) -> CGFloat in
-            var y:CGFloat = CGFloat(graphPoint) /
-                CGFloat(maxValue) * graphHeight
+            var y:CGFloat = CGFloat(graphPoint - xAxisPosition) /
+                CGFloat(maxValue - xAxisPosition) * graphHeight
             y = graphHeight + topBorder - y  // Flip the graph
             return y
         }
@@ -157,18 +164,20 @@ class GraphView: UIView {
             self.axisColor.setStroke()
             
             // Set maximum value
-            maxValue = datasets[0].values.max()
+            maxValue = datasets.map { $0.values.max() ?? 0 }.max()
+            minValue = datasets.map { $0.values.min() ?? 0 }.min()
+            xAxisPosition = max(0.0, minValue * 0.8)
             
             // Draw x-axis
             let xAxis = UIBezierPath()
-            xAxis.move(to: CGPoint(x: columnXPoint(datasets[0], 0), y: columnYPoint(0)))
-            xAxis.addLine(to: CGPoint(x: columnXPoint(datasets[0], datasets[0].values.count-1), y: columnYPoint(0)))
+            xAxis.move(to: CGPoint(x: columnXPoint(datasets[0], 0), y: columnYPoint(xAxisPosition)))
+            xAxis.addLine(to: CGPoint(x: columnXPoint(datasets[0], datasets[0].values.count-1), y: columnYPoint(xAxisPosition)))
             xAxis.stroke()
             
             // Draw y-axis
             let yAxis = UIBezierPath()
-            yAxis.move(to: CGPoint(x: columnXPoint(datasets[0], 0), y: columnYPoint(0)))
-            yAxis.addLine(to: CGPoint(x: columnXPoint(datasets[0], 0), y: columnYPoint(maxValue)))
+            yAxis.move(to: CGPoint(x: columnXPoint(datasets[0], 0), y: columnYPoint(min(minValue, xAxisPosition))))
+            yAxis.addLine(to: CGPoint(x: columnXPoint(datasets[0], 0), y: columnYPoint(maxValue + 4.0)))
             yAxis.stroke()
             
             for dataset in datasets {
@@ -231,13 +240,17 @@ class GraphView: UIView {
                     // Draw on data points
                     for i in 0...dataset.values.count-1 {
                         var point = CGPoint(x: columnXPoint(dataset, i), y: columnYPoint(dataset.values[i]))
-                        point.x -= dataset.pointSize/2
-                        point.y -= dataset.pointSize/2
+                        point.x -= dataset.pointSize/2.0
+                        point.y -= dataset.pointSize/2.0
                         
                         let circle = UIBezierPath(ovalIn:
                             CGRect(origin: point,
                                    size: CGSize(width: dataset.pointSize, height: dataset.pointSize)))
+                        circle.lineWidth = dataset.weight
+                        self.backgroundColor?.setFill()
                         circle.fill()
+                        dataset.color.setFill()
+                        circle.stroke()
                     }
                 }
                 if dataset.drillRef != nil && detailDelegate != nil {
@@ -260,7 +273,7 @@ class GraphView: UIView {
                                                           width: CGFloat(bottomMaxLen) * 8.0,
                                                           height: xScale))
                         label.text = dataset.xAxisLabels[i]
-                        label.font = UIFont.systemFont(ofSize: 16)
+                        label.font = UIFont.systemFont(ofSize: 14)
                         label.adjustsFontSizeToFitWidth = true
                         label.textColor = UIColor.white
                         label.textAlignment = .left
@@ -272,13 +285,11 @@ class GraphView: UIView {
             }
         }
         
-        if self.title != nil {
+        if self.attributedTitle != nil {
             let label = UILabel(frame: CGRect(x: leftMargin + 10, y: 10, width: width - leftMargin - rightMargin - 20, height: topBorder - 30))
-            label.text = self.title
+            label.attributedText = self.attributedTitle
             label.textAlignment = .center
-            label.font = UIFont.systemFont(ofSize: 24)
             label.adjustsFontSizeToFitWidth = true
-            label.textColor = self.titleColor
             label.tag = 1
             self.addSubview(label)
         }
@@ -298,7 +309,7 @@ class GraphView: UIView {
                 }
                 let label = UILabel(frame: CGRect(x: x, y: columnYPoint(yAxisLabel.value)-8, width: margin - 8, height: 16))
                 label.text = yAxisLabel.text
-                label.font = UIFont.systemFont(ofSize: 16)
+                label.font = UIFont.systemFont(ofSize: 14)
                 label.adjustsFontSizeToFitWidth = true
                 label.textColor = yAxisLabel.color
                 if yAxisLabel.position == .left {

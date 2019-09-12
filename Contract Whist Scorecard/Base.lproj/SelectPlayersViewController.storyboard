@@ -213,7 +213,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="box" width="142" height="167"/>
+        <image name="box" width="22" height="22"/>
         <image name="forward" width="22" height="22"/>
         <image name="home" width="22" height="22"/>
         <image name="info" width="22" height="22"/>

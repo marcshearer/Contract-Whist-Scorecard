@@ -47,6 +47,8 @@ class GraphView: UIView {
     private var leftMaxLen: Int = 0
     private var rightMaxLen: Int = 0
     private var bottomMaxLen: Int = 0
+    private var xAxisHidden: Bool = false
+    private var xAxisFractionMin: CGFloat?
     
     // Detail delegate
     public weak var detailDelegate: GraphDetailDelegate?
@@ -102,6 +104,11 @@ class GraphView: UIView {
         self.gradientColors = gradient.map {$0.cgColor} as CFArray
     }
     
+    public func setXAxis(hidden: Bool = false, fractionMin: CGFloat? = nil) {
+        self.xAxisHidden = hidden
+        self.xAxisFractionMin = fractionMin
+    }
+    
     public func addYaxisLabel(text: String, value: CGFloat, position: Position, color: UIColor = UIColor.white) {
         yAxisLabels.append(Label(text: text, value: value, position: position, color: color))
         if position == .left {
@@ -117,7 +124,7 @@ class GraphView: UIView {
         var leftMargin: CGFloat = 4.0 + (8.0 * CGFloat(leftMaxLen))
         let rightMargin: CGFloat = 20.0 + (8.0 * CGFloat(rightMaxLen))
         let topBorder:CGFloat = (attributedTitle == nil ? 50 : 70)
-        let bottomBorder:CGFloat = 4 + (8.0 * CGFloat(bottomMaxLen))
+        let bottomBorder:CGFloat = max(8.0, 4.0 + (8.0 * CGFloat(bottomMaxLen)))
         let graphHeight = height - topBorder - bottomBorder
         var maxValue: CGFloat!
         var minValue: CGFloat!
@@ -166,17 +173,19 @@ class GraphView: UIView {
             // Set maximum value
             maxValue = datasets.map { $0.values.max() ?? 0 }.max()
             minValue = datasets.map { $0.values.min() ?? 0 }.min()
-            xAxisPosition = max(0.0, minValue * 0.8)
+            xAxisPosition = max(0.0, (xAxisFractionMin == nil ? 0.0 : minValue * xAxisFractionMin!))
             
             // Draw x-axis
-            let xAxis = UIBezierPath()
-            xAxis.move(to: CGPoint(x: columnXPoint(datasets[0], 0), y: columnYPoint(xAxisPosition)))
-            xAxis.addLine(to: CGPoint(x: columnXPoint(datasets[0], datasets[0].values.count-1), y: columnYPoint(xAxisPosition)))
-            xAxis.stroke()
+            if !xAxisHidden {
+                let xAxis = UIBezierPath()
+                xAxis.move(to: CGPoint(x: columnXPoint(datasets[0], 0), y: columnYPoint(xAxisPosition)))
+                xAxis.addLine(to: CGPoint(x: columnXPoint(datasets[0], datasets[0].values.count-1), y: columnYPoint(xAxisPosition)))
+                xAxis.stroke()
+            }
             
             // Draw y-axis
             let yAxis = UIBezierPath()
-            yAxis.move(to: CGPoint(x: columnXPoint(datasets[0], 0), y: columnYPoint(min(minValue, xAxisPosition))))
+            yAxis.move(to: CGPoint(x: columnXPoint(datasets[0], 0), y: columnYPoint(min(minValue, xAxisPosition) - 4.0)))
             yAxis.addLine(to: CGPoint(x: columnXPoint(datasets[0], 0), y: columnYPoint(maxValue + 4.0)))
             yAxis.stroke()
             
@@ -286,7 +295,7 @@ class GraphView: UIView {
         }
         
         if self.attributedTitle != nil {
-            let label = UILabel(frame: CGRect(x: leftMargin + 10, y: 10, width: width - leftMargin - rightMargin - 20, height: topBorder - 30))
+            let label = UILabel(frame: CGRect(x: leftMargin + 40, y: 10, width: width - leftMargin - rightMargin - 40, height: topBorder - 30))
             label.attributedText = self.attributedTitle
             label.textAlignment = .center
             label.adjustsFontSizeToFitWidth = true

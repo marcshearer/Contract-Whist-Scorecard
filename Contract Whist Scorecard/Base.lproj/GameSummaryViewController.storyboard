@@ -26,38 +26,43 @@
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H46-u6-heu" userLabel="Top Area">
-                                                <rect key="frame" x="0.0" y="0.0" width="414" height="358.33333333333331"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="414" height="403.33333333333331"/>
                                                 <subviews>
                                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="1" contentMode="scaleAspectFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="pO6-Hc-ZdE" userLabel="Winners Collection View">
-                                                        <rect key="frame" x="147" y="178.33333333333337" width="120" height="180"/>
+                                                        <rect key="frame" x="147" y="153.33333333333337" width="120" height="250"/>
                                                         <color key="backgroundColor" name="Clear"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="height" constant="180" id="cEm-EV-4cP"/>
+                                                            <constraint firstAttribute="height" constant="250" id="cEm-EV-4cP"/>
                                                             <constraint firstAttribute="width" constant="120" id="que-Gj-8aZ"/>
                                                         </constraints>
                                                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="20" id="sX3-1t-nE3">
-                                                            <size key="itemSize" width="120" height="180"/>
+                                                            <size key="itemSize" width="120" height="250"/>
                                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                         </collectionViewFlowLayout>
                                                         <cells>
                                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Game Summary Cell" id="ldj-uf-TJJ" customClass="GameSummaryCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="0.0" width="120" height="180"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="120" height="250"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="120" height="180"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="120" height="250"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <subviews>
-                                                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1M5-uf-JbU" userLabel="Player View" customClass="ThumbnailView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="120" height="155"/>
-                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="crown" translatesAutoresizingMaskIntoConstraints="NO" id="yHK-2B-8G5" userLabel="Crown Image View">
+                                                                            <rect key="frame" x="0.0" y="0.0" width="120" height="60"/>
+                                                                            <constraints>
+                                                                                <constraint firstAttribute="height" constant="60" id="O3g-QT-PIY"/>
+                                                                            </constraints>
+                                                                        </imageView>
+                                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1M5-uf-JbU" userLabel="Player View" customClass="ThumbnailView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                                            <rect key="frame" x="0.0" y="60" width="120" height="150"/>
                                                                             <color key="backgroundColor" name="Clear"/>
                                                                         </view>
                                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wfp-ti-7kF" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                                            <rect key="frame" x="0.0" y="145" width="120" height="35"/>
+                                                                            <rect key="frame" x="0.0" y="210" width="120" height="40"/>
                                                                             <constraints>
-                                                                                <constraint firstAttribute="height" constant="35" id="pEu-RS-k4r"/>
+                                                                                <constraint firstAttribute="height" constant="40" id="pEu-RS-k4r"/>
                                                                             </constraints>
                                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="36"/>
                                                                             <state key="normal">
@@ -67,8 +72,15 @@
                                                                     </subviews>
                                                                 </view>
                                                                 <constraints>
+                                                                    <constraint firstItem="yHK-2B-8G5" firstAttribute="leading" secondItem="ldj-uf-TJJ" secondAttribute="leading" id="2HJ-UD-Kk6"/>
+                                                                    <constraint firstItem="Wfp-ti-7kF" firstAttribute="top" secondItem="1M5-uf-JbU" secondAttribute="bottom" id="C2p-3q-xJr"/>
                                                                     <constraint firstAttribute="bottom" secondItem="Wfp-ti-7kF" secondAttribute="bottom" id="Feo-H0-Exg"/>
+                                                                    <constraint firstItem="1M5-uf-JbU" firstAttribute="leading" secondItem="ldj-uf-TJJ" secondAttribute="leading" id="I05-9R-Taw"/>
                                                                     <constraint firstItem="Wfp-ti-7kF" firstAttribute="leading" secondItem="ldj-uf-TJJ" secondAttribute="leading" id="NsR-vz-DSC"/>
+                                                                    <constraint firstItem="1M5-uf-JbU" firstAttribute="top" secondItem="yHK-2B-8G5" secondAttribute="bottom" id="a7Y-B9-9hh"/>
+                                                                    <constraint firstItem="yHK-2B-8G5" firstAttribute="top" secondItem="ldj-uf-TJJ" secondAttribute="top" id="j88-DL-G11"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="1M5-uf-JbU" secondAttribute="trailing" id="kNk-G8-acU"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="yHK-2B-8G5" secondAttribute="trailing" id="wkj-13-Czp"/>
                                                                     <constraint firstAttribute="trailing" secondItem="Wfp-ti-7kF" secondAttribute="trailing" id="wrA-w0-7sc"/>
                                                                 </constraints>
                                                                 <connections>
@@ -145,7 +157,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="207" height="179.33333333333334"/>
                                                                 <subviews>
                                                                     <view tag="1" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="5J7-Q9-k63" userLabel="Stop Playing Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                                        <rect key="frame" x="26.666666666666657" y="0.0" width="153.66666666666663" height="143.33333333333334"/>
+                                                                        <rect key="frame" x="26.666666666666671" y="0.0" width="153.66666666666663" height="143.33333333333334"/>
                                                                         <color key="backgroundColor" name="Clear"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="width" secondItem="5J7-Q9-k63" secondAttribute="height" multiplier="82:64" constant="-30" id="ikx-kq-uUK"/>
@@ -195,10 +207,10 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kar-Qx-XWq" userLabel="Middle Area">
-                                                <rect key="frame" x="0.0" y="358.33333333333337" width="414" height="358.33333333333337"/>
+                                                <rect key="frame" x="0.0" y="403.33333333333337" width="414" height="313.33333333333337"/>
                                                 <subviews>
                                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="2" contentMode="scaleAspectFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="2h7-Jf-CHY" userLabel="Others Collection View">
-                                                        <rect key="frame" x="67" y="119.33333333333337" width="280" height="120"/>
+                                                        <rect key="frame" x="67" y="96.666666666666686" width="280" height="120"/>
                                                         <color key="backgroundColor" name="Clear"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="280" id="8L9-vx-Fqr"/>
@@ -252,7 +264,7 @@
                                                         </connections>
                                                     </collectionView>
                                                     <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="k0v-pi-t17">
-                                                        <rect key="frame" x="188.66666666666666" y="301.33333333333331" width="37" height="37"/>
+                                                        <rect key="frame" x="188.66666666666666" y="256.33333333333331" width="37" height="37"/>
                                                         <color key="color" name="Dark Highlight Text"/>
                                                     </activityIndicatorView>
                                                 </subviews>
@@ -270,7 +282,7 @@
                                             <constraint firstItem="H46-u6-heu" firstAttribute="leading" secondItem="YUm-GK-DA2" secondAttribute="leading" id="1Qs-M4-tH9"/>
                                             <constraint firstItem="kar-Qx-XWq" firstAttribute="leading" secondItem="YUm-GK-DA2" secondAttribute="leading" id="E3p-vI-IDt"/>
                                             <constraint firstAttribute="trailing" secondItem="H46-u6-heu" secondAttribute="trailing" id="HqK-Eg-MV9"/>
-                                            <constraint firstItem="H46-u6-heu" firstAttribute="height" secondItem="YUm-GK-DA2" secondAttribute="height" multiplier="0.4" id="OBG-ql-h13"/>
+                                            <constraint firstItem="H46-u6-heu" firstAttribute="height" secondItem="YUm-GK-DA2" secondAttribute="height" multiplier="0.45" id="OBG-ql-h13"/>
                                             <constraint firstItem="4Xn-Vn-q9j" firstAttribute="height" secondItem="YUm-GK-DA2" secondAttribute="height" multiplier="0.2" id="Qbb-nH-SB1"/>
                                             <constraint firstItem="kar-Qx-XWq" firstAttribute="top" secondItem="H46-u6-heu" secondAttribute="bottom" id="V3a-VH-hkt"/>
                                             <constraint firstItem="H46-u6-heu" firstAttribute="top" secondItem="YUm-GK-DA2" secondAttribute="top" id="WmJ-sT-ytO"/>
@@ -330,7 +342,7 @@
                             <constraint firstItem="QwS-ao-9CA" firstAttribute="trailing" secondItem="9uo-b0-008" secondAttribute="trailing" constant="32" id="0bP-5S-Rj9"/>
                             <constraint firstItem="2d4-a6-rKy" firstAttribute="bottom" secondItem="dDC-WM-Jrb" secondAttribute="bottom" id="2Gy-iC-5s4"/>
                             <constraint firstItem="9uo-b0-008" firstAttribute="leading" secondItem="QwS-ao-9CA" secondAttribute="leading" constant="32" id="Dsi-t2-kFq"/>
-                            <constraint firstItem="kar-Qx-XWq" firstAttribute="height" secondItem="YUm-GK-DA2" secondAttribute="height" multiplier="0.4" id="EE9-YC-3Sl"/>
+                            <constraint firstItem="kar-Qx-XWq" firstAttribute="height" secondItem="YUm-GK-DA2" secondAttribute="height" multiplier="0.35" id="EE9-YC-3Sl"/>
                             <constraint firstItem="Bhv-M4-Rmr" firstAttribute="top" secondItem="QwS-ao-9CA" secondAttribute="top" constant="8" id="QnB-pI-Ala"/>
                             <constraint firstItem="2d4-a6-rKy" firstAttribute="top" secondItem="dDC-WM-Jrb" secondAttribute="top" id="WFy-xS-6xl"/>
                             <constraint firstItem="2d4-a6-rKy" firstAttribute="leading" secondItem="dDC-WM-Jrb" secondAttribute="leading" id="WxD-gd-aLo"/>
@@ -377,11 +389,12 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="9461.6000000000004" y="903.59820089955031"/>
+            <point key="canvasLocation" x="9460.8695652173919" y="903.34821428571422"/>
         </scene>
     </scenes>
     <resources>
         <image name="back" width="22" height="22"/>
+        <image name="crown" width="100" height="100"/>
         <image name="play again" width="50" height="64"/>
         <image name="stop playing" width="50" height="64"/>
         <namedColor name="Clear">

@@ -168,6 +168,11 @@ Better animation of game preview
 5.0 (9)
 Fix deal bugs
 
+5.0 (10-11)
+Drill not rotating right (wrong number of values)
+Drill not hitting the right value in graph
+Added crown to game summary
+
 Bugs fix now
 ------------
 When initialise app - should make the email you type in your default - i.e. set date first
@@ -192,12 +197,9 @@ TODO
 ----
 Crash if go into High Scores repeatedly
 Avoid message text blue color
-Redo graph - grey background - no banner - yellow line - hollow circles for data points (shown fully)- gradient? - start near minimum
-             remove min/max (words) and lines white - axes dark gray - lines thicker - 100 line dashed
 Looks like it is still in recovery mode even when play game and override warning
-Color of done button in entry
 Problem if reset when in confirm window
-Add crowns and confetti to game summary
+Add confetti to game summary
 Player detail screen
 Settings screen
 Change icons on sync completion

@@ -49,7 +49,6 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        
         scorecard.reCenterPopup(self)
         view.setNeedsLayout()
     }
@@ -64,7 +63,7 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
         var drillRef: [String] = []
         var xAxisLabels: [String] = []
         let phoneSize = ScorecardUI.phoneSize()
-        let portraitPhoneSize = phoneSize && frame.height > frame.width
+        let portraitPhoneSize = ScorecardUI.portraitPhone()
         let showLimit = (portraitPhoneSize ? 12 : (phoneSize ? 25 : 50))
         let participantList = History.getParticipantRecordsForPlayer(playerEmail: playerDetail.email, includeBF: false)
         
@@ -72,6 +71,7 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
         graphView.reset()
         graphView.backgroundColor = Palette.background
         graphView.setColors(axis: Palette.text, gradient: [Palette.background, Palette.emphasis])
+        graphView.setXAxis(hidden: true, fractionMin: 1.0)
         
         if participantList.count == 0 {
             self.alertMessage("No games played since game history has been saved", okHandler: {
@@ -80,10 +80,10 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
         } else {
         
             // Build data
-            for participant in max(0, participantList.count - showLimit)...participantList.count - 1 {
-                values.append(CGFloat(participantList[participant].totalScore))
-                drillRef.append(participantList[participant].gameUUID!)
-                xAxisLabels.append(Utility.dateString(participantList[participant].datePlayed! as Date))
+            for participant in participantList {
+                values.append(CGFloat(participant.totalScore))
+                drillRef.append(participant.gameUUID!)
+                xAxisLabels.append(Utility.dateString(participant.datePlayed! as Date))
             }
             
             let maximum = values.max()!
@@ -91,21 +91,27 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
             var average = CGFloat(playerDetail.totalScore) / CGFloat(playerDetail.gamesPlayed)
             average.round()
             
+            if values.count > showLimit {
+                values = values.suffix(showLimit)
+                drillRef = drillRef.suffix(showLimit)
+                xAxisLabels = xAxisLabels.suffix(showLimit)
+            }
+            
             // Add maximum score line
             if maximum >= average + 10 {
-                graphView.addDataset(values: [maximum, maximum], weight: 2.0, color: Palette.emphasis.withAlphaComponent(0.4))
+                graphView.addDataset(values: [maximum, maximum], weight: 2.0, color: Palette.text.withAlphaComponent(0.4))
                 graphView.addYaxisLabel(text: "\(Int(maximum))", value: maximum, position: .right, color: Palette.text)
                 if !portraitPhoneSize {
-                    graphView.addYaxisLabel(text: "Max", value: maximum, position: .left, color: Palette.text)
+                    graphView.addYaxisLabel(text: "Highest", value: maximum, position: .left, color: Palette.text)
                 }
             }
             
             // Add minimum score line
             if minimum <= average - 6 {
-                graphView.addDataset(values: [minimum, minimum], weight: 2.0, color: Palette.emphasis.withAlphaComponent(0.4))
+                graphView.addDataset(values: [minimum, minimum], weight: 2.0, color: Palette.text.withAlphaComponent(0.4))
                 graphView.addYaxisLabel(text: "\(Int(minimum))", value: minimum, position: .right, color: Palette.text)
                 if !portraitPhoneSize {
-                    graphView.addYaxisLabel(text: "Min", value: minimum, position: .left, color: Palette.text)
+                    graphView.addYaxisLabel(text: "Lowest", value: minimum, position: .left, color: Palette.text)
                 }
             }
             

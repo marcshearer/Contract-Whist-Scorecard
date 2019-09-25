@@ -47,9 +47,10 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
     private var otherWidth: CGFloat = 0.0
     private var otherCellHeight: CGFloat = 0.0
     private var otherCellWidth: CGFloat = 0.0
-    private let winnerNameHeight: CGFloat = 40.0
+    private let winnerNameHeight: CGFloat = 35.0
+    private let crownHeight: CGFloat = 60.0
     private let otherNameHeight: CGFloat = 30.0
-    private let winnerScoreHeight: CGFloat = 35.0
+    private let winnerScoreHeight: CGFloat = 40.0
     private let otherScoreHeight: CGFloat = 20.0
     private let winnerSpacing: CGFloat = 30.0
     private let otherSpacing: CGFloat = 20.0
@@ -201,7 +202,7 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
         
         cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Game Summary Cell", for: indexPath) as! GameSummaryCollectionCell
         
-        cell.thumbnailView.set(frame: CGRect(origin: CGPoint(), size: CGSize(width: width, height: width + nameHeight)))
+        cell.thumbnailView.set(frame: CGRect(origin: CGPoint(), size: CGSize(width: width, height: width + nameHeight - 5.0)))
         cell.thumbnailView.set(playerMO: self.scorecard.enteredPlayer(playerResults.playerNumber).playerMO!, nameHeight: nameHeight)
         cell.thumbnailView.set(font: UIFont.systemFont(ofSize: nameHeight * 0.67, weight: .semibold))
         cell.thumbnailView.set(textColor: Palette.roomInteriorTextContrast)
@@ -301,7 +302,7 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
         let totalWidth = self.view.safeAreaLayoutGuide.layoutFrame.width
         
         self.winnerCellWidth = min(100.0, (totalWidth - (self.winnerSpacing * (CGFloat(self.winners) + 1))) / CGFloat(self.winners))
-        self.winnerCellHeight = self.winnerCellWidth + self.winnerNameHeight + winnerScoreHeight
+        self.winnerCellHeight = self.winnerCellWidth + (self.winnerNameHeight - 5.0) + winnerScoreHeight + crownHeight
         self.winnerWidth = (winnerCellWidth * CGFloat(self.winners)) + (winnerSpacing * CGFloat(self.winners - 1))
         self.winnerCollectionViewWidth.constant = self.winnerWidth
         

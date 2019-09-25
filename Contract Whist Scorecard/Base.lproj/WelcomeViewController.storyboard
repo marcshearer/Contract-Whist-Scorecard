@@ -71,7 +71,6 @@
                                 </subviews>
                                 <color key="backgroundColor" name="Banner"/>
                                 <constraints>
-                                    <constraint firstItem="QP0-uS-vsK" firstAttribute="leading" secondItem="XlQ-ht-Cyf" secondAttribute="leading" constant="8" id="eXQ-wO-MPj"/>
                                     <constraint firstAttribute="height" constant="44" id="xfp-sN-eUK">
                                         <variation key="heightClass=regular-widthClass=regular" constant="100"/>
                                     </constraint>
@@ -109,7 +108,6 @@
                                 </subviews>
                                 <color key="backgroundColor" name="Banner"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="282-wV-NAZ" secondAttribute="trailing" constant="8" id="K1g-qn-pTD"/>
                                     <constraint firstItem="282-wV-NAZ" firstAttribute="centerY" secondItem="pE1-ST-peb" secondAttribute="centerY" id="VHk-6h-Fxg"/>
                                     <constraint firstAttribute="height" constant="44" id="Zhh-nR-Kr5">
                                         <variation key="heightClass=regular-widthClass=regular" constant="100"/>
@@ -128,6 +126,7 @@
                         <color key="backgroundColor" name="Background"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="9e5-uf-7bY" firstAttribute="trailing" secondItem="282-wV-NAZ" secondAttribute="trailing" constant="8" id="4Pe-KV-kyv"/>
                             <constraint firstItem="pE1-ST-peb" firstAttribute="top" secondItem="Ivm-JK-J61" secondAttribute="bottom" id="5Nq-qj-Stq"/>
                             <constraint firstItem="9e5-uf-7bY" firstAttribute="leading" secondItem="GfL-2p-s30" secondAttribute="leading" constant="-16" id="GRq-gj-riX"/>
                             <constraint firstItem="9e5-uf-7bY" firstAttribute="leading" secondItem="xhn-Yh-ogb" secondAttribute="leading" constant="-20" id="Gzz-RJ-exn"/>
@@ -138,6 +137,7 @@
                                 <variation key="heightClass=regular-widthClass=regular" constant="20"/>
                             </constraint>
                             <constraint firstItem="tYH-SB-xrl" firstAttribute="centerX" secondItem="jyL-Wg-M4O" secondAttribute="centerX" id="QsD-nb-icW"/>
+                            <constraint firstItem="QP0-uS-vsK" firstAttribute="leading" secondItem="9e5-uf-7bY" secondAttribute="leading" constant="8" id="Rg3-t4-c0T"/>
                             <constraint firstItem="RwW-IW-wzd" firstAttribute="top" secondItem="Ivm-JK-J61" secondAttribute="bottom" id="Ts7-zm-801"/>
                             <constraint firstAttribute="trailing" secondItem="RwW-IW-wzd" secondAttribute="trailing" id="Z6m-56-ROQ"/>
                             <constraint firstItem="Ivm-JK-J61" firstAttribute="leading" secondItem="jyL-Wg-M4O" secondAttribute="leading" id="Zt3-zz-lbU"/>

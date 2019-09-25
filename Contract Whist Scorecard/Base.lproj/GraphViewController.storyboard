@@ -30,7 +30,7 @@
                                     <constraint firstAttribute="height" constant="30" id="X06-Qk-sdl"/>
                                     <constraint firstAttribute="width" constant="30" id="iTg-rj-ePX"/>
                                 </constraints>
-                                <state key="normal" image="cross banner"/>
+                                <state key="normal" image="cross grey"/>
                                 <connections>
                                     <action selector="finishPressed:" destination="7b0-A7-L4e" eventType="touchUpInside" id="LYO-fs-2i6"/>
                                 </connections>
@@ -67,7 +67,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="cross banner" width="22" height="22"/>
+        <image name="cross grey" width="22" height="22"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

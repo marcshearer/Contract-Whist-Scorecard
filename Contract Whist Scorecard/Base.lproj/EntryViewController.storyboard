@@ -353,8 +353,10 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5A9-ob-sf7">
+                                                    <rect key="frame" x="0.0" y="0.0" width="73" height="0.0"/>
                                                     <subviews>
                                                         <button autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IVB-I0-IfC" userLabel="Errors Button" customClass="ErrorRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="30" height="0.0"/>
                                                             <color key="backgroundColor" name="Error"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="30" id="8n7-22-CIA"/>
@@ -364,7 +366,9 @@
                                                                 <action selector="saveScorePressed:" destination="mEi-hH-CUE" eventType="touchUpInside" id="5ki-0u-eNT"/>
                                                             </connections>
                                                         </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8rw-oz-v5h" customClass="LightRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8rw-oz-v5h" customClass="RoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                            <rect key="frame" x="30" y="0.0" width="43" height="0.0"/>
+                                                            <color key="backgroundColor" name="Room Interior Text Contrast"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="Kuj-6V-wtF"/>
                                                             </constraints>
@@ -544,6 +548,9 @@
         </namedColor>
         <namedColor name="Room Interior Text">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Room Interior Text Contrast">
+            <color red="0.21568627450980393" green="0.47843137254901963" blue="0.46666666666666667" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Separator">
             <color red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

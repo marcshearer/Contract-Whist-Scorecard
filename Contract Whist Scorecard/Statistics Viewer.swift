@@ -62,10 +62,10 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
     internal func didSelect(record: DataTableViewerDataSource, field: String) {
         let record = record as! PlayerDetail
         switch field {
-        case "graph":
-            self.drawGraph(playerDetail: record)
-        default:
+        case "info":
             self.showDetail(playerDetail: record)
+        default:
+            self.drawGraph(playerDetail: record)
         }
         
     }

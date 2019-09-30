@@ -105,7 +105,6 @@ class Scorecard {
     public var settingVersionMessage = ""
     public var settingDatabase = ""
     public static var settingRabbitMQUri = ""
-    public var settingNearbyPlaying = false
     public var settingOnlinePlayerEmail: String!
     public var settingFaceTimeAddress: String!
     public var settingPrefersStatusBarHidden = true
@@ -346,9 +345,6 @@ class Scorecard {
         
         // Load broadcast setting
         self.settingAllowBroadcast = UserDefaults.standard.bool(forKey: "allowBroadcast")
-        
-        // Load nearby playing setting
-        self.settingNearbyPlaying = UserDefaults.standard.bool(forKey: "nearbyPlaying")
         
         // Load Online Game settings
         self.settingOnlinePlayerEmail = Scorecard.onlineEmail()

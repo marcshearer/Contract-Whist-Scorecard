@@ -361,7 +361,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
             self.showGetStarted()
         })
         
-        self.addAction(section: mainSection, title: "Play Game", isHidden: {!self.scorecard.settingSyncEnabled || !(self.scorecard.settingNearbyPlaying || self.scorecard.onlineEnabled) || self.scorecard.playerList.count == 0}, action: newOnlineGame)
+        self.addAction(section: mainSection, title: "Play Game", isHidden: {!self.scorecard.settingSyncEnabled || !((self.scorecard.settingOnlinePlayerEmail ?? "") != "" || self.scorecard.onlineEnabled) || self.scorecard.playerList.count == 0}, action: newOnlineGame)
         
         self.addAction(section: mainSection, title: "Resume Playing", highlight: true, isHidden: {!self.recoveryAvailable || !self.recoverOnline || !allowRecovery
         }, action: resumeGame)
@@ -669,7 +669,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         if Utility.compareVersions(version1: self.scorecard.settingVersion,
                                    version2: self.scorecard.latestVersion) == .lessThan {
             self.alertMessage("You must upgrade to the latest version of the app to use this option")
-        } else if self.scorecard.settingSyncEnabled && (self.scorecard.settingNearbyPlaying || self.scorecard.settingOnlinePlayerEmail != nil) {
+        } else if self.scorecard.settingSyncEnabled && (self.scorecard.settingOnlinePlayerEmail != nil) {
             self.showClient(purpose: .playing, title: "Play a Game")
         }
     }

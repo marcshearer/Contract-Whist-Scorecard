@@ -204,6 +204,7 @@ Player detail screen
 Settings screen
 Change icons on sync completion
 Gradients wrong on and after rotation of scorepad
+Implement Facetime calls
 
 Jack
 ----

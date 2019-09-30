@@ -250,7 +250,7 @@ class AngledButton: ClearButton {
         self.superview?.bringSubviewToFront(self)
         self.bringSubviewToFront(self.titleLabel!)
         
-        let inset: CGFloat = angleSize + 5.0
+        let inset: CGFloat = angleSize + min(5.0, (frame.width - 50.0) / 10.0)
         self.titleEdgeInsets = UIEdgeInsets.init(top: 5.0, left: inset, bottom: 5.0, right: inset)
         self.backgroundColor = UIColor.clear
     }

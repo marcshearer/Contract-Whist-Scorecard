@@ -1193,12 +1193,10 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         self.hostingOptions = 0
         
         if self.commsPurpose == .playing {
-            if self.scorecard.settingNearbyPlaying {
-                self.nearbyRow = self.hostingOptions
-                self.hostingOptions += 1
-            }
             
             if self.scorecard.settingOnlinePlayerEmail != nil {
+                self.nearbyRow = self.hostingOptions
+                self.hostingOptions += 1
                 self.onlineRow = self.hostingOptions
                 self.hostingOptions += 1
             }

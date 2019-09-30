@@ -348,7 +348,6 @@ extension Scorecard {
         self.settingReceiveNotifications = false
         self.settingAllowBroadcast = true
         self.settingAlertVibrate = true
-        self.settingNearbyPlaying = true
         self.settingOnlinePlayerEmail = "mshearer@waitrose.com"
     }
 }

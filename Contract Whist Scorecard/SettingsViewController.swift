@@ -874,10 +874,11 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     private func identifyPlayerCompletion(playerMO: [PlayerMO]?) {
         var playerEmail: String! = nil
+        var refresh = false
         
         if let playerMO = playerMO {
             if self.scorecard.settingOnlinePlayerEmail ?? "" == "" {
-                self.refreshOnlinePlayer()
+                refresh = true
             }
             playerEmail = playerMO[0].email
             self.saveOnlineEmailLocally(playerEmail: playerEmail)
@@ -889,6 +890,9 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
         } else if self.scorecard.settingOnlinePlayerEmail ?? "" == "" {
             // Cancelled and no previous value
             self.clearOnline()
+        }
+        if refresh {
+            self.refreshOnlinePlayer()
         }
     }
     
@@ -931,7 +935,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     private func refreshOnlinePlayer() {
         // Reload whole section to avoid dodgy animation
-        self.settingsTableView.reloadSections(IndexSet(arrayLiteral: Sections.sync.rawValue), with: .top)
+        self.settingsTableView.reloadSections(IndexSet(arrayLiteral: Sections.sync.rawValue), with: .automatic)
     }
     
     private func refreshFaceTimeAddress() {

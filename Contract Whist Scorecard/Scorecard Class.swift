@@ -338,7 +338,7 @@ class Scorecard {
         self.settingSaveLocation = UserDefaults.standard.bool(forKey: "saveLocation")
         
         // Load notification setting
-        self.settingReceiveNotifications = UserDefaults.standard.bool(forKey: "allowNotifications")
+        self.settingReceiveNotifications = UserDefaults.standard.bool(forKey: "receiveNotifications")
         
         // Load alert settings
         self.settingAlertVibrate = UserDefaults.standard.bool(forKey: "alertVibrate")

@@ -613,17 +613,15 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     @objc internal func onlineGamesChanged(_ onlineGamesSwitch: UISwitch) {
         self.onlineEnabled = onlineGamesSwitch.isOn
-        self.authoriseNotifications(
-            successAction: {
-                self.identifyOnlinePlayer()
-            },
-            failureAction: {
-                self.clearOnline()
-                self.clearAlerts()
-                self.clearReceiveNotifications()
-        })
         if self.onlineEnabled {
-            
+            self.authoriseNotifications(
+                successAction: {
+                    self.identifyOnlinePlayer()
+            },
+                failureAction: {
+                    self.clearOnline()
+                    self.clearReceiveNotifications()
+            })
         } else {
             self.clearOnline()
         }
@@ -698,6 +696,8 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
             authoriseNotifications(
                 successAction: {
                     Notifications.updateHighScoreSubscriptions()
+                    // Save it
+                    UserDefaults.standard.set(self.scorecard.settingReceiveNotifications, forKey: "receiveNotifications")
                 },
                 failureAction: {
                     self.clearReceiveNotifications()
@@ -705,9 +705,6 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
         } else {
             self.clearReceiveNotifications()
         }
-        
-        // Save it
-        UserDefaults.standard.set(scorecard.settingReceiveNotifications, forKey: "receiveNotifications")
     }
     
     @objc internal func cardsSliderChanged(_ cardsSlider: UISlider) {
@@ -879,16 +876,16 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
         var playerEmail: String! = nil
         
         if let playerMO = playerMO {
-            playerEmail = playerMO[0].email
-            if playerEmail != self.scorecard.settingOnlinePlayerEmail {
-                self.saveOnlineEmailLocally(playerEmail: playerEmail)
-                self.setOptionEnabled(section: Sections.sync.rawValue, option: SyncOptions.onlinePlayer.rawValue, enabled: true)
-                self.enableOnline()
-                self.displayOnlineCell(inProgress: "Enabling for \(playerMO[0].name!)")
-
-                // Disable for now - will be enabled when enabling complete
-                self.setOptionEnabled(section: Sections.sync.rawValue, option: SyncOptions.onlinePlayer.rawValue, enabled: false)
+            if self.scorecard.settingOnlinePlayerEmail ?? "" == "" {
+                self.refreshOnlinePlayer()
             }
+            playerEmail = playerMO[0].email
+            self.saveOnlineEmailLocally(playerEmail: playerEmail)
+            self.enableOnline()
+            self.displayOnlineCell(inProgress: "Enabling for \(playerMO[0].name!)")
+            
+            // Disable for now - will be enabled when enabling complete
+            self.setOptionEnabled(section: Sections.sync.rawValue, option: SyncOptions.onlinePlayer.rawValue, enabled: false)
         } else if self.scorecard.settingOnlinePlayerEmail ?? "" == "" {
             // Cancelled and no previous value
             self.clearOnline()
@@ -930,6 +927,11 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
         if let trumpSuitCollectionView = self.getTrumpSuitCollectionView() {
             trumpSuitCollectionView.reloadData()
         }
+    }
+    
+    private func refreshOnlinePlayer() {
+        // Reload whole section to avoid dodgy animation
+        self.settingsTableView.reloadSections(IndexSet(arrayLiteral: Sections.sync.rawValue), with: .top)
     }
     
     private func refreshFaceTimeAddress() {
@@ -1228,6 +1230,8 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     }
     
     func enableOnline() {
+        // Enable online player details
+        self.setOptionEnabled(section: Sections.sync.rawValue, option: SyncOptions.onlinePlayer.rawValue, enabled: true)
         // Enable Facetime calls switch
         self.setOptionEnabled(section: Sections.sync.rawValue, option: SyncOptions.facetimeCalls.rawValue, enabled: true)
         // Enable (and default on alerts
@@ -1239,6 +1243,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
             self.scorecard.settingOnlinePlayerEmail = nil
             self.onlineEnabled = false
             UserDefaults.standard.set(nil, forKey: "onlinePlayerEmail")
+            self.refreshOnlinePlayer()
             // Delete Facetime address
             self.facetimeEnabled = false
             self.scorecard.settingFaceTimeAddress = ""
@@ -1252,7 +1257,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
             // Delete subscriptions
             self.updateOnlineGameSubscriptions()
             // Disable alerts
-            self.enableAlerts()
+            self.clearAlerts()
         }
         self.setOptionValue(section: Sections.sync.rawValue, option: SyncOptions.onlineGames.rawValue, value: false)
     }
@@ -1460,6 +1465,12 @@ class SettingsTableCell: UITableViewCell {
     
     override func prepareForReuse() {
         self.setEnabled(enabled: true)
+        self.toggleSwitch?.removeTarget(nil, action: nil, for: .allEvents)
+        self.editButton?.removeTarget(nil, action: nil, for: .allEvents)
+        self.onlinePlayerButton?.removeTarget(nil, action: nil, for: .allEvents)
+        self.segmentedControl?.removeTarget(nil, action: nil, for: .allEvents)
+        self.slider?.removeTarget(nil, action: nil, for: .allEvents)
+        self.textField?.removeTarget(nil, action: nil, for: .allEvents)
     }
 }
 

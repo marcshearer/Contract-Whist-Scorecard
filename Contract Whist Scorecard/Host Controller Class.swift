@@ -243,14 +243,14 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
             if let index = self.playerData.firstIndex(where: {$0.email == peer.playerEmail}) {
                 if self.playerData[index].peer != nil && self.playerData[index].peer.deviceName != peer.deviceName && self.playerData[index].peer.state != .notConnected {
                     // Duplicate - add it temporarily - to disconnect in state change
-                    addPlayer(name: name, email: peer.playerEmail!, playerMO: playerMO, peer: peer, inviteStatus: .none, disconnectReason: "\(name ?? "This player") has already joined from another device")
+                    addPlayer(name: name, email: peer.playerEmail!, playerMO: playerMO, peer: peer, inviteStatus: InviteStatus.none, disconnectReason: "\(name ?? "This player") has already joined from another device")
                 } else {
                     self.playerData[index].peer = peer
                     self.updateFaceTimeAddress(info: info, playerData: self.playerData[index])
                 }
             } else {
                 // Not found - shouldn't happen - add it temporarily - to disconnect in state change
-                addPlayer(name: name, email: peer.playerEmail!, playerMO: playerMO, peer: peer, inviteStatus: .none, disconnectReason: "\(name ?? "This player") has not been invited to a game on this device")
+                addPlayer(name: name, email: peer.playerEmail!, playerMO: playerMO, peer: peer, inviteStatus: InviteStatus.none, disconnectReason: "\(name ?? "This player") has not been invited to a game on this device")
             }
         } else {
             addPlayer(name: peer.playerName!, email: peer.playerEmail!, playerMO: playerMO, peer: peer)

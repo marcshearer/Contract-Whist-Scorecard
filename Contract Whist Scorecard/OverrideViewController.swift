@@ -10,6 +10,16 @@ import UIKit
 
 class OverrideViewController : CustomViewController, UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate {
     
+    private enum Options: Int, CaseIterable {
+        case excludeHistory = 0
+        case excludeStats = 1
+        case subHeading = 2
+        case startCards = 3
+        case endCards = 4
+        case bounce = 5
+        case instructions = 6
+    }
+    
     private let scorecard = Scorecard.shared
     
     private var message: String!
@@ -17,18 +27,8 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
     private var value = 1
     private var completion: (()->())?
     private var existingOverride = false
+    private var skipOptions = 0
     
-    private let instructionSection = 0
-    private let cardsSection = 1
-    private let excludeSection = 2
-    
-    private let startSliderRow = 0
-    private let endSliderRow = 1
-    private let bounceRow = 2
-    
-    private let excludeHistoryRow = 0
-    private let excludeStatsRow = 1
-
     // UI elements
     private var cardsSlider: [Int : UISlider] = [:]
     private var cardsValue: [Int : UITextField] = [:]
@@ -41,6 +41,7 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
     @IBOutlet private weak var revertButton: UIButton!
     
     // MARK: - IB Actions ============================================================================== -
+    
     @IBAction func confirmPressed(_ sender: UIButton) {
         self.completion?()
         self.dismiss()
@@ -67,6 +68,8 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
             self.scorecard.overrideSelected = true
         }
         
+        self.skipOptions = (self.scorecard.settingSaveHistory ? 0 : 2)
+        
         self.revertButton.setTitleColor(Palette.gameBannerText, for: .normal)
         self.confirmButton.setTitleColor(Palette.gameBannerText, for: .normal)
 
@@ -75,141 +78,84 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
     
     // MARK: - TableView Overrides ===================================================================== -
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return (self.scorecard.settingSaveHistory ? 3 : 2)
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case instructionSection:
-            return 1
-        case cardsSection:
-            return 3
-        case excludeSection:
-            return 2
-        default:
-            return 0
+        if self.scorecard.settingSaveHistory {
+            return Options.allCases.count
+        } else {
+            return Options.allCases.count - self.skipOptions
         }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.section {
-        case instructionSection:
-            return 130
-        case cardsSection:
-            return 50
-        case excludeSection:
-            return 50
-        default:
-            return 0
+        var height: CGFloat = 0.0
+        if let option = Options(rawValue: indexPath.row + skipOptions) {
+            switch option {
+            case .excludeHistory, .excludeStats:
+                height = 80.0
+            case .subHeading:
+                height = 80.0
+            case .startCards, .endCards:
+                height = 32.0
+            case .bounce:
+                height = 45.0
+            case .instructions:
+                height = 140.0
+            }
         }
+        return height
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: OverrideTableCell!
         
-        switch indexPath.section {
-        case instructionSection:
-            cell = tableView.dequeueReusableCell(withIdentifier: "Instructions Cell", for: indexPath) as? OverrideTableCell
-            cell.instructionLabel.text = "This lets you override the number of cards for one or more games.\nYou can also exclude these (or ordinary) games from history/statistics."
-        case cardsSection:
-            switch indexPath.row {
-            case startSliderRow, endSliderRow:
-                cell = tableView.dequeueReusableCell(withIdentifier: "Number Cards Cell", for: indexPath) as? OverrideTableCell
-                let cardsSlider = cell.cardsSlider!
-                let cardsValue = cell.cardsValue!
-                cardsSlider.tag = indexPath.row
-                cardsSlider.addTarget(self, action: #selector(OverrideViewController.cardsSliderAction(_:)), for: UIControl.Event.valueChanged)
+        if let option = Options(rawValue: indexPath.row + skipOptions) {
+            switch option {
+            case .excludeHistory:
+                cell = tableView.dequeueReusableCell(withIdentifier: "Exclude", for: indexPath) as? OverrideTableCell
+                cell.excludeLabel.attributedText = self.excludeText(from: "History")
+                cell.excludeSelection.addTarget(self, action: #selector(OverrideViewController.excludeHistoryAction(_:)), for: UIControl.Event.valueChanged)
+                cell.excludeSelection.selectedSegmentIndex = (self.scorecard.overrideExcludeHistory ? 1 : 0)
+                cell.excludeSelection.layer.cornerRadius = 5.0
+                self.excludeHistorySelection = cell.excludeSelection
+                self.excludeChanged()
                 
-                // Set number of rounds value and slider
-                cell.cardsLabel.text = (indexPath.row == startSliderRow ? "Start:" : "End:")
-                cardsValue.text = "\(scorecard.overrideCards[indexPath.row])"
-                cardsSlider.value = Float(scorecard.overrideCards[indexPath.row])
+            case .excludeStats:
+                cell = tableView.dequeueReusableCell(withIdentifier: "Exclude", for: indexPath) as? OverrideTableCell
+                cell.excludeLabel.attributedText = self.excludeText(from: "Statistics")
+                cell.excludeSelection.addTarget(self, action: #selector(OverrideViewController.excludeStatsAction(_:)), for: UIControl.Event.valueChanged)
+                cell.excludeSelection.selectedSegmentIndex = (self.scorecard.overrideExcludeStats ? 1 : 0)
+                self.excludeStatsSelection = cell.excludeSelection
                 
-                // Store controls
-                self.cardsSlider[indexPath.row] = cardsSlider
-                self.cardsValue[indexPath.row] = cardsValue
-            case bounceRow:
-                cell = tableView.dequeueReusableCell(withIdentifier: "Bounce Cell", for: indexPath) as? OverrideTableCell
-                bounceSelection = cell.bounceSelection
-                bounceSelection.addTarget(self, action: #selector(OverrideViewController.bounceAction(_:)), for: UIControl.Event.valueChanged)
-                cardsChanged()
+            case .subHeading:
+                cell = tableView.dequeueReusableCell(withIdentifier: "Sub Heading", for: indexPath) as? OverrideTableCell
+                cell.subHeadingLabel.text = "Number of cards in hands"
                 
-                // Set bounce number of cards selection
-                switch scorecard.overrideBounceNumberCards! {
-                case true:
-                    bounceSelection.selectedSegmentIndex = 1
-                default:
-                    bounceSelection.selectedSegmentIndex = 0
-                }
-            default:
-                break
+            case .startCards, .endCards:
+                let index = (option == .startCards ? 0 : 1)
+                cell = tableView.dequeueReusableCell(withIdentifier: "Cards", for: indexPath) as? OverrideTableCell
+                cell.cardsLabel.text = (index == 0 ? "Start:" : "End:")
+                cell.cardsSlider.tag = index
+                cell.cardsSlider.addTarget(self, action: #selector(OverrideViewController.cardsSliderAction(_:)), for: UIControl.Event.valueChanged)
+                cell.cardsSlider.value = Float(self.scorecard.overrideCards[index])
+                cell.cardsValue.text = "\(self.scorecard.overrideCards[index])"
+                self.cardsSlider[index] = cell.cardsSlider
+                self.cardsValue[index] = cell.cardsValue
+                
+            case .bounce:
+                cell = tableView.dequeueReusableCell(withIdentifier: "Bounce", for: indexPath) as? OverrideTableCell
+                cell.bounceSelection.addTarget(self, action: #selector(OverrideViewController.bounceAction(_:)), for: UIControl.Event.valueChanged)
+                cell.bounceSelection.selectedSegmentIndex = (self.scorecard.overrideBounceNumberCards ? 1 : 0)
+                cell.bounceSelection.layer.cornerRadius = 5.0
+                self.bounceSelection = cell.bounceSelection
+                self.cardsChanged()
+                
+            case .instructions:
+                cell = tableView.dequeueReusableCell(withIdentifier: "Instructions", for: indexPath) as? OverrideTableCell
+                cell.instructionLabel.text = "Changes will only last for one session and will be reset back to your choices in Settings automatically"
             }
-        case excludeSection:
-            switch indexPath.row {
-            case excludeHistoryRow:
-                cell = tableView.dequeueReusableCell(withIdentifier: "Exclude History Cell", for: indexPath) as? OverrideTableCell
-                excludeHistorySelection = cell.excludeHistorySelection
-                excludeHistorySelection.addTarget(self, action: #selector(OverrideViewController.excludeHistoryAction(_:)), for: UIControl.Event.valueChanged)
-                excludeChanged()
-                
-                // Set exclude history selection
-                switch scorecard.overrideExcludeHistory! {
-                case true:
-                    excludeHistorySelection.selectedSegmentIndex = 0
-                default:
-                    excludeHistorySelection.selectedSegmentIndex = 1
-                }
-            case excludeStatsRow:
-                cell = tableView.dequeueReusableCell(withIdentifier: "Exclude Stats Cell", for: indexPath) as? OverrideTableCell
-                excludeStatsSelection = cell.excludeStatsSelection
-                excludeStatsSelection.addTarget(self, action: #selector(OverrideViewController.excludeStatsAction(_:)), for: UIControl.Event.valueChanged)
-                
-                // Set exclude stats selection
-                switch scorecard.overrideExcludeStats! {
-                case true:
-                    excludeStatsSelection.selectedSegmentIndex = 0
-                default:
-                    excludeStatsSelection.selectedSegmentIndex = 1
-                }
-                
-            default:
-                break
-            }
-        default:
-            break
         }
         
         return cell as UITableViewCell
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == instructionSection {
-            return 0
-        } else {
-            return 30
-        }
-    }
-    
-    func tableView(_ tableView: UITableView,
-                   titleForHeaderInSection section: Int) -> String? {
-        switch section {
-        case instructionSection:
-            return nil
-        case cardsSection:
-            return "Number of cards in hands"
-        case excludeSection:
-            return "Exclude from history/statistics"
-        default:
-            return nil
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        let header = view as! UITableViewHeaderFooterView
-        Palette.sectionHeadingStyle(view: header.backgroundView!)
-        header.textLabel!.textColor = Palette.sectionHeadingText
-        header.textLabel!.font = UIFont.boldSystemFont(ofSize: 18.0)
     }
 
     // MARK: - Action Handlers ========================================================================= -
@@ -223,34 +169,19 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
     }
     
     @objc func bounceAction(_ sender: Any) {
-        switch bounceSelection.selectedSegmentIndex {
-        case 0:
-            scorecard.overrideBounceNumberCards = false
-        default:
-            scorecard.overrideBounceNumberCards = true
-        }
+        scorecard.overrideBounceNumberCards = (bounceSelection.selectedSegmentIndex == 1)
         cardsChanged()
         self.enableButtons()
     }
     
     @objc func excludeHistoryAction(_ sender: Any) {
-        switch excludeHistorySelection.selectedSegmentIndex {
-        case 0:
-            scorecard.overrideExcludeHistory = true
-        default:
-            scorecard.overrideExcludeHistory = false
-        }
+        scorecard.overrideExcludeHistory = (bounceSelection.selectedSegmentIndex == 1)
         excludeChanged()
         self.enableButtons()
     }
     
     @objc func excludeStatsAction(_ sender: Any) {
-        switch excludeStatsSelection.selectedSegmentIndex {
-        case 0:
-            scorecard.overrideExcludeStats = true
-        default:
-            scorecard.overrideExcludeStats = false
-        }
+        scorecard.overrideExcludeStats = (bounceSelection.selectedSegmentIndex == 1)
         self.enableButtons()
     }
     
@@ -276,7 +207,7 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
     func enableButtons() {
         let enabled = self.scorecard.checkOverride()
         self.confirmButton.isHidden = !enabled
-        self.revertButton.setTitle((!enabled || !self.existingOverride ? "" : "Revert"), for: .normal)
+        self.revertButton.setTitle((!enabled || !self.existingOverride ? "Cancel" : "Revert"), for: .normal)
     }
     
     // Mark: - Main instatiation routine =============================================================== -
@@ -301,18 +232,31 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
     private func dismiss() {
         self.dismiss(animated: true, completion: nil)
     }
+            
+    private func excludeText(from: String) -> NSMutableAttributedString {
+        let attributedString = NSMutableAttributedString()
+        var attributes: [NSAttributedString.Key : Any] = [:]
+        attributes[NSAttributedString.Key.foregroundColor] = Palette.text
+        attributes[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 17.0, weight: .light)
+        attributedString.append(NSAttributedString(string: "Include this game in ", attributes: attributes))
+        attributes[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 17.0, weight: .bold)
+        attributedString.append(NSAttributedString(string: from, attributes: attributes))
+        
+        return attributedString
+    }
 }
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
 
 class OverrideTableCell: UITableViewCell {
     @IBOutlet weak var instructionLabel: UILabel!
+    @IBOutlet weak var subHeadingLabel: UILabel!
     @IBOutlet weak var cardsLabel: UILabel!
     @IBOutlet weak var cardsSlider: UISlider!
     @IBOutlet weak var cardsValue: UITextField!
     @IBOutlet weak var bounceSelection: UISegmentedControl!
-    @IBOutlet weak var excludeStatsSelection: UISegmentedControl!
-    @IBOutlet weak var excludeHistorySelection: UISegmentedControl!
+    @IBOutlet weak var excludeSelection: UISegmentedControl!
+    @IBOutlet weak var excludeLabel: UILabel!
 }
 
 

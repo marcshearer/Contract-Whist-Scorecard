@@ -62,6 +62,10 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </navigationBar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Let-o1-9be">
+                                <rect key="frame" x="0.0" y="44" width="375" height="30"/>
+                                <color key="backgroundColor" name="Banner"/>
+                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="DkQ-EB-XGS">
                                 <rect key="frame" x="0.0" y="74" width="375" height="593"/>
                                 <color key="backgroundColor" name="Clear"/>
@@ -220,21 +224,20 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="V6G-jc-uig">
-                                                    <rect key="frame" x="15" y="12.5" width="345" height="20.5"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="V6G-jc-uig">
+                                                    <rect key="frame" x="15" y="62.5" width="345" height="20.5"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" name="Text"/>
+                                                    <color key="textColor" name="Banner Text"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="V6G-jc-uig" firstAttribute="leading" secondItem="D8A-jR-Di4" secondAttribute="leadingMargin" id="Xwz-g0-8r2"/>
-                                                <constraint firstItem="V6G-jc-uig" firstAttribute="bottom" secondItem="D8A-jR-Di4" secondAttribute="bottomMargin" id="lYw-60-Lft"/>
                                                 <constraint firstItem="V6G-jc-uig" firstAttribute="trailing" secondItem="D8A-jR-Di4" secondAttribute="trailingMargin" id="tA6-5D-RDa"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <color key="backgroundColor" name="Clear"/>
+                                        <color key="backgroundColor" name="Banner"/>
                                         <connections>
                                             <outlet property="instructionLabel" destination="V6G-jc-uig" id="0ul-uT-XJ2"/>
                                         </connections>
@@ -265,12 +268,16 @@
                             <constraint firstAttribute="bottom" secondItem="Wiu-MJ-nOh" secondAttribute="bottom" id="M9k-XU-FgO"/>
                             <constraint firstItem="Wiu-MJ-nOh" firstAttribute="leading" secondItem="hOp-TY-evR" secondAttribute="leading" id="Qpy-jH-uad"/>
                             <constraint firstItem="Wiu-MJ-nOh" firstAttribute="top" secondItem="XnD-Df-Iax" secondAttribute="bottom" id="REA-eP-Gcq"/>
+                            <constraint firstItem="DkQ-EB-XGS" firstAttribute="top" secondItem="Let-o1-9be" secondAttribute="bottom" id="Rbb-Jq-LO6"/>
                             <constraint firstItem="DkQ-EB-XGS" firstAttribute="top" secondItem="BMC-qc-qAk" secondAttribute="bottom" constant="30" id="WPo-TI-R0y"/>
                             <constraint firstItem="DkQ-EB-XGS" firstAttribute="leading" secondItem="hOp-TY-evR" secondAttribute="leading" id="Wng-Rv-4ck"/>
                             <constraint firstItem="BMC-qc-qAk" firstAttribute="leading" secondItem="hOp-TY-evR" secondAttribute="leading" id="aRd-Ks-X7F"/>
                             <constraint firstItem="XnD-Df-Iax" firstAttribute="bottom" secondItem="DkQ-EB-XGS" secondAttribute="bottom" id="e66-9Y-alX"/>
                             <constraint firstItem="F6E-8M-LIy" firstAttribute="top" secondItem="hOp-TY-evR" secondAttribute="top" id="ewV-30-8Z0"/>
                             <constraint firstItem="F6E-8M-LIy" firstAttribute="trailing" secondItem="hOp-TY-evR" secondAttribute="trailing" id="hdf-kd-Ede"/>
+                            <constraint firstItem="Let-o1-9be" firstAttribute="leading" secondItem="XnD-Df-Iax" secondAttribute="leading" id="k7F-rO-a5F"/>
+                            <constraint firstItem="XnD-Df-Iax" firstAttribute="trailing" secondItem="Let-o1-9be" secondAttribute="trailing" id="lcs-8D-XI0"/>
+                            <constraint firstItem="Let-o1-9be" firstAttribute="top" secondItem="BMC-qc-qAk" secondAttribute="bottom" id="mkL-Lz-jai"/>
                             <constraint firstItem="XnD-Df-Iax" firstAttribute="top" secondItem="F6E-8M-LIy" secondAttribute="bottom" id="tty-0g-KBD"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="XnD-Df-Iax"/>
@@ -294,6 +301,9 @@
         </namedColor>
         <namedColor name="Banner">
             <color red="0.89800000190734863" green="0.74900001287460327" blue="0.37299999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Banner Text">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>

@@ -181,8 +181,6 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             self.checkFaceTimeAvailable()
         }
         
-        self.createCutCards()
-        
         // Become delegate of selected players view
         self.selectedPlayersView.delegate = self
     }
@@ -214,6 +212,10 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         self.firstTime = false
         
         self.setupScreen(size: self.view.bounds.size)
+        
+        if firstTime {
+            self.createCutCards()
+        }
         
         // Draw room
         self.drawRoom()
@@ -541,7 +543,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         // Carry out cut and broadcast
         cutCards = self.cutCards(preCutCards: preCutCards)
         if self.scorecard.isHosting {
-            self.scorecard.sendCut(cutCards: cutCards)
+            self.scorecard.sendCut(cutCards: cutCards, playerNames: self.selectedPlayers.map{ $0!.name! })
         }
         
        self.animateDealCards(cards: cutCards, afterDuration: 0.2, stepDuration: 0.3, completion: {

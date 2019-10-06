@@ -428,14 +428,14 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         
     }
     
-    public func sendCut(cutCards: [Card], to commsPeer: CommsPeer! = nil) {
+    public func sendCut(cutCards: [Card], playerNames: [String], to commsPeer: CommsPeer! = nil) {
+        var slot = 1
         var cardNumbers: [Int] = []
-        var playerNames: [String] = []
+        var names: [String] = []
         for card in cutCards {
             cardNumbers.append(card.toNumber())
-        }
-        for playerNumber in 1...self.currentPlayers {
-            playerNames.append(self.enteredPlayer(playerNumber).playerMO!.name!)
+            names.append(playerNames[slot])
+            slot = (slot + 1) % playerNames.count
         }
         self.commsDelegate?.send("cut", ["cards": cardNumbers,
                                          "names": playerNames],

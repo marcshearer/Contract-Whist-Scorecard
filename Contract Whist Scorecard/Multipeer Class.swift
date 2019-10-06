@@ -141,6 +141,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
                         }
                     } catch {
                         // Ignore errors
+                        self.debugMessage("Error sending data (\(error.localizedDescription))")
                     }
                 }
             }

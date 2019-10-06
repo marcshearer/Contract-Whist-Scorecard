@@ -11,13 +11,13 @@ import UIKit
 class OverrideViewController : CustomViewController, UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate {
     
     private enum Options: Int, CaseIterable {
-        case excludeHistory = 0
-        case excludeStats = 1
-        case subHeading = 2
-        case startCards = 3
-        case endCards = 4
-        case bounce = 5
-        case instructions = 6
+        case instructions = 0
+        case excludeHistory = 1
+        case excludeStats = 2
+        case subHeading = 3
+        case startCards = 4
+        case endCards = 5
+        case bounce = 6
     }
     
     private let scorecard = Scorecard.shared
@@ -99,7 +99,7 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
             case .bounce:
                 height = 45.0
             case .instructions:
-                height = 140.0
+                height = 80.0
             }
         }
         return height
@@ -124,6 +124,7 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
                 cell.excludeLabel.attributedText = self.excludeText(from: "Statistics")
                 cell.excludeSelection.addTarget(self, action: #selector(OverrideViewController.excludeStatsAction(_:)), for: UIControl.Event.valueChanged)
                 cell.excludeSelection.selectedSegmentIndex = (self.scorecard.overrideExcludeStats ? 1 : 0)
+                cell.excludeSelection.layer.cornerRadius = 5.0
                 self.excludeStatsSelection = cell.excludeSelection
                 
             case .subHeading:

@@ -1040,6 +1040,9 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
             }
         default:
             self.useLocation = true
+            scorecard.settingSaveLocation = true
+            // Save it
+            UserDefaults.standard.set(scorecard.settingSaveLocation, forKey: "saveLocation")
         }
     }
     

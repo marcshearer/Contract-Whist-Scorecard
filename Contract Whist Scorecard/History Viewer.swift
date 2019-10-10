@@ -98,7 +98,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
        
     internal func setupCustomButton(barButtonItem: UIBarButtonItem) {
         self.filterButton = UIButton(frame: CGRect(origin: CGPoint(), size: CGSize(width: 22.0, height: 22.0)))
-        self.filterButton.setImage(UIImage(named: "info"), for: .normal)
+        self.filterButton.setImage(UIImage(named: "filter"), for: .normal)
         self.filterButton.contentHorizontalAlignment = .left
         self.filterButton.addTarget(self, action: #selector(HistoryViewer.filterButtonPressed(_:)), for: .touchUpInside)
         self.filterButtonThumbnail = ThumbnailView(frame: self.filterButton.imageView!.frame)
@@ -320,7 +320,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             viewHeight = 0.0
             instructionHeight = 0.0
             self.filterInstructionView.isHidden = true
-            self.filterButton.setImage(UIImage(named: "info"), for: .normal)
+            self.filterButton.setImage(UIImage(named: "filter"), for: .normal)
             self.filterButtonThumbnail.isHidden = true
 
         case .filtered:
@@ -331,7 +331,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             instructionHeight = 44.0
             self.filterClearButton.isHidden = false
             self.filterInstructionView.isHidden = false
-            self.filterButton.setImage(UIImage(named: "info"), for: .normal)
+            self.filterButton.setImage(UIImage(named: "filter"), for: .normal)
             self.filterButtonThumbnail.set(playerMO: self.filterPlayerMO, nameHeight: 0.0)
             self.filterButtonThumbnail.isHidden = false
         }
@@ -374,7 +374,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
     private func createFilterSelectionView() {
         self.filterSelectionView = PlayerSelectionView(frame: CGRect(x: 0.0, y: 0.0, width: self.customView.frame.width, height: self.dataTableViewController.view.frame.height - self.customView.frame.minY), interRowSpacing: 10.0)
         self.filterSelectionView.delegate = self
-        self.filterSelectionView.backgroundColor = Palette.background
+        self.filterSelectionView.backgroundColor = UIColor.white
         self.filterSelectionView.set(textColor: Palette.text)
         
         self.setFilterSelectionViewRequiredHeight()

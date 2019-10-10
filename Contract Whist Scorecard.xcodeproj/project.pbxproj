@@ -113,6 +113,8 @@
 		B2B7550D1E619A3F00B1313B /* DataAdmin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B7550C1E619A3F00B1313B /* DataAdmin.swift */; };
 		B2BBCCAA2327ECD0005678B2 /* SelectedPlayersHexagonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BBCCA92327ECD0005678B2 /* SelectedPlayersHexagonView.swift */; };
 		B2BC51C71F7B5E8C0065F07D /* String Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BC51C61F7B5E8C0065F07D /* String Extensions.swift */; };
+		B2BE8690234C6BF000766CF2 /* PlayerSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2BE868F234C6BF000766CF2 /* PlayerSelectionView.xib */; };
+		B2BE8692234C6C1600766CF2 /* PlayerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BE8691234C6C1600766CF2 /* PlayerSelectionView.swift */; };
 		B2C051041EDF194C009DE37F /* Multipeer Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C051031EDF194C009DE37F /* Multipeer Class.swift */; };
 		B2C054781FB8B55700846F6E /* ConfirmCountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */; };
 		B2D2AAB01E1FF8A600E211A9 /* SyncViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D2AAAF1E1FF8A600E211A9 /* SyncViewController.swift */; };
@@ -309,6 +311,8 @@
 		B2B7550C1E619A3F00B1313B /* DataAdmin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataAdmin.swift; sourceTree = "<group>"; };
 		B2BBCCA92327ECD0005678B2 /* SelectedPlayersHexagonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedPlayersHexagonView.swift; sourceTree = "<group>"; };
 		B2BC51C61F7B5E8C0065F07D /* String Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String Extensions.swift"; sourceTree = "<group>"; };
+		B2BE868F234C6BF000766CF2 /* PlayerSelectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayerSelectionView.xib; sourceTree = "<group>"; };
+		B2BE8691234C6C1600766CF2 /* PlayerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSelectionView.swift; sourceTree = "<group>"; };
 		B2C051031EDF194C009DE37F /* Multipeer Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Multipeer Class.swift"; sourceTree = "<group>"; };
 		B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmCountViewController.swift; sourceTree = "<group>"; };
 		B2D2AAAF1E1FF8A600E211A9 /* SyncViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncViewController.swift; sourceTree = "<group>"; };
@@ -725,6 +729,7 @@
 		B243385622E0A67C002EBD40 /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
+				B2BE868E234C6BB600766CF2 /* Player Selection */,
 				B243385122D89AE7002EBD40 /* Thumbnail View */,
 				B243385C22E0AE97002EBD40 /* Player View */,
 				B243385722E0A68F002EBD40 /* Selected Players View */,
@@ -922,6 +927,15 @@
 				B2B1801C21195FB0008D3BAA /* Computer Bidding.swift */,
 			);
 			name = "Computer Player";
+			sourceTree = "<group>";
+		};
+		B2BE868E234C6BB600766CF2 /* Player Selection */ = {
+			isa = PBXGroup;
+			children = (
+				B2BE868F234C6BF000766CF2 /* PlayerSelectionView.xib */,
+				B2BE8691234C6C1600766CF2 /* PlayerSelectionView.swift */,
+			);
+			name = "Player Selection";
 			sourceTree = "<group>";
 		};
 		CC4CC0EC1DEADC32007FB24F = {
@@ -1222,6 +1236,7 @@
 				B227891E1FB84F66009BABCA /* LocationViewController.storyboard in Resources */,
 				B243385922E0A6C3002EBD40 /* SelectedPlayersView.xib in Resources */,
 				B22789001FB83AA7009BABCA /* GetStartedViewController.storyboard in Resources */,
+				B2BE8690234C6BF000766CF2 /* PlayerSelectionView.xib in Resources */,
 				B227893F1FB893C9009BABCA /* SettingsViewController.storyboard in Resources */,
 				B22789421FB894AE009BABCA /* PlayerDetailViewController.storyboard in Resources */,
 				B227893C1FB8932A009BABCA /* SyncViewController.storyboard in Resources */,
@@ -1362,6 +1377,7 @@
 				B267DF75211F41FC0086D521 /* Admin Menu.swift in Sources */,
 				B2C051041EDF194C009DE37F /* Multipeer Class.swift in Sources */,
 				B243386322E57BE7002EBD40 /* ImageButton.swift in Sources */,
+				B2BE8692234C6C1600766CF2 /* PlayerSelectionView.swift in Sources */,
 				B2666A1F1FADAC0700A34CB0 /* Test Extensions.swift in Sources */,
 				B20DA0441E142D1E0040221D /* SelectionViewController.swift in Sources */,
 				B2DA893E1F3CC89C008EE96C /* Comms.swift in Sources */,

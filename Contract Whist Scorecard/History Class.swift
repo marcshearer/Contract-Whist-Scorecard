@@ -225,7 +225,7 @@ class History {
         
     }
 
-    static public func getParticipantRecordsForPlayer(playerEmail: String, includeBF: Bool = true, includeExcluded: Bool = true) -> [ParticipantMO] {
+    static public func getParticipantRecordsForPlayer(playerEmail: String, includeBF: Bool = false, includeExcluded: Bool = true, sortDirection: SortDirection = .ascending) -> [ParticipantMO] {
         var predicate: [NSPredicate]
         // Get all participants from Core Data for player
         
@@ -241,9 +241,27 @@ class History {
         
         let results: [ParticipantMO] = CoreData.fetch(from: "Participant",
                                                       filter: predicate,
-                                                      sort: [("datePlayed", .ascending)])
+                                                      sort: [("datePlayed", sortDirection)])
         
         return results
+    }
+    
+    public func loadGames(playerEmail: String, sortDirection: SortDirection = .ascending) {
+        var lastGameUUID: String?
+        
+        let participants = History.getParticipantRecordsForPlayer(playerEmail: playerEmail, sortDirection: sortDirection)
+        self.games = []
+        for participant in participants {
+            let games: [GameMO] = CoreData.fetch(from: "Game",
+                                                filter: NSPredicate(format: "gameUUID = %@", participant.gameUUID!),
+                                                sort: ("datePlayed", .descending))
+            for game in games {
+                if game.gameUUID != lastGameUUID {
+                    self.games.append(HistoryGame(fromManagedObject: game))
+                    lastGameUUID = game.gameUUID
+                }
+            }
+        }
     }
     
     static public func getWinStreaks(playerEmailList: [String], limit: Int = 3) -> [(streak: Int, participantMO: ParticipantMO?)] {
@@ -322,7 +340,7 @@ class History {
         var gameLocations: [GameLocation] = []
         
         // Get game list from core data
-        var gameList: [GameMO] = CoreData.fetch(from: "Game",
+        let gameList: [GameMO] = CoreData.fetch(from: "Game",
                                                 filter: NSPredicate(format: "gameUUID != 'B/F' and location != nil  and location != %@ and location != '' and location != 'Online' and latitude != nil and longitude != nil", skipLocation),
                                                 limit: 100,
                                                 sort: ("datePlayed", .descending))

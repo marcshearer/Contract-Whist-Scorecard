@@ -467,7 +467,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     /// Function used in other views to get the same thumbnail size
     
-    class public func thumbnailSize(view: UIView, labelHeight: CGFloat, landscapeWidthFraction: CGFloat = 1.0) -> CGSize {
+    class public func thumbnailSize(view: UIView, labelHeight: CGFloat, marginWidth: CGFloat = 10.0, spacing: CGFloat = 10.0) -> CGSize {
         
         let viewSize = view.frame.size
         let totalWidth = viewSize.width
@@ -476,7 +476,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         
         let numberThatFit = max(5, Int(availableWidth / (min(totalWidth, totalHeight) > 450 ? 120 : 75)))
         
-        let width = ((availableWidth - (CGFloat(numberThatFit + 1) * 10.0)) / CGFloat(numberThatFit))
+        let width = ((availableWidth - (CGFloat(numberThatFit - 1) * spacing) - (2.0 * marginWidth)) / CGFloat(numberThatFit))
         let height = width + labelHeight - 5.0
         
         return CGSize(width: width, height: height)

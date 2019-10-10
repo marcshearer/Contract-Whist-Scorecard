@@ -82,7 +82,7 @@ class Reconcile: SyncDelegate {
     
     class func rebuildLocalPlayer(playerMO: PlayerMO, resetSyncValues: Bool = false) -> Bool {
         // Load participant records
-        let participantList = History.getParticipantRecordsForPlayer(playerEmail: playerMO.email!)
+        let participantList = History.getParticipantRecordsForPlayer(playerEmail: playerMO.email!, includeBF: true)
         
         return CoreData.update(updateLogic: {
             

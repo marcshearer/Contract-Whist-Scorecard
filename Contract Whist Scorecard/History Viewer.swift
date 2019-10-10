@@ -9,11 +9,17 @@
 import UIKit
 import CoreData
 
-class HistoryViewer : NSObject, DataTableViewerDelegate {
+class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDelegate {
 
+    private enum FilterState {
+        case notFiltered
+        case selecting
+        case filtered
+    }
+    
     private let scorecard = Scorecard.shared
     
-    public var viewTitle = "Game History"
+    public var viewTitle = "History"
     public var allowSync = true
     public let initialSortField = "datePlayed"
     public let initialSortDescending = true
@@ -27,6 +33,20 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
     private var sourceViewController: UIViewController
     private var dataTableViewController: DataTableViewController!
     private var callerCompletion: (()->())?
+    private var customView: UIView!
+    private var customHeightConstraint: NSLayoutConstraint!
+    private var filterState: FilterState = .notFiltered
+    private var filterInstructionView: UIView!
+    private var filterInstructionHeightConstraint: NSLayoutConstraint!
+    private var filterInstructionLabel: UILabel!
+    private var filterClearButton: UIButton!
+    private var filterSelectionView: PlayerSelectionView!
+    private var filterSelectionHeightConstraint: NSLayoutConstraint!
+    private var filterSelectionViewHeight: CGFloat!
+    private var filterButton: UIButton!
+    private var filterButtonThumbnail: ThumbnailView!
+    private var filterPlayerMO: PlayerMO!
+    private var landscape = false
     
     // Local class variables
     let availableFields: [DataTableField] = [
@@ -34,7 +54,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
         DataTableField("=count",        "Count",     sequence: 1,   width: 60,  type: .int),
         DataTableField("=location",     "Location",  sequence: 2,   width: 100, type: .string,      align: NSTextAlignment.left, pad: true),
         DataTableField("info",          "",          sequence: 14,  width: 40,  type: .button),
-        DataTableField("cross black",   "",          sequence: 13,  width: 40,  type: .button),
+        DataTableField("cross red",     "",          sequence: 13,  width: 40,  type: .button),
         DataTableField("datePlayed",    "Date",      sequence: 3,   width: 100, type: .date),
         DataTableField("=player1",      "Winner",    sequence: 5,   width: 80,  type: .string),
         DataTableField("=score1",       "Score",     sequence: 6,   width: 50,  type: .int),
@@ -62,15 +82,42 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
         self.getHistory()
         self.callerCompletion = completion
         
-        
         // Call the data table viewer
-        dataTableViewController = DataTableViewController.show(from: viewController, delegate: self, recordList: history.games)
+        self.dataTableViewController = DataTableViewController.show(from: viewController, delegate: self, recordList: history.games)
+        self.customView = self.dataTableViewController.customHeaderView
+        self.customHeightConstraint = self.dataTableViewController.customHeaderViewHeightConstraint
+    }
+    
+    internal func layoutSubviews() {
+        if self.filterState == .selecting && self.landscape != ScorecardUI.landscape() {
+            // Re-size window
+            self.setFilterSelectionViewRequiredHeight()
+            self.filterStateChange()
+        }
+    }
+       
+    internal func setupCustomButton(barButtonItem: UIBarButtonItem) {
+        self.filterButton = UIButton(frame: CGRect(origin: CGPoint(), size: CGSize(width: 22.0, height: 22.0)))
+        self.filterButton.setImage(UIImage(named: "info"), for: .normal)
+        self.filterButton.contentHorizontalAlignment = .left
+        self.filterButton.addTarget(self, action: #selector(HistoryViewer.filterButtonPressed(_:)), for: .touchUpInside)
+        self.filterButtonThumbnail = ThumbnailView(frame: self.filterButton.imageView!.frame)
+        self.filterButton.addSubview(self.filterButtonThumbnail)
+        self.filterButtonThumbnail.isHidden = true
+        self.filterButtonThumbnail.isUserInteractionEnabled = false
+        barButtonItem.customView = self.filterButton
+    }
+    
+    internal func didSelect(playerMO: PlayerMO) {
+        self.filterPlayerMO = playerMO
+        self.filterState = .filtered
+        self.filterStateChange()
     }
     
     internal func didSelect(record: DataTableViewerDataSource, field: String) {
         let historyGame = record as! HistoryGame
         switch field {
-        case "cross black":
+        case "cross red":
             self.deleteHistory(historyGame: historyGame)
         default:
             self.showDetail(historyGame: historyGame)
@@ -82,7 +129,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
         var result = false
         
         switch field {
-        case "=count", "cross black":
+        case "=count", "cross red":
             result = !Scorecard.adminMode
         case "=location":
             result = !self.scorecard.settingSaveLocation
@@ -99,11 +146,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
         
         let historyGame = record as! HistoryGame
         
-        if historyGame.participant == nil {
-            if let index = self.history.games.firstIndex(where: { $0.gameUUID == historyGame.gameUUID } ) {
-                history.getParticipants(index: index)
-            }
-        }
+        self.loadParticipants(historyGame)
         
         switch field  {
         case "count":
@@ -122,7 +165,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
             
         case "player1", "player2", "player3", "player4":
             let player = Int(String(field.suffix(1)))!
-            if player <= historyGame.participant.count {
+            if player <= historyGame.participant?.count ?? 0 {
                 if let participant = historyGame.participant?[player-1] {
                     result = participant.name
                 } else {
@@ -134,7 +177,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
 
         case "score1", "score2", "score3", "score4":
             let player = Int(String(field.suffix(1)))!
-            if player <= historyGame.participant.count {
+            if player <= historyGame.participant?.count ?? 0 {
                 if let participant = historyGame.participant?[player-1] {
                     numericResult = Int(participant.totalScore)
                 } else {
@@ -158,6 +201,14 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
         }
         
         return result
+    }
+    
+    private func loadParticipants(_ historyGame: HistoryGame) {
+        if historyGame.participant == nil {
+            if let index = self.history.games.firstIndex(where: { $0.gameUUID == historyGame.gameUUID } ) {
+                history.getParticipants(index: index)
+            }
+        }
     }
     
     internal func refreshData(recordList: [DataTableViewerDataSource]) -> [DataTableViewerDataSource] {
@@ -184,6 +235,10 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
                 self.history.loadGames(getParticipants: false, includeBF: Scorecard.adminMode)
             }
         }
+    }
+    
+    func getPlayerHistory() {
+        self.history.loadGames(playerEmail: self.filterPlayerMO.email!, sortDirection: .descending)
     }
     
     // MARK: - Drill routines============================================================= -
@@ -225,4 +280,123 @@ class HistoryViewer : NSObject, DataTableViewerDelegate {
             })
         }
     }
+    
+    // MARK: - Filter button logic ======================================================================== -
+    
+    @objc private func filterButtonPressed(_ sender: UIButton) {
+        switch self.filterState {
+        case .notFiltered, .filtered:
+            self.filterState = .selecting
+        case .selecting:
+            self.filterState = .notFiltered
+        }
+        self.filterStateChange()
+    }
+    
+    private func filterStateChange() {
+        var viewHeight = self.customHeightConstraint.constant
+        var instructionHeight = self.filterInstructionHeightConstraint?.constant ?? 0.0
+        
+        switch self.filterState {
+        case .selecting:
+            if self.filterInstructionView == nil {
+                self.createFilterInstructionView()
+            }
+            if self.filterSelectionView == nil {
+                self.createFilterSelectionView()
+            }
+
+            viewHeight = self.filterSelectionViewHeight + 44.0
+            instructionHeight = 44.0
+            self.filterInstructionLabel.text = "Filter by Player"
+            self.filterClearButton.isHidden = true
+            self.filterInstructionView.isHidden = false
+            self.filterButton.setImage(UIImage(named: "cross white"), for: .normal)
+            self.filterButtonThumbnail.isHidden = true
+
+        case .notFiltered:
+            self.getHistory()
+            self.dataTableViewController.refreshData(recordList: history.games)
+            viewHeight = 0.0
+            instructionHeight = 0.0
+            self.filterInstructionView.isHidden = true
+            self.filterButton.setImage(UIImage(named: "info"), for: .normal)
+            self.filterButtonThumbnail.isHidden = true
+
+        case .filtered:
+            self.getPlayerHistory()
+            self.dataTableViewController.refreshData(recordList: history.games)
+            self.filterInstructionLabel.text = "History for \(self.filterPlayerMO.name!)"
+            viewHeight = 44.0
+            instructionHeight = 44.0
+            self.filterClearButton.isHidden = false
+            self.filterInstructionView.isHidden = false
+            self.filterButton.setImage(UIImage(named: "info"), for: .normal)
+            self.filterButtonThumbnail.set(playerMO: self.filterPlayerMO, nameHeight: 0.0)
+            self.filterButtonThumbnail.isHidden = false
+        }
+        
+        if self.customHeightConstraint.constant != viewHeight ||
+            self.filterInstructionHeightConstraint.constant != instructionHeight {
+            Utility.animate(duration: viewHeight == 0.0 ? 0.3 : 0.5) {
+                self.customHeightConstraint.constant = viewHeight
+                self.filterInstructionHeightConstraint.constant = instructionHeight
+            }
+            self.filterSelectionView.set(players: self.scorecard.playerList)
+        }
+    }
+    
+    @objc private func filterClearButtonPressed(_ sender: UIButton) {
+        self.filterState = .notFiltered
+        self.filterStateChange()
+    }
+    
+    private func createFilterInstructionView() {
+        self.filterInstructionView = UIView()
+        self.filterInstructionView.backgroundColor = Palette.banner
+        self.filterInstructionLabel = UILabel()
+        self.filterInstructionLabel.textColor = Palette.bannerText
+        self.filterInstructionLabel.font = UIFont.systemFont(ofSize: 24.0, weight: .light)
+        self.filterClearButton = UIButton(frame: CGRect(x: 0.0, y: 0.0, width: 22.0, height: 22.0))
+        self.filterClearButton.setTitle("X", for: .normal)
+        self.filterClearButton.titleLabel?.font = UIFont.systemFont(ofSize: 24.0, weight: .light)
+        self.filterClearButton.addTarget(self, action: #selector(HistoryViewer.filterClearButtonPressed(_:)), for: .touchUpInside)
+        self.filterInstructionView.addSubview(self.filterInstructionLabel)
+        self.filterInstructionView.addSubview(self.filterClearButton)
+        Constraint.anchor(view: self.filterInstructionView, control: self.filterInstructionLabel, attributes: .centerX, .centerY)
+        Constraint.anchor(view: self.filterInstructionView, control: self.filterClearButton, to: self.filterInstructionLabel, multiplier: 1.0, constant: 4.0, toAttribute: .trailing, attributes: .leading)
+        Constraint.anchor(view: self.filterInstructionView, control: self.filterClearButton, attributes: .centerY)
+        self.customView!.addSubview(self.filterInstructionView)
+        Constraint.anchor(view: customView!, control: self.filterInstructionView, attributes: .top, .leading, .trailing)
+        self.filterInstructionHeightConstraint = Constraint.setHeight(control: self.filterInstructionView, height: 0.0)
+    }
+    
+    private func createFilterSelectionView() {
+        self.filterSelectionView = PlayerSelectionView(frame: CGRect(x: 0.0, y: 0.0, width: self.customView.frame.width, height: self.dataTableViewController.view.frame.height - self.customView.frame.minY), interRowSpacing: 10.0)
+        self.filterSelectionView.delegate = self
+        self.filterSelectionView.backgroundColor = Palette.background
+        self.filterSelectionView.set(textColor: Palette.text)
+        
+        self.setFilterSelectionViewRequiredHeight()
+        
+        self.customView.addSubview(self.filterSelectionView)
+        Constraint.anchor(view: customView!, control: self.filterSelectionView, attributes: .bottom, .leading, .trailing)
+        Constraint.anchor(view: customView!, control: self.filterSelectionView, to: self.filterInstructionView, toAttribute: .bottom, attributes: .top)
+        
+    }
+    
+    private func setFilterSelectionViewRequiredHeight() {
+        
+        let availableWidth = self.filterSelectionView.collectionWidth + 10.0
+        
+        let cellsAcross = Int(availableWidth / (self.filterSelectionView.cellWidth + 10.0))
+        let cellsDown = (self.scorecard.playerList.count + cellsAcross - 1) / cellsAcross
+        
+        self.filterSelectionViewHeight = (CGFloat(cellsDown) * (self.filterSelectionView.cellHeight + 10.0)) - 10.0
+        self.filterSelectionViewHeight = min(self.filterSelectionViewHeight, self.dataTableViewController.view.frame.height - self.customView.frame.minY)
+        
+        self.landscape = ScorecardUI.landscape()
+        
+    }
+    
 }

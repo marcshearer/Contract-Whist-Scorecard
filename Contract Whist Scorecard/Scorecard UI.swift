@@ -25,8 +25,10 @@ class ScorecardUI {
         return gradient
     }
     
-    class func roundCorners(_ view: UIView, percent: CGFloat = 0.0) {
-        if percent == 0.0 {
+    class func roundCorners(_ view: UIView, percent: CGFloat = 0.0, radius: CGFloat? = nil) {
+        if radius != nil {
+            view.layer.cornerRadius = radius!
+        } else if percent == 0.0 {
             view.layer.cornerRadius = 5
         } else {
             view.layer.cornerRadius = view.layer.bounds.width * (percent/100.0)
@@ -34,16 +36,13 @@ class ScorecardUI {
         view.layer.masksToBounds = true
     }
     
-    class func veryRoundCorners(_ view: UIView, radius: CGFloat = 0.0) {
-        var percent: CGFloat
+    class func veryRoundCorners(_ view: UIView, radius: CGFloat? = nil) {
+        var percent: CGFloat = 0.0
+        
         if radius == 0.0 {
             percent = 50.0
-        } else if view.layer.bounds.width == 0 {
-            percent = 0.0
-        } else {
-            percent = radius / view.layer.bounds.width * 100.0
         }
-        ScorecardUI.roundCorners(view, percent: percent)
+        ScorecardUI.roundCorners(view, percent: percent, radius: radius)
     }
     
     class func largeBoldStyle(_ label: UILabel) {

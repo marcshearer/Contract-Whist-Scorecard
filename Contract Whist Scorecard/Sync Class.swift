@@ -227,87 +227,91 @@ class Sync {
     private func syncController() {
         // Each element should either return true to signify complete (and hence should continue with next phase immediately)
         // or return true and then recall the controller from a completion block
-        var nextPhase = true
-        observer = nil
         
-        while true {
-            
-            // Prepare for next phase
-            syncPhaseCount += 1
+        Utility.mainThread {
         
-            // Quit if errors or finished
-            if errors != 0 || !Sync.syncInProgress || syncPhaseCount >= syncPhases.count {
-                break
-            }
+            var nextPhase = true
+            self.observer = nil
             
-            // Don't allow any phase to take longer than timeout seconds
-            if self.timeout != nil {
-                self.startTimer(self.timeout)
+            while true {
+                
+                // Prepare for next phase
+                self.syncPhaseCount += 1
+                
+                // Quit if errors or finished
+                if self.errors != 0 || !Sync.syncInProgress || self.syncPhaseCount >= self.syncPhases.count {
+                    break
+                }
+                
+                // Don't allow any phase to take longer than timeout seconds
+                if self.timeout != nil {
+                    self.startTimer(self.timeout)
+                }
+                
+                switch self.syncPhases[self.syncPhaseCount] {
+                case .phaseGetVersion:
+                    nextPhase = self.getCloudVersion()
+                case .phaseGetLastSyncDate:
+                    nextPhase = self.getLastSyncDate()
+                case .phaseUpdateLastSyncDate:
+                    nextPhase = self.updateLastSyncDate()
+                case .phaseGetExistingParticipants:
+                    nextPhase = self.getParticipantsFromCloud(.getExisting)
+                case .phaseGetNewParticipants:
+                    nextPhase = self.getParticipantsFromCloud(.getNew)
+                case .phaseGetGameParticipants:
+                    nextPhase = self.getParticipantsFromCloud(.getGame)
+                case .phaseGetSpecificParticipants:
+                    nextPhase = self.getParticipantsFromCloud(.getSpecific)
+                case .phaseGetRelatedParticipants:
+                    nextPhase = self.getParticipantsFromCloud(.getRelated)
+                case .phaseUpdateParticipants:
+                    nextPhase = self.updateParticipantsFromCloud()
+                case .phaseGetGames:
+                    nextPhase = self.getGamesFromCloud()
+                case .phaseUpdateGames:
+                    nextPhase = self.updateGamesFromCloud()
+                case .phaseSendGamesAndParticipants:
+                    nextPhase = self.sendUnconfirmedGamesAndParticipants()
+                case .phaseGetPlayers:
+                    nextPhase = self.synchronisePlayersWithCloud()
+                case .phaseSendPlayers:
+                    nextPhase = self.sendPlayersToCloud()
+                case .phaseGetSendImages:
+                    self.fetchPlayerImagesFromCloud(self.playerImageFromCloud)
+                    self.sendPlayerImagesToCloud(self.playerImageToCloud)
+                    nextPhase = true
+                case .phaseBuildGameList:
+                    nextPhase = self.buildGameListFromParticipants()
+                case .phaseBuildPlayerList:
+                    nextPhase = self.buildPlayerListFromParticipants()
+                case .phaseGetPlayerList:
+                    nextPhase = self.downloadPlayersFromCloud(specificExternalId: self.specificExternalId,
+                                                              specificEmail: self.specificEmail,
+                                                              downloadAction: self.addPlayerList,
+                                                              completeAction: self.completeGetPlayers)
+                case .phaseStartedStageComplete:
+                    self.delegate?.syncStageComplete?(.started)
+                case .phaseInitialiseStageComplete:
+                    self.delegate?.syncStageComplete?(.initialise)
+                case .phaseDownloadGamesStageComplete:
+                    self.delegate?.syncStageComplete?(.downloadGames)
+                case .phaseUploadGamesStageComplete:
+                    self.delegate?.syncStageComplete?(.uploadGames)
+                case .phaseDownloadPlayersStageComplete:
+                    self.delegate?.syncStageComplete?(.downloadPlayers)
+                case .phaseUploadPlayersStageComplete:
+                    self.delegate?.syncStageComplete?(.uploadPlayers)
+                }
+                
+                if !nextPhase {
+                    break
+                }
+                
             }
-
-            switch syncPhases[syncPhaseCount] {
-            case .phaseGetVersion:
-                nextPhase = getCloudVersion()
-            case .phaseGetLastSyncDate:
-                nextPhase = getLastSyncDate()
-            case .phaseUpdateLastSyncDate:
-                nextPhase = updateLastSyncDate()
-            case .phaseGetExistingParticipants:
-                nextPhase = self.getParticipantsFromCloud(.getExisting)
-            case .phaseGetNewParticipants:
-                nextPhase = self.getParticipantsFromCloud(.getNew)
-            case .phaseGetGameParticipants:
-                nextPhase = self.getParticipantsFromCloud(.getGame)
-            case .phaseGetSpecificParticipants:
-                nextPhase = self.getParticipantsFromCloud(.getSpecific)
-            case .phaseGetRelatedParticipants:
-                nextPhase = self.getParticipantsFromCloud(.getRelated)
-            case .phaseUpdateParticipants:
-                nextPhase = self.updateParticipantsFromCloud()
-            case .phaseGetGames:
-                nextPhase = self.getGamesFromCloud()
-            case .phaseUpdateGames:
-                nextPhase = self.updateGamesFromCloud()
-            case .phaseSendGamesAndParticipants:
-                nextPhase = self.sendUnconfirmedGamesAndParticipants()
-            case .phaseGetPlayers:
-                nextPhase = self.synchronisePlayersWithCloud()
-            case .phaseSendPlayers:
-                nextPhase = self.sendPlayersToCloud()
-            case .phaseGetSendImages:
-                self.fetchPlayerImagesFromCloud(self.playerImageFromCloud)
-                self.sendPlayerImagesToCloud(self.playerImageToCloud)
-                nextPhase = true
-            case .phaseBuildGameList:
-                nextPhase = self.buildGameListFromParticipants()
-            case .phaseBuildPlayerList:
-                nextPhase = self.buildPlayerListFromParticipants()
-            case .phaseGetPlayerList:
-                nextPhase = self.downloadPlayersFromCloud(specificExternalId: self.specificExternalId,
-                                                          specificEmail: self.specificEmail,
-                                                          downloadAction: self.addPlayerList,
-                                                          completeAction: self.completeGetPlayers)
-            case .phaseStartedStageComplete:
-                self.delegate?.syncStageComplete?(.started)
-            case .phaseInitialiseStageComplete:
-                self.delegate?.syncStageComplete?(.initialise)
-            case .phaseDownloadGamesStageComplete:
-                self.delegate?.syncStageComplete?(.downloadGames)
-            case .phaseUploadGamesStageComplete:
-                self.delegate?.syncStageComplete?(.uploadGames)
-            case .phaseDownloadPlayersStageComplete:
-                self.delegate?.syncStageComplete?(.downloadPlayers)
-            case .phaseUploadPlayersStageComplete:
-                self.delegate?.syncStageComplete?(.uploadPlayers)
+            if self.errors != 0 || self.syncPhaseCount >= self.syncPhases.count {
+                self.syncCompletion()
             }
-            
-            if !nextPhase {
-                break
-            }
-            
-        }
-        if errors != 0 || syncPhaseCount >= syncPhases.count {
-            self.syncCompletion()
         }
     }
     

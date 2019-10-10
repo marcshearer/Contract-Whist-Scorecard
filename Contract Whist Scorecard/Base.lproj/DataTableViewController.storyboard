@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -16,28 +14,29 @@
             <objects>
                 <viewController storyboardIdentifier="DataTableViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FsR-Kn-dnU" userLabel="Data Table Viewer" customClass="DataTableViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5eb-gD-VJV">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="623"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="618"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P6c-mS-fXT" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6k9-mI-xNc" userLabel="Left Padding View">
-                                <rect key="frame" x="0.0" y="64" width="0.0" height="52"/>
+                                <rect key="frame" x="0.0" y="44" width="0.0" height="34"/>
                                 <color key="backgroundColor" name="Section Heading"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="52" id="In7-GZ-s6Z"/>
-                                </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VqW-sd-yiV" userLabel="Right Padding View">
-                                <rect key="frame" x="375" y="64" width="0.0" height="52"/>
+                                <rect key="frame" x="375" y="44" width="0.0" height="34"/>
                                 <color key="backgroundColor" name="Section Heading"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Rn-Vn-KHT" userLabel="Custom View">
+                                <rect key="frame" x="0.0" y="44" width="375" height="0.0"/>
+                                <color key="backgroundColor" name="Banner"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="52" id="vku-DI-VHW"/>
+                                    <constraint firstAttribute="height" id="RFs-dp-wrs"/>
                                 </constraints>
                             </view>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H5B-2k-XF2" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" name="Banner Text"/>
                                 </textAttributes>
@@ -45,7 +44,7 @@
                                     <navigationItem id="gXM-gM-Eqi">
                                         <barButtonItem key="leftBarButtonItem" id="OKi-M2-DFj">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="aKf-ti-7PN" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="16" y="11" width="62" height="22"/>
+                                                <rect key="frame" x="16" y="0.0" width="84" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Back" image="back">
                                                     <color key="titleColor" name="Banner Text"/>
@@ -55,9 +54,9 @@
                                                 </connections>
                                             </button>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" width="30" id="dVQ-Do-UuF">
+                                        <barButtonItem key="rightBarButtonItem" id="dVQ-Do-UuF">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="6Q0-4S-yhc" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="259" y="0.0" width="100" height="44"/>
+                                                <rect key="frame" x="293" y="0.0" width="66" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" image="cloud">
                                                     <color key="titleColor" name="Banner Text"/>
@@ -70,8 +69,115 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
+                            <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="55F-UG-Ned" userLabel="Header Table View">
+                                <rect key="frame" x="0.0" y="44" width="375" height="44"/>
+                                <color key="backgroundColor" name="Clear"/>
+                                <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="MUj-Xx-bYz"/>
+                                </constraints>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Data Table Header Cell" id="9Y5-Jh-t1d" userLabel="Header Table View Cell" customClass="DataTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9Y5-Jh-t1d" id="6SL-4M-90t">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gXG-S6-tvf" userLabel="Header Collection View">
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                                    <color key="backgroundColor" name="Clear"/>
+                                                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="MWO-G1-p4t">
+                                                        <size key="itemSize" width="50" height="44"/>
+                                                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                    </collectionViewFlowLayout>
+                                                    <cells>
+                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" reuseIdentifier="Data Table Header Cell" id="1av-63-VO8" userLabel="Header Collection Cell" customClass="DataTableCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="44"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="44"/>
+                                                                <autoresizingMask key="autoresizingMask"/>
+                                                                <subviews>
+                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bV8-m3-5nP">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="0.0"/>
+                                                                        <color key="backgroundColor" name="Clear"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" id="2oy-Cd-DlZ"/>
+                                                                        </constraints>
+                                                                    </view>
+                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="CC4-IV-sdi">
+                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="24"/>
+                                                                        <color key="backgroundColor" name="Clear"/>
+                                                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
+                                                                        <color key="textColor" name="Text"/>
+                                                                        <nil key="highlightedColor"/>
+                                                                    </label>
+                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fo1-5v-pZW">
+                                                                        <rect key="frame" x="0.0" y="24" width="50" height="10"/>
+                                                                        <color key="backgroundColor" name="Clear"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="10" id="qHI-un-kW5"/>
+                                                                        </constraints>
+                                                                    </view>
+                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2EQ-R2-YJx">
+                                                                        <rect key="frame" x="0.0" y="34" width="50" height="10"/>
+                                                                        <color key="backgroundColor" name="Clear"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="10" id="aoj-7s-W8L"/>
+                                                                        </constraints>
+                                                                    </view>
+                                                                </subviews>
+                                                            </view>
+                                                            <color key="backgroundColor" name="Clear"/>
+                                                            <constraints>
+                                                                <constraint firstItem="fo1-5v-pZW" firstAttribute="leading" secondItem="1av-63-VO8" secondAttribute="leading" id="6Ma-eX-VJb"/>
+                                                                <constraint firstItem="bV8-m3-5nP" firstAttribute="top" secondItem="1av-63-VO8" secondAttribute="top" id="BSr-tk-yrX"/>
+                                                                <constraint firstAttribute="trailing" secondItem="2EQ-R2-YJx" secondAttribute="trailing" id="F1T-iR-jnb"/>
+                                                                <constraint firstItem="2EQ-R2-YJx" firstAttribute="leading" secondItem="1av-63-VO8" secondAttribute="leading" id="H9U-hd-JSk"/>
+                                                                <constraint firstItem="2EQ-R2-YJx" firstAttribute="top" secondItem="fo1-5v-pZW" secondAttribute="bottom" id="Vca-2o-hAu"/>
+                                                                <constraint firstAttribute="trailing" secondItem="fo1-5v-pZW" secondAttribute="trailing" id="ffC-Jo-tZK"/>
+                                                                <constraint firstItem="fo1-5v-pZW" firstAttribute="top" secondItem="CC4-IV-sdi" secondAttribute="bottom" id="hyr-YH-9Bi"/>
+                                                                <constraint firstItem="CC4-IV-sdi" firstAttribute="top" secondItem="bV8-m3-5nP" secondAttribute="bottom" id="jFL-kX-jTe"/>
+                                                                <constraint firstItem="bV8-m3-5nP" firstAttribute="leading" secondItem="1av-63-VO8" secondAttribute="leading" id="pOa-Wk-gOc"/>
+                                                                <constraint firstAttribute="bottom" secondItem="2EQ-R2-YJx" secondAttribute="bottom" id="x23-Ha-HBU"/>
+                                                                <constraint firstAttribute="trailing" secondItem="bV8-m3-5nP" secondAttribute="trailing" id="xdz-Pn-kjO"/>
+                                                                <constraint firstAttribute="trailing" secondItem="CC4-IV-sdi" secondAttribute="trailing" id="yLN-Yo-eVQ"/>
+                                                                <constraint firstItem="CC4-IV-sdi" firstAttribute="leading" secondItem="1av-63-VO8" secondAttribute="leading" id="ym6-8g-5fa"/>
+                                                            </constraints>
+                                                            <connections>
+                                                                <outlet property="headerDownArrowView" destination="2EQ-R2-YJx" id="obW-r1-h99"/>
+                                                                <outlet property="headerUpArrowView" destination="fo1-5v-pZW" id="aA0-ja-YoZ"/>
+                                                                <outlet property="textLabel" destination="CC4-IV-sdi" id="zv5-cq-1K5"/>
+                                                                <outlet property="topSpacingHeightConstraint" destination="2oy-Cd-DlZ" id="l6a-yG-m4Q"/>
+                                                                <outlet property="topSpacingView" destination="bV8-m3-5nP" id="J6K-Mn-FZ1"/>
+                                                            </connections>
+                                                        </collectionViewCell>
+                                                    </cells>
+                                                </collectionView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="gXG-S6-tvf" firstAttribute="top" secondItem="6SL-4M-90t" secondAttribute="top" id="1Cu-Po-yqD"/>
+                                                <constraint firstAttribute="bottom" secondItem="gXG-S6-tvf" secondAttribute="bottom" id="AyB-c5-Jp8"/>
+                                                <constraint firstAttribute="trailing" secondItem="gXG-S6-tvf" secondAttribute="trailing" id="MVU-vo-CcV"/>
+                                                <constraint firstItem="gXG-S6-tvf" firstAttribute="leading" secondItem="6SL-4M-90t" secondAttribute="leading" id="rDY-X3-CVF"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" name="Clear"/>
+                                        <connections>
+                                            <outlet property="dataTableCollection" destination="gXG-S6-tvf" id="Q8J-e8-j0t"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="FsR-Kn-dnU" id="w2A-G1-mD7"/>
+                                    <outlet property="delegate" destination="FsR-Kn-dnU" id="4JP-fK-Kbg"/>
+                                </connections>
+                            </tableView>
                             <tableView clipsSubviews="YES" tag="2" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zs1-6Q-Kuk" userLabel="Body Table View">
-                                <rect key="frame" x="0.0" y="98" width="375" height="525"/>
+                                <rect key="frame" x="0.0" y="78" width="375" height="540"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Data Table Body Cell" id="t2h-Qy-aAO" userLabel="Body Table View Cell" customClass="DataTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
@@ -290,123 +396,17 @@
                                     <outlet property="delegate" destination="FsR-Kn-dnU" id="BIG-cN-ukg"/>
                                 </connections>
                             </tableView>
-                            <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="55F-UG-Ned" userLabel="Header Table View">
-                                <rect key="frame" x="0.0" y="64" width="375" height="44"/>
-                                <color key="backgroundColor" name="Clear"/>
-                                <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="MUj-Xx-bYz"/>
-                                </constraints>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Data Table Header Cell" id="9Y5-Jh-t1d" userLabel="Header Table View Cell" customClass="DataTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9Y5-Jh-t1d" id="6SL-4M-90t">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gXG-S6-tvf" userLabel="Header Collection View">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
-                                                    <color key="backgroundColor" name="Clear"/>
-                                                    <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="MWO-G1-p4t">
-                                                        <size key="itemSize" width="50" height="44"/>
-                                                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                    </collectionViewFlowLayout>
-                                                    <cells>
-                                                        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" reuseIdentifier="Data Table Header Cell" id="1av-63-VO8" userLabel="Header Collection Cell" customClass="DataTableCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="-0.5" width="50" height="44"/>
-                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                                <rect key="frame" x="0.0" y="0.0" width="50" height="44"/>
-                                                                <autoresizingMask key="autoresizingMask"/>
-                                                                <subviews>
-                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bV8-m3-5nP">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="0.0"/>
-                                                                        <color key="backgroundColor" name="Clear"/>
-                                                                        <constraints>
-                                                                            <constraint firstAttribute="height" id="2oy-Cd-DlZ"/>
-                                                                        </constraints>
-                                                                    </view>
-                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="CC4-IV-sdi">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="50" height="24"/>
-                                                                        <color key="backgroundColor" name="Clear"/>
-                                                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
-                                                                        <color key="textColor" name="Text"/>
-                                                                        <nil key="highlightedColor"/>
-                                                                    </label>
-                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fo1-5v-pZW">
-                                                                        <rect key="frame" x="0.0" y="24" width="50" height="10"/>
-                                                                        <color key="backgroundColor" name="Clear"/>
-                                                                        <constraints>
-                                                                            <constraint firstAttribute="height" constant="10" id="qHI-un-kW5"/>
-                                                                        </constraints>
-                                                                    </view>
-                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2EQ-R2-YJx">
-                                                                        <rect key="frame" x="0.0" y="34" width="50" height="10"/>
-                                                                        <color key="backgroundColor" name="Clear"/>
-                                                                        <constraints>
-                                                                            <constraint firstAttribute="height" constant="10" id="aoj-7s-W8L"/>
-                                                                        </constraints>
-                                                                    </view>
-                                                                </subviews>
-                                                            </view>
-                                                            <color key="backgroundColor" name="Clear"/>
-                                                            <constraints>
-                                                                <constraint firstItem="fo1-5v-pZW" firstAttribute="leading" secondItem="1av-63-VO8" secondAttribute="leading" id="6Ma-eX-VJb"/>
-                                                                <constraint firstItem="bV8-m3-5nP" firstAttribute="top" secondItem="1av-63-VO8" secondAttribute="top" id="BSr-tk-yrX"/>
-                                                                <constraint firstAttribute="trailing" secondItem="2EQ-R2-YJx" secondAttribute="trailing" id="F1T-iR-jnb"/>
-                                                                <constraint firstItem="2EQ-R2-YJx" firstAttribute="leading" secondItem="1av-63-VO8" secondAttribute="leading" id="H9U-hd-JSk"/>
-                                                                <constraint firstItem="2EQ-R2-YJx" firstAttribute="top" secondItem="fo1-5v-pZW" secondAttribute="bottom" id="Vca-2o-hAu"/>
-                                                                <constraint firstAttribute="trailing" secondItem="fo1-5v-pZW" secondAttribute="trailing" id="ffC-Jo-tZK"/>
-                                                                <constraint firstItem="fo1-5v-pZW" firstAttribute="top" secondItem="CC4-IV-sdi" secondAttribute="bottom" id="hyr-YH-9Bi"/>
-                                                                <constraint firstItem="CC4-IV-sdi" firstAttribute="top" secondItem="bV8-m3-5nP" secondAttribute="bottom" id="jFL-kX-jTe"/>
-                                                                <constraint firstItem="bV8-m3-5nP" firstAttribute="leading" secondItem="1av-63-VO8" secondAttribute="leading" id="pOa-Wk-gOc"/>
-                                                                <constraint firstAttribute="bottom" secondItem="2EQ-R2-YJx" secondAttribute="bottom" id="x23-Ha-HBU"/>
-                                                                <constraint firstAttribute="trailing" secondItem="bV8-m3-5nP" secondAttribute="trailing" id="xdz-Pn-kjO"/>
-                                                                <constraint firstAttribute="trailing" secondItem="CC4-IV-sdi" secondAttribute="trailing" id="yLN-Yo-eVQ"/>
-                                                                <constraint firstItem="CC4-IV-sdi" firstAttribute="leading" secondItem="1av-63-VO8" secondAttribute="leading" id="ym6-8g-5fa"/>
-                                                            </constraints>
-                                                            <connections>
-                                                                <outlet property="headerDownArrowView" destination="2EQ-R2-YJx" id="obW-r1-h99"/>
-                                                                <outlet property="headerUpArrowView" destination="fo1-5v-pZW" id="aA0-ja-YoZ"/>
-                                                                <outlet property="textLabel" destination="CC4-IV-sdi" id="zv5-cq-1K5"/>
-                                                                <outlet property="topSpacingHeightConstraint" destination="2oy-Cd-DlZ" id="l6a-yG-m4Q"/>
-                                                                <outlet property="topSpacingView" destination="bV8-m3-5nP" id="J6K-Mn-FZ1"/>
-                                                            </connections>
-                                                        </collectionViewCell>
-                                                    </cells>
-                                                </collectionView>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="gXG-S6-tvf" firstAttribute="top" secondItem="6SL-4M-90t" secondAttribute="top" id="1Cu-Po-yqD"/>
-                                                <constraint firstAttribute="bottom" secondItem="gXG-S6-tvf" secondAttribute="bottom" id="AyB-c5-Jp8"/>
-                                                <constraint firstAttribute="trailing" secondItem="gXG-S6-tvf" secondAttribute="trailing" id="MVU-vo-CcV"/>
-                                                <constraint firstItem="gXG-S6-tvf" firstAttribute="leading" secondItem="6SL-4M-90t" secondAttribute="leading" id="rDY-X3-CVF"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" name="Clear"/>
-                                        <connections>
-                                            <outlet property="dataTableCollection" destination="gXG-S6-tvf" id="Q8J-e8-j0t"/>
-                                        </connections>
-                                    </tableViewCell>
-                                </prototypes>
-                                <connections>
-                                    <outlet property="dataSource" destination="FsR-Kn-dnU" id="w2A-G1-mD7"/>
-                                    <outlet property="delegate" destination="FsR-Kn-dnU" id="4JP-fK-Kbg"/>
-                                </connections>
-                            </tableView>
                         </subviews>
                         <color key="backgroundColor" name="Background"/>
                         <constraints>
+                            <constraint firstItem="6k9-mI-xNc" firstAttribute="bottom" secondItem="55F-UG-Ned" secondAttribute="bottom" constant="-10" id="0RE-OB-XU0"/>
                             <constraint firstItem="P6c-mS-fXT" firstAttribute="top" secondItem="5eb-gD-VJV" secondAttribute="top" id="0YQ-Bk-SQG"/>
                             <constraint firstItem="X5U-rg-RZw" firstAttribute="top" secondItem="P6c-mS-fXT" secondAttribute="bottom" id="4aE-Yi-jat"/>
+                            <constraint firstAttribute="trailing" secondItem="0Rn-Vn-KHT" secondAttribute="trailing" id="9nQ-JN-KsS"/>
                             <constraint firstAttribute="bottom" secondItem="zs1-6Q-Kuk" secondAttribute="bottom" id="AYq-rs-Ksq"/>
                             <constraint firstItem="H5B-2k-XF2" firstAttribute="top" secondItem="X5U-rg-RZw" secondAttribute="top" id="Ag6-uh-bWj"/>
                             <constraint firstAttribute="trailing" secondItem="zs1-6Q-Kuk" secondAttribute="trailing" id="B16-Gk-bwo"/>
                             <constraint firstItem="6k9-mI-xNc" firstAttribute="top" secondItem="H5B-2k-XF2" secondAttribute="bottom" id="GR2-nT-81u"/>
-                            <constraint firstItem="55F-UG-Ned" firstAttribute="top" secondItem="H5B-2k-XF2" secondAttribute="bottom" id="Jil-nc-t11"/>
                             <constraint firstItem="P6c-mS-fXT" firstAttribute="trailing" secondItem="5eb-gD-VJV" secondAttribute="trailing" id="NMj-z3-Fkn"/>
                             <constraint firstItem="55F-UG-Ned" firstAttribute="leading" secondItem="X5U-rg-RZw" secondAttribute="leading" id="NYN-Gm-kRP"/>
                             <constraint firstItem="X5U-rg-RZw" firstAttribute="leading" secondItem="6k9-mI-xNc" secondAttribute="trailing" id="Pqw-ka-NPC"/>
@@ -414,12 +414,16 @@
                             <constraint firstItem="VqW-sd-yiV" firstAttribute="top" secondItem="H5B-2k-XF2" secondAttribute="bottom" id="ZUN-r7-pPn"/>
                             <constraint firstItem="zs1-6Q-Kuk" firstAttribute="top" secondItem="55F-UG-Ned" secondAttribute="bottom" constant="-10" id="dXd-W9-svZ"/>
                             <constraint firstItem="6k9-mI-xNc" firstAttribute="leading" secondItem="5eb-gD-VJV" secondAttribute="leading" id="eVM-yp-gNs"/>
+                            <constraint firstItem="VqW-sd-yiV" firstAttribute="bottom" secondItem="55F-UG-Ned" secondAttribute="bottom" constant="-10" id="hhA-Zb-bqo"/>
                             <constraint firstItem="H5B-2k-XF2" firstAttribute="leading" secondItem="5eb-gD-VJV" secondAttribute="leading" id="mHz-Kd-0dA"/>
+                            <constraint firstItem="0Rn-Vn-KHT" firstAttribute="leading" secondItem="5eb-gD-VJV" secondAttribute="leading" id="mms-8D-LB4"/>
+                            <constraint firstItem="55F-UG-Ned" firstAttribute="top" secondItem="0Rn-Vn-KHT" secondAttribute="bottom" id="nfN-eh-7eA"/>
                             <constraint firstItem="X5U-rg-RZw" firstAttribute="trailing" secondItem="55F-UG-Ned" secondAttribute="trailing" id="oFX-8X-2oA"/>
                             <constraint firstAttribute="trailing" secondItem="VqW-sd-yiV" secondAttribute="trailing" id="sHl-q4-4g7"/>
                             <constraint firstAttribute="trailing" secondItem="H5B-2k-XF2" secondAttribute="trailing" id="tty-9P-u0a"/>
                             <constraint firstItem="P6c-mS-fXT" firstAttribute="leading" secondItem="5eb-gD-VJV" secondAttribute="leading" id="u1X-IP-DTs"/>
                             <constraint firstItem="zs1-6Q-Kuk" firstAttribute="leading" secondItem="5eb-gD-VJV" secondAttribute="leading" id="uAB-D1-Lfy"/>
+                            <constraint firstItem="0Rn-Vn-KHT" firstAttribute="top" secondItem="H5B-2k-XF2" secondAttribute="bottom" id="zlK-96-zkI"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="X5U-rg-RZw"/>
                         <connections>
@@ -431,16 +435,14 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="bodyView" destination="zs1-6Q-Kuk" id="Hq4-k9-amc"/>
+                        <outlet property="customHeaderView" destination="0Rn-Vn-KHT" id="KWh-gc-a3z"/>
+                        <outlet property="customHeaderViewHeightConstraint" destination="RFs-dp-wrs" id="tU9-Kh-TJ5"/>
                         <outlet property="finishButton" destination="aKf-ti-7PN" id="Og5-5E-Rc1"/>
                         <outlet property="headerHeightConstraint" destination="MUj-Xx-bYz" id="jci-zx-VJz"/>
                         <outlet property="headerView" destination="55F-UG-Ned" id="lRK-BV-Gdv"/>
-                        <outlet property="leftPaddingHeightConstraint" destination="In7-GZ-s6Z" id="xNJ-r5-4uN"/>
+                        <outlet property="navigationBar" destination="H5B-2k-XF2" id="33m-d0-00U"/>
                         <outlet property="navigationHeaderItem" destination="gXM-gM-Eqi" id="B9j-kT-OtT"/>
-                        <outlet property="rightPaddingHeightConstraint" destination="vku-DI-VHW" id="fB9-1Y-3F9"/>
                         <outlet property="syncButton" destination="6Q0-4S-yhc" id="yih-eF-ih2"/>
-                        <segue destination="ZMz-Qc-fxY" kind="popoverPresentation" identifier="showDataTableSync" popoverAnchorView="5eb-gD-VJV" id="4fS-Qv-DTV">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                        </segue>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wsI-67-bsY" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -452,14 +454,6 @@
             </objects>
             <point key="canvasLocation" x="5503.125" y="1002.4647887323944"/>
         </scene>
-        <!--Sync-->
-        <scene sceneID="bwr-iy-S4Y">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="SyncViewController" storyboardName="SyncViewController" referencedIdentifier="SyncViewController" id="ZMz-Qc-fxY" userLabel="Sync" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="3Bo-lE-HgZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="6168" y="1003"/>
-        </scene>
     </scenes>
     <resources>
         <image name="back" width="22" height="22"/>
@@ -467,6 +461,12 @@
         <image name="graph" width="30" height="30"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Banner">
+            <color red="0.89800000190734863" green="0.74900001287460327" blue="0.37299999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="Banner Text">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Banner Text">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -24,7 +24,7 @@ public class ThumbnailView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.loadThumbnailView()
-        self.set(frame:frame)
+        self.set(frame: frame)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -82,7 +82,7 @@ public class ThumbnailView: UIView {
         }
     }
     
-    public func set(data: Data? = nil, name: String? = nil, initials: String? = nil, nameHeight: CGFloat? = nil, diameter: CGFloat = 0, alpha: CGFloat? = nil, placeholder: Bool = false) {
+    public func set(data: Data? = nil, name: String? = nil, initials: String? = nil, nameHeight: CGFloat? = nil, diameter: CGFloat = 0.0, alpha: CGFloat? = nil, placeholder: Bool = false) {
         
         let initials = initials ?? (name ?? "")
         
@@ -105,8 +105,8 @@ public class ThumbnailView: UIView {
         }
     }
     
-    public func set(playerMO: PlayerMO, nameHeight: CGFloat? = nil) {
-        self.set(data: playerMO.thumbnail, name: playerMO.name, nameHeight: nameHeight ?? 30.0)
+    public func set(playerMO: PlayerMO, nameHeight: CGFloat? = nil, diameter: CGFloat = 0.0) {
+        self.set(data: playerMO.thumbnail, name: playerMO.name, nameHeight: nameHeight ?? 30.0, diameter: diameter)
     }
     
     public func set(imageName: String?) {

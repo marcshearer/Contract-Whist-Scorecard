@@ -11,13 +11,12 @@ import UIKit
 class OverrideViewController : CustomViewController, UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate {
     
     private enum Options: Int, CaseIterable {
-        case instructions = 0
-        case excludeHistory = 1
-        case excludeStats = 2
-        case subHeading = 3
-        case startCards = 4
-        case endCards = 5
-        case bounce = 6
+        case excludeHistory = 0
+        case excludeStats = 1
+        case subHeading = 2
+        case startCards = 3
+        case endCards = 4
+        case bounce = 5
     }
     
     private let scorecard = Scorecard.shared
@@ -39,6 +38,8 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var confirmButton: UIButton!
     @IBOutlet private weak var revertButton: UIButton!
+    @IBOutlet private weak var bannerContinuation: BannerContinuation!
+    @IBOutlet private weak var bannerContinuationHeightConstraint: NSLayoutConstraint!
     
     // MARK: - IB Actions ============================================================================== -
     
@@ -76,6 +77,21 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
         self.enableButtons()
     }
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        self.view.setNeedsLayout()
+    }
+    
+    override func viewWillLayoutSubviews() {
+        if ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone() {
+            self.bannerContinuation.isHidden = true
+            self.bannerContinuationHeightConstraint.constant = 0.0
+        } else {
+            self.bannerContinuation.isHidden = false
+            self.bannerContinuationHeightConstraint.constant = 60.0
+        }
+    }
+    
     // MARK: - TableView Overrides ===================================================================== -
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -98,8 +114,6 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
                 height = 32.0
             case .bounce:
                 height = 45.0
-            case .instructions:
-                height = 80.0
             }
         }
         return height
@@ -150,9 +164,6 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
                 self.bounceSelection = cell.bounceSelection
                 self.cardsChanged()
                 
-            case .instructions:
-                cell = tableView.dequeueReusableCell(withIdentifier: "Instructions", for: indexPath) as? OverrideTableCell
-                cell.instructionLabel.text = "Changes will only last for one session and will be reset back to your choices in Settings automatically"
             }
         }
         

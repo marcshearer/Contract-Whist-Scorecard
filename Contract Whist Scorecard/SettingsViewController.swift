@@ -546,6 +546,18 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
         self.view.endEditing(true)
+        if let section = Sections(rawValue: indexPath.section) {
+            switch section {
+            case .generalInfo:
+                // Expand general info if touch any part of section
+                self.generalInfoClicked()
+            case .dataInfo:
+                // Expand data info if touch any part of section
+                self.dataInfoClicked()
+            default:
+                break
+            }
+        }
         return nil
     }
     
@@ -575,12 +587,20 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     }
     
     @objc internal func generalInfoClicked(_ collapseButton: UIButton) {
+        self.generalInfoClicked()
+    }
+            
+    private func generalInfoClicked() {
         self.generalInfoExpanded = !self.generalInfoExpanded
         self.settingsTableView.reloadSections(IndexSet(arrayLiteral: Sections.generalInfo.rawValue), with: .automatic)
         self.scrollToBottom()
     }
     
     @objc internal func dataInfoClicked(_ collapseButton: UIButton) {
+        self.dataInfoClicked()
+    }
+    
+    private func dataInfoClicked() {
         self.dataInfoExpanded = !self.dataInfoExpanded
         self.settingsTableView.reloadSections(IndexSet(arrayLiteral: Sections.dataInfo.rawValue), with: .automatic)
         self.scrollToBottom()

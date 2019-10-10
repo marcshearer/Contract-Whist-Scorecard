@@ -195,19 +195,18 @@ Resume scoring doesn't auto start in preview
 
 TODO
 ----
-Crash if go into High Scores repeatedly
 Looks like it is still in recovery mode even when play game and override warning
 Problem if reset when in confirm window
 Add confetti to game summary
-Player detail screen
 Gradients wrong on and after rotation of scorepad
 Implement Facetime calls
 Initial connection difficult
+Player detail screen
+Change History to allow filter by player
+Review screen (like Bridge books)
 
 Jack
 ----
-Sync icons
-Layout for review
 
 Medium-term
 -----------

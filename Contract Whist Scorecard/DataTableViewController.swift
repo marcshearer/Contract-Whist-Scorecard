@@ -27,6 +27,9 @@ import CoreData
     @objc optional var separatorHeight: CGFloat { get }
     @objc optional var backImage: String { get }
     @objc optional var backText: String { get }
+    @objc optional var customButton: Bool { get }
+    
+    @objc optional func setupCustomButton(barButtonItem: UIBarButtonItem)
     
     @objc optional func didSelect(record: DataTableViewerDataSource, field: String)
     
@@ -40,6 +43,8 @@ import CoreData
     
     @objc optional func completion()
     
+    @objc optional func layoutSubviews()
+    
 }
 
 class DataTableViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate {
@@ -49,11 +54,11 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
     // Main state properties
     private let scorecard = Scorecard.shared
     
-    var displayedFields: [DataTableField] = []
-    var firstTime = true
-    var lastSortColumn = -1
-    var lastSortField = ""
-    var lastSortDescending = false
+    private var displayedFields: [DataTableField] = []
+    private var firstTime = true
+    private var lastSortColumn = -1
+    private var lastSortField = ""
+    private var lastSortDescending = false
     private let graphView = GraphView()
     private var padColumn = -1
     
@@ -65,18 +70,21 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
     private var delegate: DataTableViewerDelegate?
     
     // UI component pointers
-    var headerCollectionView: UICollectionView!
+    private var headerCollectionView: UICollectionView!
  
     // MARK: - IB Outlets ============================================================================== -
-    @IBOutlet var headerView: UITableView!
-    @IBOutlet var bodyView: UITableView!
-    @IBOutlet var syncButton: RoundedButton!
-    @IBOutlet var finishButton: UIButton!
-    @IBOutlet var navigationHeaderItem: UINavigationItem!
-    @IBOutlet var headerHeightConstraint: NSLayoutConstraint!
-    @IBOutlet var leftPaddingHeightConstraint: NSLayoutConstraint!
-    @IBOutlet var rightPaddingHeightConstraint: NSLayoutConstraint!
-
+    @IBOutlet private var headerView: UITableView!
+    @IBOutlet private var bodyView: UITableView!
+    @IBOutlet private var navigationBar: UINavigationBar!
+    @IBOutlet private var syncButton: RoundedButton!
+    @IBOutlet private var finishButton: UIButton!
+    @IBOutlet private var navigationHeaderItem: UINavigationItem!
+    @IBOutlet private var headerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private var leftPaddingHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private var rightPaddingHeightConstraint: NSLayoutConstraint!
+    @IBOutlet public var customHeaderView: UIView!
+    @IBOutlet public var customHeaderViewHeightConstraint: NSLayoutConstraint!
+    
     // MARK: - IB Actions ============================================================================== -
 
     @IBAction func finishPressed(_ sender: UIButton) {
@@ -118,8 +126,15 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
         
         // Set header / padding heights
         self.headerHeightConstraint.constant = self.delegate?.headerRowHeight ?? 44.0
-        self.leftPaddingHeightConstraint.constant = self.headerHeightConstraint.constant - 10.0
-        self.rightPaddingHeightConstraint.constant = self.headerHeightConstraint.constant - 10.0
+        
+        if firstTime {
+            if self.delegate?.setupCustomButton != nil {
+                let customButtonItem = UIBarButtonItem()
+                customButtonItem.width = 22.0
+                self.navigationHeaderItem.rightBarButtonItems?.insert(customButtonItem, at: 0)
+                self.delegate?.setupCustomButton?(barButtonItem: customButtonItem)
+            }
+        }
         
     }
     
@@ -131,11 +146,24 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        // headerView.layoutIfNeeded()
         checkFieldDisplay(to: self.view.safeAreaLayoutGuide.layoutFrame.size)
         headerView.reloadData()
         bodyView.reloadData()
         firstTime = true
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.customHeaderView.layoutIfNeeded()
+        self.delegate?.layoutSubviews?()
+    }
+    
+    // MARK: - Method to refresh data================================================================== -
+    
+    public func refreshData(recordList: [DataTableViewerDataSource], completion: (()->())? = nil) {
+        self.recordList = recordList
+        self.bodyView.reloadData()
+        completion?()
     }
     
     // MARK: - Method to refresh a specific row in the table view====================================== -

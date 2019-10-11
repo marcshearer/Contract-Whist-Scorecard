@@ -402,7 +402,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             self.unselectedCollectionViewBottomConstraint?.constant = 0.0
         }
 
-        // Set colecction view insets
+        // Set collection view insets
         let collectionViewLayout = self.unselectedCollectionView.collectionViewLayout as? UICollectionViewFlowLayout
         if ScorecardUI.landscapePhone() {
             // No insets in landscape

@@ -37,12 +37,7 @@ class ScorecardUI {
     }
     
     class func veryRoundCorners(_ view: UIView, radius: CGFloat? = nil) {
-        var percent: CGFloat = 0.0
-        
-        if radius == 0.0 {
-            percent = 50.0
-        }
-        ScorecardUI.roundCorners(view, percent: percent, radius: radius)
+        ScorecardUI.roundCorners(view, percent: ((radius ?? 0.0) == 0.0 ? 50.0 : 0.0), radius: (radius == 0.0 ? nil : radius))
     }
     
     class func largeBoldStyle(_ label: UILabel) {

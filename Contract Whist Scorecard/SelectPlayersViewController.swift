@@ -573,7 +573,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         // Add new player to local database and return
         
         if let playerMO = playerDetail.createMO() {
-            if playerDetail.thumbnailDate != nil {
+            if playerDetail.thumbnailDate != nil && playerDetail.syncRecordID != nil {
                 self.getImages([playerMO])
             }
             

@@ -20,10 +20,48 @@ enum DetailMode {
 class PlayerDetailViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, SyncDelegate {
     
     // MARK: - Class Properties ======================================================================== -
+    
+    // Lines in view
+    private enum Sections: Int, CaseIterable {
+        case uniqueID = 0
+        case lastPlayed = 1
+        case records = 2
+        case stats = 3
+    }
+    
+    private enum UniqueIdOptions: Int, CaseIterable {
+        case uniqueID = 0
+        case deletePlayer = 1
+    }
+    
+    private enum LastPlayedOptions: Int, CaseIterable {
+        case lastPlayed = 0
+    }
+    
+    private enum RecordsOptions: Int, CaseIterable {
+        case totalScore = 0
+        case bidsMade = 1
+        case winStreak = 2
+        case twosMade = 3
+    }
+    
+    private enum StatsOptions: Int, CaseIterable {
+        case played = 0
+        case win = 1
+        case winPercent = 2
+        case total = 3
+        case average = 4
+    }
+    
     // Main state properties
     private let scorecard = Scorecard.shared
     private var reconcile: Reconcile!
     private let sync = Sync()
+    
+    // Text field tags
+    private let nameFieldTag = 0
+    private let emailFieldTag = 1
+    private let deleteButtonTag = 2
 
     // Properties to control how view works
     private var playerDetail: PlayerDetail!
@@ -32,30 +70,14 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     private var callerCompletion: ((PlayerDetail?, Bool)->())?
     
     // Local class variables
-    private var tableRows = 0
-    private var baseRows = 0
-    private var nameTitleRow = 1
-    private var nameRow = 2
-    private var emailTitleRow = 3
-    private var emailRow = 4
-    private var twosTitleRow = -1
-    private var twosValueRow = -1
-    private var imageRow = 6
     private var emailOnEntry = ""
-    private var visibleOnEntry = false
     private var actionSheet: ActionSheet!
-    private var showEmail = false
     private var changed = false
 
     // Alert controller while waiting for cloud download
     private var cloudAlertController: UIAlertController!
     private var cloudIndicatorView: UIActivityIndicatorView!
-
-    // UI component pointers
-    private var textFieldList = [UITextField?](repeating: nil, count: 23)
-    private var nameErrorLabel: UILabel? = nil
     private var emailErrorLabel: UILabel? = nil
-    private var imageView: UIImageView? = nil
     private var emailCell: PlayerDetailCell!
 
     // MARK: - IB Outlets ============================================================================== -
@@ -64,6 +86,10 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     @IBOutlet private weak var finishButton: UIButton!
     @IBOutlet private weak var actionButton: UIButton!
     @IBOutlet private weak var tableView: UITableView!
+    @IBOutlet private weak var playerNameField: UITextField!
+    @IBOutlet private weak var playerImageView: UIImageView!
+    @IBOutlet private weak var playerErrorLabel: UILabel!
+    @IBOutlet private weak var addImageLabel: UILabel!
 
     // MARK: - IB Actions ============================================================================== -
     
@@ -114,26 +140,8 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         backButtonPressed(finishButton!)
     }
     
-    // MARK: - method to show this view controller ============================================================================== -
-    
-    static public func show(from sourceViewController: CustomViewController, playerDetail: PlayerDetail, mode: DetailMode, sourceView: UIView, completion: ((PlayerDetail?,Bool)->())? = nil) {
-        let storyboard = UIStoryboard(name: "PlayerDetailViewController", bundle: nil)
-        let playerDetailViewController = storyboard.instantiateViewController(withIdentifier: "PlayerDetailViewController") as! PlayerDetailViewController
-
-        playerDetailViewController.preferredContentSize = CGSize(width: 400, height: 600)
-
-        playerDetailViewController.playerDetail = playerDetail
-        playerDetailViewController.mode = mode
-        playerDetailViewController.sourceView = sourceView
-        playerDetailViewController.callerCompletion = completion
-        
-        sourceViewController.present(playerDetailViewController, sourceView: sourceView, animated: true, completion: nil)
-    }
-    
-    private func dismiss(playerDetail: PlayerDetail? = nil, deletePlayer: Bool = false) {
-        self.dismiss(animated: true, completion: {
-            self.callerCompletion?(playerDetail, deletePlayer)
-        })
+    @IBAction private func tapGesture(recognizer: UITapGestureRecognizer) {
+        self.imageTapped()
     }
     
     // MARK: - View Overrides ========================================================================== -
@@ -141,39 +149,13 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        baseRows = 13
-        if scorecard.settingBonus2 {
-            twosTitleRow = baseRows
-            twosValueRow = baseRows + 1
-            baseRows += 2
-        }
-        tableRows = baseRows + (mode == .amend ? 11 : 9) // Exclude delete if not in amend mode
-        navigationBar.topItem?.title = playerDetail.name
-        
-        switch self.mode! {
-        case .create:
-            // Smaller input
-            tableRows = 7
-            baseRows = 10
-            navigationBar.topItem?.title = "New Player"
-            
-        case .download:
-            // Switch name and email
-            emailTitleRow = 1
-            emailRow = 2
-            nameTitleRow = 3
-            nameRow = 4
-            navigationBar.topItem?.title = "Download"
-            footerPaddingView.backgroundColor = Palette.disabled
-            showEmail = true
-
-        default:
-            break
-        }
-        
         // Store email on entry
         emailOnEntry = playerDetail.email
-        visibleOnEntry = playerDetail.visibleLocally
+        
+        // Setup player header fields
+        self.setupHeaderFields()
+               
+        tableView.contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 20.0, right: 0.0)
         
         enableButtons()
     }
@@ -191,6 +173,11 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         }
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.updateHeaderFields()
+    }
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
@@ -198,359 +185,302 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         if actionSheet != nil {
             scorecard.reCenterPopup(actionSheet.alertController)
         }
+        self.view.setNeedsLayout()
     }
 
     // MARK: - TableView Overrides ===================================================================== -
 
+    func numberOfSections(in tableView: UITableView) -> Int {
+        if mode != .create {
+            return Sections.allCases.count
+        } else {
+            return 1
+        }
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tableRows
+        var rows: Int
+        
+        switch Sections(rawValue: section)! {
+        case .uniqueID:
+            rows = UniqueIdOptions.allCases.count
+        case .lastPlayed:
+            rows = LastPlayedOptions.allCases.count
+        case .records:
+            rows = RecordsOptions.allCases.count
+        case .stats:
+            rows = StatsOptions.allCases.count
+        }
+        return rows
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        var height: CGFloat
+        
+        switch Sections(rawValue: section)! {
+        case .uniqueID:
+            height = 20.0
+        default:
+            height = 50.0
+        }
+        return height
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        var header: PlayerDetailHeaderFooterView?
+        
+        if let section = Sections(rawValue: section) {
+            var reuseIdentifier = "Header"
+            var text: String
+            
+            switch section {
+            case .uniqueID:
+                reuseIdentifier = "Header Error"
+                switch mode! {
+                case .download:
+                   text = "Unique ID of player to download"
+                default:
+                    text = "Unique ID - E.g. email"
+                }
+            case .lastPlayed:
+                text = "Last played:"
+            case .records:
+                text = "Personal records:"
+            case .stats:
+                text = "Personal statistics:"
+            }
+            let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as! PlayerDetailCell
+            cell.headerLabel.text = text
+            cell.headerErrorLabel?.text = ""
+            header = PlayerDetailHeaderFooterView(cell)
+                        
+            if section == .uniqueID {
+                self.emailErrorLabel = cell.headerErrorLabel
+            }
+        }
+        return header
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return (indexPath.row == imageRow ? 80 :
-               (indexPath.row == 0 ? 10 :
-               (indexPath.row >= baseRows+5 && indexPath.row <= baseRows+8 ? 30 :
-               (indexPath.row == baseRows+9 ? 20 :
-               (indexPath.row == baseRows+10 || indexPath.row == baseRows+10 ? 44 :
-               (indexPath.row % 2 == 1 ? 20 : 44))))))
+        var height: CGFloat
+        
+        switch Sections(rawValue: indexPath.section)! {
+        case .uniqueID:
+            switch UniqueIdOptions(rawValue: indexPath.row)! {
+            case .deletePlayer:
+                height = 40.0
+            default:
+                height = 20.0
+            }
+        case .stats:
+            switch StatsOptions(rawValue: indexPath.row)! {
+            case .total:
+                height = 40.0
+            default:
+                height = 20.0
+            }
+        default:
+            height = 20.0
+        }
+        
+        return height
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell: PlayerDetailCell?
-        var title = false
+        var cell: PlayerDetailCell!
         
-        switch indexPath.row {
-        case 0:
-            // blank row at the top
-            cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Padding", for: indexPath) as? PlayerDetailCell
-        case nameTitleRow, emailTitleRow, baseRows, baseRows+2, baseRows+4, baseRows+9:
-            // Single input title
-            cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Header Single", for: indexPath) as? PlayerDetailCell
-            title = true
-        case 5:
-            // Thumbnail title
-            cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Header Single", for: indexPath) as? PlayerDetailCell
-            title = true
-        case 7, 9, 11, twosTitleRow:
-            // Triple title
-            cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Header Triple", for: indexPath) as? PlayerDetailCell
-            title = true
-        case nameRow, emailRow:
-            // Single input value
-            cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Body Single", for: indexPath) as? PlayerDetailCell
-            cell?.playerDetailField.tag = indexPath.row
-            cell?.playerDetailField.addTarget(self, action: #selector(PlayerDetailViewController.textFieldDidChange(_:)), for: UIControl.Event.editingChanged)
-            cell?.playerDetailField.addTarget(self, action: #selector(PlayerDetailViewController.textFieldShouldReturn(_:)), for: UIControl.Event.editingDidEndOnExit)
-            cell?.playerDetailField.returnKeyType = .next
-            cell?.playerDetailField.isSecureTextEntry = false
-            cell?.playerDetailSecure.isHidden = true
-            cell?.playerDetailSecureInfo.isHidden = true
-            textFieldList[indexPath.row] = cell!.playerDetailField
-        case imageRow:
-            // Image view
-            cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Image", for: indexPath) as? PlayerDetailCell
-            imageView = cell?.playerImage
-            ScorecardUI.veryRoundCorners(imageView!)
-        case 8, 10, 12, twosValueRow, baseRows+1, baseRows+3, baseRows+5, baseRows+6, baseRows+7, baseRows+8:
-            // Triple value
-            cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Body Triple", for: indexPath) as? PlayerDetailCell
-        case baseRows+10:
-            // Single action button
-            cell = tableView.dequeueReusableCell(withIdentifier: "Player Detail Body Action Button", for: indexPath) as? PlayerDetailCell
-            
-        default:
-            cell = nil
-        }
-        
-        // Set text colors
-        let disabled = (mode == .download && indexPath.row != emailRow && indexPath.row != emailTitleRow)
-        let textColor = (disabled ? Palette.disabledText : Palette.text)
-        let titleColor = (disabled ? Palette.textMessage.withAlphaComponent(0.4) : Palette.textMessage)
-        cell?.playerDetailLabel1?.textColor = (title ? titleColor : textColor)
-        cell?.playerDetailLabel2?.textColor = (title ? titleColor : textColor)
-        cell?.playerDetailLabel3?.textColor = (title ? titleColor : textColor)
-        
-        switch indexPath.row {
-        case 0:
-            // Blank row
-            break
-        case nameTitleRow:
-            // Name title
-            cell!.playerDetailLabel1.text = "Player name"
-            nameErrorLabel = cell!.playerDetailLabel2
-            Palette.errorStyle(nameErrorLabel!)
-        case nameRow:
-            // Name value
-            cell!.playerDetailField.text = playerDetail.name
-            switch mode! {
-            case .create, .amend:
-                cell!.playerDetailField.placeholder = "Player name - Must not be blank"
-            default:
-                cell!.playerDetailField.placeholder = "Player name"
-            }
-            cell!.playerDetailField.keyboardType = .default
-            cell!.playerDetailField.autocapitalizationType = .words
-            cell!.playerDetailField.returnKeyType = .next
-            if mode == .create {
-                cell!.playerDetailField.becomeFirstResponder()
-            }
-        case emailTitleRow:
-            // Email title
-            switch mode! {
-            case .download:
-                cell!.playerDetailLabel1.text = "Player to download"
-            default:
-                cell!.playerDetailLabel1.text = "Unique identifier - E.g. email address"
-            }
-            emailErrorLabel = cell!.playerDetailLabel2
-            Palette.errorStyle(emailErrorLabel!)
-        case emailRow:
-            // Email value
-            cell!.playerDetailField.text = "\(playerDetail.email)"
-            switch mode! {
-            case .download:
-                cell!.playerDetailField.placeholder = "Unique identifier of player"
-            default:
-                cell!.playerDetailField.placeholder = "Unique identifier - Must not be blank"
-            }
-            cell!.playerDetailField.keyboardType = .emailAddress
-            cell!.playerDetailField.autocapitalizationType = .none
-            cell!.playerDetailField.returnKeyType = .done
-            cell?.playerDetailSecure.addTarget(self, action: #selector(PlayerDetailViewController.secureButtonPressed(_:)), for: UIControl.Event.touchUpInside)
-            cell?.playerDetailSecureInfo.addTarget(self, action: #selector(PlayerDetailViewController.secureInfoButtonPressed(_:)), for: UIControl.Event.touchUpInside)
-            emailCell = cell
-            // Hidden entry if value already filled in
-            setEmailVisible(self.playerDetail.visibleLocally)
-            if mode == .download {
-                cell!.playerDetailField.becomeFirstResponder()
-            }
-            cell!.separator.isHidden = (mode == .download)
-        case 5:
-            // Thumbnail title
-            cell!.playerDetailLabel1.text = "Thumbnail image"
-        case imageRow:
-            // Thumbnail Image
-            Utility.setThumbnail(data: playerDetail.thumbnail,
-                                 imageView: cell!.playerImage)
-        case 7:
-            // Played, Won titles
-            cell!.playerDetailLabel1.text = "Games played"
-            cell!.playerDetailLabel2.text = "Games won"
-            cell!.playerDetailLabel3.text = "Games won %"
-        case 8:
-            // Played, Won values
-            cell!.playerDetailLabel1.text = "\(playerDetail.gamesPlayed)"
-            cell!.playerDetailLabel2.text = "\(playerDetail.gamesWon)"
-            var ratio = (CGFloat(playerDetail.gamesWon) / CGFloat(playerDetail.gamesPlayed) * 100)
-            ratio.round()
-            cell!.playerDetailLabel3.text = (playerDetail.gamesPlayed == 0 ? "0 %" : "\(Int(ratio)) %")
-        case 9:
-            // Total score, Average score titles
-            cell!.playerDetailLabel1.text = "Total score"
-            cell!.playerDetailLabel2.text = "Average score"
-            cell!.playerDetailLabel3.text = ""
-        case 10:
-            // Total score, Average score values
-            cell!.playerDetailLabel1.text = "\(playerDetail.totalScore)"
-            var ratio = CGFloat(playerDetail.totalScore) / CGFloat(playerDetail.gamesPlayed)
-            ratio.round()
-            cell!.playerDetailLabel2.text = (playerDetail.gamesPlayed == 0 ? "0" : "\(Int(ratio))")
-            cell!.playerDetailLabel3.text = ""
-        case 11:
-            // Hands played, Hands Made titles
-            cell!.playerDetailLabel1.text = "Hands played"
-            cell!.playerDetailLabel2.text = "Hands made"
-            cell!.playerDetailLabel3.text = "Hands made %"
-        case 12:
-            // Hands played, Hands Made values
-            cell!.playerDetailLabel1.text = "\(playerDetail.handsPlayed)"
-            cell!.playerDetailLabel2.text = "\(playerDetail.handsMade)"
-            var ratio = (CGFloat(playerDetail.handsMade) / CGFloat(playerDetail.handsPlayed)) * 100
-            ratio.round()
-            cell!.playerDetailLabel3.text = (playerDetail.handsPlayed == 0 ? "0 %" : "\(Int(ratio)) %")
-        case twosTitleRow:
-            // Twos titles
-            cell!.playerDetailLabel1.text = "Twos made"
-            cell!.playerDetailLabel2.text = "Twos made %"
-            cell!.playerDetailLabel3.text = ""
-        case twosValueRow:
-            // Twos values
-            cell!.playerDetailLabel1.text = "\(playerDetail.twosMade)"
-            var ratio = (CGFloat(playerDetail.twosMade) / CGFloat(playerDetail.handsPlayed)) * 100
-            ratio.round()
-            cell!.playerDetailLabel2.text = (playerDetail.handsPlayed == 0 ? "0 %" : "\(Int(ratio)) %")
-            cell!.playerDetailLabel3.text = ""
-        case baseRows:
-            // Date last played title
-            cell!.playerDetailLabel1.text = "Last played"
-        case baseRows+1:
-            // Date last played
-            if playerDetail.datePlayed != nil {
-                let formatter = DateFormatter()
-                formatter.dateStyle = DateFormatter.Style.full
-                cell!.playerDetailLabel1.text = formatter.string(from: playerDetail.datePlayed)
-            } else {
-                cell!.playerDetailLabel1.text="Not played"
-            }
-            cell!.playerDetailLabel1Width.constant = 300
-            cell!.playerDetailLabel2Width.constant = 0
-            cell!.playerDetailLabel3Width.constant = 0
-            cell!.playerDetailLabel1.textAlignment = .left
-            cell!.playerDetailLabel2.text = ""
-            cell!.playerDetailLabel3.text = ""
-        case baseRows+2:
-            // Date last sync title
-            cell!.playerDetailLabel1.text = "Last sync"
-        case baseRows+3:
-            // Date last sync
-            if playerDetail.syncDate != nil {
-                let formatter = DateFormatter()
-                formatter.dateStyle = DateFormatter.Style.full
-                cell!.playerDetailLabel1.text = formatter.string(from: playerDetail.syncDate)
-            } else {
-                cell!.playerDetailLabel1.text="Not synced"
-            }
-            cell!.playerDetailLabel1Width.constant = 300
-            cell!.playerDetailLabel2Width.constant = 0
-            cell!.playerDetailLabel3Width.constant = 0
-            cell!.playerDetailLabel1.textAlignment = .left
-            cell!.playerDetailLabel2.text = ""
-            cell!.playerDetailLabel3.text = ""
-        case baseRows+4:
-            // Personal Records Title
-                cell!.playerDetailLabel1.text = "Personal Records"
-        case baseRows+5:
-            cell!.playerDetailLabel1.textAlignment = .left
-            cell!.playerDetailLabel1.text = "Score"
-            cell!.playerDetailLabel2.text = "\(playerDetail.maxScore)"
-            if playerDetail.maxScoreDate != nil {
-                let formatter = DateFormatter()
-                formatter.setLocalizedDateFormatFromTemplate("dd/MM/yyyy")
-                cell!.playerDetailLabel3.text = formatter.string(from: playerDetail.maxScoreDate)
-            } else {
-                cell!.playerDetailLabel3.text=""
-            }
-            cell!.separator.isHidden = true
-        case baseRows+6:
-            cell!.playerDetailLabel1.textAlignment = .left
-            cell!.playerDetailLabel1.text = "Bids made"
-            cell!.playerDetailLabel2.text = "\(playerDetail.maxMade)"
-            if playerDetail.maxMadeDate != nil {
-                let formatter = DateFormatter()
-                formatter.setLocalizedDateFormatFromTemplate("dd/MM/yyyy")                
-                cell!.playerDetailLabel3.text = formatter.string(from: playerDetail.maxMadeDate)
-            } else {
-                cell!.playerDetailLabel3.text=""
-            }
-            cell!.separator.isHidden = true
-        case baseRows+7:
-            cell!.playerDetailLabel1.textAlignment = .left
-            cell!.playerDetailLabel1.text = "Win streak"
-            let streaks = History.getWinStreaks(playerEmailList: [playerDetail.playerMO.email!])
-            if streaks.first?.streak ?? 0 == 0 {
-                cell?.playerDetailLabel2.text = "0"
-                cell?.playerDetailLabel3.text = ""
-            } else {
-                cell!.playerDetailLabel2.text = "\(streaks.first!.streak)"
-                if let participantMO = streaks.first?.participantMO {
-                    let formatter = DateFormatter()
-                    formatter.setLocalizedDateFormatFromTemplate("dd/MM/yyyy")
-                    cell!.playerDetailLabel3.text = formatter.string(from: participantMO.datePlayed!)
+        switch Sections(rawValue: indexPath.section)! {
+        case .uniqueID:
+            switch UniqueIdOptions(rawValue: indexPath.row)! {
+            case .uniqueID:
+                cell = tableView.dequeueReusableCell(withIdentifier: "Unique ID", for: indexPath) as? PlayerDetailCell
+                cell.uniqueIdField.text = playerDetail.email
+                cell.uniqueIdField.tag = self.emailFieldTag
+                cell.uniqueIdField.isSecureTextEntry = (self.mode != .create && self.mode != .download)
+                cell.uniqueIdField.attributedPlaceholder = NSAttributedString(string: "Unique identifier - must not be blank", attributes:[NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15.0, weight: .thin)])
+                if self.mode == .display {
+                    cell.uniqueIdField.isEnabled = false
+                }
+                self.addTargets(cell.uniqueIdField)
+                self.emailCell = cell
+                if mode == .download {
+                    cell.uniqueIdField.becomeFirstResponder()
+                }
+                
+            case .deletePlayer:
+                cell = tableView.dequeueReusableCell(withIdentifier: "Action Button", for: indexPath) as? PlayerDetailCell
+                if mode == .amend {
+                    cell.actionButton.setTitle("Delete Player", for: .normal)
+                    cell.actionButton.tag = self.deleteButtonTag
+                    cell.actionButton.addTarget(self, action: #selector(PlayerDetailViewController.actionButtonPressed(_:)), for: .touchUpInside)
                 }
             }
-            cell!.separator.isHidden = true
-        case baseRows+8:
-            cell!.playerDetailLabel1.textAlignment = .left
-            cell!.playerDetailLabel1.text = "Twos made"
-            cell!.playerDetailLabel2.text = "\(playerDetail.maxTwos)"
-            if playerDetail.maxTwosDate != nil {
-                let formatter = DateFormatter()
-                formatter.setLocalizedDateFormatFromTemplate("dd/MM/yyyy")
-                cell!.playerDetailLabel3.text = formatter.string(from: playerDetail.maxTwosDate)
-            } else {
-                cell!.playerDetailLabel3.text=""
-            }
-        case baseRows+9:
-            // Personal Records Title
-            cell!.playerDetailLabel1.text = "Actions"
-        case baseRows+10:
-            cell!.playerDetailActionButton.setTitle("Delete Player", for: .normal)
-            cell!.playerDetailActionButton.addTarget(self, action: #selector(PlayerDetailViewController.actionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
             
-        default:
-            break
+        case .lastPlayed:
+            switch LastPlayedOptions(rawValue: indexPath.row)! {
+            case .lastPlayed:
+                cell = tableView.dequeueReusableCell(withIdentifier: "Single", for: indexPath) as? PlayerDetailCell
+                if playerDetail.datePlayed != nil {
+                    let formatter = DateFormatter()
+                    formatter.dateStyle = DateFormatter.Style.full
+                    cell.singleLabel.text = formatter.string(from: playerDetail.datePlayed)
+                } else {
+                    cell.singleLabel.text="Not played"
+                }
+            }
+            
+        case .records:
+            cell = tableView.dequeueReusableCell(withIdentifier: "Record", for: indexPath) as? PlayerDetailCell
+            
+            switch RecordsOptions(rawValue: indexPath.row)! {
+            case .totalScore:
+                cell.recordDescLabel.text = "High score"
+                cell!.recordValueLabel.text = "\(playerDetail.maxScore)"
+                if playerDetail.maxScoreDate != nil {
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "dd MMM yyyy"
+                    cell!.recordDateLabel.text = formatter.string(from: playerDetail.maxScoreDate)
+                } else {
+                    cell!.recordDateLabel.text=""
+                }
+                
+            case .bidsMade:
+                cell.recordDescLabel.text = "Bids made"
+                cell!.recordValueLabel.text = "\(playerDetail.maxMade)"
+                if playerDetail.maxMadeDate != nil {
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "dd MMM yyyy"
+                    cell!.recordDateLabel.text = formatter.string(from: playerDetail.maxMadeDate)
+                } else {
+                    cell!.recordDateLabel.text=""
+                }
+                
+            case .winStreak:
+                cell.recordDescLabel.text = "Win streak"
+                if let playerMO = playerDetail.playerMO, let email = playerMO.email {
+                    let streaks = History.getWinStreaks(playerEmailList: [email])
+                    if streaks.first?.streak ?? 0 == 0 {
+                        cell?.recordValueLabel.text = "0"
+                        cell?.recordDateLabel.text = ""
+                    } else {
+                        cell!.recordValueLabel.text = "\(streaks.first!.streak)"
+                        if let participantMO = streaks.first?.participantMO {
+                            let formatter = DateFormatter()
+                            formatter.dateFormat = "dd MMM yyyy"
+                            cell!.recordDateLabel.text = formatter.string(from: participantMO.datePlayed!)
+                        }
+                    }
+                } else {
+                    cell?.recordValueLabel.text = "0"
+                    cell?.recordDateLabel.text = ""
+                }
+                
+            case .twosMade:
+                cell.recordDescLabel.text = "Twos made"
+                cell!.recordValueLabel.text = "\(playerDetail.maxTwos)"
+                if playerDetail.maxTwosDate != nil {
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "dd MMM yyyy"
+                    cell!.recordDateLabel.text = formatter.string(from: playerDetail.maxTwosDate)
+                } else {
+                    cell!.recordDateLabel.text=""
+                }
+            }
+            
+        case .stats:
+            cell = tableView.dequeueReusableCell(withIdentifier: "Stat", for: indexPath) as? PlayerDetailCell
+            
+            switch StatsOptions(rawValue: indexPath.row)! {
+            case .played:
+                cell.statDescLabel1.text = "Games played"
+                cell.statValueLabel1.text = "\(playerDetail.gamesPlayed)"
+
+                cell.statDescLabel2.text = "Hands played"
+                cell.statValueLabel2.text = "\(playerDetail.handsPlayed)"
+
+            case .win:
+                cell.statDescLabel1.text = "Games won"
+                cell.statValueLabel1.text = "\(playerDetail.gamesWon)"
+
+                cell.statDescLabel2.text = "Hands made"
+                cell.statValueLabel2.text = "\(playerDetail.handsMade)"
+
+            case .winPercent:
+                cell.statDescLabel1.text = "Win %"
+                if CGFloat(playerDetail.gamesPlayed) == 0 {
+                    cell.statValueLabel1.text = "0.0 %"
+                } else {
+                    let percent = (CGFloat(playerDetail.gamesWon) / CGFloat(playerDetail.gamesPlayed)) * 100
+                    cell.statValueLabel1.text = "\(String(format: "%0.1f", percent)) %"
+                }
+                
+                cell.statDescLabel2.text = "Made %"
+                if playerDetail.handsPlayed == 0 {
+                    cell.statValueLabel2.text = "0.0 %"
+                } else {
+                    let percent = (CGFloat(playerDetail.handsMade) / CGFloat(playerDetail.handsPlayed)) * 100
+                    cell.statValueLabel2.text = "\(String(format: "%0.1f", percent)) %"
+                }
+                
+            case .total:
+                cell.statDescLabel1.text = "Total score"
+                cell.statValueLabel1.text = "\(playerDetail.totalScore)"
+
+                if self.scorecard.settingBonus2 {
+                    cell.statDescLabel2.text = "Twos made"
+                    cell.statValueLabel2.text = "\(playerDetail.twosMade)"
+                } else {
+                    cell.statDescLabel2.text = ""
+                    cell.statValueLabel2.text = ""
+                }
+                
+            case .average:
+                cell.statDescLabel1.text = "Average score"
+                if playerDetail.gamesPlayed == 0 {
+                    cell.statValueLabel1.text = "0.0"
+                } else {
+                    let average = (CGFloat(playerDetail.totalScore) / CGFloat(playerDetail.gamesPlayed))
+                    cell.statValueLabel1.text = "\(String(format: "%0.1f", average))"
+                }
+
+                if self.scorecard.settingBonus2 {
+                    cell.statDescLabel2.text = "Twos made %"
+                    if playerDetail.handsPlayed == 0 {
+                        cell.statValueLabel2.text = "0.0 %"
+                    } else {
+                        let percent = (CGFloat(playerDetail.twosMade) / CGFloat(playerDetail.handsPlayed)) * 100
+                        cell.statValueLabel2.text = "\(String(format: "%0.1f", percent)) %"
+                    }
+                } else {
+                    cell.statDescLabel2.text = ""
+                    cell.statValueLabel2.text = ""
+                }
+            }
         }
-        
+             
         let backgroundView = UIView()
         backgroundView.backgroundColor = UIColor.clear
         cell!.selectedBackgroundView = backgroundView
-        
-        if mode == .download {
-            // Gray out and disable all but email row
-            if indexPath.row == emailRow {
-                cell?.isUserInteractionEnabled = true
-                cell?.backgroundColor = Palette.background
-            } else {
-                cell?.isUserInteractionEnabled = false
-                if indexPath.row > emailRow {
-                    cell?.backgroundColor = Palette.disabled
-                }
-            }
-        } else {
-            cell?.backgroundColor = Palette.background
-        }
-
-        if self.mode == .display || self.mode == .downloaded {
-            cell?.isUserInteractionEnabled = false
-        }
-        
+            
         return cell!
     }
-    
-    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath?{
-        switch indexPath.row {
-        case imageRow:
-            return indexPath
-        default:
-            return nil
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch indexPath.row {
-        case imageRow:
-            
-            tableView.deselectRow(at: indexPath, animated: false)
-            
-            actionSheet = ActionSheet("Thumbnail Image", message: "\(playerDetail.thumbnail == nil ? "Add a" : "Replace") thumbnail image for this player", view: sourceView)
-            actionSheet.add("Take Photo", handler: {
-                    self.getPicture(from: .camera)
-                })
-            actionSheet.add("Use Photo Library",handler: {
-                    self.getPicture(from: .photoLibrary)
-                })
-            if playerDetail.thumbnail != nil {
-                actionSheet.add("Remove Photo", handler: {
-                    self.removeImage()
-
-                })
-            }
-            actionSheet.add("Cancel", style: .cancel, handler:nil)
-            actionSheet.present()
-        default:
-            break
-        }
-    }
-    
+       
     // MARK: - TextField and Button Control Overrides ======================================================== -
+    
+    private func addTargets(_ textField: UITextField) {
+        textField.addTarget(self, action: #selector(PlayerDetailViewController.textFieldDidChange(_:)), for: UIControl.Event.editingChanged)
+        textField.addTarget(self, action: #selector(PlayerDetailViewController.textFieldShouldReturn(_:)), for: UIControl.Event.editingDidEndOnExit)
+    }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
         self.changed = true
         switch textField.tag {
-        case nameRow:
+        case self.nameFieldTag:
+            // Name
             playerDetail.name = textField.text!
             playerDetail.nameDate = Date()
-        case emailRow:
+        case self.emailFieldTag:
+            // Email
             playerDetail.email = textField.text!
             playerDetail.emailDate = Date()
         default:
@@ -560,46 +490,31 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     }
     
     @objc func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField.tag == nameRow && textField.text == "" {
+        if textField.tag == self.nameFieldTag && textField.text == "" {
             // Don't allow blank name
             return false
-        } else if mode == .download && textField.tag == emailRow && textField.text == "" {
-            // Don't allow blank email in download mode
-            return false
+        } else if mode == .download && textField.tag == self.emailFieldTag {
+            if textField.text == "" {
+                // Don't allow blank email in download mode
+                return false
+            } else {
+                // Press the 'check' button
+                self.getCloudPlayerDetails()
+            }
         } else {
             // Try to move to next text field - resign if none found
-            var field = textField.tag
-            var found = false
-            while field < textFieldList.count - 1 {
-                field += 1
-                if textFieldList[field] != nil {
-                    textFieldList[field]?.becomeFirstResponder()
-                    found = true
-                    break
-                }
-            }
-            if !found {
+            if textField.tag == self.nameFieldTag {
+                emailCell.uniqueIdField.becomeFirstResponder()
+            } else {
                 textField.resignFirstResponder()
             }
-            return true
         }
+        return true
     }
 
-    @objc func secureButtonPressed(_ button: UIButton) {
-        alertDecision("Note that by default Unique IDs are only visible on a device where they are created. Changing this setting will also make this Unique ID hidden on this device - i.e. you will not be able to see the value on this device although you will be able to change it. Once you select hidden mode, this is irreversible.\n\nYou can only make the Unique ID visible again by blanking it out and re-typing it.\n\nAre you sure you want to do this?", title: "Hidden Mode", okButtonText: "Confirm", okHandler: {
-                self.setEmailVisible(false)
-                self.changed = true
-                self.enableButtons()
-        })
-    }
-    
-    @objc func secureInfoButtonPressed(_ button: UIButton) {
-        alertMessage("Note that by default Unique IDs are only visible on a device where they are created. \n\nYou can only make the Unique ID visible again by blanking it out and re-typing it.", title: "Hidden Entry")
-    }
-    
     @objc func actionButtonPressed(_ button: UIButton) {
         switch button.tag {
-        case 0:
+        case self.deleteButtonTag:
             self.checkDeletePlayer()
         default:
             break
@@ -608,7 +523,25 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
 
    // MARK: - Image Picker Routines / Overrides ============================================================ -
 
-    func getPicture(from: UIImagePickerController.SourceType) {
+    private func imageTapped() {
+        let actionSheet = ActionSheet("Thumbnail Image", message: "\(playerDetail.thumbnail == nil ? "Add a" : "Replace") thumbnail image for this player", view: sourceView)
+        actionSheet.add("Take Photo", handler: {
+                self.getPicture(from: .camera)
+            })
+        actionSheet.add("Use Photo Library",handler: {
+                self.getPicture(from: .photoLibrary)
+            })
+        if playerDetail.thumbnail != nil {
+            actionSheet.add("Remove Photo", handler: {
+                self.removeImage()
+
+            })
+        }
+        actionSheet.add("Cancel", style: .cancel, handler:nil)
+        actionSheet.present()
+    }
+    
+    private func getPicture(from: UIImagePickerController.SourceType) {
        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
@@ -619,26 +552,25 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         }
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    internal func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
         
         if let selectedImage = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage {
             var rotatedImage:UIImage
             
-            imageView!.image = selectedImage
+            self.playerImageView!.image = selectedImage
             
-            if let rawImage = imageView!.image {
+            if let rawImage = self.playerImageView!.image {
                 rotatedImage = rotateImage(image: rawImage)
                 if let imageData = rotatedImage.pngData() {
                     playerDetail.thumbnail  = Data(imageData)
                     playerDetail.thumbnailDate = Date()
                 }
-                imageView!.image = rotatedImage
+                self.playerImageView!.image = rotatedImage
             }
-            imageView!.contentMode = .scaleAspectFill
-            imageView!.clipsToBounds = true
-            imageView!.alpha = 1.0
-            imageView!.backgroundColor = Palette.disabled
+            self.playerImageView!.contentMode = .scaleAspectFill
+            self.playerImageView!.clipsToBounds = true
+            self.playerImageView!.alpha = 1.0
             self.changed = true
             self.enableButtons()
             
@@ -666,10 +598,15 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     func removeImage() {
         playerDetail.thumbnail = nil
         playerDetail.thumbnailDate = nil
-        imageView!.image = UIImage(named: "camera")
-        imageView!.contentMode = .center
-        imageView!.clipsToBounds = false
-        imageView!.alpha = 0.5
+        if mode == .create || mode == .amend {
+            self.playerImageView!.image = UIImage(named: "camera")
+        }
+        self.playerImageView!.contentMode = .center
+        self.playerImageView!.backgroundColor = Palette.disabled
+        ScorecardUI.veryRoundCorners(self.playerImageView!)
+        self.playerImageView!.clipsToBounds = false
+        self.playerImageView!.alpha = 0.5
+        self.view.bringSubviewToFront(self.addImageLabel)
         self.changed = true
         self.enableButtons()
     }
@@ -728,6 +665,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
                     self.footerPaddingView.backgroundColor = Palette.background
                     self.tableView.isUserInteractionEnabled = false
                     self.enableButtons()
+                    self.updateHeaderFields()
                     self.tableView.reloadData()
                     
                 } else {
@@ -784,25 +722,64 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             actionButton.isHidden = true
         }
         
-        if nameErrorLabel != nil {
-            nameErrorLabel!.text = (duplicateName ? "Duplicate not allowed" : "")
-        }
-        if emailErrorLabel != nil {
-            emailErrorLabel!.text = (duplicateEmail ? (mode == .download ? "Already on device" : "Duplicate not allowed") : "")
+        switch mode {
+        case .create, .amend:
+            self.addImageLabel.text = (self.playerDetail.thumbnail == nil ? "Tap camera to\nadd photo" : "Tap photo to\nchange")
+        default:
+            self.addImageLabel.isHidden = true
         }
         
-        if playerDetail.email == "" {
-            // Reset to visible
-            setEmailVisible(true)
-            // Avoid undo to reveal previous content
-            if self.emailCell != nil {
-                self.emailCell.playerDetailField.undoManager?.removeAllActions()
-            }
-        }
+        self.playerErrorLabel.text = (duplicateName ? "Duplicate not allowed" : "")
+        
+        self.emailErrorLabel?.text = (duplicateEmail ? (mode == .download ? "Already on device" : "Duplicate not allowed") : "")
     }
     
     // MARK: - Utility Routines ======================================================================== -
 
+    func setupHeaderFields() {
+        navigationBar.topItem?.title = playerDetail.name
+        switch self.mode! {
+        case .create:
+            // Smaller input
+            navigationBar.topItem?.title = "New Player"
+            
+        case .download:
+            // Switch name and email
+            navigationBar.topItem?.title = "Download"
+        
+        default:
+            break
+        }
+        
+        self.playerNameField.tag = nameFieldTag
+        self.addTargets(self.playerNameField)
+        var placeholder: String
+        switch mode! {
+        case .create, .amend:
+            placeholder = "Player name - Must not be blank"
+        default:
+            placeholder = "Player name"
+        }
+        self.playerNameField.attributedPlaceholder = NSAttributedString(string: placeholder, attributes:[NSAttributedString.Key.font: UIFont.systemFont(ofSize: 20.0, weight: .thin)])
+        self.playerNameField.isEnabled = (mode == .create || mode == .amend)
+        if mode == .create {
+            self.playerNameField.becomeFirstResponder()
+        }
+        
+        if mode != .create && mode != .amend {
+            self.playerImageView.isUserInteractionEnabled = false
+        }
+    }
+    
+    func updateHeaderFields() {
+        self.playerNameField.text = playerDetail.name
+        if let thumbnail = self.playerDetail.thumbnail {
+            Utility.setThumbnail(data: thumbnail,imageView: self.playerImageView)
+        } else {
+            self.removeImage()
+        }
+    }
+    
     func checkDeletePlayer() {
         var alertController: UIAlertController
         alertController = UIAlertController(title: "Warning", message: "This will remove the player \n'\(playerDetail.name)'\nfrom this device.\n\nIf you are synchronising with iCloud the player will still be available to download in future.\n Otherwise this will remove their details permanently.\n\n Are you sure you want to do this?", preferredStyle: UIAlertController.Style.alert)
@@ -842,34 +819,75 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         }
     }
     
-    func setEmailVisible(_ visible: Bool) {
-        self.playerDetail.visibleLocally = visible
-        if self.emailCell != nil && !showEmail {
-            self.emailCell.playerDetailField.isSecureTextEntry = !visible
-            self.emailCell.playerDetailSecure.isHidden = !visible
-            self.emailCell.playerDetailSecureInfo.isHidden = visible
-        }
+    // MARK: - method to show this view controller ============================================================================== -
+    
+    static public func show(from sourceViewController: CustomViewController, playerDetail: PlayerDetail, mode: DetailMode, sourceView: UIView, completion: ((PlayerDetail?,Bool)->())? = nil) {
+        let storyboard = UIStoryboard(name: "PlayerDetailViewController", bundle: nil)
+        let playerDetailViewController = storyboard.instantiateViewController(withIdentifier: "PlayerDetailViewController") as! PlayerDetailViewController
+
+        playerDetailViewController.preferredContentSize = CGSize(width: 400, height: 600)
+
+        playerDetailViewController.playerDetail = playerDetail
+        playerDetailViewController.mode = mode
+        playerDetailViewController.sourceView = sourceView
+        playerDetailViewController.callerCompletion = completion
+        
+        sourceViewController.present(playerDetailViewController, sourceView: sourceView, animated: true, completion: nil)
     }
+    
+    private func dismiss(playerDetail: PlayerDetail? = nil, deletePlayer: Bool = false) {
+        self.dismiss(animated: true, completion: {
+            self.callerCompletion?(playerDetail, deletePlayer)
+        })
+    }
+    
+
 }
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
 
 class PlayerDetailCell: UITableViewCell {
-    @IBOutlet weak var playerDetailLabel1Width: NSLayoutConstraint!
-    @IBOutlet weak var playerDetailLabel2Width: NSLayoutConstraint!
-    @IBOutlet weak var playerDetailLabel3Width: NSLayoutConstraint!
-    @IBOutlet weak var playerDetailLabel1: UILabel!
-    @IBOutlet weak var playerDetailLabel2: UILabel!
-    @IBOutlet weak var playerDetailLabel3: UILabel!
-    @IBOutlet weak var playerDetailField: UITextField!
-    @IBOutlet weak var playerDetailSecure: UIButton!
-    @IBOutlet weak var playerDetailSecureInfo: UIButton!
-    @IBOutlet weak var playerDetailActionButton: UIButton!
-    @IBOutlet weak var playerImage: UIImageView!
-    @IBOutlet weak var separator: UIView!
+    @IBOutlet weak var headerLabel: UILabel!
+    @IBOutlet weak var headerErrorLabel: UILabel!
+    @IBOutlet weak var uniqueIdField: UITextField!
+    @IBOutlet weak var actionButton: UIButton!
+    @IBOutlet weak var singleLabel: UILabel!
+    @IBOutlet weak var recordDescLabel: UILabel!
+    @IBOutlet weak var recordValueLabel: UILabel!
+    @IBOutlet weak var recordDateLabel: UILabel!
+    @IBOutlet weak var statDescLabel1: UILabel!
+    @IBOutlet weak var statValueLabel1: UILabel!
+    @IBOutlet weak var statDescLabel2: UILabel!
+    @IBOutlet weak var statValueLabel2: UILabel!
 }
 
-
+class PlayerDetailHeaderFooterView: UITableViewHeaderFooterView {
+   
+    public var cell: PlayerDetailCell!
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
+    }
+    
+    convenience init?(_ cell: PlayerDetailCell, reuseIdentifier: String? = nil) {
+        let frame = CGRect(origin: CGPoint(), size: cell.frame.size)
+        self.init(reuseIdentifier: reuseIdentifier)
+        cell.frame = frame
+        self.cell = cell
+        self.addSubview(cell)
+    }
+    
+    override func layoutSubviews() {
+        let frame = CGRect(origin: CGPoint(), size: self.frame.size)
+        cell.frame = frame
+    }
+    
+}
 
 // Helper function inserted by Swift 4.2 migrator.
 fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {

@@ -204,6 +204,7 @@ Initial connection difficult
 Player detail screen
 Change History to allow filter by player
 Review screen (like Bridge books)
+Drill from high scores in player detail
 
 Jack
 ----

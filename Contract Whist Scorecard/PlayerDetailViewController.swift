@@ -120,7 +120,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             self.getCloudPlayerDetails()
         case .downloaded:
             // No further action required
-        self.dismiss(playerDetail: self.playerDetail)
+            self.dismiss(playerDetail: self.playerDetail)
         default:
             break
         }
@@ -296,7 +296,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
                 cell = tableView.dequeueReusableCell(withIdentifier: "Unique ID", for: indexPath) as? PlayerDetailCell
                 cell.uniqueIdField.text = playerDetail.email
                 cell.uniqueIdField.tag = self.emailFieldTag
-                cell.uniqueIdField.isSecureTextEntry = (self.mode != .create && self.mode != .download)
+                cell.uniqueIdField.isSecureTextEntry = (self.mode != .create && self.mode != .download && self.mode != .downloaded)
                 cell.uniqueIdField.attributedPlaceholder = NSAttributedString(string: "Unique identifier - must not be blank", attributes:[NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15.0, weight: .thin)])
                 if self.mode == .display {
                     cell.uniqueIdField.isEnabled = false

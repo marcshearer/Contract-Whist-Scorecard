@@ -1138,11 +1138,16 @@ extension ScorepadViewController: UIViewControllerTransitioningDelegate {
     }
     
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        if dismissed is EntryViewController {
-            self.transition.presenting = false
-            return self.transition
-        } else {
+        if #available(iOS 13.0, *) {
+            // TODO transitions don't work on IOS 13
             return nil
+        } else {
+            if dismissed is EntryViewController {
+                self.transition.presenting = false
+                return self.transition
+            } else {
+                return nil
+            }
         }
     }
 }

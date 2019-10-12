@@ -78,7 +78,7 @@ public class ThumbnailView: UIView {
     
     public var diameter: CGFloat {
         get {
-            return self.discHalo.frame.width
+            return self.discHalo.layer.frame.width
         }
     }
     
@@ -124,8 +124,8 @@ public class ThumbnailView: UIView {
         // Adjust components
         let haloInset = allowHaloWidth - haloWidth
         let haloSize = self.frame.width - (2.0 * haloInset)
-        self.discHalo.frame = CGRect(x: haloInset, y: haloInset, width: haloSize , height: haloSize)
-        ScorecardUI.veryRoundCorners(self.discHalo, radius: self.discHalo.frame.width / 2.0)
+        self.discHalo.layer.frame = CGRect(x: haloInset, y: haloInset, width: haloSize , height: haloSize)
+        ScorecardUI.veryRoundCorners(self.discHalo, radius: self.discHalo.layer.frame.width / 2.0)
         
         let discSize: CGFloat = frame.width - (2 * allowHaloWidth)
         self.discImage.frame = CGRect(x: haloWidth, y: haloWidth, width: discSize, height: discSize)

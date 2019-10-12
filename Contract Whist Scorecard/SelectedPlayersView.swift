@@ -50,7 +50,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
     private var width: CGFloat! = 50.0
     private var height: CGFloat! = 75.0
     private var haloWidth: CGFloat = 0.0
-    private var allowHaloWidth: CGFloat = 0.0
+    private var allowHaloWidth: CGFloat = 5.0
     private let lineWidth: CGFloat = 5.0
     private let tableInset: CGFloat = 20.0
     private var additionalAdjustment: CGFloat = 0.0

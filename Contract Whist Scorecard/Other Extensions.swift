@@ -144,3 +144,50 @@ extension CGRect {
         }
     }
 }
+
+class SegmentedControl: UISegmentedControl {
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        self.set()
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.set()
+    }
+    
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        self.set()
+    }
+    
+    private func set() {
+        if #available(iOS 13.0, *) {
+            self.selectedSegmentTintColor = Palette.emphasis
+            let selectedImage = UIImage(color: Palette.emphasis, size: CGSize(width: 1, height: 32))
+            self.setBackgroundImage(selectedImage, for: .selected, barMetrics: .default)
+            let unselectedImage = UIImage(color: UIColor.white, size: CGSize(width: 1, height: 32))
+            self.setBackgroundImage(unselectedImage, for: .normal, barMetrics: .default)
+            self.backgroundColor = UIColor.white
+        } else {
+            self.tintColor = Palette.emphasis
+            self.backgroundColor = UIColor.white
+            self.layer.cornerRadius = 5.0
+        }
+        self.layer.masksToBounds = true
+    }
+}
+
+extension UIImage {
+    convenience init(color: UIColor, size: CGSize) {
+        UIGraphicsBeginImageContextWithOptions(size, false, 1)
+        color.set()
+        let ctx = UIGraphicsGetCurrentContext()!
+        ctx.fill(CGRect(origin: .zero, size: size))
+        let image = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+
+        self.init(data: image.pngData()!)!
+    }
+}

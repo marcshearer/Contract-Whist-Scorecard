@@ -193,14 +193,13 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="QQV-uX-MBi">
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="QQV-uX-MBi" customClass="SegmentedControl" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                     <rect key="frame" x="169" y="19.5" width="37" height="32"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <segments>
                                                         <segment title=""/>
                                                         <segment title=""/>
                                                     </segments>
-                                                    <color key="tintColor" name="Segmented Controls"/>
                                                 </segmentedControl>
                                             </subviews>
                                             <constraints>

@@ -129,7 +129,6 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
                 cell.excludeLabel.attributedText = self.excludeText(from: "History")
                 cell.excludeSelection.addTarget(self, action: #selector(OverrideViewController.excludeHistoryAction(_:)), for: UIControl.Event.valueChanged)
                 cell.excludeSelection.selectedSegmentIndex = (self.scorecard.overrideExcludeHistory ? 1 : 0)
-                cell.excludeSelection.layer.cornerRadius = 5.0
                 self.excludeHistorySelection = cell.excludeSelection
                 self.excludeChanged()
                 
@@ -138,7 +137,6 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
                 cell.excludeLabel.attributedText = self.excludeText(from: "Statistics")
                 cell.excludeSelection.addTarget(self, action: #selector(OverrideViewController.excludeStatsAction(_:)), for: UIControl.Event.valueChanged)
                 cell.excludeSelection.selectedSegmentIndex = (self.scorecard.overrideExcludeStats ? 1 : 0)
-                cell.excludeSelection.layer.cornerRadius = 5.0
                 self.excludeStatsSelection = cell.excludeSelection
                 
             case .subHeading:

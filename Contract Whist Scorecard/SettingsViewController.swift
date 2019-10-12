@@ -380,7 +380,6 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                         
                     case .cardsInHandBounce:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Segmented") as? SettingsTableCell
-                        cell.segmentedControl.layer.cornerRadius = 5.0
                         self.cardsChanged(bounceSegmentedControl: cell.segmentedControl)
                         cell.segmentedControl.addTarget(self, action: #selector(SettingsViewController.cardsInHandBounceChanged(_:)), for: .valueChanged)
                         cell.segmentedControl.selectedSegmentIndex = (self.scorecard.settingBounceNumberCards ? 1 : 0)
@@ -391,7 +390,6 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                         
                     case .bonus2:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Segmented") as? SettingsTableCell
-                        cell.segmentedControl.layer.cornerRadius = 5.0
                         cell.segmentedControl.setTitle("No bonus", forSegmentAt: 0)
                         cell.segmentedControl.setTitle("10 Point Bonus", forSegmentAt: 1)
                         cell.segmentedControl.addTarget(self, action: #selector(SettingsViewController.bonus2Changed(_:)), for: .valueChanged)

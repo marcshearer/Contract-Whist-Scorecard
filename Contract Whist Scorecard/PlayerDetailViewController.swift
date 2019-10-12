@@ -207,7 +207,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         case .lastPlayed:
             rows = LastPlayedOptions.allCases.count
         case .records:
-            rows = RecordsOptions.allCases.count
+            rows = RecordsOptions.allCases.count - (self.scorecard.settingBonus2 ? 0 : 1)
         case .stats:
             rows = StatsOptions.allCases.count
         }

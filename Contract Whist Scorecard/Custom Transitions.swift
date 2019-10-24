@@ -21,22 +21,23 @@ class FadeAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         
         let containerView = transitionContext.containerView
-        let toView = transitionContext.view(forKey: .to)!
+        if let toView = transitionContext.view(forKey: .to) ?? transitionContext.viewController(forKey:.from)?.view {
         
-        // Avoid layout bug if rotated since last shown
-        let toViewController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)!
-        toView.frame = transitionContext.finalFrame(for: toViewController)
-        
-        containerView.addSubview(toView)
-        toView.alpha = 0.0
-        UIView.animate(
-            withDuration: duration,
-            animations: {
-                toView.alpha = 1.0
-        },
-            completion: { _ in
-                transitionContext.completeTransition(true)
-        })
+            // Avoid layout bug if rotated since last shown
+            let toViewController = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)!
+            toView.frame = transitionContext.finalFrame(for: toViewController)
+            
+            containerView.addSubview(toView)
+            toView.alpha = 0.0
+            UIView.animate(
+                withDuration: duration,
+                animations: {
+                    toView.alpha = 1.0
+            },
+                completion: { _ in
+                    transitionContext.completeTransition(true)
+            })
+        }
     }
 }
 

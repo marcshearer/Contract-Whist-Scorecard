@@ -22,14 +22,13 @@ enum AppState: String {
     case waiting = "Waiting to start"
 }
 
-class ClientViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate, GamePreviewDelegate, UIPopoverPresentationControllerDelegate {
+class ClientViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate, GamePreviewDelegate, PlayerSelectionViewDelegate, UIPopoverPresentationControllerDelegate {
 
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
     internal let scorecard = Scorecard.shared
     private var recovery: Recovery!
-    private weak var selectionViewController: SelectionViewController!
     private weak var scorepadViewController: ScorepadViewController!
     private weak var gamePreviewViewController: GamePreviewViewController!
     private var hostController: HostController!
@@ -58,6 +57,8 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     public var thisPlayer: String!
     public var thisPlayerName: String!
     private var thisPlayerNumber: Int!
+    private var choosingPlayer = false
+    private var tableViewHeight: CGFloat = 0.0
 
     private var idleTimer: Timer!
     private var connectingTimer: Timer!
@@ -89,6 +90,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     // MARK: - IB Outlets ============================================================================== -
     
+    @IBOutlet private weak var scrollView: UIScrollView!
     @IBOutlet private weak var titleBar: UINavigationItem!
     @IBOutlet private weak var finishButton: RoundedButton!
     @IBOutlet private weak var clientTableView: UITableView!
@@ -98,6 +100,8 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     @IBOutlet private weak var thisPlayerNameLabel: UILabel!
     @IBOutlet private weak var thisPlayerThumbnailWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var changePlayerButton: UIButton!
+    @IBOutlet private weak var playerSelectionView: PlayerSelectionView!
+    @IBOutlet private weak var playerSelectionViewHeightConstraint: NSLayoutConstraint!
     
     // MARK: - IB Actions ============================================================================== -
     
@@ -112,9 +116,11 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     @IBAction func changePlayerPressed(_ sender: UIButton) {
-        self.selectionViewController = SelectionViewController.show(from: self, existing: self.selectionViewController, mode: .single, thisPlayer: self.thisPlayer, thisPlayerFrame: self.thisPlayerThumbnail.frame, formTitle: "Choose Player", backText: "", backImage: "cross white", preCompletion: { (playerMO) in
-            self.returnPlayers(playerMO: playerMO)
-        })
+        if self.choosingPlayer {
+            self.hidePlayerSelection()
+        } else {
+            self.showPlayerSelection()
+        }
     }
     
     // MARK: - View Overrides ========================================================================== -
@@ -224,7 +230,13 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.clientTableView.layoutIfNeeded()
+        // Update sizes to layout constraints immediately to aid calculations
+        self.view.layoutIfNeeded()
+        
+        if self.rotated && self.choosingPlayer {
+            // Resize player selection
+            self.showPlayerSelection()
+        }
         if self.firstTime || self.rotated {
             self.firstTime = false
             self.rotated = false
@@ -617,6 +629,76 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     internal let gamePreviewCanStartGame = false
+    
+    // MARK: - Player Selection View Delegate Handlers ======================================================= -
+    
+    private func showPlayerSelection() {
+        let alreadyChoosingPlayer = self.choosingPlayer
+        if !alreadyChoosingPlayer {
+            self.choosingPlayer = true
+            self.playerSelectionView.set(parent: self)
+            self.playerSelectionView.delegate = self
+        }
+        let selectionHeight = self.view.frame.height - self.playerSelectionView.frame.minY - self.scrollView.frame.minY
+        self.playerSelectionView.set(size: CGSize(width: UIScreen.main.bounds.width, height: selectionHeight))
+        let requiredHeight = self.playerSelectionView.getHeightFor(items: self.scorecard.playerList.count + 1)
+        if requiredHeight > selectionHeight {
+            self.playerSelectionView.set(size: CGSize(width: UIScreen.main.bounds.width, height: requiredHeight))
+        }
+        UIView.performWithoutAnimation {
+            // Update labels without animation to avoid distraction
+            self.thisPlayerNameLabel.text = "Choose Player"
+            self.thisPlayerNameLabel.layoutIfNeeded()
+            self.changePlayerButton.setTitle("Cancel", for: .normal)
+            self.changePlayerButton.layoutIfNeeded()
+        }
+        if !alreadyChoosingPlayer {
+            self.scrollView.scrollRectToVisible(CGRect(), animated: false)
+            self.tableViewHeight = self.clientTableViewHeightConstraint.constant
+            self.clientTableViewHeightConstraint.constant = 0.0
+        }
+        
+        Utility.animate(view: self.view, duration: 0.5) {
+            self.playerSelectionViewHeightConstraint.constant = max(requiredHeight, selectionHeight)
+        }
+        let playerList = self.scorecard.playerList.filter { $0.email != self.thisPlayer }
+        self.playerSelectionView.set(players: playerList, addButton: true, updateBeforeSelect: false)
+        
+    }
+    
+    private func hidePlayerSelection() {
+        self.choosingPlayer = false
+        self.showThisPlayer()
+        self.scrollView.isScrollEnabled = true
+
+        Utility.animate(view: self.view, duration: 0.5) {
+            self.playerSelectionViewHeightConstraint.constant = 0.0
+        }
+        self.clientTableViewHeightConstraint.constant = self.tableViewHeight
+        self.clientTableView.reloadData()
+    }
+    
+    internal func didSelect(playerMO: PlayerMO) {
+        // Save player as default for device
+        if let onlineEmail = self.scorecard.settingOnlinePlayerEmail {
+            if playerMO.email == onlineEmail {
+                // Back to normal user - can remove temporary override
+                Notifications.removeTemporaryOnlineGameSubscription()
+            } else {
+                Notifications.addTemporaryOnlineGameSubscription(email: playerMO.email!)
+            }
+        }
+        self.thisPlayer = playerMO.email!
+        self.scorecard.defaultPlayerOnDevice = self.thisPlayer
+        UserDefaults.standard.set(self.thisPlayer, forKey: "defaultPlayerOnDevice")
+        self.refreshInvites()
+        self.hidePlayerSelection()
+    }
+    
+    internal func resizeView() {
+        // Additional players added - resize the view
+        self.showPlayerSelection()
+    }
     
     // MARK: - Browser Delegate handlers ===================================================================== -
     
@@ -1061,7 +1143,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         
         // Make sure all off table view is shown without scrolling - scrolling handled by underlying scroll view
         let newHeight = self.clientTableView.contentSize.height
-        if newHeight > self.clientTableView.frame.height {
+        if newHeight > self.clientTableView.frame.height && !self.choosingPlayer {
             self.clientTableViewHeightConstraint.constant = newHeight
         }
         
@@ -1161,32 +1243,6 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    // MARK: - Search return handler ================================================================ -
-    
-    private func returnPlayers(playerMO: [PlayerMO]?) {
-        // Save player as default for device
-        if playerMO == nil {
-            // Cancel taken - exit if no player
-            if thisPlayer == nil {
-                exitClient()
-            }
-        } else {
-            if let onlineEmail = self.scorecard.settingOnlinePlayerEmail {
-                if playerMO![0].email! == onlineEmail {
-                    // Back to normal user - can remove temporary override
-                    Notifications.removeTemporaryOnlineGameSubscription()
-                } else {
-                    Notifications.addTemporaryOnlineGameSubscription(email: playerMO![0].email!)
-                }
-            }
-            self.thisPlayer = playerMO![0].email!
-            self.scorecard.defaultPlayerOnDevice = self.thisPlayer
-            UserDefaults.standard.set(self.thisPlayer, forKey: "defaultPlayerOnDevice")
-            self.refreshInvites()
-            self.showThisPlayer()
-        }
-    }
-    
     // MARK: - Utility Routines ======================================================================== -
 
     private func setupHostingOptions() {
@@ -1206,10 +1262,11 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     private func showThisPlayer() {
         if self.commsPurpose == .playing {
             if let playerMO = self.scorecard.findPlayerByEmail(self.thisPlayer) {
-                let size = SelectionViewController.thumbnailSize(view: self.view, labelHeight: 0.0)
+                let size = SelectionViewController.thumbnailSize(labelHeight: 0.0)
                 self.thisPlayerThumbnailWidthConstraint.constant = size.width
                 self.thisPlayerThumbnail.set(data: playerMO.thumbnail, name: playerMO.name!, nameHeight: 0.0, diameter: size.width)
                 self.thisPlayerNameLabel.text = "Play as \(playerMO.name!)"
+                self.changePlayerButton.setTitle("Change", for: .normal)
             }
         } else {
             self.thisPlayerNameLabel.text = "Choose Device to View"
@@ -1573,6 +1630,11 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         self.dismiss(animated: true, completion: {
             self.completion?()
         })
+    }
+    
+    override internal func didDismiss() {
+        self.finishClient(resetRecovery: false)
+        self.completion?()
     }
 }
 

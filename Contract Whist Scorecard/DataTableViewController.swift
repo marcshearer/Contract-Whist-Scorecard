@@ -292,6 +292,7 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
         
         dataTableviewController.recordList = recordList
         dataTableviewController.delegate = delegate
+        dataTableviewController.modalPresentationStyle = .fullScreen
         sourceViewController.present(dataTableviewController, animated: true, completion: nil)
         
         return dataTableviewController
@@ -300,6 +301,11 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
     private func dismiss() {
         self.dismiss(animated: true, completion: self.delegate?.completion)
     }
+    
+    override internal func didDismiss() {
+        self.delegate?.completion?()
+    }   
+    
 }
 
 // MARK: - Extension Override Handlers ============================================================= -

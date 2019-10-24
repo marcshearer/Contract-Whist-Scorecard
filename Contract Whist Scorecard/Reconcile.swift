@@ -93,6 +93,9 @@ class Reconcile: SyncDelegate {
             playerMO.handsMade = 0
             playerMO.twosMade = 0
             playerMO.totalScore = 0
+            playerMO.maxScore = 0
+            playerMO.maxMade = 0
+            playerMO.maxTwos = 0
             playerMO.datePlayed = nil
 
             for participantMO in participantList {

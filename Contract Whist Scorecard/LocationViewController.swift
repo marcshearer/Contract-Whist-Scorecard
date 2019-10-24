@@ -117,12 +117,12 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     override internal func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
-        scorecard.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        scorecard.reCenterPopup(self)
         
         // Set colors of banner
         if let bannerColor = self.bannerColor {
@@ -532,6 +532,10 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
         self.dismiss(animated: true, completion: {
             self.completion?(location)
         })
+    }
+    
+    override internal func didDismiss() {
+        self.completion?(nil)
     }
 }
 

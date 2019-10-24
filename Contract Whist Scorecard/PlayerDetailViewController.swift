@@ -128,10 +128,6 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     
     @IBAction func backButtonPressed(_ sender: Any) {
 
-        // Taking cancel option
-        if self.mode != .display {
-            playerDetail.name = ""
-        }
         self.dismiss()
 
     }
@@ -221,7 +217,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         case .uniqueID:
             height = 20.0
         default:
-            height = 50.0
+            height = (ScorecardUI.landscapePhone() ? 30.0 : 50.0)
         }
         return height
     }
@@ -263,12 +259,13 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         var height: CGFloat
+        let landscape = ScorecardUI.landscapePhone()
         
         switch Sections(rawValue: indexPath.section)! {
         case .uniqueID:
             switch UniqueIdOptions(rawValue: indexPath.row)! {
             case .deletePlayer:
-                height = 40.0
+                height = (landscape ? 30.0 : 40.0)
             default:
                 height = 20.0
             }
@@ -464,6 +461,42 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             
         return cell!
     }
+    
+    internal func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        switch Sections(rawValue: indexPath.section)! {
+        case .records:
+            let record = RecordsOptions(rawValue: indexPath.row)!
+            if record == .winStreak {
+            // Win streak - special case
+                _ = HistoryViewer(from: self, winStreakPlayer: self.playerDetail.email)
+            } else {
+                var highScoreType: HighScoreType?
+                switch record {
+                case .totalScore:
+                    highScoreType = .totalScore
+                case .bidsMade:
+                    highScoreType = .handsMade
+                case .twosMade:
+                    highScoreType = .twosMade
+                default:
+                    break
+                }
+                if let highScoreType = highScoreType {
+                    let participantMO = History.getHighScores(type: highScoreType, limit: 1, playerEmailList: [playerDetail.email])
+                
+                    if participantMO.count > 0 {
+                        let history = History(gameUUID: participantMO[0].gameUUID, getParticipants: true)
+                        if history.games.count >= 1 {
+                            HistoryDetailViewController.show(from: self, gameDetail: history.games[0], sourceView: self.popoverPresentationController?.sourceView)
+                        }
+                    }
+                }
+            }
+        default:
+            break
+        }
+        return nil
+    }
        
     // MARK: - TextField and Button Control Overrides ======================================================== -
     
@@ -575,8 +608,6 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
             self.enableButtons()
             
         }
-        
-        dismiss(animated: true, completion: nil)
     }
     
     func rotateImage(image: UIImage) -> UIImage {
@@ -765,6 +796,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         if mode == .create {
             self.playerNameField.becomeFirstResponder()
         }
+        self.playerNameField.text = self.playerDetail.name
         
         if mode != .create && mode != .amend {
             self.playerImageView.isUserInteractionEnabled = false
@@ -825,7 +857,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         let storyboard = UIStoryboard(name: "PlayerDetailViewController", bundle: nil)
         let playerDetailViewController = storyboard.instantiateViewController(withIdentifier: "PlayerDetailViewController") as! PlayerDetailViewController
 
-        playerDetailViewController.preferredContentSize = CGSize(width: 400, height: 600)
+        playerDetailViewController.preferredContentSize = CGSize(width: 400, height: 700)
 
         playerDetailViewController.playerDetail = playerDetail
         playerDetailViewController.mode = mode
@@ -841,7 +873,9 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         })
     }
     
-
+    override internal func didDismiss() {
+        self.callerCompletion?(nil, false)
+    }
 }
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -

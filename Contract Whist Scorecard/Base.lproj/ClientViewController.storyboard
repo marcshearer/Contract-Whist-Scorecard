@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -94,6 +94,13 @@
                                             <action selector="changePlayerPressed:" destination="aZe-pG-rMs" eventType="touchUpInside" id="4sr-r4-B6u"/>
                                         </connections>
                                     </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OVx-NQ-fbM" customClass="PlayerSelectionView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="150" width="375" height="0.0"/>
+                                        <color key="backgroundColor" name="Background"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" id="0qO-Lb-0Dm"/>
+                                        </constraints>
+                                    </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="60" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="dtV-HG-agM">
                                         <rect key="frame" x="0.0" y="150" width="375" height="364"/>
                                         <color key="backgroundColor" name="Clear"/>
@@ -196,12 +203,15 @@
                                     <constraint firstItem="RyR-aM-WNg" firstAttribute="top" secondItem="zWK-vn-Rqd" secondAttribute="top" constant="16" id="C27-Un-X6X"/>
                                     <constraint firstAttribute="trailing" secondItem="dtV-HG-agM" secondAttribute="trailing" id="JGP-ww-POc"/>
                                     <constraint firstItem="Yy9-i2-EGh" firstAttribute="top" secondItem="nJF-Zf-jlr" secondAttribute="bottom" constant="8" id="JRH-25-c9N"/>
+                                    <constraint firstAttribute="trailing" secondItem="OVx-NQ-fbM" secondAttribute="trailing" id="VJu-g4-2dR"/>
+                                    <constraint firstItem="OVx-NQ-fbM" firstAttribute="top" secondItem="Yy9-i2-EGh" secondAttribute="bottom" constant="8" id="X4p-4v-apS"/>
                                     <constraint firstItem="dtV-HG-agM" firstAttribute="leading" secondItem="zWK-vn-Rqd" secondAttribute="leading" id="kXK-qV-TB6"/>
                                     <constraint firstItem="RyR-aM-WNg" firstAttribute="centerX" secondItem="zWK-vn-Rqd" secondAttribute="centerX" id="qNi-Ew-FBl"/>
                                     <constraint firstAttribute="bottom" secondItem="dtV-HG-agM" secondAttribute="bottom" id="r3Y-ts-yDf"/>
                                     <constraint firstItem="nJF-Zf-jlr" firstAttribute="centerX" secondItem="zWK-vn-Rqd" secondAttribute="centerX" id="tAo-Qz-k0T"/>
                                     <constraint firstItem="dtV-HG-agM" firstAttribute="centerX" secondItem="Yy9-i2-EGh" secondAttribute="centerX" id="uyI-C7-61n"/>
-                                    <constraint firstItem="dtV-HG-agM" firstAttribute="top" secondItem="Yy9-i2-EGh" secondAttribute="bottom" constant="8" id="yhA-yf-sIR"/>
+                                    <constraint firstItem="dtV-HG-agM" firstAttribute="top" secondItem="OVx-NQ-fbM" secondAttribute="bottom" id="y16-kr-vtH"/>
+                                    <constraint firstItem="OVx-NQ-fbM" firstAttribute="leading" secondItem="zWK-vn-Rqd" secondAttribute="leading" id="z8u-zI-aMZ"/>
                                     <constraint firstItem="Yy9-i2-EGh" firstAttribute="centerX" secondItem="zWK-vn-Rqd" secondAttribute="centerX" id="zqx-E5-N75"/>
                                 </constraints>
                             </scrollView>
@@ -253,6 +263,9 @@
                         <outlet property="clientTableView" destination="dtV-HG-agM" id="ShH-Ew-7io"/>
                         <outlet property="clientTableViewHeightConstraint" destination="YN1-GM-lKq" id="ZGx-QT-0n6"/>
                         <outlet property="finishButton" destination="0Si-5j-YyO" id="tNG-UY-Tpu"/>
+                        <outlet property="playerSelectionView" destination="OVx-NQ-fbM" id="xpO-V7-Fbx"/>
+                        <outlet property="playerSelectionViewHeightConstraint" destination="0qO-Lb-0Dm" id="8QS-8Z-jdb"/>
+                        <outlet property="scrollView" destination="zWK-vn-Rqd" id="2gR-tD-a11"/>
                         <outlet property="thisPlayerNameLabel" destination="nJF-Zf-jlr" id="GZ0-RA-vZ7"/>
                         <outlet property="thisPlayerThumbnail" destination="RyR-aM-WNg" id="i3h-jf-wsK"/>
                         <outlet property="thisPlayerThumbnailWidthConstraint" destination="38b-HW-L25" id="WT5-to-N1T"/>

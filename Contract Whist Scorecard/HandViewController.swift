@@ -985,12 +985,20 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     
     private func dismissHand() {
         self.dismiss(animated: true, completion: {
-            self.delegate?.handComplete()
-            if self.scorecard.commsHandlerMode == .dismiss {
-                self.scorecard.commsHandlerMode = .none
-                NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
-            }
+            self.dismissCompletion()
         })
+    }
+    
+    override internal func didDismiss() {
+        self.self.dismissCompletion()
+    }
+    
+    private func dismissCompletion() {
+        self.delegate?.handComplete()
+        if self.scorecard.commsHandlerMode == .dismiss {
+            self.scorecard.commsHandlerMode = .none
+            NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
+        }
     }
     
     internal func alertUser(reminder: Bool) {

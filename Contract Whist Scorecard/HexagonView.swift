@@ -1,5 +1,5 @@
 //
-//  SelectedPlayersSectionView.swift
+//  HexagonView.swift
 //  Contract Whist Scorecard
 //
 //  Created by Marc Shearer on 10/09/2019.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class SelectedPlayersHexagonView: UIView {
+public class HexagonView: UIView {
     
     @IBInspectable var titleText: String = ""
     @IBInspectable var detailText: String = ""
@@ -67,6 +67,7 @@ public class SelectedPlayersHexagonView: UIView {
         let hexagonHeightUnits = heightUnits - 8.0 - (buttonHeightUnits * 0.5)
         let scale: CGFloat = frame.height / heightUnits
         let width = self.frame.width
+        let safeAreaInsets = UIApplication.shared.keyWindow?.safeAreaInsets ?? UIEdgeInsets()
         
         // Create banner-colored view
         let bannerHeightUnits = (separator ? 2.0 + (hexagonHeightUnits / 2.0) : heightUnits)
@@ -91,13 +92,14 @@ public class SelectedPlayersHexagonView: UIView {
         }
         
         // Create hexagon
-        self.hexagonView = UIView(frame: CGRect(x: 20.0, y: 4.0 * scale, width: width - 40.0, height: hexagonHeightUnits * scale))
+        self.hexagonView = UIView(frame: CGRect(x: safeAreaInsets.left + 20.0, y: 4.0 * scale, width: width - safeAreaInsets.left - safeAreaInsets.right - 40.0, height: hexagonHeightUnits * scale))
         self.hexagonView.backgroundColor = UIColor.clear
         self.hexagonShape = Polygon.hexagonFrame(in: self.hexagonView, strokeColor: strokeColor, fillColor: fillColor, lineWidth: 2.0 * scale, radius: 10.0 * scale)
         self.addSubview(self.hexagonView)
         Constraint.anchor(view: self, control: self.hexagonView, constant: 4.0 * scale, attributes: .top)
         Constraint.proportionalHeight(view: self, control: self.hexagonView, multiplier: hexagonHeightUnits / heightUnits)
-        Constraint.anchor(view: self, control: self.hexagonView, constant: 20.0, attributes: .leading, .trailing)
+        Constraint.anchor(view: self, control: self.hexagonView, constant: 20.0 + safeAreaInsets.left, attributes: .leading)
+        Constraint.anchor(view: self, control: self.hexagonView, constant: 20.0 + safeAreaInsets.right, attributes: .trailing)
         
         // Create title label
         self.titleLabel = UILabel(frame: CGRect(x: 40.0, y: 12.0 * scale, width: width - 80.0, height: 36.0 * scale))
@@ -136,7 +138,7 @@ public class SelectedPlayersHexagonView: UIView {
             self.button.disabledTextColor = bannerColor.withAlphaComponent(0.3)
             self.button.isHidden = buttonIsHidden
             self.button.isEnabled(true)
-            self.button.addTarget(self, action: #selector(SelectedPlayersHexagonView.buttonPressed(_:)), for: .touchUpInside)
+            self.button.addTarget(self, action: #selector(HexagonView.buttonPressed(_:)), for: .touchUpInside)
             self.addSubview(self.button)
             Constraint.anchor(view: self, control: self.button, constant: buttonTopUnits * scale, attributes: .top)
             Constraint.proportionalHeight(view: self, control: self.button, multiplier: buttonHeightUnits / heightUnits)

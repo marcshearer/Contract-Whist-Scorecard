@@ -1210,6 +1210,7 @@ class Sync {
             }
             self.syncReturnPlayers(self.downloadedPlayerRecordList)
         }
+        self.syncController()
     }
     
     private func sendPlayersToCloud() -> Bool {
@@ -1558,6 +1559,9 @@ class Sync {
                 delegate?.syncCompletion?(self.errors)
                 self.syncFinalCompletion()
             }
+        } else {
+            // Do final completion anyway
+            self.syncFinalCompletion()
         }
     }
     

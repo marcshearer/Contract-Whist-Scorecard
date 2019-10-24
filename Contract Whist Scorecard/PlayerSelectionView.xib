@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -20,8 +20,8 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="470"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WJW-02-tll">
-                    <rect key="frame" x="4" y="48" width="406" height="418"/>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WJW-02-tll">
+                    <rect key="frame" x="10" y="54" width="394" height="406"/>
                     <color key="backgroundColor" name="Clear"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Rd6-gU-2OP">
                         <size key="itemSize" width="50" height="50"/>
@@ -33,10 +33,10 @@
             </subviews>
             <color key="backgroundColor" name="Clear"/>
             <constraints>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="WJW-02-tll" secondAttribute="trailing" constant="4" id="1t2-ta-jEP"/>
-                <constraint firstItem="WJW-02-tll" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="4" id="2eU-OA-hDa"/>
-                <constraint firstItem="WJW-02-tll" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="4" id="dTr-Vn-2ON"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="WJW-02-tll" secondAttribute="bottom" constant="4" id="jx6-P2-efD"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="WJW-02-tll" secondAttribute="trailing" constant="10" id="1t2-ta-jEP"/>
+                <constraint firstItem="WJW-02-tll" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="10" id="2eU-OA-hDa"/>
+                <constraint firstItem="WJW-02-tll" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="10" id="dTr-Vn-2ON"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="WJW-02-tll" secondAttribute="bottom" constant="10" id="jx6-P2-efD"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>

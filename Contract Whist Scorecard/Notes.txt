@@ -198,17 +198,8 @@ TODO
 Looks like it is still in recovery mode even when play game and override warning
 Problem if reset when in confirm window
 Add confetti to game summary
-Gradients wrong on and after rotation of scorepad
 Implement Facetime calls
 Initial connection difficult
-Player detail screen
-Change History to allow filter by player
-Review screen (like Bridge books)
-Drill from high scores in player detail
-Sort out dismiss transitions (currently disable on IOS 13)
-Problems on iPad
-    Windows not centered
-    Facetime can't be enabled
 
 Jack
 ----

@@ -121,7 +121,6 @@ class ScorepadViewController: CustomViewController,
     }
     
     @IBAction private func finishGamePressed(_ sender: Any) {
-        NotificationCenter.default.removeObserver(self.observer!)
         if scorepadMode == .amend || self.scorecard.isHosting {
             scorecard.finishGame(from: self, rounds: self.rounds, resetOverrides: true, completion: {
                 self.tidyUp()
@@ -432,7 +431,7 @@ class ScorepadViewController: CustomViewController,
         footerViewHeightConstraint.constant = CGFloat(cellHeight) + self.view.safeAreaInsets.bottom
 
         scoresHeight = min(ScorecardUI.screenHeight, CGFloat(self.scorecard.rounds) * cellHeight, 600)
-        scorecard.saveScorepadHeights(headerHeight: headerHeight + navigationBar.frame.height, bodyHeight: scoresHeight, footerHeight: CGFloat(cellHeight) + self.view.safeAreaInsets.bottom)
+        scorecard.saveScorepadHeights(headerHeight: headerHeight + navigationBar.frame.height + bannerContinuationHeight, bodyHeight: scoresHeight, footerHeight: CGFloat(cellHeight) + self.view.safeAreaInsets.bottom)
         
         // If moving to 1 column clear out stored bid cell pointers
         if bodyColumns == 1 {
@@ -623,6 +622,7 @@ class ScorepadViewController: CustomViewController,
     
     private func tidyUp() {
         // Tidy up before exiting
+        NotificationCenter.default.removeObserver(self.observer!)
         self.scorecard.scorepadHeaderHeight = 0
         scorecard.inScorepad = false
         UIApplication.shared.isIdleTimerDisabled = false
@@ -807,7 +807,7 @@ class ScorepadViewController: CustomViewController,
         scorepadViewController.computerPlayerDelegate = computerPlayerDelegate
         scorepadViewController.completion = completion
         
-        viewController.present(scorepadViewController, animated: true, completion: nil)
+        viewController.present(scorepadViewController, sourceView: nil, animated: true)
         
         return scorepadViewController
     }
@@ -816,6 +816,11 @@ class ScorepadViewController: CustomViewController,
         self.dismiss(animated: true, completion: {
             self.completion?(returnHome)
         })
+    }
+    
+    override internal func shouldDismiss() -> Bool {
+        self.finishGamePressed(self)
+        return false
     }
 
     // MARK: - CollectionView Overrides ================================================================ -
@@ -980,7 +985,7 @@ class ScorepadViewController: CustomViewController,
             // Footer
             
             footerCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Footer Collection Cell",for: indexPath) as! ScorepadCollectionViewCell
-        
+            
             footerCell.scorepadLeftLineGradientLayer?.removeFromSuperlayer()
             footerCell.scorepadLeftLineGradientLayer = nil
             footerCell.scorepadCellLabel.textColor = Palette.roomInteriorText
@@ -1020,7 +1025,6 @@ class ScorepadViewController: CustomViewController,
                 footerCell.scorepadCellGradientLayer = ScorecardUI.gradient(footerCell, color: Palette.roomInterior, gradients: self.footerGradient)
             } else {
                 footerCell.backgroundColor = Palette.roomInterior
-                footerCell.scorepadLeftLine.backgroundColor = Palette.grid
             }
             
             footerCell.scorepadTopLineWeight.constant = thinLineWeight

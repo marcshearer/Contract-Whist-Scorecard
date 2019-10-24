@@ -102,8 +102,8 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.excludeHistory = (self.scorecard.overrideSelected && self.scorecard.overrideExcludeHistory != nil && self.scorecard.overrideExcludeHistory)
-        self.excludeStats = self.excludeHistory || (self.scorecard.overrideSelected && self.scorecard.overrideExcludeStats != nil && self.scorecard.overrideExcludeStats)
+        self.excludeHistory = (self.scorecard.overrideSelected && self.scorecard.overrideSettings.excludeHistory != nil && self.scorecard.overrideSettings.excludeHistory)
+        self.excludeStats = self.excludeHistory || (self.scorecard.overrideSelected && self.scorecard.overrideSettings.excludeStats != nil && self.scorecard.overrideSettings.excludeStats)
         
         if gameSummaryMode != .amend {
             leftSwipeGesture.isEnabled = false
@@ -558,6 +558,10 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
         self.dismiss(animated: false, completion: {
             self.completion?(returnMode)
         })
+    }
+    
+    override internal func didDismiss() {
+        self.completion?(.resume)
     }
 }
 

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -20,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="22l-fD-ik1" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
                                         <color key="value" name="Room Interior"/>
@@ -28,11 +26,11 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fNx-6D-Fun" userLabel="Title Padder">
-                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                 <color key="backgroundColor" name="Room Interior"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wym-eE-JCq">
-                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bz4-29-ZE2" userLabel="Finish Button" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="4" y="8" width="20" height="22"/>
@@ -90,7 +88,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="dg7-pq-npw">
-                                                    <rect key="frame" x="15" y="11" width="150" height="8"/>
+                                                    <rect key="frame" x="15" y="11" width="0.0" height="8"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" name="Room Interior Text"/>
@@ -129,7 +127,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="lvK-92-U7h">
-                                                    <rect key="frame" x="15" y="11" width="110" height="13"/>
+                                                    <rect key="frame" x="15" y="11" width="0.0" height="13"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" name="Room Interior Text"/>
@@ -168,7 +166,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="EmK-iV-9Bz">
-                                                    <rect key="frame" x="15" y="11" width="150" height="13"/>
+                                                    <rect key="frame" x="15" y="11" width="0.0" height="13"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" name="Room Interior Text"/>
@@ -207,7 +205,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="acB-bZ-1dI">
-                                                    <rect key="frame" x="0.0" y="0.0" width="140" height="30"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="30"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" name="Room Interior Text"/>
@@ -233,10 +231,55 @@
                                     <outlet property="delegate" destination="Mox-uR-fC4" id="k3M-1y-iXy"/>
                                 </connections>
                             </tableView>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EZf-wk-Pej">
-                                <rect key="frame" x="168" y="342" width="39" height="49"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" name="Table Top"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EZf-wk-Pej">
+                                <rect key="frame" x="168" y="333" width="39" height="49"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ci7-9s-kVO" userLabel="Top line">
+                                        <rect key="frame" x="0.0" y="0.0" width="39" height="0.5"/>
+                                        <color key="backgroundColor" name="Text"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="0.5" id="5qw-l5-93J"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Aj-Xo-34G" userLabel="Bottom line">
+                                        <rect key="frame" x="0.0" y="48.5" width="39" height="0.5"/>
+                                        <color key="backgroundColor" name="Text"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="0.5" id="oa6-3h-58A"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="leO-27-kKf" userLabel="Left line">
+                                        <rect key="frame" x="0.0" y="0.0" width="0.5" height="49"/>
+                                        <color key="backgroundColor" name="Text"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="0.5" id="Ye9-18-EA9"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ge5-PD-iPp" userLabel="Right line">
+                                        <rect key="frame" x="38.5" y="0.0" width="0.5" height="49"/>
+                                        <color key="backgroundColor" name="Text"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="0.5" id="yUQ-g5-eaJ"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" name="Background"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="49" id="0RE-hP-jwh"/>
+                                    <constraint firstAttribute="trailing" secondItem="Ci7-9s-kVO" secondAttribute="trailing" id="9P2-pV-d11"/>
+                                    <constraint firstItem="leO-27-kKf" firstAttribute="top" secondItem="EZf-wk-Pej" secondAttribute="top" id="MOE-Gv-lvw"/>
+                                    <constraint firstAttribute="width" constant="39" id="MgQ-aU-HVJ"/>
+                                    <constraint firstItem="4Aj-Xo-34G" firstAttribute="leading" secondItem="EZf-wk-Pej" secondAttribute="leading" id="eCI-Ay-bNn"/>
+                                    <constraint firstItem="leO-27-kKf" firstAttribute="leading" secondItem="EZf-wk-Pej" secondAttribute="leading" id="gZU-Sf-SOk"/>
+                                    <constraint firstAttribute="trailing" secondItem="ge5-PD-iPp" secondAttribute="trailing" id="iPZ-Jx-OFh"/>
+                                    <constraint firstAttribute="bottom" secondItem="leO-27-kKf" secondAttribute="bottom" id="la1-xw-zSP"/>
+                                    <constraint firstItem="Ci7-9s-kVO" firstAttribute="top" secondItem="EZf-wk-Pej" secondAttribute="top" id="nEd-17-rl7"/>
+                                    <constraint firstItem="ge5-PD-iPp" firstAttribute="top" secondItem="EZf-wk-Pej" secondAttribute="top" id="p0M-e6-bOS"/>
+                                    <constraint firstAttribute="bottom" secondItem="4Aj-Xo-34G" secondAttribute="bottom" id="r3A-gL-YsV"/>
+                                    <constraint firstItem="Ci7-9s-kVO" firstAttribute="leading" secondItem="EZf-wk-Pej" secondAttribute="leading" id="tnE-dC-klQ"/>
+                                    <constraint firstAttribute="trailing" secondItem="4Aj-Xo-34G" secondAttribute="trailing" id="uWE-4S-rIn"/>
+                                    <constraint firstAttribute="bottom" secondItem="ge5-PD-iPp" secondAttribute="bottom" id="uy4-i1-ID0"/>
+                                </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bab-Kf-C0n">
                                 <rect key="frame" x="0.0" y="637" width="375" height="30"/>
@@ -248,11 +291,12 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" name="Room Interior"/>
+                        <color key="backgroundColor" name="Background"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="wym-eE-JCq" firstAttribute="leading" secondItem="uOh-9P-zjM" secondAttribute="leading" id="1ba-c9-NNT"/>
                             <constraint firstItem="wym-eE-JCq" firstAttribute="top" secondItem="uOh-9P-zjM" secondAttribute="top" id="2SZ-li-HJP"/>
+                            <constraint firstItem="EZf-wk-Pej" firstAttribute="leading" secondItem="uOh-9P-zjM" secondAttribute="leading" constant="168" id="4g8-KR-oHp"/>
                             <constraint firstItem="fNx-6D-Fun" firstAttribute="leading" secondItem="mAZ-tv-8uT" secondAttribute="leading" id="63W-PW-3ev"/>
                             <constraint firstItem="bab-Kf-C0n" firstAttribute="bottom" secondItem="uOh-9P-zjM" secondAttribute="bottom" id="IXb-ag-dMW"/>
                             <constraint firstItem="uOh-9P-zjM" firstAttribute="trailing" secondItem="wym-eE-JCq" secondAttribute="trailing" id="NOZ-Dn-5im"/>
@@ -260,6 +304,7 @@
                             <constraint firstItem="22l-fD-ik1" firstAttribute="leading" secondItem="mAZ-tv-8uT" secondAttribute="leading" id="USZ-xN-NgD"/>
                             <constraint firstItem="bab-Kf-C0n" firstAttribute="leading" secondItem="uOh-9P-zjM" secondAttribute="leading" id="Vfb-nE-4nU"/>
                             <constraint firstItem="fNx-6D-Fun" firstAttribute="top" secondItem="wym-eE-JCq" secondAttribute="top" id="ekz-Ew-faZ"/>
+                            <constraint firstItem="EZf-wk-Pej" firstAttribute="top" secondItem="wym-eE-JCq" secondAttribute="bottom" constant="289" id="iLR-0w-qfD"/>
                             <constraint firstItem="uOh-9P-zjM" firstAttribute="top" secondItem="22l-fD-ik1" secondAttribute="bottom" id="lhi-SZ-5yY"/>
                             <constraint firstItem="22l-fD-ik1" firstAttribute="trailing" secondItem="mAZ-tv-8uT" secondAttribute="trailing" id="peZ-w8-cWX"/>
                             <constraint firstItem="uOh-9P-zjM" firstAttribute="trailing" secondItem="bab-Kf-C0n" secondAttribute="trailing" id="syb-op-Pdr"/>
@@ -281,7 +326,11 @@
                         <outlet property="hand4TableView" destination="i2h-cH-RO4" id="vtr-qH-zi2"/>
                         <outlet property="overUnderLabel" destination="fRi-Eh-euY" id="1Mt-5N-u2X"/>
                         <outlet property="roundTitleLabel" destination="Mzm-ri-OLh" id="UGR-dD-38A"/>
+                        <outlet property="tableTopHeightConstraint" destination="0RE-hP-jwh" id="ITp-7g-3cf"/>
+                        <outlet property="tableTopLeadingConstraint" destination="4g8-KR-oHp" id="Uep-CZ-Xj0"/>
+                        <outlet property="tableTopTopConstraint" destination="iLR-0w-qfD" id="Ubq-hb-2w9"/>
                         <outlet property="tableTopView" destination="EZf-wk-Pej" id="ePw-F5-DO4"/>
+                        <outlet property="tableTopWidthConstraint" destination="MgQ-aU-HVJ" id="UJq-a5-CZo"/>
                         <outlet property="titleView" destination="wym-eE-JCq" id="x99-fG-a7d"/>
                         <outlet property="titleViewHeight" destination="MeZ-zx-Vfz" id="9l6-sa-YPr"/>
                     </connections>
@@ -303,6 +352,9 @@
     </scenes>
     <resources>
         <image name="cross white" width="20" height="20"/>
+        <namedColor name="Background">
+            <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -315,8 +367,8 @@
         <namedColor name="Room Interior Text">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="Table Top">
-            <color red="0.53725490196078429" green="0.80392156862745101" blue="0.56470588235294117" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <namedColor name="Text">
+            <color red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

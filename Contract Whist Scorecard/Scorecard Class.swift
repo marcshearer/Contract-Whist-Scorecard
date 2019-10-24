@@ -78,9 +78,18 @@ class Scorecard {
     public var autoPlayGames: Int = 0
     
     // Variables to store scorepad header and body height to re-center popups correctly
+    public var _scorepadBodyHeight: CGFloat = 0
     public var scorepadHeaderHeight: CGFloat = 0
-    public var scorepadBodyHeight: CGFloat = 0
     public var scorepadFooterHeight: CGFloat = 0
+    public var scorepadBodyHeight: CGFloat {
+        get {
+            return (self._scorepadBodyHeight == 0.0 ? 700.0 : self._scorepadBodyHeight)
+        }
+        set(newValue) {
+            self._scorepadBodyHeight = newValue
+        }
+    }
+    
     
     // Class to pass state to watch
     public var watchManager: WatchManager!
@@ -91,6 +100,8 @@ class Scorecard {
     public var settingBounceNumberCards: Bool = false
     public var settingTrumpSequence = ["♣︎", "♦︎", "♥︎", "♠︎", "NT"]
     public var settingSyncEnabled = false
+    public var gameSettings = GameSettings()
+    public var overrideSettings = GameSettings()
     public var settingSaveHistory = true
     public var settingSaveLocation = true
     public var settingReceiveNotifications = false
@@ -324,8 +335,8 @@ class Scorecard {
         self.settingBonus2 = UserDefaults.standard.bool(forKey: "bonus2")
                 
         // Load number of cards & bounce number of cards
-        self.settingCards = UserDefaults.standard.array(forKey: "cards") as! [Int]
-        self.settingBounceNumberCards = UserDefaults.standard.bool(forKey: "bounceNumberCards")
+        self.gameSettings.cards = UserDefaults.standard.array(forKey: "cards") as! [Int]
+        self.gameSettings.bounceNumberCards = UserDefaults.standard.bool(forKey: "bounceNumberCards")
         
         // Load trump sequence
         self.settingTrumpSequence = UserDefaults.standard.array(forKey: "trumpSequence") as! [String]
@@ -605,11 +616,11 @@ class Scorecard {
     public func calculateRounds(cards: [Int]! = nil, bounce: Bool! = nil) -> Int {
         var cards = cards
         if cards == nil {
-            cards = self.settingCards
+            cards = self.gameSettings.cards
         }
         var bounce = bounce
         if bounce == nil {
-            bounce = self.settingBounceNumberCards
+            bounce = self.gameSettings.bounceNumberCards
         }
         let range = abs(cards![0] - cards![1]) + 1
         if bounce! {
@@ -649,12 +660,12 @@ class Scorecard {
         
         var cards = cards
         if cards == nil {
-            cards = self.settingCards
+            cards = self.gameSettings.cards
         }
         
         var bounce = bounce
         if bounce == nil {
-            bounce = self.settingBounceNumberCards
+            bounce = self.gameSettings.bounceNumberCards
         }
         
         if bounce! {
@@ -878,8 +889,8 @@ class Scorecard {
         // Only save if last round complete
         if self.gameComplete(rounds: rounds) && !self.isPlayingComputer {
             // Check if need to exclude from stats
-            let excludeHistory = (self.overrideSelected && self.overrideExcludeHistory != nil && self.overrideExcludeHistory!)
-            let excludeStats = excludeHistory || (self.overrideSelected && self.overrideExcludeStats != nil && self.overrideExcludeStats!)
+            let excludeHistory = (self.overrideSelected && self.overrideSettings.excludeHistory)
+            let excludeStats = excludeHistory || (self.overrideSelected && self.overrideSettings.excludeStats)
             // Save the game
             result = self.saveGame(excludeHistory: excludeHistory, excludeStats: excludeStats)
             for player in 1...self.currentPlayers {
@@ -1037,37 +1048,31 @@ class Scorecard {
     }
     
     func resetOverrideSettings() {
-        self.overrideCards = nil
-        self.overrideBounceNumberCards = nil
-        self.overrideExcludeStats = nil
+        self.overrideSettings = self.gameSettings.copy()
         self.overrideSelected = false
     }
     
-    func checkOverride() -> Bool {
-        if self.overrideCards == nil || self.overrideBounceNumberCards == nil || self.overrideExcludeStats == nil {
-            self.resetOverrideSettings()
+    func currentGameSettings() -> GameSettings {
+        var gameSettings: GameSettings
+        if self.overrideSelected {
+            gameSettings = self.overrideSettings
+            gameSettings.rounds = self.calculateRounds(cards: gameSettings.cards, bounce: gameSettings.bounceNumberCards)
         } else {
-            var cardsDifferent = false
-            for index in 0..<self.settingCards.count {
-                if self.overrideCards[index] != self.settingCards[index] {
-                    cardsDifferent = true
-                }
-            }
-            self.overrideSelected = (cardsDifferent ||
-                                     self.overrideBounceNumberCards != self.settingBounceNumberCards ||
-                                     self.overrideExcludeStats == true)
+            gameSettings = self.gameSettings
+            gameSettings.rounds = self.rounds
         }
         
-        return self.overrideSelected
+        return gameSettings
     }
         
     func saveScorepadHeights(headerHeight: CGFloat, bodyHeight: CGFloat, footerHeight: CGFloat) {
-        if UIScreen.main.bounds.size.height > 600 && UIScreen.main.bounds.size.height < 800 {
+        
+        if UIScreen.main.bounds.size.height > 600 {
             self.scorepadHeaderHeight = headerHeight
             self.scorepadBodyHeight = bodyHeight
             self.scorepadFooterHeight = footerHeight
         } else {
-            self.scorepadBodyHeight = 600
+            self.scorepadBodyHeight = 700
         }
     }
     
@@ -1075,10 +1080,12 @@ class Scorecard {
         // Either recenters in parent or if top provided makes that the vertical top
         var verticalCenter: CGFloat
         
-        if !ignoreScorepad && self.scorepadHeaderHeight != 0 && UIScreen.main.bounds.size.height > 600 && UIScreen.main.bounds.size.height < 800 {
+        
+        let midTop = (UIScreen.main.bounds.height - viewController.preferredContentSize.height) / 2
+        
+        if !ignoreScorepad && self.scorepadHeaderHeight != 0 && viewController.preferredContentSize.height <= self.scorepadBodyHeight && midTop < self.scorepadHeaderHeight {
             // Positioning just below top
-            let formHeight = viewController.preferredContentSize.height
-            verticalCenter = self.scorepadHeaderHeight + CGFloat(formHeight / 2) + CGFloat(8.0)
+            verticalCenter = self.scorepadHeaderHeight + CGFloat(self.scorepadBodyHeight / 2)
         } else {
             verticalCenter = UIScreen.main.bounds.midY
         }
@@ -1270,6 +1277,43 @@ class GameLocation {
     public func distance(from location: CLLocation) -> CLLocationDistance {
         let thisLocation = CLLocation(latitude: self.latitude, longitude: self.longitude)
         return thisLocation.distance(from: location)
+    }
+    
+}
+
+class GameSettings : Equatable, NSCopying {
+    
+    public var cards: [Int] = [13, 1]
+    public var bounceNumberCards: Bool = false
+    public var rounds: Int = 0
+    public var excludeStats: Bool = false
+    public var excludeHistory: Bool = false
+    
+    public func copy(with zone: NSZone? = nil) -> Any {
+        
+        let copy = GameSettings()
+        copy.cards = self.cards
+        copy.bounceNumberCards = self.bounceNumberCards
+        copy.excludeStats = self.excludeStats
+        copy.excludeHistory = self.excludeHistory
+        copy.rounds = self.rounds
+        
+        return copy
+    }
+    
+    public func copy() -> GameSettings {
+        return self.copy(with: nil) as! GameSettings
+    }
+    
+    public static func == (lhs: GameSettings, rhs: GameSettings) -> Bool {
+        
+        let equal = (lhs.cards == rhs.cards &&
+                 lhs.bounceNumberCards == rhs.bounceNumberCards &&
+                 lhs.excludeStats == rhs.excludeStats &&
+                 lhs.excludeHistory == rhs.excludeHistory)
+        
+        return equal
+        
     }
     
 }

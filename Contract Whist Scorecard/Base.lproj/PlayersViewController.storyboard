@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="landscape" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -16,14 +14,14 @@
             <objects>
                 <viewController storyboardIdentifier="PlayersViewController" title="Players" useStoryboardIdentifierAsRestorationIdentifier="YES" id="aCF-cU-Oeh" userLabel="Players" customClass="PlayersViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9pw-Pu-D89">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lP3-fI-JoD" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                                <rect key="frame" x="0.0" y="0.0" width="667" height="0.0"/>
                             </view>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CMD-pe-gDa" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="667" height="32"/>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" name="Banner Text"/>
                                 </textAttributes>
@@ -31,7 +29,7 @@
                                     <navigationItem title="Players" largeTitleDisplayMode="always" id="tiP-qu-fbf">
                                         <barButtonItem key="leftBarButtonItem" width="50" id="0lq-Kn-ItV">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="KBX-t5-3kT" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="16" y="11" width="50" height="22"/>
+                                                <rect key="frame" x="20" y="0.0" width="50" height="32"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" image="home">
                                                     <color key="titleColor" name="Banner Text"/>
@@ -43,7 +41,7 @@
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" width="50" id="cZu-N7-Ocv">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" id="anD-NV-QFc" userLabel="New Player Button" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="309" y="0.0" width="50" height="44"/>
+                                                <rect key="frame" x="597" y="0.0" width="50" height="32"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                                 <state key="normal" title="+">
@@ -58,11 +56,11 @@
                                 </items>
                             </navigationBar>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dU2-44-xkb">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="32" width="667" height="343"/>
                                 <color key="backgroundColor" name="Clear"/>
                             </scrollView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zKl-vc-bKj" userLabel="Left Pad View">
-                                <rect key="frame" x="0.0" y="64" width="375" height="100"/>
+                                <rect key="frame" x="0.0" y="32" width="375" height="100"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap a player for details" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0tj-pH-co7">
                                         <rect key="frame" x="50" y="10" width="275" height="20.5"/>
@@ -81,21 +79,21 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jNc-qk-XEu" userLabel="Right Pad View">
-                                <rect key="frame" x="0.0" y="64" width="375" height="100"/>
+                                <rect key="frame" x="292" y="32" width="375" height="100"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap a player for details" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OpE-Oo-ENB">
-                                        <rect key="frame" x="100" y="19.5" width="175" height="41"/>
-                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="17"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap a player for details" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="OpE-Oo-ENB">
+                                        <rect key="frame" x="0.0" y="32" width="375" height="36"/>
+                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="15"/>
                                         <color key="textColor" name="Banner Text"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" name="Banner"/>
                                 <constraints>
-                                    <constraint firstItem="OpE-Oo-ENB" firstAttribute="centerY" secondItem="jNc-qk-XEu" secondAttribute="centerY" constant="-10" id="05m-E0-f5u"/>
+                                    <constraint firstItem="OpE-Oo-ENB" firstAttribute="centerY" secondItem="jNc-qk-XEu" secondAttribute="centerY" id="05m-E0-f5u"/>
                                     <constraint firstAttribute="height" constant="100" id="RAM-z5-uXv"/>
-                                    <constraint firstAttribute="trailing" secondItem="OpE-Oo-ENB" secondAttribute="trailing" constant="100" id="aju-mO-scW"/>
-                                    <constraint firstItem="OpE-Oo-ENB" firstAttribute="leading" secondItem="jNc-qk-XEu" secondAttribute="leading" constant="100" id="wN3-va-R8F"/>
+                                    <constraint firstAttribute="trailing" secondItem="OpE-Oo-ENB" secondAttribute="trailing" id="aju-mO-scW"/>
+                                    <constraint firstItem="OpE-Oo-ENB" firstAttribute="leading" secondItem="jNc-qk-XEu" secondAttribute="leading" id="wN3-va-R8F"/>
                                     <constraint firstAttribute="width" constant="375" id="wfy-iu-TLk"/>
                                 </constraints>
                             </view>
@@ -149,17 +147,9 @@
             </objects>
             <point key="canvasLocation" x="4725.6000000000004" y="1000.7496251874064"/>
         </scene>
-        <!--Sync-->
-        <scene sceneID="LUg-N9-Dij">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="UIViewController-kEX-6R-oYT" storyboardName="SyncViewController" referencedIdentifier="SyncViewController" id="jyU-H0-0Mr" userLabel="Sync" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Hf7-3h-Cbl" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="4726" y="1439"/>
-        </scene>
     </scenes>
     <resources>
-        <image name="home" width="22" height="22"/>
+        <image name="home" width="22" height="23"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

@@ -60,6 +60,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private var lastPlayerMO: PlayerMO!
     public let transition = FadeAnimator()
     private var refreshCollection = true
+    private var alreadyDrawing = false
 
     // Main local state handlers
     private var availableList: [PlayerMO] = []
@@ -348,7 +349,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         self.navigationBarHeightConstraint?.constant = ScorecardUI.navigationBarHeight
         
         // Setup sizes of thumbnail and a row in the collection
-        let thumbnailSize = SelectionViewController.thumbnailSize(view: self.view, labelHeight: self.labelHeight)
+        let thumbnailSize = SelectionViewController.thumbnailSize(labelHeight: self.labelHeight)
         self.thumbnailWidth = thumbnailSize.width
         self.thumbnailHeight = thumbnailSize.height
         self.rowHeight = self.thumbnailHeight + self.interRowSpacing
@@ -415,6 +416,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     }
     
     private func drawRoom() {
+        let alreadyDrawing = self.alreadyDrawing
+        self.alreadyDrawing = true
         
         // Configure selected players view
         self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth, allowHaloWidth: dealerHaloWidth)
@@ -422,7 +425,9 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         self.selectedPlayersView.setTapDelegate(self)
         
         // Update layout to get correct size
-        self.view.layoutIfNeeded()
+        if !alreadyDrawing {
+            self.view.layoutIfNeeded()
+        }
         
         // Draw room
         let selectedFrame = self.selectedPlayersView.drawRoom(thumbnailWidth: self.thumbnailWidth, thumbnailHeight: self.thumbnailHeight, players: self.scorecard.numberPlayers, directions: (ScorecardUI.landscapePhone() ? .none : .up), (ScorecardUI.landscapePhone() ? .none : .down))
@@ -430,6 +435,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         // Reset height
         self.selectedHeight = selectedFrame.height
         self.selectedViewHeight?.constant = self.selectedHeight
+        
+        self.alreadyDrawing = false
     }
     
     private func showThisPlayer() {
@@ -441,7 +448,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 if let thisPlayerFrame = self.thisPlayerFrame {
                     size = thisPlayerFrame.size
                 } else {
-                    size = SelectionViewController.thumbnailSize(view: self.view, labelHeight: nameHeight)
+                    size = SelectionViewController.thumbnailSize(labelHeight: nameHeight)
                 }
                 self.thisPlayerViewContainerWidthConstraint.constant = size.width + 10.0
                 
@@ -467,19 +474,23 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     /// Function used in other views to get the same thumbnail size
     
-    class public func thumbnailSize(view: UIView, labelHeight: CGFloat, marginWidth: CGFloat = 10.0, spacing: CGFloat = 10.0) -> CGSize {
-        
-        let viewSize = view.frame.size
-        let totalWidth = viewSize.width
-        let totalHeight = viewSize.height
-        let availableWidth = min(totalWidth, totalHeight) // Get portrait height - relies on no side safe area insets in portrait
-        
-        let numberThatFit = max(5, Int(availableWidth / (min(totalWidth, totalHeight) > 450 ? 120 : 75)))
-        
-        let width = ((availableWidth - (CGFloat(numberThatFit - 1) * spacing) - (2.0 * marginWidth)) / CGFloat(numberThatFit))
-        let height = width + labelHeight - 5.0
-        
-        return CGSize(width: width, height: height)
+    class public func thumbnailSize(labelHeight: CGFloat, marginWidth: CGFloat = 10.0, spacing: CGFloat = 10.0, maxHeight: CGFloat = 80.0) -> CGSize {
+        var result: CGSize
+        if let viewController = Utility.getActiveViewController(ignoreAlertController: true), let view = viewController.view {
+            let viewSize = view.bounds
+            let totalWidth = viewSize.width
+            let totalHeight = viewSize.height
+            let availableWidth = min(totalWidth, totalHeight) // Get portrait height - relies on no side safe area insets in portrait
+            
+            let numberThatFit = max(5, Int(availableWidth / (min(totalWidth, totalHeight) > 450 ? 120 : 75)))
+            
+            let width = min(maxHeight, ((availableWidth - (CGFloat(numberThatFit - 1) * spacing) - (2.0 * marginWidth)) / CGFloat(numberThatFit)))
+            let height = width + labelHeight - 5.0
+            result = CGSize(width: width, height: height)
+        } else {
+            result = CGSize(width: 60.0, height: 60.0 + labelHeight - 5.0)
+        }
+        return result
     }
     
     func finishAction() {
@@ -766,44 +777,39 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                                                     (selectedList.count + newPlayers.count <= self.scorecard.numberPlayers))
         
         for newPlayerDetail in newPlayers {
-            if newPlayerDetail.name == "" {
-                // Name not filled in - must have cancelled
+            var playerMO: PlayerMO?
+            if createMO {
+                // Need to create Managed Object
+                _ = newPlayerDetail.createMO()
             } else {
+                playerMO = newPlayerDetail.playerMO
+            }
+            if let playerMO = playerMO {
                 
-                var playerMO: PlayerMO?
-                if createMO {
-                    // Need to create Managed Object
-                    _ = newPlayerDetail.createMO()
-                } else {
-                    playerMO = newPlayerDetail.playerMO
-                }
-                if let playerMO = playerMO {
+                // Add to available list and unselected list if not there already
+                if self.availableList.firstIndex(where: { $0.email! == newPlayerDetail.email } ) == nil {
                     
-                    // Add to available list and unselected list if not there already
-                    if self.availableList.firstIndex(where: { $0.email! == newPlayerDetail.email } ) == nil {
-                        
-                        availableList.append(playerMO)
-                        
-                        // Add to unselected list and collection view
-                        var unselectedIndex: Int! = self.unselectedList.firstIndex(where: {($0!.name! > newPlayerDetail.name)})
-                        if unselectedIndex == nil {
-                            // Insert at end
-                            unselectedIndex = unselectedList.count
-                        }
-                        unselectedCollectionView.performBatchUpdates({
-                            unselectedList.insert(playerMO, at: unselectedIndex)
-                            unselectedCollectionView.insertItems(at: [IndexPath(row: unselectedIndex + (self.addPlayerThumbnail ? 1 : 0), section: 0)])
-                        })
+                    availableList.append(playerMO)
+                    
+                    // Add to unselected list and collection view
+                    var unselectedIndex: Int! = self.unselectedList.firstIndex(where: {($0!.name! > newPlayerDetail.name)})
+                    if unselectedIndex == nil {
+                        // Insert at end
+                        unselectedIndex = unselectedList.count
                     }
-                    
-                    // Add to selection if there is space
-                    if addToSelected {
-                        if self.selectionMode == .single {
-                            self.preCompletion?([playerMO])
-                            self.dismiss([playerMO])
-                        } else {
-                            self.addSelection(playerMO)
-                        }
+                    unselectedCollectionView.performBatchUpdates({
+                        unselectedList.insert(playerMO, at: unselectedIndex)
+                        unselectedCollectionView.insertItems(at: [IndexPath(row: unselectedIndex + (self.addPlayerThumbnail ? 1 : 0), section: 0)])
+                    })
+                }
+                
+                // Add to selection if there is space
+                if addToSelected {
+                    if self.selectionMode == .single {
+                        self.preCompletion?([playerMO])
+                        self.dismiss([playerMO])
+                    } else {
+                        self.addSelection(playerMO)
                     }
                 }
             }
@@ -996,7 +1002,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class func show(from viewController: CustomViewController, existing selectionViewController: SelectionViewController? = nil, mode: SelectionMode, thisPlayer: String? = nil, thisPlayerFrame: CGRect? = nil, showThisPlayerName: Bool = false, formTitle: String = "Selection", smallFormTitle: String? = nil, backText: String = "Back", backImage: String = "", bannerColor: UIColor? = nil, preCompletion: (([PlayerMO]?)->())? = nil, completion: (([PlayerMO]?)->())? = nil, showCompletion: (()->())? = nil, gamePreviewDelegate: GamePreviewDelegate? = nil) -> SelectionViewController {
+    class func show(from viewController: CustomViewController, existing selectionViewController: SelectionViewController? = nil, mode: SelectionMode, thisPlayer: String? = nil, thisPlayerFrame: CGRect? = nil, showThisPlayerName: Bool = false, formTitle: String = "Selection", smallFormTitle: String? = nil, backText: String = "Back", backImage: String = "", bannerColor: UIColor? = nil, fullScreen: Bool = false, preCompletion: (([PlayerMO]?)->())? = nil, completion: (([PlayerMO]?)->())? = nil, showCompletion: (()->())? = nil, gamePreviewDelegate: GamePreviewDelegate? = nil) -> SelectionViewController {
         var selectionViewController = selectionViewController
         
         if selectionViewController == nil {
@@ -1004,6 +1010,10 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             selectionViewController = storyboard.instantiateViewController(withIdentifier: "SelectionViewController") as? SelectionViewController
         }
         selectionViewController!.preferredContentSize = CGSize(width: 400, height: min(viewController.view.frame.height, 700))
+        
+        if fullScreen {
+            selectionViewController!.modalPresentationStyle = .fullScreen
+        }
         
         selectionViewController!.selectionMode = mode
         selectionViewController!.thisPlayer = thisPlayer ?? ""
@@ -1035,6 +1045,12 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         self.dismiss(animated: true, completion: {
             self.completion?(players)
         })
+    }
+    
+    override internal func didDismiss() {
+        NotificationCenter.default.removeObserver(observer!)
+        self.preCompletion?(nil)
+        self.completion?(nil)
     }
 }
 

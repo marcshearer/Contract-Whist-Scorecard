@@ -99,6 +99,16 @@ class ScrollView : NSObject, UIScrollViewDelegate {
         }
     }
     
+    public func reloadItems(after afterIndexPath: IndexPath) {
+        for (indexPath, cell) in self.cellList {
+            if indexPath.section > afterIndexPath.section || (indexPath.section == afterIndexPath.section && indexPath.row >= indexPath.row) {
+                cell.removeFromSuperview()
+                cellList[indexPath] = nil
+            }
+            self.reloadCell(at: indexPath)
+        }
+    }
+    
     internal func scrollViewDidScroll(_ scrollView: UIScrollView) {
         self.reloadSections()
     }
@@ -147,25 +157,31 @@ class ScrollView : NSObject, UIScrollViewDelegate {
     }
     
     private func reloadCell(at indexPath: IndexPath) {
-        if let itemFrame = self.delegate?.scrollView(self, frameForItemAt: indexPath) {
+        
+        let items = self.dataSource?.scrollView(self, numberOfItemsIn: indexPath.section) ?? 0
+        
+        if indexPath.item < items {
             
-            self.scrollView.contentSize = CGSize(width: max(self.scrollView.contentSize.width, itemFrame.maxX),
-                                                 height: max(self.scrollView.contentSize.height, itemFrame.maxY))
-            
-            // Setup content rectangle
-            let contentFrame = CGRect(origin: self.scrollView.contentOffset, size: self.scrollView.frame.size)
-            
-            if itemFrame.intersects(contentFrame) {
+            if let itemFrame = self.delegate?.scrollView(self, frameForItemAt: indexPath) {
                 
-                if let cell = self.dataSource?.scrollView(self, cellForItemAt: indexPath) {
+                self.scrollView.contentSize = CGSize(width: max(self.scrollView.contentSize.width, itemFrame.maxX),
+                                                     height: max(self.scrollView.contentSize.height, itemFrame.maxY))
+                
+                // Setup content rectangle
+                let contentFrame = CGRect(origin: self.scrollView.contentOffset, size: self.scrollView.frame.size)
+                
+                if itemFrame.intersects(contentFrame) {
                     
-                    if let _ = cellList.first(where: { $0.value.frame.intersects(cell.frame) }) {
-                        overlaps = true
+                    if let cell = self.dataSource?.scrollView(self, cellForItemAt: indexPath) {
+                        
+                        if let _ = cellList.first(where: { $0.value.frame.intersects(cell.frame) }) {
+                            overlaps = true
+                        }
+                        self.cellList[indexPath] = cell
+                        cell.frame = itemFrame
+                        cell.indexPath = indexPath
+                        self.scrollView.addSubview(cell)
                     }
-                    self.cellList[indexPath] = cell
-                    cell.frame = itemFrame
-                    cell.indexPath = indexPath
-                    self.scrollView.addSubview(cell)
                 }
             }
         }

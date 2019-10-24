@@ -400,7 +400,7 @@ class Utility {
     
     // MARK: - Animate ============================================================================== -
     
-    public class func animate(if animate: Bool = true, view: UIView? = nil, duration: TimeInterval = 0.5, curve: UIView.AnimationCurve = .linear, afterDelay: TimeInterval? = 0.0, animations: @escaping ()->()) {
+    public class func animate(if animate: Bool = true, view: UIView? = nil, duration: TimeInterval = 0.5, curve: UIView.AnimationCurve = .linear, afterDelay: TimeInterval? = 0.0, completion: (()->())? = nil, animations: @escaping ()->()) {
         var view = view
         if view == nil {
             view = Utility.getActiveViewController()!.view!
@@ -410,6 +410,11 @@ class Utility {
             let animation = UIViewPropertyAnimator(duration: duration, curve: curve) {
                 animations()
                 view!.layoutIfNeeded()
+            }
+            if completion != nil {
+                animation.addCompletion { (_) in
+                    completion?()
+                }
             }
             animation.startAnimation(afterDelay: afterDelay ?? 0.01)
         } else {
@@ -429,7 +434,7 @@ class Utility {
         }
     }
 
-    public class func getActiveViewController(fullScreenOnly: Bool = false) -> UIViewController? {
+    public class func getActiveViewController(fullScreenOnly: Bool = false, ignoreAlertController: Bool = false) -> UIViewController? {
         var viewController = UIApplication.shared.keyWindow?.rootViewController
         let fullHeight = viewController?.view.frame.height
         var activeViewController = viewController
@@ -440,7 +445,7 @@ class Utility {
                 break
             }
             viewController = viewController?.children[(viewController?.children.count)!-1]
-            if !fullScreenOnly || viewController?.view.frame.height == fullHeight {
+            if (!fullScreenOnly || viewController?.view.frame.height == fullHeight) && (!ignoreAlertController || !(viewController is UIAlertController)) {
                 activeViewController = viewController
             }
         }
@@ -450,7 +455,7 @@ class Utility {
                 break
             }
             viewController = viewController?.presentedViewController
-            if !fullScreenOnly || viewController?.view.frame.height == fullHeight {
+            if (!fullScreenOnly || viewController?.view.frame.height == fullHeight) && (!ignoreAlertController || !(viewController is UIAlertController)) {
                 activeViewController = viewController
             }
         }

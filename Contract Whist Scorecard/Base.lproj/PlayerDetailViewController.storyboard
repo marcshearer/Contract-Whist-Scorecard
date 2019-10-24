@@ -71,11 +71,12 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <imageView alpha="0.5" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" preservesSuperviewLayoutMargins="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oid-al-TdY" userLabel="Player Image">
-                                <rect key="frame" x="128" y="64" width="64" height="64"/>
+                                <rect key="frame" x="122.5" y="64" width="75" height="75"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="oid-al-TdY" secondAttribute="height" multiplier="1:1" id="0EW-2T-XZH"/>
+                                    <constraint firstAttribute="width" constant="75" id="q9G-Wh-lMX"/>
                                 </constraints>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="X8a-jy-AF4" appends="YES" id="Q4O-gv-AAJ"/>
@@ -91,7 +92,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Player name" textAlignment="center" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="1IL-mG-MYa" userLabel="Player Name">
-                                <rect key="frame" x="20" y="132" width="280" height="50"/>
+                                <rect key="frame" x="20" y="143" width="280" height="50"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="O2g-1H-3hW"/>
@@ -104,7 +105,7 @@
                                 </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tKT-sf-QpS" userLabel="Player Error">
-                                <rect key="frame" x="20" y="186" width="280" height="12"/>
+                                <rect key="frame" x="20" y="197" width="280" height="12"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="12" id="FT7-Qx-OYS"/>
                                 </constraints>
@@ -113,7 +114,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" canCancelContentTouches="NO" bouncesZoom="NO" keyboardDismissMode="interactive" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3Pf-sG-Che">
-                                <rect key="frame" x="0.0" y="206" width="320" height="194"/>
+                                <rect key="frame" x="0.0" y="217" width="320" height="183"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" tag="1" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Unique ID" id="VqQ-AO-cnP" customClass="PlayerDetailCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
@@ -290,23 +291,23 @@
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Record" rowHeight="20" id="3pR-kx-rqq" userLabel="Record" customClass="PlayerDetailCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="200" width="320" height="20"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="3pR-kx-rqq" id="KDO-Ps-uVE">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3pR-kx-rqq" id="KDO-Ps-uVE">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="High score" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="n4I-U3-4cs">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="High score" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="n4I-U3-4cs">
                                                     <rect key="frame" x="20" y="4" width="96" height="16"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" name="Text"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="175" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="bPx-gv-q3o">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="175" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="bPx-gv-q3o">
                                                     <rect key="frame" x="118" y="4" width="68" height="16"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" name="Text"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="01/01/2019" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="F4x-pa-hqa">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="01/01/2019" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="F4x-pa-hqa">
                                                     <rect key="frame" x="188" y="4" width="112" height="16"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" name="Text"/>
@@ -337,29 +338,29 @@
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Stat" rowHeight="20" id="x7B-uJ-jOF" userLabel="Stats" customClass="PlayerDetailCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="220" width="320" height="20"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="x7B-uJ-jOF" id="xaK-J7-p01">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="x7B-uJ-jOF" id="xaK-J7-p01">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Games Played" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ZjP-Mf-mE6">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Games Played" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ZjP-Mf-mE6">
                                                     <rect key="frame" x="20" y="4" width="96" height="16"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" name="Text"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="333" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jiz-nZ-vmz">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="333" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jiz-nZ-vmz">
                                                     <rect key="frame" x="124" y="4" width="24.5" height="16"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" name="Text"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Hands played" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hAf-nI-iHW">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hands played" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hAf-nI-iHW">
                                                     <rect key="frame" x="148" y="4" width="96" height="16"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" name="Text"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="4327" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="feo-5G-3Z4">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="4327" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="feo-5G-3Z4">
                                                     <rect key="frame" x="252" y="4" width="48" height="16"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" name="Text"/>
@@ -405,10 +406,9 @@
                             <constraint firstItem="tKT-sf-QpS" firstAttribute="top" secondItem="1IL-mG-MYa" secondAttribute="bottom" constant="4" id="5XL-Bf-6ZM"/>
                             <constraint firstItem="oid-al-TdY" firstAttribute="top" secondItem="gwq-z7-rmp" secondAttribute="top" constant="20" id="6CG-3Q-GNN"/>
                             <constraint firstItem="gwq-z7-rmp" firstAttribute="top" secondItem="gXs-Is-mIL" secondAttribute="bottom" id="71R-WJ-Uic"/>
-                            <constraint firstItem="o3W-OF-Z0q" firstAttribute="trailing" secondItem="gwq-z7-rmp" secondAttribute="trailing" id="BVd-Ss-pbK"/>
+                            <constraint firstAttribute="trailing" secondItem="gwq-z7-rmp" secondAttribute="trailing" id="BVd-Ss-pbK"/>
                             <constraint firstItem="1IL-mG-MYa" firstAttribute="top" secondItem="oid-al-TdY" secondAttribute="bottom" constant="4" id="ELA-5z-9yB"/>
                             <constraint firstAttribute="trailing" secondItem="gXs-Is-mIL" secondAttribute="trailing" id="EON-Um-gyK"/>
-                            <constraint firstItem="oid-al-TdY" firstAttribute="width" secondItem="rYz-bu-WB3" secondAttribute="width" multiplier="0.2" id="Gmf-Vk-QBh"/>
                             <constraint firstItem="o3W-OF-Z0q" firstAttribute="trailing" secondItem="1IL-mG-MYa" secondAttribute="trailing" constant="20" id="H8b-Vf-3QL"/>
                             <constraint firstAttribute="bottom" secondItem="w68-7y-hH1" secondAttribute="bottom" id="Htp-4e-PRh"/>
                             <constraint firstItem="o3W-OF-Z0q" firstAttribute="top" secondItem="oEM-x6-cmp" secondAttribute="bottom" id="Ihu-aU-clz"/>
@@ -419,7 +419,7 @@
                             <constraint firstItem="o3W-OF-Z0q" firstAttribute="trailing" secondItem="tKT-sf-QpS" secondAttribute="trailing" constant="20" id="PLO-iQ-LRh"/>
                             <constraint firstItem="oEM-x6-cmp" firstAttribute="leading" secondItem="rYz-bu-WB3" secondAttribute="leading" id="QRZ-oN-kHQ"/>
                             <constraint firstItem="tKT-sf-QpS" firstAttribute="centerX" secondItem="rYz-bu-WB3" secondAttribute="centerX" id="Uak-Xf-Uc9"/>
-                            <constraint firstItem="gwq-z7-rmp" firstAttribute="leading" secondItem="o3W-OF-Z0q" secondAttribute="leading" id="UeV-lA-qo9"/>
+                            <constraint firstItem="gwq-z7-rmp" firstAttribute="leading" secondItem="rYz-bu-WB3" secondAttribute="leading" id="UeV-lA-qo9"/>
                             <constraint firstItem="1IL-mG-MYa" firstAttribute="leading" secondItem="o3W-OF-Z0q" secondAttribute="leading" constant="20" id="XpJ-ZR-Vr3"/>
                             <constraint firstItem="oid-al-TdY" firstAttribute="centerX" secondItem="rYz-bu-WB3" secondAttribute="centerX" id="ZvJ-dQ-haO"/>
                             <constraint firstItem="YKS-Wj-8zi" firstAttribute="leading" secondItem="gwq-z7-rmp" secondAttribute="leading" constant="20" id="bUf-24-amn"/>

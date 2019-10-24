@@ -662,6 +662,10 @@ class EntryViewController: CustomViewController, UITableViewDataSource, UITableV
             self.completion?(linkToGameSummary)
         })
     }
+    
+    override internal func didDismiss() {
+        self.completion?(false)
+    }
 }
 
 extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {

@@ -155,7 +155,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="dkH-H9-R1t">
-                                                    <rect key="frame" x="23" y="11" width="270" height="48"/>
+                                                    <rect key="frame" x="23" y="35" width="270" height="0.0"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" name="Text"/>
                                                     <nil key="highlightedColor"/>
@@ -173,10 +173,9 @@
                                             <constraints>
                                                 <constraint firstItem="bRF-L9-XRt" firstAttribute="leading" secondItem="dkH-H9-R1t" secondAttribute="trailing" constant="8" id="GZt-0F-Izo"/>
                                                 <constraint firstItem="bRF-L9-XRt" firstAttribute="centerY" secondItem="51C-ed-ZoD" secondAttribute="centerY" id="Ub3-b1-h27"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="dkH-H9-R1t" secondAttribute="bottom" id="WGg-zG-hYs"/>
                                                 <constraint firstItem="dkH-H9-R1t" firstAttribute="leading" secondItem="51C-ed-ZoD" secondAttribute="leadingMargin" constant="8" id="oU9-Bv-BRZ"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="bRF-L9-XRt" secondAttribute="trailing" constant="12" id="pFk-wL-SpD"/>
-                                                <constraint firstItem="dkH-H9-R1t" firstAttribute="top" secondItem="51C-ed-ZoD" secondAttribute="topMargin" id="sH7-qk-Syj"/>
+                                                <constraint firstItem="dkH-H9-R1t" firstAttribute="centerY" secondItem="51C-ed-ZoD" secondAttribute="centerY" id="r56-RL-Ky6"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="Clear"/>
@@ -656,7 +655,6 @@
                         <color key="backgroundColor" name="Background"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="KFM-qF-ry7" firstAttribute="top" secondItem="x1U-ho-wrZ" secondAttribute="bottom" id="Ald-CT-cze"/>
                             <constraint firstItem="x1U-ho-wrZ" firstAttribute="top" secondItem="iT4-V4-FZx" secondAttribute="top" id="BGK-7M-VWx"/>
                             <constraint firstItem="bHq-hw-4hT" firstAttribute="top" secondItem="ktL-fo-SvR" secondAttribute="top" id="Caz-PV-jdf"/>
                             <constraint firstAttribute="bottom" secondItem="KFM-qF-ry7" secondAttribute="bottom" id="EkF-hY-Gmp"/>
@@ -664,6 +662,7 @@
                             <constraint firstAttribute="trailing" secondItem="bHq-hw-4hT" secondAttribute="trailing" id="VCy-c7-kvU"/>
                             <constraint firstItem="bHq-hw-4hT" firstAttribute="leading" secondItem="ktL-fo-SvR" secondAttribute="leading" id="WgB-z5-Hlx"/>
                             <constraint firstItem="KFM-qF-ry7" firstAttribute="leading" secondItem="ktL-fo-SvR" secondAttribute="leading" id="Xsk-5b-nuR"/>
+                            <constraint firstItem="KFM-qF-ry7" firstAttribute="top" secondItem="x1U-ho-wrZ" secondAttribute="bottom" id="oXh-NR-gFn"/>
                             <constraint firstAttribute="trailing" secondItem="KFM-qF-ry7" secondAttribute="trailing" id="pBQ-ER-Jq0"/>
                             <constraint firstAttribute="trailing" secondItem="x1U-ho-wrZ" secondAttribute="trailing" id="rHj-uP-DYJ"/>
                             <constraint firstItem="iT4-V4-FZx" firstAttribute="top" secondItem="bHq-hw-4hT" secondAttribute="bottom" id="rVB-26-DMw"/>

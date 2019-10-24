@@ -11,7 +11,7 @@ import UserNotifications
 import GameKit
 import CoreLocation
 
-class SettingsViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CLLocationManagerDelegate {
+class SettingsViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CLLocationManagerDelegate {
     
     // MARK: - Class Properties ======================================================================== -
         
@@ -101,6 +101,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     // MARK: - View Overrides ========================================================================== -
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         finishButton.setImage(UIImage(named: self.backImage), for: .normal)
         finishButton.setTitle(self.backText)
@@ -126,7 +127,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         scorecard.reCenterPopup(self)
-        reload = true
+        self.reload = true
         self.view.setNeedsLayout()
     }
     
@@ -135,6 +136,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
         if reload {
             self.settingsTableView.reloadData()
         }
+        self.reload = false
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -208,6 +210,8 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                         height = 60.0
                     case .spacer1, .spacer2:
                         height = 10.0
+                    case .cardsInHandBounce, .bonus2:
+                        height = 50.0
                     default:
                         height = self.rowHeight
                     }
@@ -375,14 +379,14 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                         cell.slider.tag = index
                         cell.sliderLabel.text = (index == 0 ? "Start:" : "End:")
                         cell.slider.addTarget(self, action: #selector(SettingsViewController.cardsSliderChanged(_:)), for: .valueChanged)
-                        cell.sliderValue.text = "\(self.scorecard.settingCards[index])"
-                        cell.slider.value = Float(self.scorecard.settingCards[index])
+                        cell.sliderValue.text = "\(self.scorecard.gameSettings.cards[index])"
+                        cell.slider.value = Float(self.scorecard.gameSettings.cards[index])
                         
                     case .cardsInHandBounce:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Segmented") as? SettingsTableCell
                         self.cardsChanged(bounceSegmentedControl: cell.segmentedControl)
                         cell.segmentedControl.addTarget(self, action: #selector(SettingsViewController.cardsInHandBounceChanged(_:)), for: .valueChanged)
-                        cell.segmentedControl.selectedSegmentIndex = (self.scorecard.settingBounceNumberCards ? 1 : 0)
+                        cell.segmentedControl.selectedSegmentIndex = (self.scorecard.gameSettings.bounceNumberCards ? 1 : 0)
                         
                     case .bonus2Subheading:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Sub Heading") as? SettingsTableCell
@@ -728,21 +732,21 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     @objc internal func cardsSliderChanged(_ cardsSlider: UISlider) {
         let index = cardsSlider.tag
         let option = (index == 0 ? InGameOptions.cardsInHandStart : InGameOptions.cardsInHandEnd)
-        scorecard.settingCards[index] = Int(cardsSlider.value)
-        self.setOptionValue(section: Sections.inGame.rawValue, option: option.rawValue, value: scorecard.settingCards[index])
+        scorecard.gameSettings.cards[index] = Int(cardsSlider.value)
+        self.setOptionValue(section: Sections.inGame.rawValue, option: option.rawValue, value: scorecard.gameSettings.cards[index])
         self.cardsChanged()
         
         // Save it
-        UserDefaults.standard.set(scorecard.settingCards, forKey: "cards")
+        UserDefaults.standard.set(scorecard.gameSettings.cards, forKey: "cards")
     }
     
     @objc func cardsInHandBounceChanged(_ cardsInHandBounceSegmentedControl: UISegmentedControl) {
         
-        self.scorecard.settingBounceNumberCards = (cardsInHandBounceSegmentedControl.selectedSegmentIndex == 1)
+        self.scorecard.gameSettings.bounceNumberCards = (cardsInHandBounceSegmentedControl.selectedSegmentIndex == 1)
         self.cardsChanged()
         
         // Save it
-        UserDefaults.standard.set(scorecard.settingBounceNumberCards, forKey: "bounceNumberCards")
+        UserDefaults.standard.set(scorecard.gameSettings.bounceNumberCards, forKey: "bounceNumberCards")
     }
 
     @objc internal func bonus2Changed(_ bonus2SegmentedControl: UISegmentedControl) {
@@ -935,7 +939,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     private func cardsChanged(bounceSegmentedControl: UISegmentedControl? = nil) {
         if let bounceSegmentedControl = bounceSegmentedControl ?? self.getCardsInHandBounceSegmentedControl() {
-            let cards = scorecard.settingCards
+            let cards = scorecard.gameSettings.cards
             let direction = (cards[1] < cards[0] ? "down" : "up")
             var cardString = (cards[1] == 1 ? "card" : "cards")
             bounceSegmentedControl.setTitle("Go \(direction) to \(cards[1]) \(cardString)", forSegmentAt: 0)
@@ -1339,7 +1343,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                             cell.onlinePlayerNameLabel?.text = "as \(playerMO.name!)"
                             cell.onlinePlayerButton.isHidden = false
                             cell.onlinePlayerThumbnail.isHidden = false
-                            cell.onlinePlayerThumbnail.set(data: playerMO.thumbnail, nameHeight: 0.0, diameter: self.rowHeight - 8.0)
+                            cell.onlinePlayerThumbnail.set(data: playerMO.thumbnail, initials: playerMO.name, nameHeight: 0.0, diameter: self.rowHeight - 8.0)
                             self.enableOnline()
                         } else {
                             self.clearOnline()
@@ -1405,8 +1409,12 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     private func dismiss() {
         self.dismiss(animated: true, completion: {
-            self.completion?()
+            self.didDismiss()
         })
+    }
+    
+    override internal func didDismiss() {
+        self.completion?()
     }
 }
 

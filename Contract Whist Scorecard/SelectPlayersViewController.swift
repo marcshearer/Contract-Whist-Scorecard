@@ -41,7 +41,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     // Local class variables
     private var combinedPlayerList: [Int : [PlayerDetail]] = [:]
     private var combinedSelection: [Int : [Bool]] = [:]
-    private var selectedPlayerHexagonView: [Int: SelectedPlayersHexagonView] = [:]
+    private var selectedPlayerHexagonView: [Int: HexagonView] = [:]
     private var selectedPlayer: IndexPath!
     private var syncStarted = false
     private var syncFinished = false
@@ -51,6 +51,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     private var relatedPlayerSection = -1
     private var actionRows = 0
     private var sections = 0
+    private var rotated = false
 
     // Alert controller while waiting for cloud download
     private var cloudAlertController: UIAlertController!
@@ -88,8 +89,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         self.selection = []
         self.playerList = []
         
-        // Abandon any sync in progress
-        self.sync?.stop()
+        self.cancelAction()
         
         // Return to calling program
         self.dismiss()
@@ -114,6 +114,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         super.viewWillTransition(to: size, with: coordinator)
         scorecard.reCenterPopup(self)
         view.setNeedsLayout()
+        self.rotated = true
     }
     
     override func viewDidLayoutSubviews() {
@@ -122,6 +123,10 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         if !syncStarted {
             self.selectCloudPlayers()
             syncStarted = true
+        }
+        if self.rotated {
+            self.rotated = false
+            self.tableView.reloadData()
         }
     }
     
@@ -150,7 +155,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
             default:
                 return nil
             }
-            self.selectedPlayerHexagonView[section] = SelectedPlayersHexagonView(frame: frame, titleText: titleText, detailText: detailText, buttonText: buttonText, separator: true, bannerColor: (section == relatedPlayerSection ? Palette.banner : Palette.background), fillColor: (section == relatedPlayerSection ? Palette.banner : Palette.banner), textColor: (section == relatedPlayerSection ? Palette.bannerText : Palette.bannerText), buttonAction: self.changeAllPressed)
+            self.selectedPlayerHexagonView[section] = HexagonView(frame: frame, titleText: titleText, detailText: detailText, buttonText: buttonText, separator: true, bannerColor: (section == relatedPlayerSection ? Palette.banner : Palette.background), fillColor: (section == relatedPlayerSection ? Palette.banner : Palette.banner), textColor: (section == relatedPlayerSection ? Palette.bannerText : Palette.bannerText), buttonAction: self.changeAllPressed)
         
             return self.selectedPlayerHexagonView[section]
             
@@ -161,7 +166,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     
     private func sectionHeaderHeight(for section: Int) -> CGFloat {
         if section == relatedPlayerSection {
-            return 101.0
+            return (ScorecardUI.smallPhoneSize() && ScorecardUI.landscapePhone() ? 86.0 : 101.0)
         } else {
             return 0.0
         }
@@ -170,7 +175,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     internal func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case actionSection:
-            return 86.0
+            return (ScorecardUI.smallPhoneSize() && ScorecardUI.landscapePhone() ? 71.0 : 86.0)
         case relatedPlayerSection:
             return 60.0
         default:
@@ -200,14 +205,24 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
             cell = tableView.dequeueReusableCell(withIdentifier: "Action Cell", for: indexPath) as! SelectPlayersCell
             
             // Fill in text
+            var titleText = ""
+            var detailText = ""
             switch indexPath.row {
             case newPlayerRow:
-                cell.actionHexagonView.setText(titleText: "Create new player", detailText: "entering details manually")
+                titleText = "Create new player"
+                detailText = "entering details manually"
             case otherPlayerRow:
-                cell.actionHexagonView.setText(titleText: "Download player", detailText: "using their Unique ID")
+                titleText = "Download player"
+                detailText = "using their Unique ID"
             default:
                 break
             }
+            
+            // Create hexagon view
+            let frame = CGRect(x:0.0, y: 0.0, width: tableView.frame.width, height: self.tableView(self.tableView, heightForRowAt: indexPath))
+            cell.actionHexagonView?.removeFromSuperview()
+            cell.actionHexagonView = HexagonView(frame: frame, titleText: titleText, detailText: detailText, bannerColor: Palette.banner, fillColor: Palette.banner, textColor: Palette.bannerText)
+            cell.addSubview(cell.actionHexagonView)
 
         case relatedPlayerSection:
             // Players
@@ -650,11 +665,24 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
         })
     }
     
+    override internal func didDismiss() {
+        self.cancelAction()
+        self.completion?(0, [], [])
+    }
+    
+    private func cancelAction() {
+        
+        // Abandon any sync in progress
+        self.sync?.stop()
+    }
 }
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
 
 class SelectPlayersCell: UITableViewCell {
+    
+    public var actionHexagonView: HexagonView!
+    
     @IBOutlet public weak var playerName: UILabel!
     @IBOutlet public weak var playerDescription: UILabel!
     @IBOutlet public weak var playerTick: UIImageView!
@@ -662,5 +690,4 @@ class SelectPlayersCell: UITableViewCell {
     @IBOutlet public weak var playerNameBottomConstraint: NSLayoutConstraint!
     @IBOutlet public weak var playerDescriptionHeightConstraint: NSLayoutConstraint!
     @IBOutlet public weak var playerSeparatorView: UIView!
-    @IBOutlet public weak var actionHexagonView: SelectedPlayersHexagonView!
 }

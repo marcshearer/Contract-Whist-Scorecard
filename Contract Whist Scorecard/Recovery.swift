@@ -105,10 +105,10 @@ class Recovery {
     
     func saveOverride() {
         UserDefaults.standard.set(scorecard.overrideSelected, forKey: "recoveryOverrideSelected")
-        UserDefaults.standard.set(scorecard.overrideCards, forKey: "recoveryOverrideCards")
-        UserDefaults.standard.set(scorecard.overrideBounceNumberCards, forKey: "recoveryOverrideBounceNumberCards")
-        UserDefaults.standard.set(scorecard.overrideExcludeHistory, forKey: "recoveryOverrideExcludeHistory")
-        UserDefaults.standard.set(scorecard.overrideExcludeStats, forKey: "recoveryOverrideStats")
+        UserDefaults.standard.set(scorecard.overrideSettings.cards, forKey: "recoveryOverrideCards")
+        UserDefaults.standard.set(scorecard.overrideSettings.bounceNumberCards, forKey: "recoveryOverrideBounceNumberCards")
+        UserDefaults.standard.set(scorecard.overrideSettings.excludeHistory, forKey: "recoveryOverrideExcludeHistory")
+        UserDefaults.standard.set(scorecard.overrideSettings.excludeStats, forKey: "recoveryOverrideStats")
     }
     
     func saveDeal(round: Int, deal: Deal) {
@@ -242,15 +242,12 @@ class Recovery {
         // Reload overrides
         scorecard.overrideSelected = UserDefaults.standard.bool(forKey: "recoveryOverrideSelected")
         if scorecard.overrideSelected {
-            scorecard.overrideCards = UserDefaults.standard.array(forKey: "recoveryOverrideCards") as? [Int]
-            scorecard.overrideBounceNumberCards = UserDefaults.standard.bool(forKey: "recoveryOverrideBounceNumberCards")
-            scorecard.overrideExcludeHistory = UserDefaults.standard.bool(forKey: "recoveryOverrideExcludeHistory")
-            scorecard.overrideExcludeStats = UserDefaults.standard.bool(forKey: "recoveryOverrideExcludeStats")
+            scorecard.overrideSettings.cards = UserDefaults.standard.array(forKey: "recoveryOverrideCards")! as! [Int]
+            scorecard.overrideSettings.bounceNumberCards = UserDefaults.standard.bool(forKey: "recoveryOverrideBounceNumberCards")
+            scorecard.overrideSettings.excludeHistory = UserDefaults.standard.bool(forKey: "recoveryOverrideExcludeHistory")
+            scorecard.overrideSettings.excludeStats = UserDefaults.standard.bool(forKey: "recoveryOverrideExcludeStats")
         } else {
-            scorecard.overrideCards = nil
-            scorecard.overrideBounceNumberCards = nil
-            scorecard.overrideExcludeHistory = nil
-            scorecard.overrideExcludeStats = nil
+            self.scorecard.resetOverrideSettings()
         }
         
         // Finished

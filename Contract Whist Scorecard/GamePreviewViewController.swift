@@ -305,7 +305,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         
         navigationBarHeightConstraint.constant = ScorecardUI.navigationBarHeight
         
-        let thumbnailSize = SelectionViewController.thumbnailSize(view: self.view, labelHeight: self.labelHeight)
+        let thumbnailSize = SelectionViewController.thumbnailSize(labelHeight: self.labelHeight)
         self.thumbnailWidth = thumbnailSize.width
         self.thumbnailHeight = self.thumbnailWidth + 25.0
         self.cutCardHeight = self.thumbnailWidth
@@ -770,21 +770,10 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     // MARK: - Show scorepad ================================================================ -
 
     private func showScorepadViewController() {
-        var cards: [Int]
-        var bounce: Bool
-        var rounds: Int
         
-        if self.scorecard.checkOverride() {
-            cards = scorecard.overrideCards
-            bounce = scorecard.overrideBounceNumberCards
-            rounds = scorecard.calculateRounds(cards: cards, bounce: bounce)
-        } else {
-            cards = scorecard.settingCards
-            bounce = scorecard.settingBounceNumberCards
-            rounds = scorecard.rounds
-        }
+        let gameSettings = self.scorecard.currentGameSettings()
         
-        _ = ScorepadViewController.show(from: self, scorepadMode: (self.scorecard.isHosting || self.scorecard.hasJoined ? .display : .amend), rounds: rounds, cards: cards, bounce: bounce, bonus2: scorecard.settingBonus2, suits: scorecard.suits, rabbitMQService: self.rabbitMQService, recoveryMode: self.scorecard.recoveryMode, computerPlayerDelegate: self.computerPlayerDelegate, completion:
+        _ = ScorepadViewController.show(from: self, scorepadMode: (self.scorecard.isHosting || self.scorecard.hasJoined ? .display : .amend), rounds: gameSettings.rounds, cards: gameSettings.cards, bounce: gameSettings.bounceNumberCards, bonus2: scorecard.settingBonus2, suits: scorecard.suits, rabbitMQService: self.rabbitMQService, recoveryMode: self.scorecard.recoveryMode, computerPlayerDelegate: self.computerPlayerDelegate, completion:
                 { (returnHome) in
                     self.delegate?.gamePreviewStopGame?()
                     if returnHome {
@@ -832,6 +821,14 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         self.dismiss(animated: true, completion: {
             self.delegate?.gamePreviewCompletion?(returnHome: returnHome)
         })
+    }
+    
+    override internal func didDismiss() {
+        if !self.scorecard.isHosting && !self.scorecard.hasJoined {
+            NotificationCenter.default.removeObserver(observer!)
+            self.scorecard.resetOverrideSettings()
+        }
+        self.delegate?.gamePreviewCompletion?(returnHome: false)
     }
 }
 

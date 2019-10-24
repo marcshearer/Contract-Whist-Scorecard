@@ -48,13 +48,33 @@ extension UIViewController {
     
 }
 
-class CustomViewController : UIViewController {
+class CustomViewController : UIViewController, UIAdaptivePresentationControllerDelegate  {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.presentationController?.delegate = self
+    }
+    
+    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
+        return self.shouldDismiss()
+    }
+    
+    func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+        self.didDismiss()
+    }
+    
+    internal func shouldDismiss() -> Bool {
+        return true
+    }
+    
+    internal func didDismiss(){
+    }
     
     /*
     override func viewDidLoad() {
         Utility.mainThread {
             super.viewDidLoad()
-            Utility.debugMessage(self.className(), "didLoad =========================================")
+            Utility.debugMessage(self.className, "didLoad =========================================")
         }
         self.isModalInPopover = true
     }
@@ -62,28 +82,28 @@ class CustomViewController : UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         Utility.mainThread {
             super.viewDidAppear(animated)
-            Utility.debugMessage(self.className(), "didAppear ---------------------------------------")
+            Utility.debugMessage(self.className, "didAppear ---------------------------------------")
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         Utility.mainThread {
             super.viewWillAppear(animated)
-            Utility.debugMessage(self.className(), "willAppear ---------------------------------------")
+            Utility.debugMessage(self.className, "willAppear ---------------------------------------")
         }
     }
 
     override func viewDidLayoutSubviews() {
         Utility.mainThread {
             super.viewDidLayoutSubviews()
-            Utility.debugMessage(self.className(), "didLayoutSubviews -------------------------------")
+            Utility.debugMessage(self.className, "didLayoutSubviews -------------------------------")
         }
     }
     
     override func viewWillLayoutSubviews() {
         Utility.mainThread {
             super.viewWillLayoutSubviews()
-            Utility.debugMessage(self.className(), "willLayoutSubviews ------------------------------")
+            Utility.debugMessage(self.className, "willLayoutSubviews ------------------------------")
         }
     }
     */
@@ -100,6 +120,9 @@ class CustomViewController : UIViewController {
             if let delegate = self as? UIPopoverPresentationControllerDelegate {
                 viewControllerToPresent.popoverPresentationController?.delegate = delegate
             }
+        } else if !ScorecardUI.phoneSize() {
+            // Make full screen on iPad
+            viewControllerToPresent.modalPresentationStyle = .fullScreen
         }
         
         super.present(viewControllerToPresent, animated: flag, completion: completion)
@@ -119,7 +142,7 @@ class CustomViewController : UIViewController {
         return true
     }
     
-    private func className() -> String {
+    public var className: String {
         let fullName = NSStringFromClass(self.classForCoder)
         var tail = fullName.split(at: ".").last!
         if let viewControllerPos = tail.position("viewController", caseless: true) {

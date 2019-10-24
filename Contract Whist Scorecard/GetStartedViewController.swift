@@ -308,7 +308,11 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     }
     
     private func dismiss() {
-        self.dismiss(animated: true, completion: { self.completion?() })
+        self.dismiss(animated: true, completion: { self.didDismiss() })
+    }
+    
+    internal override func didDismiss() {
+        self.completion?()
     }
     
 }

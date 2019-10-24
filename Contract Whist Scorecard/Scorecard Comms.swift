@@ -241,7 +241,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 let storyboard = UIStoryboard(name: "HandViewController", bundle: nil)
                 let handViewController = storyboard.instantiateViewController(withIdentifier: "HandViewController") as! HandViewController
 
-                handViewController.preferredContentSize = CGSize(width: 400, height: 554)
+                handViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
                
                 handViewController.delegate = viewController as? HandStatusDelegate
                 handViewController.computerPlayerDelegate = computerPlayerDelegate
@@ -262,14 +262,10 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     }
     
     private func sendPlayersOverrideSettings(to peer: CommsPeer! = nil) {
-        if self.checkOverride() {
-            // Use override values
-            let rounds = self.calculateRounds(cards: self.overrideCards, bounce: self.overrideBounceNumberCards)
-            self.sendPlay(rounds: rounds, cards: self.overrideCards, bounce: self.overrideBounceNumberCards, bonus2: self.settingBonus2, suits: self.suits, to: peer)
-        } else {
-            // Use settings values
-            self.sendPlay(rounds: self.rounds, cards: self.settingCards, bounce: self.settingBounceNumberCards, bonus2: self.settingBonus2, suits: self.suits, to: peer)
-        }
+        let gameSettings = self.currentGameSettings()
+
+        self.sendPlay(rounds: gameSettings.rounds, cards: gameSettings.cards, bounce: gameSettings.bounceNumberCards, bonus2: self.settingBonus2, suits: self.suits, to: peer)
+
     }
     
     public func sendPlay(rounds: Int, cards: [Int], bounce: Bool, bonus2: Bool, suits: [Suit], to commsPeer: CommsPeer! = nil) {

@@ -389,7 +389,7 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
         let storyboard = UIStoryboard(name: "HistoryDetailViewController", bundle: nil)
         let historyDetailViewController = storyboard.instantiateViewController(withIdentifier: "HistoryDetailViewController") as! HistoryDetailViewController
 
-        historyDetailViewController.preferredContentSize = CGSize(width: 400, height: 600)
+        historyDetailViewController.preferredContentSize = CGSize(width: 400, height: 700)
 
         historyDetailViewController.gameDetail = gameDetail
         historyDetailViewController.callerCompletion = completion
@@ -399,6 +399,10 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
     
     private func dismiss() {
         self.dismiss(animated: true, completion: { self.callerCompletion?((self.updated ? self.gameDetail : nil)) })
+    }
+    
+    override internal func didDismiss() {
+        self.callerCompletion?((self.updated ? self.gameDetail : nil))
     }
     
 }

@@ -39,6 +39,7 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
     private var imageObserver: NSObjectProtocol?
     private var scrollView: ScrollView!
     private var lastSize: CGSize!
+    private var threeAcross = true
     private var sync: Sync!
     
     // MARK: - IB Outlets ============================================================================== -
@@ -73,8 +74,7 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
 
     @IBAction func finishPressed(sender: UIButton) {
         
-        NotificationCenter.default.removeObserver(playerObserver!)
-        NotificationCenter.default.removeObserver(imageObserver!)
+        self.dismissAction()
         self.dismiss()
     }
     
@@ -121,9 +121,13 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        self.scorecard.reCenterPopup(self)
         
         if self.view.safeAreaLayoutGuide.layoutFrame.size != self.lastSize {
         
+            // Set up mode
+            self.threeAcross = ScorecardUI.screenWidth >= 350.0
+            
             // Setup width / height
             let cellFrame = self.cellFrame(1)
             
@@ -132,7 +136,7 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
             let fillerHeight = (cellFrame.height / 2.0) + 4.0
             let shapeWidth = fillerWidth + view.safeAreaInsets.left
             let arrowWidth = ((fillerWidth + 9.0) / 4.0)
-            if ScorecardUI.screenWidth < 500 {
+            if !self.threeAcross {
                 self.leftPadWidthConstraint.constant = fillerWidth + view.safeAreaInsets.left + 20.0
                 self.leftPadHeightConstraint.constant = fillerHeight
                 Polygon.angledBannerContinuationMask(view: leftPadView, frame: CGRect(x: 0, y: 0, width: shapeWidth, height: fillerHeight), type: .arrowRight, arrowWidth: arrowWidth)
@@ -144,8 +148,8 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
                 self.rightPadWidthConstraint.constant = (fillerWidth * 2.0) - arrowWidth + view.safeAreaInsets.right + 20.0
                 self.rightPadHeightConstraint.constant = fillerHeight
                 Polygon.angledBannerContinuationMask(view: rightPadView, frame: CGRect(x: 20.0, y: 0, width: fillerWidth, height: fillerHeight), type: .hexagon, arrowWidth: arrowWidth)
-                self.rightPadTextLeadingConstraint.constant = 75.0
-                self.rightPadTextTrailingConstraint.constant = fillerWidth - arrowWidth + view.safeAreaInsets.right + 60.0
+                self.rightPadTextLeadingConstraint.constant = 15.0
+                self.rightPadTextTrailingConstraint.constant = fillerWidth - arrowWidth + view.safeAreaInsets.right - 5.0
                 self.leftPadView.isHidden = true
                 self.rightPadView.isHidden = false
             }
@@ -211,16 +215,20 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
         let relativeTapPosition = CGPoint(x: tapPosition.x - cell.frame.minX, y: tapPosition.y - cell.frame.minY)
         if let path = cell.path {
             if path.contains(relativeTapPosition) {
-                PlayerDetailViewController.show(from: self, playerDetail: self.playerList[cell.indexPath.item], mode: .amend, sourceView: self.view, completion: { (playerDetail, deletePlayer) in
+                PlayerDetailViewController.show(from: self, playerDetail: self.playerList[cell.indexPath.item], mode: .amend, sourceView: self.popoverPresentationController?.sourceView ?? self.view, completion: { (playerDetail, deletePlayer) in
                                                     if playerDetail != nil {
                                                         if deletePlayer {
                                                             // Refresh all
-                                                            self.refreshView()
+                                                            self.scrollView.reloadItems(after: cell.indexPath!)
                                                         } else {
                                                             // Refresh updated player
                                                             playerDetail!.fromManagedObject(playerMO: playerDetail!.playerMO!)
                                                             self.scrollView.reloadItems(at: [cell.indexPath!])
                                                         }
+                                                    } else {
+                                                        // Restore player
+                                                        let playerDetail = self.playerList[cell.indexPath.item]
+                                                        playerDetail.fromManagedObject(playerMO: playerDetail.playerMO!)
                                                     }
                 })
             }
@@ -229,7 +237,7 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
     
     private func cellType(_ item: Int) -> ShapeType {
         var type: ShapeType
-        if ScorecardUI.screenWidth > 500.0 {
+        if self.threeAcross {
             switch item % 3 {
             case 0:
                 type = .arrowRight
@@ -252,7 +260,7 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
         
         let viewWidth = self.view.safeAreaLayoutGuide.layoutFrame.width
         
-        if ScorecardUI.screenWidth > 500 {
+        if self.threeAcross {
             cellWidth = ((8.0 / 20.0) * viewWidth) - 5.0
             cellHeight = ((21.0 / 80.0) * viewWidth)
             switch item % 3 {
@@ -361,6 +369,16 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
         self.dismiss(animated: true, completion: {
             self.completion?()
         })
+    }
+    
+    override internal func didDismiss() {
+        self.dismissAction()
+        self.completion?()
+    }
+    
+    private func dismissAction() {
+        NotificationCenter.default.removeObserver(playerObserver!)
+        NotificationCenter.default.removeObserver(imageObserver!)
     }
     
     // MARK: - Arrow masks ============================================================================== -

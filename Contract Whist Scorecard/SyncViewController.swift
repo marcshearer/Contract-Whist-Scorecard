@@ -257,6 +257,10 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
     private func dismiss() {
         self.dismiss(animated: true, completion: { self.completion?() })
     }
+    
+    override internal func shouldDismiss() -> Bool {
+        return false
+    }
 }
 
 class SyncStageTableCell: UITableViewCell {

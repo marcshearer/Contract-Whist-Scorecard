@@ -339,8 +339,8 @@ extension Scorecard {
     func testResetSettings() {
         // Reset all settings to default values - called on entry to app in test mode
         self.settingBonus2 = true
-        self.settingCards = [13, 1]
-        self.settingBounceNumberCards = false
+        self.gameSettings.cards = [13, 1]
+        self.gameSettings.bounceNumberCards = false
         self.settingTrumpSequence = ["♣︎", "♦︎", "♥︎", "♠︎", "NT"]
         self.settingSyncEnabled = true
         self.settingSaveHistory = true

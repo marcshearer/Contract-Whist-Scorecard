@@ -21,7 +21,7 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
     private var tableView: [UITableView] = []
     private var width: [CGFloat] = []
     private var height: [CGFloat] = []
-    private var text: [[String]]!
+    private var text: [[NSMutableAttributedString]]!
     private var rowHeight: CGFloat!
     private var titleHeight: CGFloat!
     private let splitSuit = 6
@@ -34,6 +34,10 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
     @IBOutlet private weak var hand3TableView: UITableView!
     @IBOutlet private weak var hand4TableView: UITableView!
     @IBOutlet private weak var tableTopView: UIView!
+    @IBOutlet private weak var tableTopTopConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var tableTopLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var tableTopWidthConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var tableTopHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var roundTitleLabel: UILabel!
     @IBOutlet private weak var overUnderLabel: UILabel!
     @IBOutlet private weak var titleView: UIView!
@@ -103,7 +107,7 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return rowHeight
+        return self.rowHeight
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -111,12 +115,12 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
         if let handNumber = tableViewPlayer[tableView.tag] {
             if indexPath.row == 0 {
                 cell.label.font = UIFont.boldSystemFont(ofSize: 17.0)
-                cell.label.textColor = Palette.roomInteriorTextContrast
+                cell.label.textColor = UIColor.black
             } else {
                 cell.label.font = UIFont.systemFont(ofSize: 17.0)
-                cell.label.textColor = Palette.roomInteriorText
+                cell.label.textColor = Palette.text
             }
-            cell.label.text = self.text[handNumber-1][indexPath.row]
+            cell.label.attributedText = self.text[handNumber-1][indexPath.row]
         }
         
         return cell
@@ -164,19 +168,25 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
         for playerNumber in 1...self.scorecard.currentPlayers {
             self.text.append([])
             let player = self.scorecard.enteredPlayer(playerNumber)
-            self.text[playerNumber-1].append("\(player.playerMO!.name!) \(player.bid(self.round)!)/\(player.made(self.round)!)")
+            self.text[playerNumber-1].append(NSMutableAttributedString(string: "\(player.playerMO!.name!) \(player.bid(self.round)!)/\(player.made(self.round)!)"))
             if let hand: Hand = self.scorecard.dealHistory[self.round]?.hands[player.playerNumber - 1] {
-                for handSuit in hand.handSuits {
-                    var suitText = handSuit.cards.first!.suit.toString()
-                    for cardNumber in 0..<min(splitSuit,handSuit.cards.count) {
-                        suitText = suitText + " " + handSuit.cards[cardNumber].toRankString()
-                    }
-                    self.text[playerNumber-1].append(suitText)
-                    if handSuit.cards.count > self.splitSuit {
-                        var suitText = "  "
-                        for cardNumber in self.splitSuit..<handSuit.cards.count {
-                            suitText = suitText + "  " + handSuit.cards[cardNumber].toRankString()
+                for rawSuit in (1...4).reversed() {
+                    let suit = Suit(rawValue: rawSuit)
+                    var suitText: NSMutableAttributedString = NSMutableAttributedString(attributedString: suit.toAttributedString())
+                    if let handSuit = hand.xrefSuit[suit] {
+                        for cardNumber in 0..<min(splitSuit,handSuit.cards.count) {
+                            suitText.append(NSAttributedString(string: " " + handSuit.cards[cardNumber].toRankString()))
                         }
+                        self.text[playerNumber-1].append(suitText)
+                        if handSuit.cards.count > self.splitSuit {
+                            suitText = NSMutableAttributedString(string: "  ")
+                            for cardNumber in self.splitSuit..<handSuit.cards.count {
+                                suitText.append(NSMutableAttributedString(string: handSuit.cards[cardNumber].toRankString()))
+                            }
+                            self.text[playerNumber-1].append(suitText)
+                        }
+                    } else {
+                        suitText.append(NSMutableAttributedString(string: " -"))
                         self.text[playerNumber-1].append(suitText)
                     }
                 }
@@ -220,7 +230,7 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
                 } else {
                     self.dummyLabel.font = UIFont.systemFont(ofSize: 17.0)
                 }
-                self.dummyLabel.text = self.text[handNumber-1][row]
+                self.dummyLabel.attributedText = self.text[handNumber-1][row]
                 width = max(width, self.dummyLabel.intrinsicContentSize.width)
             }
             self.width[tableView-1] = width
@@ -229,6 +239,7 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
     }
     
     private func setupPosition(frame: CGRect) {
+        var tableTopSpacing: CGFloat = 0.0
         let totalHeight = frame.height
         let totalWidth = frame.width
         let useableHeight = totalHeight - self.titleHeight
@@ -242,41 +253,58 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
             // Can fit all hands around this - no need to adjust
             tableTopHeight = innerTableTopSize
             tableTopWidth = innerTableTopSize
-            innerTableTopSize -= 80
         } else if totalHeight > totalWidth {
             // Portrait - Move hands 1 and 3 away from centre to allow hands 2 and 4 to fit
             tableTopHeight = maxHeight + (useableHeight * 0.1)
             tableTopWidth = innerTableTopSize
-            innerTableTopSize -= 20
         } else {
             // Landscape - Move hands 2 and 4 away from centre to allow hands 1 and 3 to fit
             tableTopHeight = innerTableTopSize
             tableTopWidth = maxWidth + (totalWidth * 0.2)
-            innerTableTopSize -= 20
         }
         if self.scorecard.currentPlayers < 4 {
             offset = -useableHeight / 8.0
         }
         
         // Setup displayed table top
-        if innerTableTopSize <= 50.0 {
+        let maxSideHeight = max(height[1], height[3])
+        let maxMiddleWidth = max(width[0], width[2])
+        if innerTableTopSize <= 130.0 {
+            // Table top too small - forget it
             tableTopView.isHidden = true
-        } else {
+        } else if innerTableTopSize >= maxHeight && innerTableTopSize > maxWidth {
+            // Table top fits sized to height and width
             tableTopView.isHidden = false
-            self.tableTopView.frame = CGRect(x: frame.minX + (totalWidth - innerTableTopSize) / 2.0, y: frame.minY + offset + (useableHeight - innerTableTopSize) / 2.0, width: innerTableTopSize, height: innerTableTopSize)
+            let height = maxSideHeight - self.rowHeight - 15.0
+            tableTopWidth = min(height, maxWidth)
+            let minX = frame.midX - (tableTopWidth / 2.0)
+            let minY = ((useableHeight - height) / 2.0) + 3.0
+            self.tableTopLeadingConstraint.constant = frame.minX + minX
+            self.tableTopTopConstraint.constant = minY + offset - self.titleHeight
+            self.tableTopWidthConstraint.constant = tableTopWidth
+            self.tableTopHeightConstraint.constant = height
+            tableTopSpacing = 20.0
+        } else {
+            // Table top doesn't fit but is credibly sized
+            tableTopView.isHidden = false
+            innerTableTopSize -= 80.0
+            self.tableTopLeadingConstraint.constant = frame.minX + (totalWidth - innerTableTopSize) / 2.0
+            self.tableTopTopConstraint.constant = frame.minY + offset - self.titleHeight + (useableHeight - innerTableTopSize) / 2.0
+            self.tableTopWidthConstraint.constant = innerTableTopSize
+            self.tableTopHeightConstraint.constant = innerTableTopSize
         }
         
-        // Setup hand 1
-        self.hand1TableView.frame = CGRect(x: frame.minX + (totalWidth - width[0]) / 2.0, y: frame.minY + offset + ((useableHeight - tableTopHeight) / 2.0) - height[0], width: width[0], height: height[0])
+        // Setup top hand
+        self.hand1TableView.frame = CGRect(x: frame.minX + (totalWidth - maxMiddleWidth) / 2.0, y: frame.minY + offset + ((useableHeight - tableTopHeight) / 2.0) - height[0], width: width[0], height: height[0])
         
-        // Setup hand 2
-        self.hand2TableView.frame = CGRect(x: (totalWidth + tableTopWidth) / 2.0, y: frame.minY + offset + ((useableHeight - height[1]) / 2.0), width: width[1], height: height[1])
+        // Setup right hand
+        self.hand2TableView.frame = CGRect(x: ((totalWidth + tableTopWidth) / 2.0) + tableTopSpacing, y: frame.minY + offset + ((useableHeight - maxSideHeight) / 2.0), width: width[1], height: height[1])
         
-        // Setup hand 3
-        self.hand3TableView.frame = CGRect(x: frame.minX + (totalWidth - width[2]) / 2.0, y: frame.minY + offset + ((useableHeight + tableTopHeight) / 2.0), width: width[2], height: height[2])
+        // Setup bottom hand
+        self.hand3TableView.frame = CGRect(x: frame.minX + (totalWidth - maxMiddleWidth) / 2.0, y: frame.minY + offset + ((useableHeight + tableTopHeight) / 2.0), width: width[2], height: height[2])
         
-        // Setup hand 4
-        self.hand4TableView.frame = CGRect(x: frame.minX + ((totalWidth - tableTopWidth) / 2.0) - width[3], y: frame.minY + offset + ((useableHeight - height[3]) / 2.0), width: width[3], height: height[3])
+        // Setup left hand
+        self.hand4TableView.frame = CGRect(x: frame.minX + ((totalWidth - tableTopWidth) / 2.0) - width[3] - tableTopSpacing, y: frame.minY + offset + ((useableHeight - maxSideHeight) / 2.0), width: width[3], height: height[3])
         
     }
     

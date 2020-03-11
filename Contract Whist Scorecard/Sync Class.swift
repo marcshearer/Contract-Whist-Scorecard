@@ -458,6 +458,8 @@ class Sync {
         if self.lastSyncDate == nil {
             self.lastSyncDate = Date(timeIntervalSinceReferenceDate: 0)
         }
+        // Go back one hour to avoid overlaps
+        self.lastSyncDate = Date(timeInterval: -3600, since: self.lastSyncDate)
         
         return true
     }

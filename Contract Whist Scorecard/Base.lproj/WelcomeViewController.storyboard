@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina5_9" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -166,10 +164,6 @@
                         <outlet property="titleLabel" destination="GfL-2p-s30" id="dXZ-BM-nPN"/>
                         <outlet property="viewOnlineButton" destination="QP0-uS-vsK" id="XOr-dJ-w33"/>
                         <outlet property="welcomeView" destination="jyL-Wg-M4O" id="Xlq-wg-uBg"/>
-                        <segue destination="lvI-KL-xbx" kind="popoverPresentation" identifier="showGetStarted" popoverAnchorView="jyL-Wg-M4O" id="zF4-ui-zT9">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                        </segue>
-                        <segue destination="gsX-G4-58w" kind="show" identifier="showPlayers" id="7ir-Fu-KYu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UlI-9p-3xx" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -185,22 +179,6 @@
                 </rotationGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="6332" y="130.88455772113943"/>
-        </scene>
-        <!--Players-->
-        <scene sceneID="oYQ-Y3-jEL">
-            <objects>
-                <viewControllerPlaceholder storyboardIdentifier="PlayersViewController" storyboardName="PlayersViewController" referencedIdentifier="PlayersViewController" id="gsX-G4-58w" userLabel="Players" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="c8P-0T-CAt" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="6944" y="405"/>
-        </scene>
-        <!--Get Started-->
-        <scene sceneID="yIY-Rg-TgH">
-            <objects>
-                <viewControllerPlaceholder storyboardName="GetStartedViewController" referencedIdentifier="GetStartedViewController" id="lvI-KL-xbx" userLabel="Get Started" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="SMb-UP-qcr" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="6976" y="-83"/>
         </scene>
     </scenes>
     <resources>

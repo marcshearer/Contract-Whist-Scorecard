@@ -117,17 +117,18 @@
 		B2BE8692234C6C1600766CF2 /* PlayerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BE8691234C6C1600766CF2 /* PlayerSelectionView.swift */; };
 		B2C051041EDF194C009DE37F /* Multipeer Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C051031EDF194C009DE37F /* Multipeer Class.swift */; };
 		B2C054781FB8B55700846F6E /* ConfirmCountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */; };
+		B2C19E932370541E009485E0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2C19E922370541E009485E0 /* Assets.xcassets */; };
 		B2D2AAB01E1FF8A600E211A9 /* SyncViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D2AAAF1E1FF8A600E211A9 /* SyncViewController.swift */; };
 		B2D2D2DC1ED9975A00CA7B3A /* ClientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D2D2DB1ED9975A00CA7B3A /* ClientViewController.swift */; };
 		B2D8104E225AF7B6005A86A5 /* Multipeer logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D8104D225AF7A7005A86A5 /* Multipeer logger.swift */; };
 		B2DA893E1F3CC89C008EE96C /* Comms.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DA893D1F3CC89C008EE96C /* Comms.swift */; };
-		B2DD5D7A1ECE3C8800725B55 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2DD5D791ECE3C8800725B55 /* Assets.xcassets */; };
 		B2DD5D7C1ED1A87600725B55 /* Graph View Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DD5D7B1ED1A87600725B55 /* Graph View Class.swift */; };
 		B2DD5D7E1ED323F400725B55 /* GraphViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DD5D7D1ED323F400725B55 /* GraphViewController.swift */; };
 		B2E556C122C9F86200C49821 /* Colors.xlsx in Resources */ = {isa = PBXBuildFile; fileRef = B2E556C022C9F86100C49821 /* Colors.xlsx */; };
 		B2E7621C1E6C98A0001DAF4F /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7621B1E6C98A0001DAF4F /* Notifications.swift */; };
 		B2E7621E1E73E6A6001DAF4F /* GetStartedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7621D1E73E6A6001DAF4F /* GetStartedViewController.swift */; };
 		B2E7E04D1FBACAFA001206F0 /* Miscellaneous Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7E04C1FBACAFA001206F0 /* Miscellaneous Tests.swift */; };
+		B2E894D42369EF2E0011AD3D /* ConfettiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E894D32369EF2E0011AD3D /* ConfettiView.swift */; };
 		B2E9C75F22C1344C00B58BE5 /* Polygon.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E9C75E22C1344C00B58BE5 /* Polygon.swift */; };
 		B2EA98E31E285F19000B7E54 /* WalkthroughViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2EA98E21E285F19000B7E54 /* WalkthroughViewController.swift */; };
 		B2EA98E51E28609A000B7E54 /* WalkthroughPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2EA98E41E28609A000B7E54 /* WalkthroughPageViewController.swift */; };
@@ -315,17 +316,18 @@
 		B2BE8691234C6C1600766CF2 /* PlayerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSelectionView.swift; sourceTree = "<group>"; };
 		B2C051031EDF194C009DE37F /* Multipeer Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Multipeer Class.swift"; sourceTree = "<group>"; };
 		B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmCountViewController.swift; sourceTree = "<group>"; };
+		B2C19E922370541E009485E0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B2D2AAAF1E1FF8A600E211A9 /* SyncViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncViewController.swift; sourceTree = "<group>"; };
 		B2D2D2DB1ED9975A00CA7B3A /* ClientViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ClientViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		B2D8104D225AF7A7005A86A5 /* Multipeer logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Multipeer logger.swift"; sourceTree = "<group>"; };
 		B2DA893D1F3CC89C008EE96C /* Comms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comms.swift; sourceTree = "<group>"; };
-		B2DD5D791ECE3C8800725B55 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B2DD5D7B1ED1A87600725B55 /* Graph View Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Graph View Class.swift"; sourceTree = "<group>"; };
 		B2DD5D7D1ED323F400725B55 /* GraphViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphViewController.swift; sourceTree = "<group>"; };
 		B2E556C022C9F86100C49821 /* Colors.xlsx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Colors.xlsx; sourceTree = "<group>"; };
 		B2E7621B1E6C98A0001DAF4F /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		B2E7621D1E73E6A6001DAF4F /* GetStartedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetStartedViewController.swift; sourceTree = "<group>"; };
 		B2E7E04C1FBACAFA001206F0 /* Miscellaneous Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Miscellaneous Tests.swift"; sourceTree = "<group>"; };
+		B2E894D32369EF2E0011AD3D /* ConfettiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiView.swift; sourceTree = "<group>"; };
 		B2E9C75E22C1344C00B58BE5 /* Polygon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Polygon.swift; sourceTree = "<group>"; };
 		B2EA98E21E285F19000B7E54 /* WalkthroughViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalkthroughViewController.swift; sourceTree = "<group>"; };
 		B2EA98E41E28609A000B7E54 /* WalkthroughPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalkthroughPageViewController.swift; sourceTree = "<group>"; };
@@ -728,6 +730,7 @@
 		B243385622E0A67C002EBD40 /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
+				B2E894D22369EEF40011AD3D /* Confetti View */,
 				B2BE868E234C6BB600766CF2 /* Player Selection */,
 				B243385122D89AE7002EBD40 /* Thumbnail View */,
 				B243385C22E0AE97002EBD40 /* Player View */,
@@ -937,6 +940,14 @@
 			name = "Player Selection";
 			sourceTree = "<group>";
 		};
+		B2E894D22369EEF40011AD3D /* Confetti View */ = {
+			isa = PBXGroup;
+			children = (
+				B2E894D32369EF2E0011AD3D /* ConfettiView.swift */,
+			);
+			name = "Confetti View";
+			sourceTree = "<group>";
+		};
 		B2E8E49523571CA2007A2FE7 /* Hexagon View */ = {
 			isa = PBXGroup;
 			children = (
@@ -1000,7 +1011,7 @@
 		CC86557B1E021518000AF391 /* Standard Components */ = {
 			isa = PBXGroup;
 			children = (
-				B2DD5D791ECE3C8800725B55 /* Assets.xcassets */,
+				B2C19E922370541E009485E0 /* Assets.xcassets */,
 				CC4CC0F81DEADC32007FB24F /* AppDelegate.swift */,
 				CC4CC0FC1DEADC32007FB24F /* Main.storyboard */,
 				CC4CC1041DEADC32007FB24F /* LaunchScreen.storyboard */,
@@ -1232,6 +1243,7 @@
 				B227892D1FB88BDD009BABCA /* HistoryDetailViewController.storyboard in Resources */,
 				B243385522D89B72002EBD40 /* ThumbnailView.xib in Resources */,
 				B22789151FB8490F009BABCA /* EntryViewController.storyboard in Resources */,
+				B2C19E932370541E009485E0 /* Assets.xcassets in Resources */,
 				B221EED5210B0DFE00F7FBA0 /* HandViewController.storyboard in Resources */,
 				B227892A1FB885AC009BABCA /* ConfirmCountViewController.storyboard in Resources */,
 				CC4CC1061DEADC32007FB24F /* LaunchScreen.storyboard in Resources */,
@@ -1240,7 +1252,6 @@
 				B2594E852251FEB2004398FB /* launch_multiple_simulators.sh in Resources */,
 				B25FC7CB22D0733C00D2E651 /* ReviewViewController.storyboard in Resources */,
 				B25FC7CA22D0733C00D2E651 /* OverrideViewController.storyboard in Resources */,
-				B2DD5D7A1ECE3C8800725B55 /* Assets.xcassets in Resources */,
 				B227891E1FB84F66009BABCA /* LocationViewController.storyboard in Resources */,
 				B243385922E0A6C3002EBD40 /* SelectedPlayersView.xib in Resources */,
 				B22789001FB83AA7009BABCA /* GetStartedViewController.storyboard in Resources */,
@@ -1355,6 +1366,7 @@
 				B2F41B231FB6BBA70043F974 /* Other Extensions.swift in Sources */,
 				B24AABE41EC4DC5F000D34B0 /* Core Data Class.swift in Sources */,
 				B202A06B1FD122F30070D5DC /* OverrideViewController.swift in Sources */,
+				B2E894D42369EF2E0011AD3D /* ConfettiView.swift in Sources */,
 				B2767C1E2110061B0029155E /* Loopback Class.swift in Sources */,
 				B20A66FC1E23921E00E75190 /* Buttons.swift in Sources */,
 				B2E9C75F22C1344C00B58BE5 /* Polygon.swift in Sources */,
@@ -1692,7 +1704,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = Contract_Whist_Watch_Extension;
@@ -1717,7 +1729,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = Contract_Whist_Watch_Extension;
@@ -1741,7 +1753,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "Contract Whist Watch Extension/Info.plist";
@@ -1765,7 +1777,7 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = "Contract Whist Watch Extension/Info.plist";
@@ -1942,7 +1954,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = "Contract Whist Scorecard/Contract Whist Scorecard.entitlements";
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				INFOPLIST_FILE = "Contract Whist Scorecard/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -1961,7 +1973,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = "Contract Whist Scorecard/Contract Whist Scorecard.entitlements";
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				INFOPLIST_FILE = "Contract Whist Scorecard/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;

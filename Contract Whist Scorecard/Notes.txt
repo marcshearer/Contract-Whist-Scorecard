@@ -175,6 +175,7 @@ Added crown to game summary
 
 Bugs fix now
 ------------
+Problem with syncing. If sync then last sync date updated, but if someone else syncs at same time could drop it. Think fixed by backdating last sync 1 hour
 Refresh always leaves "last trick" disabled
 Resume game doesn't seem to work during bidding phase - dealer gets out of line
 Tiles in selection flow under tabletop

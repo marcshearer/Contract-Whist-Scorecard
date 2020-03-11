@@ -655,10 +655,12 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         if !alreadyChoosingPlayer {
             self.scrollView.scrollRectToVisible(CGRect(), animated: false)
             self.tableViewHeight = self.clientTableViewHeightConstraint.constant
-            self.clientTableViewHeightConstraint.constant = 0.0
         }
         
-        Utility.animate(view: self.view, duration: 0.5) {
+        Utility.animate(view: self.view, duration: 0.5, completion: {
+            self.clientTableViewHeightConstraint.constant = 0.0
+
+        }) {
             self.playerSelectionViewHeightConstraint.constant = max(requiredHeight, selectionHeight)
         }
         let playerList = self.scorecard.playerList.filter { $0.email != self.thisPlayer }

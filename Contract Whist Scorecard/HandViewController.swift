@@ -962,7 +962,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             statusOverUnderLabel.text = " \(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")"
         }
         statusRoundLabel.textColor = UIColor.white
-        statusRoundLabel.attributedText = self.scorecard.roundTitle(round, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
+        statusRoundLabel.attributedText = self.scorecard.roundTitle(round, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce, suits: self.state.suits)
     }
     
     func setupBidText() {

@@ -6,7 +6,8 @@
 //  Copyright © 2019 Marc Shearer. All rights reserved.
 //
 
-import Foundation
+import UIKit
+import MessageUI
 
 class MultipeerLogger : CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate {
     
@@ -16,6 +17,8 @@ class MultipeerLogger : CommsBrowserDelegate, CommsStateDelegate, CommsDataDeleg
     private var logHistory: [LogEntry] = []
     private var historyElement = 0
     private var logUUID: String?
+    static private var mailComposeDelegate = MailComposeDelegate()
+    
     public  var connected: Bool {
         // Check if any connections open
         get {
@@ -27,6 +30,11 @@ class MultipeerLogger : CommsBrowserDelegate, CommsStateDelegate, CommsDataDeleg
                 }
             }
             return result
+        }
+    }
+    static public var logEntries: Bool {
+        get {
+            return !self.logger.logHistory.isEmpty
         }
     }
     
@@ -119,6 +127,42 @@ class MultipeerLogger : CommsBrowserDelegate, CommsStateDelegate, CommsDataDeleg
             }
         }
     }
+    
+    static func sendEmail(from: UIViewController) {
+        var bodyText = ""
+        
+        if MFMailComposeViewController.canSendMail() {
+            if !self.logger.logHistory.isEmpty {
+                let mail = MFMailComposeViewController()
+                mail.mailComposeDelegate = MultipeerLogger.mailComposeDelegate
+                mail.setSubject("Whist Log")
+                mail.setToRecipients(["marc@sheareronline.com"])
+                
+                for history in self.logger.logHistory {
+                    bodyText = bodyText + "\"" + "\(history.source ?? "")" + "\""
+                    bodyText = bodyText + ",\"" + "\(history.timestamp ?? "")" + "\""
+                    bodyText = bodyText + ",\"" + "\(history.message ?? "")" + "\""
+                    bodyText = bodyText + "\n"
+                }
+                
+                mail.setMessageBody(bodyText, isHTML: false)
+                
+                from.present(mail, animated: true)
+                
+            }
+        } else {
+            // show failure alert
+            from.alertMessage("Unable to send email from this device")
+        }
+    }
+}
+
+fileprivate class MailComposeDelegate: NSObject, MFMailComposeViewControllerDelegate {
+    
+    internal func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true)
+    }
+    
 }
 
 fileprivate class MultipeerLoggerEntry {

@@ -1026,13 +1026,13 @@
 			isa = PBXGroup;
 			children = (
 				B28DFC2C1F79618700E991E4 /* Config Class.swift */,
-				B2B1801B21195F2A008D3BAA /* Computer Player */,
 				B288FABB1FB802FE00633FD7 /* Contract Whist Classes */,
 				B288FABC1FB8037300633FD7 /* Comms Classes */,
 				B288FAB91FB8027E00633FD7 /* Utility Classes */,
 				B288FABE1FB8041200633FD7 /* Test Classes */,
 				B288FAB81FB8027000633FD7 /* Core Class Extensions */,
 				B288FABD1FB803F800633FD7 /* Miscellaneous Classes */,
+				B2B1801B21195F2A008D3BAA /* Computer Player */,
 			);
 			name = "Data & Utility Classes";
 			sourceTree = "<group>";

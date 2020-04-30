@@ -322,7 +322,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         } else {
             // Main continue button used on other devices
             bannerContinueButton.setTitle("X", for: .normal)
-            self.continueButton(isHidden: hidden, animate: true)
+            self.continueButton(isHidden: hidden, animate: animated)
             bannerContinueButton.isHidden = true
             continueButtonItem.width = 0.0
             self.navigationBar.layoutIfNeeded()

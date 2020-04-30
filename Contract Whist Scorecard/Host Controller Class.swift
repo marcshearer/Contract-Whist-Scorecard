@@ -701,7 +701,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
         // Set up other players - they should call the host back
         let hostPeer = CommsPeer(parent: loopbackHost, deviceName: Scorecard.deviceName, playerEmail: self.playerData.first?.email, playerName: playerData.first?.playerMO.name)
         self.computerPlayers = [:]
-        var names = ["Harry", "Snape", "Ron"]
+        let names = ["Harry", "Snape", "Ron"]
         for playerNumber in 2...4 {
             self.startLoopbackClient(email: "_Player\(playerNumber)", name: names[playerNumber - 2], deviceName: "\(names[playerNumber - 2])'s iPhone", hostPeer: hostPeer, playerNumber: playerNumber)
         }

@@ -704,7 +704,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     // MARK: - Browser Delegate handlers ===================================================================== -
     
-    internal func peerFound(peer: CommsPeer) {
+    internal func peerFound(peer: CommsPeer, reconnect: Bool = true) {
         Utility.mainThread { [unowned self] in
             Utility.debugMessage("client", "Peer found for \(peer.deviceName)")
             // Check if already got this device - if so disconnect it and replace it
@@ -750,10 +750,13 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                 // Recovering/reacting to notification and this is the device I'm waiting for
                 if !peer.autoReconnect {
                     // Not trying to reconnect at a lower level so reconnect here
-
-                    // Assume that FaceTime connection had already been sent
-                    _ = self.connect(peer: peer, faceTimeAddress: nil)
-                    self.reflectState(peer: peer)
+                    if reconnect {
+                        // Reconnect unless calling code has not asked us not to
+                        
+                        // Assume that FaceTime connection had already been sent
+                        _ = self.connect(peer: peer, faceTimeAddress: nil)
+                        self.reflectState(peer: peer)
+                    }
                 }
             }
         }

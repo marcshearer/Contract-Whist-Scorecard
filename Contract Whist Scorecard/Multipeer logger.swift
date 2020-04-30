@@ -48,7 +48,7 @@ class MultipeerLogger : CommsBrowserDelegate, CommsStateDelegate, CommsDataDeleg
         self.logUUID = UUID().uuidString
     }
     
-    func peerFound(peer: CommsPeer) {
+    func peerFound(peer: CommsPeer, reconnect: Bool = true) {
         
         var logger = self.loggerList[peer.deviceName]
         var new = false

@@ -121,12 +121,19 @@ public class CommsPeer {
 
 public protocol CommsBrowserDelegate : class {
     
-    func peerFound(peer: CommsPeer)
+    func peerFound(peer: CommsPeer, reconnect: Bool)
     
     func peerLost(peer: CommsPeer)
     
     func error(_ message: String)
     
+}
+
+extension CommsBrowserDelegate {
+
+    func peerFound(peer: CommsPeer) {
+        peerFound(peer: peer, reconnect: true)
+    }
 }
 
 public protocol CommsStateDelegate : class {

@@ -447,8 +447,13 @@ class RabbitMQClientService : RabbitMQService, CommsClientHandlerDelegate, Rabbi
     
     // MARK: - Broadcast handler ========================================================================= -
     
-    internal func didReceiveBroadcast(descriptor: String, data: Any?, from queue: RabbitMQQueue) {
+    internal func didReceiveBroadcast(descriptor: String, data: Data, from queue: RabbitMQQueue) {
         // Reset received on queue - need to close any connections, re-check invitations and reconnect
+        do {
+            let propertyList: [String : Any?] = try JSONSerialization.jsonObject(with: data, options: []) as! [String : Any]
+            self.debugMessage("Received Broadcast(\(Scorecard.serialise(propertyList)))")
+        } catch {
+        }
         var connected = false
         if descriptor == "reset" {
             queue.forEachPeer { (rabbitMQPeer) in
@@ -526,9 +531,10 @@ class RabbitMQClientService : RabbitMQService, CommsClientHandlerDelegate, Rabbi
                         }
                         if peerFound {
                             // Notify delegate
-                            self.browserDelegate?.peerFound(peer: rabbitMQPeer.commsPeer)
+                            let autoConnect = (rabbitMQPeer.autoReconnect || self.recoveryMode)
+                            self.browserDelegate?.peerFound(peer: rabbitMQPeer.commsPeer, reconnect: !autoConnect)
                             // Auto-reconnect if reconnect flag is set or recovering
-                            if rabbitMQPeer.autoReconnect || self.recoveryMode {
+                            if autoConnect {
                                 let playerName = Scorecard.nameFromEmail(self.inviteEmail)
                                 _ = self.connect(to: rabbitMQPeer.commsPeer,
                                                  playerEmail: self.inviteEmail,

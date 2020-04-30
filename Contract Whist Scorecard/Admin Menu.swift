@@ -48,17 +48,7 @@ class AdminMenu {
                     Scorecard.shared.commsDelegate?.connectionInfo(message: message)
                 })
             }
-            
-            // Generic options - logging
-            // TODO Remove as could allow cheating
-            if MultipeerLogger.logEntries {
-                if let viewController = Utility.getActiveViewController() {
-                    actionSheet.add("Send logs", handler: {
-                        MultipeerLogger.sendEmail(from: viewController)
-                    })
-                }
-            }
-            
+                        
             // Present the action sheet
             actionSheet.add("Cancel", style: .cancel)
             actionSheet.present()

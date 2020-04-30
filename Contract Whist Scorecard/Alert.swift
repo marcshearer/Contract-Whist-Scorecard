@@ -70,15 +70,7 @@ extension UIViewController {
     }
     
     public func alertVibrate() {
-        
-        if Utility.isSimulator {
-            if Scorecard.shared.autoPlayGames == 0 {
-                let whisper = Whisper(backgroundColor: UIColor(red: 0.8, green: 0.8, blue: 1.0, alpha: 1.0))
-                whisper.show("Buzzzzz!", hideAfter: 3)
-            }
-        } else {
-            AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-        }
+        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
     }
     
     public func alertSound() {

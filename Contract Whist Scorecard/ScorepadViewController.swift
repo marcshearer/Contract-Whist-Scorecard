@@ -737,7 +737,9 @@ class ScorepadViewController: CustomViewController,
     }
     
     private func showReview(round: Int) {
-        ReviewViewController.show(from: self, round: round, thisPlayer: self.scorecard.handState.enteredPlayerNumber)
+        ReviewViewController.show(from: self, round: round, thisPlayer: self.scorecard.handState.enteredPlayerNumber) {
+            self.formatButtons()
+        }
     }
     
     public func showRoundSummary() {

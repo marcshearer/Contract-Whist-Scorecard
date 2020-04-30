@@ -1286,7 +1286,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             self.appState = newState
             
             if (newState == .notConnected || newState == .reconnecting) && !finishing {
-                self.startIdleTimer()
+                self.startIdleTimer(interval: 1)
             } else {
                 self.stopIdleTimer()
             }
@@ -1298,11 +1298,11 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
     }
     
-    private func startIdleTimer() {
+    private func startIdleTimer(interval: TimeInterval = 10) {
         self.stopIdleTimer(report: false)
         Utility.debugMessage("client", "Starting idle timer")
         self.idleTimer = Timer.scheduledTimer(
-            timeInterval: TimeInterval(10),
+            timeInterval: TimeInterval(interval),
             target: self,
             selector: #selector(ClientViewController.refreshInvites(_:)),
             userInfo: nil,

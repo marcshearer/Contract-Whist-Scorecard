@@ -163,20 +163,14 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     }
     
     private func startReminderTimer(interval: TimeInterval, vibrate: Bool = true) {
-        Utility.debugMessage("Timer", "Timer started")
-        _ = self.stopReminderTimer(hideMessage: true)
+        _ = self.stopReminderTimer()
         self.reminderTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: false, block: { (_) in
-            Utility.debugMessage("Timer", "Timer fired")
             self.alertUser(vibrate: vibrate, reminder: true)
         })
     }
     
-    private func stopReminderTimer(hideMessage: Bool = false) -> TimeInterval {
+    private func stopReminderTimer() -> TimeInterval {
         var timeLeft: TimeInterval = 0.0
-        
-        if !hideMessage {
-            Utility.debugMessage("Timer", "Timer stopped")
-        }
         
         if let timer = self.reminderTimer {
             timeLeft = timer.fireDate.timeIntervalSinceNow
@@ -445,9 +439,9 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             commsDelegate = self.commsDelegate
         }
         commsDelegate?.send("played", [ "round"           : round,
-                                             "trick"           : trick,
-                                             "player"          : playerNumber,
-                                             "card"            : card.toNumber() ])
+                                        "trick"           : trick,
+                                        "player"          : playerNumber,
+                                        "card"            : card.toNumber() ])
     }
     
     public func sendHandState(to commsPeer: CommsPeer! = nil) {
@@ -763,46 +757,65 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         return self.enteredPlayer(enteredPlayerNumber).entryPlayerNumber(round: round)
     }
     
-    class public func serialise(_ data: [String : Any?]) -> String {
+    class public func dataLogMessage(propertyList: [String: Any?], fromDeviceName: String, using commsHandler: CommsHandlerDelegate) {
+        // Log message
+        var dataMessageLogged = false
+        if let type = propertyList["type"] as? String , let content = propertyList["content"] as? [String:[String:Any?]] {
+            if type == "data" {
+                for (descriptor, detail) in content {
+                    let serialised = Scorecard.serialise(detail, skipDescriptors: ["type", "fromDeviceName"])
+                    commsHandler.debugMessage("Received \(descriptor)(\(serialised)) from \(fromDeviceName)")
+                    dataMessageLogged = true
+                }
+            }
+        }
+        if !dataMessageLogged {
+            commsHandler.debugMessage("Received \(Scorecard.serialise(propertyList)) from \(fromDeviceName)")
+        }
+    }
+    
+    class public func serialise(_ data: [String : Any?], skipDescriptors: [String] = []) -> String {
         var result = ""
         var first = true
         for (descriptor, value) in data {
-            if !first {
-                result += ", "
-            }
-            first = false
-            result += "\(descriptor)="
-            if descriptor.right(5).lowercased() == "cards" {
-                // Special case - cards array
-                if let handCards = value as? [Int] {
-                    let hand = Hand(fromNumbers: handCards, sorted: true)
-                    result += "[\(hand.toString())]"
+            if !skipDescriptors.contains(descriptor) {
+                if !first {
+                    result += ", "
                 }
-             
-            } else if descriptor == "deal" {
-                if let dealCards = value as? [[Int]] {
-                    let deal = Deal(fromNumbers: dealCards)
-                    result += deal.toString()
-                }
-            } else if let array = value as? [Any] {
-                // Other array
-                result += "["
-                for (index, element) in array.enumerated() {
-                    if index != 0 {
-                        result += ", "
+                first = false
+                result += descriptor
+                if descriptor.right(5).lowercased() == "cards" {
+                    // Special case - cards array
+                    if let handCards = value as? [Int] {
+                        let hand = Hand(fromNumbers: handCards, sorted: true)
+                        result += "=[\(hand.toString())]"
                     }
-                    result += "\(element)"
+                    
+                } else if descriptor == "deal" {
+                    if let dealCards = value as? [[Int]] {
+                        let deal = Deal(fromNumbers: dealCards)
+                        result += "=" + deal.toString()
+                    }
+                } else if let array = value as? [Any] {
+                    // Other array
+                    result += "=["
+                    for (index, element) in array.enumerated() {
+                        if index != 0 {
+                            result += ", "
+                        }
+                        result += "\(element)"
+                    }
+                    result += "]"
+                    
+                } else if let dictionary = value as? [String : Any?] {
+                    // Sub-dictionary
+                    result += "=(\(Scorecard.serialise(dictionary)))"
+                    
+                } else {
+                    // Plain value
+                    result += "=\(value ?? "")"
+                    
                 }
-                result += "]"
-                
-            } else if let dictionary = value as? [String : Any?] {
-                // Sub-dictionary
-                result += "(\(Scorecard.serialise(dictionary)))"
-                
-            } else {
-                // Plain value
-                result += "\(value ?? "")"
-                
             }
         }
         return result

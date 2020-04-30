@@ -97,11 +97,21 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsS
    
     internal func send(_ descriptor: String, _ dictionary: Dictionary<String, Any?>!, to commsPeer: CommsPeer?, matchEmail: String?) {
         self.debugMessage("Send \(descriptor) to \(commsPeer == nil ? "all" : commsPeer!.deviceName)", device: commsPeer?.deviceName)
-        self.forEachPeer { (rabbitMQPeer) in
-            if let email = rabbitMQPeer.playerEmail {
-                if matchEmail == nil || matchEmail! == email {
-                    if commsPeer == nil || commsPeer!.deviceName == rabbitMQPeer.deviceName {
-                        _ = rabbitMQPeer.send(descriptor:"data", dictionary: [descriptor : dictionary], to: rabbitMQPeer.commsPeer)
+        
+        if commsPeer == nil && matchEmail == nil {
+            // Send to all
+            self.forEachQueue(do: { (rabbitMQQueue) in
+                _ = rabbitMQQueue.send(descriptor:"data", dictionary: [descriptor : dictionary])
+            })
+            
+        } else {
+            // Send to specific peer(s)
+            self.forEachPeer { (rabbitMQPeer) in
+                if let email = rabbitMQPeer.playerEmail {
+                    if matchEmail == nil || matchEmail! == email {
+                        if commsPeer == nil || commsPeer!.deviceName == rabbitMQPeer.deviceName {
+                            _ = rabbitMQPeer.send(descriptor:"data", dictionary: [descriptor : dictionary], to: rabbitMQPeer.commsPeer)
+                        }
                     }
                 }
             }
@@ -447,11 +457,17 @@ class RabbitMQClientService : RabbitMQService, CommsClientHandlerDelegate, Rabbi
     
     // MARK: - Broadcast handler ========================================================================= -
     
-    internal func didReceiveBroadcast(descriptor: String, data: Data, from queue: RabbitMQQueue) {
+    internal func didReceiveBroadcast(descriptor: String, data: Any?, from queue: RabbitMQQueue) {
         // Reset received on queue - need to close any connections, re-check invitations and reconnect
         do {
-            let propertyList: [String : Any?] = try JSONSerialization.jsonObject(with: data, options: []) as! [String : Any]
-            self.debugMessage("Received Broadcast(\(Scorecard.serialise(propertyList)))")
+            var content = ""
+            if let data = data as? Data {
+                let propertyList: [String : Any?] = try JSONSerialization.jsonObject(with: data, options: []) as! [String : Any]
+                content = Scorecard.serialise(propertyList)
+            } else if let data = data as? String {
+                content = data
+            }
+            self.debugMessage("Received Broadcast(\(content))")
         } catch {
         }
         var connected = false
@@ -691,6 +707,33 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
         }
     }
     
+    public func send(descriptor:String, dictionary: Dictionary<String, Any?>! = nil) -> Bool {
+        var matchSessionUUIDs: [String] = []
+        
+        self.forEachPeer(do: { (rabbitMQPeer) in
+            if rabbitMQPeer.state == .connected {
+                matchSessionUUIDs.append(rabbitMQPeer.sessionUUID)
+            }
+        })
+        
+        _ = self.publishMessage(descriptor: descriptor, matchSessionUUIDs: matchSessionUUIDs, dictionary: dictionary)
+        return true
+    }
+    
+    private func publishMessage(descriptor: String, matchSessionUUIDs: [String], dictionary: Dictionary<String, Any?>! = nil) -> Bool {
+        do {
+            let propertyList: [String : Any?] = ["type" : descriptor,
+                                                 "fromDeviceName" : self.myDeviceName,
+                                                 "matchSessionUUIDs": matchSessionUUIDs,
+                                                 "content" : dictionary]
+            let data: Data? = try JSONSerialization.data(withJSONObject: propertyList, options: .prettyPrinted)
+            self.publish(data)
+            return true
+        } catch {
+            return false
+        }
+    }
+        
     public func publish(_ data: Data!) {
         self.exchange.publish(data)
     }
@@ -701,15 +744,11 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
                 let propertyList: [String : Any?] = try JSONSerialization.jsonObject(with: data, options: []) as! [String : Any]
                 if let type = propertyList["type"] as! String? {
                     if let fromDeviceName = propertyList["fromDeviceName"] as! String? {
-                        var content = ""
-                        if !propertyList.isEmpty {
-                            content = "(\(Scorecard.serialise(propertyList)))"
-                        }
-                        self.parent?.debugMessage("Received \(type)\(content) from \(fromDeviceName)")
                         switch type {
                         case "connectRequest":
                             if self.parent.connectionType == .server {
                                 // Connections only accepted by servers
+                                Scorecard.dataLogMessage(propertyList: propertyList, fromDeviceName: fromDeviceName, using: self.parent)
                                 var rabbitMQPeer: RabbitMQPeer!
                                 rabbitMQPeer = self.rabbitMQPeerList[fromDeviceName]
                                 if rabbitMQPeer == nil {
@@ -729,6 +768,7 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
                         case "broadcast":
                             // Broadcast on queue - not necessarily connected
                             if self.parent != nil && (self.parent.connectionType == .client || (self.parent.connectionType == .queue  && self.messageDelegate != nil)) {
+                                Scorecard.dataLogMessage(propertyList: propertyList, fromDeviceName: fromDeviceName, using: self.parent)
                                 var filterOk = true
                                 if self.filterBroadcast != nil {
                                     let messageFilter = propertyList["filter"] as! String?
@@ -746,6 +786,7 @@ public class RabbitMQQueue: NSObject, RMQConnectionDelegate {
                             }
                         default:
                             if self.dataDelegate[fromDeviceName] != nil {
+                                Scorecard.dataLogMessage(propertyList: propertyList, fromDeviceName: fromDeviceName, using: self.parent)
                                 if let rabbitMQPeer = self.rabbitMQPeerList[fromDeviceName] {
                                     // Pass anything else up to peer
                                     self.dataDelegate[fromDeviceName]??.didReceiveData(descriptor: type,

@@ -14,6 +14,7 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
     private let scorecard = Scorecard.shared
     public var round: Int!
     public var thisPlayer: Int!
+    private var completion: (()->())?
     
     // Other properties
     private var maxContentSize: [CGFloat] = []
@@ -319,7 +320,7 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: CustomViewController, round: Int, thisPlayer: Int) {
+    class public func show(from viewController: CustomViewController, round: Int, thisPlayer: Int, completion: (()->())? = nil) {
         
         let storyboard = UIStoryboard(name: "ReviewViewController", bundle: nil)
         let reviewViewController = storyboard.instantiateViewController(withIdentifier: "ReviewViewController") as! ReviewViewController
@@ -328,13 +329,14 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
         
         reviewViewController.round = round
         reviewViewController.thisPlayer = thisPlayer
+        reviewViewController.completion = completion
         
         viewController.present(reviewViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
         
     }
     
-    private func dismiss(linkToGameSummary: Bool = false) {
-        self.dismiss(animated: true, completion: nil)
+    private func dismiss() {
+        self.dismiss(animated: true, completion: completion)
     }
 }
 

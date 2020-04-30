@@ -248,7 +248,9 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
                 let deviceName = peerID.displayName
                 if let broadcastPeer = self.broadcastPeerList[deviceName] {
                     let propertyList: [String : Any?] = try JSONSerialization.jsonObject(with: data, options: []) as! [String : Any]
-                    self.debugMessage("Received \(Scorecard.serialise(propertyList)) from \(peerID.displayName)")
+                    Scorecard.dataLogMessage(propertyList: propertyList, fromDeviceName: peerID.displayName, using: self)
+                    
+                    // Process data
                     if !propertyList.isEmpty {
                         for (descriptor, values) in propertyList {
                             if descriptor == "disconnect" {
@@ -478,10 +480,6 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
         }
         
         super.startService(email: email, name: name, recoveryMode: recoveryMode, matchDeviceName: matchDeviceName)
-        
-        if self.client != nil {
-            print("STOP")
-        }
         
         let browser = MCNearbyServiceBrowser(peer: self.myPeerID, serviceType: serviceID)
         self.client = ClientConnection(browser: browser)

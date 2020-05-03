@@ -38,6 +38,7 @@ class Invite {
                                withName hostName: String,
                                to inviteEmails: [String],
                                inviteUUID: String,
+                               deleteFirst: Bool = true,
                                completion: @escaping (Bool, String?, [InviteReceived]?)->()) {
         
 

@@ -75,7 +75,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     
     public func setupSharing() {
         if self.settingAllowBroadcast {
-            self.sharingService = CommsHandler.server(proximity: .nearby, mode: .broadcast, serviceID: self.serviceID(.sharing))
+            self.sharingService = CommsHandler.server(proximity: .nearby, mode: .broadcast, serviceID: self.serviceID(.sharing), deviceName: Scorecard.deviceName)
             self.resetSharing()
         }
     }

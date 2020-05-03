@@ -31,7 +31,7 @@ class Recovery {
                             UserDefaults.standard.set(delegate.connectionUUID, forKey: "recoveryConnectionUUID")
                         }
                     } else {
-                        UserDefaults.standard.set(delegate.connectionDevice, forKey: "recoveryConnectionDevice")
+                        UserDefaults.standard.set(delegate.connectionDeviceName, forKey: "recoveryConnectionDevice")
                         UserDefaults.standard.set(delegate.connectionEmail, forKey: "recoveryConnectionEmail")
                     }
                 }

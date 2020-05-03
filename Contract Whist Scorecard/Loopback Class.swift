@@ -21,11 +21,11 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsServerHandlerDelegat
     public let connectionFramework: CommsConnectionFramework = .loopback
     public let connectionProximity: CommsConnectionProximity = .loopback
     public var connectionType: CommsConnectionType
-    public var handlerState: CommsHandlerState = .notStarted
+    public var handlerState: CommsServerHandlerState = .notStarted
     public var connections = 0
     public var connectionUUID: String?
     public var connectionEmail: String?
-    public var connectionDevice: String?
+    public var connectionDeviceName: String?
     
     // Delegates
     public var browserDelegate: CommsBrowserDelegate!
@@ -33,7 +33,7 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsServerHandlerDelegat
     public var dataDelegate: CommsDataDelegate!
     public var connectionDelegate: CommsConnectionDelegate!
     public var broadcastDelegate: CommsBroadcastDelegate!
-    public var handlerStateDelegate: CommsHandlerStateDelegate!
+    public var handlerStateDelegate: CommsServerHandlerStateDelegate!
     public var loopbackServiceDelegate: LoopbackServiceDelegate!
     
     // Internal state
@@ -50,7 +50,7 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsServerHandlerDelegat
             fatalError("Loopback protocol only supports loopback mode")
         }
         self.connectionType = .server
-        self.connectionDevice = deviceName
+        self.connectionDeviceName = deviceName
         super.init()
 
     }
@@ -60,7 +60,7 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsServerHandlerDelegat
     }
     
     public func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool) {
-        self.myPeer = LoopbackPeer(parent: self, deviceName: self.connectionDevice!, playerEmail: email, playerName: name)
+        self.myPeer = LoopbackPeer(parent: self, deviceName: self.connectionDeviceName!, playerEmail: email, playerName: name)
         
         // Add myself to the shared peer list
         LoopbackService.peerList[self.myPeer.deviceName] = LoopbackDelegates(peer: self.myPeer , connectionDelegate: self.connectionDelegate, stateDelegate: self.stateDelegate, dataDelegate: self.dataDelegate, loopbackServiceDelegate: self)
@@ -142,7 +142,7 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsServerHandlerDelegat
     
     private func remotePeer(of peer: CommsPeer, as newState: CommsConnectionState? = nil) -> CommsPeer? {
         // Get the peer at the other end of the connection
-        let deviceName = peer.fromDeviceName!
+        let deviceName = peer.deviceName // TODO This was previously fromDeviceName which was set to parent.connectionDevice - not sure if this will still work
         let lookupDelegate = LoopbackService.peerList[deviceName]
         let remotePeer = lookupDelegate?.peer
         if newState != nil {

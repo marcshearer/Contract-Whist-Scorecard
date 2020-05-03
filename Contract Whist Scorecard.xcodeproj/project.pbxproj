@@ -25,6 +25,7 @@
 		B20A66FA1E2385B500E75190 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20A66F91E2385B500E75190 /* Reachability.swift */; };
 		B20A66FC1E23921E00E75190 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20A66FB1E23921E00E75190 /* Buttons.swift */; };
 		B20A66FE1E24002400E75190 /* GameSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20A66FD1E24002300E75190 /* GameSummaryViewController.swift */; };
+		B20B1262245EFC2B001DD632 /* Contract Whist Comms Protocols.docx in Resources */ = {isa = PBXBuildFile; fileRef = B20B1261245EFC2B001DD632 /* Contract Whist Comms Protocols.docx */; };
 		B20DA0401E139C450040221D /* HighScoresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DA03F1E139C450040221D /* HighScoresViewController.swift */; };
 		B20DA0441E142D1E0040221D /* SelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DA0431E142D1E0040221D /* SelectionViewController.swift */; };
 		B20DA04C1E179DC70040221D /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DA04B1E179DC70040221D /* WelcomeViewController.swift */; };
@@ -221,6 +222,7 @@
 		B20A66F91E2385B500E75190 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		B20A66FB1E23921E00E75190 /* Buttons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		B20A66FD1E24002300E75190 /* GameSummaryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameSummaryViewController.swift; sourceTree = "<group>"; };
+		B20B1261245EFC2B001DD632 /* Contract Whist Comms Protocols.docx */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Contract Whist Comms Protocols.docx"; sourceTree = "<group>"; };
 		B20DA03F1E139C450040221D /* HighScoresViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HighScoresViewController.swift; sourceTree = "<group>"; };
 		B20DA0431E142D1E0040221D /* SelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SelectionViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		B20DA04B1E179DC70040221D /* WelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
@@ -986,6 +988,7 @@
 			children = (
 				CCEA53E21DF3D19F0045292C /* Notes.txt */,
 				B2B1802021195FFA008D3BAA /* Contract Whist Scorecard.pages */,
+				B20B1261245EFC2B001DD632 /* Contract Whist Comms Protocols.docx */,
 				B2E556C022C9F86100C49821 /* Colors.xlsx */,
 				CC4CC0F61DEADC32007FB24F /* Products */,
 				CC86557B1E021518000AF391 /* Standard Components */,
@@ -1233,6 +1236,7 @@
 				CCEA53E31DF3D19F0045292C /* Notes.txt in Resources */,
 				B22789241FB882F7009BABCA /* ClientViewController.storyboard in Resources */,
 				B22789361FB8911F009BABCA /* PlayersViewController.storyboard in Resources */,
+				B20B1262245EFC2B001DD632 /* Contract Whist Comms Protocols.docx in Resources */,
 				B243386022E57BBC002EBD40 /* ImageButton.xib in Resources */,
 				B22789451FB8951A009BABCA /* GraphViewController.storyboard in Resources */,
 				B2594E862251FEB2004398FB /* MyDevices.sh in Resources */,

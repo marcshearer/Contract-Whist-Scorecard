@@ -23,7 +23,7 @@ class NotificationSimulator: CommsBroadcastDelegate {
     
     public func start() {
         if RabbitMQConfig.uriDevMode != "" {
-            self.onlineQueueService = CommsHandler.client(proximity: .online, mode: .queue, serviceID: nil, deviceName: Scorecard.deviceName)
+            self.onlineQueueService = CommsHandler.client(proximity: .online, mode: .queue, serviceID: "notification", deviceName: Scorecard.deviceName)
             self.onlineQueueService.broadcastDelegate = self
             let filterEmail = Scorecard.onlineEmail()
             self.onlineQueueService.start(queue: "notifications", filterEmail: filterEmail)

@@ -16,7 +16,6 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsS
     
     // Main class variables
     public let connectionMode: CommsConnectionMode
-    public let connectionFramework: CommsConnectionFramework = .rabbitMQ
     public let connectionProximity: CommsConnectionProximity = .online
     public let connectionType: CommsConnectionType
     private var _connectionEmail: String?
@@ -42,7 +41,7 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsS
             return _connectionEmail
         }
     }
-    public var connectionDevice: String? {
+    public var connectionDeviceName: String? {
         get {
             return _connectionDevice
         }
@@ -59,7 +58,7 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsS
     
     // Other state variables
     internal var rabbitMQQueueList: [String : RabbitMQQueue] = [:]           // [ queueUUID : rabbitMQQueue ]
-    private let myDeviceName = Scorecard.deviceName
+    private let myDeviceName: String
     internal var recoveryMode = false
     private static let reachabilty = Reachability(uri: (NSURL(string: RabbitMQConfig.uriDevMode)?.host)!)
     private var observer: NSObjectProtocol?
@@ -70,6 +69,7 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsS
     init(mode: CommsConnectionMode, type: CommsConnectionType, serviceID: String?, deviceName: String) {
         self.connectionMode = mode
         self.connectionType = type
+        self.myDeviceName = deviceName
     }
     
     internal func startService(email: String!, recoveryMode: Bool, matchDeviceName: String! = nil) {
@@ -243,7 +243,7 @@ class RabbitMQService: NSObject, CommsHandlerDelegate, CommsDataDelegate, CommsS
 
 // RabbitMQ Server Service Class ========================================================================= -
 
-class RabbitMQServerService : RabbitMQService, CommsServerHandlerDelegate, CommsConnectionDelegate, CommsHandlerStateDelegate {
+class RabbitMQServerService : RabbitMQService, CommsServerHandlerDelegate, CommsConnectionDelegate, CommsServerHandlerStateDelegate {
 
     private var invite: Invite!
     private var inviteEmail: String! = nil
@@ -251,10 +251,10 @@ class RabbitMQServerService : RabbitMQService, CommsServerHandlerDelegate, Comms
  
     // Delegates
     public weak var connectionDelegate: CommsConnectionDelegate!
-    public weak var handlerStateDelegate: CommsHandlerStateDelegate!
+    public weak var handlerStateDelegate: CommsServerHandlerStateDelegate!
 
-    private var _handlerState: CommsHandlerState = .notStarted
-    public var handlerState: CommsHandlerState {
+    private var _handlerState: CommsServerHandlerState = .notStarted
+    public var handlerState: CommsServerHandlerState {
         get {
             return _handlerState
         }
@@ -355,7 +355,7 @@ class RabbitMQServerService : RabbitMQService, CommsServerHandlerDelegate, Comms
     
     // MARK: - Comms Handler State handlers ========================================================================= -
     
-    internal func handlerStateChange(to state: CommsHandlerState) {
+    internal func handlerStateChange(to state: CommsServerHandlerState) {
         // Record state and pass it up
         self._handlerState = state
         self.handlerStateDelegate?.handlerStateChange(to: state)

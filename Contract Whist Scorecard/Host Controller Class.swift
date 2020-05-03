@@ -22,7 +22,7 @@ enum InviteStatus {
     case reconnecting
 }
 
-class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsHandlerStateDelegate, GamePreviewDelegate {
+class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConnectionDelegate, CommsServerHandlerStateDelegate, GamePreviewDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     
@@ -53,7 +53,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
     private var onlineHostService: CommsServerHandlerDelegate!
     private var loopbackHost: LoopbackService!
     private var hostService: CommsServerHandlerDelegate!
-    private var currentState: CommsHandlerState = .notStarted
+    private var currentState: CommsServerHandlerState = .notStarted
     private var exiting = false
     private var computerPlayers: [Int : ComputerPlayerDelegate]?
     private var firstTime = true
@@ -426,7 +426,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
     
     // MARK: - Handler State Overrides ===================================================================== -
     
-    internal func handlerStateChange(to state: CommsHandlerState) {
+    internal func handlerStateChange(to state: CommsServerHandlerState) {
         if state != self.currentState {
             switch state {
             case .notStarted:
@@ -438,7 +438,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
                 } else if !exiting {
                     self.exitHost(returnHome: false)
                 }
-            case .broadcasting:
+            case .advertising:
                 break
                 
             default:
@@ -675,7 +675,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
     
     private func startNearbyConnection() {
         // Create comms service and take hosting delegate
-        nearbyHostService = CommsHandler.server(proximity: .nearby, mode: .broadcast, serviceID: self.scorecard.serviceID(.playing))
+        nearbyHostService = CommsHandler.server(proximity: .nearby, mode: .broadcast, serviceID: self.scorecard.serviceID(.playing), deviceName: Scorecard.deviceName)
         self.scorecard.setCommsDelegate(nearbyHostService, purpose: .playing)
         self.hostService = nearbyHostService
         self.takeDelegates(self)
@@ -694,7 +694,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
     
     private func startLoopbackMode() {
         // Create loopback service, take delegate and then start loopback service
-        loopbackHost = LoopbackService(mode: .loopback, type: .server, serviceID: nil, deviceName: Scorecard.deviceName)
+        loopbackHost = LoopbackService(mode: .loopback, type: .server, serviceID: self.scorecard.serviceID(.playing), deviceName: Scorecard.deviceName)
         self.scorecard.setCommsDelegate(loopbackHost, purpose: .playing)
         self.hostService = loopbackHost
         self.takeDelegates(self)
@@ -718,7 +718,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
         self.hostService?.stateDelegate = delegate as! CommsStateDelegate?
         self.hostService?.dataDelegate = delegate as! CommsDataDelegate?
         self.hostService?.connectionDelegate = delegate as! CommsConnectionDelegate?
-        self.hostService?.handlerStateDelegate = delegate as! CommsHandlerStateDelegate?
+        self.hostService?.handlerStateDelegate = delegate as! CommsServerHandlerStateDelegate?
     }
     
     func removeCardPlayed(data: [String : Any]) {

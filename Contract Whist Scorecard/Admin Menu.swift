@@ -23,7 +23,7 @@ class AdminMenu {
             }
         }
         
-        if availableOptions || (Scorecard.shared.commsDelegate != nil && Scorecard.shared.commsDelegate?.connectionFramework != .loopback) {
+        if availableOptions || (Scorecard.shared.commsDelegate != nil && Scorecard.shared.commsDelegate?.connectionMode != .loopback) {
             // There are som options to display
             
             let actionSheet = ActionSheet("Admin Options")
@@ -37,7 +37,7 @@ class AdminMenu {
             }
             
             // Generic options - connections
-            if Scorecard.shared.commsDelegate != nil && Scorecard.shared.commsDelegate!.connectionFramework != .loopback {
+            if Scorecard.shared.commsDelegate != nil && Scorecard.shared.commsDelegate!.connectionMode != .loopback {
                 actionSheet.add("Reset connection", handler: {
                     Scorecard.shared.resetConnection()
                 })

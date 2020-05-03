@@ -571,7 +571,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     private func playHand(peer: CommsPeer, dismiss: Bool = false, hand: Hand! = nil, round: Int! = nil, trick: Int! = nil, made: [Int]! = nil, twos: [Int]! = nil, trickCards: [Card]! = nil, toLead: Int! = nil, lastCards: [Card]! = nil, lastToLead: Int! = nil) {
         
         if self.commsPurpose == .sharing || (self.thisPlayerNumber != nil && hand != nil) {
-            if self.available.firstIndex(where: { $0.deviceName == peer.deviceName && $0.framework == peer.framework}) != nil {
+            if self.available.firstIndex(where: { $0.deviceName == peer.deviceName && $0.mode == peer.mode && $0.proximity == peer.proximity}) != nil {
                 if !dismiss && self.commsPurpose == .playing && self.scorepadViewController != nil {
                     self.scorecard.commsHandlerMode = .playHand
                     self.scorecard.handState.hand = hand
@@ -709,7 +709,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             Utility.debugMessage("client", "Peer found for \(peer.deviceName)")
             // Check if already got this device - if so disconnect it and replace it
 
-            if let index = self.available.firstIndex(where: { $0.deviceName == peer.deviceName && $0.peer.framework == peer.framework }) {
+            if let index = self.available.firstIndex(where: { $0.deviceName == peer.deviceName && $0.peer.mode == peer.mode }) {
                 // Already have an entry for this device - re-use it (unless showing as 'Disconnected')
                 
                 if peer.state != .notConnected || self.available[index].oldState != .notConnected {
@@ -905,7 +905,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         }
         
         if self.clientService!.connect(to: peer, playerEmail: self.thisPlayer, playerName: playerName, context: context, reconnect: true) {
-            if let index = self.available.firstIndex(where: { $0.deviceName == peer.deviceName && $0.peer.framework == peer.framework }) {
+            if let index = self.available.firstIndex(where: { $0.deviceName == peer.deviceName && $0.peer.mode == peer.mode }) {
                 available[index].lastConnect = Date()
             }
         } else {
@@ -930,7 +930,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     private func reflectState(peer: CommsPeer) {
-        if let combinedIndex = available.firstIndex(where: {$0.deviceName == peer.deviceName && $0.framework == peer.framework}) {
+        if let combinedIndex = available.firstIndex(where: {$0.deviceName == peer.deviceName && $0.mode == peer.mode && $0.proximity == peer.proximity}) {
             let availableFound = self.available[combinedIndex]
             if peer.state != .connecting {
                 availableFound.connecting = false
@@ -943,7 +943,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
 
     private func currentState(peer: CommsPeer) -> CommsConnectionState {
         // Get current state of a player associated with a device
-        if let combinedIndex = available.firstIndex(where: {$0.deviceName == peer.deviceName && $0.framework == peer.framework}) {
+        if let combinedIndex = available.firstIndex(where: {$0.deviceName == peer.deviceName && $0.mode == peer.mode && $0.proximity == peer.proximity}) {
             return self.available[combinedIndex].peer.state
         } else {
             return .notConnected
@@ -1461,7 +1461,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     }
     
     private func removeEntry(peer: CommsPeer) {
-        let index = available.firstIndex(where: {$0.deviceName == peer.deviceName && $0.framework == peer.framework})
+        let index = available.firstIndex(where: {$0.deviceName == peer.deviceName && $0.mode == peer.mode && $0.proximity == peer.proximity})
         if index != nil {
             if self.firstTime {
                 // UI not ready yet - just update list
@@ -1691,9 +1691,14 @@ fileprivate class Available {
             return self.peer.deviceName
         }
     }
-    fileprivate var framework: CommsConnectionFramework {
+    fileprivate var mode: CommsConnectionMode {
         get {
-            return self.peer.framework
+            return self.peer.mode
+        }
+    }
+    fileprivate var proximity: CommsConnectionProximity {
+        get {
+            return self.peer.proximity
         }
     }
     

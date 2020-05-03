@@ -491,7 +491,7 @@ class Utility {
             if (RabbitMQConfig.devMode != .amqpServer || Scorecard.adminMode || force) && RabbitMQConfig.logQueue != "" && RabbitMQConfig.uriDevMode != "" {
                     let scorecard = Scorecard.shared
                     if scorecard.logService == nil {
-                        scorecard.logService = CommsHandler.client(proximity: .online, mode: .queue, serviceID: RabbitMQConfig.uriDevMode, deviceName: Scorecard.deviceName)
+                        scorecard.logService = CommsHandler.client(proximity: .online, mode: .queue, serviceID: "whist-logger", deviceName: Scorecard.deviceName)
                         scorecard.logService.start(queue: RabbitMQConfig.logQueue, filterEmail: "")
                     }
                     scorecard.logService.send("0", ["from"      : from,

@@ -14,7 +14,6 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
     
     // Main class variables
     public let connectionMode: CommsConnectionMode
-    public let connectionFramework: CommsConnectionFramework = .multipeer
     public let connectionProximity: CommsConnectionProximity = .nearby
     public let connectionType: CommsConnectionType
     public var connectionUUID: String?
@@ -32,7 +31,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
             return _connectionName
         }
     }
-    public var connectionDevice: String? {
+    public var connectionDeviceName: String? {
         get {
             return _connectionDevice
         }
@@ -58,16 +57,16 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
         self.connectionMode = mode
         self.connectionType = type
         self.serviceID = serviceID!
-        self.myPeerID = MCPeerID(displayName: Scorecard.deviceName)
+        self.myPeerID = MCPeerID(displayName: deviceName)
         // Create my peer ID to be consistent over time - apparently helps stability!
         var archivedPeerID = UserDefaults.standard.data(forKey: "MCPeerID")
         if archivedPeerID == nil {
-            myPeerID = MCPeerID(displayName: Scorecard.deviceName)
+            self.myPeerID = MCPeerID(displayName: Scorecard.deviceName)
             archivedPeerID = NSKeyedArchiver.archivedData(withRootObject: myPeerID)
             UserDefaults.standard.set(archivedPeerID, forKey: "MCPeerID")
             UserDefaults.standard.synchronize()
         } else {
-            myPeerID = NSKeyedUnarchiver.unarchiveObject(with: archivedPeerID!) as! MCPeerID
+            self.myPeerID = NSKeyedUnarchiver.unarchiveObject(with: archivedPeerID!) as! MCPeerID
         }
     }
     
@@ -330,12 +329,12 @@ class MultipeerServerService : MultipeerService, CommsServerHandlerDelegate, MCN
         var advertiser: MCNearbyServiceAdvertiser!
     }
     
-    internal var handlerState: CommsHandlerState = .notStarted
+    internal var handlerState: CommsServerHandlerState = .notStarted
     private var server: ServerConnection!
 
     // Delegates
     public weak var connectionDelegate: CommsConnectionDelegate!
-    public weak var handlerStateDelegate: CommsHandlerStateDelegate!
+    public weak var handlerStateDelegate: CommsServerHandlerStateDelegate!
     
     required init(mode: CommsConnectionMode, serviceID: String?, deviceName: String) {
         super.init(mode: mode, type: .server, serviceID: serviceID, deviceName: deviceName)
@@ -356,7 +355,7 @@ class MultipeerServerService : MultipeerService, CommsServerHandlerDelegate, MCN
         self.server = ServerConnection(advertiser: advertiser)
         self.server.advertiser.delegate = self
         self.server.advertiser.startAdvertisingPeer()
-        changeState(to: .broadcasting)
+        changeState(to: .advertising)
         
     }
     
@@ -394,7 +393,7 @@ class MultipeerServerService : MultipeerService, CommsServerHandlerDelegate, MCN
     
     // MARK: - Comms Handler State handler =================================================================== -
 
-    internal func changeState(to state: CommsHandlerState) {
+    internal func changeState(to state: CommsServerHandlerState) {
         self.handlerState = state
         self.handlerStateDelegate?.handlerStateChange(to: state)
     }

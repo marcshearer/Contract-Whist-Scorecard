@@ -12,13 +12,12 @@ import Foundation
 
 // MARK: - Type declarations =============================================== -
 
-public enum CommsHandlerState {
+public enum CommsServerHandlerState {
     case notStarted
+    case advertising
     case inviting
     case invited
     case reconnecting
-    case broadcasting
-    case browsing
 }
 
 public enum CommsConnectionState: String {
@@ -70,11 +69,9 @@ public class CommsPeer {
     public var autoReconnect: Bool { get { return _autoReconnect } }
     
     public var mode: CommsConnectionMode { get { return self.parent.connectionMode } }
-    public var framework: CommsConnectionFramework { get { return self.parent.connectionFramework } }
     public var proximity: CommsConnectionProximity { get { return self.parent.connectionProximity } }
     public var type: CommsConnectionType { get { return self.parent.connectionType } }
     
-    public var fromDeviceName: String? { get { return self.parent.connectionDevice } }
 
     init(parent: CommsHandlerDelegate, deviceName: String, playerEmail: String? = "", playerName: String? = "", state: CommsConnectionState = .notConnected, reason: String? = nil, autoReconnect: Bool = false) {
         self.parent = parent
@@ -158,9 +155,11 @@ extension CommsConnectionDelegate {
     }
 }
 
-public protocol CommsHandlerStateDelegate : class {
+public protocol CommsServerHandlerStateDelegate : class {
     
-    func handlerStateChange(to state: CommsHandlerState)
+    // Can be implemented by servers to allow them to detect a change in the state of the server handler
+    
+    func handlerStateChange(to state: CommsServerHandlerState)
 }
 
 // MARK: - Protocols from abstraction layer to communication handlers ==================================== -
@@ -173,14 +172,12 @@ public protocol CommsHandlerDelegate : class {
     // Instead either a client or server extension class should be instantiated
 
     var connectionMode: CommsConnectionMode { get }
-    var connectionFramework: CommsConnectionFramework { get }
     var connectionProximity: CommsConnectionProximity { get }
     var connectionType: CommsConnectionType { get }
     var connections: Int { get }
     var connectionUUID: String? { get }
     var connectionEmail: String? { get }
-    var connectionDevice: String? { get }
-
+    var connectionDeviceName: String? { get }
     var stateDelegate: CommsStateDelegate! { get set }
     var dataDelegate: CommsDataDelegate! { get set }
     var broadcastDelegate: CommsBroadcastDelegate! { get set}
@@ -229,9 +226,9 @@ extension CommsHandlerDelegate {
 
 public protocol CommsServerHandlerDelegate : CommsHandlerDelegate {
     
-    var handlerState: CommsHandlerState { get }
+    var handlerState: CommsServerHandlerState { get }
     var connectionDelegate: CommsConnectionDelegate! { get set }
-    var handlerStateDelegate: CommsHandlerStateDelegate! { get set }
+    var handlerStateDelegate: CommsServerHandlerStateDelegate! { get set }
     
     init(mode: CommsConnectionMode, serviceID: String?, deviceName: String)
     

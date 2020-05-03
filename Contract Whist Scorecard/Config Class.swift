@@ -12,21 +12,9 @@ class Config {
     
     // In development don't use iCloud to notify invitees - hard-code as below
     public static let _debugNoICloudOnline = false
-    
-    // Choose which rabbitMQ server to use in development mode
-    public static let rabbitMQUri_DevMode: RabbitMQUriDevMode = .amqpServer
-    
-    // Use descriptive rabbitMQ session/connection IDs
-    public static let rabbitMQ_DescriptiveIDs = false
-    
-    // Use rabbitMQ instead of/as well as push notifications - best not to do this if connected to network as will double up
-    public static let pushNotifications_rabbitMQ = false
-    
-    // Queue for log messages - blank to disable else "WhistLogger"
-    public static let rabbitMQLogQueue = ""
-    
-    // Service for log messages - blank to disable
-    public static let multiPeerLogService = "whist-logger"
+       
+    // Use an online queue instead of/as well as push notifications - best not to do this if connected to network as will double up
+    public static let pushNotifications_onlineQueue = true
     
     // Time unit for auto-play testing (in seconds) - card is played every unit
     public static var autoPlayTimeUnit = 0.05
@@ -49,26 +37,6 @@ class Config {
                 return false
             }
             
-        }
-    }
-    
-    // MARK: - rabbitMQ URI string ======================================================================= -
-    
-    public enum RabbitMQUriDevMode {
-        case localhost
-        case myServer
-        case amqpServer
-    }
-    
-    public static var rabbitMQUri: String {
-        get {
-            if rabbitMQUri_DevMode == .localhost && Utility.isDevelopment {
-                return "amqp://marcshearer:jonathan@localhost/test"
-            } else if rabbitMQUri_DevMode == .myServer && Utility.isDevelopment {
-                return "amqp://marcshearer:jonathan@marcs-mbp/test"
-            } else {
-                return Scorecard.settingRabbitMQUri
-            }
         }
     }
 }

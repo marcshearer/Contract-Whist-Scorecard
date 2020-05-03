@@ -24,7 +24,7 @@ class WatchManager: NSObject, WCSessionDelegate {
     
     public func updateScores() {
         if self.watchSession?.isPaired == true {
-            if self.scorecard.commsDelegate?.connectionPurpose != .playing {
+            if self.scorecard.commsPurpose != .playing {
                 var dict: [String: Any] = [:]
                 var playerNames: [String] = []
                 var playerBids: [Int] = []

@@ -49,8 +49,8 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
     private var alertController: UIAlertController!
     private var connectionMode: ConnectionMode!
     private var defaultConnectionMode: ConnectionMode!
-    private var multipeerHost: MultipeerServerService!
-    private var rabbitMQHost: RabbitMQServerService!
+    private var nearbyHostService: CommsServerHandlerDelegate!
+    private var onlineHostService: CommsServerHandlerDelegate!
     private var loopbackHost: LoopbackService!
     private var hostService: CommsServerHandlerDelegate!
     private var currentState: CommsHandlerState = .notStarted
@@ -121,6 +121,8 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
                 self.startMode = .nearby
             case .invite:
                 self.startMode = .online
+            default:
+                self.startMode = .unknown
             }
             
             // Restore players
@@ -624,7 +626,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
     private func showGamePreview(selectedPlayers: [PlayerMO], showCompletion: (()->())? = nil) {
         
         if let viewController = parentViewController as? CustomViewController {
-            self.gamePreviewViewController = GamePreviewViewController.show(from: viewController, selectedPlayers: selectedPlayers, title: "Host a Game", backText: "", readOnly: false, faceTimeAddress: self.faceTimeAddress, rabbitMQService: self.rabbitMQHost, computerPlayerDelegates: self.computerPlayers, delegate: self, showCompletion: showCompletion)
+            self.gamePreviewViewController = GamePreviewViewController.show(from: viewController, selectedPlayers: selectedPlayers, title: "Host a Game", backText: "", readOnly: false, faceTimeAddress: self.faceTimeAddress, computerPlayerDelegates: self.computerPlayers, delegate: self, showCompletion: showCompletion)
         }
     }
     
@@ -673,9 +675,9 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
     
     private func startNearbyConnection() {
         // Create comms service and take hosting delegate
-        multipeerHost = MultipeerServerService(purpose: .playing, serviceID: self.scorecard.serviceID(.playing))
-        self.scorecard.commsDelegate = multipeerHost
-        self.hostService = multipeerHost
+        nearbyHostService = CommsHandler.server(proximity: .nearby, mode: .broadcast, serviceID: self.scorecard.serviceID(.playing))
+        self.scorecard.setCommsDelegate(nearbyHostService, purpose: .playing)
+        self.hostService = nearbyHostService
         self.takeDelegates(self)
         if self.playerData.count > 0 {
             self.startHostBroadcast(email: playerData[0].email, name: playerData[0].name)
@@ -684,16 +686,16 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
     
     private func startOnlineConnection() {
         // Create comms service and take hosting delegate
-        rabbitMQHost = RabbitMQServerService(purpose: .playing, serviceID: nil)
-        self.scorecard.commsDelegate = rabbitMQHost
-        self.hostService = rabbitMQHost
+        onlineHostService = CommsHandler.server(proximity: .online, mode: .invite, serviceID: nil)
+        self.scorecard.setCommsDelegate(onlineHostService, purpose: .playing)
+        self.hostService = onlineHostService
         self.takeDelegates(self)
     }
     
     private func startLoopbackMode() {
         // Create loopback service, take delegate and then start loopback service
-        loopbackHost = LoopbackService(purpose: .playing, type: .server, serviceID: nil, deviceName: Scorecard.deviceName)
-        self.scorecard.commsDelegate = loopbackHost
+        loopbackHost = LoopbackService(mode: .loopback, type: .server, serviceID: nil, deviceName: Scorecard.deviceName)
+        self.scorecard.setCommsDelegate(loopbackHost, purpose: .playing)
         self.hostService = loopbackHost
         self.takeDelegates(self)
         self.loopbackHost.start(email: playerData[0].email, name: playerData[0].name)
@@ -835,7 +837,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
         self.scorecard.commsDelegate?.disconnect(reason: "\(self.playerData[0].name) has stopped hosting", reconnect: false)
         self.stopHostBroadcast(completion: {
             self.takeDelegates(nil)
-            self.scorecard.commsDelegate = nil
+            self.scorecard.setCommsDelegate(nil)
             self.hostService = nil
             self.scorecard.resetSharing()
             self.clearHandlerCompleteNotification(observer: self.observer)

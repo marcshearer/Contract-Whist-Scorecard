@@ -13,11 +13,10 @@ import MultipeerConnectivity
 class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
     
     // Main class variables
-    public let connectionMode: CommsConnectionMode = .broadcast
+    public let connectionMode: CommsConnectionMode
     public let connectionFramework: CommsConnectionFramework = .multipeer
     public let connectionProximity: CommsConnectionProximity = .nearby
     public let connectionType: CommsConnectionType
-    public let connectionPurpose: CommsConnectionPurpose
     public var connectionUUID: String?
     private var _connectionEmail: String?
     private var _connectionName: String?
@@ -47,6 +46,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
     // Delegates
     public var stateDelegate: CommsStateDelegate!
     public var dataDelegate: CommsDataDelegate!
+    public var broadcastDelegate: CommsBroadcastDelegate!
 
     // Other state variables
     internal var serviceID: String
@@ -54,8 +54,8 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
     internal var broadcastPeerList: [String: BroadcastPeer] = [:]
     internal var myPeerID: MCPeerID
     
-    init(purpose: CommsConnectionPurpose, type: CommsConnectionType, serviceID: String?, deviceName: String) {
-        self.connectionPurpose = purpose
+    init(mode: CommsConnectionMode, type: CommsConnectionType, serviceID: String?, deviceName: String) {
+        self.connectionMode = mode
         self.connectionType = type
         self.serviceID = serviceID!
         self.myPeerID = MCPeerID(displayName: Scorecard.deviceName)
@@ -322,7 +322,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
 }
 
 
-// RabbitMQ Server Service Class ========================================================================= -
+// Multipeer Server Service Class ========================================================================= -
 
 class MultipeerServerService : MultipeerService, CommsServerHandlerDelegate, MCNearbyServiceAdvertiserDelegate {
         
@@ -337,14 +337,14 @@ class MultipeerServerService : MultipeerService, CommsServerHandlerDelegate, MCN
     public weak var connectionDelegate: CommsConnectionDelegate!
     public weak var handlerStateDelegate: CommsHandlerStateDelegate!
     
-    required init(purpose: CommsConnectionPurpose, serviceID: String?, deviceName: String) {
-        super.init(purpose: purpose, type: .server, serviceID: serviceID, deviceName: deviceName)
+    required init(mode: CommsConnectionMode, serviceID: String?, deviceName: String) {
+        super.init(mode: mode, type: .server, serviceID: serviceID, deviceName: deviceName)
     }
     
     // MARK: - Comms Handler Server handlers ========================================================================= -
     
     internal func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool) {
-        self.debugMessage("Start Server \(self.connectionPurpose)")
+        self.debugMessage("Start Server \(self.connectionMode)")
         
         super.startService(email: email, name: name, recoveryMode: recoveryMode)
         
@@ -362,7 +362,7 @@ class MultipeerServerService : MultipeerService, CommsServerHandlerDelegate, MCN
     
     internal func stop(completion: (()->())?) {
         if super.started {
-            self.debugMessage("Stop Server \(self.connectionPurpose)")
+            self.debugMessage("Stop Server \(self.connectionMode)")
         }
         
         super.stopService()
@@ -467,16 +467,20 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
     // Delegates
     public weak var browserDelegate: CommsBrowserDelegate!
     
-    required init(purpose: CommsConnectionPurpose, serviceID: String?, deviceName: String) {
-        super.init(purpose: purpose, type: .client, serviceID: serviceID, deviceName: deviceName)
+    required init(mode: CommsConnectionMode, serviceID: String?, deviceName: String) {
+        super.init(mode: mode, type: .client, serviceID: serviceID, deviceName: deviceName)
     }
     
     // Comms Handler Client Service handlers ========================================================================= -
     
     internal func start(email: String!, name: String!, recoveryMode: Bool, matchDeviceName: String!) {
-        if self.connectionPurpose != .other {
+        if self.connectionMode != .queue {
             // Don't log start for other since it might be (probably is) the logger starting! While this works on simulator it crashes devices
-            self.debugMessage("Start Client \(self.connectionPurpose)")
+            self.debugMessage("Start Client \(self.connectionMode)")
+        }
+        
+        if self.connectionMode != .broadcast {
+            fatalError("start(email: is only valid for broadcast mode in Multi-peer Connectivity")
         }
         
         super.startService(email: email, name: name, recoveryMode: recoveryMode, matchDeviceName: matchDeviceName)
@@ -487,9 +491,13 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
         self.client?.browser?.startBrowsingForPeers()
     }
     
+    internal func start(queue: String, filterEmail: String!) {
+        fatalError("start(queue: is not valid in Multi-peer Connectivity")
+    }
+    
     internal func stop() {
         if super.started {
-            self.debugMessage("Stop Client \(self.connectionPurpose)")
+            self.debugMessage("Stop Client \(self.connectionMode)")
         }
         
         super.stopService()
@@ -573,6 +581,11 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
     
     override internal func startBrowsingForPeers() {
         self.client?.browser?.startBrowsingForPeers()
+    }
+    
+    func checkOnlineInvites(email: String, checkExpiry: Bool = true) {
+        // Not used in broadcast mode
+        fatalError("Not relevant in broadcast mode")
     }
     
     // MARK: - Browser delegate handlers ===================================================== -

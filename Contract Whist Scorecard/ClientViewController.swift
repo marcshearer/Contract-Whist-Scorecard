@@ -38,7 +38,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     private var backText = ""
     private var backImage = "back"
     private var formTitle: String!
-    public var commsPurpose: CommsConnectionPurpose!
+    public var commsPurpose: CommsPurpose!
     private var matchDeviceName: String!
     private var completion: (()->())?
 
@@ -71,8 +71,8 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     private var peerSection: Int! = 0
     private var hostSection: Int! = 1
     private var clientHandlerObserver: NSObjectProtocol?
-    private var multipeerClient: MultipeerClientService?
-    private var rabbitMQClient: RabbitMQClientService?
+    private var nearbyClientService: CommsClientHandlerDelegate?
+    private var onlineClientService: CommsClientHandlerDelegate?
     private var clientService: CommsClientHandlerDelegate?
     internal var appState: AppState!
     private var invite: Invite!
@@ -556,7 +556,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     private func showScorepad() {
         
-        scorepadViewController = ScorepadViewController.show(from: self, existing: scorepadViewController, scorepadMode: .display, rounds: self.rounds, cards: self.cards, bounce: self.bounce, bonus2: self.bonus2, suits: self.suits, rabbitMQService: self.rabbitMQClient, completion:
+        scorepadViewController = ScorepadViewController.show(from: self, existing: scorepadViewController, scorepadMode: .display, rounds: self.rounds, cards: self.cards, bounce: self.bounce, bonus2: self.bonus2, suits: self.suits, completion:
             { (returnHome) in
                 if returnHome {
                     self.exitClient()
@@ -820,7 +820,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                 
                 if peer.state != .notConnected {
                     // Set framework based on this connection (for reconnect at lower level)
-                    self.selectFramework(framework: peer.framework)
+                    self.selectService(proximity: peer.proximity)
                     
                     // Don't allow device to timeout
                     UIApplication.shared.isIdleTimerDisabled = true
@@ -855,33 +855,33 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         // Refresh online game invites
         if self.scorecard.onlineEnabled && (self.appState == .notConnected || self.appState == .reconnecting) {
             // Utility.debugMessage("client", "Timer - refresh invites")
-            self.rabbitMQClient?.clientCheckOnlineInvites(email: self.thisPlayer)
+            self.onlineClientService?.checkOnlineInvites(email: self.thisPlayer)
             self.clientTableView.reloadData()
         }
     }
     
     private func closeConnections() {
-        self.multipeerClient?.stop()
-        self.rabbitMQClient?.stop()
+        self.nearbyClientService?.stop()
+        self.onlineClientService?.stop()
     }
     
     private func createConnections() {
         // Create nearby comms service, take delegates and start listening
         if !self.recoveryMode || self.recoveryOnlineMode == .broadcast {
-            self.multipeerClient = MultipeerClientService(purpose: self.commsPurpose, serviceID: self.scorecard.serviceID(self.commsPurpose), deviceName: Scorecard.deviceName)
-            self.multipeerClient?.stateDelegate = self
-            self.multipeerClient?.dataDelegate = self
-            self.multipeerClient?.browserDelegate = self
-            self.multipeerClient?.start(email: self.thisPlayer, name: self.thisPlayerName, recoveryMode: self.recoveryMode, matchDeviceName: self.matchDeviceName)
+            self.nearbyClientService = CommsHandler.client(proximity: .nearby, mode: .broadcast, serviceID: self.scorecard.serviceID(self.commsPurpose), deviceName: Scorecard.deviceName)
+            self.nearbyClientService?.stateDelegate = self
+            self.nearbyClientService?.dataDelegate = self
+            self.nearbyClientService?.browserDelegate = self
+            self.nearbyClientService?.start(email: self.thisPlayer, name: self.thisPlayerName, recoveryMode: self.recoveryMode, matchDeviceName: self.matchDeviceName)
         }
         
         // Create online comms service, take delegates and start listening
         if self.commsPurpose == .playing && self.scorecard.onlineEnabled && (!self.recoveryMode || self.recoveryOnlineMode == .invite) {
-            self.rabbitMQClient = RabbitMQClientService(purpose: self.commsPurpose, serviceID: nil, deviceName: Scorecard.deviceName)
-            self.rabbitMQClient?.stateDelegate = self
-            self.rabbitMQClient?.dataDelegate = self
-            self.rabbitMQClient?.browserDelegate = self
-            self.rabbitMQClient?.start(email: self.thisPlayer, name: self.thisPlayerName, recoveryMode: self.recoveryMode, matchDeviceName: self.matchDeviceName)
+            self.onlineClientService = CommsHandler.client(proximity: .online, mode: .invite, serviceID: nil, deviceName: Scorecard.deviceName)
+            self.onlineClientService?.stateDelegate = self
+            self.onlineClientService?.dataDelegate = self
+            self.onlineClientService?.browserDelegate = self
+            self.onlineClientService?.start(email: self.thisPlayer, name: self.thisPlayerName, recoveryMode: self.recoveryMode, matchDeviceName: self.matchDeviceName)
         }
     }
     
@@ -897,7 +897,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
             playerName = playerMO?.name
         }
         
-        self.selectFramework(framework: peer.framework)
+        self.selectService(proximity: peer.proximity)
         
         if faceTimeAddress != nil {
             // Send face time address to remote
@@ -916,17 +916,17 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         return true
     }
     
-    private func selectFramework(framework: CommsConnectionFramework) {
+    private func selectService(proximity: CommsConnectionProximity) {
         // Wire up the selected connection
-        switch framework {
-        case .multipeer:
-            self.clientService = self.multipeerClient
-        case .rabbitMQ:
-            self.clientService = self.rabbitMQClient
+        switch proximity {
+        case .nearby:
+            self.clientService = self.nearbyClientService
+        case .online:
+            self.clientService = self.onlineClientService
         default:
             break
         }
-        self.scorecard.commsDelegate = self.clientService
+        self.scorecard.setCommsDelegate(self.clientService, purpose: self.commsPurpose)
     }
     
     private func reflectState(peer: CommsPeer) {
@@ -1433,11 +1433,11 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         self.stopIdleTimer()
         self.stopConnectingTimer()
         UIApplication.shared.isIdleTimerDisabled = false
-        self.finishConnection(self.multipeerClient)
-        self.multipeerClient = nil
-        self.finishConnection(self.rabbitMQClient)
-        self.rabbitMQClient = nil
-        self.scorecard.commsDelegate = nil
+        self.finishConnection(self.nearbyClientService)
+        self.nearbyClientService = nil
+        self.finishConnection(self.onlineClientService)
+        self.onlineClientService = nil
+        self.scorecard.setCommsDelegate(nil)
         self.clientService = nil
         self.scorecard.sendScores = false
         self.scorecard.reset()
@@ -1612,7 +1612,7 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: CustomViewController, backText: String = "", backImage: String = "back", formTitle: String? = nil, purpose: CommsConnectionPurpose? = nil, matchDeviceName: String? = nil, completion: (()->())? = nil){
+    class public func show(from viewController: CustomViewController, backText: String = "", backImage: String = "back", formTitle: String? = nil, purpose: CommsPurpose? = nil, matchDeviceName: String? = nil, completion: (()->())? = nil){
         
         let storyboard = UIStoryboard(name: "ClientViewController", bundle: nil)
         let clientViewController: ClientViewController = storyboard.instantiateViewController(withIdentifier: "ClientViewController") as! ClientViewController

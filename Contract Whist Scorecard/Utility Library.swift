@@ -463,6 +463,8 @@ class Utility {
         return activeViewController
     }
     
+    static private var sendingMessage = false
+    
     class func debugMessage(_ from: String, _ message: String, showDevice: Bool = false, force: Bool = false, mainThread: Bool = true) {
         
         func closure() {
@@ -486,26 +488,32 @@ class Utility {
             }
             #if ContractWhist
                 // Write to rabbitMQ logs
-                if (Config.rabbitMQUri_DevMode != .amqpServer || Scorecard.adminMode || force) && Config.rabbitMQLogQueue != "" && Config.rabbitMQUri != "" {
+            if (RabbitMQConfig.devMode != .amqpServer || Scorecard.adminMode || force) && RabbitMQConfig.logQueue != "" && RabbitMQConfig.uriDevMode != "" {
                     let scorecard = Scorecard.shared
                     if scorecard.logService == nil {
-                        scorecard.logService = RabbitMQClientService(purpose: .other, serviceID: Config.rabbitMQUri, deviceName: Scorecard.deviceName)
-                        scorecard.logQueue = scorecard.logService.startQueue(delegate: scorecard.logService, queueUUID: Config.rabbitMQLogQueue)
+                        scorecard.logService = CommsHandler.client(proximity: .online, mode: .queue, serviceID: RabbitMQConfig.uriDevMode, deviceName: Scorecard.deviceName)
+                        scorecard.logService.start(queue: RabbitMQConfig.logQueue, filterEmail: "")
                     }
-                    scorecard.logQueue.sendBroadcast(data: ["0" : ["from"      : from,
-                                                                   "message"   : message,
-                                                                   "timestamp" : timestamp]])
+                    scorecard.logService.send("0", ["from"      : from,
+                                                    "message"   : message,
+                                                    "timestamp" : timestamp])
                 }
-            
+                
                 // Write to multi-peer logs
-                if Config.multiPeerLogService != "" {
+                if MultipeerLoggerConfig.logService != "" {
                     MultipeerLogger.logger.write(timestamp: timestamp, source: from, message: message)
                 }
-            
             #endif
+            Utility.sendingMessage = false
         }
         
-        if Utility.isDevelopment || Scorecard.adminMode || force || (Config.multiPeerLogService != "" && MultipeerLogger.logger.connected) {
+        var loggerConnected = false
+        if !Utility.sendingMessage {
+            Utility.sendingMessage = true
+            loggerConnected = MultipeerLogger.logger.connected
+        }
+
+        if Utility.isDevelopment || Scorecard.adminMode || force || (MultipeerLoggerConfig.logService != "" && loggerConnected) {
             if mainThread {
                 Utility.mainThread(suppressDebug: true, execute: {
                     closure()
@@ -513,7 +521,10 @@ class Utility {
             } else {
                 closure()
             }
+        } else {
+            Utility.sendingMessage = false
         }
+
     }
     
     public static func deviceName() -> String {

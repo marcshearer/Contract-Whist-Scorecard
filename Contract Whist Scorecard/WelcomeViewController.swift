@@ -563,7 +563,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         SettingsViewController.show(from: self, backText: "", backImage: "home", completion: self.optionCompletion)
     }
     
-    private func showClient(purpose: CommsConnectionPurpose? = nil, title: String? = nil) {
+    private func showClient(purpose: CommsPurpose? = nil, title: String? = nil) {
         ClientViewController.show(from: self, backText: "", backImage: "home", formTitle: title, purpose: purpose, completion: self.optionCompletion)
     }
     

@@ -367,7 +367,7 @@ class Sync {
             
             // Setup simulated notification rabbitMQ queue
             Utility.mainThread {
-                if Config.pushNotifications_rabbitMQ &&  Utility.appDelegate?.notificationSimulator == nil {
+                if Config.pushNotifications_onlineQueue &&  Utility.appDelegate?.notificationSimulator == nil {
                     Utility.appDelegate?.notificationSimulator = NotificationSimulator()
                     Utility.appDelegate?.notificationSimulator.start()
                 }

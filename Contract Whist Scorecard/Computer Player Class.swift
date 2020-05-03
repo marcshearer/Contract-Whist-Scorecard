@@ -49,7 +49,7 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
         self.hostPeer = hostPeer
         
         // Create loopback client service
-        self.loopbackService = LoopbackService(purpose: .playing, type: .server, serviceID: nil, deviceName: deviceName)
+        self.loopbackService = LoopbackService(mode:.loopback, type: .client, serviceID: nil, deviceName: deviceName)
         
         // Initialise super-class
         super.init()

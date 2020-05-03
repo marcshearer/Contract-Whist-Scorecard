@@ -21,20 +21,18 @@ class Recovery {
         UserDefaults.standard.synchronize()
         if scorecard.gameInProgress {
             if let delegate = self.scorecard.commsDelegate {
-                if delegate.connectionPurpose == .playing {
-                    let purpose = delegate.connectionPurpose.rawValue
+                if self.scorecard.commsPurpose == .playing {
+                    let purpose = CommsPurpose.playing.rawValue
                     let type = delegate.connectionType.rawValue
                     let mode = delegate.connectionMode.rawValue
                     online = purpose +  "-" + type + "-" + mode
-                    if delegate.connectionPurpose == .playing {
-                        if delegate.connectionType == .server  {
-                            if delegate.connectionMode == .invite {
-                                UserDefaults.standard.set(delegate.connectionUUID, forKey: "recoveryConnectionUUID")
-                            }
-                        } else {
-                            UserDefaults.standard.set(delegate.connectionDevice, forKey: "recoveryConnectionDevice")
-                            UserDefaults.standard.set(delegate.connectionEmail, forKey: "recoveryConnectionEmail")
+                    if delegate.connectionType == .server  {
+                        if delegate.connectionMode == .invite {
+                            UserDefaults.standard.set(delegate.connectionUUID, forKey: "recoveryConnectionUUID")
                         }
+                    } else {
+                        UserDefaults.standard.set(delegate.connectionDevice, forKey: "recoveryConnectionDevice")
+                        UserDefaults.standard.set(delegate.connectionEmail, forKey: "recoveryConnectionEmail")
                     }
                 }
             }
@@ -199,7 +197,7 @@ class Recovery {
         online = UserDefaults.standard.string(forKey: "recoveryOnline")
         if online != nil && online != "" {
             let components = online.split(at: "-")
-            scorecard.recoveryOnlinePurpose = CommsConnectionPurpose(rawValue: components[0])
+            scorecard.recoveryOnlinePurpose = CommsPurpose(rawValue: components[0])
             scorecard.recoveryOnlineType = CommsConnectionType(rawValue: components[1])
             scorecard.recoveryOnlineMode = CommsConnectionMode(rawValue: components[2])
             if scorecard.recoveryOnlinePurpose == .playing {

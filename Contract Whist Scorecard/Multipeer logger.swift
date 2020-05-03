@@ -40,7 +40,7 @@ class MultipeerLogger : CommsBrowserDelegate, CommsStateDelegate, CommsDataDeleg
     
     init() {
         
-        self.service = MultipeerClientService(purpose: .other, serviceID: Config.multiPeerLogService, deviceName: Scorecard.deviceName)
+        self.service = CommsHandler.client(proximity: .nearby, mode: .broadcast, serviceID: MultipeerLoggerConfig.logService, deviceName: Scorecard.deviceName)
         self.service?.browserDelegate = self
         self.service?.stateDelegate = self
         self.service?.dataDelegate = self
@@ -184,4 +184,11 @@ fileprivate class LogEntry {
         self.source = source
         self.message = message
     }
+}
+
+class MultipeerLoggerConfig {
+    
+    // Service for log messages - blank to disable
+    public static let logService = "whist-logger"
+    
 }

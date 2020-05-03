@@ -33,7 +33,6 @@ class ScorepadViewController: CustomViewController,
     public var bonus2: Bool!
     public var suits: [Suit]!
     public var parentView: UIView!
-    public var rabbitMQService: RabbitMQService!
     public var recoveryMode = false
     public var computerPlayerDelegate: [Int : ComputerPlayerDelegate?]?
     public var completion: ((Bool)->())? = nil
@@ -789,7 +788,7 @@ class ScorepadViewController: CustomViewController,
    
     // MARK: - Function to present this view ==============================================================
     
-    class func show(from viewController: CustomViewController, existing scorepadViewController: ScorepadViewController? = nil, scorepadMode: ScorepadMode? = nil, rounds: Int? = nil, cards: [Int]? = nil, bounce: Bool? = nil, bonus2: Bool!, suits: [Suit]? = nil, rabbitMQService: RabbitMQService? = nil, recoveryMode: Bool = false, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil ,completion: ((Bool)->())? = nil) -> ScorepadViewController {
+    class func show(from viewController: CustomViewController, existing scorepadViewController: ScorepadViewController? = nil, scorepadMode: ScorepadMode? = nil, rounds: Int? = nil, cards: [Int]? = nil, bounce: Bool? = nil, bonus2: Bool!, suits: [Suit]? = nil, recoveryMode: Bool = false, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil ,completion: ((Bool)->())? = nil) -> ScorepadViewController {
         var scorepadViewController: ScorepadViewController! = scorepadViewController
         
         if scorepadViewController == nil {
@@ -804,7 +803,6 @@ class ScorepadViewController: CustomViewController,
         scorepadViewController.bounce = bounce
         scorepadViewController.bonus2 = bonus2
         scorepadViewController.suits = suits
-        scorepadViewController.rabbitMQService = rabbitMQService
         scorepadViewController.recoveryMode = recoveryMode
         scorepadViewController.computerPlayerDelegate = computerPlayerDelegate
         scorepadViewController.completion = completion

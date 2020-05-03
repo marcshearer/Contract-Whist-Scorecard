@@ -17,11 +17,10 @@ protocol LoopbackServiceDelegate {
 class LoopbackService: NSObject, CommsHandlerDelegate, CommsServerHandlerDelegate, CommsConnectionDelegate, LoopbackServiceDelegate {
     
     // Delegate properties
-    public let connectionMode: CommsConnectionMode = .loopback
+    public let connectionMode: CommsConnectionMode
     public let connectionFramework: CommsConnectionFramework = .loopback
     public let connectionProximity: CommsConnectionProximity = .loopback
     public var connectionType: CommsConnectionType
-    public var connectionPurpose: CommsConnectionPurpose
     public var handlerState: CommsHandlerState = .notStarted
     public var connections = 0
     public var connectionUUID: String?
@@ -33,6 +32,7 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsServerHandlerDelegat
     public var stateDelegate: CommsStateDelegate!
     public var dataDelegate: CommsDataDelegate!
     public var connectionDelegate: CommsConnectionDelegate!
+    public var broadcastDelegate: CommsBroadcastDelegate!
     public var handlerStateDelegate: CommsHandlerStateDelegate!
     public var loopbackServiceDelegate: LoopbackServiceDelegate!
     
@@ -43,18 +43,20 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsServerHandlerDelegat
     
     // MARK: - Comms Handler delegate implementation ======================================================== -
 
-    required init(purpose: CommsConnectionPurpose, type: CommsConnectionType, serviceID: String?, deviceName: String) {
-        self.connectionPurpose = purpose
+    init(mode: CommsConnectionMode, type: CommsConnectionType, serviceID: String?, deviceName: String) {
+        self.connectionMode = mode
         self.connectionType = type
-        self.connectionDevice = deviceName
-        super.init()
-    }
-    
-    required init(purpose: CommsConnectionPurpose, serviceID: String?, deviceName: String) {
-        self.connectionPurpose = purpose
+        if mode != .loopback {
+            fatalError("Loopback protocol only supports loopback mode")
+        }
         self.connectionType = .server
         self.connectionDevice = deviceName
         super.init()
+
+    }
+    
+    convenience required init(mode: CommsConnectionMode, serviceID: String?, deviceName: String) {
+        self.init(mode: mode, type: .server, serviceID: serviceID, deviceName: deviceName)
     }
     
     public func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool) {

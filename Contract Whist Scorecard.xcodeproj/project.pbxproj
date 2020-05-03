@@ -121,7 +121,7 @@
 		B2D2AAB01E1FF8A600E211A9 /* SyncViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D2AAAF1E1FF8A600E211A9 /* SyncViewController.swift */; };
 		B2D2D2DC1ED9975A00CA7B3A /* ClientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D2D2DB1ED9975A00CA7B3A /* ClientViewController.swift */; };
 		B2D8104E225AF7B6005A86A5 /* Multipeer logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D8104D225AF7A7005A86A5 /* Multipeer logger.swift */; };
-		B2DA893E1F3CC89C008EE96C /* Comms.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DA893D1F3CC89C008EE96C /* Comms.swift */; };
+		B2DA893E1F3CC89C008EE96C /* Comms Handler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DA893D1F3CC89C008EE96C /* Comms Handler.swift */; };
 		B2DD5D7C1ED1A87600725B55 /* Graph View Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DD5D7B1ED1A87600725B55 /* Graph View Class.swift */; };
 		B2DD5D7E1ED323F400725B55 /* GraphViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DD5D7D1ED323F400725B55 /* GraphViewController.swift */; };
 		B2E556C122C9F86200C49821 /* Colors.xlsx in Resources */ = {isa = PBXBuildFile; fileRef = B2E556C022C9F86100C49821 /* Colors.xlsx */; };
@@ -320,7 +320,7 @@
 		B2D2AAAF1E1FF8A600E211A9 /* SyncViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncViewController.swift; sourceTree = "<group>"; };
 		B2D2D2DB1ED9975A00CA7B3A /* ClientViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ClientViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		B2D8104D225AF7A7005A86A5 /* Multipeer logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Multipeer logger.swift"; sourceTree = "<group>"; };
-		B2DA893D1F3CC89C008EE96C /* Comms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comms.swift; sourceTree = "<group>"; };
+		B2DA893D1F3CC89C008EE96C /* Comms Handler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Comms Handler.swift"; sourceTree = "<group>"; };
 		B2DD5D7B1ED1A87600725B55 /* Graph View Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Graph View Class.swift"; sourceTree = "<group>"; };
 		B2DD5D7D1ED323F400725B55 /* GraphViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphViewController.swift; sourceTree = "<group>"; };
 		B2E556C022C9F86100C49821 /* Colors.xlsx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Colors.xlsx; sourceTree = "<group>"; };
@@ -881,7 +881,7 @@
 		B288FABC1FB8037300633FD7 /* Comms Classes */ = {
 			isa = PBXGroup;
 			children = (
-				B2DA893D1F3CC89C008EE96C /* Comms.swift */,
+				B2DA893D1F3CC89C008EE96C /* Comms Handler.swift */,
 				B2F70E511EE8BC470092C19F /* Host Controller Class.swift */,
 				B2F7281A1F6D74F9006F0941 /* Invite.swift */,
 				B2767C1D2110061B0029155E /* Loopback Class.swift */,
@@ -1400,7 +1400,7 @@
 				B2BE8692234C6C1600766CF2 /* PlayerSelectionView.swift in Sources */,
 				B2666A1F1FADAC0700A34CB0 /* Test Extensions.swift in Sources */,
 				B20DA0441E142D1E0040221D /* SelectionViewController.swift in Sources */,
-				B2DA893E1F3CC89C008EE96C /* Comms.swift in Sources */,
+				B2DA893E1F3CC89C008EE96C /* Comms Handler.swift in Sources */,
 				B206A1381E50526100E26E96 /* LocationViewController.swift in Sources */,
 				B2B1802821196166008D3BAA /* Contract_Whist_Scorecard.xcdatamodeld in Sources */,
 				B2DD5D7C1ED1A87600725B55 /* Graph View Class.swift in Sources */,

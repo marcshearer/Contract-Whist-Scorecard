@@ -10,7 +10,7 @@ import UIKit
 import CoreData
 import CloudKit
 
-enum CommsHandlerMode {
+public enum CommsHandlerMode {
     case none
     case scorepad
     case roundSummary
@@ -18,6 +18,12 @@ enum CommsHandlerMode {
     case playHand
     case dismiss
     case viewTrick
+}
+
+public enum CommsPurpose: String {
+    case playing = "playing"
+    case sharing = "sharing"
+    case other = "other"
 }
 
 class Scorecard {
@@ -42,7 +48,7 @@ class Scorecard {
     public var gameInProgress: Bool = false
     public var inScorepad: Bool = false
     public var recoveryMode: Bool = false
-    public var recoveryOnlinePurpose: CommsConnectionPurpose!
+    public var recoveryOnlinePurpose: CommsPurpose!
     public var recoveryOnlineType: CommsConnectionType!
     public var recoveryOnlineMode: CommsConnectionMode!
     public var recoveryConnectionUUID: String!
@@ -70,8 +76,7 @@ class Scorecard {
     internal var reminderTimer: Timer?
     
     // Remote logging
-    public var logService: RabbitMQClientService!
-    public var logQueue: RabbitMQQueue!
+    public var logService: CommsClientHandlerDelegate!
     
     // Variables for test extensions
     public var autoPlayHands: Int = 0
@@ -140,8 +145,11 @@ class Scorecard {
     public var iCloudUserIsMe = false
     
     // Comms services
-    public var sharingService: MultipeerServerService!
-    public var commsDelegate: CommsHandlerDelegate?
+    public var sharingService: CommsServerHandlerDelegate?
+    internal var _commsDelegate: CommsHandlerDelegate?
+    internal var _commsPurpose: CommsPurpose?
+    public var commsDelegate: CommsHandlerDelegate? { get { return _commsDelegate } }
+    public var commsPurpose: CommsPurpose? { get { return _commsPurpose } }
     
     // Admin mode
     static var adminMode = false
@@ -1198,7 +1206,7 @@ class Scorecard {
     
     public class func descriptiveUUID(_ type: String) -> String {
         var result: String!
-        if Config.rabbitMQ_DescriptiveIDs {
+        if RabbitMQConfig.descriptiveIDs {
             if let email = Scorecard.onlineEmail() {
                 if let name = Scorecard.nameFromEmail(email) {
                     let dateString = Utility.dateString(Date(), format: "yyyy-MM-dd-hh-mm-ss", localized: false)

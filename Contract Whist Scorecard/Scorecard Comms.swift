@@ -21,7 +21,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     public var isSharing: Bool {
         get {
             if let delegate = self.commsDelegate {
-                if self.commsDelegate!.connectionType == .server && delegate.connectionPurpose == .sharing {
+                if delegate.connectionType == .server && self.commsPurpose == .sharing {
                     return (delegate.connections > 0)
                 } else {
                     return false
@@ -34,59 +34,79 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     
     public var isViewing: Bool {
         get {
-            return (self.commsDelegate != nil && self.commsDelegate!.connectionType == .client && self.commsDelegate!.connectionPurpose == .sharing)
+            if let delegate = self.commsDelegate {
+                return (delegate.connectionType == .client && self.commsPurpose == .sharing)
+            } else {
+                return false
+            }
         }
     }
     
     public var isHosting: Bool {
         get {
-            return (self.commsDelegate != nil && self.commsDelegate!.connectionType == .server  && self.commsDelegate!.connectionPurpose == .playing)
+            if let delegate = self.commsDelegate {
+                return (delegate.connectionType == .server  && self.commsPurpose == .playing)
+            } else {
+                return false
+            }
         }
     }
     
     public var hasJoined: Bool {
         get {
-            return (self.commsDelegate != nil && self.commsDelegate!.connectionType == .client  && self.commsDelegate!.connectionPurpose == .playing)
+            if let delegate = self.commsDelegate {
+                return (delegate.connectionType == .client  && self.commsPurpose == .playing)
+            } else {
+                return false
+            }
         }
     }
     
     public var isPlayingComputer: Bool {
         get {
-            return (self.commsDelegate != nil && self.commsDelegate!.connectionMode == .loopback  && self.commsDelegate!.connectionPurpose == .playing)
+            if let delegate = self.commsDelegate {
+                return (delegate.connectionMode == .loopback  && self.commsPurpose == .playing)
+                
+            } else {
+                return false
+            }
         }
     }
     
     public func setupSharing() {
         if self.settingAllowBroadcast {
-            self.sharingService = MultipeerServerService(purpose: .sharing, serviceID: self.serviceID(.sharing))
+            self.sharingService = CommsHandler.server(proximity: .nearby, mode: .broadcast, serviceID: self.serviceID(.sharing), deviceName: Scorecard.deviceName)
             self.resetSharing()
         }
     }
     
     public func stopSharing() {
-        if let delegate = self.commsDelegate {
-            if delegate.connectionPurpose == .sharing {
-                self.sharingService?.stop()
-                self.commsDelegate = nil
-            }
+        if self.commsPurpose == .sharing {
+            self.sharingService?.stop()
+            self.setCommsDelegate(nil)
         }
     }
     
     public func resetSharing() {
         // Make sure current delegate is cleared
         sharingService?.stop()
-        self.commsDelegate = nil
+        self.setCommsDelegate(nil)
             
         if self.settingAllowBroadcast {
             // Restore server delegate
-            self.commsDelegate = self.sharingService
+            self.setCommsDelegate(self.sharingService, purpose: .sharing)
             self.sharingService?.dataDelegate = self
             self.sharingService?.stateDelegate = self
             self.sharingService?.start()
         }
     }
     
-    public func serviceID(_ purpose: CommsConnectionPurpose) -> String {
+    public func setCommsDelegate(_ delegate: CommsHandlerDelegate?, purpose: CommsPurpose? = nil) {
+        self._commsPurpose = purpose
+        self._commsDelegate = delegate
+    }
+    
+    public func serviceID(_ purpose: CommsPurpose) -> String {
         let servicePrefix = (self.settingDatabase == "development" ? "whdev" : "whist")
         var purposeString: String
         if purpose == .playing {

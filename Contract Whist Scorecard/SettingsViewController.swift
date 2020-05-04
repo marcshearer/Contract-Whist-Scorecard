@@ -894,7 +894,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     // MARK: - Search return routine ================================================================== -
     
-    private func identifyPlayerCompletion(playerMO: [PlayerMO]?) {
+    private func identifyPlayerCompletion(return: Bool, playerMO: [PlayerMO]?) {
         var playerEmail: String! = nil
         var refresh = false
         

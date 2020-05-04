@@ -10,49 +10,45 @@
 import Foundation
 import UIKit
 
-class NotificationSimulator: RabbitMQBroadcastDelegate {
+class NotificationSimulator: CommsBroadcastDelegate {
     
-    var rabbitMQService: RabbitMQService!
-    var queue: RabbitMQQueue!
+    private var onlineQueueService: CommsClientHandlerDelegate!
     
     init() {
     }
     
     deinit {
-        self.queue = nil
+        self.onlineQueueService.stop()
     }
     
     public func start() {
-        if Config.rabbitMQUri != "" {
-            let email = Scorecard.onlineEmail()
-            self.rabbitMQService = RabbitMQService(purpose: .other, type: .queue, serviceID: Config.rabbitMQUri, deviceName: Scorecard.deviceName)
-            self.queue = self.rabbitMQService.startQueue(delegate: self, queueUUID: "notifications", email: email)
-        } else {
-            self.queue = nil
+        if RabbitMQConfig.uriDevMode != "" {
+            self.onlineQueueService = CommsHandler.client(proximity: .online, mode: .queue, serviceID: "notification", deviceName: Scorecard.deviceName)
+            self.onlineQueueService.broadcastDelegate = self
+            let filterEmail = Scorecard.onlineEmail()
+            self.onlineQueueService.start(queue: "notifications", filterEmail: filterEmail)
         }
     }
     
     public class func sendNotifications(hostEmail: String, hostName: String, inviteEmails: [String]) {
-        if Config.pushNotifications_rabbitMQ {
+        if Config.pushNotifications_onlineQueue {
             if let simulator = Utility.appDelegate?.notificationSimulator {
                 for email in inviteEmails {
-                    simulator.sendNotification(email: email, category: "onlineGame", key: "%1$@ has invited you to play online. Go to 'Online Game' and select 'Join a Game' to see the invitation", args: [hostName, hostEmail, Scorecard.deviceName, email])
+                    simulator.sendNotification(email: email, category: "onlineGame", key: "%1$@ has invited you to play online. Go to 'Online Game' and select 'Join a Game' to see the invitation", args: [hostName, hostEmail, Scorecard.deviceName, Scorecard.onlineEmail() ?? ""])
                 }
             }
         }
     }
     
     private func sendNotification(email: String, category: String, key: String, args: [String]) {
-        if self.queue != nil {
-            let data: [String : Any?] = ["notification" : ["category" : category,
-                                                           "key"      : key,
-                                                           "args"     : args]]
-            
-            self.queue.sendBroadcast(data: data, filterBroadcast: email)
-        }
+        let data: [String : Any?] = ["category" : category,
+                                     "key"      : key,
+                                     "args"     : args]
+        
+        self.onlineQueueService.send("notification", data, matchEmail: email)
     }
     
-    internal func didReceiveBroadcast(descriptor: String, data: Any?, from queue: RabbitMQQueue) {
+    internal func didReceiveBroadcast(descriptor: String, data: Any?, from: String) {
         if descriptor == "notification" {
             Utility.mainThread {
                 let content = data as! [String : Any?]

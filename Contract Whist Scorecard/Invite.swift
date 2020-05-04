@@ -38,6 +38,7 @@ class Invite {
                                withName hostName: String,
                                to inviteEmails: [String],
                                inviteUUID: String,
+                               deleteFirst: Bool = true,
                                completion: @escaping (Bool, String?, [InviteReceived]?)->()) {
         
 
@@ -208,7 +209,7 @@ class Invite {
                     return
                 }
                 
-                //Send simulated notifications through rabbitMQ
+                //Send simulated notifications through network
                 if self.inviteEmails != nil {
                     NotificationSimulator.sendNotifications(hostEmail: self.hostEmail, hostName: self.hostName, inviteEmails: self.inviteEmails)
                 }

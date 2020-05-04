@@ -616,11 +616,13 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         self.gamePreviewViewController.showStatus(status: self.lastStatus)
     }
     
-    internal func gamePreviewCompletion(returnHome: Bool) {
+    internal func gamePreviewCompletion(returnHome: Bool, completion: (()->())?) {
         self.disconnectPressed()
         self.gamePreviewViewController = nil
         if returnHome {
-            self.exitClient(resetRecovery: true)
+            self.exitClient(resetRecovery: true, completion: completion)
+        } else {
+            completion?()
         }
     }
     
@@ -1455,9 +1457,9 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         self.scorecard.resetSharing()
     }
     
-    private func exitClient(resetRecovery: Bool = true) {
+    private func exitClient(resetRecovery: Bool = true, completion: (()->())? = nil) {
         self.finishClient(resetRecovery: resetRecovery)
-        self.dismiss()
+        self.dismiss(completion: completion)
     }
     
     private func removeEntry(peer: CommsPeer) {
@@ -1474,14 +1476,6 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
                 if available.count == 0 {
                     // Just lost last one - need to insert placeholder and update hosting options
                     self.clientTableView.insertRows(at: [IndexPath(row: 0, section: peerSection)], with: .right)
-                    if self.hostingOptions > 0 {
-                        let hostingRows = self.clientTableView.numberOfRows(inSection: self.hostSection)
-                        if hostingRows > 0 {
-                            for row in 0..<hostingRows {
-                                self.clientTableView.reloadRows(at: [IndexPath(row: row, section: hostSection)], with: .automatic)
-                            }
-                        }
-                    }
                 }
                 self.clientTableView.endUpdates()
             }
@@ -1631,9 +1625,10 @@ class ClientViewController: CustomViewController, UITableViewDelegate, UITableVi
         viewController.present(clientViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
     }
     
-    private func dismiss() {
+    private func dismiss(completion: (()->())? = nil) {
         self.dismiss(animated: true, completion: {
             self.completion?()
+            completion?()
         })
     }
     

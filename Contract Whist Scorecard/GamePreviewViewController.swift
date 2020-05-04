@@ -19,7 +19,7 @@ import CoreData
     
     @objc optional func gamePreviewInitialisationComplete(gamePreviewViewController: GamePreviewViewController)
     
-    @objc optional func gamePreviewCompletion(returnHome: Bool)
+    @objc optional func gamePreviewCompletion(returnHome: Bool, completion: (()->())?)
     
     @objc optional func gamePreviewStartGame()
     
@@ -493,12 +493,14 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     public func showDealer(playerNumber: Int, forceHide: Bool = false) {
         
-        if forceHide {
-            self.selectedPlayersView.setHaloColor(slot: playerNumber - 1, color: Palette.halo)
-            self.selectedPlayersView.setHaloWidth(slot: playerNumber - 1, haloWidth: haloWidth, allowHaloWidth: dealerHaloWidth)
-        } else {
-            self.selectedPlayersView.setHaloColor(slot: playerNumber - 1, color: Palette.haloDealer)
-            self.selectedPlayersView.setHaloWidth(slot: playerNumber - 1, haloWidth: dealerHaloWidth)
+        if self.selectedPlayersView != nil {
+            if forceHide {
+                self.selectedPlayersView.setHaloColor(slot: playerNumber - 1, color: Palette.halo)
+                self.selectedPlayersView.setHaloWidth(slot: playerNumber - 1, haloWidth: haloWidth, allowHaloWidth: dealerHaloWidth)
+            } else {
+                self.selectedPlayersView.setHaloColor(slot: playerNumber - 1, color: Palette.haloDealer)
+                self.selectedPlayersView.setHaloWidth(slot: playerNumber - 1, haloWidth: dealerHaloWidth)
+            }
         }
     }
     
@@ -817,7 +819,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     private func dismiss(returnHome: Bool = false) {
         self.dismiss(animated: true, completion: {
-            self.delegate?.gamePreviewCompletion?(returnHome: returnHome)
+            self.delegate?.gamePreviewCompletion?(returnHome: returnHome, completion: nil)
         })
     }
     
@@ -826,7 +828,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             NotificationCenter.default.removeObserver(observer!)
             self.scorecard.resetOverrideSettings()
         }
-        self.delegate?.gamePreviewCompletion?(returnHome: false)
+        self.delegate?.gamePreviewCompletion?(returnHome: false, completion: nil)
     }
 }
 

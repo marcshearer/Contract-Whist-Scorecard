@@ -496,27 +496,26 @@ class RabbitMQClientService : RabbitMQService, CommsClientHandlerDelegate, Comms
         var connected = false
         if descriptor == "reset" {
             self.forEachQueue() { (queue) in
+                let mode = data as? String ?? ""
                 if queue.queueUUID == queueUUID {
                     queue.forEachPeer { (rabbitMQPeer) in
                         if rabbitMQPeer.state == .connected {
-                            rabbitMQPeer.disconnect(reason: "Connection reset", reconnect: true)
+                            rabbitMQPeer.disconnect(reason: "Connection reset", reconnect: (mode != "stop"))
                             connected = true
                         }
                     }
-                    if !connected {
-                        // Wasn't connected so reload invites
-                        self.checkOnlineInvites(email: self.inviteEmail, checkExpiry: !self.recoveryMode)
-                    }
-                    if let mode = data as? String {
-                        if mode != "stop" {
-                            queue.forEachPeer { (rabbitMQPeer) in
-                                if rabbitMQPeer.autoReconnect {
-                                    let playerName = Scorecard.nameFromEmail(self.inviteEmail)
-                                    _ = rabbitMQPeer.connect(to: rabbitMQPeer.commsPeer,
-                                                             playerEmail: self.inviteEmail,
-                                                             playerName: playerName,
-                                                             reconnect: true)
-                                }
+                    if mode != "stop" {
+                        if !connected {
+                            // Wasn't connected so reload invites
+                            self.checkOnlineInvites(email: self.inviteEmail, checkExpiry: !self.recoveryMode)
+                        }
+                        queue.forEachPeer { (rabbitMQPeer) in
+                            if rabbitMQPeer.autoReconnect {
+                                let playerName = Scorecard.nameFromEmail(self.inviteEmail)
+                                _ = rabbitMQPeer.connect(to: rabbitMQPeer.commsPeer,
+                                                         playerEmail: self.inviteEmail,
+                                                         playerName: playerName,
+                                                         reconnect: true)
                             }
                         }
                     }
@@ -1252,7 +1251,7 @@ extension Notification.Name {
 class RabbitMQConfig {
     
     // Choose which rabbitMQ server to use in development mode
-    public static let devMode: RabbitMQUriDevMode = .amqpServer
+    public static let devMode: RabbitMQUriDevMode = .localhost
     
     // Use descriptive rabbitMQ session/connection IDs
     public static let descriptiveIDs = false

@@ -27,7 +27,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     // Variables to decide how view behaves
     private var selectionMode: SelectionMode!
     private var preCompletion: (([PlayerMO]?)->())? = nil
-    private var completion: (([PlayerMO]?)->())? = nil
+    private var completion: ((Bool, [PlayerMO]?)->())? = nil
     private var gamePreviewDelegate: GamePreviewDelegate!
     private var backText: String = "Back"
     private var backImage: String = "back"
@@ -500,7 +500,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     }
 
     func continueAction() {
-        self.completion?(self.selectedList.map {$0.playerMO})
+        self.completion?(false, self.selectedList.map {$0.playerMO})
         selectedList.sort(by: { $0.slot < $1.slot })
         self.showGamePreview()
     }
@@ -914,14 +914,17 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         self.gamePreviewDelegate?.gamePreviewInitialisationComplete?(gamePreviewViewController: gamePreviewViewController)
     }
     
-    internal func gamePreviewCompletion(returnHome: Bool) {
+    internal func gamePreviewCompletion(returnHome: Bool, completion: (()->())?) {
         self.scorecard.loadGameDefaults()
         self.selectedList = []
         self.assignPlayers()
-        self.gamePreviewDelegate?.gamePreviewCompletion?(returnHome: returnHome)
-        if returnHome {
-            self.dismiss()
-        }
+        self.gamePreviewDelegate?.gamePreviewCompletion?(returnHome: returnHome, completion: {
+            if returnHome {
+                self.dismiss(returnHome: true, completion: completion)
+            } else {
+                completion?()
+            }
+        })
     }
     
     internal func gamePreview(isConnected playerMO: PlayerMO) -> Bool {
@@ -1002,7 +1005,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class func show(from viewController: CustomViewController, existing selectionViewController: SelectionViewController? = nil, mode: SelectionMode, thisPlayer: String? = nil, thisPlayerFrame: CGRect? = nil, showThisPlayerName: Bool = false, formTitle: String = "Selection", smallFormTitle: String? = nil, backText: String = "Back", backImage: String = "", bannerColor: UIColor? = nil, fullScreen: Bool = false, preCompletion: (([PlayerMO]?)->())? = nil, completion: (([PlayerMO]?)->())? = nil, showCompletion: (()->())? = nil, gamePreviewDelegate: GamePreviewDelegate? = nil) -> SelectionViewController {
+    class func show(from viewController: CustomViewController, existing selectionViewController: SelectionViewController? = nil, mode: SelectionMode, thisPlayer: String? = nil, thisPlayerFrame: CGRect? = nil, showThisPlayerName: Bool = false, formTitle: String = "Selection", smallFormTitle: String? = nil, backText: String = "Back", backImage: String = "", bannerColor: UIColor? = nil, fullScreen: Bool = false, preCompletion: (([PlayerMO]?)->())? = nil, completion: ((Bool, [PlayerMO]?)->())? = nil, showCompletion: (()->())? = nil, gamePreviewDelegate: GamePreviewDelegate? = nil) -> SelectionViewController {
         var selectionViewController = selectionViewController
         
         if selectionViewController == nil {
@@ -1041,16 +1044,17 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         return selectionViewController!
     }
     
-    private func dismiss(_ players: [PlayerMO]? = nil) {
+    private func dismiss(returnHome: Bool = false, _ players: [PlayerMO]? = nil, completion: (()->())? = nil) {
         self.dismiss(animated: true, completion: {
-            self.completion?(players)
+            self.completion?(returnHome, players)
+            completion?()
         })
     }
     
     override internal func didDismiss() {
         NotificationCenter.default.removeObserver(observer!)
         self.preCompletion?(nil)
-        self.completion?(nil)
+        self.completion?(false, nil)
     }
 }
 

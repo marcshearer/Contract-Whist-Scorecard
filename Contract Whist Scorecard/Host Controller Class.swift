@@ -145,7 +145,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
         
         if self.startMode == .online {
             // Show selection
-            self.showSelection(completion: { [unowned self] (selectedPlayers) in
+            self.showSelection(completion: { [unowned self] (returnHome, selectedPlayers) in
                 if let selectedPlayers = selectedPlayers {
                     // Finish initialisation
                     self.selectedPlayers = selectedPlayers
@@ -159,7 +159,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
                         }
                     }
                 } else {
-                    self.exitHost(returnHome: false)
+                    self.exitHost(returnHome: returnHome)
                 }
             })
         } else {
@@ -544,10 +544,10 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
         }
     }
     
-    internal func gamePreviewCompletion(returnHome: Bool) {
+    internal func gamePreviewCompletion(returnHome: Bool, completion: (()->())? = nil) {
         self.gamePreviewViewController = nil
         self.gameInProgress = false
-        self.exitHost(returnHome: returnHome)
+        self.exitHost(returnHome: returnHome, completion: completion)
     }
     
     internal func gamePreview(isConnected playerMO: PlayerMO) -> Bool {
@@ -630,7 +630,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
         }
     }
     
-    private func showSelection(showCompletion: (()->())? = nil, completion: (([PlayerMO]?)->())? = nil) {
+    private func showSelection(showCompletion: (()->())? = nil, completion: ((Bool, [PlayerMO]?)->())? = nil) {
         if let viewController = parentViewController as? CustomViewController {
             self.selectionViewController = SelectionViewController.show(from: viewController, existing: self.selectionViewController, mode: .invitees, thisPlayer: self.playerData[0].email, formTitle: "Choose Players", smallFormTitle: "Select", backText: "", backImage: "back", completion: completion, showCompletion: showCompletion, gamePreviewDelegate: self)
         }
@@ -831,7 +831,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
         self.hostService?.start(email: email, queueUUID: queueUUID, name: name, invite: invite, recoveryMode: self.scorecard.recoveryMode)
     }
     
-    public func exitHost(returnHome: Bool) {
+    public func exitHost(returnHome: Bool, completion: (()->())? = nil) {
         self.exiting = true
         self.scorecard.sendScores = false
         self.scorecard.commsDelegate?.disconnect(reason: "\(self.playerData[0].name) has stopped hosting", reconnect: false)
@@ -843,6 +843,7 @@ class HostController: NSObject, CommsStateDelegate, CommsDataDelegate, CommsConn
             self.clearHandlerCompleteNotification(observer: self.observer)
             self.scorecard.resetOverrideSettings()
             self.completion?(returnHome)
+            completion?()
         })
     }
 

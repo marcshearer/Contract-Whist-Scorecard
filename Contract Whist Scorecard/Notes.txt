@@ -6,7 +6,7 @@ master                              safe version (5.1(2)) to go back to if subse
 feature/network-abstraction         tidy up of network abstraction layer
 feature/restructure-spring-2020     major rewrite of UI and classes
 
-release/6.0                         master plus feature/network-abstraction
+release/5.1                         master plus feature/network-abstraction
 
 List of outstanding things to do
 

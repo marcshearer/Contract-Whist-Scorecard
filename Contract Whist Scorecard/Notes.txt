@@ -1,3 +1,13 @@
+List of current versions
+------------------------
+
+master                              safe version (5.1(2)) to go back to if subsequent versions become unstable
+
+feature/network-abstraction         tidy up of network abstraction layer
+feature/restructure-spring-2020     major rewrite of UI and classes
+
+release/6.0                         master plus feature/network-abstraction
+
 List of outstanding things to do
 
 Changes since last version
@@ -172,6 +182,9 @@ Fix deal bugs
 Drill not rotating right (wrong number of values)
 Drill not hitting the right value in graph
 Added crown to game summary
+
+5.1 (0-2)
+Stability fixes
 
 Bugs fix now
 ------------

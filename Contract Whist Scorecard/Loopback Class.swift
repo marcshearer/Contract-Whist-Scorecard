@@ -18,7 +18,6 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsServerHandlerDelegat
     
     // Delegate properties
     public let connectionMode: CommsConnectionMode
-    public let connectionFramework: CommsConnectionFramework = .loopback
     public let connectionProximity: CommsConnectionProximity = .loopback
     public var connectionType: CommsConnectionType
     public var handlerState: CommsServerHandlerState = .notStarted

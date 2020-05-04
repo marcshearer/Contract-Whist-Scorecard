@@ -35,12 +35,6 @@ public enum CommsConnectionMode: String {
     case loopback = "loopback"
 }
 
-public enum CommsConnectionFramework {
-    case multipeer
-    case rabbitMQ
-    case loopback
-}
-
 public enum CommsConnectionProximity {
     case nearby
     case online

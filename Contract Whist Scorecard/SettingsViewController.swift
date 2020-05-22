@@ -11,13 +11,10 @@ import UserNotifications
 import GameKit
 import CoreLocation
 
-class SettingsViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CLLocationManagerDelegate {
+class SettingsViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CLLocationManagerDelegate {
     
     // MARK: - Class Properties ======================================================================== -
         
-    // Main state properties
-    private let scorecard = Scorecard.shared
-    
     // Properties to pass state
     private var backText = "Back"
     private var backImage = "back"
@@ -112,8 +109,8 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
             }
         }
         
-        self.onlineEnabled = self.scorecard.settingSyncEnabled && (self.scorecard.settingOnlinePlayerEmail ?? "") != ""
-        self.facetimeEnabled = self.scorecard.settingSyncEnabled && self.scorecard.settingFaceTimeAddress != nil
+        self.onlineEnabled = Scorecard.shared.settings.syncEnabled && (Scorecard.shared.settings.onlinePlayerEmail ?? "") != ""
+        self.facetimeEnabled = Scorecard.shared.settings.syncEnabled && Scorecard.shared.settings.faceTimeAddress != nil
         
         // Set observer for entering foreground
         NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -126,7 +123,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        scorecard.reCenterPopup(self)
+        Scorecard.shared.reCenterPopup(self)
         self.reload = true
         self.view.setNeedsLayout()
     }
@@ -150,7 +147,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
         if let section = Sections(rawValue: section) {
             switch section {
             case .sync:
-                return (self.scorecard.playerList.count == 0 ? 0 : SyncOptions.allCases.count)
+                return (Scorecard.shared.playerList.count == 0 ? 0 : SyncOptions.allCases.count)
                 
             case .displayStatus:
                 return 0
@@ -178,7 +175,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
         if let section = Sections(rawValue: section) {
             switch section {
             case .sync:
-                height = (self.scorecard.playerList.count == 0 ? 0.0 : 70.0)
+                height = (Scorecard.shared.playerList.count == 0 ? 0.0 : 70.0)
             default:
                 height = 70.0
             }
@@ -242,7 +239,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                 cell.separator.isHidden = true
                 cell.toggleSwitch.isHidden = false
                 cell.toggleSwitch.addTarget(self, action: #selector(SettingsViewController.syncEnabledChanged(_:)), for: .valueChanged)
-                cell.toggleSwitch.isOn = self.scorecard.settingSyncEnabled
+                cell.toggleSwitch.isOn = Scorecard.shared.settings.syncEnabled
                 return header
                 
             case .displayStatus:
@@ -251,7 +248,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                 cell.label.text = "Show Status Bar"
                 cell.toggleSwitch.isHidden = false
                 cell.toggleSwitch.addTarget(self, action: #selector(SettingsViewController.displayStatusChanged(_:)), for: .valueChanged)
-                cell.toggleSwitch.isOn = !self.scorecard.settingPrefersStatusBarHidden
+                cell.toggleSwitch.isOn = !Scorecard.shared.settings.prefersStatusBarHidden
                 return header
                 
             case .inGame:
@@ -267,8 +264,8 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                 cell.label.text = "Save Game History"
                 cell.toggleSwitch.isHidden = false
                 cell.toggleSwitch.addTarget(self, action: #selector(SettingsViewController.saveHistoryChanged(_:)), for: .valueChanged)
-                cell.toggleSwitch.isOn = self.scorecard.settingSaveHistory
-                cell.setEnabled(enabled: !self.scorecard.settingSyncEnabled)
+                cell.toggleSwitch.isOn = Scorecard.shared.settings.saveHistory
+                cell.setEnabled(enabled: !Scorecard.shared.settings.syncEnabled)
                 return header
                 
             case .generalInfo:
@@ -306,8 +303,8 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                         cell.label.text = "Scorecard sharing"
                         cell.labelLeadingConstraint.constant = 20.0
                         cell.toggleSwitch.addTarget(self, action: #selector(SettingsViewController.shareScorecardChanged(_:)), for: .valueChanged)
-                        cell.toggleSwitch.isOn = self.scorecard.settingAllowBroadcast
-                        cell.setEnabled(enabled: self.scorecard.settingSyncEnabled)
+                        cell.toggleSwitch.isOn = Scorecard.shared.settings.allowBroadcast
+                        cell.setEnabled(enabled: Scorecard.shared.settings.syncEnabled)
                         
                     case .onlineGames:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Switch") as? SettingsTableCell
@@ -315,8 +312,8 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                         cell.label.text = "Online games enabled"
                         cell.labelLeadingConstraint.constant = 20.0
                         cell.toggleSwitch.addTarget(self, action: #selector(SettingsViewController.onlineGamesChanged(_:)), for: .valueChanged)
-                        cell.toggleSwitch.isOn = self.scorecard.settingOnlinePlayerEmail != nil
-                        cell.setEnabled(enabled: self.scorecard.settingSyncEnabled)
+                        cell.toggleSwitch.isOn = Scorecard.shared.settings.onlinePlayerEmail != nil
+                        cell.setEnabled(enabled: Scorecard.shared.settings.syncEnabled)
                         
                     case .onlinePlayer:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Online Player") as? SettingsTableCell
@@ -330,7 +327,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                         cell.label.text = "Vibrate when turn to play"
                         cell.labelLeadingConstraint.constant = 40
                         cell.toggleSwitch.addTarget(self, action: #selector(SettingsViewController.vibrateAlertChanged(_:)), for: .valueChanged)
-                        cell.toggleSwitch.isOn = self.scorecard.settingAlertVibrate
+                        cell.toggleSwitch.isOn = Scorecard.shared.settings.alertVibrate
                         self.enableAlerts(cell: cell)
                         
                     case .facetimeCalls:
@@ -340,7 +337,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                         cell.labelLeadingConstraint.constant = 40
                         cell.toggleSwitch.addTarget(self, action: #selector(SettingsViewController.facetimeCallsClicked(_:)), for: .valueChanged)
                         cell.toggleSwitch.isOn = self.facetimeEnabled
-                        cell.setEnabled(enabled: self.scorecard.settingSyncEnabled && (self.scorecard.settingOnlinePlayerEmail ?? "") != "")
+                        cell.setEnabled(enabled: Scorecard.shared.settings.syncEnabled && (Scorecard.shared.settings.onlinePlayerEmail ?? "") != "")
                         
                     case .facetimeAddress:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Text Field") as? SettingsTableCell
@@ -348,7 +345,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                         cell.textField.addTarget(self, action: #selector(SettingsViewController.facetimeAddressEndEdit(_:)), for: UIControl.Event.editingDidEnd)
                         cell.textField.addTarget(self, action: #selector(SettingsViewController.facetimeAddressBeginEdit(_:)), for: UIControl.Event.editingDidBegin)
                         cell.textField.attributedPlaceholder = NSAttributedString(string: "Enter Facetime address", attributes:[NSAttributedString.Key.foregroundColor: Palette.inputControlPlaceholder])
-                        cell.textField.text = self.scorecard.settingFaceTimeAddress ?? ""
+                        cell.textField.text = Scorecard.shared.settings.faceTimeAddress ?? ""
                         cell.setEnabled(enabled: self.facetimeEnabled)
                         
                     case .receiveNotifications:
@@ -357,8 +354,8 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                         cell.label.text = "Receive game notifications"
                         cell.labelLeadingConstraint.constant = 20.0
                         cell.toggleSwitch.addTarget(self, action: #selector(SettingsViewController.receiveNotificationsChanged(_:)), for: .valueChanged)
-                        cell.toggleSwitch.isOn = self.scorecard.settingReceiveNotifications
-                        cell.setEnabled(enabled: self.scorecard.settingSyncEnabled)
+                        cell.toggleSwitch.isOn = Scorecard.shared.settings.receiveNotifications
+                        cell.setEnabled(enabled: Scorecard.shared.settings.syncEnabled)
                     }
                 }
                 
@@ -379,14 +376,14 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                         cell.slider.tag = index
                         cell.sliderLabel.text = (index == 0 ? "Start:" : "End:")
                         cell.slider.addTarget(self, action: #selector(SettingsViewController.cardsSliderChanged(_:)), for: .valueChanged)
-                        cell.sliderValue.text = "\(self.scorecard.gameSettings.cards[index])"
-                        cell.slider.value = Float(self.scorecard.gameSettings.cards[index])
+                        cell.sliderValue.text = "\(Scorecard.shared.settings.cards[index])"
+                        cell.slider.value = Float(Scorecard.shared.settings.cards[index])
                         
                     case .cardsInHandBounce:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Segmented") as? SettingsTableCell
                         self.cardsChanged(bounceSegmentedControl: cell.segmentedControl)
                         cell.segmentedControl.addTarget(self, action: #selector(SettingsViewController.cardsInHandBounceChanged(_:)), for: .valueChanged)
-                        cell.segmentedControl.selectedSegmentIndex = (self.scorecard.gameSettings.bounceNumberCards ? 1 : 0)
+                        cell.segmentedControl.selectedSegmentIndex = (Scorecard.shared.settings.bounceNumberCards ? 1 : 0)
                         
                     case .bonus2Subheading:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Sub Heading") as? SettingsTableCell
@@ -397,7 +394,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                         cell.segmentedControl.setTitle("No bonus", forSegmentAt: 0)
                         cell.segmentedControl.setTitle("10 Point Bonus", forSegmentAt: 1)
                         cell.segmentedControl.addTarget(self, action: #selector(SettingsViewController.bonus2Changed(_:)), for: .valueChanged)
-                        cell.segmentedControl.selectedSegmentIndex = (self.scorecard.settingBonus2 ? 1 : 0)
+                        cell.segmentedControl.selectedSegmentIndex = (Scorecard.shared.settings.bonus2 ? 1 : 0)
                         
                     case .includeNoTrump:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Switch") as? SettingsTableCell
@@ -405,7 +402,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                         cell.label.text = "Include No Trump (NT)"
                         cell.labelLeadingConstraint.constant = 20.0
                         cell.toggleSwitch.addTarget(self, action: #selector(SettingsViewController.includeNoTrumpChanged(_:)), for: .valueChanged)
-                        let index = self.scorecard.settingTrumpSequence.firstIndex(where: {$0 == "NT"})
+                        let index = Scorecard.shared.settings.trumpSequence.firstIndex(where: {$0 == "NT"})
                         cell.toggleSwitch.isOn = (index != nil)
                         
                     case .trumpSequenceEdit:
@@ -432,8 +429,8 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                         cell.label.text = "Save game location"
                         cell.labelLeadingConstraint.constant = 20.0
                         cell.toggleSwitch.addTarget(self, action: #selector(SettingsViewController.saveGameLocationChanged(_:)), for: .valueChanged)
-                        cell.toggleSwitch.isOn = self.scorecard.settingSaveLocation
-                        cell.setEnabled(enabled: self.scorecard.settingSaveHistory)
+                        cell.toggleSwitch.isOn = Scorecard.shared.settings.saveLocation
+                        cell.setEnabled(enabled: Scorecard.shared.settings.saveHistory)
                     }
                 }
                 
@@ -443,13 +440,13 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                     case .version:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Info Single") as? SettingsTableCell
                         cell.infoLabel.text = "Version:"
-                        cell.infoValue1.text = "\(self.scorecard.settingVersion) (\(self.scorecard.settingBuild))"
+                        cell.infoValue1.text = "\(Scorecard.version.version) (\(Scorecard.version.build))"
                         
                     case .database:
                         // Database
                         cell = tableView.dequeueReusableCell(withIdentifier: "Info Single") as? SettingsTableCell
                         cell.infoLabel.text = "Database:"
-                        cell.infoValue1.text = self.scorecard.settingDatabase
+                        cell.infoValue1.text = Scorecard.shared.database
                     }
                 }
                 
@@ -465,9 +462,9 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                         
                     case .players:
                          cell = tableView.dequeueReusableCell(withIdentifier: "Info Three") as? SettingsTableCell
-                        let totalScore = self.scorecard.playerList.reduce(0) { $0 + $1.totalScore }
+                        let totalScore = Scorecard.shared.playerList.reduce(0) { $0 + $1.totalScore }
                         cell.infoLabel.text = "Players:"
-                        cell.infoValue1.text = "\(self.scorecard.playerList.count)"
+                        cell.infoValue1.text = "\(Scorecard.shared.playerList.count)"
                         cell.infoValue2.text = ""
                         Utility.getCloudRecordCount("Players", completion: { (players) in
                             Utility.mainThread {
@@ -571,21 +568,21 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     @objc internal func saveHistoryChanged(_ saveHistorySwitch: UISwitch) {
         
-        scorecard.settingSaveHistory = saveHistorySwitch.isOn
+        Scorecard.shared.settings.saveHistory = saveHistorySwitch.isOn
         
-        if scorecard.settingSaveHistory {
+        if Scorecard.shared.settings.saveHistory {
             self.setOptionEnabled(section: Sections.saveHistory.rawValue, option: SaveHistoryOptions.saveGameLocation.rawValue, enabled: true)
         } else {
             // Need to clear 'save location' as well
             self.setOptionValue(section: Sections.saveHistory.rawValue, option: SaveHistoryOptions.saveGameLocation.rawValue, value: false)
             self.setOptionEnabled(section: Sections.saveHistory.rawValue, option: SaveHistoryOptions.saveGameLocation.rawValue, enabled: false)
-            scorecard.settingSaveLocation = false
+            Scorecard.shared.settings.saveLocation = false
             // Save 'save location'
-            UserDefaults.standard.set(scorecard.settingSaveLocation, forKey: "saveLocation")
+            UserDefaults.standard.set(Scorecard.shared.settings.saveLocation, forKey: "saveLocation")
         }
         
         // Save it
-        UserDefaults.standard.set(scorecard.settingSaveHistory, forKey: "saveHistory")
+        UserDefaults.standard.set(Scorecard.shared.settings.saveHistory, forKey: "saveHistory")
     }
     
     @objc internal func generalInfoClicked(_ collapseButton: UIButton) {
@@ -621,16 +618,16 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     @objc internal func shareScorecardChanged(_ shareScorecardSwitch: UISwitch) {
         
-        scorecard.settingAllowBroadcast = shareScorecardSwitch.isOn
+        Scorecard.shared.settings.allowBroadcast = shareScorecardSwitch.isOn
             
-        if scorecard.settingAllowBroadcast {
-            self.scorecard.setupSharing()
+        if Scorecard.shared.settings.allowBroadcast {
+            Scorecard.shared.setupSharing()
         } else {
             self.clearSharing()
         }
         
         // Save it
-        UserDefaults.standard.set(scorecard.settingAllowBroadcast, forKey: "allowBroadcast")
+        UserDefaults.standard.set(Scorecard.shared.settings.allowBroadcast, forKey: "allowBroadcast")
     }
     
     @objc internal func onlineGamesChanged(_ onlineGamesSwitch: UISwitch) {
@@ -655,10 +652,10 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
 
     @objc internal func vibrateAlertChanged(_ vibrateAlertSwitch: UISwitch) {
         
-        scorecard.settingAlertVibrate = vibrateAlertSwitch.isOn
+        Scorecard.shared.settings.alertVibrate = vibrateAlertSwitch.isOn
         
         // Save it
-        UserDefaults.standard.set(scorecard.settingAlertVibrate, forKey: "alertVibrate")
+        UserDefaults.standard.set(Scorecard.shared.settings.alertVibrate, forKey: "alertVibrate")
     }
 
     @objc internal func facetimeCallsClicked(_ facetimeCallsSwitch: UISwitch) {
@@ -670,12 +667,12 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
             self.setOptionEnabled(section: Sections.sync.rawValue, option: SyncOptions.facetimeAddress.rawValue, enabled: true)
         } else {
             // Disabled blank out address
-            self.scorecard.settingFaceTimeAddress = ""
+            Scorecard.shared.settings.faceTimeAddress = ""
             self.setOptionValue(section: Sections.sync.rawValue, option: SyncOptions.facetimeCalls.rawValue, value: false)
             self.setOptionEnabled(section: Sections.sync.rawValue, option: SyncOptions.facetimeAddress.rawValue, enabled: false)
             
             // Save it
-            UserDefaults.standard.set(self.scorecard.settingFaceTimeAddress, forKey: "facetimeAddress")
+            UserDefaults.standard.set(Scorecard.shared.settings.faceTimeAddress, forKey: "facetimeAddress")
         }
         
         self.refreshFaceTimeAddress()
@@ -686,10 +683,10 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     @objc internal func facetimeAddressChanged(_ facetimeAddressTextField: UITextField) {
         
-        self.scorecard.settingFaceTimeAddress = facetimeAddressTextField.text
+        Scorecard.shared.settings.faceTimeAddress = facetimeAddressTextField.text
         
         // Save it
-        UserDefaults.standard.set(self.scorecard.settingFaceTimeAddress, forKey: "facetimeAddress")
+        UserDefaults.standard.set(Scorecard.shared.settings.faceTimeAddress, forKey: "facetimeAddress")
         
     }
     
@@ -702,7 +699,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
         self.facetimeAddressChanged(facetimeAddressTextField)
         
         // If blank then unset facetime calls switch and disable address
-        if self.scorecard.settingFaceTimeAddress == "" {
+        if Scorecard.shared.settings.faceTimeAddress == "" {
             self.facetimeEnabled = false
             self.setOptionValue(section: Sections.sync.rawValue, option: SyncOptions.facetimeCalls.rawValue, value: false)
             self.setOptionEnabled(section: Sections.sync.rawValue, option: SyncOptions.facetimeAddress.rawValue, enabled: false)
@@ -714,12 +711,12 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
      
     @objc internal func receiveNotificationsChanged(_ receiveNotificationsSwitch: UISwitch) {
         if receiveNotificationsSwitch.isOn {
-            scorecard.settingReceiveNotifications = true
+            Scorecard.shared.settings.receiveNotifications = true
             authoriseNotifications(
                 successAction: {
                     Notifications.updateHighScoreSubscriptions()
                     // Save it
-                    UserDefaults.standard.set(self.scorecard.settingReceiveNotifications, forKey: "receiveNotifications")
+                    UserDefaults.standard.set(Scorecard.shared.settings.receiveNotifications, forKey: "receiveNotifications")
                 },
                 failureAction: {
                     self.clearReceiveNotifications()
@@ -732,55 +729,53 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     @objc internal func cardsSliderChanged(_ cardsSlider: UISlider) {
         let index = cardsSlider.tag
         let option = (index == 0 ? InGameOptions.cardsInHandStart : InGameOptions.cardsInHandEnd)
-        scorecard.gameSettings.cards[index] = Int(cardsSlider.value)
-        self.setOptionValue(section: Sections.inGame.rawValue, option: option.rawValue, value: scorecard.gameSettings.cards[index])
+        Scorecard.shared.settings.cards[index] = Int(cardsSlider.value)
+        self.setOptionValue(section: Sections.inGame.rawValue, option: option.rawValue, value: Scorecard.shared.settings.cards[index])
         self.cardsChanged()
         
         // Save it
-        UserDefaults.standard.set(scorecard.gameSettings.cards, forKey: "cards")
+        UserDefaults.standard.set(Scorecard.shared.settings.cards, forKey: "cards")
     }
     
     @objc func cardsInHandBounceChanged(_ cardsInHandBounceSegmentedControl: UISegmentedControl) {
         
-        self.scorecard.gameSettings.bounceNumberCards = (cardsInHandBounceSegmentedControl.selectedSegmentIndex == 1)
+        Scorecard.shared.settings.bounceNumberCards = (cardsInHandBounceSegmentedControl.selectedSegmentIndex == 1)
         self.cardsChanged()
         
         // Save it
-        UserDefaults.standard.set(scorecard.gameSettings.bounceNumberCards, forKey: "bounceNumberCards")
+        UserDefaults.standard.set(Scorecard.shared.settings.bounceNumberCards, forKey: "bounceNumberCards")
     }
 
     @objc internal func bonus2Changed(_ bonus2SegmentedControl: UISegmentedControl) {
         
-        self.scorecard.settingBonus2 = (bonus2SegmentedControl.selectedSegmentIndex == 1)
+        Scorecard.shared.settings.bonus2 = (bonus2SegmentedControl.selectedSegmentIndex == 1)
         
         // Save it
-        UserDefaults.standard.set(scorecard.settingBonus2, forKey: "bonus2")
+        UserDefaults.standard.set(Scorecard.shared.settings.bonus2, forKey: "bonus2")
     }
     
     @objc func includeNoTrumpChanged(_ includeNoTrumpSwitch: UISwitch) {
         if includeNoTrumpSwitch.isOn {
             // Add NT
-            if self.scorecard.suits.firstIndex(where: {$0.toString() == "NT"}) == nil {
-                self.scorecard.settingTrumpSequence.append("NT")
+            if Scorecard.shared.settings.trumpSequence.firstIndex(where: {$0 == "NT"}) == nil {
+                Scorecard.shared.settings.trumpSequence.append("NT")
             }
         } else {
             // Remove NT
-            if let index = self.scorecard.suits.firstIndex(where: {$0.toString() == "NT"}) {
-                self.scorecard.settingTrumpSequence.remove(at: index)
+            if let index = Scorecard.shared.settings.trumpSequence.firstIndex(where: {$0 == "NT"}) {
+                Scorecard.shared.settings.trumpSequence.remove(at: index)
             }
         }
-        self.scorecard.setupSuits()
         self.refreshTrumpSequence()
     }
     
     @objc func trumpSequenceEditClicked(_ trumpSequenceEditButton: UIButton) {
         if trumpSequenceEdit {
             // Leaving edit mode - save it
-            self.scorecard.setupSuits()
             self.refreshTrumpSequence()
             
             // Save it
-            UserDefaults.standard.set(scorecard.settingTrumpSequence, forKey: "trumpSequence")
+            UserDefaults.standard.set(Scorecard.shared.settings.trumpSequence, forKey: "trumpSequence")
             
             // Disable suit buttons
             self.setOptionEnabled(section: Sections.inGame.rawValue, option: InGameOptions.trumpSequenceSuits.rawValue, enabled: false)
@@ -818,20 +813,20 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     }
 
     @objc internal func displayStatusChanged(_ displayStatusSwitch: UISwitch) {
-        scorecard.settingPrefersStatusBarHidden = !displayStatusSwitch.isOn
+        Scorecard.shared.settings.prefersStatusBarHidden = !displayStatusSwitch.isOn
 
         // Save it
-        UserDefaults.standard.set(scorecard.settingPrefersStatusBarHidden, forKey: "prefersStatusBarHidden")
+        UserDefaults.standard.set(Scorecard.shared.settings.prefersStatusBarHidden, forKey: "prefersStatusBarHidden")
         
         // Update status bar
-        self.scorecard.updatePrefersStatusBarHidden(from: self)
+        Scorecard.shared.updatePrefersStatusBarHidden(from: self)
     }
     
     // MARK: - CollectionView Overrides ================================================================ -
     
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        return self.scorecard.suits.count
+        return Scorecard.shared.settings.trumpSequence.count
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -848,7 +843,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
         var cell: TrumpCollectionCell
         
         cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Trump Collection Cell", for: indexPath) as! TrumpCollectionCell
-        cell.trumpSuitLabel.attributedText = self.scorecard.suits[indexPath.row].toAttributedString(font: UIFont.systemFont(ofSize: 36.0), noTrumpScale: 0.8)
+        cell.trumpSuitLabel.attributedText = Suit(fromString: Scorecard.shared.settings.trumpSequence[indexPath.row]).toAttributedString(font: UIFont.systemFont(ofSize: 36.0), noTrumpScale: 0.8)
         if self.trumpSequenceEdit {
             self.startCellWiggle(cell: cell)
         }
@@ -863,13 +858,12 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                         to destinationIndexPath: IndexPath) {
         
         // Swap the data and restart wiggling
-        let selectedSuit = self.scorecard.settingTrumpSequence[sourceIndexPath.row]
-        self.scorecard.settingTrumpSequence.remove(at: sourceIndexPath.row)
-        self.scorecard.settingTrumpSequence.insert(selectedSuit, at: destinationIndexPath.row)
-        self.scorecard.setupSuits()
+        let selectedSuit = Scorecard.shared.settings.trumpSequence[sourceIndexPath.row]
+        Scorecard.shared.settings.trumpSequence.remove(at: sourceIndexPath.row)
+        Scorecard.shared.settings.trumpSequence.insert(selectedSuit, at: destinationIndexPath.row)
         
         // Save it
-        UserDefaults.standard.set(scorecard.settingTrumpSequence, forKey: "trumpSequence")
+        UserDefaults.standard.set(Scorecard.shared.settings.trumpSequence, forKey: "trumpSequence")
     }
     
     @objc func handleLongGesture(gesture: UILongPressGestureRecognizer) {
@@ -899,7 +893,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
         var refresh = false
         
         if let playerMO = playerMO {
-            if self.scorecard.settingOnlinePlayerEmail ?? "" == "" {
+            if Scorecard.shared.settings.onlinePlayerEmail ?? "" == "" {
                 refresh = true
             }
             playerEmail = playerMO[0].email
@@ -909,7 +903,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
             
             // Disable for now - will be enabled when enabling complete
             self.setOptionEnabled(section: Sections.sync.rawValue, option: SyncOptions.onlinePlayer.rawValue, enabled: false)
-        } else if self.scorecard.settingOnlinePlayerEmail ?? "" == "" {
+        } else if Scorecard.shared.settings.onlinePlayerEmail ?? "" == "" {
             // Cancelled and no previous value
             self.clearOnline()
         }
@@ -927,8 +921,8 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
             self.setOptionEnabled(section: Sections.sync.rawValue, option: SyncOptions.vibrateAlert.rawValue, enabled: self.onlineEnabled)
         }
         if switchOn {
-            self.scorecard.settingAlertVibrate = true
-            UserDefaults.standard.set(scorecard.settingAlertVibrate, forKey: "alertVibrate")
+            Scorecard.shared.settings.alertVibrate = true
+            UserDefaults.standard.set(Scorecard.shared.settings.alertVibrate, forKey: "alertVibrate")
             if let cell = cell {
                 self.setOptionValue(cell: cell, value: true)
             } else {
@@ -939,13 +933,12 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     private func cardsChanged(bounceSegmentedControl: UISegmentedControl? = nil) {
         if let bounceSegmentedControl = bounceSegmentedControl ?? self.getCardsInHandBounceSegmentedControl() {
-            let cards = scorecard.gameSettings.cards
+            let cards = Scorecard.shared.settings.cards
             let direction = (cards[1] < cards[0] ? "down" : "up")
             var cardString = (cards[1] == 1 ? "card" : "cards")
             bounceSegmentedControl.setTitle("Go \(direction) to \(cards[1]) \(cardString)", forSegmentAt: 0)
             cardString = (cards[0] == 1 ? "card" : "cards")
             bounceSegmentedControl.setTitle("Return to \(cards[0]) \(cardString)", forSegmentAt: 1)
-            self.scorecard.setupRounds()
         }
     }
     
@@ -974,7 +967,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     private func startWiggle() {
         if let collection = self.getTrumpSuitCollectionView() {
-            let numberSuits = self.scorecard.suits.count
+            let numberSuits = Scorecard.shared.settings.trumpSequence.count
             for item in 0..<numberSuits {
                 if let cell = collection.cellForItem(at: IndexPath(item: item, section: 0)) {
                     self.startCellWiggle(cell: cell)
@@ -995,7 +988,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     public func stopWiggle() {
         if let collection = self.getTrumpSuitCollectionView() {
-            let numberSuits = self.scorecard.suits.count
+            let numberSuits = Scorecard.shared.settings.trumpSequence.count
             for item in 0..<numberSuits {
                 if let cell = collection.cellForItem(at: IndexPath(item: item, section: 0)) {
                     cell.layer.removeAllAnimations()
@@ -1062,14 +1055,14 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
             }
         default:
             self.useLocation = true
-            scorecard.settingSaveLocation = true
+            Scorecard.shared.settings.saveLocation = true
             // Save it
-            UserDefaults.standard.set(scorecard.settingSaveLocation, forKey: "saveLocation")
+            UserDefaults.standard.set(Scorecard.shared.settings.saveLocation, forKey: "saveLocation")
         }
     }
     
     private func setSaveGameLocation(value: Bool) {
-        scorecard.settingSaveLocation = value
+        Scorecard.shared.settings.saveLocation = value
         self.setOptionValue(section: Sections.saveHistory.rawValue, option: SaveHistoryOptions.saveGameLocation.rawValue, value: value)
         UserDefaults.standard.set(value, forKey: "saveLocation")
     }
@@ -1124,7 +1117,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                 }
                 Utility.mainThread {
                     UIApplication.shared.registerForRemoteNotifications()
-                    if self.scorecard.settingSyncEnabled {
+                    if Scorecard.shared.settings.syncEnabled {
                         // Success
                         successAction()
                     }
@@ -1134,7 +1127,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     }
     
     private func warnShare(syncSwitch: UISwitch) {
-        scorecard.warnShare(from: self, enabled: syncSwitch.isOn, handler: { (enabled: Bool) -> () in
+        Scorecard.shared.warnShare(from: self, enabled: syncSwitch.isOn, handler: { (enabled: Bool) -> () in
             // Set the segmented controller
             if enabled {
                 syncSwitch.isOn = true
@@ -1244,7 +1237,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     private func clearReceiveNotifications() {
         self.setOptionValue(section: Sections.sync.rawValue, option: SyncOptions.receiveNotifications.rawValue, value: false)
-        self.scorecard.settingReceiveNotifications = false
+        Scorecard.shared.settings.receiveNotifications = false
         // Save 'receive notifications'
         UserDefaults.standard.set(false, forKey: "receiveNotifications")
         // Delete subscriptions
@@ -1254,8 +1247,8 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     func clearAlerts() {
         // Reset Alert Vibrate
         self.setOptionValue(section: Sections.sync.rawValue, option: SyncOptions.vibrateAlert.rawValue, value: false)
-        self.scorecard.settingAlertVibrate = false
-        UserDefaults.standard.set(self.scorecard.settingAlertVibrate, forKey: "alertVibrate")
+        Scorecard.shared.settings.alertVibrate = false
+        UserDefaults.standard.set(Scorecard.shared.settings.alertVibrate, forKey: "alertVibrate")
     }
     
     func enableOnline() {
@@ -1268,14 +1261,14 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     }
     
     func clearOnline() {
-        if self.scorecard.settingOnlinePlayerEmail != nil {
-            self.scorecard.settingOnlinePlayerEmail = nil
+        if Scorecard.shared.settings.onlinePlayerEmail != nil {
+            Scorecard.shared.settings.onlinePlayerEmail = nil
             self.onlineEnabled = false
             UserDefaults.standard.set(nil, forKey: "onlinePlayerEmail")
             self.refreshOnlinePlayer()
             // Delete Facetime address
             self.facetimeEnabled = false
-            self.scorecard.settingFaceTimeAddress = ""
+            Scorecard.shared.settings.faceTimeAddress = ""
             UserDefaults.standard.set(nil, forKey: "facetimeAddress")
             self.setOptionValue(section: Sections.sync.rawValue, option: SyncOptions.facetimeCalls.rawValue, value: false)
             self.setOptionEnabled(section: Sections.sync.rawValue, option: SyncOptions.facetimeCalls.rawValue, enabled: false)
@@ -1292,19 +1285,19 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     }
     
     func clearSharing() {
-        if self.scorecard.settingAllowBroadcast {
+        if Scorecard.shared.settings.allowBroadcast {
             self.setOptionValue(section: Sections.sync.rawValue, option: SyncOptions.shareScorecard.rawValue, value: false)
-            self.scorecard.settingAllowBroadcast = false
+            Scorecard.shared.settings.allowBroadcast = false
             UserDefaults.standard.set(false, forKey: "allowBroadcast")
-            self.scorecard.stopSharing()
+            Scorecard.shared.stopSharing()
         }
     }
     
     func setHistory() {
-        if !self.scorecard.settingSaveHistory {
+        if !Scorecard.shared.settings.saveHistory {
             self.setSectionValue(section: Sections.saveHistory.rawValue, value: false)
             self.setSectionEnabled(section: Sections.saveHistory.rawValue, enabled: false)
-            self.scorecard.settingSaveHistory = true
+            Scorecard.shared.settings.saveHistory = true
             UserDefaults.standard.set(false, forKey: "saveHistory")
             self.setOptionValue(section: Sections.saveHistory.rawValue, option: SaveHistoryOptions.saveGameLocation.rawValue, value: false)
             self.setOptionEnabled(section: Sections.saveHistory.rawValue, option: SaveHistoryOptions.saveGameLocation.rawValue, enabled: false)
@@ -1313,11 +1306,11 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     }
     
     func setSharing() {
-        if !self.scorecard.settingAllowBroadcast {
+        if !Scorecard.shared.settings.allowBroadcast {
             self.setOptionValue(section: Sections.sync.rawValue, option: SyncOptions.shareScorecard.rawValue, value: true)
-            self.scorecard.settingAllowBroadcast = true
+            Scorecard.shared.settings.allowBroadcast = true
             UserDefaults.standard.set(true, forKey: "allowBroadcast")
-            self.scorecard.resetSharing()
+            Scorecard.shared.resetSharing()
         }
     }
     
@@ -1328,8 +1321,8 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
         self.onlineEnabled = false
         let indexPath = IndexPath(row: SyncOptions.onlinePlayer.rawValue, section: Sections.sync.rawValue)
         
-        if self.scorecard.settingSyncEnabled {
-            if let onlinePlayerEmail = self.scorecard.settingOnlinePlayerEmail {
+        if Scorecard.shared.settings.syncEnabled {
+            if let onlinePlayerEmail = Scorecard.shared.settings.onlinePlayerEmail {
                 self.onlineEnabled = true
                 if let cell = cell ?? settingsTableView.cellForRow(at: indexPath) as? SettingsTableCell {
                     if inProgress != nil {
@@ -1339,7 +1332,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
                         cell.onlinePlayerNameLabel.text = inProgress!
                     } else {
                         // Player enabled
-                        if let playerMO = self.scorecard.findPlayerByEmail(onlinePlayerEmail) {
+                        if let playerMO = Scorecard.shared.findPlayerByEmail(onlinePlayerEmail) {
                             cell.onlinePlayerNameLabel?.text = "as \(playerMO.name!)"
                             cell.onlinePlayerButton.isHidden = false
                             cell.onlinePlayerThumbnail.isHidden = false
@@ -1361,13 +1354,13 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     }
             
     private func identifyOnlinePlayer() {
-        let thisPlayer = self.scorecard.settingOnlinePlayerEmail
+        let thisPlayer = Scorecard.shared.settings.onlinePlayerEmail
         _ = SelectionViewController.show(from: self, mode: .single, thisPlayer: thisPlayer, showThisPlayerName: true, formTitle: "Select Player", backText: "", backImage: "back", bannerColor: Palette.banner, completion: self.identifyPlayerCompletion)
     }
     
     private func saveOnlineEmailLocally(playerEmail: String!) {
         // Save the setting and update screen
-        self.scorecard.settingOnlinePlayerEmail = playerEmail
+        Scorecard.shared.settings.onlinePlayerEmail = playerEmail
         Utility.mainThread {
             UserDefaults.standard.set(playerEmail, forKey: "onlinePlayerEmail")
             self.displayOnlineCell()
@@ -1377,7 +1370,7 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     private func updateOnlineGameSubscriptions() {
         if self.onlineEnabled {
-            Notifications.addOnlineGameSubscription(scorecard.settingOnlinePlayerEmail, completion: {
+            Notifications.addOnlineGameSubscription(Scorecard.shared.settings.onlinePlayerEmail, completion: {
                 Utility.mainThread { [unowned self] in
                     self.displayOnlineCell()
                 }
@@ -1393,12 +1386,13 @@ class SettingsViewController: CustomViewController, UITableViewDataSource, UITab
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: CustomViewController, backText: String = "Back", backImage: String = "back", completion: (()->())?){
+    class public func show(from viewController: ScorecardViewController, backText: String = "Back", backImage: String = "back", completion: (()->())?){
         
         let storyboard = UIStoryboard(name: "SettingsViewController", bundle: nil)
         let settingsViewController: SettingsViewController = storyboard.instantiateViewController(withIdentifier: "SettingsViewController") as! SettingsViewController
         
         settingsViewController.preferredContentSize = CGSize(width: 400, height: 700)
+        settingsViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         settingsViewController.backText = backText
         settingsViewController.backImage = backImage

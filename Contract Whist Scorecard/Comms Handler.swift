@@ -12,7 +12,7 @@ import Foundation
 
 // MARK: - Type declarations =============================================== -
 
-public enum CommsServerHandlerState {
+public enum CommsServiceState {
     case notStarted
     case advertising
     case inviting
@@ -35,10 +35,10 @@ public enum CommsConnectionMode: String {
     case loopback = "loopback"
 }
 
-public enum CommsConnectionProximity {
-    case nearby
-    case online
-    case loopback
+public enum CommsConnectionProximity: String {
+    case nearby = "local"
+    case online = "online"
+    case loopback = "loopback"
 }
 
 public enum CommsConnectionType: String {
@@ -58,7 +58,7 @@ public class CommsPeer {
     public let playerName: String?     // Remote player name
     public let state: CommsConnectionState
     public let reason: String?
-    private var parent: CommsHandlerDelegate
+    private weak var parent: CommsServiceDelegate!
     private var _autoReconnect: Bool
     public var autoReconnect: Bool { get { return _autoReconnect } }
     
@@ -67,7 +67,7 @@ public class CommsPeer {
     public var type: CommsConnectionType { get { return self.parent.connectionType } }
     
 
-    init(parent: CommsHandlerDelegate, deviceName: String, playerEmail: String? = "", playerName: String? = "", state: CommsConnectionState = .notConnected, reason: String? = nil, autoReconnect: Bool = false) {
+    init(parent: CommsServiceDelegate, deviceName: String, playerEmail: String? = "", playerName: String? = "", state: CommsConnectionState = .notConnected, reason: String? = nil, autoReconnect: Bool = false) {
         self.parent = parent
         self.deviceName = deviceName
         self.playerEmail = playerEmail
@@ -149,18 +149,27 @@ extension CommsConnectionDelegate {
     }
 }
 
-public protocol CommsServerHandlerStateDelegate : class {
+public protocol CommsServiceStateDelegate : class {
     
-    // Can be implemented by servers to allow them to detect a change in the state of the server handler
+    // Can be implemented by controllers to allow them to detect a change in the state of the service
     
-    func handlerStateChange(to state: CommsServerHandlerState)
+    func controllerStateChange(to state: CommsServiceState)
+    
+}
+
+public protocol CommsServicePlayerDelegate {
+    
+    // Can be implemented by server controllers to allow them to override the players to be sent to remotes
+    
+    func currentPlayers() -> [(email: String, name: String, connected: Bool)]?
+    
 }
 
 // MARK: - Protocols from abstraction layer to communication handlers ==================================== -
 
 // These protocols must be implemented by communication handlers to allow the abstraction layer to communicate with them
 
-public protocol CommsHandlerDelegate : class {
+public protocol CommsServiceDelegate : class {
     
     // This is an abstract class protocol and classes which implement it should never be instantiated
     // Instead either a client or server extension class should be instantiated
@@ -171,7 +180,8 @@ public protocol CommsHandlerDelegate : class {
     var connections: Int { get }
     var connectionUUID: String? { get }
     var connectionEmail: String? { get }
-    var connectionDeviceName: String? { get }
+    var connectionRemoteDeviceName: String? { get }
+    var connectionRemoteEmail: String? { get }
     var stateDelegate: CommsStateDelegate! { get set }
     var dataDelegate: CommsDataDelegate! { get set }
     var broadcastDelegate: CommsBroadcastDelegate! { get set}
@@ -187,7 +197,7 @@ public protocol CommsHandlerDelegate : class {
     func debugMessage(_ message: String, device: String?, force: Bool)
 }
 
-extension CommsHandlerDelegate {
+extension CommsServiceDelegate {
     
     func send(_ descriptor: String, _ dictionary: Dictionary<String, Any?>!, to commsPeer: CommsPeer?) {
         send(descriptor, dictionary, to: commsPeer, matchEmail: nil)
@@ -218,11 +228,11 @@ extension CommsHandlerDelegate {
     }   
 }
 
-public protocol CommsServerHandlerDelegate : CommsHandlerDelegate {
+public protocol CommsHostServiceDelegate : CommsServiceDelegate {
     
-    var handlerState: CommsServerHandlerState { get }
+    var handlerState: CommsServiceState { get }
     var connectionDelegate: CommsConnectionDelegate! { get set }
-    var handlerStateDelegate: CommsServerHandlerStateDelegate! { get set }
+    var handlerStateDelegate: CommsServiceStateDelegate! { get set }
     
     init(mode: CommsConnectionMode, serviceID: String?, deviceName: String)
     
@@ -231,7 +241,7 @@ public protocol CommsServerHandlerDelegate : CommsHandlerDelegate {
     func stop(completion: (()->())?)
 }
 
-extension CommsServerHandlerDelegate {
+extension CommsHostServiceDelegate {
     
     init(mode: CommsConnectionMode, serviceID: String?) {
         self.init(mode: mode, serviceID: serviceID, deviceName: "")
@@ -267,7 +277,7 @@ extension CommsServerHandlerDelegate {
 
 }
 
-public protocol CommsClientHandlerDelegate : CommsHandlerDelegate {
+public protocol CommsClientServiceDelegate : CommsServiceDelegate {
     
     var browserDelegate: CommsBrowserDelegate! { get set }
     
@@ -284,7 +294,7 @@ public protocol CommsClientHandlerDelegate : CommsHandlerDelegate {
     func checkOnlineInvites(email: String, checkExpiry: Bool)
 }
 
-extension CommsClientHandlerDelegate {
+extension CommsClientServiceDelegate {
     
   func start() {
         start(email: nil, name: nil, recoveryMode: false, matchDeviceName: nil)
@@ -326,7 +336,7 @@ public class CommsHandler {
     public static func client(proximity: CommsConnectionProximity,
                               mode: CommsConnectionMode,
                               serviceID: String?,
-                              deviceName: String = "") -> CommsClientHandlerDelegate? {
+                              deviceName: String = "") -> CommsClientServiceDelegate? {
         
         if proximity == .nearby && mode == .broadcast {
             // Nearby broadcast = Multi-peer connectivity
@@ -342,7 +352,7 @@ public class CommsHandler {
     public static func server(proximity: CommsConnectionProximity,
                               mode: CommsConnectionMode,
                               serviceID: String?,
-                              deviceName: String = "") -> CommsServerHandlerDelegate? {
+                              deviceName: String = "") -> CommsHostServiceDelegate? {
         
         if proximity == .nearby && mode == .broadcast {
             // Nearby broadcast = Multi-peer connectivity

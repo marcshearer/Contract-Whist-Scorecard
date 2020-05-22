@@ -9,16 +9,9 @@
 import UIKit
 import CoreData
 import CloudKit
+import Combine
 
-public enum CommsHandlerMode {
-    case none
-    case scorepad
-    case roundSummary
-    case gameSummary
-    case playHand
-    case dismiss
-    case viewTrick
-}
+// MARK: - Enumerations ============================================================== -
 
 public enum CommsPurpose: String {
     case playing = "playing"
@@ -26,57 +19,56 @@ public enum CommsPurpose: String {
     case other = "other"
 }
 
+public enum GetPlayerMode {
+    case getExisting
+    case getNew
+    case getAll
+    case getSyncInProgress
+}
+
 class Scorecard {
     
-    // Main state class for the application - singleton
+    // MARK: - Properties ============================================================== -
     
+    /** Singleton scorecard */
     public static let shared = Scorecard()
     
-    public var suits: [Suit]!
+    /** Game state for any game in progress */
+    public static var game: Game!
     
-    private var player: [Player]? = nil // Keep this private as should access it dependent on index incremented by dealer etc
+    /** Recovery class */
+    public static var recovery = Recovery()
     
-    public var numberPlayers = 0
-    public var currentPlayers = 0
-    public var maxRounds = 25
-    public var rounds = 0
-    public var maxEnteredRound = 1
-    public var selectedRound = 1
-    public var dealerIs = 1
-    public var readyToPlay = false
-    private var roundError: [Bool] = []
-    public var gameInProgress: Bool = false
-    public var inScorepad: Bool = false
-    public var recoveryMode: Bool = false
-    public var recoveryOnlinePurpose: CommsPurpose!
-    public var recoveryOnlineType: CommsConnectionType!
-    public var recoveryOnlineMode: CommsConnectionMode!
-    public var recoveryConnectionUUID: String!
-    public var recoveryConnectionEmail: String!
-    public var recoveryConnectionDevice: String!
+    /** Version information */
+    public static var version = Version()
+    
+    /** Settings */
+    public var settings = Settings()
+    
+    /** Maximum number of players currently supported - currently 4
+     - Note try to use this variable throughout since only real limitation should be UI
+    */
+    public let maxPlayers = 4
+    
+    /** Number of suits
+     - Unlikely to change from 4!
+    */
     public let numberSuits = 4
-    public var gameLocation: GameLocation!
-    public var gameDatePlayed: Date!
-    public var gameUUID: String!
+
     public var defaultPlayerOnDevice: String!
-    public var latestVersion = "0.0"
-    public var latestBuild = 0
     
     // Variables for online games
-    public var deal: Deal!
-    public var handViewController: HandViewController!
-    public var handState: HandState!
-    public var dealHistory: [Int : Deal] = [:]
-    public var commsHandlerMode: CommsHandlerMode = .none
-    public var sendScores = false
+    public var viewPresenting = ScorecardView.none
     public var notificationSimulator: NotificationSimulator!
     internal var lastRefresh: Date?
     internal var lastPeerRefresh: [String : Date] = [:]
     public var alertDelegate: ScorecardAlertDelegate?
     internal var reminderTimer: Timer?
-    
+    internal var bidSubscription = PassthroughSubject<(Int, Int, Int), Never>()
+    internal var cardSubscription = PassthroughSubject<(Int, Int, Int, Card), Never>()
+
     // Remote logging
-    public var logService: CommsClientHandlerDelegate!
+    public var logService: CommsClientServiceDelegate!
     
     // Variables for test extensions
     public var autoPlayHands: Int = 0
@@ -95,49 +87,14 @@ class Scorecard {
         }
     }
     
-    
     // Class to pass state to watch
     public var watchManager: WatchManager!
     
-    // Settings
-    public var settingBonus2 = true
-    public var settingCards = [13, 1]
-    public var settingBounceNumberCards: Bool = false
-    public var settingTrumpSequence = ["♣︎", "♦︎", "♥︎", "♠︎", "NT"]
-    public var settingSyncEnabled = false
-    public var gameSettings = GameSettings()
-    public var overrideSettings = GameSettings()
-    public var settingSaveHistory = true
-    public var settingSaveLocation = true
-    public var settingReceiveNotifications = false
-    public var settingAllowBroadcast = true
-    public var settingAlertVibrate = true
-    public var settingVersion = "0.0"
-    public var settingBuild = 0
-    public var settingLastVersion = "0.0"
-    public var settingLastBuild = 0
-    public var settingVersionBlockSync = false
-    public var settingVersionBlockAccess = false
-    public var settingVersionMessage = ""
-    public var settingDatabase = ""
-    public static var settingRabbitMQUri = ""
-    public var settingOnlinePlayerEmail: String!
-    public var settingFaceTimeAddress: String!
-    public var settingPrefersStatusBarHidden = true
-    
-    // Override Settings
-    public var overrideCards: [Int]! = nil
-    public var overrideBounceNumberCards: Bool! = nil
-    public var overrideExcludeStats: Bool! = nil
-    public var overrideExcludeHistory: Bool! = nil
-    public var overrideSelected: Bool = false
-    
-    // Link to recover class
-    public var recovery: Recovery!
-    
+    // Database - production / development
+    public var database = ""
+        
     // Core data variables
     public var playerList:[PlayerMO] = []
-    public var gameMO: GameMO!
     
     // Network state
     public var isLoggedIn = false
@@ -145,62 +102,55 @@ class Scorecard {
     public var iCloudUserIsMe = false
     
     // Comms services
-    public var sharingService: CommsServerHandlerDelegate?
-    internal var _commsDelegate: CommsHandlerDelegate?
+    public weak var sharingService: CommsHostServiceDelegate?
+    internal weak var _commsDelegate: CommsServiceDelegate?
     internal var _commsPurpose: CommsPurpose?
-    public var commsDelegate: CommsHandlerDelegate? { get { return _commsDelegate } }
+    internal var commsScoresSubscription: AnyCancellable?
+    public weak var commsDelegate: CommsServiceDelegate? { get { return _commsDelegate } }
     public var commsPurpose: CommsPurpose? { get { return _commsPurpose } }
     
     // Admin mode
     static var adminMode = false
-        
-    public func initialise(from viewController: UIViewController? = nil, players: Int, maxRounds: Int) {
-        
-       self.recovery = Recovery()
-        
-        self.player = []
-        if players > 0 {
-            for playerNumber in 1...players {
-                self.player!.append(Player(playerNumber: playerNumber))
-            }
+    
+    // MARK: - Calculated properties ========================================================= -
+    
+    /**
+     Calculated current active settings
+     - If a game is set up this will be the game settings
+     - Otherwise it will be the device settings
+     */
+    public static var activeSettings: Settings {
+        get {
+            return Scorecard.game?.settings ?? Scorecard.shared.settings
         }
+    }
+        
+    // MARK: - Initialisation ================================================================ -
 
-        if maxRounds > 0 {
-            for _ in 1...maxRounds {
-                self.roundError.append(false)
-            }
-        }
-        self.numberPlayers = players
-        self.currentPlayers = players
+    init() {
         
-        // Load settings
-        loadSettings()
+        // Get last database used
+        self.database = UserDefaults.standard.string(forKey: "database")!
+        
+        // Load settings & version etc
+        self.settings.load()
+        Scorecard.version.load()
+        RabbitMQConfig.load()
         
         // Reset settings in test mode (unless requested not to)
         TestMode.resetSettings()
         
         // Load defaults
-        loadDefaults()
-        if viewController != nil {
-            self.updatePrefersStatusBarHidden(from: viewController!)
-        }
+        self.loadDefaults()
+        self.updatePrefersStatusBarHidden()
         
-        self.maxRounds = (self.maxRounds == 0 ? maxRounds : self.maxRounds)
-        
-        getPlayerList()
-        
-        // Setup suit sequence & rounds
-        self.setupRounds()
-        self.setupSuits()
+        self.getPlayerList()
                 
-        // Set up game location class
-        self.gameLocation = GameLocation()
-        
         // Setup sharing object and take broadcast delegates
         self.setupSharing()
         
         // Set icloud user flag
-        Scorecard.iCloudUserIsMe()
+        self.setICloudUserIsMe()
         
         // Remove any temporary online game notification subscription
         Notifications.removeTemporaryOnlineGameSubscription()
@@ -210,6 +160,8 @@ class Scorecard {
         
    }
     
+    // MARK: - Methods ================================================================ -
+
     public func getPlayerList() {
         // Fetch list of potential players from data store
         self.playerList = CoreData.fetch(from: "Player", sort: ("name", .ascending))
@@ -224,13 +176,6 @@ class Scorecard {
             playerDetailList.append(playerDetail)
         }
         return playerDetailList
-    }
-    
-    public enum GetPlayerMode {
-        case getExisting
-        case getNew
-        case getAll
-        case getSyncInProgress
     }
     
     public func playerEmailList(getPlayerMode: GetPlayerMode = .getAll, cutoffDate: Date! = nil, specificEmail: [String] = []) -> [String] {
@@ -298,11 +243,11 @@ class Scorecard {
     public func getVersion(completion: (()->())? = nil) {
         // Get current software versions
         let dictionary = Bundle.main.infoDictionary!
-        self.settingVersion = dictionary["CFBundleShortVersionString"] as! String? ?? "0.0"
-        self.settingBuild = Int(dictionary["CFBundleVersion"] as! String) ?? 0
+        Scorecard.version.version = dictionary["CFBundleShortVersionString"] as! String? ?? "0.0"
+        Scorecard.version.build = Int(dictionary["CFBundleVersion"] as! String) ?? 0
         
         // Check if upgrade necessary
-        if self.settingVersion != self.settingLastVersion {
+        if Scorecard.version.version != Scorecard.version.lastVersion {
             if !upgradeToVersion(from: Utility.getActiveViewController()!, completion: completion) {
                 Utility.getActiveViewController()?.alertMessage("Error upgrading to latest version")
                 exit(0)
@@ -316,16 +261,16 @@ class Scorecard {
         
         func successfulCompletion() {
             // Store version in defaults and update last version
-            UserDefaults.standard.set(self.settingVersion, forKey: "version")
-            UserDefaults.standard.set(self.settingBuild, forKey: "build")
-            self.settingLastVersion = self.settingVersion
-            self.settingLastBuild = self.settingBuild
+            UserDefaults.standard.set(Scorecard.version.version, forKey: "version")
+            UserDefaults.standard.set(Scorecard.version.build, forKey: "build")
+            Scorecard.version.lastVersion = Scorecard.version.version
+            Scorecard.version.lastBuild = Scorecard.version.build
             
             // Execute any other completion
             completion?()
         }
         
-        if Utility.compareVersions(version1: self.settingLastVersion, version2: "4.1") == .lessThan  {
+        if Utility.compareVersions(version1: Scorecard.version.lastVersion, version2: "4.1") == .lessThan  {
             if !Upgrade.upgradeTo41(from: from, completion:  successfulCompletion) {
                 return false
             }
@@ -337,232 +282,9 @@ class Scorecard {
         
     }
     
-    private func loadSettings() {
-        
-        // Load bonus for making a trick with a 2
-        self.settingBonus2 = UserDefaults.standard.bool(forKey: "bonus2")
-                
-        // Load number of cards & bounce number of cards
-        self.gameSettings.cards = UserDefaults.standard.array(forKey: "cards") as! [Int]
-        self.gameSettings.bounceNumberCards = UserDefaults.standard.bool(forKey: "bounceNumberCards")
-        
-        // Load trump sequence
-        self.settingTrumpSequence = UserDefaults.standard.array(forKey: "trumpSequence") as! [String]
-        
-        // Load sync enabled flag
-        self.settingSyncEnabled = UserDefaults.standard.bool(forKey: "syncEnabled")
-        
-        // Load save history settings
-        self.settingSaveHistory = UserDefaults.standard.bool(forKey: "saveHistory")
-        self.settingSaveLocation = UserDefaults.standard.bool(forKey: "saveLocation")
-        
-        // Load notification setting
-        self.settingReceiveNotifications = UserDefaults.standard.bool(forKey: "receiveNotifications")
-        
-        // Load alert settings
-        self.settingAlertVibrate = UserDefaults.standard.bool(forKey: "alertVibrate")
-        
-        // Load broadcast setting
-        self.settingAllowBroadcast = UserDefaults.standard.bool(forKey: "allowBroadcast")
-        
-        // Load Online Game settings
-        self.settingOnlinePlayerEmail = Scorecard.onlineEmail()
-        if self.settingOnlinePlayerEmail != nil {
-            self.settingFaceTimeAddress = UserDefaults.standard.string(forKey: "faceTimeAddress")
-        }
-        
-        // Load status bar setting
-        self.settingPrefersStatusBarHidden = UserDefaults.standard.bool(forKey: "prefersStatusBarHidden")
-        
-        // Get previous version and build
-        self.settingLastVersion = UserDefaults.standard.string(forKey: "version")!
-        self.settingLastBuild = UserDefaults.standard.integer(forKey: "build")
-        
-        // Get saved access / sync / version message / database and flags
-        self.settingVersionBlockAccess = UserDefaults.standard.bool(forKey: "versionBlockAccess")
-        self.settingVersionBlockSync = UserDefaults.standard.bool(forKey: "versionBlockSync")
-        self.settingVersionMessage = UserDefaults.standard.string(forKey: "versionMessage")!
-        self.settingDatabase = UserDefaults.standard.string(forKey: "database")!
-        
-        // Get saved rabbitMQ URI
-        Scorecard.settingRabbitMQUri = UserDefaults.standard.string(forKey: "rabbitMQUri")!
-    }
-    
-    public func loadGameDefaults() {
-        // Load saved values from last session
-        var playerListNumber = 0
-        
-        // Number of players
-        var currentPlayers = UserDefaults.standard.integer(forKey: "numberPlayers")
-        if currentPlayers != 3 && currentPlayers != 4 {
-            currentPlayers = 4
-        }
-        self.currentPlayers = currentPlayers
-        
-        // Player names
-        for player in 1...currentPlayers {
-            let prefix = (self.isPlayingComputer ? "computerPlayer" : "player")
-            if let defaultPlayerURI = UserDefaults.standard.string(forKey: "\(prefix)\(player)") {
-                // Got a URI - search managed objects for a match
-                playerListNumber = 1
-                
-                while playerListNumber <= self.playerList.count {
-                    
-                    if defaultPlayerURI == playerURI(self.playerList[playerListNumber-1]) {
-                        self.player![player-1].playerMO = self.playerList[playerListNumber-1]
-                        self.player![player-1].playerNumber = player
-                        break
-                    }
-                    
-                    playerListNumber += 1
-                    
-                }
-                
-                if self.player![player-1].playerMO == nil && !self.isPlayingComputer && self.recoveryMode {
-                    // Might be recovering - recreate player if necessary
-                    self.player![player-1].playerMO = CoreData.create(from: "Player") as? PlayerMO
-                    self.player![player-1].playerMO!.name = UserDefaults.standard.string(forKey: "\(prefix)\(player)name")
-                    self.player![player-1].playerMO!.email = UserDefaults.standard.string(forKey: "\(prefix)\(player)email")
-                    self.player![player-1].playerNumber = player
-                }
-            }
-        }
-        
-        // Dealer is
-        self.dealerIs = max(1, UserDefaults.standard.integer(forKey: "dealerIs"))
-    }
-    
     private func loadDefaults() {
         // Defaut player on device
         self.defaultPlayerOnDevice = UserDefaults.standard.string(forKey: "defaultPlayerOnDevice")
-    }
-        
-    public func reset() {
-        // Reset class for a new game
-        for playerNumber in 1...numberPlayers {
-            self.player![playerNumber-1].reset()
-        }
-        self.maxEnteredRound = 1
-        self.selectedRound = 1
-        self.gameInProgress = false
-        self.gameDatePlayed = nil
-        self.gameUUID = ""
-        
-        // Reset game managed object
-        self.gameMO = nil
-    }
-    
-    
-    public func formatRound(_ round: Int) {
-    // Loop around all players (not just this one) highlighting errors etc
-        for playerLoop in 1...self.currentPlayers {
-            
-            formatCell(round: round, playerNumber: playerLoop, mode: Mode.bid)
-            formatCell(round: round, playerNumber: playerLoop, mode: Mode.made)
-            formatCell(round: round, playerNumber: playerLoop, mode: Mode.twos)
-        }
-    }
-    
-    public func playerURI(_ playerMO: PlayerMO?) -> String {
-        // Returns the Object ID URI for an entry in the player list
-        if playerMO == nil {
-            return ""
-        } else {
-            return playerMO!.objectID.uriRepresentation().absoluteString
-        }
-    }
-    
-    public func formatCell(round: Int, playerNumber: Int, mode: Mode) {
-        let player = self.scorecardPlayer(playerNumber)
-        
-        switch mode {
-        case Mode.bid:
-            if player.bidCell[round-1] != nil {
-                if self.roundError[round-1] {
-                    Palette.inverseErrorStyle(player.bidCell[round-1]!.scorepadCellLabel, errorCondtion: true)
-                } else {
-                    Palette.alternateStyle(player.bidCell[round-1]!.scorepadCellLabel, setFont: false)
-                }
-            }
-        case Mode.made:
-            if player.scoreCell[round-1] != nil {
-                if self.roundError[round-1] {
-                    Palette.inverseErrorStyle(player.scoreCell[round-1]!.scorepadCellLabel, errorCondtion: true)
-                } else {
-                    if player.bid(round) != nil && player.bid(round) == player.made(round) {
-                        Palette.madeContractStyle(player.scoreCell[round-1]!.scorepadCellLabel, setFont: false)
-                    } else {
-                        if player.bidCell[round-1] == nil{
-                            // No bid label so don't need to differentiate
-                            Palette.normalStyle(player.scoreCell[round-1]!.scorepadCellLabel, setFont: false)
-                        } else {
-                            Palette.normalStyle(player.scoreCell[round-1]!.scorepadCellLabel, setFont: false)
-                        }
-                    }
-                    let imageView = player.scoreCell[round-1]!.scorepadImage!
-                    if player.twos(round) != nil && player.twos(round) != 0 {
-                        if player.twos(round) == 1 {
-                            imageView.image = UIImage(named: "two")!
-                        } else {
-                            imageView.image = UIImage(named: "twos")!
-                        }
-                    } else {
-                        imageView.image = nil
-                    }
-                    imageView.superview!.bringSubviewToFront(imageView)
-                }
-            }
-        default:
-            break
-        }
-    }
-    
-    public func enteredPlayer(email: String) -> Player? {
-        if let index = self.player?.firstIndex(where: {$0.playerMO != nil && $0.playerMO!.email == email}) {
-            return self.player?[index]
-        } else {
-            return nil
-        }
-    }
-
-    public func enteredPlayer(_ playerNumber: Int) -> Player {
-        // Returns the players in the sequence they were entered in the Player View - for use in the Player View
-        return self.player![(playerNumber - 1)  % self.currentPlayers]
-    }
-    
-    public func scorecardPlayer(_ playerNumber: Int) -> Player {
-        // Returns the players with the first dealer first - for use in the Scorepad View
-        return self.player![((playerNumber - 1) + (self.dealerIs - 1)) % self.currentPlayers]
-    }
-    
-    public func entryPlayer(_ playerNumber: Int) -> Player {
-        // Returns the players with the dealer for the selected round first - for use in the Entry View
-        return self.roundPlayer(playerNumber: playerNumber, round: self.selectedRound)
-    }
-    
-    public func roundPlayer(playerNumber: Int, round: Int) -> Player {
-        // Returns the players with the dealer for a specific round first
-        return self.player![((playerNumber - 1) + (self.dealerIs - 1) + (round - 1)) % self.currentPlayers]
-    }
-    
-    public func enteredIndex(_ objectID: NSManagedObjectID) -> Int? {
-        // Find the index of the given object ID in the player array
-        for playerNumber in 1...self.currentPlayers {
-            if self.player![playerNumber-1].playerMO!.objectID == objectID {
-                return playerNumber - 1
-            }
-        }
-        return nil
-    }
-    
-    public func scorecardIndex(_ objectID: NSManagedObjectID) -> Int? {
-        // Find the index of the given object ID in the player array and offset it by the dealer
-        let enteredIndex = self.enteredIndex(objectID)
-        if enteredIndex == nil {
-            return nil
-        } else {
-            return (enteredIndex! + (self.dealerIs - 1)) % self.currentPlayers
-        }
     }
     
     public func findPlayerByEmail(_ email: String) -> PlayerMO? {
@@ -582,131 +304,15 @@ class Scorecard {
             return nil
         }
     }
-    
+   
     public func setGameInProgress(_ gameInProgress: Bool, suppressWatch: Bool = false, save: Bool = true) {
-        self.gameInProgress = gameInProgress
-        if save {
-            recovery.saveGameInProgress()
+        Scorecard.game?.inProgress = gameInProgress
+        if save && (!Scorecard.recovery.recoveryAvailable || gameInProgress == true) {
+            Scorecard.recovery.saveGameInProgress()
             if !suppressWatch || gameInProgress {
                 self.watchManager.updateScores()
             }
         }
-    }
-    
-    public func gameComplete(rounds: Int) -> Bool {
-        // Check last score on last round filled in
-        return self.roundPlayer(playerNumber: self.currentPlayers,
-                                round: rounds).score(rounds) != nil
-    }
-    
-    public func movePlayer(fromPlayerNumber: Int, toPlayerNumber: Int) {
-        let playerToMove = self.player![fromPlayerNumber-1]
-        self.player!.remove(at: fromPlayerNumber - 1)
-        self.player!.insert(playerToMove, at: toPlayerNumber-1)
-        
-        // Need to sort out any stored sequence dependent values at this point - calling routine should sort out UI
-        for playerNumber in 1...self.currentPlayers {
-            self.player![playerNumber-1].playerNumber = playerNumber
-        }
-    }
-    
-    public func setupSuits() {
-        self.suits = []
-        for suit in self.settingTrumpSequence {
-            self.suits.append(Suit(fromString: suit))
-        }
-    }
-    
-    public func setupRounds() {
-            self.rounds = self.calculateRounds()
-    }
-    
-    public func calculateRounds(cards: [Int]! = nil, bounce: Bool! = nil) -> Int {
-        var cards = cards
-        if cards == nil {
-            cards = self.gameSettings.cards
-        }
-        var bounce = bounce
-        if bounce == nil {
-            bounce = self.gameSettings.bounceNumberCards
-        }
-        let range = abs(cards![0] - cards![1]) + 1
-        if bounce! {
-            return (2 * range) - 1
-        } else {
-            return range
-        }
-    }
-    
-    public func roundTitle(_ round: Int, rankColor: UIColor = UIColor.black, font: UIFont? = nil, noTrumpScale: CGFloat? = nil, rounds: Int! = nil, cards: [Int]! = nil, bounce: Bool! = nil, suits: [Suit]! = nil) -> NSMutableAttributedString {
-        
-        let rankColor = [NSAttributedString.Key.foregroundColor: rankColor]
-        let rank = NSMutableAttributedString(string: "\(self.roundCards(round, rounds: rounds, cards: cards, bounce: bounce))", attributes: rankColor)
-        let suit = self.roundSuit(round, suits: suits)
-        let roundTitle = NSMutableAttributedString()
-        roundTitle.append(rank)
-        roundTitle.append(suit.toAttributedString(font: font, noTrumpScale: noTrumpScale))
-        
-        return roundTitle
-    }
-
-    public func roundSuit(_ round: Int, suits: [Suit]!) -> Suit {
-        var suits = suits
-        if suits == nil {
-            suits = self.suits
-        }
-        return suits![(round-1) % suits!.count]
-    }
-    
-    public func roundCards(_ round: Int, rounds: Int! = nil, cards: [Int]! = nil, bounce: Bool! = nil) -> Int {
-        var numberCards: Int
-        
-        var rounds = rounds
-        if rounds == nil {
-            rounds = self.rounds
-        }
-        
-        var cards = cards
-        if cards == nil {
-            cards = self.gameSettings.cards
-        }
-        
-        var bounce = bounce
-        if bounce == nil {
-            bounce = self.gameSettings.bounceNumberCards
-        }
-        
-        if bounce! {
-            numberCards = abs(((rounds!+1) / 2) - round) + 1
-        } else {
-            numberCards = rounds! - round + 1
-        }
-        if cards![0] < cards![1] {
-            return cards![1] - numberCards + 1
-        } else {
-            return cards![1] + numberCards - 1
-        }
-    }
-
-    public func remaining(playerNumber: Int, round: Int, mode: Mode, rounds: Int, cards: [Int], bounce: Bool) -> Int {
-        // Returns the number of tricks remaining (excluding a particular player (or 0)
-        // i.e. subtracts total bid / made / twos from the number of tricks in the round
-        // For twos it caps the number of tricks at 4
-        
-        // Note that the playernumber is compared with the entered player number
-        
-        var remaining = roundCards(round, rounds: rounds, cards: cards, bounce: bounce)
-        if mode == Mode.twos {
-            remaining = min(remaining, self.numberSuits)
-        }
-        
-        for playerLoop in 1...self.currentPlayers {
-            if playerLoop != playerNumber && self.entryPlayer(playerLoop).value(round: round, mode: mode) != nil {
-                remaining = remaining-self.entryPlayer(playerLoop).value(round: round, mode: mode)!
-            }
-        }
-        
-        return remaining
     }
     
     public func updateSelectedPlayers(_ selectedPlayers: [PlayerMO?]) {
@@ -714,122 +320,83 @@ class Scorecard {
         
         if selectedPlayers.count > 1 {
             self.setCurrentPlayers(players: selectedPlayers.count)
-            UserDefaults.standard.set(self.currentPlayers, forKey: "numberPlayers")
+            UserDefaults.standard.set(Scorecard.game.currentPlayers, forKey: "numberPlayers")
             
-            for playerNumber in 1...self.currentPlayers {
+            for playerNumber in 1...Scorecard.game.currentPlayers {
                 let playerMO = selectedPlayers[playerNumber-1]!
-                self.enteredPlayer(playerNumber).playerMO = playerMO
-                let prefix = (self.isPlayingComputer ? "computerPlayer" : "player")
-                UserDefaults.standard.set(self.playerURI(playerMO), forKey: "\(prefix)\(playerNumber)")
+                Scorecard.game.player(enteredPlayerNumber: playerNumber).playerMO = playerMO
+                let prefix = ((Scorecard.game?.isPlayingComputer ?? false) ? "computerPlayer" : "player")
+                UserDefaults.standard.set(playerMO.uri, forKey: "\(prefix)\(playerNumber)")
                 UserDefaults.standard.set(playerMO.name, forKey: "\(prefix)\(playerNumber)name")
                 UserDefaults.standard.set(playerMO.email, forKey: "\(prefix)\(playerNumber)email")
             }
         }
     }
     
-    public func checkReady() {
-        var playerLoop = 1
-        self.readyToPlay = true
-        
-        while playerLoop <= self.currentPlayers {
-            if self.player![playerLoop-1].playerMO == nil
-            {
-                self.readyToPlay = false
-                break
-                
-            } else {
-                if playerLoop > 1 {
-                    // Check for duplicates
-                    for subPlayerLoop in 1...playerLoop - 1 {
-                        if self.player![playerLoop-1].playerMO!.name! == self.player![subPlayerLoop-1].playerMO!.name! {
-                            self.readyToPlay = false
-                            break
-                        }
-                    }
-                }
-            }
-            playerLoop += 1
-        }
-    }
-    
     public func setCurrentPlayers(players: Int) {
-        if players != self.currentPlayers {
+        if players != Scorecard.game.currentPlayers {
             // Changing number of players
             
-            self.currentPlayers = players
-            if self.dealerIs > self.currentPlayers {
+            Scorecard.game.currentPlayers = players
+            if Scorecard.game.dealerIs > Scorecard.game.currentPlayers {
                 self.saveDealer(1)
             }
         }
     }
     
-    public func roundError(_ round: Int) -> Bool {
-        return self.roundError[round-1]
-    }
-    
-    public func setRoundError(_ round: Int, _ errors: Bool) {
-        self.roundError[round-1] = errors
-        self.formatRound(round)
-        recovery.saveRoundError(round: round)
-    }
-    
     public func nextDealer() {
-        self.saveDealer((self.dealerIs % self.currentPlayers) + 1)
+        self.saveDealer((Scorecard.game.dealerIs % Scorecard.game.currentPlayers) + 1)
     }
     
     public func previousDealer() {
-        self.saveDealer(((self.dealerIs + self.currentPlayers - 2) % self.currentPlayers) + 1)
+        self.saveDealer(((Scorecard.game.dealerIs + Scorecard.game.currentPlayers - 2) % Scorecard.game.currentPlayers) + 1)
     }
     
     public func randomDealer() {
-        self.saveDealer(Int(arc4random_uniform(UInt32(self.currentPlayers))) + 1)
+        self.saveDealer(Int(arc4random_uniform(UInt32(Scorecard.game.currentPlayers))) + 1)
     }
     
     public func saveDealer(_ dealerIs: Int) {
-        if self.dealerIs != dealerIs {
-            self.dealerIs = dealerIs
-            if self.isHosting {
+        if Scorecard.game.dealerIs != dealerIs {
+            Scorecard.game.dealerIs = dealerIs
+            if Scorecard.game.isHosting {
                 self.sendDealer()
             }
         }
-        UserDefaults.standard.set(self.dealerIs, forKey: "dealerIs")
+        UserDefaults.standard.set(Scorecard.game.dealerIs, forKey: "dealerIs")
     }
     
     public func isScorecardDealer() -> Int {
         // Returns the player number of the dealer - for use in the Scorecard view
-        return (((self.maxEnteredRound - 1)) % self.currentPlayers) + 1
-    }
-    
-    public func dealerName() -> String {
-        return self.player![self.dealerIs-1].playerMO!.name!
+        return (((Scorecard.game.maxEnteredRound - 1)) % Scorecard.game.currentPlayers) + 1
     }
     
     public func advanceMaximumRound(rounds: Int) {
-        if self.roundComplete(maxEnteredRound) {
+        if self.roundComplete(Scorecard.game.maxEnteredRound) {
             // Have now completed the entire row
-            self.maxEnteredRound = min(rounds, maxEnteredRound + 1)
+            Scorecard.game.maxEnteredRound = min(rounds, Scorecard.game.maxEnteredRound + 1)
         }
-        self.selectedRound = self.maxEnteredRound
+        Scorecard.game.selectedRound = Scorecard.game.maxEnteredRound
     }
     
     public func roundStarted(_ round: Int) -> Bool {
-        return self.roundPlayer(playerNumber: 1, round: round).bid(round) != nil
+        return Scorecard.game.scores.get(round: round, playerNumber: 1, sequence: .round).bid != nil
     }
     
     public func roundBiddingComplete(_ round: Int) -> Bool {
-        return self.roundPlayer(playerNumber: self.currentPlayers, round: round).bid(round) != nil
+        return Scorecard.game.scores.get(round: round, playerNumber: Scorecard.game.currentPlayers, sequence: .round).bid != nil
     }
     
     public func roundMadeStarted(_ round: Int) -> Bool {
-        return self.roundPlayer(playerNumber: 1, round: round).made(round) != nil
+        return Scorecard.game.scores.get(round: round, playerNumber: 1, sequence: .round).made != nil
     }
     
     public func roundComplete(_ round: Int) -> Bool {
         var result = true
-        if self.roundPlayer(playerNumber: self.currentPlayers, round: round).score(round) == nil {
+        if Scorecard.game.scores.score(round: round, playerNumber: Scorecard.game.currentPlayers, sequence: .round) == nil {
             result = false
         }
-        if self.settingBonus2 && self.roundPlayer(playerNumber: self.currentPlayers, round: round).twos(round) == nil {
+        if self.settings.bonus2 && Scorecard.game.scores.get(round: round, playerNumber: Scorecard.game.currentPlayers, sequence: .round).twos == nil {
             result = false
         }
         return result
@@ -837,42 +404,16 @@ class Scorecard {
     
     public func saveMaxScores() {
         
-        for player in 1...self.currentPlayers {
-            self.enteredPlayer(player).saveMaxScore()
+        for player in 1...Scorecard.game.currentPlayers {
+            Scorecard.game.player(enteredPlayerNumber: player).saveMaxScore()
         }
     }
 
-    public func finishGame(from: UIViewController, advanceDealer: Bool = false, rounds: Int, resetOverrides: Bool, returnHome: Bool = false, completion: (()->())? = nil) {
-        if !self.gameInProgress {
-            exitScorecard(from: from, rounds: rounds, resetOverrides: resetOverrides, completion: completion)
-        } else {
-            var message: String
-            if self.gameComplete(rounds: rounds) {
-                // Game is complete
-                message = "Your game has been saved. However if you continue you will not be able to return to it."
-            } else {
-                // Game is still in progress
-                message = "Warning: This will clear the existing score card and start a new game."
-            }
-            let alertController = UIAlertController(title: "Finish Game", message: message + "\n\n Are you sure you want to do this?", preferredStyle: UIAlertController.Style.alert)
-            alertController.addAction(UIAlertAction(title: "Confirm", style: UIAlertAction.Style.default,
-                                                    handler: { (action:UIAlertAction!) -> Void in
-                                                        self.exitScorecard(from: from, advanceDealer: advanceDealer, rounds: rounds,
-                                                                           resetOverrides: resetOverrides,
-                                                                           completion: completion)
-                }))
-            alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel,
-                                                    handler:nil))
-            from.present(alertController, animated: true, completion: nil)
-            
-        }
-    }
-    
-    public func exitScorecard(from: UIViewController, advanceDealer: Bool = false, rounds: Int, resetOverrides: Bool, completion: (()->())? = nil) {
+    public func exitScorecard(advanceDealer: Bool = false, resetOverrides: Bool, completion: (()->())? = nil) {
         // Save current game (if complete)
-        if self.savePlayers(rounds: rounds) {
+        if Scorecard.game.save() {
             // Reset current game
-            self.reset()
+            Scorecard.game.resetValues()
             if advanceDealer {
                 // If necessary advance the dealer
                 self.nextDealer()
@@ -880,108 +421,49 @@ class Scorecard {
             // Store max scores ready for next game in case we don't go right back to home
             self.saveMaxScores()
             
-            // Close form and execute completion code
-            from.dismiss(animated: true, completion: {
-                if resetOverrides {
-                    self.resetOverrideSettings()
-                }
-                completion?()
-            })
+            if resetOverrides {
+                Scorecard.game.reset()
+            }
+            completion?()
+            
         } else {
-            from.alertMessage("Error saving game")
+            Utility.getActiveViewController()!.alertMessage("Error saving game")
         }
     }
     
-    public func savePlayers(rounds: Int) -> Bool {
-        var result = false
-        // Only save if last round complete
-        if self.gameComplete(rounds: rounds) && !self.isPlayingComputer {
-            // Check if need to exclude from stats
-            let excludeHistory = (self.overrideSelected && self.overrideSettings.excludeHistory)
-            let excludeStats = excludeHistory || (self.overrideSelected && self.overrideSettings.excludeStats)
-            // Save the game
-            result = self.saveGame(excludeHistory: excludeHistory, excludeStats: excludeStats)
-            for player in 1...self.currentPlayers {
-                if result {
-                    result = self.enteredPlayer(player).save(excludeHistory: excludeHistory, excludeStats: excludeStats)
-                }
-            }
-            if result {
-                // Can't recover once we've saved
-                self.setGameInProgress(false, suppressWatch: true)
-            }
-        } else {
-            result = true
-        }
-        return result
-    }
-    
-    public func saveGame(excludeHistory: Bool, excludeStats: Bool) -> Bool {
-    // Save the game - participants will be saved with players
-        
-        if !excludeHistory && self.settingSaveHistory {
-            if !CoreData.update(updateLogic: {
-                if self.gameMO == nil {
-                    // Create the managed object
-                    
-                    self.gameMO = CoreData.create(from: "Game") as? GameMO
-                }
-                if self.gameDatePlayed == nil || self.gameUUID == "" {
-                    self.gameDatePlayed = Date()
-                    self.gameUUID = UUID().uuidString
-                }
-                self.gameMO.localDateCreated = Date()
-                self.gameMO.gameUUID = self.gameUUID
-                self.gameMO.datePlayed = self.gameDatePlayed
-                self.gameMO.deviceUUID = UIDevice.current.identifierForVendor?.uuidString
-                self.gameMO.deviceName = Scorecard.deviceName
-                if !self.settingSaveLocation || !self.gameLocation.locationSet {
-                    self.gameMO.latitude = 0
-                    self.gameMO.longitude = 0
-                } else {
-                    self.gameMO.latitude = self.gameLocation.latitude
-                    self.gameMO.longitude = self.gameLocation.longitude
-                }
-                if self.settingSaveLocation {
-                    self.gameMO.location = self.gameLocation.description
-                }
-                self.gameMO.excludeStats = excludeStats
-            }) {
-                // Failed
-                return false
-            }
-        }
-        return true
-    }
-    
-    public func checkNetworkConnection(button: RoundedButton!, label: UILabel!, labelHeightConstraint: NSLayoutConstraint? = nil, labelHeight: CGFloat = 0.0, disable: Bool = false) {
+    public func checkNetworkConnection(button: RoundedButton! = nil, label: UILabel! = nil, labelHeightConstraint: NSLayoutConstraint? = nil, labelHeight: CGFloat = 0.0, disable: Bool = false, action: (()->())? = nil) {
         // First check network
+        
         if Reachability.isConnectedToNetwork()
         {
             self.isNetworkAvailable = true
             
             // First look at stored values and act immediately
-            self.reflectNetworkConnection(button: button, label: label, labelHeightConstraint: labelHeightConstraint, labelHeight: labelHeight, disable: disable)
+            self.reflectNetworkConnection(button: button, label: label, labelHeightConstraint: labelHeightConstraint, labelHeight: labelHeight, disable: disable, action: action)
             
             // Now check icloud asynchronously
             CKContainer.default().accountStatus(completionHandler: { (accountStatus, errorMessage) -> Void in
                 self.isLoggedIn = (accountStatus == .available)
-                self.reflectNetworkConnection(button: button, label: label, disable: disable)
+                self.reflectNetworkConnection(button: button, label: label, disable: disable, action: action)
             })
         } else {
             self.isNetworkAvailable = false
-            self.reflectNetworkConnection(button: button, label: label, labelHeightConstraint: labelHeightConstraint, labelHeight: labelHeight, disable: disable)
+            self.reflectNetworkConnection(button: button, label: label, labelHeightConstraint: labelHeightConstraint, labelHeight: labelHeight, disable: disable, action: action)
         }
     }
     
-    public func reflectNetworkConnection(button: RoundedButton!, label: UILabel!, labelHeightConstraint: NSLayoutConstraint? = nil, labelHeight: CGFloat = 0.0, disable: Bool = false) {
+    public func reflectNetworkConnection(button: RoundedButton!, label: UILabel!, labelHeightConstraint: NSLayoutConstraint? = nil, labelHeight: CGFloat = 0.0, disable: Bool = false, action: (()->())?) {
         var buttonHidden = true
         var labelText = ""
         var labelHidden = true
         
-        if label != nil || button != nil {
+        if action != nil {
             Utility.mainThread {
-                if !self.settingSyncEnabled {
+                action?()
+            }
+        } else if label != nil || button != nil {
+            Utility.mainThread {
+                if !self.settings.syncEnabled {
                     buttonHidden = true
                     labelText = ""
                     labelHidden = true
@@ -1021,8 +503,8 @@ class Scorecard {
     public var onlineEnabled: Bool {
         get {
             return ((Utility.isDevelopment || (self.isNetworkAvailable && self.isLoggedIn)) &&
-                    Scorecard.settingRabbitMQUri != "" &&
-                    self.settingOnlinePlayerEmail ?? "" != "")
+                    RabbitMQConfig.rabbitMQUri != "" &&
+                    self.settings.onlinePlayerEmail ?? "" != "")
         }
     }
     
@@ -1030,9 +512,9 @@ class Scorecard {
         
         func internalHandler(_ enabled: Bool) {
             // Update sync group
-            self.settingSyncEnabled = enabled
+            self.settings.syncEnabled = enabled
             // Save it
-            UserDefaults.standard.set(self.settingSyncEnabled , forKey: "syncEnabled")
+            UserDefaults.standard.set(self.settings.syncEnabled , forKey: "syncEnabled")
             // Call source handler to update controls etc
             handler(enabled)
         }
@@ -1055,24 +537,6 @@ class Scorecard {
         }
     }
     
-    func resetOverrideSettings() {
-        self.overrideSettings = self.gameSettings.copy()
-        self.overrideSelected = false
-    }
-    
-    func currentGameSettings() -> GameSettings {
-        var gameSettings: GameSettings
-        if self.overrideSelected {
-            gameSettings = self.overrideSettings
-            gameSettings.rounds = self.calculateRounds(cards: gameSettings.cards, bounce: gameSettings.bounceNumberCards)
-        } else {
-            gameSettings = self.gameSettings
-            gameSettings.rounds = self.rounds
-        }
-        
-        return gameSettings
-    }
-        
     func saveScorepadHeights(headerHeight: CGFloat, bodyHeight: CGFloat, footerHeight: CGFloat) {
         
         if UIScreen.main.bounds.size.height > 600 {
@@ -1102,7 +566,7 @@ class Scorecard {
     }
     
     func showSummaryImage(_ summaryButton: UIButton) {
-        switch ((self.selectedRound - 1) % 5 ) + 1 {
+        switch ((Scorecard.game.selectedRound - 1) % 5 ) + 1 {
         case 1:
             summaryButton.setImage(UIImage(named: "round summary clubs"), for: .normal)
         case 2:
@@ -1118,9 +582,9 @@ class Scorecard {
 
     // MARK: - Functions to return useful iCloud information ================================= -
     
-    class func iCloudUserIsMe() {
+    private func setICloudUserIsMe() {
         
-        Scorecard.shared.iCloudUserIsMe = false
+        self.iCloudUserIsMe = false
         let container = CKContainer.default()
         container.fetchUserRecordID() {
             recordID, error in
@@ -1131,7 +595,7 @@ class Scorecard {
                     recordID?.recordName == "_6a4c8d69b48141215f9570049dc70f69" ||
                     recordID?.recordName == "_c4c157aa21caf6572e9a9b6fa1349f46" ||
                     recordID?.recordName == "_a3eb2a77f1e670699112be1835571ae0" {
-                    Scorecard.shared.iCloudUserIsMe = true
+                    self.iCloudUserIsMe = true
                 }
             }
         }
@@ -1230,98 +694,17 @@ class Scorecard {
         return (defaultPlayerEmail == nil || defaultPlayerEmail == "" ? nil : defaultPlayerEmail)
     }
     
-    public func updatePrefersStatusBarHidden(from viewController : UIViewController) {
+    public func updatePrefersStatusBarHidden(from viewController : UIViewController? = nil) {
         
-        if AppDelegate.applicationPrefersStatusBarHidden != self.settingPrefersStatusBarHidden {
+        if AppDelegate.applicationPrefersStatusBarHidden != self.settings.prefersStatusBarHidden {
             
-            AppDelegate.applicationPrefersStatusBarHidden = self.settingPrefersStatusBarHidden
-            viewController.setNeedsStatusBarAppearanceUpdate()
+            AppDelegate.applicationPrefersStatusBarHidden = self.settings.prefersStatusBarHidden
+            viewController?.setNeedsStatusBarAppearanceUpdate()
             
         }
     }
 }
 
-// MARK: - Scorecard component classes ============================================================================ -
-
-class GameLocation {
-    var latitude: CLLocationDegrees!
-    var longitude: CLLocationDegrees!
-    var description: String!
-    var subDescription: String!
-    
-    init() {
-    }
-    
-    init(latitude: CLLocationDegrees!, longitude: CLLocationDegrees, description: String, subDescription: String = "") {
-        self.latitude = latitude
-        self.longitude = longitude
-        self.description = description
-        self.subDescription = subDescription
-    }
-    
-    public func setLocation(latitude: CLLocationDegrees!, longitude: CLLocationDegrees) {
-        self.latitude = latitude
-        self.longitude = longitude
-    }
-    
-    public func setLocation(_ location: CLLocation) {
-        self.latitude = location.coordinate.latitude
-        self.longitude = location.coordinate.longitude
-    }
-    
-    public func copy(to gameLocation: GameLocation!) {
-        gameLocation.latitude = self.latitude
-        gameLocation.longitude = self.longitude
-        gameLocation.description = self.description
-        gameLocation.subDescription = self.subDescription
-    }
-    
-    public var locationSet: Bool {
-        get {
-            return (self.latitude != nil && self.longitude != nil)
-        }
-    }
-    
-    public func distance(from location: CLLocation) -> CLLocationDistance {
-        let thisLocation = CLLocation(latitude: self.latitude, longitude: self.longitude)
-        return thisLocation.distance(from: location)
-    }
-    
-}
-
-class GameSettings : Equatable, NSCopying {
-    
-    public var cards: [Int] = [13, 1]
-    public var bounceNumberCards: Bool = false
-    public var rounds: Int = 0
-    public var excludeStats: Bool = false
-    public var excludeHistory: Bool = false
-    
-    public func copy(with zone: NSZone? = nil) -> Any {
-        
-        let copy = GameSettings()
-        copy.cards = self.cards
-        copy.bounceNumberCards = self.bounceNumberCards
-        copy.excludeStats = self.excludeStats
-        copy.excludeHistory = self.excludeHistory
-        copy.rounds = self.rounds
-        
-        return copy
-    }
-    
-    public func copy() -> GameSettings {
-        return self.copy(with: nil) as! GameSettings
-    }
-    
-    public static func == (lhs: GameSettings, rhs: GameSettings) -> Bool {
-        
-        let equal = (lhs.cards == rhs.cards &&
-                 lhs.bounceNumberCards == rhs.bounceNumberCards &&
-                 lhs.excludeStats == rhs.excludeStats &&
-                 lhs.excludeHistory == rhs.excludeHistory)
-        
-        return equal
-        
-    }
-    
+extension Notification.Name {
+    static let appControllerViewPresentingCompleted = Notification.Name(".appControllerViewPresentingCompleted")
 }

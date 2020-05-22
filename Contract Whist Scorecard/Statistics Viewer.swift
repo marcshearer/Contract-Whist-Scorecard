@@ -11,8 +11,6 @@ import CoreData
 
 class StatisticsViewer : NSObject, DataTableViewerDelegate {
 
-    private let scorecard = Scorecard.shared
-        
     public let viewTitle = "Statistics"
     public let allowSync = true
     public let nameField = "name"
@@ -48,7 +46,7 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
     
     init(from viewController: UIViewController, completion: (()->())? = nil) {
         self.sourceViewController = viewController
-        self.recordList = self.scorecard.playerDetailList()
+        self.recordList = Scorecard.shared.playerDetailList()
         self.callerCompletion = completion
         super.init()
         
@@ -75,7 +73,7 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
         
         switch field {
         case "twosMade", "=twosMade%":
-            result = !self.scorecard.settingBonus2
+            result = !Scorecard.activeSettings.bonus2
         default:
             break
         }
@@ -120,7 +118,7 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
     }
     
     internal func refreshData(recordList: [DataTableViewerDataSource])->[DataTableViewerDataSource] {
-        scorecard.refreshPlayerDetailList(recordList as! [PlayerDetail])
+        Scorecard.shared.refreshPlayerDetailList(recordList as! [PlayerDetail])
         return recordList
     }
     

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Combine
 
 protocol ScorecardAlertDelegate: UIViewController {
     
@@ -18,63 +19,8 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     
     // MARK: - Comms mode helpers ======================================================== -
     
-    public var isSharing: Bool {
-        get {
-            if let delegate = self.commsDelegate {
-                if delegate.connectionType == .server && self.commsPurpose == .sharing {
-                    return (delegate.connections > 0)
-                } else {
-                    return false
-                }
-            } else {
-                return false
-            }
-        }
-    }
-    
-    public var isViewing: Bool {
-        get {
-            if let delegate = self.commsDelegate {
-                return (delegate.connectionType == .client && self.commsPurpose == .sharing)
-            } else {
-                return false
-            }
-        }
-    }
-    
-    public var isHosting: Bool {
-        get {
-            if let delegate = self.commsDelegate {
-                return (delegate.connectionType == .server  && self.commsPurpose == .playing)
-            } else {
-                return false
-            }
-        }
-    }
-    
-    public var hasJoined: Bool {
-        get {
-            if let delegate = self.commsDelegate {
-                return (delegate.connectionType == .client  && self.commsPurpose == .playing)
-            } else {
-                return false
-            }
-        }
-    }
-    
-    public var isPlayingComputer: Bool {
-        get {
-            if let delegate = self.commsDelegate {
-                return (delegate.connectionMode == .loopback  && self.commsPurpose == .playing)
-                
-            } else {
-                return false
-            }
-        }
-    }
-    
     public func setupSharing() {
-        if self.settingAllowBroadcast {
+        if self.settings.allowBroadcast {
             self.sharingService = CommsHandler.server(proximity: .nearby, mode: .broadcast, serviceID: self.serviceID(.sharing), deviceName: Scorecard.deviceName)
             self.resetSharing()
         }
@@ -92,7 +38,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         sharingService?.stop()
         self.setCommsDelegate(nil)
             
-        if self.settingAllowBroadcast {
+        if self.settings.allowBroadcast {
             // Restore server delegate
             self.setCommsDelegate(self.sharingService, purpose: .sharing)
             self.sharingService?.dataDelegate = self
@@ -101,13 +47,22 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         }
     }
     
-    public func setCommsDelegate(_ delegate: CommsHandlerDelegate?, purpose: CommsPurpose? = nil) {
+    public func setCommsDelegate(_ delegate: CommsServiceDelegate?, purpose: CommsPurpose? = nil) {
         self._commsPurpose = purpose
         self._commsDelegate = delegate
+        
+        // Subscribe to scores update service to forward to remotes (Note this will only do anything on servers
+        if delegate == nil {
+            self.commsScoresSubscription?.cancel()
+        } else {
+            self.commsScoresSubscription = Scorecard.game?.scores.subscribe { (round, playerNumber) in
+                self.sendScores(playerNumber: playerNumber, round: round, using: delegate)
+            }
+        }
     }
     
     public func serviceID(_ purpose: CommsPurpose) -> String {
-        let servicePrefix = (self.settingDatabase == "development" ? "whdev" : "whist")
+        let servicePrefix = (self.database == "development" ? "whdev" : "whist")
         var purposeString: String
         if purpose == .playing {
             purposeString = "playing"
@@ -126,19 +81,8 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             break
             
         case .connected:
-            // New connection - resend state
-            Utility.mainThread("stateChange", execute: { [unowned self] in
-                if self.gameInProgress {
-                    // Only here when sharing
-                    if self.isHosting || self.hasJoined {
-                        fatalError("Assert violation: Should never happen")
-                    }
-                    self.sendPlayersOverrideSettings(to: peer)
-                    self.sendScores(to: peer)
-                } else {
-                    self.sendInstruction("wait", to: peer)
-                }
-            })
+            // New connection - used to send state but now should wait for refresh request
+            break
             
         default:
             break
@@ -165,7 +109,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     // MARK: - Alert handlers ================================================================= -
     
     public func alertUser(vibrate: Bool = true, remindAfter: TimeInterval? = nil, remindVibrate: Bool? = nil, reminder: Bool = false) {
-        if vibrate && self.settingAlertVibrate {
+        if vibrate && self.settings.alertVibrate {
             Utility.getActiveViewController()?.alertVibrate()
         }
         self.alertDelegate?.alertUser(reminder: reminder)
@@ -213,8 +157,8 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     }
     
     public func resetConnection() {
-        self.commsHandlerMode = .none
-        if self.isHosting || self.isSharing {
+        self.viewPresenting = .none
+        if Scorecard.game.isHosting || Scorecard.game.isSharing {
             // Refresh state to all devices
             self.commsDelegate?.reset()
             
@@ -224,98 +168,59 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         }
     }
     
-    public func dealHand() {
-        if self.isHosting && self.handState.hand == nil {
-            // Need to deal next hand
-            self.handState.hand = self.dealHand(cards: self.roundCards(self.handState.round, rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce))
+    public func dealNextHand() {
+        // Deal next hand if necessary
+        if Scorecard.game.handState.hand == nil {
+            Scorecard.game.handState.hand = self.dealHand(round: Scorecard.game.handState.round)
             // Save hand and (blank) trick in case need to recover
-            self.recovery.saveHands(deal: self.deal, made: self.handState.made, twos: self.handState.twos)
-            self.recovery.saveTrick(toLead: self.handState.toLead, trickCards: [])
-            self.recovery.saveLastTrick(lastToLead: nil, lastCards: nil)
+            Scorecard.recovery.saveHands(deal: Scorecard.game.deal, made: Scorecard.game.handState.made, twos: Scorecard.game.handState.twos)
+            Scorecard.recovery.saveTrick(toLead: Scorecard.game.handState.toLead, trickCards: [])
+            Scorecard.recovery.saveLastTrick(lastToLead: nil, lastCards: nil)
         }
     }
     
-    public func playHand(from viewController: CustomViewController, sourceView: UIView, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil) {
-        if self.isHosting || self.hasJoined {
+    public func playHand(from viewController: ScorecardViewController, sourceView: UIView, animated: Bool = true, controllerDelegate: ScorecardAppControllerDelegate? = nil, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil) -> HandViewController? {
+        var handViewController: HandViewController?
+        
+        if Scorecard.game.isHosting || Scorecard.game.hasJoined {
             // Now play the hand
-            if self.isHosting {
-                if self.handState.hand == nil {
-                    // Need to deal next hand
-                    self.handState.hand = self.dealHand(cards: self.roundCards(self.handState.round, rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce))
-                }
-                
+            if Scorecard.game.isHosting {
+               
                 // Set up hands in computer player mode
                 if computerPlayerDelegate != nil {
                     for (playerNumber, computerPlayerDelegate) in computerPlayerDelegate! {
-                        computerPlayerDelegate?.newHand(hand: self.deal.hands[playerNumber-1])
+                        computerPlayerDelegate?.newHand(hand: Scorecard.game.deal.hands[playerNumber-1])
                     }
                 }
             }
-            if self.handState.hand != nil && (self.handState.hand.cards.count > 0 || self.handState.trickCards.count != 0) {
-                let storyboard = UIStoryboard(name: "HandViewController", bundle: nil)
-                let handViewController = storyboard.instantiateViewController(withIdentifier: "HandViewController") as! HandViewController
-
-                handViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
-               
-                handViewController.delegate = viewController as? HandStatusDelegate
-                handViewController.computerPlayerDelegate = computerPlayerDelegate
-                
-                Utility.mainThread("playHand", execute: {
-                    viewController.present(handViewController, sourceView: sourceView, animated: true, completion: nil)
-                })
-                self.handViewController = handViewController
-            } else if self.commsHandlerMode == .playHand {
-                // Notify client controller that hand display already complete
-                self.commsHandlerMode = .none
-                NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
+            if Scorecard.game.handState.hand != nil && (Scorecard.game.handState.hand.cards.count > 0 || Scorecard.game.handState.trickCards.count != 0) {
+                handViewController = HandViewController.show(from: viewController, sourceView: sourceView, existing: handViewController, controllerDelegate: controllerDelegate, computerPlayerDelegate: computerPlayerDelegate, animated: animated)
+            } else {
+                fatalError("Trying to display hand with no hand setup")
             }
-        } else if self.isSharing {
-            self.sendPlayersOverrideSettings()
-            self.sendScores = true
         }
+        return handViewController
     }
     
-    private func sendPlayersOverrideSettings(to peer: CommsPeer! = nil) {
-        let gameSettings = self.currentGameSettings()
-
-        self.sendPlay(rounds: gameSettings.rounds, cards: gameSettings.cards, bounce: gameSettings.bounceNumberCards, bonus2: self.settingBonus2, suits: self.suits, to: peer)
-
-    }
+    // MARK: - Routines to send data ======================================================= -
     
-    public func sendPlay(rounds: Int, cards: [Int], bounce: Bool, bonus2: Bool, suits: [Suit], to commsPeer: CommsPeer! = nil) {
+    private func settingsData() -> [String: Any] {
+        var settings: [String: Any] = [:]
+
+        settings["cards"] = Scorecard.activeSettings.cards
+        settings["bounceNumberCards"] = Scorecard.activeSettings.bounceNumberCards
+        settings["trumpSequence"] = Scorecard.activeSettings.trumpSequence
+        settings["bonus2"] = Scorecard.activeSettings.bonus2
+        settings["gameUUID"] = Scorecard.game.gameUUID!
         
-        if self.isSharing || self.isHosting {
-            // Send general settings
-            var settings: [String: Any] = [:]
-            settings["rounds"] = rounds
-            settings["cards"] = cards
-            settings["bounce"] = bounce
-            settings["bonus2"] = bonus2
-            var suitStrings: [String] = []
-            for suit in suits {
-                suitStrings.append(suit.toString())
-            }
-            settings["suits"] = suitStrings
-            settings["gameUUID"] = self.gameUUID!
-            var round = self.selectedRound
-            if self.entryPlayer(self.currentPlayers).score(round) != nil {
-                // Round complete - prepare for next round
-                round = min(round + 1, self.rounds)
-            }
-            settings["round"] = round
-            self.commsDelegate?.send("settings", settings, to: commsPeer)
-            
-            // Send players with directive to play
-            self.sendPlayers(descriptor: "play", to: commsPeer)
-            self.sendScores = true
-        }
+        return settings
     }
-            
-    public func sendPlayers(descriptor: String = "players", players: [(email: String, name: String, connected: Bool)]? = nil, to commsPeer: CommsPeer! = nil) {
+    
+    private func playersData(from playerDelegate: CommsServicePlayerDelegate?) -> [String: Any] {
         var playerList: [String : Any] = [:]
         // Send players
-        if let players = players {
-            // List passed in
+        if let players = playerDelegate?.currentPlayers() {
+            // Override list
             for playerNumber in 1...players.count {
                 var player: [String : String] = [:]
                 player["name"] = players[playerNumber - 1].name
@@ -325,99 +230,162 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             }
         } else {
             // Use defined players
-            for playerNumber in 1...self.currentPlayers {
+            for playerNumber in 1...Scorecard.game.currentPlayers {
                 var player: [String : String] = [:]
-                let playerMO = enteredPlayer(playerNumber).playerMO!
+                let playerMO = Scorecard.game.player(enteredPlayerNumber: playerNumber).playerMO!
                 player["name"] = playerMO.name!
                 player["email"] = playerMO.email!
                 player["connected"] = "true"
                 playerList["\(playerNumber)"] = player
             }
         }
-        self.commsDelegate?.send(descriptor, playerList, to: commsPeer)
+        return playerList
+    }
+    
+    private func dealerData() -> [String : Any] {
+        return [ "dealer" : Scorecard.game.dealerIs ]
+    }
+    
+    private func dealData() -> [String : Any] {
+        return [ "round" : Scorecard.game.handState.round,
+                 "deal" : Scorecard.game.deal.toNumbers()]
+    }
+    
+    private func scoresData(playerNumber: Int! = nil, round: Int! = nil, mode: Mode! = nil) -> [String : Any] {
+        var scoreList: [String : Any] = [:]
+        var playerRange: CountableClosedRange<Int>
+        var roundRange: CountableClosedRange<Int>
+        
+        // Set up ranges
+        if playerNumber == nil {
+            playerRange = 1...Scorecard.game.currentPlayers
+        } else {
+            playerRange = playerNumber...playerNumber
+        }
+        if round == nil {
+            roundRange = 1...Scorecard.game.maxEnteredRound
+        } else {
+            roundRange = round...round
+        }
+        
+        // Scan players
+        for playerNumber in playerRange {
+            var playerScore: [String : Any] = [:]
+            
+            // Scan rounds
+            for round in roundRange {
+                var roundScore: [String : Any] = [:]
+                
+                let score = Scorecard.game.scores.get(round: round, playerNumber: playerNumber, sequence: .entered)
+                
+                // Send required values
+                if mode == nil || mode == .bid {
+                    let bid = score.bid
+                    roundScore["bid"] = bid ?? NSNull()
+                }
+                if mode == nil || mode == .made {
+                    let made = score.made
+                    roundScore["made"] = made ?? NSNull()
+                }
+                if mode == nil || mode == .twos {
+                    let twos = score.twos
+                    roundScore["twos"] = twos ?? NSNull()
+                }
+                
+                // Send round if non-nil scores
+                if roundScore.count != 0 {
+                    playerScore["\(round)"] = roundScore
+                }
+            }
+            
+            // Send player if non-nil scores
+            if playerScore.count != 0 {
+                scoreList["\(playerNumber)"] = playerScore
+            }
+        }
+        return scoreList
+    }
+    
+    private func handStateData() -> [String : Any] {
+        var handState: [String:Any] = [:]
+        
+        if Scorecard.game.handState != nil && !Scorecard.game.handState.finished {
+            
+            var hands: [String:[Int]] = [:]
+            for playerNumber in 1...Scorecard.game.currentPlayers {
+                hands["\(playerNumber)"] = Scorecard.game.deal.hands[playerNumber - 1].toNumbers()
+            }
+            
+            handState = [ "cards"        : hands,
+                          "trick"        : Scorecard.game.handState.trick!,
+                          "made"         : Scorecard.game.handState.made!,
+                          "twos"         : Scorecard.game.handState.twos!,
+                          "trickCards"   : Hand(fromCards: Scorecard.game.handState.trickCards).toNumbers(),
+                          "lastCards"    : Hand(fromCards: Scorecard.game.handState.lastCards).toNumbers(),
+                          "toLead"       : Scorecard.game.handState.toLead!,
+                          "lastToLead"   : Scorecard.game.handState.lastToLead ?? -1,
+                          "round"        : Scorecard.game.handState.round]
+        }
+        return handState
+    }
+    
+    public func sendState(from playerDelegate: CommsServicePlayerDelegate?, to commsPeer: CommsPeer! = nil) {
+        var state: [String : Any] = [:]
+        state["settings"] = self.settingsData()
+        state["players"] = self.playersData(from: playerDelegate)
+        state["dealer"] = self.dealerData()
+        if Scorecard.game.inProgress {
+            state["deal"] = self.dealData()
+            state["allscores"] = self.scoresData()
+            state["autoPlay"] = self.autoPlayData()
+            state["handState"] = self.handStateData()
+            state["playHand"] = [:]
+        }
+        
+        self.commsDelegate?.send("state", state, to: commsPeer)
+    }
+    
+    public func sendPlayHand(to commsPeer: CommsPeer? = nil) {
+        // Should only be sent after all other information - e.g. players, settings, deal - have been sent
+        self.sendInstruction("playHand", to: commsPeer)
+    }
+    
+    public func sendPlayers(from playersDelegate: CommsServicePlayerDelegate?, to commsPeer: CommsPeer? = nil) {
+        
+        self.commsDelegate?.send("players", self.playersData(from: playersDelegate), to: commsPeer)
         self.sendDealer()
     }
     
+    public func sendDeal(to commsPeer: CommsPeer! = nil) {
+         self.commsDelegate?.send("deal", self.dealData(), to: commsPeer)
+    }
+
+    public func sendHandState(to commsPeer: CommsPeer! = nil) {
+         self.commsDelegate?.send("handState", self.handStateData(), to: commsPeer)
+    }
+
+    public func sendDealer(to commsPeer: CommsPeer! = nil) {
+         self.commsDelegate?.send("dealer", self.dealerData(), to: commsPeer)
+    }
+     
     public func sendStatus(to commsPeer: CommsPeer! = nil, message: String) {
         let status: [String: Any] = [ "status" : message ]
         self.commsDelegate?.send("status", status, to: commsPeer)
     }
     
-    
-    public func sendDealer(to commsPeer: CommsPeer! = nil) {
-        let dealer: [String: Any] = [ "dealer" : self.dealerIs ]
-        self.commsDelegate?.send("dealer", dealer, to: commsPeer)
+    public func sendBid(playerNumber: Int, round: Int, to commsPeer: CommsPeer! = nil, using commsDelegate: CommsServiceDelegate? = nil) {
+        if !(Scorecard.game.isHosting || Scorecard.game.isSharing) {
+            // No need to send if hosting/sharing as all changes automatically sent
+            self.sendScores(playerNumber: playerNumber, round: round, mode: .bid, to: commsPeer, using: commsDelegate, sendJoined: true)
+        }
     }
     
-    public func sendScores(playerNumber: Int! = nil, round: Int! = nil, mode: Mode! = nil, overrideBid: Int? = nil, to commsPeer: CommsPeer! = nil, using commsDelegate: CommsHandlerDelegate? = nil) {
-        var scoreList: [String : Any] = [:]
-        var playerRange: CountableClosedRange<Int>
-        var roundRange: CountableClosedRange<Int>
-        
-        if self.sendScores {
+    public func sendScores(playerNumber: Int! = nil, round: Int! = nil, mode: Mode! = nil, to commsPeer: CommsPeer! = nil, using commsDelegate: CommsServiceDelegate? = nil, sendJoined: Bool = false) {
+       
+        if Scorecard.game.isHosting || Scorecard.game.isSharing || (sendJoined && Scorecard.game.hasJoined) {
+       
+            let scoreList = scoresData(playerNumber: playerNumber, round: round, mode: mode)
             
-            // Set up ranges
-            if playerNumber == nil {
-                playerRange = 1...self.currentPlayers
-            } else {
-                playerRange = playerNumber...playerNumber
-            }
-            if round == nil {
-                roundRange = 1...self.maxEnteredRound
-            } else {
-                roundRange = round...round
-            }
-            
-            // Scan players
-            for playerNumber in playerRange {
-                var playerScore: [String : Any] = [:]
-                
-                // Scan rounds
-                for round in roundRange {
-                    var roundScore: [String : Any] = [:]
-                    
-                    // Send required values
-                    if mode == nil || mode == .bid {
-                        var bid = overrideBid
-                        if bid == nil {
-                            // Will only be overridden by computer player
-                            bid = self.enteredPlayer(playerNumber).bid(round)
-                        }
-                        if bid != nil {
-                            roundScore["bid"] = bid
-                        } else {
-                            roundScore["bid"] = NSNull()
-                        }
-                    }
-                    if mode == nil || mode == .made {
-                        let made = self.enteredPlayer(playerNumber).made(round)
-                        if made != nil {
-                            roundScore["made"] = made
-                        } else {
-                            roundScore["made"] = NSNull()
-                        }
-                    }
-                    if mode == nil || mode == .twos {
-                        let twos = self.enteredPlayer(playerNumber).twos(round)
-                        if twos != nil {
-                            roundScore["twos"] = twos
-                        } else {
-                            roundScore["twos"] = NSNull()
-                        }
-                    }
-                    
-                    // Send round if non-nil scores
-                    if roundScore.count != 0 {
-                        playerScore["\(round)"] = roundScore
-                    }
-                    
-                }
-                
-                // Send player if non-nil scores
-                if playerScore.count != 0 {
-                    scoreList["\(playerNumber)"] = playerScore
-                }
-            }
             // Send if non-nil scores
             if scoreList.count != 0 {
                 // Setup comms handler
@@ -428,14 +396,6 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 commsDelegate?.send((playerNumber == nil && round == nil && mode == nil ? "allscores" : "scores"), scoreList, to: commsPeer)
             }
         }
-    }
-    
-    public func sendDeal(to commsPeer: CommsPeer! = nil) {
-        // Send other players their cards
-        
-        self.commsDelegate?.send("deal", [ "round" : self.handState.round,
-                                           "deal" : self.deal.toNumbers()])
-        
     }
     
     public func sendCut(cutCards: [Card], playerNames: [String], to commsPeer: CommsPeer! = nil) {
@@ -452,7 +412,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                                  to: commsPeer)
     }
     
-    public func sendCardPlayed(round: Int, trick: Int, playerNumber: Int, card: Card, using commsDelegate: CommsHandlerDelegate? = nil) {
+    public func sendCardPlayed(round: Int, trick: Int, playerNumber: Int, card: Card, using commsDelegate: CommsServiceDelegate? = nil) {
         // Setup comms handler
         var commsDelegate = commsDelegate
         if commsDelegate == nil {
@@ -463,33 +423,12 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                                         "player"          : playerNumber,
                                         "card"            : card.toNumber() ])
     }
-    
-    public func sendHandState(to commsPeer: CommsPeer! = nil) {
-        if self.handState != nil && !self.handState.finished {
-            for playerNumber in 2...self.currentPlayers {
-                let hand = self.deal.hands[playerNumber - 1]
-                self.commsDelegate?.send("handState", [ "cards"        : hand.toNumbers(),
-                                                        "trick"        : self.handState.trick,
-                                                        "made"         : self.handState.made,
-                                                        "twos"         : self.handState.twos,
-                                                        "trickCards"   : Hand(fromCards: self.handState.trickCards).toNumbers(),
-                                                        "lastCards"    : Hand(fromCards: self.handState.lastCards).toNumbers(),
-                                                        "toLead"       : self.handState.toLead,
-                                                        "lastToLead"   : self.handState.lastToLead ?? -1,
-                                                        "round"        : self.handState.round],
-                                          to: commsPeer,
-                                          matchEmail: self.enteredPlayer(playerNumber).playerMO!.email!)
-                Utility.debugMessage("sendHandState", "\(playerNumber) \(commsPeer?.deviceName ?? "all") \(self.enteredPlayer(playerNumber).playerMO!.email!)")
-                self.sendAutoPlay(to: commsPeer)
-            }
-        }
-    }
-    
+        
     public func sendRefreshRequest(to commsPeer: CommsPeer! = nil) {
         self.sendInstruction("refreshRequest", to: commsPeer)
     }
     
-    public func refreshState(to commsPeer: CommsPeer! = nil) {
+    public func refreshState(from playerDelegate: CommsServicePlayerDelegate?, to commsPeer: CommsPeer! = nil) {
         Utility.mainThread {
             var lastRefresh = self.lastRefresh
             if commsPeer != nil {
@@ -506,23 +445,12 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             // Only send 1 refresh a second to a particular device!
             if lastRefresh?.timeIntervalSinceNow ?? TimeInterval(-2.0) < TimeInterval(-1.0) {
                 
-                if self.isHosting {
+                if Scorecard.game.isHosting {
                     // Hosting online game
+                    self.sendState(from: playerDelegate, to: commsPeer)
                     
-                    if !self.gameInProgress || self.handState == nil {
-                        // Game not started yet - wait
-                        self.sendInstruction("wait", to: commsPeer)
-                        self.sendAutoPlay(to: commsPeer)
-                    } else {
-                        // Game in progress - need to resend state - luckily have what we need in handState
-                        self.sendPlay(rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce, bonus2: self.handState.bonus2, suits: self.handState.suits, to: commsPeer)
-                        self.sendScores(to: commsPeer)
-                        self.sendHandState(to: commsPeer)
-                    }
-                    
-                } else if self.isSharing {
+                } else if Scorecard.game.isSharing && Scorecard.game.inProgress {
                     // Sharing
-                    
                     self.sendScores(to: commsPeer)
                 }
                 
@@ -537,14 +465,13 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         }
     }
     
-    public func processScores(descriptor: String, data: [String : Any?], bonus2: Bool) -> Int {
+    public func processScores(descriptor: String, data: [String : Any?]) -> Int {
         var maxRound = 0
-        self.commsDelegate?.debugMessage("Processing scores")
+        if descriptor == "allscores" {
+            Scorecard.game.resetPlayers()
+        }
         for (playerNumberData, playerData) in (data as! [String : [String : Any]]).sorted(by: {$0.key < $1.key})  {
             let playerNumber = Int(playerNumberData)!
-            if descriptor == "allscores" {
-                self.enteredPlayer(playerNumber).reset()
-            }
             
             for (roundNumberData, roundData) in (playerData as! [String : [String : Any]]).sorted(by: {Int($0.key)! < Int($1.key)!}) {
                 let roundNumber = Int(roundNumberData)!
@@ -552,24 +479,16 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 
                 if roundData["bid"] != nil {
                     // Ignore if player is on this device - only doing this for bids which are entered locally - scores come down from host
-                    if descriptor == "allscores" || (self.handState == nil || playerNumber != self.handState.enteredPlayerNumber) {
+                    if descriptor == "allscores" || (Scorecard.game.handState == nil || playerNumber != Scorecard.game.handState.enteredPlayerNumber) {
                         var bid: Int!
                         if roundData["bid"] is NSNull {
                             bid = nil
                         } else {
                             bid = roundData["bid"] as! Int?
                         }
-                        if self.enteredPlayer(playerNumber).setBid(roundNumber, bid, bonus2: bonus2) {
-                            if self.handViewController != nil {
-                                self.handViewController.reflectBid(round: roundNumber, enteredPlayerNumber: playerNumber)
-                            } else {
-                                if descriptor == "scores" && self.handState != nil {
-                                    // Check if this makes it your bid
-                                    if (playerNumber % self.currentPlayers) + 1 == self.handState.enteredPlayerNumber {
-                                        self.alertUser(remindAfter: 10.0)
-                                    }
-                                }
-                            }
+                        _ = Scorecard.game.scores.set(round: roundNumber, playerNumber: playerNumber, bid: bid)
+                        if bid != nil && descriptor == "scores" {
+                            Scorecard.shared.bidSubscription.send((roundNumber, playerNumber, bid))
                         }
                     }
                 }
@@ -580,7 +499,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                     } else {
                         made = roundData["made"] as! Int?
                     }
-                    self.enteredPlayer(playerNumber).setMade(roundNumber, made, bonus2: bonus2)
+                    _ = Scorecard.game.scores.set(round: roundNumber, playerNumber: playerNumber, made: made)
                 }
                 if roundData["twos"] != nil {
                     var twos: Int!
@@ -589,7 +508,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                     } else {
                         twos = roundData["twos"] as! Int?
                     }
-                    self.enteredPlayer(playerNumber).setTwos(roundNumber, twos, bonus2: bonus2)
+                    _ = Scorecard.game.scores.set(round: roundNumber, playerNumber: playerNumber, twos: twos)
                 }
             }
             
@@ -597,41 +516,50 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         return maxRound
     }
     
-    public func processCardPlayed(data: [String : Any]) {
+    public func processCardPlayed(data: [String : Any], from appController: ScorecardAppController) {
         let round = data["round"] as! Int
         let trick = data["trick"] as! Int
         let playerNumber = data["player"] as! Int
         let card = Card(fromNumber: data["card"] as! Int)
         
-        self.commsDelegate?.debugMessage("Processing card played \(card.toString()) from \(self.enteredPlayer(playerNumber).playerMO!.name!)")
-        
-        if self.handState == nil || playerNumber != self.handState.enteredPlayerNumber {
+        if Scorecard.game.handState == nil || playerNumber != Scorecard.game.handState.enteredPlayerNumber {
             // Ignore if from self since should know about it already
-            
-            // Update state
+            var handViewController: HandViewController?
+            if appController.activeView == .hand {
+                handViewController = appController.activeViewController as? HandViewController
+            }
+
+            // Play the card
             self.playCard(card: card)
             
-            if self.isHosting {
+            // Update view if it is showing
+            handViewController?.reflectCardPlayed(round: round, trick: trick, playerNumber: playerNumber, card: card)
+            
+            // Proceed to next player in view if it is showing
+            Utility.executeAfter(delay: 1.0) {
+            
+                // Save current cards played
+                let currentTrickCards = Scorecard.game.handState.trickCards.count
+                
+                // Update state
+                self.updateState()
+            
+                handViewController?.reflectCurrentState(currentTrickCards: currentTrickCards)
+            }
+            
+            if Scorecard.game.isHosting {
                 // Reflect it out to other devices
                 self.sendCardPlayed(round: round, trick: trick, playerNumber: playerNumber, card: card)
             }
-            
-            if self.handViewController != nil {
-                // Play the card on the view
-                self.handViewController.reflectCardPlayed(round: round, trick: trick, playerNumber: playerNumber, card: card)
-            } else {
-                // State won't be updated in view so do it here
-                self.updateState()
-            }
         }
     }
-    
-    public func playCard(card: Card) {
-        _ = self.handState.hand.remove(card: card)
         
-        let nextCard = self.handState.trickCards.count
-        if nextCard < self.currentPlayers {
-            self.handState.trickCards.append(card)
+    public func playCard(card: Card) {
+        _ = Scorecard.game.handState.hand.remove(card: card)
+        
+        let nextCard = Scorecard.game.handState.trickCards.count
+        if nextCard < Scorecard.game.currentPlayers {
+            Scorecard.game.handState.trickCards.append(card)
         }
     }
     
@@ -650,7 +578,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                     winner = cardNumber
                     win2 = (cardPlayed.toRankString() == "2")
                 }
-            } else if cardPlayed.suit == self.roundSuit(round, suits: suits) && (highTrump == nil || cardPlayed.rank > highTrump) {
+            } else if cardPlayed.suit == Scorecard.game.roundSuit(round) && (highTrump == nil || cardPlayed.rank > highTrump) {
                 highTrump = cardPlayed.rank
                 winner = cardNumber
                 win2 = (cardPlayed.toRankString() == "2")
@@ -660,88 +588,83 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     }
     
     public func updateState(alertUser: Bool = true) {
-        if self.handState.trickCards.count == self.currentPlayers {
+        if Scorecard.game.handState.trickCards.count == Scorecard.game.currentPlayers {
             // Hand complete - check who won
             var win2: Bool
-            (self.handState.winner, win2) = self.checkWinner(currentPlayers: self.currentPlayers, round: self.handState.round, suits: self.handState.suits, trickCards: self.handState.trickCards)
+            (Scorecard.game.handState.winner, win2) = self.checkWinner(currentPlayers: Scorecard.game.currentPlayers, round: Scorecard.game.handState.round, suits: Scorecard.game.suits, trickCards: Scorecard.game.handState.trickCards)
             
-            if self.isHosting {
+            if Scorecard.game.isHosting {
                 // Remove current trick from deal
-                for (index, card) in self.handState.trickCards.enumerated() {
-                    let playerNumber = self.handState.playerNumber(index + 1)
-                    _ = self.deal.hands[playerNumber - 1].remove(card: card)
+                for (index, card) in Scorecard.game.handState.trickCards.enumerated() {
+                    let playerNumber = Scorecard.game.handState.playerNumber(index + 1)
+                    _ = Scorecard.game.deal.hands[playerNumber - 1].remove(card: card)
                 }
             }
             
             // Store and reset cards played / who led / trick
-            self.handState.nextTrick()
+            Scorecard.game.handState.nextTrick()
             
             // Set next to lead from winner
-            self.handState.toLead = self.handState.playerNumber(self.handState.winner!)
-            self.handState.toPlay = self.handState.toLead
+            Scorecard.game.handState.toLead = Scorecard.game.handState.playerNumber(Scorecard.game.handState.winner!)
+            Scorecard.game.handState.toPlay = Scorecard.game.handState.toLead
             
             // Update tricks made
-            self.handState.made[self.handState.toPlay! - 1] += 1
-            self.handState.twos[self.handState.toPlay! - 1] += (self.handState.bonus2 && win2 ? 1 : 0)
+            Scorecard.game.handState.made[Scorecard.game.handState.toPlay! - 1] += 1
+            Scorecard.game.handState.twos[Scorecard.game.handState.toPlay! - 1] += (Scorecard.activeSettings.bonus2 && win2 ? 1 : 0)
             
             // Save deal and current (blank) trick for recovery
-            if self.isHosting {
-                self.recovery.saveHands(deal: self.deal, made: self.handState.made,twos: self.handState.twos)
+            if Scorecard.game.isHosting {
+                Scorecard.recovery.saveHands(deal: Scorecard.game.deal, made: Scorecard.game.handState.made,twos: Scorecard.game.handState.twos)
             }
             
-            if self.handState.trick > self.roundCards(self.handState.round, rounds: self.handState.rounds, cards: self.handState.cards, bounce: self.handState.bounce) {
-                // Hand finished
-                if self.isHosting {
-                    // Record scores (in the order they happened)
-                    for playerNumber in 1...self.currentPlayers {
-                        let player = self.roundPlayer(playerNumber: playerNumber, round: self.handState.round)
-                        player.setMade(self.handState.round, self.handState.made[player.playerNumber - 1])
-                        player.setTwos(self.handState.round, self.handState.twos[player.playerNumber - 1], bonus2: self.handState.bonus2)
-                    }
+            if Scorecard.game.handState.trick > Scorecard.game.roundCards(Scorecard.game.handState.round) {
+                // Hand finished - Record scores (in the order they happened)
+                for playerNumber in 1...Scorecard.game.currentPlayers {
+                    let player = Scorecard.game.player(roundPlayerNumber: playerNumber, round: Scorecard.game.handState.round)
+                    _ = Scorecard.game.scores.set(round: Scorecard.game.handState.round, playerNumber: playerNumber, made: Scorecard.game.handState.made[player.playerNumber - 1], sequence: .round)
+                    _ = Scorecard.game.scores.set(round: Scorecard.game.handState.round, playerNumber: playerNumber, twos: Scorecard.game.handState.twos[player.playerNumber - 1], sequence: .round)
                 }
-                self.handState.finished = true
+                Scorecard.game.handState.finished = true
             }
         } else {
             // Work out who should play
-            self.handState.toPlay = self.handState.playerNumber(self.handState.trickCards.count + 1)
+            Scorecard.game.handState.toPlay = Scorecard.game.handState.playerNumber(Scorecard.game.handState.trickCards.count + 1)
         }
-        if alertUser && self.handState.toPlay == self.handState.enteredPlayerNumber {
+        if alertUser && Scorecard.game.handState.toPlay == Scorecard.game.handState.enteredPlayerNumber {
             self.alertUser(remindAfter: 10.0)
         }
-        if self.isHosting {
+        if Scorecard.game.isHosting {
             // Save current and last trick for recovery
-            self.recovery.saveTrick(toLead: self.handState.toLead!, trickCards: self.handState.trickCards)
-            if self.handState.trick <= 1 {
-                self.recovery.saveLastTrick(lastToLead: nil, lastCards: nil)
+            Scorecard.recovery.saveTrick(toLead: Scorecard.game.handState.toLead!, trickCards: Scorecard.game.handState.trickCards)
+            if Scorecard.game.handState.trick <= 1 {
+                Scorecard.recovery.saveLastTrick(lastToLead: nil, lastCards: nil)
             } else {
-                self.recovery.saveLastTrick(lastToLead: self.handState.lastToLead, lastCards: self.handState.lastCards)
+                Scorecard.recovery.saveLastTrick(lastToLead: Scorecard.game.handState.lastToLead, lastCards: Scorecard.game.handState.lastCards)
             }
         }
     }
     
     
     func updateHandState(toLead: Int?, toPlay: Int?, finished: Bool!) {
-        self.handState.toLead = toLead
-        self.handState.toPlay = toPlay
-        self.handState.finished = finished
+        Scorecard.game.handState.toLead = toLead
+        Scorecard.game.handState.toPlay = toPlay
+        Scorecard.game.handState.finished = finished
     }
     
-    public func dealHand(cards: Int) -> Hand! {
-        if self.isHosting {
+    private func dealHand(round: Int) -> Hand! {
+        if Scorecard.game.isHosting {
             // Deal pack
-            self.deal = Pack.deal(numberCards: cards,
-                                  numberPlayers: self.currentPlayers)
+            Scorecard.game.deal = Pack.deal(numberCards: Scorecard.game.roundCards(round),
+                                  numberPlayers: Scorecard.game.currentPlayers)
             // Save in history
-            self.dealHistory[self.handState.round] = self.deal.copy() as? Deal
+            Scorecard.game.dealHistory[Scorecard.game.handState.round] = Scorecard.game.deal.copy() as? Deal
             
             // Save for recovery
-            self.recovery.saveDeal(round: self.handState.round, deal: self.deal)
+            Scorecard.recovery.saveDeal(round: Scorecard.game.handState.round, deal: Scorecard.game.deal)
             
-            // Send hands to other players
-            sendDeal()
-            
-            return self.deal.hands[0]
+            return Scorecard.game.deal.hands[0]
         } else {
+            // Others get their hand via comms layer
             return nil
         }
     }
@@ -765,19 +688,14 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     
     public func sendInstruction(_ instruction: String, to commsPeer: CommsPeer? = nil) {
         // No game running - send a wait message
-        self.commsDelegate?.send(instruction, nil, to: commsPeer)
+        self.commsDelegate?.send(instruction, [:], to: commsPeer)
     }
     
     public func sendTestConnection() {
-        self.commsDelegate?.send("testConnection", nil)
+        self.commsDelegate?.send("testConnection", [:])
     }
     
-    func entryPlayerNumber(_ enteredPlayerNumber: Int, round: Int) -> Int {
-        // Everything in data is in entered player sequence but bids will be in entry player sequence this converts between them
-        return self.enteredPlayer(enteredPlayerNumber).entryPlayerNumber(round: round)
-    }
-    
-    class public func dataLogMessage(propertyList: [String: Any?], fromDeviceName: String, using commsHandler: CommsHandlerDelegate) {
+    class public func dataLogMessage(propertyList: [String: Any?], fromDeviceName: String, using commsHandler: CommsServiceDelegate) {
         // Log message
         var dataMessageLogged = false
         if let type = propertyList["type"] as? String , let content = propertyList["content"] as? [String:[String:Any?]] {
@@ -839,5 +757,23 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             }
         }
         return result
+    }
+    
+    // MARK: -  Bid / card changed subscription ============================================================== -
+    
+    public func subscribeBid(completion: @escaping (Int, Int, Int)->()) -> AnyCancellable {
+        return self.bidSubscription
+            .receive(on: RunLoop.main)
+            .sink() { (round, player, bid) in
+                completion(round, player, bid)
+        }
+    }
+    
+    public func subscribeCard(completion: @escaping (Int, Int, Int, Card)->()) -> AnyCancellable {
+        return self.cardSubscription
+            .receive(on: RunLoop.main)
+            .sink() { (round, trick, player, card) in
+                completion(round, trick, player, card)
+        }
     }
 }

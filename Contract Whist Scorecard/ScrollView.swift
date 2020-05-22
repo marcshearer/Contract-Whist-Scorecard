@@ -39,7 +39,7 @@ open class ScrollViewCell : UIView {
 
 class ScrollView : NSObject, UIScrollViewDelegate {
     
-    public var delegate: ScrollViewDelegate?
+    public weak var delegate: ScrollViewDelegate?
     public var dataSource: ScrollViewDataSource?
     private var scrollView: UIScrollView
     private var sectionHeaderViewList: [Int : UIView]

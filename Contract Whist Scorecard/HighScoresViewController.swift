@@ -14,12 +14,9 @@ enum HighScoreType {
     case twosMade
 }
 
-class HighScoresViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate {
+class HighScoresViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate {
     
     // MARK: - Class Properties ======================================================================== -
-    
-    // Main state properties
-    private let scorecard = Scorecard.shared
     
     // Properties to pass state
     private var backText = "Back"
@@ -59,7 +56,7 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
         finishButton.setImage(UIImage(named: self.backImage), for: .normal)
         finishButton.setTitle(self.backText)
         
-        self.sections = (self.scorecard.settingBonus2 ? 4 : 3)
+        self.sections = (Scorecard.activeSettings.bonus2 ? 4 : 3)
         
     }
     
@@ -117,7 +114,7 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableView.tag == 1 {
             // Section table view
-            return (self.scorecard.settingBonus2 ? 4 : 3)
+            return (Scorecard.activeSettings.bonus2 ? 4 : 3)
         } else {
             // Section score table view
             switch tableView.tag % 1000000 {
@@ -217,7 +214,7 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
                 break
             }
             // Find the matching player
-            playerMO = scorecard.findPlayerByEmail(participantMO.email!)
+            playerMO = Scorecard.shared.findPlayerByEmail(participantMO.email!)
             if playerMO != nil {
                 thumbnail = playerMO.thumbnail
                 name = playerMO.name!
@@ -233,7 +230,7 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
                                  label: cell.disc)
 
             cell.date?.text = DateFormatter.localizedString(from: participantMO.datePlayed!, dateStyle: .medium, timeStyle: .none)
-            cell.location?.text = game.gameLocation.description
+            cell.location?.text = Scorecard.game.location.description
             cell.dateWidthConstraint.constant = (ScorecardUI.landscapePhone() ? 120 : 0)
             cell.locationWidthConstraint.constant = (view.frame.width > 600 ? 150 : 0)
             cell.value.text = "\(value!)"
@@ -278,7 +275,7 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
     // MARK: - Form Presentation / Handling Routines =================================================== -
     
     func setupScores() {
-        let playerEmailList = self.scorecard.playerEmailList(getPlayerMode: .getAll)
+        let playerEmailList = Scorecard.shared.playerEmailList(getPlayerMode: .getAll)
         totalScoreParticipants = History.getHighScores(type: .totalScore, playerEmailList: playerEmailList)
         handsMadeParticipants = History.getHighScores(type: .handsMade, playerEmailList: playerEmailList)
         twosMadeParticipants = History.getHighScores(type: .twosMade, playerEmailList: playerEmailList)
@@ -286,17 +283,18 @@ class HighScoresViewController: CustomViewController, UITableViewDataSource, UIT
     }
     
     func positionPopup() {
-        scorecard.reCenterPopup(self)
+        Scorecard.shared.reCenterPopup(self)
     }
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: CustomViewController, backText: String = "Back", backImage: String = "back"){
+    class public func show(from viewController: ScorecardViewController, backText: String = "Back", backImage: String = "back"){
         
         let storyboard = UIStoryboard(name: "HighScoresViewController", bundle: nil)
         let highScoresViewController: HighScoresViewController = storyboard.instantiateViewController(withIdentifier: "HighScoresViewController") as! HighScoresViewController
         
         highScoresViewController.preferredContentSize = CGSize(width: 400, height: 700)
+        highScoresViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         highScoresViewController.backText = backText
         highScoresViewController.backImage = backImage

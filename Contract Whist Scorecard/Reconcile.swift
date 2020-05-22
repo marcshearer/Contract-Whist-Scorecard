@@ -31,10 +31,9 @@ class Reconcile: SyncDelegate {
     // MARK: - Class Properties ======================================================================== -
     
     // Delegate for callback protocol
-    weak var delegate: ReconcileDelegate?
+    public weak var delegate: ReconcileDelegate?
     
     // Main state properties
-    private let scorecard = Scorecard.shared
     private let sync = Sync()
     
     // Local state properties
@@ -46,7 +45,7 @@ class Reconcile: SyncDelegate {
         self.playerMOList = playerMOList
         
         // First synchronise
-        if scorecard.settingSyncEnabled && syncFirst {
+        if Scorecard.shared.settings.syncEnabled && syncFirst {
             self.sync.delegate = self
             if self.sync.synchronise(waitFinish: true) {
                 self.reconcileMessage("Sync in progress")

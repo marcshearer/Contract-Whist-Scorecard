@@ -31,6 +31,8 @@
 		B20DA04C1E179DC70040221D /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DA04B1E179DC70040221D /* WelcomeViewController.swift */; };
 		B20DA0521E1FED040040221D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B20DA0511E1FED040040221D /* CloudKit.framework */; };
 		B211E137224164FB00B48D64 /* SelectPlayersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211E136224164FB00B48D64 /* SelectPlayersViewController.swift */; };
+		B2144C4F2465334200CF56B7 /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2144C4E2465334200CF56B7 /* Version.swift */; };
+		B2144C5124653BF900CF56B7 /* Game Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2144C5024653BF900CF56B7 /* Game Location.swift */; };
 		B214FB8C1FCADC7B00F4F39B /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B214FB8A1FCADC7B00F4F39B /* Interface.storyboard */; };
 		B214FB8E1FCADC7B00F4F39B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B214FB8D1FCADC7B00F4F39B /* Assets.xcassets */; };
 		B214FB951FCADC7B00F4F39B /* Contract Whist Watch Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = B214FB941FCADC7B00F4F39B /* Contract Whist Watch Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -90,6 +92,8 @@
 		B267DF75211F41FC0086D521 /* Admin Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B267DF74211F41FC0086D521 /* Admin Menu.swift */; };
 		B2693CCB22C78C0B00596D85 /* Statistics Viewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2693CCA22C78C0B00596D85 /* Statistics Viewer.swift */; };
 		B2693CCD22C88B6900596D85 /* History Viewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2693CCC22C88B6900596D85 /* History Viewer.swift */; };
+		B26A11A82460728400449FCC /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26A11A72460728300449FCC /* Settings.swift */; };
+		B26A11AA2460803500449FCC /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = B26A11A92460803500449FCC /* Game.swift */; };
 		B2767C1E2110061B0029155E /* Loopback Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2767C1D2110061B0029155E /* Loopback Class.swift */; };
 		B27B1FEA1F9B55ED00ED6FFF /* Scorecard Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27B1FE91F9B55ED00ED6FFF /* Scorecard Tests.swift */; };
 		B27C88FF22CDBB2D009F8FE1 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27C88FE22CDBB2D009F8FE1 /* Palette.swift */; };
@@ -118,11 +122,16 @@
 		B2BE8692234C6C1600766CF2 /* PlayerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BE8691234C6C1600766CF2 /* PlayerSelectionView.swift */; };
 		B2C051041EDF194C009DE37F /* Multipeer Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C051031EDF194C009DE37F /* Multipeer Class.swift */; };
 		B2C054781FB8B55700846F6E /* ConfirmCountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */; };
+		B2C0966B24616E4900C19447 /* Player Managed Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C0966A24616E4900C19447 /* Player Managed Object.swift */; };
 		B2C19E932370541E009485E0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B2C19E922370541E009485E0 /* Assets.xcassets */; };
+		B2CB5C5224669CDA009B44C5 /* Client Controller Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2CB5C5124669CDA009B44C5 /* Client Controller Class.swift */; };
 		B2D2AAB01E1FF8A600E211A9 /* SyncViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D2AAAF1E1FF8A600E211A9 /* SyncViewController.swift */; };
 		B2D2D2DC1ED9975A00CA7B3A /* ClientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D2D2DB1ED9975A00CA7B3A /* ClientViewController.swift */; };
+		B2D70EDF24628BA9009E6D6F /* Scores.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D70EDE24628BA9009E6D6F /* Scores.swift */; };
+		B2D74252246AE6C200C58802 /* Scorecard Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D74251246AE6C200C58802 /* Scorecard Controller.swift */; };
 		B2D8104E225AF7B6005A86A5 /* Multipeer logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2D8104D225AF7A7005A86A5 /* Multipeer logger.swift */; };
 		B2DA893E1F3CC89C008EE96C /* Comms Handler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DA893D1F3CC89C008EE96C /* Comms Handler.swift */; };
+		B2DCEFDC246FFBE2007D409B /* View flow host.xlsx in Resources */ = {isa = PBXBuildFile; fileRef = B2DCEFDB246FFBE2007D409B /* View flow host.xlsx */; };
 		B2DD5D7C1ED1A87600725B55 /* Graph View Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DD5D7B1ED1A87600725B55 /* Graph View Class.swift */; };
 		B2DD5D7E1ED323F400725B55 /* GraphViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2DD5D7D1ED323F400725B55 /* GraphViewController.swift */; };
 		B2E556C122C9F86200C49821 /* Colors.xlsx in Resources */ = {isa = PBXBuildFile; fileRef = B2E556C022C9F86100C49821 /* Colors.xlsx */; };
@@ -229,6 +238,8 @@
 		B20DA04F1E1FEC5F0040221D /* Contract Whist Scorecard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Contract Whist Scorecard.entitlements"; sourceTree = "<group>"; };
 		B20DA0511E1FED040040221D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B211E136224164FB00B48D64 /* SelectPlayersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPlayersViewController.swift; sourceTree = "<group>"; };
+		B2144C4E2465334200CF56B7 /* Version.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Version.swift; sourceTree = "<group>"; };
+		B2144C5024653BF900CF56B7 /* Game Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Game Location.swift"; sourceTree = "<group>"; };
 		B214FB881FCADC7B00F4F39B /* Contract Whist Watch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Contract Whist Watch.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B214FB8B1FCADC7B00F4F39B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		B214FB8D1FCADC7B00F4F39B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -290,6 +301,8 @@
 		B267DF74211F41FC0086D521 /* Admin Menu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Admin Menu.swift"; sourceTree = "<group>"; };
 		B2693CCA22C78C0B00596D85 /* Statistics Viewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Statistics Viewer.swift"; sourceTree = "<group>"; };
 		B2693CCC22C88B6900596D85 /* History Viewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "History Viewer.swift"; sourceTree = "<group>"; };
+		B26A11A72460728300449FCC /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		B26A11A92460803500449FCC /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		B2767C1D2110061B0029155E /* Loopback Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Loopback Class.swift"; sourceTree = "<group>"; };
 		B27B1FE71F9B55ED00ED6FFF /* Contract Whist Scorecard UI Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Contract Whist Scorecard UI Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B27B1FE91F9B55ED00ED6FFF /* Scorecard Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scorecard Tests.swift"; sourceTree = "<group>"; };
@@ -318,11 +331,16 @@
 		B2BE8691234C6C1600766CF2 /* PlayerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSelectionView.swift; sourceTree = "<group>"; };
 		B2C051031EDF194C009DE37F /* Multipeer Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Multipeer Class.swift"; sourceTree = "<group>"; };
 		B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmCountViewController.swift; sourceTree = "<group>"; };
+		B2C0966A24616E4900C19447 /* Player Managed Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Player Managed Object.swift"; sourceTree = "<group>"; };
 		B2C19E922370541E009485E0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B2CB5C5124669CDA009B44C5 /* Client Controller Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Client Controller Class.swift"; sourceTree = "<group>"; };
 		B2D2AAAF1E1FF8A600E211A9 /* SyncViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncViewController.swift; sourceTree = "<group>"; };
 		B2D2D2DB1ED9975A00CA7B3A /* ClientViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ClientViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		B2D70EDE24628BA9009E6D6F /* Scores.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scores.swift; sourceTree = "<group>"; };
+		B2D74251246AE6C200C58802 /* Scorecard Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scorecard Controller.swift"; sourceTree = "<group>"; };
 		B2D8104D225AF7A7005A86A5 /* Multipeer logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Multipeer logger.swift"; sourceTree = "<group>"; };
 		B2DA893D1F3CC89C008EE96C /* Comms Handler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Comms Handler.swift"; sourceTree = "<group>"; };
+		B2DCEFDB246FFBE2007D409B /* View flow host.xlsx */ = {isa = PBXFileReference; lastKnownFileType = file; path = "View flow host.xlsx"; sourceTree = "<group>"; };
 		B2DD5D7B1ED1A87600725B55 /* Graph View Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Graph View Class.swift"; sourceTree = "<group>"; };
 		B2DD5D7D1ED323F400725B55 /* GraphViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphViewController.swift; sourceTree = "<group>"; };
 		B2E556C022C9F86100C49821 /* Colors.xlsx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Colors.xlsx; sourceTree = "<group>"; };
@@ -588,6 +606,8 @@
 			children = (
 				B22789221FB882F7009BABCA /* ClientViewController.storyboard */,
 				B2D2D2DB1ED9975A00CA7B3A /* ClientViewController.swift */,
+				B2F70E511EE8BC470092C19F /* Host Controller Class.swift */,
+				B2CB5C5124669CDA009B44C5 /* Client Controller Class.swift */,
 			);
 			name = Client;
 			sourceTree = "<group>";
@@ -820,6 +840,7 @@
 		B288FAB71FB8024A00633FD7 /* Miscellaneous Views */ = {
 			isa = PBXGroup;
 			children = (
+				B20DA04F1E1FEC5F0040221D /* Contract Whist Scorecard.entitlements */,
 				B221EEF5210B1C1D00F7FBA0 /* Graph */,
 				B221EEF4210B1C1500F7FBA0 /* Settings */,
 				B221EEF3210B1C0E00F7FBA0 /* Sync */,
@@ -868,8 +889,15 @@
 			children = (
 				49410E4F1DF1A712000BDA6D /* Scorecard Class.swift */,
 				B22500F01F48425C0042D566 /* Scorecard Comms.swift */,
+				B2D74251246AE6C200C58802 /* Scorecard Controller.swift */,
+				B26A11A92460803500449FCC /* Game.swift */,
 				49410E4D1DF1A251000BDA6D /* Player Class.swift */,
+				B2D70EDE24628BA9009E6D6F /* Scores.swift */,
+				B26A11A72460728300449FCC /* Settings.swift */,
+				B2144C4E2465334200CF56B7 /* Version.swift */,
+				B2C0966A24616E4900C19447 /* Player Managed Object.swift */,
 				CC8655851E036432000AF391 /* Player Detail Class.swift */,
+				B2144C5024653BF900CF56B7 /* Game Location.swift */,
 				CC395F4C1E064EC500165D1C /* Card Class.swift */,
 				B2F70E4D1EE335170092C19F /* Pack Class.swift */,
 				B2B755081E5B363200B1313B /* History Class.swift */,
@@ -884,7 +912,6 @@
 			isa = PBXGroup;
 			children = (
 				B2DA893D1F3CC89C008EE96C /* Comms Handler.swift */,
-				B2F70E511EE8BC470092C19F /* Host Controller Class.swift */,
 				B2F7281A1F6D74F9006F0941 /* Invite.swift */,
 				B2767C1D2110061B0029155E /* Loopback Class.swift */,
 				B2C051031EDF194C009DE37F /* Multipeer Class.swift */,
@@ -989,6 +1016,7 @@
 				CCEA53E21DF3D19F0045292C /* Notes.txt */,
 				B2B1802021195FFA008D3BAA /* Contract Whist Scorecard.pages */,
 				B20B1261245EFC2B001DD632 /* Contract Whist Comms Protocols.docx */,
+				B2DCEFDB246FFBE2007D409B /* View flow host.xlsx */,
 				B2E556C022C9F86100C49821 /* Colors.xlsx */,
 				CC4CC0F61DEADC32007FB24F /* Products */,
 				CC86557B1E021518000AF391 /* Standard Components */,
@@ -1020,7 +1048,6 @@
 				CC4CC1041DEADC32007FB24F /* LaunchScreen.storyboard */,
 				CC4CC1071DEADC32007FB24F /* Info.plist */,
 				B2B1802621196166008D3BAA /* Contract_Whist_Scorecard.xcdatamodeld */,
-				B20DA04F1E1FEC5F0040221D /* Contract Whist Scorecard.entitlements */,
 			);
 			name = "Standard Components";
 			sourceTree = "<group>";
@@ -1231,6 +1258,7 @@
 				B227890D1FB83D49009BABCA /* GamePreviewViewController.storyboard in Resources */,
 				B2B1802121195FFA008D3BAA /* Contract Whist Scorecard.pages in Resources */,
 				B2E556C122C9F86200C49821 /* Colors.xlsx in Resources */,
+				B2DCEFDC246FFBE2007D409B /* View flow host.xlsx in Resources */,
 				B22789081FB83AC4009BABCA /* WalkthroughPageViewController.storyboard in Resources */,
 				B22789011FB83AA7009BABCA /* WelcomeViewController.storyboard in Resources */,
 				CCEA53E31DF3D19F0045292C /* Notes.txt in Resources */,
@@ -1363,9 +1391,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				B2693CCB22C78C0B00596D85 /* Statistics Viewer.swift in Sources */,
+				B2144C5124653BF900CF56B7 /* Game Location.swift in Sources */,
 				B202551F22B13A560074310A /* Constraint.swift in Sources */,
 				B2B755051E58A2D900B1313B /* HistoryDetailViewController.swift in Sources */,
 				B221EED7210B0E2D00F7FBA0 /* HandViewController.swift in Sources */,
+				B26A11A82460728400449FCC /* Settings.swift in Sources */,
 				49AFA50D1E0C42A100DCB1F4 /* RoundSummaryViewController.swift in Sources */,
 				B2F41B231FB6BBA70043F974 /* Other Extensions.swift in Sources */,
 				B24AABE41EC4DC5F000D34B0 /* Core Data Class.swift in Sources */,
@@ -1377,7 +1407,9 @@
 				B27C88FF22CDBB2D009F8FE1 /* Palette.swift in Sources */,
 				CC395F511E0905BE00165D1C /* Utility Library.swift in Sources */,
 				CC395F4D1E064EC500165D1C /* Card Class.swift in Sources */,
+				B26A11AA2460803500449FCC /* Game.swift in Sources */,
 				B28033341F7E046B00CF4696 /* Sync Class.swift in Sources */,
+				B2D74252246AE6C200C58802 /* Scorecard Controller.swift in Sources */,
 				B24AABE21EC0BC08000D34B0 /* Upgrade.swift in Sources */,
 				B2EA98E51E28609A000B7E54 /* WalkthroughPageViewController.swift in Sources */,
 				B29AD706224F88060087160B /* Whisper Class.swift in Sources */,
@@ -1406,7 +1438,9 @@
 				B20DA0441E142D1E0040221D /* SelectionViewController.swift in Sources */,
 				B2DA893E1F3CC89C008EE96C /* Comms Handler.swift in Sources */,
 				B206A1381E50526100E26E96 /* LocationViewController.swift in Sources */,
+				B2144C4F2465334200CF56B7 /* Version.swift in Sources */,
 				B2B1802821196166008D3BAA /* Contract_Whist_Scorecard.xcdatamodeld in Sources */,
+				B2C0966B24616E4900C19447 /* Player Managed Object.swift in Sources */,
 				B2DD5D7C1ED1A87600725B55 /* Graph View Class.swift in Sources */,
 				B211E137224164FB00B48D64 /* SelectPlayersViewController.swift in Sources */,
 				B2693CCD22C88B6900596D85 /* History Viewer.swift in Sources */,
@@ -1423,6 +1457,7 @@
 				B2FA298E1EA9E215002A5D03 /* Alert.swift in Sources */,
 				B2D2D2DC1ED9975A00CA7B3A /* ClientViewController.swift in Sources */,
 				B243385B22E0A6D8002EBD40 /* SelectedPlayersView.swift in Sources */,
+				B2D70EDF24628BA9009E6D6F /* Scores.swift in Sources */,
 				B235D2BE1F82288A0019384B /* Notification Simulator.swift in Sources */,
 				B2F70E521EE8BC470092C19F /* Host Controller Class.swift in Sources */,
 				B214FBB11FCB71EB00F4F39B /* Watch Manager.swift in Sources */,
@@ -1439,6 +1474,7 @@
 				CC4CC0F91DEADC32007FB24F /* AppDelegate.swift in Sources */,
 				B2F7281D1F7199AE006F0941 /* RabbitMQ Class.swift in Sources */,
 				B243385E22E0AEA8002EBD40 /* PlayerView.swift in Sources */,
+				B2CB5C5224669CDA009B44C5 /* Client Controller Class.swift in Sources */,
 				B25FC7CD22D4868500D2E651 /* Rotation Gesture.swift in Sources */,
 				CC9EF3F21DFEE54A006E8930 /* DataTableViewController.swift in Sources */,
 				CCCA16631DEF9947006AA415 /* EntryViewController.swift in Sources */,
@@ -1708,12 +1744,12 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 0;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = Contract_Whist_Watch_Extension;
 				INFOPLIST_FILE = "Contract Whist Watch/Info.plist";
-				MARKETING_VERSION = 5.1;
+				MARKETING_VERSION = 6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "MarcShearer.Contract-Whist-Scorecard.watchkitapp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1734,12 +1770,12 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 0;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				IBSC_MODULE = Contract_Whist_Watch_Extension;
 				INFOPLIST_FILE = "Contract Whist Watch/Info.plist";
-				MARKETING_VERSION = 5.1;
+				MARKETING_VERSION = 6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "MarcShearer.Contract-Whist-Scorecard.watchkitapp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
@@ -1759,12 +1795,13 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 0;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_PEDANTIC = NO;
 				INFOPLIST_FILE = "Contract Whist Watch Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 5.1;
+				MARKETING_VERSION = 6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "MarcShearer.Contract-Whist-Scorecard.watchkitapp.watchkitextension";
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = watchos;
@@ -1784,12 +1821,13 @@
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 0;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_PEDANTIC = NO;
 				INFOPLIST_FILE = "Contract Whist Watch Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 5.1;
+				MARKETING_VERSION = 6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "MarcShearer.Contract-Whist-Scorecard.watchkitapp.watchkitextension";
 				PRODUCT_NAME = "${TARGET_NAME}";
 				SDKROOT = watchos;
@@ -1961,12 +1999,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Contract Whist Scorecard/Contract Whist Scorecard.entitlements";
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 0;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
+				GCC_WARN_PEDANTIC = NO;
 				INFOPLIST_FILE = "Contract Whist Scorecard/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 5.1;
+				MARKETING_VERSION = 6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "MarcShearer.Contract-Whist-Scorecard";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1980,12 +2019,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Contract Whist Scorecard/Contract Whist Scorecard.entitlements";
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 0;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
+				GCC_WARN_PEDANTIC = NO;
 				INFOPLIST_FILE = "Contract Whist Scorecard/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 5.1;
+				MARKETING_VERSION = 6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "MarcShearer.Contract-Whist-Scorecard";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

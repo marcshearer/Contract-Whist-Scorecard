@@ -17,7 +17,7 @@ enum DetailMode {
     case none
 }
 
-class PlayerDetailViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, SyncDelegate {
+class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, SyncDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     
@@ -54,8 +54,8 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     }
     
     // Main state properties
-    private let scorecard = Scorecard.shared
     private var reconcile: Reconcile!
+    private let settings = Scorecard.game.settings ?? Scorecard.shared.settings
     private let sync = Sync()
     
     // Text field tags
@@ -177,9 +177,9 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
-        scorecard.reCenterPopup(self)
+        Scorecard.shared.reCenterPopup(self)
         if actionSheet != nil {
-            scorecard.reCenterPopup(actionSheet.alertController)
+            Scorecard.shared.reCenterPopup(actionSheet.alertController)
         }
         self.view.setNeedsLayout()
     }
@@ -203,7 +203,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         case .lastPlayed:
             rows = LastPlayedOptions.allCases.count
         case .records:
-            rows = RecordsOptions.allCases.count - (self.scorecard.settingBonus2 ? 0 : 1)
+            rows = RecordsOptions.allCases.count - (self.settings.bonus2 ? 0 : 1)
         case .stats:
             rows = StatsOptions.allCases.count
         }
@@ -423,7 +423,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
                 cell.statDescLabel1.text = "Total score"
                 cell.statValueLabel1.text = "\(playerDetail.totalScore)"
 
-                if self.scorecard.settingBonus2 {
+                if self.settings.bonus2 {
                     cell.statDescLabel2.text = "Twos made"
                     cell.statValueLabel2.text = "\(playerDetail.twosMade)"
                 } else {
@@ -440,7 +440,7 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
                     cell.statValueLabel1.text = "\(String(format: "%0.1f", average))"
                 }
 
-                if self.scorecard.settingBonus2 {
+                if self.settings.bonus2 {
                     cell.statDescLabel2.text = "Twos made %"
                     if playerDetail.handsPlayed == 0 {
                         cell.statValueLabel2.text = "0.0 %"
@@ -715,8 +715,8 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
         var finishTitle = ""
         var invalid: Bool
         
-        let duplicateName = scorecard.isDuplicateName(playerDetail)
-        let duplicateEmail = scorecard.isDuplicateEmail(playerDetail)
+        let duplicateName = Scorecard.shared.isDuplicateName(playerDetail)
+        let duplicateEmail = Scorecard.shared.isDuplicateEmail(playerDetail)
         
         switch mode! {
         case .amend, .create:
@@ -853,12 +853,13 @@ class PlayerDetailViewController: CustomViewController, UITableViewDataSource, U
     
     // MARK: - method to show this view controller ============================================================================== -
     
-    static public func show(from sourceViewController: CustomViewController, playerDetail: PlayerDetail, mode: DetailMode, sourceView: UIView, completion: ((PlayerDetail?,Bool)->())? = nil) {
+    static public func show(from sourceViewController: ScorecardViewController, playerDetail: PlayerDetail, mode: DetailMode, sourceView: UIView, completion: ((PlayerDetail?,Bool)->())? = nil) {
         let storyboard = UIStoryboard(name: "PlayerDetailViewController", bundle: nil)
         let playerDetailViewController = storyboard.instantiateViewController(withIdentifier: "PlayerDetailViewController") as! PlayerDetailViewController
 
         playerDetailViewController.preferredContentSize = CGSize(width: 400, height: 700)
-
+        playerDetailViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
+        
         playerDetailViewController.playerDetail = playerDetail
         playerDetailViewController.mode = mode
         playerDetailViewController.sourceView = sourceView

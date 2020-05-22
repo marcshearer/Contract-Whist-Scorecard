@@ -12,58 +12,75 @@ import CoreData
 class Player {
     
     // A class to store all our data about players in the current game
-
-    private let scorecard = Scorecard.shared
     
-    private var bid = [Int?]()
-    private var made = [Int?]()
-    private var twos = [Int?]()
+    // MARK: - Properties =================================================================== -
+
+    /** The player number 1-4 in the sequence the players were entered */
     public var playerNumber = 0
-    public let maxRounds = 25
-    private var recovery: Recovery? = nil
-    public var bidCell = [ScorepadCollectionViewCell?]()
-    public var scoreCell = [ScorepadCollectionViewCell?]()
-    public var totalLabel: UILabel?
+    
+    /** The managed object for this player */
     public var playerMO: PlayerMO?
+    
+    /** The participant managed object associated with this player - built up as the game completes*/
     public var participantMO: ParticipantMO?
+    
+    /** The number of hands played as last saved by the save method - to allow incremental updates */
     private var savedHandsPlayed: Int64 = 0
-    private var savedGamesPlayed: Int64 = 0
-    private var savedGamesWon: Int64 = 0
-    private var savedTotalScore: Int64 = 0
+    
+    /** The number of hands made as last saved by the save method - to allow incremental updates */
     private var savedHandsMade: Int64 = 0
+    
+    /** The number of twos made as last saved by the save method - to allow incremental updates */
     private var savedTwosMade: Int64 = 0
-    public var previousMaxScore: Int64 = 0
-    public var previousMaxScoreDate = Date()
+    
+    /** The number of games played as last saved by the save method - to allow incremental updates */
+    private var savedGamesPlayed: Int64 = 0
+    
+    /** The number of games won as last saved by the save method - to allow incremental updates */
+    private var savedGamesWon: Int64 = 0
+    
+    /** The total score as last saved by the save method - to allow incremental updates */
+    private var savedTotalScore: Int64 = 0
+
+    /**
+     The player's high score before the current game
+     - Note: read only externally
+    */
+    public var previousMaxScore: Int64 {
+        get {
+            return self._previousMaxScore
+        }
+    }
+    private var _previousMaxScore: Int64 = 0
+
+    /**
+     The date on which the player achieved their last high score before the current game
+     - Note: read only externally
+    */
+    public var previousMaxScoreDate: Date {
+        get {
+            return self._previousMaxScoreDate
+        }
+    }
+    private var _previousMaxScoreDate = Date()
+
+    // MARK: - Initialisation ================================================================= -
     
     public init(playerNumber: Int) {
         
-        self.recovery = scorecard.recovery
-                
-        if maxRounds > 0 {
-            
-            for _ in 1...maxRounds {
-                
-                self.bid.append(nil)
-                self.made.append(nil)
-                self.twos.append(nil)
-                self.bidCell.append(nil)
-                self.scoreCell.append(nil)
-                
-            }
-        }
         self.playerNumber = playerNumber
-        self.totalLabel = nil
         self.playerMO = nil
         self.participantMO = nil
     }
     
+    // MARK: - Methods ======================================================================== -
+    
+    
+    /**
+     Resets the values for the player to start a new game
+    */
     public func reset() {
-        // Reset game values
-        for loop in 1...maxRounds {
-            self.bid[loop-1] = nil
-            self.made[loop-1] = nil
-            self.twos[loop-1] = nil
-        }
+        // Reset player game values
         
         // Reset saved values - allows incremental updates
         self.savedHandsPlayed = 0
@@ -77,130 +94,26 @@ class Player {
         self.participantMO = nil
     }
     
-    public func setBidCell(_ round: Int, cell: ScorepadCollectionViewCell!) {
-        bidCell[round-1] = cell
-    }
-    
-    public func setScoreCell(_ round: Int, cell: ScorepadCollectionViewCell) {
-        scoreCell[round-1] = cell
-    }
-    
-    public func setTotalLabel(label: UILabel?) {
-        totalLabel = label
-    }
-
-    private func updateScore(_ round: Int, bonus2: Bool! = nil) {
-        if self.scoreCell[round-1] != nil {
-            let score = self.score(round)
-            self.scoreCell[round-1]?.scorepadCellLabel.text = (score == nil ? "" : "\(score!)")
-            if self.totalLabel != nil {
-                let totalScore = self.totalScore(bonus2: bonus2)
-                self.totalLabel?.text = "\(totalScore)"
-            }
-            scorecard.formatRound(round)
-        }
-    }
-    
-    public func bid(_ round: Int) -> Int? {
-        return self.bid[round-1]
-    }
-    
-    public func setBid(_ round: Int,_ bid: Int!, bonus2: Bool! = nil) -> Bool {
-        var changed = false
-        if self.bid[round-1] != bid {
-            self.bid[round-1] = bid
-            changed = true
-            self.scorecard.sendScores(playerNumber: self.playerNumber, round: round, mode: .bid)
-            if bidCell[round-1] != nil {
-                bidCell[round-1]!.scorepadCellLabel.text = (bid == nil ? "" : "\(bid!)")
-            }
-            self.updateScore(round, bonus2: bonus2)
-            recovery!.saveBid(round: round, playerNumber: self.playerNumber)
-            self.scorecard.watchManager.updateScores()
-        }
-        return changed
-    }
-    
-    public func made(_ round: Int) -> Int? {
-        return self.made[round-1]
-    }
-    
-    public func setMade(_ round: Int,_ made: Int!, bonus2: Bool! = nil) {
-        if self.made[round-1] != made {
-            self.made[round-1] = made
-            self.scorecard.sendScores(playerNumber: self.playerNumber, round: round, mode: .made)
-            self.updateScore(round, bonus2: bonus2)
-            recovery!.saveMade(round: round, playerNumber: self.playerNumber)
-            self.scorecard.watchManager.updateScores()
-        }
-    }
-    
-    public func twos(_ round: Int) -> Int? {
-        return self.twos[round-1]
-    }
-    
-    public func setTwos(_ round: Int,_ twos: Int!, bonus2: Bool! = nil) {
-        if self.twos[round-1] != twos {
-            self.twos[round-1] = twos
-            self.scorecard.sendScores(playerNumber: self.playerNumber, round: round, mode: .twos)
-            self.updateScore(round, bonus2: bonus2)
-            recovery!.saveTwos(round: round, playerNumber: self.playerNumber)
-            self.scorecard.watchManager.updateScores()
-        }
-    }
-    
-    public func value(round: Int, mode: Mode) -> Int? {
-        switch mode {
-        case Mode.bid:
-            return self.bid(round)
-        case Mode.made:
-            return self.made(round)
-        case Mode.twos:
-            return self.twos(round)
-        }
-    }
-    
-    public func score(_ round: Int, bonus2: Bool! = nil) -> Int? {
-        var score: Int?
-        let bonus2 = (bonus2 == nil ? scorecard.settingBonus2 : bonus2!)
-
-        if self.bid[round-1] == nil || self.made[round-1] == nil ||
-                (bonus2 && self.twos[round-1] == nil) {
-            score = nil
-        } else {
-            score = self.made[round-1]! + (self.bid[round-1] == self.made[round-1] ? 10 : 0)
-            if bonus2 {
-                score! += (self.twos[round-1]! * 10)
-            }
-        }
-        return score
-    }
-    
-    public func totalScore(bonus2: Bool! = nil) -> Int {
-        var total = 0
-        var roundScore: Int?
-        
-        for round in 1...self.scorecard.rounds {
-            roundScore = score(round, bonus2: bonus2)
-            if roundScore != nil {
-                total += roundScore!
-            }
-        }
-        
-        return total
-    }
-    
+    /**
+     Save the previous high score and date for a player prior to the current game
+    */
     public func saveMaxScore() {
         if let playerMO = self.playerMO {
-            self.previousMaxScore = playerMO.maxScore
+            self._previousMaxScore = playerMO.maxScore
             if playerMO.maxScoreDate != nil {
-                self.previousMaxScoreDate = playerMO.maxScoreDate! as Date
+                self._previousMaxScoreDate = playerMO.maxScoreDate! as Date
             } else {
-                self.previousMaxScoreDate = Date()
+                self._previousMaxScoreDate = Date()
             }
         }
     }
         
+    /**
+     Save the player to core data - values are incremented from any previously saved values
+     - Parameters:
+       - excludeHistory: Allows the player to be updated without a partipant history record being setup
+       - excludeStats: Allows the player to be updated without their stats being incremented
+     */
     public func save(excludeHistory: Bool, excludeStats: Bool) -> Bool {
         // Save the player to the persistent store
         
@@ -210,11 +123,11 @@ class Player {
             var twosMade: Int64
             
             // Check if they won this game
-            let myScore = self.totalScore()
+            let myScore = Scorecard.game.scores.totalScore(playerNumber: self.playerNumber)
             place = 1
-            for otherPlayer in 1...scorecard.currentPlayers {
-                if scorecard.enteredPlayer(otherPlayer).playerNumber != self.playerNumber {
-                    if self.scorecard.enteredPlayer(otherPlayer).totalScore() > myScore {
+            for otherPlayer in 1...Scorecard.game.currentPlayers {
+                if Scorecard.game.player(enteredPlayerNumber: otherPlayer).playerNumber != self.playerNumber {
+                    if Scorecard.game.scores.totalScore(playerNumber: otherPlayer) > myScore {
                         place += 1
                     }
                 }
@@ -223,19 +136,18 @@ class Player {
             // Calculate rounds made and twos made
             roundsMade = 0
             twosMade = 0
-            for round in 1...self.scorecard.rounds {
-                if self.bid(round) != nil && self.made(round) != nil && self.bid(round) == self.made(round) {
+            for round in 1...Scorecard.game.rounds {
+                let playerScore = Scorecard.game.scores.get(round: round, playerNumber: self.playerNumber)
+                if playerScore.bid != nil && playerScore.made != nil && playerScore.bid == playerScore.made {
                     roundsMade += 1
                 }
-                if self.twos(round) != nil {
-                    twosMade += Int64(self.twos(round)!)
-                }
+                twosMade += Int64(playerScore.twos ?? 0)
             }
             if !excludeStats {
                 
                 // Updates hands / games played
-                self.playerMO!.handsPlayed += (Int64(self.scorecard.rounds) - self.savedHandsPlayed)
-                self.savedHandsPlayed = Int64(self.scorecard.rounds)
+                self.playerMO!.handsPlayed += (Int64(Scorecard.game.rounds) - self.savedHandsPlayed)
+                self.savedHandsPlayed = Int64(Scorecard.game.rounds)
                 self.playerMO!.gamesPlayed += (1 - savedGamesPlayed)
                 self.savedGamesPlayed = 1
             
@@ -272,19 +184,19 @@ class Player {
             
             // Update game participant for history
             if !excludeHistory {
-                if self.scorecard.settingSaveHistory {
+                if Scorecard.activeSettings.saveHistory {
                     if self.participantMO == nil {
                         // Create the managed object for this participant in the game
                         self.participantMO = CoreData.create(from: "Participant")
-                        self.participantMO?.gameUUID = scorecard.gameUUID
-                        self.participantMO?.datePlayed = scorecard.gameDatePlayed
+                        self.participantMO?.gameUUID = Scorecard.game.gameUUID
+                        self.participantMO?.datePlayed = Scorecard.game.datePlayed
                         self.participantMO?.localDateCreated = Date()
                         self.participantMO?.deviceUUID = UIDevice.current.identifierForVendor?.uuidString
                         self.participantMO?.name = self.playerMO?.name
                         self.participantMO?.email = self.playerMO?.email
                         self.participantMO?.playerNumber = Int16(self.scorecardPlayerNumber())
                     }
-                    self.participantMO!.handsPlayed = Int16(self.scorecard.rounds)
+                    self.participantMO!.handsPlayed = Int16(Scorecard.game.rounds)
                     self.participantMO!.gamesPlayed = 1
                     self.participantMO!.place = place
                     self.participantMO!.gamesWon = (place == 1 ? 1 : 0)
@@ -297,18 +209,28 @@ class Player {
         })
     }
     
-    func scorecardPlayerNumber() -> Int {
+    
+    /**
+     Return the player number in the sequence the players appear on the scorecard (offset by first dealer)
+     - Returns: Player number 1-4 in scorecard sequence
+    */
+    public func scorecardPlayerNumber() -> Int {
         // Player number starting with first dealer as 1
-        return absoluteModulus((self.playerNumber - 1) - (scorecard.dealerIs - 1 ), scorecard.currentPlayers) + 1
+        return absoluteModulus((self.playerNumber - 1) - (Scorecard.game.dealerIs - 1 ), Scorecard.game.currentPlayers) + 1
     }
     
-    func entryPlayerNumber(round: Int) -> Int {
-        // Player number starting with first dealer as 1
-        return absoluteModulus((self.playerNumber - 1) - (scorecard.dealerIs - 1 )  - (round - 1), scorecard.currentPlayers) + 1
+    /**
+     Return the player number in the sequence the players will bid in a particular round (offset by round dealer)
+     - Returns: Player number 1-4 in round sequence
+    */
+    public func roundPlayerNumber(round:Int) -> Int {
+        return absoluteModulus((self.playerNumber - 1) - (Scorecard.game.dealerIs - 1 )  - (round - 1), Scorecard.game.currentPlayers) + 1
     }
     
-    func absoluteModulus(_ value: Int, _ modulus: Int) -> Int {
-        // Return the modulus where it continues smoothly below zero (up to a point)
+    /**
+      Return the modulus where it continues smoothly below zero (up to a point)
+    */
+    private func absoluteModulus(_ value: Int, _ modulus: Int) -> Int {
         return (value + (100 * modulus)) % modulus
     }
     

@@ -8,33 +8,30 @@
 
 import UIKit
 
-class OverrideViewController : CustomViewController, UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate {
+class OverrideViewController : ScorecardViewController, UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate {
     
     private enum Options: Int, CaseIterable {
-        case excludeHistory = 0
-        case excludeStats = 1
+        case saveHistory = 0
+        case saveStats = 1
         case subHeading = 2
         case startCards = 3
         case endCards = 4
         case bounce = 5
     }
     
-    private let scorecard = Scorecard.shared
-    
     private var message: String!
     private var formTitle: String!
     private var value = 1
     private var completion: (()->())?
-    private var existingOverride = false
-    private var existingSettings: GameSettings!
     private var skipOptions = 0
     
     // UI elements
     private var cardsSlider: [Int : UISlider] = [:]
     private var cardsValue: [Int : UITextField] = [:]
     private var bounceSelection: UISegmentedControl!
-    private var excludeStatsSelection: UISegmentedControl!
-    private var excludeHistorySelection: UISegmentedControl!
+    private var saveStatsSelection: UISegmentedControl!
+    private var saveHistorySelection: UISegmentedControl!
+    private var existingOverride = false
     
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var confirmButton: UIButton!
@@ -45,16 +42,13 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func confirmPressed(_ sender: UIButton) {
-        self.scorecard.overrideSelected = true
         self.completion?()
         self.dismiss()
     }
     
     @IBAction func revertPressed(_ sender: UIButton) {
         // Disable override
-        if self.scorecard.overrideSettings != self.existingSettings {
-            self.scorecard.resetOverrideSettings()
-        }
+        Scorecard.game.reset()
         self.completion?()
         self.dismiss()
     }
@@ -63,18 +57,15 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
         super.viewDidLoad()
         ScorecardUI.roundCorners(view)
         
-        self.existingOverride = self.scorecard.overrideSelected
+        self.existingOverride = (Scorecard.game.settings != Scorecard.shared.settings)
         
-        if !self.existingOverride {
-            self.scorecard.resetOverrideSettings()
-        }
-        self.existingSettings = self.scorecard.overrideSettings.copy()
         if !self.existingOverride {
             // Default to exclude stats
-            self.scorecard.overrideSettings.excludeStats = true
+            Scorecard.game.settings.saveHistory = false
+            Scorecard.game.settings.saveStats = false
         }
         
-        self.skipOptions = (self.scorecard.settingSaveHistory ? 0 : 2)
+        self.skipOptions = (Scorecard.shared.settings.saveHistory ? 0 : 2)
         
         self.revertButton.setTitleColor(Palette.gameBannerText, for: .normal)
         self.confirmButton.setTitleColor(Palette.gameBannerText, for: .normal)
@@ -88,7 +79,7 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
     }
     
     override func viewWillLayoutSubviews() {
-        self.scorecard.reCenterPopup(self)
+        Scorecard.shared.reCenterPopup(self)
         if ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone() {
             self.bannerContinuation.isHidden = true
             self.bannerContinuationHeightConstraint.constant = 0.0
@@ -101,7 +92,7 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
     // MARK: - TableView Overrides ===================================================================== -
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if self.scorecard.settingSaveHistory {
+        if Scorecard.shared.settings.saveHistory {
             return Options.allCases.count
         } else {
             return Options.allCases.count - self.skipOptions
@@ -112,7 +103,7 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
         var height: CGFloat = 0.0
         if let option = Options(rawValue: indexPath.row + skipOptions) {
             switch option {
-            case .excludeHistory, .excludeStats:
+            case .saveHistory, .saveStats:
                 height = 80.0
             case .subHeading:
                 height = 80.0
@@ -130,20 +121,20 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
         
         if let option = Options(rawValue: indexPath.row + skipOptions) {
             switch option {
-            case .excludeHistory:
-                cell = tableView.dequeueReusableCell(withIdentifier: "Exclude", for: indexPath) as? OverrideTableCell
-                cell.excludeLabel.attributedText = self.excludeText(from: "History")
-                cell.excludeSelection.addTarget(self, action: #selector(OverrideViewController.excludeHistoryAction(_:)), for: UIControl.Event.valueChanged)
-                cell.excludeSelection.selectedSegmentIndex = (self.scorecard.overrideSettings.excludeHistory ? 0 : 1)
-                self.excludeHistorySelection = cell.excludeSelection
-                self.excludeChanged()
+            case .saveHistory:
+                cell = tableView.dequeueReusableCell(withIdentifier: "Save", for: indexPath) as? OverrideTableCell
+                cell.saveLabel.attributedText = self.includeText(from: "History")
+                cell.saveSelection.addTarget(self, action: #selector(OverrideViewController.saveHistoryAction(_:)), for: UIControl.Event.valueChanged)
+                cell.saveSelection.selectedSegmentIndex = (Scorecard.game.settings.saveHistory ? 1 : 0)
+                self.saveHistorySelection = cell.saveSelection
+                self.saveChanged()
                 
-            case .excludeStats:
-                cell = tableView.dequeueReusableCell(withIdentifier: "Exclude", for: indexPath) as? OverrideTableCell
-                cell.excludeLabel.attributedText = self.excludeText(from: "Statistics")
-                cell.excludeSelection.addTarget(self, action: #selector(OverrideViewController.excludeStatsAction(_:)), for: UIControl.Event.valueChanged)
-                cell.excludeSelection.selectedSegmentIndex = (self.scorecard.overrideSettings.excludeStats ? 0 : 1)
-                self.excludeStatsSelection = cell.excludeSelection
+            case .saveStats:
+                cell = tableView.dequeueReusableCell(withIdentifier: "Save", for: indexPath) as? OverrideTableCell
+                cell.saveLabel.attributedText = self.includeText(from: "Statistics")
+                cell.saveSelection.addTarget(self, action: #selector(OverrideViewController.saveStatsAction(_:)), for: UIControl.Event.valueChanged)
+                cell.saveSelection.selectedSegmentIndex = (Scorecard.game.settings.saveStats ? 1 : 0)
+                self.saveStatsSelection = cell.saveSelection
                 
             case .subHeading:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Sub Heading", for: indexPath) as? OverrideTableCell
@@ -155,15 +146,15 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
                 cell.cardsLabel.text = (index == 0 ? "Start:" : "End:")
                 cell.cardsSlider.tag = index
                 cell.cardsSlider.addTarget(self, action: #selector(OverrideViewController.cardsSliderAction(_:)), for: UIControl.Event.valueChanged)
-                cell.cardsSlider.value = Float(self.scorecard.overrideSettings.cards[index])
-                cell.cardsValue.text = "\(self.scorecard.overrideSettings.cards[index])"
+                cell.cardsSlider.value = Float(Scorecard.game.settings.cards[index])
+                cell.cardsValue.text = "\(Scorecard.game.settings.cards[index])"
                 self.cardsSlider[index] = cell.cardsSlider
                 self.cardsValue[index] = cell.cardsValue
                 
             case .bounce:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Bounce", for: indexPath) as? OverrideTableCell
                 cell.bounceSelection.addTarget(self, action: #selector(OverrideViewController.bounceAction(_:)), for: UIControl.Event.valueChanged)
-                cell.bounceSelection.selectedSegmentIndex = (self.scorecard.overrideSettings.bounceNumberCards ? 1 : 0)
+                cell.bounceSelection.selectedSegmentIndex = (Scorecard.game.settings.bounceNumberCards ? 1 : 0)
                 cell.bounceSelection.layer.cornerRadius = 5.0
                 self.bounceSelection = cell.bounceSelection
                 self.cardsChanged()
@@ -178,33 +169,33 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
     
     @objc internal func cardsSliderAction(_ sender: UISlider) {
         let index = sender.tag
-        scorecard.overrideSettings.cards[index] = Int(cardsSlider[index]!.value)
-        cardsValue[index]!.text = "\(scorecard.overrideSettings.cards[index])"
+        Scorecard.game.settings.cards[index] = Int(cardsSlider[index]!.value)
+        cardsValue[index]!.text = "\(Scorecard.game.settings.cards[index])"
         cardsChanged()
         self.enableButtons()
     }
     
     @objc func bounceAction(_ sender: Any) {
-        scorecard.overrideSettings.bounceNumberCards = (bounceSelection.selectedSegmentIndex == 1)
+        Scorecard.game.settings.bounceNumberCards = (bounceSelection.selectedSegmentIndex == 1)
         cardsChanged()
         self.enableButtons()
     }
     
-    @objc func excludeHistoryAction(_ sender: Any) {
-        scorecard.overrideSettings.excludeHistory = (excludeHistorySelection.selectedSegmentIndex == 0)
-        excludeChanged()
+    @objc func saveHistoryAction(_ sender: Any) {
+        Scorecard.game.settings.saveHistory = (saveHistorySelection.selectedSegmentIndex == 1)
+        saveChanged()
         self.enableButtons()
     }
     
-    @objc func excludeStatsAction(_ sender: Any) {
-        scorecard.overrideSettings.excludeStats = (excludeStatsSelection.selectedSegmentIndex == 0)
+    @objc func saveStatsAction(_ sender: Any) {
+        Scorecard.game.settings.saveStats = (saveStatsSelection.selectedSegmentIndex == 1)
         self.enableButtons()
     }
     
     // MARK: - Form Presentation / Handling Routines =================================================== -
     
     func cardsChanged() {
-        let cards = scorecard.overrideSettings.cards
+        let cards = Scorecard.game.settings.cards
         let direction = (cards[1] < cards[0] ? "down" : "up")
         var cardString = (cards[1] == 1 ? "card" : "cards")
         bounceSelection.setTitle("Go \(direction) to \(cards[1]) \(cardString)", forSegmentAt: 0)
@@ -212,18 +203,23 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
         bounceSelection.setTitle("Return to \(cards[0]) \(cardString)", forSegmentAt: 1)
     }
     
-    func excludeChanged() {
-        if self.scorecard.overrideSettings.excludeHistory {
-            self.scorecard.overrideSettings.excludeStats = true
-            self.excludeStatsSelection?.selectedSegmentIndex = 0
+    func saveChanged() {
+        if Scorecard.game.settings.saveHistory {
+            // Switched history back on - location should follow it
+            Scorecard.game.settings.saveLocation = Scorecard.shared.settings.saveLocation
+        } else {
+            // Switched history off - location and stats can't be saved
+            Scorecard.game.settings.saveLocation = false
+            Scorecard.game.settings.saveStats = false
+            self.saveStatsSelection?.selectedSegmentIndex = 0
         }
-        self.excludeStatsSelection?.setEnabled(!self.scorecard.overrideSettings.excludeHistory, forSegmentAt: 1)
+        self.saveStatsSelection?.setEnabled(Scorecard.game.settings.saveHistory, forSegmentAt: 1)
     }
     
     func enableButtons() {
-        let changed = !(self.scorecard.overrideSettings == self.scorecard.gameSettings)
+        let changed = (Scorecard.shared.settings != Scorecard.game.settings)
         self.confirmButton.isHidden = !changed
-        self.revertButton.setTitle((!changed || !self.existingOverride ? "Cancel" : "Revert"), for: .normal)
+        self.revertButton.setTitle((changed && self.existingOverride ? "Revert" : "Cancel"), for: .normal)
     }
     
     // Mark: - Main instatiation routine =============================================================== -
@@ -231,13 +227,14 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
     public func show(completion: (()->())? = nil) {
         let storyboard = UIStoryboard(name: "OverrideViewController", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "OverrideViewController") as! OverrideViewController
-        let parentViewController = Utility.getActiveViewController()! as! CustomViewController
+        let parentViewController = Utility.getActiveViewController()! as! ScorecardViewController
         viewController.completion = completion
         viewController.formTitle = title
         viewController.message = message
 
         viewController.preferredContentSize = CGSize(width: 400, height: 700)
-
+        viewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
+        
         parentViewController.present(viewController, sourceView: parentViewController.popoverPresentationController?.sourceView ?? parentViewController.view, animated: true, completion: nil)
     }
     
@@ -247,15 +244,10 @@ class OverrideViewController : CustomViewController, UITableViewDelegate, UITabl
     
     override internal func didDismiss() {
         // Reset any changes this time
-        if !self.existingOverride {
-            self.scorecard.resetOverrideSettings()
-        } else {
-            self.scorecard.overrideSettings = self.existingSettings
-        }
         self.completion?()
     }
             
-    private func excludeText(from: String) -> NSMutableAttributedString {
+    private func includeText(from: String) -> NSMutableAttributedString {
         let attributedString = NSMutableAttributedString()
         var attributes: [NSAttributedString.Key : Any] = [:]
         attributes[NSAttributedString.Key.foregroundColor] = Palette.text
@@ -277,8 +269,8 @@ class OverrideTableCell: UITableViewCell {
     @IBOutlet weak var cardsSlider: UISlider!
     @IBOutlet weak var cardsValue: UITextField!
     @IBOutlet weak var bounceSelection: UISegmentedControl!
-    @IBOutlet weak var excludeSelection: UISegmentedControl!
-    @IBOutlet weak var excludeLabel: UILabel!
+    @IBOutlet weak var saveSelection: UISegmentedControl!
+    @IBOutlet weak var saveLabel: UILabel!
 }
 
 

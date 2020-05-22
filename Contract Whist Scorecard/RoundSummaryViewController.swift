@@ -8,18 +8,14 @@
 
 import UIKit
 
-class RoundSummaryViewController: CustomViewController {
+class RoundSummaryViewController: ScorecardAppViewController {
+
+    // Whist view properties
+    override internal var scorecardView: ScorecardView? { return ScorecardView.roundSummary }
+    public weak var controllerDelegate: ScorecardAppControllerDelegate?
 
     // MARK: - Class Properties ======================================================================== -
-
-    private let scorecard = Scorecard.shared
-    
-    // Main state properties
-    public var rounds: Int!
-    public var cards: [Int]!
-    public var bounce: Bool!
-    public var suits: [Suit]!
-    
+        
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet weak var roundSummaryView: UIView!
     @IBOutlet weak var trumpSuit: UILabel!
@@ -46,21 +42,16 @@ class RoundSummaryViewController: CustomViewController {
     // MARK: - View Overrides ========================================================================== -
    
     override func viewWillAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+        super.viewWillAppear(animated)
        
         setupOverUnder()
         setupBidText(bids: player1Bid, player2Bid, player3Bid, player4Bid)
         
-        if self.scorecard.commsHandlerMode == .roundSummary {
-            // Notify client controller that round summary display complete
-            self.scorecard.commsHandlerMode = .none
-            NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
-        }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        scorecard.reCenterPopup(self)
+        Scorecard.shared.reCenterPopup(self)
     }
 
     // MARK: - Gesture Action Handlers ================================================================= -
@@ -82,20 +73,20 @@ class RoundSummaryViewController: CustomViewController {
     
     func setupOverUnder() {
         self.trumpSuit.textColor = UIColor.white
-        self.trumpSuit.attributedText = scorecard.roundSuit(scorecard.selectedRound, suits: self.suits).toAttributedString(font: self.trumpSuit.font, noTrumpScale: 0.7)
+        self.trumpSuit.attributedText = Scorecard.game.roundSuit(Scorecard.game.selectedRound).toAttributedString(font: self.trumpSuit.font, noTrumpScale: 0.7)
         
-        let totalRemaining = scorecard.remaining(playerNumber: 0, round: scorecard.selectedRound, mode: Mode.bid, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
+        let totalRemaining = Scorecard.game.remaining(playerNumber: 0, round: Scorecard.game.selectedRound, mode: Mode.bid)
         self.overUnder.text = "\(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")"
         self.overUnder.textColor = (totalRemaining == 0 ? Palette.contractEqual : (totalRemaining > 0 ? Palette.contractUnder : Palette.contractOver))
     }
     
     func setupBidText(bids: UILabel?...) {
         
-        for playerNumber in 1...scorecard.numberPlayers {
-            if playerNumber <= scorecard.currentPlayers {
-                let bid = scorecard.entryPlayer(playerNumber).bid(scorecard.selectedRound)
+        for playerNumber in 1...Scorecard.shared.maxPlayers {
+            if playerNumber <= Scorecard.game.currentPlayers {
+                let bid = Scorecard.game.scores.get(round: Scorecard.game.selectedRound, playerNumber: playerNumber, sequence: .entry).bid
                 if bid != nil {
-                    bids[playerNumber-1]?.text = "\(scorecard.entryPlayer(playerNumber).playerMO!.name!) bid \(bid!)"
+                    bids[playerNumber-1]?.text = "\(Scorecard.game.player(entryPlayerNumber: playerNumber).playerMO!.name!) bid \(bid!)"
                 } else {
                     bids[playerNumber-1]?.text = ""
                 }
@@ -107,7 +98,7 @@ class RoundSummaryViewController: CustomViewController {
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: CustomViewController, existing roundSummaryViewController: RoundSummaryViewController! = nil, rounds: Int? = nil, cards: [Int]? = nil, bounce: Bool? = nil, suits: [Suit]? = nil) -> RoundSummaryViewController {
+    class public func show(from viewController: ScorecardViewController, existing roundSummaryViewController: RoundSummaryViewController! = nil) -> RoundSummaryViewController {
         
         var roundSummaryViewController: RoundSummaryViewController! = roundSummaryViewController
         
@@ -117,11 +108,7 @@ class RoundSummaryViewController: CustomViewController {
         }
         
         roundSummaryViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
-        
-        roundSummaryViewController.rounds = rounds
-        roundSummaryViewController.cards = cards
-        roundSummaryViewController.bounce = bounce
-        roundSummaryViewController.suits = suits
+        roundSummaryViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         viewController.present(roundSummaryViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
         

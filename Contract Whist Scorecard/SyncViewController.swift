@@ -10,12 +10,11 @@ import UIKit
 import CloudKit
 import QuartzCore
 
-class SyncViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, SyncDelegate {
+class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableViewDataSource, SyncDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
-    private let scorecard = Scorecard.shared
     private let sync = Sync()
     
     // Variables to pass state
@@ -63,7 +62,7 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        scorecard.reCenterPopup(self)
+        Scorecard.shared.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
     
@@ -242,12 +241,13 @@ class SyncViewController: CustomViewController, UITableViewDelegate, UITableView
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: CustomViewController, completion: (()->())? = nil){
+    class public func show(from viewController: ScorecardViewController, completion: (()->())? = nil){
         
         let storyboard = UIStoryboard(name: "SyncViewController", bundle: nil)
         let SyncViewController: SyncViewController = storyboard.instantiateViewController(withIdentifier: "SyncViewController") as! SyncViewController
         
         SyncViewController.preferredContentSize = CGSize(width: 400, height: 700)
+        SyncViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         SyncViewController.completion = completion
         

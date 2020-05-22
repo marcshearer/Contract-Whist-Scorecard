@@ -15,17 +15,17 @@ enum GameSummaryReturnMode {
     case newGame
 }
 
-class GameSummaryViewController: CustomViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SyncDelegate, UIPopoverControllerDelegate, ImageButtonDelegate {
+class GameSummaryViewController: ScorecardAppViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SyncDelegate, UIPopoverControllerDelegate, ImageButtonDelegate {
+
+    // Whist view properties
+    override internal var scorecardView: ScorecardView? { return ScorecardView.gameSummary }
+    public weak var controllerDelegate: ScorecardAppControllerDelegate?
 
     // Main state properties
-    internal let scorecard = Scorecard.shared
     private let sync = Sync()
     
     // Properties to pass state
-    private var firstGameSummary = false
     private var gameSummaryMode: ScorepadMode!
-    private var rounds: Int!
-    private var completion: ((GameSummaryReturnMode)->())?
     
     // Constants
     private let stopPlayingTag = 1
@@ -83,7 +83,7 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
     
     @IBAction func scorecardPressed(_ sender: Any) {
         // Unwind to scorepad with current game intact
-        self.dismiss()
+        self.controllerDelegate?.didCancel()
     }
     
     @IBAction func rightSwipe(recognizer:UISwipeGestureRecognizer) {
@@ -102,16 +102,16 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.excludeHistory = (self.scorecard.overrideSelected && self.scorecard.overrideSettings.excludeHistory)
-        self.excludeStats = self.excludeHistory || (self.scorecard.overrideSelected && self.scorecard.overrideSettings.excludeStats)
+        self.excludeHistory = !Scorecard.activeSettings.saveHistory
+        self.excludeStats = self.excludeHistory || !Scorecard.activeSettings.saveStats
         
-        if gameSummaryMode != .amend {
+        if gameSummaryMode != .scoring && gameSummaryMode != .hosting {
             leftSwipeGesture.isEnabled = false
             rightSwipeGesture.isEnabled = false
             self.playAgainButton.isEnabled = false
             self.playAgainButton.alpha = 0.3
         }
-        if self.scorecard.hasJoined || self.gameSummaryMode == .amend {
+        if gameSummaryMode != .viewing {
             // Disable tap gesture as individual buttons active
             tapGesture.isEnabled = false
         }
@@ -123,18 +123,13 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if self.scorecard.commsHandlerMode == .gameSummary {
-            // Notify client controller that game summary display complete
-            self.scorecard.commsHandlerMode = .none
-            NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
-        }
         self.autoNewGame()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         self.rotated = true
-        scorecard.reCenterPopup(self)
+        Scorecard.shared.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
     
@@ -158,7 +153,7 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
         case winnersTag:
             return self.winners
         case othersTag:
-            return self.scorecard.currentPlayers - winners
+            return Scorecard.game.currentPlayers - winners
         default:
             return 0
         }
@@ -203,7 +198,7 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
         cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Game Summary Cell", for: indexPath) as! GameSummaryCollectionCell
         
         cell.thumbnailView.set(frame: CGRect(origin: CGPoint(), size: CGSize(width: width, height: width + nameHeight - 5.0)))
-        cell.thumbnailView.set(playerMO: self.scorecard.enteredPlayer(playerResults.playerNumber).playerMO!, nameHeight: nameHeight)
+        cell.thumbnailView.set(playerMO: Scorecard.game.player(enteredPlayerNumber: playerResults.playerNumber).playerMO!, nameHeight: nameHeight)
         cell.thumbnailView.set(font: UIFont.systemFont(ofSize: nameHeight * 0.67, weight: .semibold))
         cell.thumbnailView.set(textColor: Palette.roomInteriorTextContrast)
         
@@ -233,23 +228,23 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
             var message: String
             
             // New PB / First Timer
-            let name = scorecard.enteredPlayer(playerNumber).playerMO?.name!
-            if scorecard.enteredPlayer(playerNumber).previousMaxScore == 0 {
+            let name = Scorecard.game.player(enteredPlayerNumber: playerNumber).playerMO?.name!
+            if Scorecard.game.player(enteredPlayerNumber: playerNumber).previousMaxScore == 0 {
                 // First timer
                 message = "Congratulations \(name!) on completing your first game.\n\nYour score was \(playerResults.score)."
             } else {
                 // PB - - show previous one
                 let formatter = DateFormatter()
                 formatter.setLocalizedDateFormatFromTemplate("dd/MM/yyyy")
-                let date = formatter.string(from: scorecard.enteredPlayer(playerNumber).previousMaxScoreDate)
-                message = "Congratulations \(name!) on your new personal best of \(playerResults.score).\n\nYour previous best was \(scorecard.enteredPlayer(playerNumber).previousMaxScore) which you achieved on \(date)"
+                let date = formatter.string(from: Scorecard.game.player(enteredPlayerNumber: playerNumber).previousMaxScoreDate)
+                message = "Congratulations \(name!) on your new personal best of \(playerResults.score).\n\nYour previous best was \(Scorecard.game.player(enteredPlayerNumber: playerNumber).previousMaxScore) which you achieved on \(date)"
             }
             let alertController = UIAlertController(title: "Congratulations", message: message, preferredStyle: UIAlertController.Style.alert)
             alertController.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
             present(alertController, animated: true, completion: nil)
         } else {
             // Not a PB - Link to high scores
-            if self.scorecard.settingSaveHistory {
+            if Scorecard.activeSettings.saveHistory {
                 self.showHighScores()
             }
         }
@@ -272,21 +267,21 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
     
     private func stopPlayingPressed() {
         // Unwind to home screen clearing current game
-        if !self.scorecard.isViewing {
+        if gameSummaryMode != .viewing {
             UIApplication.shared.isIdleTimerDisabled = false
-            if self.scorecard.hasJoined {
+            if gameSummaryMode == .joining {
                 // Link to home via client (no sync)
-                self.dismiss(returnMode: .returnHome)
+                self.controllerDelegate?.didProceed()
             } else {
-                finishGame(from: self, returnMode: .returnHome, resetOverrides: true)
+                self.finishGame(returnMode: .returnHome, resetOverrides: true)
             }
         }
     }
     
     private func playAgainPressed() {
         // Unwind to scorepad clearing current game and advancing dealer
-        if gameSummaryMode == .amend {
-            finishGame(from: self, returnMode: .newGame, advanceDealer: true, resetOverrides: false)
+        if gameSummaryMode == .scoring || gameSummaryMode == .hosting {
+            self.finishGame(returnMode: .newGame, advanceDealer: true, resetOverrides: false)
         }
     }
     
@@ -330,22 +325,23 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
         // Clear cross reference array
         xref.removeAll()
     
-        if !self.excludeStats && !self.excludeHistory && !self.scorecard.isPlayingComputer {
-            if self.scorecard.settingSaveHistory {
+        if !self.excludeStats && !self.excludeHistory && !(Scorecard.game?.isPlayingComputer ?? false) {
+            if Scorecard.activeSettings.saveHistory {
                 // Load high scores - get 10 to allow for lots of ties
                 // Note - this assumes this game's participants have been placed in the database already
-                highScoreParticipantMO = History.getHighScores(type: .totalScore, limit: 10, playerEmailList: self.scorecard.playerEmailList(getPlayerMode: .getAll))
+                highScoreParticipantMO = History.getHighScores(type: .totalScore, limit: 10, playerEmailList: Scorecard.shared.playerEmailList(getPlayerMode: .getAll))
                 for participant in highScoreParticipantMO {
                     highScoreEntry.append(HighScoreEntry(gameUUID: participant.gameUUID!, email: participant.email!, totalScore: participant.totalScore))
                 }
             }
             
-            if gameSummaryMode != .amend || !self.scorecard.settingSaveHistory {
+            if (gameSummaryMode != .scoring && gameSummaryMode != .hosting) || !Scorecard.activeSettings.saveHistory {
                 // Need to add current game since not written on this device
-                for playerNumber in 1...scorecard.currentPlayers {
-                    highScoreEntry.append(HighScoreEntry(gameUUID: (scorecard.gameUUID==nil ? "" : scorecard.gameUUID),
-                                                         email: scorecard.enteredPlayer(playerNumber).playerMO!.email!,
-                                                         totalScore: Int16(scorecard.enteredPlayer(playerNumber).totalScore())))
+                for playerNumber in 1...Scorecard.game.currentPlayers {
+                    let totalScore = Scorecard.game.scores.totalScore(playerNumber: playerNumber)
+                    highScoreEntry.append(HighScoreEntry(gameUUID: (Scorecard.game.gameUUID==nil ? "" : Scorecard.game.gameUUID),
+                                                         email: Scorecard.game.player(enteredPlayerNumber: playerNumber).playerMO!.email!,
+                                                         totalScore: Int16(totalScore)))
                 }
             }
             
@@ -367,19 +363,19 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
         }
         
         // Check for high scores and PBs and create cross-reference
-        for playerNumber in 1...scorecard.currentPlayers {
+        for playerNumber in 1...Scorecard.game.currentPlayers {
             var personalBest = false
-            let score = Int64(scorecard.enteredPlayer(playerNumber).totalScore())
+            let score = Int64(Scorecard.game.scores.totalScore(playerNumber: playerNumber))
             var ranking = 0
             
-            if !self.excludeStats && !self.excludeHistory && !self.scorecard.isPlayingComputer {
+            if !self.excludeStats && !self.excludeHistory && !(Scorecard.game?.isPlayingComputer ?? false) {
                 for loopCount in 1...highScoreRanking.count {
                     // No need to check if already got a high place
-                    if self.scorecard.settingSaveHistory && ranking == 0 {
+                    if Scorecard.activeSettings.saveHistory && ranking == 0 {
                         // Check if it is a score for this player
-                        if highScoreEntry[loopCount-1].email == scorecard.enteredPlayer(playerNumber).playerMO?.email {
+                        if highScoreEntry[loopCount-1].email == Scorecard.game.player(enteredPlayerNumber: playerNumber).playerMO?.email {
                             // Check that it is this score that has done it - not an old one
-                            if highScoreEntry[loopCount-1].gameUUID == (scorecard.gameUUID==nil ? "" : scorecard.gameUUID) {
+                            if highScoreEntry[loopCount-1].gameUUID == (Scorecard.game.gameUUID==nil ? "" : Scorecard.game.gameUUID) {
                                 ranking = highScoreRanking[loopCount - 1]
                                 if ranking == 1 {
                                     newHighScore = true
@@ -389,7 +385,7 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
                     }
                 
                     if ranking == 0 {
-                        let previousPersonalBest = scorecard.enteredPlayer(playerNumber).previousMaxScore
+                        let previousPersonalBest = Scorecard.game.player(enteredPlayerNumber: playerNumber).previousMaxScore
                         personalBest = (score > previousPersonalBest)
                     }
                 }
@@ -404,7 +400,7 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
         // Now fill in places
         var place = 0
         self.winners = 0
-        for playerNumber in 1...scorecard.currentPlayers {
+        for playerNumber in 1...Scorecard.game.currentPlayers {
             if playerNumber == 1 || xref[playerNumber - 2].score != xref[playerNumber - 1].score {
                 place = playerNumber
             }
@@ -412,30 +408,31 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
             if place == 1 {
                 winners += 1
                 if winners == 1 {
-                    winnerEmail = self.scorecard.enteredPlayer(xref[playerNumber-1].playerNumber).playerMO!.email!
-                    winnerNames = self.scorecard.enteredPlayer(xref[playerNumber-1].playerNumber).playerMO!.name!
+                    winnerEmail = Scorecard.game.player(enteredPlayerNumber: xref[playerNumber-1].playerNumber).playerMO!.email!
+                    winnerNames = Scorecard.game.player(enteredPlayerNumber: xref[playerNumber-1].playerNumber).playerMO!.name!
                 } else {
-                    winnerNames = winnerNames + " and " + self.scorecard.enteredPlayer(xref[playerNumber-1].playerNumber).playerMO!.name!
+                    winnerNames = winnerNames + " and " + Scorecard.game.player(enteredPlayerNumber: xref[playerNumber-1].playerNumber).playerMO!.name!
                 }
             }
         }
-        self.others = self.scorecard.currentPlayers - winners
+        self.others = Scorecard.game.currentPlayers - winners
         
-        if firstGameSummary && gameSummaryMode == .amend {
+        if !Scorecard.game.gameCompleteNotificationSent && (gameSummaryMode == .scoring || gameSummaryMode == .hosting) {
             // Save notification message
             self.saveGameNotification(newHighScore: newHighScore, winnerEmail: winnerEmail, winner: winnerNames, winningScore: Int(xref[0].score))
+            Scorecard.game.gameCompleteNotificationSent = true
         }
     }
     
     public func saveGameNotification(newHighScore: Bool, winnerEmail: String, winner: String, winningScore: Int) {
-        if self.scorecard.settingSyncEnabled && self.scorecard.isNetworkAvailable && self.scorecard.isLoggedIn && !self.excludeHistory && !self.scorecard.isPlayingComputer {
+        if Scorecard.activeSettings.syncEnabled && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn && !self.excludeHistory && !(Scorecard.game?.isPlayingComputer ?? false) {
             var message = ""
             
-            for playerNumber in 1...self.scorecard.currentPlayers {
-                let name = self.scorecard.enteredPlayer(playerNumber).playerMO!.name!
+            for playerNumber in 1...Scorecard.game.currentPlayers {
+                let name = Scorecard.game.player(enteredPlayerNumber: playerNumber).playerMO!.name!
                 if playerNumber == 1 {
                     message = name
-                } else if playerNumber == self.scorecard.currentPlayers {
+                } else if playerNumber == Scorecard.game.currentPlayers {
                     message = message + " and " + name
                     
                 } else {
@@ -443,7 +440,7 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
                 }
             }
             
-            let locationDescription = self.scorecard.gameLocation.description
+            let locationDescription = Scorecard.game.location.description
             message = message + " just finished a game of Contract Whist"
             if locationDescription != nil && locationDescription! != "" {
                 if locationDescription == "Online" {
@@ -462,7 +459,7 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
         }
     }
     
-    func finishGame(from: UIViewController, returnMode: GameSummaryReturnMode, advanceDealer: Bool = false, resetOverrides: Bool = true, confirm: Bool = true) {
+    func finishGame(returnMode: GameSummaryReturnMode, advanceDealer: Bool = false, resetOverrides: Bool = true, confirm: Bool = true) {
         
         func finish() {
             self.synchroniseAndReturn(returnMode: returnMode, advanceDealer: advanceDealer, resetOverrides: resetOverrides)
@@ -470,7 +467,7 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
         
         if confirm {
             var message: String
-            if self.excludeHistory || !self.scorecard.settingSaveHistory {
+            if self.excludeHistory {
                 message = "If you continue you will not be able to return to this game.\n\n Are you sure you want to do this?"
             } else {
                 message = "Your game has been saved. However if you continue you will not be able to return to it.\n\n Are you sure you want to do this?"
@@ -482,7 +479,7 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
             }))
             alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel,
                                                     handler:nil))
-            from.present(alertController, animated: true, completion: nil)
+            self.present(alertController, animated: true, completion: nil)
         } else {
             finish()
         }
@@ -494,7 +491,7 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
         completionMode = returnMode
         completionAdvanceDealer = advanceDealer
         completionResetOverrides = resetOverrides
-        if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn && !self.excludeHistory && !self.scorecard.isPlayingComputer {
+        if Scorecard.activeSettings.syncEnabled && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn && !self.excludeHistory && !(Scorecard.game?.isPlayingComputer ?? false) {
             view.isUserInteractionEnabled = false
             activityIndicator.startAnimating()
             self.sync.delegate = self
@@ -523,9 +520,9 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
     internal func syncCompletion(_ errors: Int) {
         Utility.mainThread {
             self.activityIndicator.stopAnimating()
-            self.scorecard.exitScorecard(from: self, advanceDealer: self.completionAdvanceDealer, rounds: self.rounds, resetOverrides: self.completionResetOverrides, completion: {
-                self.completion?(self.completionMode)
-            })
+            self.controllerDelegate?.didProceed(context: ["mode" : self.completionMode,
+                                                          "advanceDealer" : self.completionAdvanceDealer,
+                                                          "resetOverrides" : self.completionResetOverrides])
         }
     }
     
@@ -537,31 +534,20 @@ class GameSummaryViewController: CustomViewController, UICollectionViewDelegate,
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: CustomViewController, firstGameSummary: Bool = false, gameSummaryMode: ScorepadMode? = nil, rounds: Int? = nil, completion: ((GameSummaryReturnMode)->())?) -> GameSummaryViewController {
+    class public func show(from viewController: ScorecardViewController, gameSummaryMode: ScorepadMode? = nil, controllerDelegate: ScorecardAppControllerDelegate?) -> GameSummaryViewController {
         
         let storyboard = UIStoryboard(name: "GameSummaryViewController", bundle: nil)
         let gameSummaryViewController: GameSummaryViewController = storyboard.instantiateViewController(withIdentifier: "GameSummaryViewController") as! GameSummaryViewController
  
         gameSummaryViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
-        
-        gameSummaryViewController.firstGameSummary = firstGameSummary
+        gameSummaryViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
+
         gameSummaryViewController.gameSummaryMode = gameSummaryMode
-        gameSummaryViewController.rounds = rounds
-        gameSummaryViewController.completion = completion
-        
+        gameSummaryViewController.controllerDelegate = controllerDelegate
+       
         viewController.present(gameSummaryViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
         
         return gameSummaryViewController
-    }
-    
-    private func dismiss(returnMode: GameSummaryReturnMode = .resume) {
-        self.dismiss(animated: false, completion: {
-            self.completion?(returnMode)
-        })
-    }
-    
-    override internal func didDismiss() {
-        self.completion?(.resume)
     }
 }
 

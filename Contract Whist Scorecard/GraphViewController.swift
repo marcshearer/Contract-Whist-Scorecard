@@ -8,12 +8,9 @@
 
 import UIKit
 
-class GraphViewController: CustomViewController, GraphDetailDelegate {
+class GraphViewController: ScorecardViewController, GraphDetailDelegate {
 
     // MARK: - Class Properties ======================================================================== -
-    
-    // Main state properties
-    private let scorecard = Scorecard.shared
     
     // Properties to determine how view is displayed
     private var playerDetail: PlayerDetail!
@@ -32,6 +29,8 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
     static public func show(from sourceViewController: UIViewController, playerDetail: PlayerDetail) {
         let storyboard = UIStoryboard(name: "GraphViewController", bundle: nil)
         let graphViewController = storyboard.instantiateViewController(withIdentifier: "GraphViewController") as! GraphViewController
+        graphViewController.modalPresentationStyle = .fullScreen
+        
         graphViewController.playerDetail = playerDetail
         sourceViewController.present(graphViewController, animated: true, completion: nil)
     }
@@ -49,7 +48,7 @@ class GraphViewController: CustomViewController, GraphDetailDelegate {
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        scorecard.reCenterPopup(self)
+        Scorecard.shared.reCenterPopup(self)
         view.setNeedsLayout()
     }
     

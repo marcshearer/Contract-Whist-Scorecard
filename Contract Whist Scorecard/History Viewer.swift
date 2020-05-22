@@ -17,8 +17,6 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
         case filtered
     }
     
-    private let scorecard = Scorecard.shared
-    
     public var viewTitle = "History"
     public var allowSync = true
     public let initialSortField = "datePlayed"
@@ -134,7 +132,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
         case "=count", "cross red":
             result = !Scorecard.adminMode
         case "=location":
-            result = !self.scorecard.settingSaveLocation
+            result = !Scorecard.activeSettings.saveLocation
         default:
             break
         }
@@ -344,7 +342,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
                 self.customHeightConstraint.constant = viewHeight
                 self.filterInstructionHeightConstraint.constant = instructionHeight
             }
-            self.filterSelectionView.set(players: self.scorecard.playerList, scrollEnabled: true)
+            self.filterSelectionView.set(players: Scorecard.shared.playerList, scrollEnabled: true)
         }
     }
     
@@ -389,7 +387,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
     
     private func setFilterSelectionViewRequiredHeight() {
         
-        self.filterSelectionViewHeight = self.filterSelectionView.getHeightFor(items: self.scorecard.playerList.count)
+        self.filterSelectionViewHeight = self.filterSelectionView.getHeightFor(items: Scorecard.shared.playerList.count)
         self.filterSelectionViewHeight = min(self.filterSelectionViewHeight, self.dataTableViewController.view.frame.height - self.customView.frame.minY)
         
         self.landscape = ScorecardUI.landscape()

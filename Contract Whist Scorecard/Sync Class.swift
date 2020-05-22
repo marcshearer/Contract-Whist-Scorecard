@@ -353,17 +353,17 @@ class Sync {
         
         queryOperation.queryCompletionBlock = { (cursor, error) -> Void in
             if error != nil {
-                Scorecard.shared.latestVersion = "0.0"
-                Scorecard.shared.latestBuild = 0
+                Scorecard.version.latestVersion = "0.0"
+                Scorecard.version.latestBuild = 0
                 self.errors += 1
                 return
             }
-            Scorecard.shared.latestVersion = version
-            Scorecard.shared.latestBuild = build
+            Scorecard.version.latestVersion = version
+            Scorecard.version.latestBuild = build
             
             // Set and save rabbitMQ URI
-            Scorecard.settingRabbitMQUri = cloudRabbitMQUri
-            UserDefaults.standard.set(cloudRabbitMQUri, forKey: "rabbitMQUri")
+            RabbitMQConfig.rabbitMQUri = cloudRabbitMQUri
+            RabbitMQConfig.save()
             
             // Setup simulated notification rabbitMQ queue
             Utility.mainThread {
@@ -374,72 +374,72 @@ class Sync {
             }
             
             // Set messages
-            Scorecard.shared.settingVersionBlockAccess = false
-            Scorecard.shared.settingVersionBlockSync = false
-            Scorecard.shared.settingVersionMessage = ""
+            Scorecard.version.blockAccess = false
+            Scorecard.version.blockSync = false
+            Scorecard.version.message = ""
             
             if accessBlockVersion != nil &&
-                Utility.compareVersions(version1: Scorecard.shared.settingVersion,
+                Utility.compareVersions(version1: Scorecard.version.version,
                                            version2: accessBlockVersion) != .greaterThan {
                 
-                Scorecard.shared.settingVersionBlockAccess = true
+                Scorecard.version.blockAccess = true
                 if accessBlockMessage == "" {
                     accessBlockMessage = "A new version of the Contract Whist Scorecard app is available and this version is no longer supported. Please update to the latest version via the App Store."
                 }
-                Scorecard.shared.settingVersionMessage = accessBlockMessage
+                Scorecard.version.message = accessBlockMessage
             }
             
-            if !Scorecard.shared.settingVersionBlockAccess && Scorecard.shared.settingDatabase != "" && database != Scorecard.shared.settingDatabase {
+            if !Scorecard.version.blockAccess && Scorecard.shared.database != "" && database != Scorecard.shared.database {
                 // Database (development/production) doesn't match!!
-                Scorecard.shared.settingVersionBlockSync = true
-                syncBlockMessage = "You are trying to connect to the '\(database!)' database but this device has previously synced with the '\(Scorecard.shared.settingDatabase)' database"
+                Scorecard.version.blockSync = true
+                syncBlockMessage = "You are trying to connect to the '\(database!)' database but this device has previously synced with the '\(Scorecard.shared.database)' database"
                 if database == "development" {
                     // OK if copying live to development so reset it after warning
                     syncBlockMessage = syncBlockMessage + ". It has been reset"
-                    Scorecard.shared.settingDatabase = database
+                    Scorecard.shared.database = database
                     UserDefaults.standard.set(database, forKey: "database")
                 }
-                Scorecard.shared.settingVersionMessage = syncBlockMessage
+                Scorecard.version.message = syncBlockMessage
             }
             
-            if !Scorecard.shared.settingVersionBlockAccess && !Scorecard.shared.settingVersionBlockSync && syncBlockVersion != nil &&
-                Utility.compareVersions(version1: Scorecard.shared.settingVersion,
+            if !Scorecard.version.blockAccess && !Scorecard.version.blockSync && syncBlockVersion != nil &&
+                Utility.compareVersions(version1: Scorecard.version.version,
                                         version2: syncBlockVersion) != .greaterThan {
                 
-                Scorecard.shared.settingVersionBlockSync = true
+                Scorecard.version.blockSync = true
                 if syncBlockMessage == "" {
                     syncBlockMessage = "A new version of the Contract Whist Scorecard app is available and you will no longer be able to sync with iCloud using this version. Please update to the latest version via the App Store."
                 }
-                Scorecard.shared.settingVersionMessage = syncBlockMessage
+                Scorecard.version.message = syncBlockMessage
                 
             }
             
-            if !Scorecard.shared.settingVersionBlockAccess && !Scorecard.shared.settingVersionBlockSync {
+            if !Scorecard.version.blockAccess && !Scorecard.version.blockSync {
                 if self.syncMode == .syncGetVersion && infoMessage != nil && infoMessage != "" {
                 
-                    Scorecard.shared.settingVersionMessage = infoMessage
+                    Scorecard.version.message = infoMessage
                 
                 } else if self.syncMode == .syncGetVersion &&
-                    Utility.compareVersions(version1: Scorecard.shared.settingVersion, build1: Scorecard.shared.settingBuild,
+                    Utility.compareVersions(version1: Scorecard.version.version, build1: Scorecard.version.build,
                                             version2: version, build2: build) == .lessThan  {
                     
-                    Scorecard.shared.settingVersionMessage = "You are currently on version \(Scorecard.shared.settingVersion) (\(Scorecard.shared.settingBuild)) of the Contract Whist Scorecard app. A newer version \(version) (\(build)) is available. It is highly recommended that you update to the latest version."
+                    Scorecard.version.message = "You are currently on version \(Scorecard.version.version) (\(Scorecard.version.build)) of the Contract Whist Scorecard app. A newer version \(version) (\(build)) is available. It is highly recommended that you update to the latest version."
                 }
             }
             
             // Save messages for later use if fail to access cloud
-            UserDefaults.standard.set(Scorecard.shared.settingVersionBlockAccess, forKey: "versionBlockAccess")
-            UserDefaults.standard.set(Scorecard.shared.settingVersionBlockSync, forKey: "versionBlockSync")
-            UserDefaults.standard.set(Scorecard.shared.settingVersionMessage, forKey: "versionMessage")
-            if Scorecard.shared.settingDatabase == "" {
-                Scorecard.shared.settingDatabase = database
+            UserDefaults.standard.set(Scorecard.version.blockAccess, forKey: "blockAccess")
+            UserDefaults.standard.set(Scorecard.version.blockSync, forKey: "blockSync")
+            UserDefaults.standard.set(Scorecard.version.message, forKey: "message")
+            if Scorecard.shared.database == "" {
+                Scorecard.shared.database = database
                 UserDefaults.standard.set(database, forKey: "database")
             }
             
             // If access and sync not blocked link to sync all if necessary - otherwise complete (and display message)
-            if Scorecard.shared.settingVersionMessage != "" {
+            if Scorecard.version.message != "" {
                 // There is a message - either advisory in get version mode or an error
-                self.syncAlert(Scorecard.shared.settingVersionMessage)
+                self.syncAlert(Scorecard.version.message)
             }
             self.syncController()
         }

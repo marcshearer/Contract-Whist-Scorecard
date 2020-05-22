@@ -19,6 +19,12 @@ class Config {
     // Time unit for auto-play testing (in seconds) - card is played every unit
     public static var autoPlayTimeUnit = 0.05
     
+    // Auto-connect clients for quicker testing
+    public static let autoConnectClient = false
+    
+    // Auto-start host for quicker testing
+    public static let autoStartHost = false
+    
     // MARK: - Utility code - should not need to be changed ============================================== -
     
     // MARK: - Debug online games without access to iCloud - always returns invites for Jack and Emma -

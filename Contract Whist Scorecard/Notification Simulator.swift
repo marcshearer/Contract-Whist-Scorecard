@@ -12,7 +12,7 @@ import UIKit
 
 class NotificationSimulator: CommsBroadcastDelegate {
     
-    private var onlineQueueService: CommsClientHandlerDelegate!
+    private var onlineQueueService: CommsClientServiceDelegate!
     
     init() {
     }
@@ -34,7 +34,7 @@ class NotificationSimulator: CommsBroadcastDelegate {
         if Config.pushNotifications_onlineQueue {
             if let simulator = Utility.appDelegate?.notificationSimulator {
                 for email in inviteEmails {
-                    simulator.sendNotification(email: email, category: "onlineGame", key: "%1$@ has invited you to play online. Go to 'Online Game' and select 'Join a Game' to see the invitation", args: [hostName, hostEmail, Scorecard.deviceName, Scorecard.onlineEmail() ?? ""])
+                    simulator.sendNotification(email: email, category: "onlineGame", key: "%1$@ has invited you to play online. Go to 'Online Game' and select 'Join a Game' to see the invitation", args: [hostName, hostEmail, Scorecard.deviceName, email])
                 }
             }
         }

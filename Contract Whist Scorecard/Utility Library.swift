@@ -435,7 +435,7 @@ class Utility {
     }
 
     public class func getActiveViewController(fullScreenOnly: Bool = false, ignoreAlertController: Bool = false) -> UIViewController? {
-        var viewController = UIApplication.shared.keyWindow?.rootViewController
+        var viewController = UIApplication.shared.windows.filter{$0.isKeyWindow}.first?.rootViewController
         let fullHeight = viewController?.view.frame.height
         var activeViewController = viewController
         
@@ -489,12 +489,11 @@ class Utility {
             #if ContractWhist
                 // Write to rabbitMQ logs
             if (RabbitMQConfig.devMode != .amqpServer || Scorecard.adminMode || force) && RabbitMQConfig.logQueue != "" && RabbitMQConfig.uriDevMode != "" {
-                    let scorecard = Scorecard.shared
-                    if scorecard.logService == nil {
-                        scorecard.logService = CommsHandler.client(proximity: .online, mode: .queue, serviceID: "whist-logger", deviceName: Scorecard.deviceName)
-                        scorecard.logService.start(queue: RabbitMQConfig.logQueue, filterEmail: "")
+                    if Scorecard.shared.logService == nil {
+                        Scorecard.shared.logService = CommsHandler.client(proximity: .online, mode: .queue, serviceID: "whist-logger", deviceName: Scorecard.deviceName)
+                        Scorecard.shared.logService.start(queue: RabbitMQConfig.logQueue, filterEmail: "")
                     }
-                    scorecard.logService.send("0", ["from"      : from,
+                    Scorecard.shared.logService.send("0", ["from"      : from,
                                                     "message"   : message,
                                                     "timestamp" : timestamp])
                 }

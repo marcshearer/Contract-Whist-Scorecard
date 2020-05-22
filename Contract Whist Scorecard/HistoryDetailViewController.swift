@@ -11,12 +11,9 @@ import MapKit
 import CoreLocation
 import CloudKit
 
-class HistoryDetailViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate {
+class HistoryDetailViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate {
 
     // MARK: - Class Properties ======================================================================== -
-    
-    // Main state properties
-    private let scorecard = Scorecard.shared
     
     // Properties to pass state
     private var gameDetail: HistoryGame!
@@ -28,13 +25,13 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
     var updated = false
     
     // MARK: - IB Outlets ============================================================================== -
-    @IBOutlet var participantTableView: UITableView!
-    @IBOutlet var locationText: UILabel!
-    @IBOutlet var locationBackground: UIView!
+    @IBOutlet weak var participantTableView: UITableView!
+    @IBOutlet weak var locationText: UILabel!
+    @IBOutlet weak var locationBackground: UIView!
     @IBOutlet weak var locationBackgroundHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var locationBackgroundLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var locationBackgroundTrailingConstraint: NSLayoutConstraint!
-    @IBOutlet var mapView: MKMapView!
+    @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var participantTableViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var titleNavigationItem: UINavigationItem!
     @IBOutlet weak var updateButton: RoundedButton!
@@ -67,14 +64,14 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if !scorecard.settingSaveLocation {
+        if !Scorecard.activeSettings.saveLocation {
             locationBackgroundHeightConstraint.constant = 0
             locationText.isHidden = true
             updateButton.isHidden = true
             mapView.isHidden = true
         } else {
             // Only show update button if network available
-            scorecard.checkNetworkConnection(button: updateButton, label: nil)
+            Scorecard.shared.checkNetworkConnection(button: updateButton, label: nil)
             // NOTE The updateButton will disappear when there is not network
         }
         
@@ -83,7 +80,7 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
         titleNavigationItem.title = "\(dateString) - \(timeString)"
         players = gameDetail.participant.count
         participantTableViewHeightConstraint.constant = CGFloat(players + 1) * tableRowHeight
-        if scorecard.settingSaveLocation {
+        if Scorecard.activeSettings.saveLocation {
             locationText.text = gameDetail.gameLocation.description
             dropPin()
         }
@@ -96,7 +93,7 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        scorecard.reCenterPopup(self)
+        Scorecard.shared.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
     
@@ -137,7 +134,7 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
             cell.name.text = "Player"
             cell.totalScore.text = "Score"
             cell.handsMade.text = "Made"
-            if scorecard.settingBonus2 {
+            if Scorecard.activeSettings.bonus2 {
                 cell.otherValue.text = "Twos"
             } else {
                 cell.otherValue.text = "Made%"
@@ -152,7 +149,7 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
             Palette.normalStyle(cell.totalScore)
             Palette.normalStyle(cell.handsMade)
             Palette.normalStyle(cell.otherValue)
-            if scorecard.findPlayerByEmail(gameDetail.participant[playerNumber-1].participantMO.email!) == nil {
+            if Scorecard.shared.findPlayerByEmail(gameDetail.participant[playerNumber-1].participantMO.email!) == nil {
                 // Player not on device - grey them out
                 let grayedOut = Palette.text.withAlphaComponent(0.3)
                 cell.name.textColor = UIColor.lightGray
@@ -164,7 +161,7 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
             cell.name.text = gameDetail.participant[playerNumber-1].name
             cell.totalScore.text = "\(gameDetail.participant[playerNumber-1].totalScore)"
             cell.handsMade.text = "\(gameDetail.participant[playerNumber-1].handsMade)"
-            if scorecard.settingBonus2 {
+            if Scorecard.activeSettings.bonus2 {
                 cell.otherValue.text = "\(gameDetail.participant[playerNumber-1].twosMade)"
             } else {
                 let handsMadePercent = Utility.roundPercent(CGFloat(gameDetail.participant[playerNumber-1].handsMade), CGFloat(gameDetail.participant[playerNumber-1].handsPlayed))
@@ -350,7 +347,7 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
         }
         message = message + ". " + winner + " won with a score of \(winningScore)."
         
-        highScores = History.getHighScores(type: .totalScore, playerEmailList: self.scorecard.playerEmailList(getPlayerMode: .getAll))
+        highScores = History.getHighScores(type: .totalScore, playerEmailList: Scorecard.shared.playerEmailList(getPlayerMode: .getAll))
         
         if winningScore == highScores[0].totalScore {
             message = message + " This was a new high score! Congratulations \(winner)."
@@ -385,12 +382,13 @@ class HistoryDetailViewController: CustomViewController, UITableViewDataSource, 
     
     // MARK: - method to show and dismiss this view controller ============================================================================== -
     
-    static public func show(from sourceViewController: CustomViewController, gameDetail: HistoryGame, sourceView: UIView?, completion: ((HistoryGame?)->())? = nil) {
+    static public func show(from sourceViewController: ScorecardViewController, gameDetail: HistoryGame, sourceView: UIView?, completion: ((HistoryGame?)->())? = nil) {
         let storyboard = UIStoryboard(name: "HistoryDetailViewController", bundle: nil)
         let historyDetailViewController = storyboard.instantiateViewController(withIdentifier: "HistoryDetailViewController") as! HistoryDetailViewController
 
         historyDetailViewController.preferredContentSize = CGSize(width: 400, height: 700)
-
+        historyDetailViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
+        
         historyDetailViewController.gameDetail = gameDetail
         historyDetailViewController.callerCompletion = completion
 

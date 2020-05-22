@@ -15,12 +15,9 @@ enum ShapeType {
     case arrowLeft
 }
 
-class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollViewDelegate {
+class PlayersViewController: ScorecardViewController, ScrollViewDataSource, ScrollViewDelegate {
     
     // MARK: - Class Properties ======================================================================== -
-    
-    // Main state properties
-    private let scorecard = Scorecard.shared
     
     // Properties to get state
     private var completion: (()->())?
@@ -60,7 +57,7 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func newPlayerPressed(_ sender: UIButton) {
-        if self.scorecard.settingSyncEnabled {
+        if Scorecard.activeSettings.syncEnabled {
             self.showSelectPlayers()
         } else {
             PlayerDetailViewController.show(from: self, playerDetail: PlayerDetail(visibleLocally: true), mode: .create, sourceView: view, completion: { (playerDetail, deletePlayer) in
@@ -102,7 +99,7 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
         super.viewDidAppear(animated)
         
         // Get player list
-        self.playerList = self.scorecard.playerDetailList()
+        self.playerList = Scorecard.shared.playerDetailList()
         
         // Update from cloud
         self.updatePlayersFromCloud()
@@ -121,7 +118,7 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.scorecard.reCenterPopup(self)
+        Scorecard.shared.reCenterPopup(self)
         
         if self.view.safeAreaLayoutGuide.layoutFrame.size != self.lastSize {
         
@@ -288,9 +285,9 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
     
     private func updatePlayersFromCloud(players: [String]? = nil) {
         
-        if self.scorecard.settingSyncEnabled && self.scorecard.isNetworkAvailable && self.scorecard.isLoggedIn {
+        if Scorecard.activeSettings.syncEnabled && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
             
-            let players = players ?? self.scorecard.playerEmailList()
+            let players = players ?? Scorecard.shared.playerEmailList()
             
             // Synchronise players
             if players.count > 0 {
@@ -333,7 +330,7 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
     
     func refreshView() {
         // Reset everything
-        self.playerList = scorecard.playerDetailList()
+        self.playerList = Scorecard.shared.playerDetailList()
         self.scrollView.reloadData()
         formatButtons()
     }
@@ -350,12 +347,13 @@ class PlayersViewController: CustomViewController, ScrollViewDataSource, ScrollV
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: CustomViewController, backText: String = "", backImage: String = "home", completion: (()->())?){
+    class public func show(from viewController: ScorecardViewController, backText: String = "", backImage: String = "home", completion: (()->())?){
         
         let storyboard = UIStoryboard(name: "PlayersViewController", bundle: nil)
         let playersViewController: PlayersViewController = storyboard.instantiateViewController(withIdentifier: "PlayersViewController") as! PlayersViewController
         
         playersViewController.preferredContentSize = CGSize(width: 400, height: 700)
+        playersViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         playersViewController.backText = backText
         playersViewController.backImage = backImage

@@ -16,19 +16,17 @@ enum SelectionMode {
     case players
 }
 
-class SelectionViewController: CustomViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, UIDropInteractionDelegate, UIGestureRecognizerDelegate, PlayerViewDelegate, SelectedPlayersViewDelegate, GamePreviewDelegate {
-    
+class SelectionViewController: ScorecardAppViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, UIDropInteractionDelegate, UIGestureRecognizerDelegate, PlayerViewDelegate, SelectedPlayersViewDelegate {
 
     // MARK: - Class Properties ======================================================================== -
 
-    // Main state properties
-    private let scorecard = Scorecard.shared
+    // Whist view properties
+    override internal var scorecardView: ScorecardView? { return ScorecardView.selection }
+    public weak var controllerDelegate: ScorecardAppControllerDelegate?
     
     // Variables to decide how view behaves
     private var selectionMode: SelectionMode!
-    private var preCompletion: (([PlayerMO]?)->())? = nil
     private var completion: ((Bool, [PlayerMO]?)->())? = nil
-    private var gamePreviewDelegate: GamePreviewDelegate!
     private var backText: String = "Back"
     private var backImage: String = "back"
     private var thisPlayer: String?
@@ -58,7 +56,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private var addPlayerThumbnail: Bool = true
     private var thisPlayerView: PlayerView!
     private var lastPlayerMO: PlayerMO!
-    public let transition = FadeAnimator()
     private var refreshCollection = true
     private var alreadyDrawing = false
 
@@ -134,19 +131,27 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         self.setupButtons()
 
         // Check network
-        scorecard.checkNetworkConnection(button: nil, label: nil)
+        Scorecard.shared.checkNetworkConnection(button: nil, label: nil)
         
         // Set nofification for image download
         observer = setImageDownloadNotification()
         
         // Setup selected players view delegate
         self.selectedPlayersView.delegate = self
+        
+        // Notify app controller view has loaded
+        self.controllerDelegate?.didLoad()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         if self.firstTime {
+            // Initialise game
+             if self.selectionMode == .players {
+                 Scorecard.game = Game()
+             }
+            
             // Setup available players
             self.setupAvailablePlayers()
             self.unselectedList = self.availableList
@@ -158,19 +163,23 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         }
 
         // Check if in recovery mode - if so (and found all players) go straight to game setup
-        if scorecard.recoveryMode {
-            if selectedList.count == scorecard.currentPlayers {
+        if Scorecard.recovery.recovering {
+            if selectedList.count == Scorecard.game.currentPlayers {
                 self.continueAction()
             } else {
-                scorecard.recoveryMode = false
+                Scorecard.recovery.recovering = false
             }
         }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         self.rotated = true
-        self.scorecard.reCenterPopup(self)
+        Scorecard.shared.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
     
@@ -201,12 +210,22 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         
         // Decide if buttons enabled
         if self.firstTime || self.rotated {
+            if self.firstTime {
+                self.controllerDelegate?.didAppear()
+            }
             self.firstTime = false
             self.rotated = false
             formatButtons(false)
         }
         
         self.loadedView = false
+    }
+    
+    override internal func willDismiss() {
+        if observer != nil {
+            NotificationCenter.default.removeObserver(observer!)
+            observer = nil
+        }
     }
     
     // MARK: - CollectionView Overrides ================================================================ -
@@ -430,7 +449,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         }
         
         // Draw room
-        let selectedFrame = self.selectedPlayersView.drawRoom(thumbnailWidth: self.thumbnailWidth, thumbnailHeight: self.thumbnailHeight, players: self.scorecard.numberPlayers, directions: (ScorecardUI.landscapePhone() ? .none : .up), (ScorecardUI.landscapePhone() ? .none : .down))
+        let selectedFrame = self.selectedPlayersView.drawRoom(thumbnailWidth: self.thumbnailWidth, thumbnailHeight: self.thumbnailHeight, players: Scorecard.shared.maxPlayers, directions: (ScorecardUI.landscapePhone() ? .none : .up), (ScorecardUI.landscapePhone() ? .none : .down))
         
         // Reset height
         self.selectedHeight = selectedFrame.height
@@ -441,7 +460,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     private func showThisPlayer() {
         if let thisPlayer = self.thisPlayer {
-            if let playerMO = self.scorecard.findPlayerByEmail(thisPlayer) {
+            if let playerMO = Scorecard.shared.findPlayerByEmail(thisPlayer) {
                 var size: CGSize
                 let nameHeight: CGFloat = (self.showThisPlayerName ? 30.0 : 0.0)
                 self.lastPlayerMO = playerMO
@@ -494,15 +513,15 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     }
     
     func finishAction() {
-        NotificationCenter.default.removeObserver(observer!)
-        self.preCompletion?(nil)
-        self.dismiss()
+        self.willDismiss()
+        self.controllerDelegate?.didCancel()
     }
 
     func continueAction() {
-        self.completion?(false, self.selectedList.map {$0.playerMO})
         selectedList.sort(by: { $0.slot < $1.slot })
-        self.showGamePreview()
+        self.completion?(false, self.selectedList.map {$0.playerMO})
+        self.willDismiss()
+        self.controllerDelegate?.didProceed()
     }
     
     // MARK: - Initial setup routines ======================================================================== -
@@ -538,7 +557,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             bannerContinuationView.shape = .rectangle
 
             // Try to find players from last time
-            self.scorecard.loadGameDefaults()
             self.assignPlayers()
             if self.selectionMode == .invitees {
                 // Make sure host is correct
@@ -550,7 +568,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private func setupAvailablePlayers() {
         // Add players to available and unselected list
         self.availableList = []
-        for playerMO in scorecard.playerList {
+        for playerMO in Scorecard.shared.playerList {
             availableList.append(playerMO)
         }
     }
@@ -560,17 +578,18 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         
         self.selectedList = []
         
-        for slot in 0..<scorecard.numberPlayers {
+        for slot in 0..<Scorecard.shared.maxPlayers {
             // Clear any existing selection
             self.selectedPlayersView.clear(slot: slot)
         }
         
-        for playerNumber in 1...self.scorecard.currentPlayers {
+        for playerNumber in 1...Scorecard.game.currentPlayers {
             // Add in player if set up
-            let playerURI = scorecard.playerURI(scorecard.enteredPlayer(playerNumber).playerMO)
-            if playerURI != "" {
-                if let playerMO = availableList.first(where: { self.scorecard.playerURI($0) == playerURI }) {
-                    addSelection(playerMO, toSlot: playerNumber - 1, updateUnselectedCollection: false, animate: false)
+            if let playerURI = Scorecard.game.player(enteredPlayerNumber: playerNumber).playerMO?.uri {
+                if playerURI != "" {
+                    if let playerMO = availableList.first(where: { $0.uri == playerURI }) {
+                        addSelection(playerMO, toSlot: playerNumber - 1, updateUnselectedCollection: false, animate: false)
+                    }
                 }
             }
         }
@@ -579,10 +598,10 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     private func defaultOnlinePlayers() {
         let host = self.selectedPlayersView.playerViews[0].playerMO
         if host?.email != self.thisPlayer {
-            for slot in 0..<self.scorecard.numberPlayers {
+            for slot in 0..<Scorecard.shared.maxPlayers {
                 self.removeSelection(slot, updateUnselectedCollection: false, animate: false)
             }
-            self.addSelection(self.scorecard.findPlayerByEmail(self.thisPlayer!)!, toSlot: 0, updateUnselected: true, updateUnselectedCollection: false, animate: false)
+            self.addSelection(Scorecard.shared.findPlayerByEmail(self.thisPlayer!)!, toSlot: 0, updateUnselected: true, updateUnselectedCollection: false, animate: false)
         }
         // Don't allow change of host player
         self.selectedPlayersView.setEnabled(slot: 0, enabled: false)
@@ -774,7 +793,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     private func createPlayers(newPlayers: [PlayerDetail], createMO: Bool) {
         let addToSelected = (self.selectionMode == .single ? (newPlayers.count == 1) :
-                                                    (selectedList.count + newPlayers.count <= self.scorecard.numberPlayers))
+                                                    (selectedList.count + newPlayers.count <= Scorecard.shared.maxPlayers))
         
         for newPlayerDetail in newPlayers {
             var playerMO: PlayerMO?
@@ -806,7 +825,6 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
                 // Add to selection if there is space
                 if addToSelected {
                     if self.selectionMode == .single {
-                        self.preCompletion?([playerMO])
                         self.dismiss([playerMO])
                     } else {
                         self.addSelection(playerMO)
@@ -818,12 +836,8 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     // MARK: - Show other views ============================================================================================ -
     
-    private func showGamePreview() {
-        _ = GamePreviewViewController.show(from: self, selectedPlayers: selectedList.map{ $0.playerMO }, readOnly: false, delegate: self)
-    }
-    
     func addNewPlayer() {
-        if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
+        if Scorecard.activeSettings.syncEnabled && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
             self.showSelectPlayers()
         } else {
             PlayerDetailViewController.show(from: self, playerDetail: PlayerDetail(visibleLocally: true), mode: .create, sourceView: view,
@@ -882,69 +896,11 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             self.addNewPlayer()
         } else {
             if self.selectionMode == .single {
-                self.preCompletion?([playerView.playerMO!])
                 self.dismiss([playerView.playerMO!])
             } else {
                 self.addSelection(playerView.playerMO!)
             }
         }
-    }
-    
-    // MARK: - Game Preview Delegate handlers ============================================================================== -
-    
-    internal var gamePreviewHosting: Bool {
-        get {
-            return self.gamePreviewDelegate?.gamePreviewHosting ?? true
-        }
-    }
-    
-    internal var gamePreviewCanStartGame: Bool {
-        get {
-            return self.gamePreviewDelegate?.gamePreviewCanStartGame ?? true
-        }
-    }
-    
-    internal var gamePreviewWaitMessage: NSAttributedString {
-        get {
-            return self.gamePreviewDelegate?.gamePreviewWaitMessage ?? NSAttributedString()
-        }
-    }
-    
-    internal func gamePreviewInitialisationComplete(gamePreviewViewController: GamePreviewViewController) {
-        self.gamePreviewDelegate?.gamePreviewInitialisationComplete?(gamePreviewViewController: gamePreviewViewController)
-    }
-    
-    internal func gamePreviewCompletion(returnHome: Bool, completion: (()->())?) {
-        self.scorecard.loadGameDefaults()
-        self.selectedList = []
-        self.assignPlayers()
-        self.gamePreviewDelegate?.gamePreviewCompletion?(returnHome: returnHome, completion: {
-            if returnHome {
-                self.dismiss(returnHome: true, completion: completion)
-            } else {
-                completion?()
-            }
-        })
-    }
-    
-    internal func gamePreview(isConnected playerMO: PlayerMO) -> Bool {
-        return self.gamePreviewDelegate?.gamePreview?(isConnected: playerMO) ?? true
-    }
-    
-    internal func gamePreview(moved playerMO: PlayerMO, to slot: Int) {
-        self.gamePreviewDelegate?.gamePreview?(moved: playerMO, to: slot)
-    }
-    
-    internal func gamePreviewStartGame() {
-        self.gamePreviewDelegate?.gamePreviewStartGame?()
-    }
-    
-    internal func gamePreviewStopGame() {
-        self.gamePreviewDelegate?.gamePreviewStopGame?()
-    }
-    
-    internal func gamePreviewShakeGestureHandler() {
-        self.gamePreviewDelegate?.gamePreviewShakeGestureHandler?()
     }
     
     // MARK: - Drop delegate handlers ================================================================== -
@@ -1005,7 +961,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class func show(from viewController: CustomViewController, existing selectionViewController: SelectionViewController? = nil, mode: SelectionMode, thisPlayer: String? = nil, thisPlayerFrame: CGRect? = nil, showThisPlayerName: Bool = false, formTitle: String = "Selection", smallFormTitle: String? = nil, backText: String = "Back", backImage: String = "", bannerColor: UIColor? = nil, fullScreen: Bool = false, preCompletion: (([PlayerMO]?)->())? = nil, completion: ((Bool, [PlayerMO]?)->())? = nil, showCompletion: (()->())? = nil, gamePreviewDelegate: GamePreviewDelegate? = nil) -> SelectionViewController {
+    class func show(from viewController: ScorecardViewController, existing selectionViewController: SelectionViewController? = nil, mode: SelectionMode, thisPlayer: String? = nil, thisPlayerFrame: CGRect? = nil, showThisPlayerName: Bool = false, formTitle: String = "Selection", smallFormTitle: String? = nil, backText: String = "Back", backImage: String = "", bannerColor: UIColor? = nil, fullScreen: Bool = false, controllerDelegate: ScorecardAppControllerDelegate? = nil, completion: ((Bool, [PlayerMO]?)->())? = nil) -> SelectionViewController {
         var selectionViewController = selectionViewController
         
         if selectionViewController == nil {
@@ -1013,10 +969,7 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
             selectionViewController = storyboard.instantiateViewController(withIdentifier: "SelectionViewController") as? SelectionViewController
         }
         selectionViewController!.preferredContentSize = CGSize(width: 400, height: min(viewController.view.frame.height, 700))
-        
-        if fullScreen {
-            selectionViewController!.modalPresentationStyle = .fullScreen
-        }
+        selectionViewController!.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         selectionViewController!.selectionMode = mode
         selectionViewController!.thisPlayer = thisPlayer ?? ""
@@ -1027,25 +980,19 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
         selectionViewController!.bannerColor = bannerColor
         selectionViewController!.backText = backText
         selectionViewController!.backImage = backImage
-        selectionViewController!.preCompletion = preCompletion
         selectionViewController!.completion = completion
-        selectionViewController?.gamePreviewDelegate = gamePreviewDelegate
+        selectionViewController?.controllerDelegate = controllerDelegate
 
-        if let viewController = viewController as? ClientViewController {
-            // Animating from client - use special view controller
-            selectionViewController!.transitioningDelegate = viewController
-        }
-        
         // Let view controller know that this is a new 'instance' even though possibly re-using
         selectionViewController!.firstTime = true
         
-        viewController.present(selectionViewController!, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: showCompletion)
+        viewController.present(selectionViewController!, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true)
         
         return selectionViewController!
     }
     
     private func dismiss(returnHome: Bool = false, _ players: [PlayerMO]? = nil, completion: (()->())? = nil) {
-        self.dismiss(animated: true, completion: {
+        self.dismiss(animated: !returnHome, completion: {
             self.completion?(returnHome, players)
             completion?()
         })
@@ -1053,39 +1000,9 @@ class SelectionViewController: CustomViewController, UICollectionViewDelegate, U
     
     override internal func didDismiss() {
         NotificationCenter.default.removeObserver(observer!)
-        self.preCompletion?(nil)
         self.completion?(false, nil)
     }
 }
-
-extension SelectionViewController: UIViewControllerTransitioningDelegate {
-    
-    func animationController(
-        forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        
-        self.transition.presenting = true
-        if presented is GamePreviewViewController {
-            return self.transition
-        } else {
-            return nil
-        }
-    }
-    
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        if #available(iOS 13.0, *) {
-            // TODO transitions don't work on IOS 13
-            return nil
-        } else {
-            if dismissed is GamePreviewViewController {
-                self.transition.presenting = false
-                return self.transition
-            } else {
-                return nil
-            }
-        }
-    }
-}
-
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
 

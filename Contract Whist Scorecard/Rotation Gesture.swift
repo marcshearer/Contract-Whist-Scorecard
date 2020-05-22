@@ -36,15 +36,8 @@ extension HandViewController {
     }
     
     private func showDebugInfo() {
-        let message = "Selected round: \(Scorecard.shared.selectedRound)\nRound: \(self.state.round)\nCards: \(self.state.hand.toString())\nDealer: \(Scorecard.shared.dealerIs)\nTrick: \(self.state.trick!)\nCards played: \(self.state.trickCards.count)\nTo lead: \(self.state.toLead!)\nTo play: \(self.state.toPlay!)"
+        let message = "Selected round: \(Scorecard.game.selectedRound)\nRound: \(Scorecard.game.handState.round)\nCards: \(Scorecard.game.handState.hand.toString())\nDealer: \(Scorecard.game.dealerIs)\nTrick: \(Scorecard.game.handState.trick!)\nCards played: \(Scorecard.game.handState.trickCards.count)\nTo lead: \(Scorecard.game.handState.toLead!)\nTo play: \(Scorecard.game.handState.toPlay!)"
         self.alertMessage(message, title: "Hand Information", buttonText: "Continue")
-    }
-}
-
-extension ClientViewController {
-    
-    @IBAction internal func rotationGesture(recognizer:UIRotationGestureRecognizer) {
-        RotationGesture.adminMenu(recognizer: recognizer, message: "App state: \(self.appState?.rawValue ?? "Unknown")")
     }
 }
 

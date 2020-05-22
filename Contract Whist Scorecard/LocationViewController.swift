@@ -10,13 +10,14 @@ import UIKit
 import CoreLocation
 import MapKit
 
-class LocationViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, CLLocationManagerDelegate {
+class LocationViewController: ScorecardAppViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, CLLocationManagerDelegate {
 
+    // Whist view properties
+    override internal var scorecardView: ScorecardView? { return ScorecardView.location }
+    public weak var controllerDelegate: ScorecardAppControllerDelegate?
+    
     // MARK: - Class Properties ======================================================================== -
 
-    // Main state properties
-    private let scorecard = Scorecard.shared
-    
     // Properties to pass state
     private var useCurrentLocation = true
     private var mustChange = false
@@ -122,7 +123,7 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        scorecard.reCenterPopup(self)
+        Scorecard.shared.reCenterPopup(self)
         
         // Set colors of banner
         if let bannerColor = self.bannerColor {
@@ -141,7 +142,7 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        self.scorecard.motionBegan(motion, with: event)
+        Scorecard.shared.motionBegan(motion, with: event)
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -511,12 +512,13 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: CustomViewController, gameLocation: GameLocation, useCurrentLocation: Bool = true, mustChange: Bool = false, bannerColor: UIColor? = nil, completion: ((GameLocation?)->())? = nil) {
+    class public func show(from viewController: ScorecardViewController, gameLocation: GameLocation, useCurrentLocation: Bool = true, mustChange: Bool = false, bannerColor: UIColor? = nil, completion: ((GameLocation?)->())? = nil) {
         
         let storyboard = UIStoryboard(name: "LocationViewController", bundle: nil)
         let locationViewController = storyboard.instantiateViewController(withIdentifier: "LocationViewController") as! LocationViewController
         
         locationViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
+        locationViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         locationViewController.newLocation = gameLocation
         locationViewController.useCurrentLocation = useCurrentLocation
@@ -529,9 +531,11 @@ class LocationViewController: CustomViewController, UITableViewDataSource, UITab
     }
     
     private func dismiss(location: GameLocation? = nil) {
-        self.dismiss(animated: true, completion: {
-            self.completion?(location)
-        })
+        self.alertDecision(if: Scorecard.game.isHosting && location == nil, "Warning: This will clear the existing score card and start a new game.\n\n Are you sure you want to do this?", title: "Finish Game", okButtonText: "Confirm", okHandler: {
+                self.dismiss(animated: true, completion: {
+                    self.completion?(location)
+                })
+            })
     }
     
     override internal func didDismiss() {

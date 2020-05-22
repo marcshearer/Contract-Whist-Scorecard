@@ -8,13 +8,10 @@
 
 import UIKit
 
-class GetStartedViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource {
+class GetStartedViewController: ScorecardViewController, UITableViewDelegate, UITableViewDataSource {
 
     // MARK: - Class Properties ======================================================================== -
-    
-    // Main state properties
-    private let scorecard = Scorecard.shared
-    
+        
     // Variables to pass state
     private var completion: (()->()?)!
     
@@ -43,13 +40,13 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        scorecard.checkNetworkConnection(button: self.downloadPlayersButton, label: self.syncLabel, labelHeightConstraint: self.syncLabelHeightConstraint, labelHeight: self.syncLabelHeight, disable: true)
+        Scorecard.shared.checkNetworkConnection(button: self.downloadPlayersButton, label: self.syncLabel, labelHeightConstraint: self.syncLabelHeightConstraint, labelHeight: self.syncLabelHeight, disable: true)
         enableButtons()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        scorecard.reCenterPopup(self)
+        Scorecard.shared.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
     
@@ -83,7 +80,7 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
             cell = tableView.dequeueReusableCell(withIdentifier: "Get Started Cell", for: indexPath) as? GetStartedCell
             self.syncLabel = cell.headerSyncLabel
             self.syncLabelHeightConstraint = cell.headerSyncLabelHeightConstraint
-            self.scorecard.reflectNetworkConnection(button: self.downloadPlayersButton, label: self.syncLabel, labelHeightConstraint: self.syncLabelHeightConstraint, labelHeight: self.syncLabelHeight)
+            Scorecard.shared.reflectNetworkConnection(button: self.downloadPlayersButton, label: self.syncLabel, labelHeightConstraint: self.syncLabelHeightConstraint, labelHeight: self.syncLabelHeight, action: nil)
             
         case 1:
             // Sync Enabled
@@ -104,13 +101,13 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
             syncEmailTextField = cell.syncEmail
             
             // Set sync enabled field value
-            if scorecard.settingSyncEnabled {
+            if Scorecard.shared.settings.syncEnabled {
                 syncEnabledSelection.selectedSegmentIndex = 1
             } else {
                 syncEnabledSelection.selectedSegmentIndex = 0
             }
             
-            if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
+            if Scorecard.shared.settings.syncEnabled && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
                 cell.instructionLabel.text = "This app uses iCloud to sync data across devices. Click the info button to find out more. If you have used the app on another device enter your unique ID and press download to download your, and your co-players details and history. Otherwise press start playing and add players manually"
             } else {
                 cell.instructionLabel.text = "This app uses iCloud to sync data across devices. Click the info button to find out more. You must be be connected to the internet and be logged into iCloud to use this option. Otherwise press start playing and add players manually"
@@ -198,14 +195,14 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     
     func enableButtons() {
         if downloadPlayersButton != nil {
-            if scorecard.playerList.count == 0 && self.syncEmailTextField.text != nil && self.syncEmailTextField.text != "" && scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
+            if Scorecard.shared.playerList.count == 0 && self.syncEmailTextField.text != nil && self.syncEmailTextField.text != "" && Scorecard.shared.settings.syncEnabled && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
                 downloadPlayersButton.isEnabled(true)
             } else {
                 downloadPlayersButton.isEnabled(false)
             }
         }
         if syncEmailTextField != nil {
-            if scorecard.playerList.count == 0 && scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
+            if Scorecard.shared.playerList.count == 0 && Scorecard.shared.settings.syncEnabled && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
                 syncEmailTextField.isHidden = false
                 syncEmailTextField.layer.borderColor = Palette.textMessage.cgColor
                 syncEmailTextField.layer.borderWidth = 2
@@ -227,14 +224,14 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     }
     
     func warnShare() {
-        scorecard.warnShare(from: self, enabled: (self.syncEnabledSelection.selectedSegmentIndex == 1), handler: { (enabled: Bool) -> () in
+        Scorecard.shared.warnShare(from: self, enabled: (self.syncEnabledSelection.selectedSegmentIndex == 1), handler: { (enabled: Bool) -> () in
             // Set the segmented controller
             if enabled {
                 self.syncEnabledSelection.selectedSegmentIndex = 1
             } else {
                 self.syncEnabledSelection.selectedSegmentIndex = 0
             }
-            self.scorecard.checkNetworkConnection(button: self.downloadPlayersButton, label: self.syncLabel, labelHeightConstraint: self.syncLabelHeightConstraint, labelHeight: self.syncLabelHeight, disable: true)
+            Scorecard.shared.checkNetworkConnection(button: self.downloadPlayersButton, label: self.syncLabel, labelHeightConstraint: self.syncLabelHeightConstraint, labelHeight: self.syncLabelHeight, disable: true)
             self.enableButtons()
         })
     }
@@ -284,24 +281,25 @@ class GetStartedViewController: CustomViewController, UITableViewDelegate, UITab
     
     private func showSettings() {
         SettingsViewController.show(from: self, completion: {
-            if self.scorecard.settingSyncEnabled {
+            if Scorecard.shared.settings.syncEnabled {
                 self.syncEnabledSelection.selectedSegmentIndex = 1
             } else {
                 self.syncEnabledSelection.selectedSegmentIndex = 0
             }
-            self.scorecard.checkNetworkConnection(button: self.downloadPlayersButton, label: self.syncLabel, labelHeightConstraint: self.syncLabelHeightConstraint, labelHeight: self.syncLabelHeight, disable: true)
+            Scorecard.shared.checkNetworkConnection(button: self.downloadPlayersButton, label: self.syncLabel, labelHeightConstraint: self.syncLabelHeightConstraint, labelHeight: self.syncLabelHeight, disable: true)
             self.enableButtons()
         })
     }
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: CustomViewController, completion: (()->())? = nil){
+    class public func show(from viewController: ScorecardViewController, completion: (()->())? = nil) {
         
         let storyboard = UIStoryboard(name: "GetStartedViewController", bundle: nil)
         let getStartedViewController: GetStartedViewController = storyboard.instantiateViewController(withIdentifier: "GetStartedViewController") as! GetStartedViewController
         
         getStartedViewController.preferredContentSize = CGSize(width: 400, height: 700)
+        getStartedViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         getStartedViewController.completion = completion
         
         viewController.present(getStartedViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)

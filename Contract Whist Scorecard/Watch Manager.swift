@@ -11,7 +11,6 @@ import WatchConnectivity
 class WatchManager: NSObject, WCSessionDelegate {
     
     fileprivate var watchSession: WCSession?
-    private let scorecard = Scorecard.shared
     
     override init() {
         super.init()
@@ -24,35 +23,36 @@ class WatchManager: NSObject, WCSessionDelegate {
     
     public func updateScores() {
         if self.watchSession?.isPaired == true {
-            if self.scorecard.commsPurpose != .playing {
+            if Scorecard.shared.commsPurpose != .playing {
                 var dict: [String: Any] = [:]
                 var playerNames: [String] = []
                 var playerBids: [Int] = []
                 var playerMade: [Int] = []
                 var playerScores: [Int?] = []
                 var playerTotals: [Int] = []
-                var round:Int = scorecard.maxEnteredRound
-                var cards:Int = scorecard.roundCards(round)
-                let inProgress = (self.scorecard.gameInProgress && !self.scorecard.recovery.recoveryInProgress)
+                var round:Int = Scorecard.game.maxEnteredRound
+                var cards:Int = Scorecard.game.roundCards(round)
+                let inProgress = ((Scorecard.game?.inProgress ?? false) && !Scorecard.recovery.reloadInProgress)
                 
                 dict["inProgress"] = inProgress
                 
                 if inProgress {
-                    round = scorecard.maxEnteredRound
-                    cards = scorecard.roundCards(round)
-                    for playerNumber in 1...self.scorecard.currentPlayers {
-                        let player = self.scorecard.roundPlayer(playerNumber: playerNumber, round: round)
+                    round = Scorecard.game.maxEnteredRound
+                    cards = Scorecard.game.roundCards(round)
+                    for playerNumber in 1...Scorecard.game.currentPlayers {
+                        let player = Scorecard.game.player(roundPlayerNumber: playerNumber, round: round)
+                        let playerScore = Scorecard.game.scores.get(round: round, playerNumber: playerNumber, sequence: .round)
                         playerNames.append(player.playerMO!.name!)
-                        playerBids.append(player.bid(round) ?? -1)
-                        playerMade.append(player.made(round) ?? -1)
-                        playerScores.append(player.score(round) ?? -1)
-                        playerTotals.append(player.totalScore())
+                        playerBids.append(playerScore.bid ?? -1)
+                        playerMade.append(playerScore.made ?? -1)
+                        playerScores.append(Scorecard.game.scores.score(round: round, playerNumber: playerNumber, sequence: .round) ?? -1)
+                        playerTotals.append(Scorecard.game.scores.totalScore(playerNumber: playerNumber, sequence: .round))
                     }
                     
-                    dict["complete"] = (self.scorecard.gameInProgress && self.scorecard.gameComplete(rounds: scorecard.rounds))
+                    dict["complete"] = ((Scorecard.game?.inProgress ?? false) && Scorecard.game.gameComplete())
                     dict["round"] = round
                     dict["cards"] = cards
-                    dict["trumpSuit"] = self.scorecard.roundSuit(round, suits: self.scorecard.suits).toString()
+                    dict["trumpSuit"] = Scorecard.game.roundSuit(round).toString()
                     dict["playerNames"] = playerNames
                     dict["playerBids"] = playerBids
                     dict["playerMade"] = playerMade

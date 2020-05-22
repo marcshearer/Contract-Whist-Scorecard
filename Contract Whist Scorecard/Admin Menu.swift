@@ -23,7 +23,7 @@ class AdminMenu {
             }
         }
         
-        if availableOptions || (Scorecard.shared.commsDelegate != nil && Scorecard.shared.commsDelegate?.connectionMode != .loopback) {
+        if availableOptions || Scorecard.adminMode || (Scorecard.shared.commsDelegate != nil && Scorecard.shared.commsDelegate?.connectionMode != .loopback) {
             // There are som options to display
             
             let actionSheet = ActionSheet("Admin Options")
@@ -46,6 +46,12 @@ class AdminMenu {
                 })
                 actionSheet.add("Show connections", handler: {
                     Scorecard.shared.commsDelegate?.connectionInfo(message: message)
+                })
+            }
+            
+            if Scorecard.adminMode {
+                actionSheet.add("Leave admin mode", handler: {
+                    Scorecard.adminMode = false
                 })
             }
                         

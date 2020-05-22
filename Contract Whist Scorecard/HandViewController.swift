@@ -7,19 +7,15 @@
 //
 
 import UIKit
+import Combine
 
-protocol HandStatusDelegate {
+class HandViewController: ScorecardAppViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ScorecardAlertDelegate {
     
-    func handComplete()
-    
-}
-
-class HandViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ScorecardAlertDelegate {
+    // Whist app view properties
+    override internal var scorecardView: ScorecardView? { return ScorecardView.hand }
+    public weak var controllerDelegate: ScorecardAppControllerDelegate?
 
     // MARK: - Class Properties ======================================================================== -
-    
-    // Main state properties
-    private let scorecard = Scorecard.shared
     
     // Local state properties
     private var currentCards = 0
@@ -28,17 +24,18 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     private var firstHandRefresh = true
     private var firstTime = true
     private var resizing = false
-    internal var state: HandState!                  // local pointer to hand state object
     internal var enteredPlayerNumber: Int!          // local version of player number
     internal var round: Int!                        // local version of round number
     internal var suitEnabled = [Bool](repeating: false, count: 6)
     private var lastHand = false
     internal var handTestData = HandTestData()
     private var collectionHand: Hand!    // Mirror of the hand in state - updated to reflect in collection
+    private var bidSubscription: AnyCancellable?
+    private var cardSubscription: AnyCancellable?
+    private let whisper = Whisper()
     
     // Delegates
-    public var delegate: HandStatusDelegate!
-    public var computerPlayerDelegate: [ Int : ComputerPlayerDelegate? ]?
+    // TODO Reinstate public var computerPlayerDelegate: [ Int : ComputerPlayerDelegate? ]?
     
     // Component sizes
     private var viewWidth: CGFloat!
@@ -73,13 +70,6 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     private var playedCardCollectionTag: Int!
     
     // UI component pointers
-    private var playerCardView: [UIView?] = []
-    private var playerCardLabel: [UILabel?] = []
-    private var playerNameLabel: [UILabel?] = []
-    private var playerBidLabel: [UILabel?] = []
-    private var playerMadeLabel: [UILabel?] = []
-    private var statusPlayerBidLabel: [UILabel?] = []
-    internal var suitCollectionView = [UICollectionView?](repeating: nil, count: 6)
     private var bidButtonEnabled = [Bool](repeating: false, count: 15)
     
     // MARK: - IB Outlets -
@@ -119,11 +109,11 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction private func finishPressed(_ sender: UIButton) {
-        self.dismissHand()
+        self.proceed()
     }
     
     @IBAction private func roundSummaryPressed(_ sender: UIButton) {
-        self.showRoundSummary()
+        self.proceed()
     }
     
     @IBAction func lastHandPressed(_ sender: Any) {
@@ -150,28 +140,28 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         super.viewDidLoad()
         
         // Setup initial state and local references for global state
-        self.state = self.scorecard.handState
-        self.enteredPlayerNumber = self.state.enteredPlayerNumber
-        self.round = self.state.round
-        self.scorecard.selectedRound = self.round
-        self.scorecard.maxEnteredRound = self.round
+        self.enteredPlayerNumber = Scorecard.game.handState.enteredPlayerNumber
+        self.round = Scorecard.game.handState.round
+        Scorecard.game.selectedRound = self.round
+        Scorecard.game.maxEnteredRound = self.round
         
         // Setup grid tags
         bidCollectionTag = bidCollectionView.tag
         playedCardCollectionTag = playedCardCollectionView.tag
         
-        setupArrays()
-       
         self.mirrorHandSuitsToCollection()
-        self.currentCards = self.scorecard.roundCards(round, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
+        self.currentCards = Scorecard.game.roundCards(round)
         
         // Put suit on summary button
-        self.roundSummaryButton.setTitle(self.scorecard.roundSuit(self.round, suits: self.state.suits).toString(), for: .normal)
+        self.roundSummaryButton.setTitle(Scorecard.game.roundSuit(self.round).toString(), for: .normal)
         self.roundSummaryButton.titleLabel?.adjustsFontSizeToFitWidth = true
         
         // Setup over under
         self.overUnderButton.titleLabel?.adjustsFontSizeToFitWidth = true
         setupOverUnder()
+        
+        // Subscribe to score changes
+        self.setupBidCardSubscriptions()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -180,19 +170,13 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         viewHeight = view.safeAreaLayoutGuide.layoutFrame.height
         viewWidth = view.safeAreaLayoutGuide.layoutFrame.width
         
-        if self.scorecard.commsHandlerMode == .playHand {
-            // Notify client controller that hand display complete
-            self.scorecard.commsHandlerMode = .none
-            NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
-        }
-        
         // Take responsibility for alerts
-        self.scorecard.alertDelegate = self
+        Scorecard.shared.alertDelegate = self
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        scorecard.reCenterPopup(self)
+        Scorecard.shared.reCenterPopup(self)
         resizing = true
         view.setNeedsLayout()
     }
@@ -221,11 +205,16 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         super.viewWillDisappear(animated)
         
         // Give up responsibility for alerts
-        self.scorecard.alertDelegate = nil
+        Scorecard.shared.alertDelegate = nil
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        self.scorecard.motionBegan(motion, with: event)
+        Scorecard.shared.motionBegan(motion, with: event)
+    }
+    
+    override internal func willDismiss() {
+        self.handTableViewTrailingConstraint = nil
+        self.cancelBidCardSubscriptions()
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -246,7 +235,6 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         
         cell = tableView.dequeueReusableCell(withIdentifier: "Suit Table Cell", for: indexPath) as! SuitTableCell
         cell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row)
-        suitCollectionView[indexPath.row] = cell.cardCollection
         suitEnable(enable: suitEnabled[indexPath.row], suitNumber: indexPath.row + 1)
         
         self.checkTestWait()
@@ -274,7 +262,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             if bidMode == nil || bidMode {
                 return 0
             } else {
-                return self.scorecard.currentPlayers
+                return Scorecard.game.currentPlayers
             }
         } else {
             // Hand cards
@@ -320,20 +308,20 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             var toLead: Int!
             var cards: [Card]!
             if lastHand {
-                toLead = self.state.lastToLead
-                cards = self.state.lastCards
+                toLead = Scorecard.game.handState.lastToLead ?? Scorecard.game.handState.toLead
+                cards = Scorecard.game.handState.lastCards ?? Scorecard.game.handState.lastCards
             } else {
-                toLead = self.state.toLead
-                cards = self.state.trickCards
+                toLead = Scorecard.game.handState.toLead
+                cards = Scorecard.game.handState.trickCards
             }
             
             // Name
-            let playerNumber = ((indexPath.row + (toLead - 1)) % self.scorecard.currentPlayers) + 1
-            let player = self.scorecard.enteredPlayer(playerNumber)
+            let playerNumber = ((indexPath.row + (toLead - 1)) % Scorecard.game.currentPlayers) + 1
+            let player = Scorecard.game.player(enteredPlayerNumber: playerNumber)
             cell.playerNameLabel.text = player.playerMO!.name!
             
             // Bid and made
-            let bid = player.bid(self.round)
+            let bid = Scorecard.game.scores.get(round: self.round, playerNumber: playerNumber).bid
             if bid == nil {
                 cell.playerBidLabel.text = ""
             } else {
@@ -358,14 +346,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
                 cell.cardLabel.textColor = UIColor.white
                 cell.cardLabel.attributedText = cards[indexPath.row].toAttributedString()
             }
-            
-            // Save UI elements
-            self.playerCardView[indexPath.row] = cell.cardView
-            self.playerCardLabel[indexPath.row] = cell.cardLabel
-            self.playerNameLabel[indexPath.row] = cell.playerNameLabel
-            self.playerBidLabel[indexPath.row] = cell.playerBidLabel
-            self.playerMadeLabel[indexPath.row] = cell.playerMadeLabel
-            
+                    
             return cell
             
         } else {
@@ -419,7 +400,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
                     setupBidSize()
                     self.bidCollectionView.reloadData()
                 }
-                bidsEnable(true, blockRemaining: self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round) == self.scorecard.currentPlayers)
+                bidsEnable(true, blockRemaining: Scorecard.game.roundPlayerNumber(enteredPlayerNumber: self.enteredPlayerNumber, round: self.round) == Scorecard.game.currentPlayers)
             }
         } else {
             confirmCard(collectionView, indexPath)
@@ -428,19 +409,22 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     
     // MARK: - Main state controller  ================================================================ -
     
-    // Works out what next, enables and disables controls and gives instructions
-    
-    func stateController() {
+    /**
+        __Works out what next, enables and disables controls and gives instructions__
+        - parameters
+           - currentTrickCards: No of cards currently played. Normally taken from state, but passed in when playing a card from a remote hand
+    */
+    func stateController(updateState: Bool = true, currentTrickCards: Int = Scorecard.game.handState.trickCards.count) {
         // Check whether bidding finished
         var bids: [Int] = []
-        for playerNumber in 1...self.scorecard.currentPlayers {
-            let bid = scorecard.entryPlayer(playerNumber).bid(round)
+        for playerNumber in 1...Scorecard.game.currentPlayers {
+            let bid = Scorecard.game.scores.get(round: round, playerNumber: playerNumber, sequence: .entry).bid
             if bid != nil {
                 bids.append(bid!)
             }
         }
         
-        let newBidMode = (bids.count < self.scorecard.currentPlayers)
+        let newBidMode = (bids.count < Scorecard.game.currentPlayers)
         if self.bidMode != newBidMode {
             if newBidMode == false && !firstBidRefresh {
                 // About to exit bid mode - delay 1 second
@@ -449,11 +433,11 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
                 self.instructionLabel.text = "Bidding Complete"
                 self.instructionLabel.adjustsFontForContentSizeCategory = true
                 self.finishButton.isHidden = true
-                self.scorecard.commsHandlerMode = .viewTrick
+                self.controllerDelegate?.lock(true)
                 self.executeAfter(delay: 1.0) {
                     self.finishButton.isHidden = false
-                    self.scorecard.commsHandlerMode = .none
-                    NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
+                    self.controllerDelegate?.lock(false)
+                    NotificationCenter.default.post(name: .appControllerViewPresentingCompleted, object: self, userInfo: nil)
                     self.bidMode(newBidMode)
                     self.stateController()
                 }
@@ -466,69 +450,69 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         if bidMode {
         // Bidding
             cardsEnable(false)
-            if self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round) == bids.count + 1 {
+            if Scorecard.game.roundPlayerNumber(enteredPlayerNumber: self.enteredPlayerNumber, round: self.round) == bids.count + 1 {
                 // Your bid
-                bidsEnable(true, blockRemaining: bids.count == self.scorecard.currentPlayers - 1)
+                bidsEnable(true, blockRemaining: bids.count == Scorecard.game.currentPlayers - 1)
                 self.instructionLabel.text = "You to bid"
                 self.setInstructionsHighlight(to: true)
-                self.scorecard.alertUser(remindAfter: 10.0)
+                Scorecard.shared.alertUser(remindAfter: 10.0)
                 self.autoBid()
             } else {
                 bidsEnable(false)
-                self.instructionLabel.text = "\(self.scorecard.entryPlayer(bids.count + 1).playerMO!.name!) to bid"
+                self.instructionLabel.text = "\(Scorecard.game.player(entryPlayerNumber: bids.count + 1).playerMO!.name!) to bid"
                 self.setInstructionsHighlight(to: false)
                 // Get computer player to bid
-                self.computerPlayerDelegate?[self.scorecard.entryPlayer(bids.count + 1).playerNumber]??.autoBid()
+                // TODO reinstate self.computerPlayerDelegate?[Scorecard.game.player(entryPlayerNumber: bids.count + 1).playerNumber]??.autoBid()
             }
             setupOverUnder()
             lastHandButton.isHidden = true
             tableTopLongPress.isEnabled = false
             titleBarLongPress.isEnabled = false
         } else {
-            // Playing cards - save current cards in trick
-            let currentTrickCards = self.state.trickCards.count
-
             // Update state
-            self.scorecard.updateState(alertUser: false)
+            if updateState {
+                // Might have already been update when remote action reflected
+                Scorecard.shared.updateState(alertUser: false)
+            }
             
-            if currentTrickCards == self.scorecard.currentPlayers && self.state.trick > 1 {
+            if currentTrickCards == Scorecard.game.currentPlayers && Scorecard.game.handState.trick > 1 {
                 // Hand complete - update tricks made on screen
-                self.playerMadeLabel[self.state.winner! - 1]?.text = playerMadeText(self.state.toPlay!)
-                self.playerMadeLabel[self.state.winner! - 1]?.textColor = Palette.tableTopTextContrast
+                let playerMadeLabel = self.playedCardCell(Scorecard.game.handState.winner! - 1)?.playerMadeLabel
+                playerMadeLabel?.text = playerMadeText(Scorecard.game.handState.toPlay!)
+                playerMadeLabel?.textColor = Palette.tableTopTextContrast
                 
                 // Disable lookback
                 lastHandButton.isHidden = true
                 tableTopLongPress.isEnabled = false
                 titleBarLongPress.isEnabled = false
 
-                
-                if self.state.trick <= self.currentCards {
+                if Scorecard.game.handState.trick <= self.currentCards {
                     // Get ready for the new trick - won't refresh until next card played
                     self.nextCard()
-                    if self.state.toPlay != self.enteredPlayerNumber {
+                    if Scorecard.game.handState.toPlay != self.enteredPlayerNumber {
                         // Don't refresh (or exit) for at least 1 second
-                        self.scorecard.commsHandlerMode = .viewTrick
+                        self.controllerDelegate?.lock(true)
                         self.finishButton.isHidden = true
                         self.executeAfter(delay: 1.0) {
                             self.finishButton.isHidden = false
-                            self.scorecard.commsHandlerMode = .none
-                            NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
+                            self.controllerDelegate?.lock(false)
+                            NotificationCenter.default.post(name: .appControllerViewPresentingCompleted, object: self, userInfo: nil)
                         }
                     }	
                 } else {
                     // Hand finished
                     self.finishButton.isHidden = true
-                    self.scorecard.commsHandlerMode = .viewTrick
+                    self.controllerDelegate?.lock(true)
                     self.executeAfter(delay: 2.0) {
-                        // Return to scorepad after 2 seconds
-                            self.scorecard.commsHandlerMode = .dismiss
-                            self.dismissHand()
+                        // Proceed after 2 seconds
+                        self.controllerDelegate?.lock(false)
+                        self.proceed()
                     }
                 }
             } else {
                 // Work out who should play
-                let hasPlayed = (self.enteredPlayerNumber + (self.state.toLead! > self.enteredPlayerNumber ? self.scorecard.currentPlayers : 0)) >= (self.state.toLead! + self.state.trickCards.count)
-                lastHandButton.isHidden = (self.state.lastCards.count == 0 || !hasPlayed || self.state.lastToLead == nil)
+                let hasPlayed = (self.enteredPlayerNumber + (Scorecard.game.handState.toLead! > self.enteredPlayerNumber ? Scorecard.game.currentPlayers : 0)) >= (Scorecard.game.handState.toLead! + Scorecard.game.handState.trickCards.count)
+                lastHandButton.isHidden = (Scorecard.game.handState.lastCards.count == 0 || !hasPlayed || Scorecard.game.handState.lastToLead == nil)
                 tableTopLongPress.isEnabled = !lastHandButton.isHidden
                 titleBarLongPress.isEnabled = !lastHandButton.isHidden
 
@@ -537,24 +521,29 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         }
     }
     
+    private func proceed() {
+        self.willDismiss()
+        self.controllerDelegate?.didProceed()
+    }
+    
     private func executeAfter(delay: TimeInterval, closure: @escaping ()->()) {
         if self.firstTime {
             // Not finished layout - do it immediately
             closure()
         } else {
-            Utility.executeAfter(delay: (self.scorecard.autoPlayHands != 0 ? 0.1 : delay), completion: closure)
+            Utility.executeAfter(delay: (Scorecard.shared.autoPlayHands != 0 ? 0.1 : delay), completion: closure)
         }
     }
     
     private func nextCard() {
-        if self.state.toPlay == self.enteredPlayerNumber {
+        if Scorecard.game.handState.toPlay == self.enteredPlayerNumber {
             // Me to play
-            if self.state.trickCards.count == 0 {
+            if Scorecard.game.handState.trickCards.count == 0 {
                 // Me to lead - can lead anything
                 self.cardsEnable(true)
             } else {
-                let cardLed = self.state.trickCards[0]
-                let suitLed = self.state.hand.xrefSuit[cardLed.suit]
+                let cardLed = Scorecard.game.handState.trickCards[0]
+                let suitLed = Scorecard.game.handState.hand.xrefSuit[cardLed.suit]
                 if suitLed == nil || suitLed!.cards.count == 0 {
                     // Dont' have this suit - can play anything
                     self.cardsEnable(true)
@@ -565,14 +554,14 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             }
             self.instructionLabel.text = "You to play"
             self.setInstructionsHighlight(to: true)
-            self.scorecard.alertUser(remindAfter: 10.0)
+            Scorecard.shared.alertUser(remindAfter: 10.0)
             self.autoPlay()
         } else {
             self.cardsEnable(false)
-            self.instructionLabel.text = "\(self.scorecard.enteredPlayer(self.state.toPlay).playerMO!.name!) to play"
+            self.instructionLabel.text = "\(Scorecard.game.player(enteredPlayerNumber: Scorecard.game.handState.toPlay).playerMO!.name!) to play"
             self.setInstructionsHighlight(to: false)
             // Get computer player to play
-            self.computerPlayerDelegate?[self.state.toPlay]??.autoPlay()
+            // TODO Reinstate self.computerPlayerDelegate?[self.state.toPlay]??.autoPlay()
         }
     }
     
@@ -582,33 +571,52 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         // Must be in bid mode - simply fill in the right bid
         // Note that the player number sent will be the enterd player number and hence must be converted
         if bidMode != nil && bidMode && round == self.round {
-            let entryPlayerNumber = self.scorecard.entryPlayerNumber(enteredPlayerNumber, round: self.round)
+            let entryPlayerNumber = Scorecard.game.roundPlayerNumber(enteredPlayerNumber: enteredPlayerNumber, round: self.round)
             setupPlayerBidText(entryPlayerNumber: entryPlayerNumber, animate:true)
             self.stateController()
         }
     }
     
     public func reflectCardPlayed(round: Int, trick: Int, playerNumber: Int, card: Card) {
-        if !bidMode && !self.state.finished && round == self.round && trick == self.state.trick && playerNumber == self.state.toPlay {
-            // Play card
-            self.refreshCardPlayed(card: card)
+        self.refreshCardPlayed(card: card)
+    }
+    
+    public func reflectCurrentState(currentTrickCards: Int) {
+        self.stateController(updateState: false, currentTrickCards: currentTrickCards)
+
+        // Refresh played cards
+        self.playedCardCollectionView.reloadData()
+    }
+    
+    // MARK: - Bid / card publisher subscription =========================================================== -
+    
+    private func setupBidCardSubscriptions() {
+        self.bidSubscription = Scorecard.shared.subscribeBid { [unowned self] (round, enteredPlayerNumber, bid) in
+            self.reflectBid(round: round, enteredPlayerNumber: enteredPlayerNumber)
+            // Check if this makes it your bid
+            if (enteredPlayerNumber % Scorecard.game.currentPlayers) + 1 == Scorecard.game.handState.enteredPlayerNumber {
+                Scorecard.shared.alertUser(remindAfter: 10.0)
+            }
         }
+        
+        // TODO Remove self.cardSubscription = Scorecard.shared.subscribeCard { [unowned self] (round, trick, enteredPlayerNumber, card) in
+        //    self.reflectCardPlayed(round: round, trick: trick, playerNumber: enteredPlayerNumber, card: card)
+        // }
+    }
+    
+    private func cancelBidCardSubscriptions() {
+        self.bidSubscription?.cancel()
+        self.bidSubscription = nil
+        self.cardSubscription?.cancel()
+        self.cardSubscription = nil
     }
     
     // MARK: - Form Presentation / Handling Routines =================================================== -
     
-    func setupArrays() {
-        statusPlayerBidLabel.append(statusPlayer1BidLabel)
-        statusPlayerBidLabel.append(statusPlayer2BidLabel)
-        statusPlayerBidLabel.append(statusPlayer3BidLabel)
-        statusPlayerBidLabel.append(statusPlayer4BidLabel)
-        for _ in 1...scorecard.currentPlayers {
-            playerCardView.append(nil)
-            playerCardLabel.append(nil)
-            playerNameLabel.append(nil)
-            playerBidLabel.append(nil)
-            playerMadeLabel.append(nil)
-        }
+    public func refreshAll() {
+        handTableView.reloadData()
+        bidCollectionView.reloadData()
+        playedCardCollectionView.reloadData()
     }
     
     func setButtonFormat() {
@@ -713,7 +721,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     }
     
     func bidsEnable(_ enable: Bool, blockRemaining: Bool = false) {
-        let remaining = scorecard.remaining(playerNumber: self.scorecard.entryPlayerNumber(self.enteredPlayerNumber, round: self.round), round: self.round, mode: .bid, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
+        let remaining = Scorecard.game.remaining(playerNumber: Scorecard.game.roundPlayerNumber(enteredPlayerNumber: self.enteredPlayerNumber, round: self.round), round: self.round, mode: .bid)
         for bid in 0..<bidButtonEnabled.count {
             if !enable || (blockRemaining && (bid == remaining && (moreMode || bid <= maxBidButton))) {
                 bidButtonEnabled[bid] = false
@@ -739,25 +747,25 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     }
     
     func cardsEnable(_ enable: Bool, suit matchSuit: Suit! = nil) {
-        if self.state.hand.handSuits != nil && self.state.hand.handSuits.count > 0 {
-            for suitNumber in 1...self.state.hand.handSuits.count {
+        if Scorecard.game.handState.hand.handSuits != nil && Scorecard.game.handState.hand.handSuits.count > 0 {
+            for suitNumber in 1...Scorecard.game.handState.hand.handSuits.count {
                 suitEnable(enable: enable, suitNumber: suitNumber, matchSuit: matchSuit)
             }
         }
     }
     
     func suitEnable(enable: Bool, suitNumber: Int, matchSuit: Suit! = nil) {
-        let suit = self.state.hand.handSuits[suitNumber - 1]
+        let suit = Scorecard.game.handState.hand.handSuits[suitNumber - 1]
         if enable && suit.cards.count != 0 && (matchSuit == nil || matchSuit == suit.cards[0].suit) {
-            suitCollectionView[suitNumber-1]?.isUserInteractionEnabled = true
-            suitCollectionView[suitNumber-1]?.alpha = 1.0
+            suitCollectionView(suitNumber-1)?.isUserInteractionEnabled = true
+            suitCollectionView(suitNumber-1)?.alpha = 1.0
             suitEnabled[suitNumber-1] = true
         } else {
-            suitCollectionView[suitNumber-1]?.isUserInteractionEnabled = false
+            suitCollectionView(suitNumber-1)?.isUserInteractionEnabled = false
             if bidMode {
-                suitCollectionView[suitNumber-1]?.alpha = 0.9
+                suitCollectionView(suitNumber-1)?.alpha = 0.9
             } else {
-                suitCollectionView[suitNumber-1]?.alpha = 0.5
+                suitCollectionView(suitNumber-1)?.alpha = 0.5
             }
             suitEnabled[suitNumber-1] = false
         }
@@ -773,7 +781,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         // Set hand height
         self.handHeightConstraint.constant = handViewHeight
         
-        for suit in self.state.hand.handSuits {
+        for suit in Scorecard.game.handState.hand.handSuits {
             maxSuitCards = max(maxSuitCards, suit.cards.count)
         }
         
@@ -782,7 +790,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             loop+=1
         
             var handRows = 0
-            for suit in self.state.hand.handSuits {
+            for suit in Scorecard.game.handState.hand.handSuits {
                 handRows += Int((suit.cards.count - 1) / handCardsPerRow) + 1
             }
             handRows = max(4, handRows)
@@ -814,15 +822,15 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         statusTextFontSize = min(24.0, (statusWidth - 16.0) / 7.0)
         statusRoundLabel.font = UIFont.boldSystemFont(ofSize: statusTextFontSize)
         statusOverUnderLabel.font = UIFont.boldSystemFont(ofSize: statusTextFontSize)
-        for playerNumber in 1...self.scorecard.currentPlayers {
-            statusPlayerBidLabel[playerNumber - 1]!.font = UIFont.systemFont(ofSize: statusTextFontSize - 2.0)
+        for playerNumber in 1...Scorecard.game.currentPlayers {
+            statusPlayerBidLabel(playerNumber)!.font = UIFont.systemFont(ofSize: statusTextFontSize - 2.0)
         }
     }
     
     func setupTabletopSize() {
         // Set tabletop height
-        let tableTopViewWidth: CGFloat = (self.viewWidth / (ScorecardUI.landscapePhone() ? 2 : 1)) - playedCardCollectionHorizontalMargins - (CGFloat(self.scorecard.currentPlayers-1) * playedCardSpacing)
-        tabletopCellWidth = tableTopViewWidth / CGFloat(self.scorecard.currentPlayers)
+        let tableTopViewWidth: CGFloat = (self.viewWidth / (ScorecardUI.landscapePhone() ? 2 : 1)) - playedCardCollectionHorizontalMargins - (CGFloat(Scorecard.game.currentPlayers-1) * playedCardSpacing)
+        tabletopCellWidth = tableTopViewWidth / CGFloat(Scorecard.game.currentPlayers)
         let maxTabletopCardHeight: CGFloat = tabletopViewHeight - playedCardCollectionVerticalMargins - playedCardStats
         let maxTabletopCardWidth = tabletopCellWidth - 8
         if maxTabletopCardHeight > maxTabletopCardWidth * CGFloat(3.0/2.0){
@@ -838,7 +846,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     
     func confirmCard(_ collectionView: UICollectionView, _ indexPath: IndexPath) {
         
-        let timeLeft = self.scorecard.cancelReminder()
+        let timeLeft = Scorecard.shared.cancelReminder()
         
         let cell = collectionView.cellForItem(at: indexPath)
         let card =  Card(fromNumber: cell!.tag)
@@ -853,16 +861,17 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         label.textAlignment = .center
         ScorecardUI.roundCorners(label)
         
-        ConfirmPlayedViewController.show(title: "Confirm Card", content: label, sourceView: self.handSourceView, confirmText: "Play card", cancelText: "Change card", offsets: (0.5, nil), backgroundColor: Palette.tableTop, confirmHandler: { self.playCard(card: card) }, cancelHandler: { self.scorecard.restartReminder(remindAfter: timeLeft) })
+        ConfirmPlayedViewController.show(title: "Confirm Card", content: label, sourceView: self.handSourceView, confirmText: "Play card", cancelText: "Change card", offsets: (0.5, nil), backgroundColor: Palette.tableTop, confirmHandler: { self.playCard(card: card) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
     }
     
     func playCard(card: Card) {
         // Update data structures
         let round = self.round!
-        let trick = self.state.trick!
-        self.scorecard.sendCardPlayed(round: round, trick: trick, playerNumber: self.enteredPlayerNumber, card: card)
-        self.scorecard.playCard(card: card)
+        let trick = Scorecard.game.handState.trick!
+        Scorecard.shared.sendCardPlayed(round: round, trick: trick, playerNumber: self.enteredPlayerNumber, card: card)
+        Scorecard.shared.playCard(card: card)
         self.refreshCardPlayed(card: card)
+        self.stateController()
     }
     
     func refreshCardPlayed(card: Card) {
@@ -871,7 +880,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
 
         // Remove the card from your hand
         if let (suitNumber, cardNumber) = self.collectionHand.find(card: card) {
-            let collectionView = suitCollectionView[suitNumber]!
+            let collectionView = suitCollectionView(suitNumber)!
             let indexPath = IndexPath(row: cardNumber, section: 0)
             collectionView.performBatchUpdates({
                 collectionView.deleteItems(at: [indexPath])
@@ -879,26 +888,13 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
             })
         }
         
-        // Clear previous trick
-        if self.state.trickCards.count == 1 {
-            // Clear previous trick
-            self.playedCardCollectionView.reloadData()
-        }
-    
-        // Show the card on the tabletop
-        let currentCard = self.state.trickCards.count - 1
-        if currentCard < self.scorecard.currentPlayers {
-            self.playerCardView[currentCard]!.isHidden = false
-            self.playerCardLabel[currentCard]!.textColor = Palette.cardFace
-            self.playerCardLabel[currentCard]!.attributedText = card.toAttributedString()
-        }
-        
-        self.stateController()
+        // Refresh played cards
+        self.playedCardCollectionView.reloadData()
     }
     
     func confirmBid(bid: Int) {
         
-        let timeLeft = self.scorecard.cancelReminder()
+        let timeLeft = Scorecard.shared.cancelReminder()
         
         let label = UILabel()
         _ = Constraint.setWidth(control: label, width: 50)
@@ -909,12 +905,13 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         label.textAlignment = .center
         ScorecardUI.roundCorners(label)
         
-        ConfirmPlayedViewController.show(title: "Confirm Bid", content: label, sourceView: self.handSourceView, confirmText: "Confirm bid", cancelText: "Change bid", offsets: (0.5, nil), confirmHandler: { self.makeBid(bid) }, cancelHandler: { self.scorecard.restartReminder(remindAfter: timeLeft) })
+        ConfirmPlayedViewController.show(title: "Confirm Bid", content: label, sourceView: self.handSourceView, confirmText: "Confirm bid", cancelText: "Change bid", offsets: (0.5, nil), confirmHandler: { self.makeBid(bid) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
     }
     
     func makeBid(_ bid: Int) {
-        _ = self.scorecard.enteredPlayer(enteredPlayerNumber).setBid(round, bid)
-        let entryPlayerNumber = self.scorecard.entryPlayerNumber(enteredPlayerNumber, round: self.round)
+        _ = Scorecard.game.scores.set(round: round, playerNumber: enteredPlayerNumber, bid: bid)
+        Scorecard.shared.sendBid(playerNumber: enteredPlayerNumber, round: round)
+        let entryPlayerNumber = Scorecard.game.roundPlayerNumber(enteredPlayerNumber: enteredPlayerNumber, round: self.round)
         setupPlayerBidText(entryPlayerNumber: entryPlayerNumber, animate: true)
         if moreMode {
             moreMode = false
@@ -930,13 +927,13 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     
     func playerMadeText(_ playerNumber: Int) -> String {
         var result: String
-        let made = self.state.made[playerNumber - 1]
+        let made = Scorecard.game.handState.made[playerNumber - 1]
         if made == 0 {
             result = ""
         } else {
             result = "Made \(made)"
-            if self.state.bonus2 {
-                let twos = self.state.twos[playerNumber - 1]
+            if Scorecard.activeSettings.bonus2 {
+                let twos = Scorecard.game.handState.twos[playerNumber - 1]
                 if twos > 0 {
                     for _ in 1...twos {
                         result = result + "*"
@@ -950,58 +947,41 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     // MARK: - Utility Routines ======================================================================= -
     
     func setupOverUnder() {
-        let totalRemaining = scorecard.remaining(playerNumber: 0, round: scorecard.selectedRound, mode: Mode.bid, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce)
+        let totalRemaining = Scorecard.game.remaining(playerNumber: 0, round: Scorecard.game.selectedRound, mode: Mode.bid)
 
         overUnderButton.setTitle("\(totalRemaining >= 0 ? "-" : "+")\(abs(Int64(totalRemaining)))", for: .normal)
         overUnderButton.setTitleColor((totalRemaining >= 0 ? Palette.contractUnder : Palette.contractOver), for: .normal)
 
-        if !self.scorecard.roundStarted(scorecard.selectedRound) {
+        if !Scorecard.shared.roundStarted(Scorecard.game.selectedRound) {
             statusOverUnderLabel.text = ""
         } else {
             statusOverUnderLabel.textColor = (totalRemaining == 0 ? Palette.contractEqual : (totalRemaining > 0 ? Palette.contractUnderLight : Palette.contractOver))
             statusOverUnderLabel.text = " \(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")"
         }
         statusRoundLabel.textColor = UIColor.white
-        statusRoundLabel.attributedText = self.scorecard.roundTitle(round, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce, suits: self.state.suits)
+        statusRoundLabel.attributedText = Scorecard.game.roundTitle(round)
     }
     
     func setupBidText() {
         
-        for entryPlayerNumber in 1...scorecard.currentPlayers {
+        for entryPlayerNumber in 1...Scorecard.game.currentPlayers {
             setupPlayerBidText(entryPlayerNumber: entryPlayerNumber)
         }
     }
     
     func setupPlayerBidText(entryPlayerNumber: Int, animate: Bool = false) {
-        let bid = scorecard.entryPlayer(entryPlayerNumber).bid(self.round)
-        let name = scorecard.entryPlayer(entryPlayerNumber).playerMO!.name!
+        let bid = Scorecard.game.scores.get(round: self.round, playerNumber: entryPlayerNumber, sequence: .entry).bid
+        let name = Scorecard.game.player(entryPlayerNumber: entryPlayerNumber).playerMO!.name!
         if bid != nil {
-            statusPlayerBidLabel[entryPlayerNumber - 1]!.text = "\(name) bid \(bid!)"
+            statusPlayerBidLabel(entryPlayerNumber)!.text = "\(name) bid \(bid!)"
         } else {
-            statusPlayerBidLabel[entryPlayerNumber - 1]!.text = "\(name)"
+            statusPlayerBidLabel(entryPlayerNumber)!.text = "\(name)"
         }
 
     }
     
-    private func dismissHand() {
-        self.dismiss(animated: true, completion: {
-            self.dismissCompletion()
-        })
-    }
-    
-    override internal func didDismiss() {
-        self.self.dismissCompletion()
-    }
-    
-    private func dismissCompletion() {
-        self.delegate?.handComplete()
-        if self.scorecard.commsHandlerMode == .dismiss {
-            self.scorecard.commsHandlerMode = .none
-            NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
-        }
-    }
-    
     internal func alertUser(reminder: Bool) {
+        self.whisper.show("Buzz", hideAfter: 2.0)
         if reminder {
             self.instructionView.alertFlash(duration: 0.3, repeatCount: 3, backgroundColor: Palette.tableTop)
             self.bannerPaddingView.alertFlash(duration: 0.3, repeatCount: 3, backgroundColor: Palette.tableTop)
@@ -1011,7 +991,7 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
     private func mirrorHandSuitsToCollection() {
         // Copy the hand suits to the version used by the collection (inside performBatchUpdates)
         // Need to copy individual values rather than pointers
-        self.collectionHand = self.scorecard.handState.hand.copy() as? Hand
+        self.collectionHand = Scorecard.game.handState.hand.copy() as? Hand
     }
     
     func setInstructionsHighlight(to highlight: Bool) {
@@ -1024,10 +1004,53 @@ class HandViewController: CustomViewController, UITableViewDataSource, UITableVi
         self.roundSummaryButton.setTitleColor(nonHighlightTextColor, for: .normal)
     }
     
-    // MARK: - Show other views =================================================================== -
+    // MARK: - Helper routines to access cells and contents ================================================================= -
     
-    private func showRoundSummary() {
-        _ = RoundSummaryViewController.show(from: self, rounds: self.state.rounds, cards: self.state.cards, bounce: self.state.bounce, suits: self.state.suits)
+    private func playedCardCell(_ currentCard: Int) -> PlayedCardCollectionCell? {
+        return playedCardCollectionView.cellForItem(at: IndexPath(item: currentCard, section: 0)) as? PlayedCardCollectionCell
+    }
+    
+    private func statusPlayerBidLabel(_ playerNumber: Int) -> UILabel? {
+        switch playerNumber {
+        case 1:
+            return self.statusPlayer1BidLabel
+        case 2:
+            return self.statusPlayer2BidLabel
+        case 3:
+            return self.statusPlayer3BidLabel
+        case 4:
+            return self.statusPlayer4BidLabel
+        default:
+            return nil
+        }
+    }
+    
+    internal func suitCollectionView(_ suitNumber: Int) -> UICollectionView? {
+        let cell = self.handTableView.cellForRow(at: IndexPath(row: suitNumber, section: 0)) as? SuitTableCell
+        return cell?.cardCollection
+    }
+
+    // MARK: - Function to present this view ==============================================================
+    
+    class func show(from viewController: ScorecardViewController, sourceView: UIView, existing handViewController: HandViewController? = nil, controllerDelegate: ScorecardAppControllerDelegate? = nil, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil, animated: Bool = true) -> HandViewController {
+        var handViewController: HandViewController! = handViewController
+        
+        if handViewController == nil {
+            let storyboard = UIStoryboard(name: "HandViewController", bundle: nil)
+            handViewController = storyboard.instantiateViewController(withIdentifier: "HandViewController") as? HandViewController
+        }
+        
+        handViewController!.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
+        handViewController!.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
+        
+        handViewController!.controllerDelegate = controllerDelegate
+        // TODO Reinstate handViewController!.computerPlayerDelegate = computerPlayerDelegate
+        
+        Utility.mainThread("playHand", execute: {
+            viewController.present(handViewController!, sourceView: sourceView, animated: animated, completion: nil)
+        })
+        
+        return handViewController
     }
 }
 
@@ -1073,11 +1096,6 @@ class HandState {
     public let enteredPlayerNumber : Int
     public var round: Int
     private var players: Int
-    public var rounds: Int
-    public var cards: [Int]
-    public var bounce: Bool
-    public var bonus2: Bool
-    public var suits: [Suit]
     private var dealerIs: Int
     public var trick: Int!
     public var trickCards: [Card]!
@@ -1091,16 +1109,10 @@ class HandState {
     public var winner: Int?
     public var finished: Bool!
     
-    init(enteredPlayerNumber: Int, round: Int, dealerIs: Int, players: Int, rounds: Int, cards: [Int], bounce: Bool, bonus2: Bool, suits: [Suit],
-         trick: Int? = nil, made: [Int]? = nil, twos: [Int]? = nil, trickCards: [Card]? = nil, toLead: Int? = nil, lastCards: [Card]! = nil, lastToLead: Int! = nil) {
+    init(enteredPlayerNumber: Int, round: Int, dealerIs: Int, players: Int, trick: Int? = nil, made: [Int]? = nil, twos: [Int]? = nil, trickCards: [Card]? = nil, toLead: Int? = nil, lastCards: [Card]! = nil, lastToLead: Int! = nil) {
         self.enteredPlayerNumber = enteredPlayerNumber
         self.round = round
         self.players = players
-        self.rounds = rounds
-        self.cards = cards
-        self.bounce = bounce
-        self.bonus2 = bonus2
-        self.suits = suits
         self.dealerIs = dealerIs
         self.reset()
         // Optional elements

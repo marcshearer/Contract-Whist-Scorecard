@@ -12,7 +12,7 @@ import MessageUI
 class MultipeerLogger : CommsBrowserDelegate, CommsStateDelegate, CommsDataDelegate {
     
     static let logger = MultipeerLogger()
-    private var service: CommsClientHandlerDelegate?
+    private var service: CommsClientServiceDelegate?
     private var loggerList: [String : MultipeerLoggerEntry] = [:]
     private var logHistory: [LogEntry] = []
     private var historyElement = 0

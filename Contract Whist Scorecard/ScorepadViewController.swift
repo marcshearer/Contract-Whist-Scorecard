@@ -1,4 +1,4 @@
-    //
+//
 //  ScorepadViewController.swift
 //  Contract Whist Scorecard
 //
@@ -8,34 +8,32 @@
 
 import UIKit
 import CoreData
+import Combine
 
 enum ScorepadMode {
-    case display
-    case amend
+    case scoring
+    case hosting
+    case joining
+    case viewing
 }
     
-class ScorepadViewController: CustomViewController,
+class ScorepadViewController: ScorecardAppViewController,
                               UITableViewDataSource, UITableViewDelegate,
                               UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,
-                              HandStatusDelegate, ScorecardAlertDelegate {
+                              ScorecardAlertDelegate {
+ 
     
+    // Whist view properties
+    override internal var scorecardView: ScorecardView? { return ScorecardView.scorepad }
+    public weak var controllerDelegate: ScorecardAppControllerDelegate?
+        
     // MARK: - Class Properties ======================================================================== -
-    
-    // Main state properties
-    internal let scorecard = Scorecard.shared
-    private var recovery: Recovery!
     
     // Properties to pass state
     public var scorepadMode: ScorepadMode!
-    public var rounds: Int!
-    public var cards: [Int]!
-    public var bounce: Bool!
-    public var bonus2: Bool!
-    public var suits: [Suit]!
     public var parentView: UIView!
     public var recoveryMode = false
     public var computerPlayerDelegate: [Int : ComputerPlayerDelegate?]?
-    public var completion: ((Bool)->())? = nil
     
     // Cell dimensions
     private let minCellHeight: CGFloat = 30
@@ -72,13 +70,12 @@ class ScorepadViewController: CustomViewController,
     private var entryViewController: EntryViewController!
     private var lastNavBarHeight:CGFloat = 0.0
     private var lastViewHeight:CGFloat = 0.0
-    private var firstTimeAppear = true
     private var rotated = false
     private var observer: NSObjectProtocol?
     private var firstGameSummary = true
     private var paddingGradientLayer: [CAGradientLayer] = []
-    public let transition = FadeAnimator()
-    
+    private var scoresSubscription: AnyCancellable?
+
     // UI component pointers
     private var imageCollectionView: UICollectionView!
     public var roundSummaryViewController: RoundSummaryViewController!
@@ -101,60 +98,37 @@ class ScorepadViewController: CustomViewController,
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction internal func scorePressed(_ sender: Any) {
-        if scorepadMode == .amend {
-            makeEntry(true)
-        } else if self.scorecard.isHosting || self.scorecard.hasJoined {
-            if scorecard.gameComplete(rounds: self.rounds) {
-                // Online game complete - go to game summary
-                self.showGameSummary()
-            } else {
-                // Online game in progress - go back to hand
-                self.playHand()
-            }
-        } else if self.scorecard.isViewing {
-            if scorecard.gameComplete(rounds: self.rounds) {
-                // Online game complete - go to game summary
-                self.showGameSummary()
-            }
-        }
+        self.willDismiss()
+        self.controllerDelegate?.didProceed()
     }
     
     @IBAction private func finishGamePressed(_ sender: Any) {
-        if scorepadMode == .amend || self.scorecard.isHosting {
-            scorecard.finishGame(from: self, rounds: self.rounds, resetOverrides: true, completion: {
-                self.tidyUp()
-                self.completion?(false)
+        Utility.debugMessage("scorepad", "Cancel pressed")
+        if scorepadMode == .scoring || scorepadMode == .hosting {
+            self.alertDecision("Warning: This will clear the existing score card and start a new game.\n\n Are you sure you want to do this?", title: "Finish Game", okButtonText: "Confirm", okHandler: {
+            
+                Scorecard.shared.exitScorecard(advanceDealer: false, resetOverrides: true) {
+                    Utility.mainThread {
+                        self.willDismiss()
+                        self.controllerDelegate?.didCancel()
+                    }
+                }
             })
         } else  {
-            self.alertDecision(if: self.scorecard.hasJoined, "Warning: This will mean you exit from the game. You can rejoin by selecting the 'Play Game' option in the Home menu", okButtonText: "Exit",
+            self.alertDecision(if: scorepadMode == .joining, "Warning: This will mean you exit from the game.\n\nAre you sure you want to do this?", okButtonText: "Confirm",
                 okHandler: {
-                    self.tidyUp()
-                    self.dismiss(returnHome: true)
+                    self.willDismiss()
+                    self.controllerDelegate?.didCancel()
                 })
         }
     }
     
     @IBAction private func tapGesture(recognizer: UITapGestureRecognizer) {
-        if scorepadMode != .amend {
-            if self.scorecard.isHosting || self.scorecard.hasJoined {
-                // Online game in progress - go back to hand
-                if !self.scorecard.handState.finished && self.scorecard.handState.hand != nil {
-                    self.playHand()
-                }
-            } else {
-                // Popup the round summary unless we have a made for the current round or we haven't got any bids yet
-                if self.scorecard.roundStarted(self.scorecard.maxEnteredRound) &&
-                        !self.scorecard.roundMadeStarted(self.scorecard.maxEnteredRound) {
-                    self.showRoundSummary()
-                } else if scorecard.gameComplete(rounds: self.rounds) {
-                    self.showGameSummary()
-                }
-            }
-        }
+        self.controllerDelegate?.didProceed()
     }
     
     @IBAction private func rightSwipe(recognizer:UISwipeGestureRecognizer) {
-        if scorepadMode == .amend {
+        if scorepadMode == .scoring {
             if recognizer.state == .ended && !finishButton.isHidden && finishButton.isEnabled {
                 finishGamePressed(self.finishButton!)
             }
@@ -162,7 +136,7 @@ class ScorepadViewController: CustomViewController,
     }
     
     @IBAction private func leftSwipe(recognizer:UISwipeGestureRecognizer) {
-        if scorepadMode == .amend {
+        if scorepadMode == .scoring {
             if recognizer.state == .ended {
                 self.scorePressed(scoreEntryButton!)
             }
@@ -174,38 +148,20 @@ class ScorepadViewController: CustomViewController,
     override internal func viewDidLoad() {
         super.viewDidLoad()
         
-        // Set flag to show that sharing available
-        scorecard.inScorepad = true
-        
-        // Link to recovery class
-        recovery = scorecard.recovery
-        
         // Set nofification for image download
         observer = setImageDownloadNotification()
         
         // Don't sleep
         UIApplication.shared.isIdleTimerDisabled = true
+        
+        // Subscribe to score changes
+        self.setupScoresSubscription()
     }
     
     override internal func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if firstTimeAppear {
-            firstTimeAppear = false
-            // Link to location
-            if (scorepadMode == .amend || self.scorecard.isHosting) && !self.scorecard.isPlayingComputer && self.scorecard.settingSaveLocation &&
-                (self.scorecard.gameLocation == nil || self.scorecard.gameLocation.description == nil || self.scorecard.gameLocation.description == "" ||
-                    (self.scorecard.selectedRound == 1 &&
-                        !self.scorecard.roundStarted(self.scorecard.selectedRound))) {
-                self.getLocation()
-            } else {
-                
-                self.saveNewGame()
-                self.playHand(setState: true, recoveryMode: recoveryMode)
-            }
-        }
-
-        if scorepadMode != .amend {
+        if scorepadMode != .scoring {
             headerTableView.isUserInteractionEnabled = false
             footerTableView.isUserInteractionEnabled = false
             tapGestureRecognizer.isEnabled = false
@@ -214,14 +170,9 @@ class ScorepadViewController: CustomViewController,
         }
         formatButtons()
         
-        if self.scorecard.commsHandlerMode == .scorepad {
-            // Notify client controller that scorepad display complete
-            self.scorecard.commsHandlerMode = .none
-            NotificationCenter.default.post(name: .clientHandlerCompleted, object: self, userInfo: nil)
-        }
         self.view.setNeedsLayout()
         
-        self.scorecard.alertDelegate = self
+        Scorecard.shared.alertDelegate = self
     }
     
     override internal func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -249,11 +200,22 @@ class ScorepadViewController: CustomViewController,
     
     override internal func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.scorecard.alertDelegate = nil
+        Scorecard.shared.alertDelegate = nil
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        self.scorecard.motionBegan(motion, with: event)
+        Scorecard.shared.motionBegan(motion, with: event)
+    }
+    
+    override internal func willDismiss() {
+        // Tidy up before exiting
+        self.cancelScoresSubscription()
+        if observer != nil {
+            NotificationCenter.default.removeObserver(self.observer!)
+            observer = nil
+        }
+        Scorecard.shared.scorepadHeaderHeight = 0
+        UIApplication.shared.isIdleTimerDisabled = false
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -290,7 +252,7 @@ class ScorepadViewController: CustomViewController,
             rows = headerRows
         case 2:
             // Body contains a row for each round
-            rows = self.rounds
+            rows = Scorecard.game.rounds
         default:
             // Footer
             rows = 1
@@ -359,12 +321,26 @@ class ScorepadViewController: CustomViewController,
     private func updateImage(objectID: NSManagedObjectID) {
         // Find any cells containing an image which has just been downloaded asynchronously
         Utility.mainThread {
-            let index = self.scorecard.scorecardIndex(objectID)
+            let index = Scorecard.game?.scorecardIndex(objectID)
             if index != nil {
                 // Found it - reload the cell
                 self.imageCollectionView.reloadItems(at: [IndexPath(row: index!+1, section: 0)])
             }
         }
+    }
+    
+    // MARK: - Scores publisher subscription =========================================================== -
+    
+    private func setupScoresSubscription() {
+        self.scoresSubscription = Scorecard.game?.scores.subscribe { (round, enteredPlayerNumber) in
+            Utility.mainThread {
+                self.updatePlayerCells(round: round, playerNumber: Scorecard.game.scorecardPlayerNumber(enteredPlayerNumber: enteredPlayerNumber))
+            }
+        }
+    }
+    
+    private func cancelScoresSubscription() {
+        self.scoresSubscription?.cancel()
     }
     
     // MARK: - Form Presentation / Handling Routines =================================================== -
@@ -375,7 +351,7 @@ class ScorepadViewController: CustomViewController,
         
         // Set cell widths
         roundWidth = round(size.width > CGFloat(600) ? size.width / CGFloat(10) : 60)
-        cellWidth = CGFloat(Int(round((size.width - roundWidth) / (CGFloat(2.0) * CGFloat(scorecard.currentPlayers)))))
+        cellWidth = CGFloat(Int(round((size.width - roundWidth) / (CGFloat(2.0) * CGFloat(Scorecard.game.currentPlayers)))))
         
         if cellWidth <= combinedTriggerWidth {
             cellWidth *= 2
@@ -388,7 +364,7 @@ class ScorepadViewController: CustomViewController,
             imageRowHeight = 50.0
         }
         
-        roundWidth = size.width - (CGFloat(bodyColumns * scorecard.currentPlayers) * cellWidth)
+        roundWidth = size.width - (CGFloat(bodyColumns * Scorecard.game.currentPlayers) * cellWidth)
         
         // work out what appears in which header row
         imageRow = -1
@@ -410,7 +386,7 @@ class ScorepadViewController: CustomViewController,
         // Note headerHeight does not include the player name row since we haven't
         // worked this out yet
         
-        var floatCellHeight: CGFloat = (size.height - imageRowHeight - navigationBar.frame.height) / CGFloat(self.rounds+2) // Adding 2 for name row in header and total row
+        var floatCellHeight: CGFloat = (size.height - imageRowHeight - navigationBar.frame.height) / CGFloat(Scorecard.game.rounds + 2) // Adding 2 for name row in header and total row
         floatCellHeight.round()
         
         cellHeight = CGFloat(Int(floatCellHeight))
@@ -420,7 +396,7 @@ class ScorepadViewController: CustomViewController,
             headerHeight += CGFloat(cellHeight)
             bannerContinuationHeight = 0.0
         } else {
-            headerHeight = size.height - (CGFloat(self.rounds+1) * cellHeight) - navigationBar.frame.height
+            headerHeight = size.height - (CGFloat(Scorecard.game.rounds+1) * cellHeight) - navigationBar.frame.height
             imageRowHeight = min(headerHeight - minCellHeight, 50.0)
             bannerContinuationHeight = headerHeight - imageRowHeight - minCellHeight
         }
@@ -429,18 +405,8 @@ class ScorepadViewController: CustomViewController,
         headerViewHeightConstraint.constant = headerHeight - bannerContinuationHeight
         footerViewHeightConstraint.constant = CGFloat(cellHeight) + self.view.safeAreaInsets.bottom
 
-        scoresHeight = min(ScorecardUI.screenHeight, CGFloat(self.scorecard.rounds) * cellHeight, 600)
-        scorecard.saveScorepadHeights(headerHeight: headerHeight + navigationBar.frame.height + bannerContinuationHeight, bodyHeight: scoresHeight, footerHeight: CGFloat(cellHeight) + self.view.safeAreaInsets.bottom)
-        
-        // If moving to 1 column clear out stored bid cell pointers
-        if bodyColumns == 1 {
-            for playerNumber in 1...scorecard.currentPlayers {
-                for round in 1...self.rounds {
-                    scorecard.scorecardPlayer(playerNumber).setBidCell(round, cell: nil)
-                }
-            }
-        }
-
+        scoresHeight = min(ScorecardUI.screenHeight, CGFloat(Scorecard.game.rounds) * cellHeight, 600)
+        Scorecard.shared.saveScorepadHeights(headerHeight: headerHeight + navigationBar.frame.height + bannerContinuationHeight, bodyHeight: scoresHeight, footerHeight: CGFloat(cellHeight) + self.view.safeAreaInsets.bottom)
     }
     
     private func setupBorders() {
@@ -471,17 +437,6 @@ class ScorepadViewController: CustomViewController,
         }
     }
     
-    private func makeEntry(_ fromButton: Bool = false) {
-        if scorepadMode == .amend {
-            if scorecard.gameComplete(rounds: self.rounds) && fromButton {
-                self.showGameSummary()
-            } else {
-                self.showEntry()
-            }
-            rotated = false
-        }
-    }
-    
     private func returnFromEntry(editedRound: Int? = nil) {
         if rotated {
             headerTableView.reloadData()
@@ -494,8 +449,8 @@ class ScorepadViewController: CustomViewController,
     public func highlightCurrentDealer(_ highlight: Bool) {
         if headerRows > 0 {
             for row in 0...headerRows-1 {
-                let headerCell = self.headerCell(playerNumber: scorecard.isScorecardDealer(), row: row)
-                highlightDealer(headerCell: headerCell, playerNumber: scorecard.isScorecardDealer(), row: row, forceClear: !highlight)
+                let headerCell = self.headerCell(playerNumber: Scorecard.shared.isScorecardDealer(), row: row)
+                highlightDealer(headerCell: headerCell, playerNumber: Scorecard.shared.isScorecardDealer(), row: row, forceClear: !highlight)
             }
         }
     }
@@ -509,7 +464,7 @@ class ScorepadViewController: CustomViewController,
     private func highlightDealer(headerCell: ScorepadCollectionViewCell, playerNumber: Int, row: Int, forceClear: Bool = false) {
         if playerNumber >= 0 {
             headerCell.scorepadCellGradientLayer?.removeFromSuperlayer()
-            if scorecard.isScorecardDealer() == playerNumber && !forceClear {
+            if Scorecard.shared.isScorecardDealer() == playerNumber && !forceClear {
                 if row == playerRow {
                     headerCell.scorepadCellLabel?.textColor = Palette.gameBannerText
                     headerCell.scorepadCellGradientLayer = ScorecardUI.gradient(headerCell, color: Palette.gameBanner, gradients: playerGradient)
@@ -530,265 +485,143 @@ class ScorepadViewController: CustomViewController,
     }
 
     private func formatButtons() {
-        scoreEntryButton.isHidden = true
         
-        if scorecard.gameComplete(rounds: self.rounds) {
+        if Scorecard.game.gameComplete() {
             // Game complete - allow return to game summary
             scoreEntryButton.setTitle("Scores")
-            scoreEntryButton.isHidden = false
             
-        } else if scorepadMode == .amend {
-            // Amend mode - enter score
+        } else if scorepadMode == .scoring {
+            // Scoring mode - enter score
             scoreEntryButton.setTitle("Score")
-            scoreEntryButton.isHidden = false
             
-        } else if self.scorecard.isHosting {
+        } else if scorepadMode == .hosting  || scorepadMode == .joining {
             // Hosting a shared game
-            if self.scorecard.handState != nil && self.scorecard.handState.finished {
-                scoreEntryButton.setTitle("Deal")
-            } else {
                 scoreEntryButton.setTitle("Play")
-            }
-            scoreEntryButton.isHidden = false
             
-        } else if self.scorecard.hasJoined {
-            // Joined a shared game
-            if !self.scorecard.handState.finished && self.scorecard.handState.hand != nil && self.scorecard.handState.hand.cards.count != 0 {
-                scoreEntryButton.setTitle("Play")
-                scoreEntryButton.isHidden = false
-            }
-            
-        } else if self.scorecard.isViewing {
-            // Viewing a game
-            scoreEntryButton.isHidden = true
         }
         
-        finishButton.isHidden = false
-        if self.scorecard.isHosting || self.scorecard.hasJoined {
-            if scorecard.gameComplete(rounds: self.rounds) {
-                finishButton.isHidden = true
-            } else {
-                finishButton.setTitle("", for: .normal)
+        scoreEntryButton.isHidden = !(self.controllerDelegate?.canProceed ?? true)
+        finishButton.isHidden = !(self.controllerDelegate?.canCancel ?? true)
+    }
+    
+    private func cellForItemAt(_ tableView: UITableView, row: Int, playerNumber: Int, mode: Mode, bodyColumns:Int) -> ScorepadCollectionViewCell? {
+        var cell: ScorepadCollectionViewCell?
+        if let tableViewCell = tableView.cellForRow(at: IndexPath(row: row, section: 0)) as? ScorepadTableViewCell {
+            if let collectionView = tableViewCell.scorepadCollectionView {
+                var item: Int?
+                switch mode {
+                case Mode.bid:
+                    if bodyColumns > 1 {
+                        item = (playerNumber * bodyColumns) - 1
+                    }
+                case Mode.made:
+                    item = (playerNumber * bodyColumns)
+                default:
+                    break
+                }
+                if let item = item {
+                    cell = collectionView.cellForItem(at: IndexPath(item: item, section: 0)) as? ScorepadCollectionViewCell
+                }
             }
-        } else {
-            if self.scorecard.gameInProgress {
-                finishButton.setTitle("", for: .normal)
+        }
+        return cell
+    }
+    
+    private func headerCell(row: Int, playerNumber: Int) -> ScorepadCollectionViewCell? {
+        return cellForItemAt(headerTableView, row: row, playerNumber: playerNumber, mode: .made, bodyColumns: 1)
+    }
+    
+    private func bodyCell(round: Int, playerNumber: Int, mode: Mode) -> ScorepadCollectionViewCell? {
+        return cellForItemAt(bodyTableView, row: round - 1, playerNumber: playerNumber, mode: mode, bodyColumns: self.bodyColumns)
+    }
+
+    private func footerCell(playerNumber: Int) -> ScorepadCollectionViewCell? {
+        return cellForItemAt(footerTableView, row: 0, playerNumber: playerNumber, mode: .made, bodyColumns: 1)
+    }
+    
+    public func updateBodyCell(round: Int, playerNumber: Int, mode: Mode) {
+
+        if let cell = self.bodyCell(round: round, playerNumber: playerNumber, mode: mode) {
+            self.updateBodyCell(cell: cell, round: round, playerNumber: playerNumber, mode: mode)
+        }
+        self.updateTotalCell(playerNumber: playerNumber)
+    }
+    
+    public func updateBodyCell(cell: ScorepadCollectionViewCell, round: Int, playerNumber: Int, mode: Mode) {
+
+        let playerScore = Scorecard.game.scores.get(round: round, playerNumber: playerNumber, sequence: .scorecard)
+    
+        switch mode {
+        case Mode.bid:
+            if Scorecard.game.scores.error(round: round) {
+                Palette.inverseErrorStyle(cell.scorepadCellLabel, errorCondtion: true)
             } else {
-                finishButton.setTitle("", for: .normal)
+                Palette.alternateStyle(cell.scorepadCellLabel, setFont: false)
             }
+            cell.scorepadCellLabel.text = (playerScore.bid  == nil ? "" : "\(playerScore.bid!)")
+            
+        case Mode.made:
+            if Scorecard.game.scores.error(round: round) {
+                Palette.inverseErrorStyle(cell.scorepadCellLabel, errorCondtion: true)
+            } else {
+                if playerScore.bid != nil && playerScore.bid == playerScore.made {
+                    Palette.madeContractStyle(cell.scorepadCellLabel, setFont: false)
+                } else {
+                    if bodyColumns <= 1 {
+                        // No bid label so don't need to differentiate
+                        Palette.normalStyle(cell.scorepadCellLabel, setFont: false)
+                    } else {
+                        Palette.normalStyle(cell.scorepadCellLabel, setFont: false)
+                    }
+                }
+                let imageView = cell.scorepadImage!
+                if (playerScore.twos ?? 0) != 0 {
+                    if playerScore.twos == 1 {
+                        imageView.image = UIImage(named: "two")!
+                    } else {
+                        imageView.image = UIImage(named: "twos")!
+                    }
+                } else {
+                    imageView.image = nil
+                }
+                imageView.superview!.bringSubviewToFront(imageView)
+            }
+            let playerTotal = Scorecard.game.scores.score(round: round, playerNumber: playerNumber, sequence: .scorecard)
+            cell.scorepadCellLabel.text = (playerTotal  == nil ? "" : "\(playerTotal!)")
+        default:
+            break
         }
     }
     
+    private func updatePlayerCells(round: Int, playerNumber: Int) {
+            self.updateBodyCell(round: round, playerNumber: playerNumber, mode: Mode.bid)
+            self.updateBodyCell(round: round, playerNumber: playerNumber, mode: Mode.made)
+            self.updateBodyCell(round: round, playerNumber: playerNumber, mode: Mode.twos)
+    }
+    
+    private func updateRoundCells(_ round: Int) {
+        for playerLoop in 1...Scorecard.game.currentPlayers {
+            self.updatePlayerCells(round: round, playerNumber: playerLoop)
+        }
+    }
+    
+    public func updateTotalCell(playerNumber: Int) {
+
+        if let cell = self.footerCell(playerNumber: playerNumber) {
+            self.updateTotalCell(cell: cell, playerNumber: playerNumber)
+        }
+    }
+    
+    private func updateTotalCell(cell: ScorepadCollectionViewCell, playerNumber: Int) {
+        let playerTotal = Scorecard.game.scores.totalScore(playerNumber: playerNumber, sequence: .scorecard)
+        cell.scorepadCellLabel.text = "\(playerTotal)"
+    }
+        
     // MARK: - Utility Routines ======================================================================== -
     
-    private func getLocation() {
-        if self.scorecard.isHosting && self.scorecard.commsDelegate?.connectionProximity == .online {
-            // Online - location not appropriate
-            self.scorecard.gameLocation = GameLocation()
-            self.scorecard.gameLocation.description = "Online"
-            self.saveNewGame()
-            self.playHand(setState: true)
-        } else {
-            // Prompt for location
-            Utility.mainThread {
-                // Get the other hands started
-                self.saveNewGame()
-                self.playHand(setState: true, recoveryMode: self.recoveryMode, show: false)
-                // Link to location view
-                self.showLocation()
-            }
-        }
-    }
-    
-    public func returnToCaller() {
-        // Called from another view controller to return control
-        self.tidyUp()
-        self.dismiss()
-    }
-    
-    private func saveNewGame() {
-        if !self.scorecard.hasJoined && !self.scorecard.isViewing {
-            self.scorecard.gameDatePlayed = Date()
-            self.scorecard.gameUUID = UUID().uuidString
-            self.saveLocationAndDate()
-            self.recovery.saveOverride()
-        }
-    }
-    
-    private func saveLocationAndDate() {
-         self.recovery.saveLocationAndDate()
-    }
-    
-    private func tidyUp() {
-        // Tidy up before exiting
-        NotificationCenter.default.removeObserver(self.observer!)
-        self.scorecard.scorepadHeaderHeight = 0
-        scorecard.inScorepad = false
-        UIApplication.shared.isIdleTimerDisabled = false
-    }
-    
-    private func playHand(setState: Bool = false, recoveryMode: Bool = false, show: Bool = true) {
-        // Send players if hosting or sharing
-        if self.scorecard.isHosting {
-            self.scorecard.setGameInProgress(true)
-            if setState {
-                // Need to set hand state
-                self.scorecard.handState = HandState(enteredPlayerNumber: 1, round: self.scorecard.maxEnteredRound, dealerIs: self.scorecard.dealerIs, players: self.scorecard.currentPlayers, rounds: self.rounds, cards: self.cards, bounce: self.bounce, bonus2: self.bonus2, suits: self.suits)
-                if recoveryMode && self.scorecard.deal != nil {
-                    // Hand has been recovered - Check if finished
-                    var finished = true
-                    for hand in self.scorecard.deal.hands {
-                        if hand.cards.count != 0 {
-                            finished = false
-                        }
-                    }
-                    if finished {
-                        self.scorecard.handState.hand = nil
-                    } else {
-                        self.scorecard.handState.hand = self.scorecard.deal.hands[0]
-                    }
-                }
-                self.scorecard.sendPlay(rounds: self.rounds, cards: self.cards, bounce: self.bounce, bonus2: self.bonus2, suits: self.suits)
-            } else if scorecard.handState.finished {
-                // Clear last hand
-                scorecard.handState.hand = nil
-            }
-        }
-        self.scorecard.setGameInProgress(true, save: true)
-        self.scorecard.dealHand()
-        if show {
-            self.scorecard.playHand(from: self, sourceView: self.scorepadView, computerPlayerDelegate: self.computerPlayerDelegate)
-        }
-        if setState {
-            // Bids already entered - resend all scores
-            self.scorecard.sendScores()
-            if recoveryMode && self.scorecard.isHosting {
-                // Recovering - resend hand state to other players
-                self.recovery.loadCurrentTrick()
-                self.recovery.loadLastTrick()
-                self.scorecard.sendHandState()
-            }
-        }
-    }
-    
-    public func handComplete() {
-        self.scorecard.handViewController = nil
-        self.formatButtons()
-        if self.scorecard.handState.finished {
-            if self.scorecard.gameComplete(rounds: self.rounds) {
-                // Game complete
-                if self.scorecard.isHosting {
-                    _ = self.scorecard.savePlayers(rounds: self.rounds)
-                }
-                self.showGameSummary()
-            } else if self.scorecard.handState.round != self.rounds {
-                // Reset state and prepare for next round
-                self.highlightCurrentDealer(false)
-                self.scorecard.handState.round += 1
-                self.scorecard.selectedRound = self.scorecard.handState.round
-                self.scorecard.maxEnteredRound = self.scorecard.handState.round
-                self.highlightCurrentDealer(true)
-                self.scorecard.handState.reset()
-                self.autoDeal()
-            }
-        }
-    }
-    
-    // MARK: - Show other views ======================================================= -
-    
-    private func showLocation() {
-        LocationViewController.show(from: self, gameLocation: self.scorecard.gameLocation, useCurrentLocation: true, completion: { (location) in
-            if let location = location {
-                // Copy location back
-                location.copy(to: self.scorecard.gameLocation)
-                // Resave updated location
-                self.saveLocationAndDate()
-                // Play hand
-                self.scorecard.playHand(from: self, sourceView: self.scorepadView, computerPlayerDelegate: self.computerPlayerDelegate)
-            } else {
-                // Exit
-                self.dismiss()
-            }
-        })
-    }
-    
-    private func showEntry() {
-        self.notAllowedInDisplay()
-        
-        let reeditMode = scorecard.roundPlayer(playerNumber: scorecard.currentPlayers, round: scorecard.selectedRound).score(scorecard.selectedRound) != nil ? true : false
-        
-        entryViewController = EntryViewController.show(from: self, existing: self.entryViewController, reeditMode: reeditMode, rounds: self.rounds, cards: self.cards, bounce: self.bounce, bonus2: self.bonus2, suits: self.suits, completion:
-            { (linkToGameSummary) in
-                if linkToGameSummary {
-                    self.formatButtons()
-                    _ = self.scorecard.savePlayers(rounds: self.rounds)
-                    self.scorecard.sendScores()
-                    self.showGameSummary()
-                } else {
-                    let editedRound = self.scorecard.selectedRound
-                    _ = self.scorecard.savePlayers(rounds: self.rounds)
-                    self.highlightCurrentDealer(false)
-                    self.scorecard.advanceMaximumRound(rounds: self.rounds)
-                    self.highlightCurrentDealer(true)
-                    self.returnFromEntry(editedRound: editedRound)
-                }
-            })
-    }
-    
-    private func showReview(round: Int) {
-        ReviewViewController.show(from: self, round: round, thisPlayer: self.scorecard.handState.enteredPlayerNumber) {
-            self.formatButtons()
-        }
-    }
-    
-    public func showRoundSummary() {
-        
-        self.roundSummaryViewController = RoundSummaryViewController.show(from: self, existing: roundSummaryViewController, rounds: self.rounds, cards: self.cards, bounce: self.bounce, suits: self.suits)
-    }
-    
-    public func showGameSummary() {
-        self.gameSummaryViewController = GameSummaryViewController.show(from: self, firstGameSummary: self.firstGameSummary, gameSummaryMode: (self.scorecard.isHosting ? .amend : self.scorepadMode), rounds: self.rounds, completion: { (returnMode) in
-            switch returnMode {
-            case .resume:
-                self.firstGameSummary=false
-                self.gameSummaryViewController = nil
-                self.returnFromEntry()
-            case .newGame:
-                // New game started - refresh the screen
-                self.recovery.saveInitialValues()
-                self.scorecard.setGameInProgress(true)
-                self.firstGameSummary = true
-                self.headerTableView.reloadData()
-                self.bodyTableView.reloadData()
-                self.footerTableView.reloadData()
-                self.saveNewGame()
-                self.formatButtons()
-                if self.scorecard.isHosting {
-                    // Start new game
-                    self.playHand(setState: true)
-                } else {
-                    // Re-send players to sharing device to trigger new game
-                    self.scorecard.sendPlay(rounds: self.rounds, cards: self.cards, bounce: self.bounce, bonus2: self.bonus2, suits: self.suits)
-                }
-            case .returnHome:
-                self.dismiss(returnHome: true)
-            }
-        })
-        
-    }
-    
-    private func notAllowedInDisplay() {
-        if scorepadMode != .amend {
-            // Shouldn't ever invoke this from display mode
-            Utility.getActiveViewController()?.alertMessage("Unexpected action in scorepad display mode", title: "Error", okHandler: {
-                self.dismiss(returnHome: true)
-            })
-        }
-    }
-   
     // MARK: - Function to present this view ==============================================================
     
-    class func show(from viewController: CustomViewController, existing scorepadViewController: ScorepadViewController? = nil, scorepadMode: ScorepadMode? = nil, rounds: Int? = nil, cards: [Int]? = nil, bounce: Bool? = nil, bonus2: Bool!, suits: [Suit]? = nil, recoveryMode: Bool = false, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil ,completion: ((Bool)->())? = nil) -> ScorepadViewController {
+    class func show(from viewController: ScorecardViewController, existing scorepadViewController: ScorepadViewController? = nil, scorepadMode: ScorepadMode? = nil, recoveryMode: Bool = false, controllerDelegate: ScorecardAppControllerDelegate? = nil, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil) -> ScorepadViewController {
         var scorepadViewController: ScorepadViewController! = scorepadViewController
         
         if scorepadViewController == nil {
@@ -796,41 +629,26 @@ class ScorepadViewController: CustomViewController,
             scorepadViewController = storyboard.instantiateViewController(withIdentifier: "ScorepadViewController") as? ScorepadViewController
         }
         
+        scorepadViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         scorepadViewController.parentView = viewController.view
         scorepadViewController.scorepadMode = scorepadMode
-        scorepadViewController.rounds = rounds
-        scorepadViewController.cards = cards
-        scorepadViewController.bounce = bounce
-        scorepadViewController.bonus2 = bonus2
-        scorepadViewController.suits = suits
         scorepadViewController.recoveryMode = recoveryMode
         scorepadViewController.computerPlayerDelegate = computerPlayerDelegate
-        scorepadViewController.completion = completion
+        scorepadViewController.controllerDelegate = controllerDelegate
         
-        viewController.present(scorepadViewController, sourceView: nil, animated: true)
+        viewController.present(scorepadViewController, sourceView: nil, animated: !recoveryMode)
         
         return scorepadViewController
     }
     
-    private func dismiss(returnHome: Bool = false) {
-        self.dismiss(animated: true, completion: {
-            self.completion?(returnHome)
-        })
-    }
-    
-    override internal func shouldDismiss() -> Bool {
-        self.finishGamePressed(self)
-        return false
-    }
-
     // MARK: - CollectionView Overrides ================================================================ -
 
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
         if collectionView.tag >= 1000000 {
-            return scorecard.currentPlayers + 1
+            return Scorecard.game.currentPlayers + 1
         } else {
-            return (scorecard.currentPlayers * bodyColumns) + 1
+            return (Scorecard.game.currentPlayers * bodyColumns) + 1
         }
     }
     
@@ -903,7 +721,7 @@ class ScorepadViewController: CustomViewController,
                 // Thumbnail and/or name
                  player = column
                 
-                let playerDetail = scorecard.scorecardPlayer(player).playerMO
+                let playerDetail = Scorecard.game.player(scorecardPlayerNumber: player).playerMO
                 
                 if row == imageRow {
                     // Thumbnail cell
@@ -922,7 +740,7 @@ class ScorepadViewController: CustomViewController,
                 if row == playerRow {
                     // Setup label
                     headerCell.scorepadCellLabel.textColor = Palette.tableTopTextContrast
-                    headerCell.scorepadCellLabel.text = scorecard.scorecardPlayer(player).playerMO!.name!
+                    headerCell.scorepadCellLabel.text = Scorecard.game.player(scorecardPlayerNumber: player).playerMO!.name!
                     if column != 0 {
                         headerCell.scorepadLeftLineGradientLayer = ScorecardUI.gradient(headerCell.scorepadLeftLine, color: Palette.grid, gradients: playerGradient, overrideWidth: thickLineWeight, overrideHeight: self.minCellHeight)
                     }
@@ -1006,9 +824,8 @@ class ScorepadViewController: CustomViewController,
             } else {
                 // Row values
                 player = column
-                footerCell.scorepadCellLabel.text = "\(scorecard.scorecardPlayer(player).totalScore())"
+                self.updateTotalCell(cell: footerCell, playerNumber: player)
                 footerCell.scorepadLeftLineWeight.constant = thickLineWeight
-                scorecard.scorecardPlayer(player).setTotalLabel(label: footerCell.scorepadCellLabel)
                 footerCell.scorepadCellLabel.accessibilityIdentifier = "player\(indexPath.row)total"
                 footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 26.0)
             }
@@ -1051,26 +868,20 @@ class ScorepadViewController: CustomViewController,
             
             if column == 0 {
                 Palette.tableTopStyle(bodyCell.scorepadCellLabel)
-                bodyCell.scorepadCellLabel.attributedText = scorecard.roundTitle(round, rankColor: Palette.emphasisText, font: bodyCell.scorepadCellLabel.font, noTrumpScale: 0.8, rounds: self.rounds, cards: self.cards, bounce: self.bounce)
+                bodyCell.scorepadCellLabel.attributedText = Scorecard.game.roundTitle(round, rankColor: Palette.emphasisText, font: bodyCell.scorepadCellLabel.font, noTrumpScale: 0.9)
                 bodyCell.scorepadLeftLineWeight.constant = 0
                 bodyCell.scorepadCellLabel.accessibilityIdentifier = ""
             } else {
                 player = ((column - 1) / bodyColumns) + 1
                 if column % 2 == 1 && bodyColumns == 2 {
                     // Bid
-                    let bid: Int? = scorecard.scorecardPlayer(player).bid(round)
-                    bodyCell.scorepadCellLabel.text = bid != nil ? "\(bid!)" : ""
-                    scorecard.scorecardPlayer(player).setBidCell(round, cell: bodyCell)
                     bodyCell.scorepadLeftLineWeight.constant = thickLineWeight
-                    scorecard.formatCell(round: round, playerNumber: player, mode: Mode.bid)
+                    self.updateBodyCell(cell: bodyCell, round: round, playerNumber: player, mode: Mode.bid)
                     bodyCell.scorepadCellLabel.accessibilityIdentifier = ""
                 } else {
                     // Score
-                    let score: Int? = scorecard.scorecardPlayer(player).score(round)
-                    bodyCell.scorepadCellLabel.text = score != nil ? "\(score!)" : ""
-                    scorecard.scorecardPlayer(player).setScoreCell(round, cell: bodyCell)
                     bodyCell.scorepadLeftLineWeight.constant = (bodyColumns == 2 ? thinLineWeight : thickLineWeight)
-                    scorecard.formatCell(round: round, playerNumber: player, mode: Mode.made)
+                    self.updateBodyCell(cell: bodyCell, round: round, playerNumber: player, mode: Mode.made)
                     bodyCell.scorepadCellLabel.accessibilityIdentifier = "player\(player)round\(round)"
                 }
             }
@@ -1084,12 +895,12 @@ class ScorepadViewController: CustomViewController,
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        if self.scorepadMode == .amend {
+        if self.scorepadMode == .scoring {
             return true
         } else {
             if collectionView.tag < 1000000 {
                 let round = collectionView.tag + 1
-                if (self.scorecard.isHosting || self.scorecard.hasJoined) && self.scorecard.dealHistory[round] != nil && (round < self.scorecard.handState.round || (round == self.scorecard.handState.round && self.scorecard.handState.finished)) {
+                if (scorepadMode == .hosting || scorepadMode == .joining) && Scorecard.game!.dealHistory[round] != nil && (round < Scorecard.game!.handState.round || (round == Scorecard.game!.handState.round && Scorecard.game!.handState.finished)) {
                     return true
                 } else {
                     return false
@@ -1103,22 +914,25 @@ class ScorepadViewController: CustomViewController,
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView.tag >= 1000000 {
             // Header row tapped - edit last row
-            self.scorecard.selectedRound = scorecard.maxEnteredRound
+            Scorecard.game.selectedRound = Scorecard.game.maxEnteredRound
         } else {
             // Body row tapped
             let round = collectionView.tag+1
-            if self.scorepadMode == .amend {
-                if round >= scorecard.maxEnteredRound {
+            if self.scorepadMode == .scoring {
+                if round >= Scorecard.game.maxEnteredRound {
                     // Row which is not yet entered tapped - edit last row
-                    self.scorecard.selectedRound = scorecard.maxEnteredRound
+                    Scorecard.game.selectedRound = Scorecard.game.maxEnteredRound
                   } else {
-                    self.scorecard.selectedRound = round
+                    Scorecard.game.selectedRound = round
                 }
-            } else if self.scorecard.isHosting || self.scorecard.hasJoined { 
-                self.showReview(round: round)
             }
         }
-        makeEntry()
+        if scorepadMode == .hosting || scorepadMode == .joining {
+            self.controllerDelegate?.didInvoke(.review)
+        } else if scorepadMode == .scoring {
+            self.controllerDelegate?.didInvoke(.entry)
+            rotated = false
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, willRotatetoInterfaceOrientation: UIInterfaceOrientation, duration: TimeInterval) {
@@ -1126,36 +940,7 @@ class ScorepadViewController: CustomViewController,
         self.view.setNeedsDisplay()
     }
 }
-
     
-extension ScorepadViewController: UIViewControllerTransitioningDelegate {
-    
-    func animationController(
-        forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        
-        self.transition.presenting = true
-        if presented is EntryViewController {
-            return self.transition
-        } else {
-            return nil
-        }
-    }
-    
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        if #available(iOS 13.0, *) {
-            // TODO transitions don't work on IOS 13
-            return nil
-        } else {
-            if dismissed is EntryViewController {
-                self.transition.presenting = false
-                return self.transition
-            } else {
-                return nil
-            }
-        }
-    }
-}
-
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
 
 class ScorepadTableViewCell: UITableViewCell {

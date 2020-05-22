@@ -8,32 +8,33 @@
 
 import Foundation
 
-protocol LoopbackServiceDelegate {
+protocol LoopbackServiceDelegate : class {
     
     func addConnection(from deviceName: String, to commsPeer: CommsPeer)
 
 }
 
-class LoopbackService: NSObject, CommsHandlerDelegate, CommsServerHandlerDelegate, CommsConnectionDelegate, LoopbackServiceDelegate {
+class LoopbackService: NSObject, CommsServiceDelegate, CommsHostServiceDelegate, CommsConnectionDelegate, LoopbackServiceDelegate {
     
     // Delegate properties
     public let connectionMode: CommsConnectionMode
     public let connectionProximity: CommsConnectionProximity = .loopback
     public var connectionType: CommsConnectionType
-    public var handlerState: CommsServerHandlerState = .notStarted
+    public var handlerState: CommsServiceState = .notStarted
     public var connections = 0
     public var connectionUUID: String?
     public var connectionEmail: String?
-    public var connectionDeviceName: String?
+    public var connectionRemoteDeviceName: String?
+    public var connectionRemoteEmail: String?
     
     // Delegates
-    public var browserDelegate: CommsBrowserDelegate!
-    public var stateDelegate: CommsStateDelegate!
-    public var dataDelegate: CommsDataDelegate!
-    public var connectionDelegate: CommsConnectionDelegate!
-    public var broadcastDelegate: CommsBroadcastDelegate!
-    public var handlerStateDelegate: CommsServerHandlerStateDelegate!
-    public var loopbackServiceDelegate: LoopbackServiceDelegate!
+    public weak var browserDelegate: CommsBrowserDelegate!
+    public weak var stateDelegate: CommsStateDelegate!
+    public weak var dataDelegate: CommsDataDelegate!
+    public weak var connectionDelegate: CommsConnectionDelegate!
+    public weak var broadcastDelegate: CommsBroadcastDelegate!
+    public weak var handlerStateDelegate: CommsServiceStateDelegate!
+    public weak var loopbackServiceDelegate: LoopbackServiceDelegate!
     
     // Internal state
     private static var peerList: [String : LoopbackDelegates] = [ : ]
@@ -49,7 +50,7 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsServerHandlerDelegat
             fatalError("Loopback protocol only supports loopback mode")
         }
         self.connectionType = .server
-        self.connectionDeviceName = deviceName
+        self.connectionRemoteDeviceName = deviceName
         super.init()
 
     }
@@ -59,7 +60,7 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsServerHandlerDelegat
     }
     
     public func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool) {
-        self.myPeer = LoopbackPeer(parent: self, deviceName: self.connectionDeviceName!, playerEmail: email, playerName: name)
+        self.myPeer = LoopbackPeer(parent: self, deviceName: self.connectionRemoteDeviceName!, playerEmail: email, playerName: name)
         
         // Add myself to the shared peer list
         LoopbackService.peerList[self.myPeer.deviceName] = LoopbackDelegates(peer: self.myPeer , connectionDelegate: self.connectionDelegate, stateDelegate: self.stateDelegate, dataDelegate: self.dataDelegate, loopbackServiceDelegate: self)
@@ -190,13 +191,13 @@ class LoopbackService: NSObject, CommsHandlerDelegate, CommsServerHandlerDelegat
 
 class LoopbackPeer {
     
-    public let parent: CommsHandlerDelegate
+    public let parent: CommsServiceDelegate
     public var playerEmail: String?
     public var playerName: String?
     public var state: CommsConnectionState
     public let deviceName: String
     
-    init(parent: CommsHandlerDelegate, deviceName: String, playerEmail: String? = "", playerName: String? = "") {
+    init(parent: CommsServiceDelegate, deviceName: String, playerEmail: String? = "", playerName: String? = "") {
         self.parent = parent
         self.deviceName = deviceName
         self.playerEmail = playerEmail

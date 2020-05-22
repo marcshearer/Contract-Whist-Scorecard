@@ -286,6 +286,7 @@ class Invite {
     func completion(_ success: Bool, _ message: String? = nil, _ invited: [InviteReceived]? = nil) {
         Utility.mainThread {
             self.completionHandler?(success, message, invited)
+            self.completionHandler = nil
         }
     }
 }

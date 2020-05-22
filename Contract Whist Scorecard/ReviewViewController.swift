@@ -8,10 +8,13 @@
 
 import UIKit
 
-class ReviewViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate, ScorecardAlertDelegate {
+class ReviewViewController: ScorecardAppViewController, UITableViewDataSource, UITableViewDelegate, ScorecardAlertDelegate {
+
+    // Whist view properties
+    override internal var scorecardView: ScorecardView? { return ScorecardView.review }
+    public weak var controllerDelegate: ScorecardAppControllerDelegate?
 
     // Properties passed
-    private let scorecard = Scorecard.shared
     public var round: Int!
     public var thisPlayer: Int!
     private var completion: (()->())?
@@ -54,7 +57,7 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        for _ in 1...self.scorecard.numberPlayers {
+        for _ in 1...Scorecard.shared.maxPlayers {
             maxContentSize.append(0.0)
             height.append(0)
             width.append(0)
@@ -66,14 +69,9 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
         self.setupText()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.scorecard.alertDelegate = self
-    }
-    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        scorecard.reCenterPopup(self)
+        Scorecard.shared.reCenterPopup(self)
         view.setNeedsLayout()
     }
     
@@ -90,11 +88,11 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.scorecard.alertDelegate = nil
+        Scorecard.shared.alertDelegate = nil
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        self.scorecard.motionBegan(motion, with: event)
+        Scorecard.shared.motionBegan(motion, with: event)
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -143,13 +141,13 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
     
     private func setupPlayers() {
         
-        for increment in 0..<self.scorecard.currentPlayers {
-            let playerNumber = ((thisPlayer + increment - 1) % self.scorecard.currentPlayers) + 1
+        for increment in 0..<Scorecard.game.currentPlayers {
+            let playerNumber = ((thisPlayer + increment - 1) % Scorecard.game.currentPlayers) + 1
             var tag: Int
-            if self.scorecard.currentPlayers < 4 {
-                tag = ((2 + increment - 1) % self.scorecard.currentPlayers) + 2
+            if Scorecard.game.currentPlayers < 4 {
+                tag = ((2 + increment - 1) % Scorecard.game.currentPlayers) + 2
             } else {
-                tag = ((3 + increment - 1) % self.scorecard.currentPlayers) + 1
+                tag = ((3 + increment - 1) % Scorecard.game.currentPlayers) + 1
             }
             tableViewPlayer[tag] = playerNumber
         }
@@ -157,8 +155,8 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
     
     private func setupTitle() {
         self.roundTitleLabel.textColor = UIColor.white
-        self.roundTitleLabel.attributedText = scorecard.roundTitle(round, rankColor: Palette.roomInteriorText)
-        let totalRemaining = self.scorecard.remaining(playerNumber: 0, round: self.round, mode: Mode.bid, rounds: self.scorecard.rounds, cards: self.scorecard.handState.cards, bounce: self.scorecard.handState.bounce)
+        self.roundTitleLabel.attributedText = Scorecard.game.roundTitle(round, rankColor: Palette.roomInteriorText)
+        let totalRemaining = Scorecard.game.remaining(playerNumber: 0, round: self.round, mode: Mode.bid)
         self.overUnderLabel.text = "\(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")"
         self.overUnderLabel.textColor = (totalRemaining == 0 ? Palette.contractEqual : (totalRemaining > 0 ? Palette.contractUnder : Palette.contractOver))
     }
@@ -166,11 +164,12 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
     private func setupText() {
         
         self.text = []
-        for playerNumber in 1...self.scorecard.currentPlayers {
+        for playerNumber in 1...Scorecard.game.currentPlayers {
             self.text.append([])
-            let player = self.scorecard.enteredPlayer(playerNumber)
-            self.text[playerNumber-1].append(NSMutableAttributedString(string: "\(player.playerMO!.name!) \(player.bid(self.round)!)/\(player.made(self.round)!)"))
-            if let hand: Hand = self.scorecard.dealHistory[self.round]?.hands[player.playerNumber - 1] {
+            let player = Scorecard.game.player(enteredPlayerNumber: playerNumber)
+            let playerScore = Scorecard.game.scores.get(round: self.round, playerNumber: playerNumber, sequence: .entered)
+            self.text[playerNumber-1].append(NSMutableAttributedString(string: "\(player.playerMO!.name!) \(playerScore.bid!)/\(playerScore.made!)"))
+            if let hand: Hand = Scorecard.game?.dealHistory[self.round]?.hands[player.playerNumber - 1] {
                 for rawSuit in (1...4).reversed() {
                     let suit = Suit(rawValue: rawSuit)
                     var suitText: NSMutableAttributedString = NSMutableAttributedString(attributedString: suit.toAttributedString())
@@ -263,7 +262,7 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
             tableTopHeight = innerTableTopSize
             tableTopWidth = maxWidth + (totalWidth * 0.2)
         }
-        if self.scorecard.currentPlayers < 4 {
+        if Scorecard.game.currentPlayers < 4 {
             offset = -useableHeight / 8.0
         }
         
@@ -320,12 +319,13 @@ class ReviewViewController: CustomViewController, UITableViewDataSource, UITable
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: CustomViewController, round: Int, thisPlayer: Int, completion: (()->())? = nil) {
+    class public func show(from viewController: ScorecardViewController, round: Int, thisPlayer: Int, completion: (()->())? = nil) {
         
         let storyboard = UIStoryboard(name: "ReviewViewController", bundle: nil)
         let reviewViewController = storyboard.instantiateViewController(withIdentifier: "ReviewViewController") as! ReviewViewController
         
         reviewViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
+        reviewViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         reviewViewController.round = round
         reviewViewController.thisPlayer = thisPlayer

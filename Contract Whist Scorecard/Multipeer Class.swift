@@ -10,7 +10,7 @@
 import Foundation
 import MultipeerConnectivity
 
-class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
+class MultipeerService: NSObject, CommsServiceDelegate, MCSessionDelegate {
     
     // Main class variables
     public let connectionMode: CommsConnectionMode
@@ -19,8 +19,10 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
     public var connectionUUID: String?
     private var _connectionEmail: String?
     private var _connectionName: String?
-    internal var _connectionDevice: String?
+    internal var _connectionRemoteDeviceName: String?
+    internal var _connectionRemoteEmail: String?
     internal var started = false
+    
     public var connectionEmail: String? {
         get {
             return _connectionEmail
@@ -31,9 +33,14 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
             return _connectionName
         }
     }
-    public var connectionDeviceName: String? {
+    public var connectionRemoteDeviceName: String? {
         get {
-            return _connectionDevice
+            return _connectionRemoteDeviceName
+        }
+    }
+    public var connectionRemoteEmail: String? {
+        get {
+            return _connectionRemoteEmail
         }
     }
     public var connections: Int {
@@ -43,9 +50,9 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
     }
 
     // Delegates
-    public var stateDelegate: CommsStateDelegate!
-    public var dataDelegate: CommsDataDelegate!
-    public var broadcastDelegate: CommsBroadcastDelegate!
+    public weak var stateDelegate: CommsStateDelegate!
+    public weak var dataDelegate: CommsDataDelegate!
+    public weak var broadcastDelegate: CommsBroadcastDelegate!
 
     // Other state variables
     internal var serviceID: String
@@ -99,16 +106,19 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
     }
     
     internal func disconnect(from commsPeer: CommsPeer? = nil, reason: String = "", reconnect: Bool) {
+        self.debugMessage("Disconnect - reconnect: \(reconnect)")
+
+        self.send("disconnect", ["reason" : reason], to: commsPeer)
+        
         for (deviceName, _) in self.sessionList {
             if commsPeer == nil || commsPeer?.deviceName == deviceName {
-                if let broadcastPeer = broadcastPeerList[deviceName] {
+                if let broadcastPeer = self.broadcastPeerList[deviceName] {
                     self.debugMessage("disconnect (\(reason))", peerID: broadcastPeer.mcPeer)
                     broadcastPeer.shouldReconnect = reconnect
                     broadcastPeer.reconnect = reconnect
                     broadcastPeer.state = .notConnected
                     self.stateDelegate?.stateChange(for: broadcastPeer.commsPeer, reason: reason)
                 }
-                self.send("disconnect", ["reason" : reason], to: commsPeer)
             }
         }
     }
@@ -228,8 +238,7 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
             // Call delegate
             stateDelegate?.stateChange(for: broadcastPeer.commsPeer)
         } else {
-            // Not in peer list - can't carry on
-            self.disconnect(from: BroadcastPeer(parent: self, mcPeer: peerID, deviceName: deviceName).commsPeer, reason: "Unexpected connection")
+            // Not in peer list - just ignore it
         }
         
         if state == .notConnected {
@@ -323,18 +332,18 @@ class MultipeerService: NSObject, CommsHandlerDelegate, MCSessionDelegate {
 
 // Multipeer Server Service Class ========================================================================= -
 
-class MultipeerServerService : MultipeerService, CommsServerHandlerDelegate, MCNearbyServiceAdvertiserDelegate {
+class MultipeerServerService : MultipeerService, CommsHostServiceDelegate, MCNearbyServiceAdvertiserDelegate {
         
     private struct ServerConnection {
         var advertiser: MCNearbyServiceAdvertiser!
     }
     
-    internal var handlerState: CommsServerHandlerState = .notStarted
+    internal var handlerState: CommsServiceState = .notStarted
     private var server: ServerConnection!
 
     // Delegates
     public weak var connectionDelegate: CommsConnectionDelegate!
-    public weak var handlerStateDelegate: CommsServerHandlerStateDelegate!
+    public weak var handlerStateDelegate: CommsServiceStateDelegate!
     
     required init(mode: CommsConnectionMode, serviceID: String?, deviceName: String) {
         super.init(mode: mode, type: .server, serviceID: serviceID, deviceName: deviceName)
@@ -364,20 +373,30 @@ class MultipeerServerService : MultipeerService, CommsServerHandlerDelegate, MCN
             self.debugMessage("Stop Server \(self.connectionMode)")
         }
         
-        super.stopService()
+        // Send disconnects
+        self.disconnect(reason: "Host has stopped", reconnect: false)
         
-        self.broadcastPeerList = [:]
-        if self.server != nil {
-            if self.server.advertiser != nil {
-                self.server.advertiser.stopAdvertisingPeer()
-                self.server.advertiser.delegate = nil
-                self.server.advertiser = nil
+        Utility.executeAfter(delay: 0.2) {
+            // Slight pause to let disconnects get through
+            
+            // End sessions
+            self.endSessions()
+            
+            // Stop service
+            super.stopService()
+            
+            self.broadcastPeerList = [:]
+            if self.server != nil {
+                if self.server.advertiser != nil {
+                    self.server.advertiser.stopAdvertisingPeer()
+                    self.server.advertiser.delegate = nil
+                    self.server.advertiser = nil
+                }
+                self.server = nil
             }
-            self.server = nil
+            self.changeState(to: .notStarted)
+            completion?()
         }
-        self.endSessions()
-        changeState(to: .notStarted)
-        completion?()
     }
     
     override internal func reset(reason: String? = nil) {
@@ -393,9 +412,9 @@ class MultipeerServerService : MultipeerService, CommsServerHandlerDelegate, MCN
     
     // MARK: - Comms Handler State handler =================================================================== -
 
-    internal func changeState(to state: CommsServerHandlerState) {
+    internal func changeState(to state: CommsServiceState) {
         self.handlerState = state
-        self.handlerStateDelegate?.handlerStateChange(to: state)
+        self.handlerStateDelegate?.controllerStateChange(to: state)
     }
     
     // MARK: - Advertiser delegate handlers ======================================================== - -
@@ -451,7 +470,7 @@ class MultipeerServerService : MultipeerService, CommsServerHandlerDelegate, MCN
 
 // Multipeer Client Service Class ========================================================================= -
 
-class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCNearbyServiceBrowserDelegate {
+class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCNearbyServiceBrowserDelegate {
     
     private struct ClientConnection {
         var browser: MCNearbyServiceBrowser!
@@ -460,7 +479,6 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
     private var client: ClientConnection!
     private var matchDeviceName: String!
     private var invite: Invite!
-    private var inviteEmail: String! = nil
     private var onlineInviteObserver: NSObjectProtocol?
     
     // Delegates
@@ -530,6 +548,8 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
             
             // Set up peer
             broadcastPeer.shouldReconnect = reconnect
+            broadcastPeer.state = .connecting
+            self.stateDelegate?.stateChange(for: broadcastPeer.commsPeer)
             
             // Set up context data
             var data: Data! = nil
@@ -557,15 +577,15 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
             self.sessionList[broadcastPeer.deviceName] = session
             
             // Invite server to accept connection
-            let timeout = 3.0
+            let timeout = 5.0
             self.client?.browser?.invitePeer(broadcastPeer.mcPeer, to: session, withContext: data, timeout: timeout)
             self.debugMessage("Connection - peer \(broadcastPeer.mcPeer) timeout \(timeout)")
-            self._connectionDevice = broadcastPeer.deviceName
+            self._connectionRemoteDeviceName = broadcastPeer.deviceName
+            self._connectionRemoteEmail = broadcastPeer.playerEmail
             
             return true
             
         } else {
-            Utility.getActiveViewController()?.alertMessage("Device not recognized", title: "Error")
             return false
         }
     }
@@ -647,6 +667,8 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
                         }
                     } else {
                         // Notify delegate peer lost
+                        broadcastPeer.state = .notConnected
+                        self.stateDelegate?.stateChange(for: broadcastPeer.commsPeer)
                         self.browserDelegate?.peerLost(peer: broadcastPeer.commsPeer)
                     }
                 }
@@ -658,17 +680,34 @@ class MultipeerClientService : MultipeerService, CommsClientHandlerDelegate, MCN
 
     internal override func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         Utility.mainThread {
+            var saveBroadcastPeer: BroadcastPeer?
+            
+            if state == .notConnected {
+                if self.client != nil && self.client.browser != nil {
+                    // Lost connection (or refused connection) - save peer for later
+                    saveBroadcastPeer = self.broadcastPeerList[peerID.displayName]
+                }
+            }
+            
             super.session(session, peer: peerID, didChange: state)
             
             // Start / stop browsing
-            if self.client != nil && self.client.browser != nil {
-                if state == .notConnected {
-                    // Lost connection - need to start browsing for another one
-                    self.debugMessage("Start browsing")
-                    self.client?.browser?.startBrowsingForPeers()
-                } else if state == .connected {
-                    // Connected
+            if state == .notConnected {
+                if self.client != nil && self.client.browser != nil {
+                    // Lost connection (or refused connection)
+                    if let broadcastPeer = saveBroadcastPeer {
+                        if self.broadcastPeerList[broadcastPeer.deviceName] == nil {
+                            // Looks like peer has gone away - notify delegates
+                            self.browserDelegate?.peerLost(peer: broadcastPeer.commsPeer)
+                        }
+                    }
                 }
+                
+                // Need to start browsing for another peer
+                self.debugMessage("Start browsing")
+                self.client?.browser?.startBrowsingForPeers()
+            } else if state == .connected {
+                // Connected
             }
         }
     }
@@ -719,7 +758,7 @@ public class BroadcastPeer {
     
     public var commsPeer: CommsPeer {
         get {
-            return CommsPeer(parent: self.parent as CommsHandlerDelegate, deviceName: self.deviceName, playerEmail: self.playerEmail, playerName: self.playerName, state: self.state, reason: reason, autoReconnect: reconnect)
+            return CommsPeer(parent: self.parent as CommsServiceDelegate, deviceName: self.deviceName, playerEmail: self.playerEmail, playerName: self.playerName, state: self.state, reason: reason, autoReconnect: reconnect)
         }
     }
     

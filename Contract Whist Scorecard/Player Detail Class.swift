@@ -15,8 +15,6 @@ import CoreData
     // A class to hold the details of a player which can then be reflected in a core data playerMO class
     // or in a CKRecord CloudKit class
   
-    private let scorecard = Scorecard.shared
-    
     // Make sure that if you add any more properties you add them to the methods below - especially ==
     public var name = ""
     public var nameDate: Date!
@@ -53,7 +51,7 @@ import CoreData
     
     public var indexMO: Int? {
         get {
-            return self.scorecard.playerList.firstIndex(where: {($0.objectID == self.objectID)})
+            return Scorecard.shared.playerList.firstIndex(where: {($0.objectID == self.objectID)})
         }
     }
     
@@ -64,7 +62,7 @@ import CoreData
             if index == nil {
                 return nil
             } else {
-                return self.scorecard.playerList[index!]
+                return Scorecard.shared.playerList[index!]
             }
         }
     }
@@ -75,7 +73,7 @@ import CoreData
         if index != nil {
             if !CoreData.update(updateLogic: {
                 // Copy back edited data
-                self.toManagedObject(playerMO: self.scorecard.playerList[index!])
+                self.toManagedObject(playerMO: Scorecard.shared.playerList[index!])
             }) {
                 // Ignore errors
             }
@@ -86,7 +84,7 @@ import CoreData
         // Copy details back from managed object
         let index = self.indexMO
         if index != nil {
-            self.fromManagedObject(playerMO: self.scorecard.playerList[index!])
+            self.fromManagedObject(playerMO: Scorecard.shared.playerList[index!])
         }
     }
     
@@ -96,19 +94,19 @@ import CoreData
         if index != nil {
             if !CoreData.update(updateLogic: {
                 // Delete this player
-                CoreData.delete(record: self.scorecard.playerList[index!])
+                CoreData.delete(record: Scorecard.shared.playerList[index!])
             }) {
                 // Ignore errors
             } else {
                 // Remove the managed object
-                self.scorecard.playerList.remove(at: index!)
+                Scorecard.shared.playerList.remove(at: index!)
             }
         }
     }
     
     public func createMO(noSync: Bool = true) -> PlayerMO! {
         var playerMO: PlayerMO!
-        if self.scorecard.isPlayingComputer {
+        if Scorecard.game?.isPlayingComputer ?? false {
             playerMO = CoreData.create(from: "Player") as? PlayerMO
             self.toManagedObject(playerMO: playerMO)
         } else {
@@ -127,8 +125,8 @@ import CoreData
             }) {
                 // Ignore errors
             } else {
-                let index = self.scorecard.playerList.firstIndex(where: {($0.name! > self.name)})
-                self.scorecard.playerList.insert(playerMO, at: (index == nil ? self.scorecard.playerList.count : index!))
+                let index = Scorecard.shared.playerList.firstIndex(where: {($0.name! > self.name)})
+                Scorecard.shared.playerList.insert(playerMO, at: (index == nil ? Scorecard.shared.playerList.count : index!))
                 self.objectID = playerMO.objectID
             }
         }

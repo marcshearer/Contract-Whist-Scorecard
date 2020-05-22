@@ -15,12 +15,12 @@ public enum DescriptionMode {
     case none
 }
 
-class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UITableViewDataSource, SyncDelegate {
+class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate, UITableViewDataSource, SyncDelegate {
+    
     
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
-    private let scorecard = Scorecard.shared
     private var sync: Sync!
     
     // Properties to pass state to action controller
@@ -112,7 +112,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        scorecard.reCenterPopup(self)
+        Scorecard.shared.reCenterPopup(self)
         view.setNeedsLayout()
         self.rotated = true
     }
@@ -433,7 +433,7 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
             self.syncFinished = true
             if returnedList != nil {
                 for playerDetail in returnedList {
-                    var index = self.scorecard.playerList.firstIndex(where: {($0.email == playerDetail.email)})
+                    var index = Scorecard.shared.playerList.firstIndex(where: {($0.email == playerDetail.email)})
                     if index == nil {
                         if self.combinedPlayerList[self.relatedPlayerSection]!.count == 0 {
                             // Replace status entry
@@ -641,12 +641,13 @@ class SelectPlayersViewController: CustomViewController, UITableViewDelegate, UI
     
     // MARK: - Function to show and dismiss this view  ============================================================================== -
     
-    public class func show(from viewController: CustomViewController, specificEmail: String = "", descriptionMode: DescriptionMode = .none, backText: String = "Cancel", actionText: String = "Download", allowOtherPlayer: Bool = true, allowNewPlayer: Bool = true, completion: ((Int?, [PlayerDetail]?, [Bool]?)->())? = nil) {
+    public class func show(from viewController: ScorecardViewController, specificEmail: String = "", descriptionMode: DescriptionMode = .none, backText: String = "Cancel", actionText: String = "Download", allowOtherPlayer: Bool = true, allowNewPlayer: Bool = true, completion: ((Int?, [PlayerDetail]?, [Bool]?)->())? = nil) {
         
         let storyboard = UIStoryboard(name: "SelectPlayersViewController", bundle: nil)
         let selectPlayersViewController = storyboard.instantiateViewController(withIdentifier: "SelectPlayersViewController") as! SelectPlayersViewController
         
         selectPlayersViewController.preferredContentSize = CGSize(width: 400, height: 700)
+        selectPlayersViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         selectPlayersViewController.specificEmail = specificEmail
         selectPlayersViewController.descriptionMode = descriptionMode

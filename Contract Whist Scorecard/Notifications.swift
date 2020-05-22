@@ -80,7 +80,7 @@ class Notifications {
         // First delete any existing high score subscriptions
         Notifications.deleteExistingSubscriptions("highScore", completion: {
             
-            if Scorecard.shared.settingSyncEnabled && Scorecard.shared.settingReceiveNotifications {
+            if Scorecard.activeSettings.syncEnabled && Scorecard.activeSettings.receiveNotifications {
                 // Now add a notification for each player on this device
                 let database = CKContainer.default().publicCloudDatabase
                 for email in Scorecard.shared.playerEmailList() {
@@ -165,8 +165,7 @@ class Notifications {
             }
         } else {
             // Do not interrupt a game in progress
-            let scorecard = Scorecard.shared
-            if scorecard.gameInProgress {
+            if Scorecard.game?.inProgress ?? false {
                 skipNotification = true
             }
         }
@@ -189,6 +188,6 @@ class Notifications {
     }
     
     public static func launchOnlineGame(welcomeViewController: WelcomeViewController, matchDeviceName: String) {
-       ClientViewController.show(from: welcomeViewController, backText: "", backImage: "home", formTitle: "Play a Game", purpose: .playing, matchDeviceName: matchDeviceName)
+       // ClientViewController.show(from: welcomeViewController, backText: "", backImage: "home", formTitle: "Play a Game", purpose: .playing, matchDeviceName: matchDeviceName)
     }
 }

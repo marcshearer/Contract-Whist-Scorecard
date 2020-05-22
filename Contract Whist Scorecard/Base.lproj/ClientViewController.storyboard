@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -33,15 +32,18 @@
                                 </textAttributes>
                                 <items>
                                     <navigationItem title="Play Game" id="9bb-Wg-XPQ">
-                                        <barButtonItem key="leftBarButtonItem" id="OTD-R4-zWC">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="0Si-5j-YyO" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                <rect key="frame" x="16" y="0.0" width="84" height="44"/>
+                                        <barButtonItem key="rightBarButtonItem" style="plain" id="S8k-LK-HJk">
+                                            <button key="customView" opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="tsU-cx-2yK" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <rect key="frame" x="315" y="0.0" width="44" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Back" image="back">
-                                                    <color key="titleColor" name="Banner Text"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                                <size key="titleShadowOffset" width="2" height="2"/>
+                                                <state key="normal" image="equal.square" catalog="system">
+                                                    <color key="titleColor" name="Game Banner Text"/>
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="20" scale="large"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="finishPressed:" destination="aZe-pG-rMs" eventType="touchUpInside" id="QJQ-Cz-Kxv"/>
+                                                    <action selector="actionButtonPressed:" destination="aZe-pG-rMs" eventType="touchUpInside" id="4DM-G5-9wK"/>
                                                 </connections>
                                             </button>
                                         </barButtonItem>
@@ -262,7 +264,7 @@
                         <outlet property="changePlayerButton" destination="Yy9-i2-EGh" id="FLT-x8-Z69"/>
                         <outlet property="clientTableView" destination="dtV-HG-agM" id="ShH-Ew-7io"/>
                         <outlet property="clientTableViewHeightConstraint" destination="YN1-GM-lKq" id="ZGx-QT-0n6"/>
-                        <outlet property="finishButton" destination="0Si-5j-YyO" id="tNG-UY-Tpu"/>
+                        <outlet property="menuButton" destination="tsU-cx-2yK" id="TTl-Lc-1WJ"/>
                         <outlet property="playerSelectionView" destination="OVx-NQ-fbM" id="xpO-V7-Fbx"/>
                         <outlet property="playerSelectionViewHeightConstraint" destination="0qO-Lb-0Dm" id="8QS-8Z-jdb"/>
                         <outlet property="scrollView" destination="zWK-vn-Rqd" id="2gR-tD-a11"/>
@@ -274,14 +276,10 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UDy-kc-SSJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="right" id="chC-Hk-f6N">
-                    <connections>
-                        <action selector="rightSwipeWithRecognizer:" destination="aZe-pG-rMs" id="RPw-mc-NfU"/>
-                    </connections>
-                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="right" id="chC-Hk-f6N"/>
                 <rotationGestureRecognizer id="T3J-B5-Pwe">
                     <connections>
-                        <action selector="rotationGestureWithRecognizer:" destination="aZe-pG-rMs" id="QfO-QT-Kha"/>
+                        <action selector="rotationGestureWithRecognizer:" destination="aZe-pG-rMs" id="dZD-fd-9wJ"/>
                     </connections>
                 </rotationGestureRecognizer>
             </objects>
@@ -289,12 +287,9 @@
         </scene>
     </scenes>
     <resources>
-        <image name="back" width="22" height="22"/>
+        <image name="equal.square" catalog="system" width="128" height="114"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Banner Text">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>

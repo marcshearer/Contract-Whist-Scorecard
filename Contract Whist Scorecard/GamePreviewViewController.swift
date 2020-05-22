@@ -10,20 +10,10 @@ import UIKit
 import CoreData
 
 @objc protocol GamePreviewDelegate {
-    
-    @objc optional var gamePreviewCanStartGame: Bool { get }
-    
+        
     @objc optional var gamePreviewHosting: Bool { get }
     
     @objc optional var gamePreviewWaitMessage: NSAttributedString { get }
-    
-    @objc optional func gamePreviewInitialisationComplete(gamePreviewViewController: GamePreviewViewController)
-    
-    @objc optional func gamePreviewCompletion(returnHome: Bool, completion: (()->())?)
-    
-    @objc optional func gamePreviewStartGame()
-    
-    @objc optional func gamePreviewStopGame()
     
     @objc optional func gamePreview(isConnected playerMO: PlayerMO) -> Bool
     
@@ -31,21 +21,21 @@ import CoreData
     
     @objc optional func gamePreview(moved playerMO: PlayerMO, to slot: Int)
     
-    @objc optional func gamePreviewShakeGestureHandler()
+    @objc optional func gamePreviewShakeGestureHandler() // TODO Replaced by controller reset
     
 }
 
-class GamePreviewViewController: CustomViewController, ImageButtonDelegate, SelectedPlayersViewDelegate {
+class GamePreviewViewController: ScorecardAppViewController, ImageButtonDelegate, SelectedPlayersViewDelegate {
     
     // MARK: - Class Properties ================================================================ -
     
-    // Delegate
-    public var delegate: GamePreviewDelegate?
+    // Whist view properties
+    override internal var scorecardView: ScorecardView? { return ScorecardView.gamePreview }
+    public weak var controllerDelegate: ScorecardAppControllerDelegate?
     
-    // Main state properties
-    private let scorecard = Scorecard.shared
-    private var recovery: Recovery!
-
+    // Delegate
+    public weak var delegate: GamePreviewDelegate?
+    
     // Properties to determine how view operates
     public var selectedPlayers = [PlayerMO?]()          // Selected players passed in from player selection
     private var faceTimeAddress: [String] = []          // FaceTime addresses for the above
@@ -53,7 +43,6 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     private var readOnly = false
     private var formTitle = "Preview"
     private var backText = ""
-    private var completion: ((Bool)->())?
     
     // Local class variables
     private var buttonMode = "Triangle"
@@ -66,14 +55,16 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     private var cutCardHeight: CGFloat!
     private var haloWidth: CGFloat = 3.0
     private var dealerHaloWidth: CGFloat = 5.0
-    private var observer: NSObjectProtocol?
+    private weak var observer: NSObjectProtocol?
     private var faceTimeAvailable = false
     private var initialising = true
     private var cutCardView: [UILabel] = []
     private var firstTime = true
     private var rotated = false
+    private var exiting = false
     private var cutting = false
     private var waitAnimation = true
+    private var autoStarting = false
     
     // MARK: - IB Outlets ================================================================ -
     
@@ -86,7 +77,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     @IBOutlet private weak var continueButton: UIButton!
     @IBOutlet private weak var continueButtonHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var cancelButton: UIButton!
-    @IBOutlet private weak var selectedPlayersView: SelectedPlayersView!
+    @IBOutlet public weak var selectedPlayersView: SelectedPlayersView!
     @IBOutlet private weak var selectedPlayersTopConstraint: NSLayoutConstraint!
     @IBOutlet private weak var selectedPlayersHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var overrideSettingsButton: UIButton!
@@ -100,20 +91,21 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     @IBAction func finishGamePressed(_ sender: Any) {
         // Link back to selection
-        if !self.scorecard.isHosting && !self.scorecard.hasJoined {
-            NotificationCenter.default.removeObserver(observer!)
-            self.scorecard.resetOverrideSettings()
-        }
-        self.dismiss()
+        Utility.debugMessage("gamePreview", "Cancel pressed")
+        self.willDismiss()
+        self.resetAnimationsBeforeExit()
+        self.controllerDelegate?.didCancel()
     }
     
     @IBAction func continuePressed(_ sender: Any) {
-        self.goToScorepad()
+        if observer != nil {
+            self.willDismiss()
+        }
+        self.controllerDelegate?.didProceed()
     }
     
     @IBAction func overrideSettingsButtonPressed(_ sender: Any) {
-        let overrideViewController = OverrideViewController()
-        overrideViewController.show()
+        self.controllerDelegate?.didInvoke(.overrideSettings)
     }
     
     internal func imageButtonPressed(_ sender: ImageButton) {
@@ -123,8 +115,8 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             self.executeCut()
         case 2:
             // Next dealer
-            self.showDealer(playerNumber: scorecard.dealerIs, forceHide: true)
-            self.scorecard.nextDealer()
+            self.showDealer(playerNumber: Scorecard.game.dealerIs, forceHide: true)
+            Scorecard.shared.nextDealer()
             self.showCurrentDealer()
             
         default:
@@ -135,11 +127,11 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     @IBAction func rotationGesture(recognizer:UIRotationGestureRecognizer) {
         if recognizer.state == .ended {
             if !self.readOnly {
-                showDealer(playerNumber: scorecard.dealerIs, forceHide: true)
+                showDealer(playerNumber: Scorecard.game.dealerIs, forceHide: true)
                 if recognizer.rotation > 0 {
-                    scorecard.nextDealer()
+                    Scorecard.shared.nextDealer()
                 } else {
-                    scorecard.previousDealer()
+                    Scorecard.shared.previousDealer()
                 }
                 showCurrentDealer()
             }
@@ -148,11 +140,10 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     // MARK: - View Overrides ================================================================ -
 
-    override func viewDidLoad() {
+    override internal func viewDidLoad() {
         super.viewDidLoad()
         
-        recovery = scorecard.recovery
-        self.waitAnimation = !ScorecardUI.landscapePhone() && self.delegate?.gamePreviewHosting ?? false
+        self.waitAnimation = !ScorecardUI.landscapePhone() && (self.delegate?.gamePreviewHosting ?? false) && !Scorecard.recovery.recovering
         
         // Set title
         self.navigationTitle.title = self.formTitle
@@ -161,14 +152,14 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         self.updateSelectedPlayers(selectedPlayers)
         
         // Make sure dealer not too high
-        if self.scorecard.dealerIs > self.scorecard.currentPlayers {
-            self.scorecard.saveDealer(1)
+        if Scorecard.game.dealerIs > Scorecard.game.currentPlayers {
+            Scorecard.shared.saveDealer(1)
         }
         
         // Setup screen
         self.setupScreen(size: self.view.frame.size)
         
-        self.scorecard.saveMaxScores()
+        Scorecard.shared.saveMaxScores()
         
         // Set nofification for image download
         self.observer = setImageDownloadNotification()
@@ -182,58 +173,51 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         
         // Become delegate of selected players view
         self.selectedPlayersView.delegate = self
+        
+        // Call controller delegate to notify loading complete
+        self.controllerDelegate?.didLoad()
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if (self.delegate?.gamePreviewHosting ?? false) && self.scorecard.recoveryMode && self.delegate?.gamePreviewCanStartGame ?? true {
-            // If recovering and controller is happy then go to scorepad
-            self.recoveryScorepad()
-        } else if self.scorecard.recoveryMode && self.scorecard.recoveryOnlineMode != nil {
-            // If recovering in scorepad mode go to scorepad
-            self.recoveryScorepad()
-        }
-    }
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        
+    override internal func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         self.rotated = true
-        self.scorecard.reCenterPopup(self)
+        Scorecard.shared.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
     
-    override func viewDidLayoutSubviews() {
+    override internal func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        let rotated = self.rotated
-        let firstTime = self.firstTime
-        self.rotated = false
-        self.firstTime = false
-        
-        self.setupScreen(size: self.view.bounds.size)
-        
-        if firstTime {
-            self.createCutCards()
-        }
-        
-        // Draw room
-        self.drawRoom()
-        
-        if rotated || firstTime {
-            // Update buttons
-            self.updateButtons(animate: false)
-        }
-        
-        if self.initialising {
-            self.initialising = false
-            self.delegate?.gamePreviewInitialisationComplete?(gamePreviewViewController: self)
-        }
-        self.refreshPlayers()
-        self.showCurrentDealer()
-        
-        if self.waitAnimation {
-            Utility.executeAfter(delay: 1.0) {
-                if self.waitAnimation {
+        if !exiting {
+            
+            let rotated = self.rotated
+            let firstTime = self.firstTime
+            self.rotated = false
+            self.firstTime = false
+            
+            self.setupScreen(size: self.view.bounds.size)
+            
+            if firstTime {
+                self.createCutCards()
+            }
+            
+            // Draw room
+            self.drawRoom()
+            
+            if rotated || firstTime {
+                // Update buttons
+                self.updateButtons(animate: false)
+            }
+            
+            if self.initialising {
+                self.initialising = false
+                self.controllerDelegate?.didAppear()
+            }
+            self.refreshPlayers()
+            self.showCurrentDealer()
+            
+            if self.waitAnimation {
+                Utility.executeAfter(delay: 1.0) {
                     self.waitAnimation = false
                     self.updateButtons(animate: true)
                 }
@@ -241,11 +225,18 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         }
     }
     
-    override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+    override internal func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         if let shakeGestureHandler = self.delegate?.gamePreviewShakeGestureHandler {
             shakeGestureHandler()
         } else {
-            self.scorecard.motionBegan(motion, with: event)
+            Scorecard.shared.motionBegan(motion, with: event)
+        }
+    }
+    
+    override internal func willDismiss() {
+        if observer != nil {
+            NotificationCenter.default.removeObserver(observer!)
+            observer = nil
         }
     }
     
@@ -260,7 +251,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     
     func setImageDownloadNotification() -> NSObjectProtocol? {
         // Set a notification for images downloaded
-        let observer = NotificationCenter.default.addObserver(forName: .playerImageDownloaded, object: nil, queue: nil) {
+        let observer = NotificationCenter.default.addObserver(forName: .playerImageDownloaded, object: nil, queue: nil) { [unowned self]
             (notification) in
             self.updateImage(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
         }
@@ -286,7 +277,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     }
     
     func selectedPlayersView(wasTappedOn slot: Int) {
-        if slot > 0 && self.delegate?.gamePreviewHosting ?? false && self.selectedPlayersView.playerViews[slot].inUse && self.scorecard.commsDelegate?.connectionProximity == .nearby {
+        if slot > 0 && self.delegate?.gamePreviewHosting ?? false && self.selectedPlayersView.playerViews[slot].inUse && Scorecard.shared.commsDelegate?.connectionProximity == .nearby {
             // Allow disconnection of players if this is a 'nearby' host
             self.selectedPlayersView.startDeleteWiggle(slot: slot)
         }
@@ -358,7 +349,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             if (self.delegate?.gamePreviewHosting ?? false) {
                 
                 var topConstraint: CGFloat
-                let canStartGame = self.delegate?.gamePreviewCanStartGame ?? true
+                let canStartGame = self.controllerDelegate?.canProceed ?? true
                 
                 if canStartGame {
                     // Ready to start (or suppressing message) - enable dealer buttons and no need for top message
@@ -369,6 +360,11 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
                     self.nextDealerButton.isEnabled = true
                     self.nextDealerButton.alpha = 1.0
                     self.bannerContinuationLabel.attributedText = NSAttributedString()
+                    
+                    if Config.autoStartHost && !autoStarting {
+                        autoStarting = true
+                        self.continuePressed(self)
+                    }
                     
                 } else  {
                     // Not ready - Hide continue and dealer buttons and slide down space for message at top
@@ -392,12 +388,6 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
                     Utility.animate(if: animate, duration: 1.0) {
                         self.selectedPlayersTopConstraint.constant = topConstraint
                     }
-                }
-                
-                // Auto-start in recovery mode
-                if canStartGame && self.scorecard.recoveryMode {
-                    // Controller happy for game to start in recovery mode - go straight to game
-                    self.recoveryScorepad()
                 }
             }
             // Position bottom buttons
@@ -428,9 +418,21 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         self.updateButtons(animate: animate)
     }
     
+    private func resetAnimationsBeforeExit() {
+        if Scorecard.shared.commsDelegate?.connectionProximity == .online {
+            self.exiting = true
+            let topConstraint: CGFloat = 20.0
+            Utility.animate(if: self.selectedPlayersTopConstraint.constant != topConstraint, duration: 0.2,
+                            animations: {
+                                            self.showStatus(status: "")
+                                            self.selectedPlayersTopConstraint.constant = topConstraint
+                                        })
+        }
+    }
+    
     public func refreshPlayers() {
         if !self.initialising {
-            for slot in 0..<self.scorecard.numberPlayers {
+            for slot in 0..<Scorecard.shared.maxPlayers {
                 if slot < self.selectedPlayers.count {
                     self.selectedPlayersView.set(slot: slot, playerMO: self.selectedPlayers[slot]!)
                     if !(self.delegate?.gamePreview?(isConnected: self.selectedPlayers[slot]!) ?? true) {
@@ -452,43 +454,13 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         self.bannerContinuationLabel?.text = status
     }
     
-    private func goToScorepad() {
-        if self.scorecard.overrideSelected {
-            self.alertDecision("Overrides for the number of cards/rounds or stats/history inclusion have been selected. Are you sure you want to continue",
-                               title: "Warning",
-                               okButtonText: "Use Overrides",
-                               okHandler: {
-                               self.showScorepad()
-            },
-                               otherButtonText: "Use Settings",
-                               otherHandler: {
-                                self.scorecard.resetOverrideSettings()
-                                self.showScorepad()
-            },
-                               cancelButtonText: "Cancel")
-        } else {
-            self.showScorepad()
+    func showCurrentDealer(clear: Bool = false) {
+        if clear {
+            for playerNumber in 1...Scorecard.game.currentPlayers {
+                self.showDealer(playerNumber: playerNumber, forceHide: true)
+            }
         }
-    }
-    
-    private func recoveryScorepad() {
-        Utility.mainThread {
-            self.alertMessage(if: self.scorecard.overrideSelected, "This game was being played with Override Settings", title: "Reminder", okHandler: {
-                self.delegate?.gamePreviewStartGame?()
-                self.showScorepadViewController()
-            })
-        }
-    }
-    
-    func showScorepad() {
-        recovery.saveInitialValues()
-        self.scorecard.setGameInProgress(true)
-        self.delegate?.gamePreviewStartGame?()
-        self.showScorepadViewController()
-    }
-    
-    func showCurrentDealer() {
-        showDealer(playerNumber: scorecard.dealerIs)
+        showDealer(playerNumber: Scorecard.game.dealerIs)
     }
     
     public func showDealer(playerNumber: Int, forceHide: Bool = false) {
@@ -507,16 +479,15 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     // MARK: - Utility Routines ================================================================ -
 
     private func updateSelectedPlayers(_ selectedPlayers: [PlayerMO?]) {
-        scorecard.updateSelectedPlayers(selectedPlayers)
+        Scorecard.shared.updateSelectedPlayers(selectedPlayers)
         self.selectedPlayersView.setAlpha(alpha: 0.3)
         self.selectedPlayersView.setAlpha(slot: 0, alpha: 1.0)
-        scorecard.checkReady()
 
     }
     
     private func checkFaceTimeAvailable() {
         self.faceTimeAvailable = false
-        if (self.delegate?.gamePreviewHosting ?? false) && self.scorecard.commsDelegate?.connectionProximity == .online && Utility.faceTimeAvailable() {
+        if (self.delegate?.gamePreviewHosting ?? false) && Scorecard.shared.commsDelegate?.connectionProximity == .online && Utility.faceTimeAvailable() {
             var allBlank = true
             if self.faceTimeAddress.count > 0 {
                 for address in self.faceTimeAddress {
@@ -539,19 +510,19 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         bannerContinuationLabel.isHidden = true
         
         // Remove current dealer halo
-        self.showDealer(playerNumber: self.scorecard.dealerIs, forceHide: true)
+        self.showDealer(playerNumber: Scorecard.game.dealerIs, forceHide: true)
         
         // Carry out cut and broadcast
         cutCards = self.cutCards(preCutCards: preCutCards)
-        if self.scorecard.isHosting {
-            self.scorecard.sendCut(cutCards: cutCards, playerNames: self.selectedPlayers.map{ $0!.name! })
+        if Scorecard.game.isHosting {
+            Scorecard.shared.sendCut(cutCards: cutCards, playerNames: self.selectedPlayers.map{ $0!.name! })
         }
         
-       self.animateDealCards(cards: cutCards, afterDuration: 0.2, stepDuration: 0.3, completion: {
-            self.animateTurnCards(afterDuration: 0.3, stepDuration: 0.5, completion: {
-                self.animateHideOthers(afterDuration: 0.5, stepDuration: 0.5, completion: {
-                    self.animateOutcome(cards: cutCards, afterDuration: 0.0, stepDuration: 1.0, completion: {
-                        self.animateClear(afterDuration: 2.0, stepDuration: 0.5, completion: {
+       self.animateDealCards(cards: cutCards, afterDuration: 0.2, stepDuration: 0.3, completion: { [unowned self] in
+            self.animateTurnCards(afterDuration: 0.3, stepDuration: 0.5, completion: { [unowned self] in
+                self.animateHideOthers(afterDuration: 0.5, stepDuration: 0.5, completion: { [unowned self] in
+                    self.animateOutcome(cards: cutCards, afterDuration: 0.0, stepDuration: 1.0, completion: { [unowned self] in
+                        self.animateClear(afterDuration: 2.0, stepDuration: 0.5, completion: { [unowned self] in
                             self.animateResume(statusIsHidden: statusIsHidden)
                         })
                     })
@@ -565,9 +536,9 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         let outcome = NSMutableAttributedString()
         let outcomeTextColor = [NSAttributedString.Key.foregroundColor: UIColor.white]
         
-        outcome.append(NSMutableAttributedString(string: self.selectedPlayers[self.scorecard.dealerIs - 1]!.name!, attributes: outcomeTextColor))
+        outcome.append(NSMutableAttributedString(string: self.selectedPlayers[Scorecard.game.dealerIs - 1]!.name!, attributes: outcomeTextColor))
         outcome.append(NSMutableAttributedString(string: " wins with ", attributes: outcomeTextColor))
-        outcome.append(cutCards[scorecard.dealerIs-1].toAttributedString())
+        outcome.append(cutCards[Scorecard.game.dealerIs-1].toAttributedString())
         
         return outcome
     }
@@ -593,7 +564,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         }
         
         // Save it
-        self.scorecard.saveDealer(dealerIs)
+        Scorecard.shared.saveDealer(dealerIs)
         
         return cards
     }
@@ -649,7 +620,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
                                         size: cardView.frame.size)
             }
             if slot == 0 {
-                animation.addCompletion({ _ in
+                animation.addCompletion({ [unowned self] _ in
                     // Fade buttons
                     if !self.readOnly {
                         self.cutForDealerButton.alpha = 0.7
@@ -676,7 +647,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
             // Hide card back (revealing front)
             self.cutCardView[slot].subviews.first!.alpha = 0.0
         }
-        animation.addCompletion({ _ in
+        animation.addCompletion({ [unowned self] _ in
             if slot == 0 {
                 completion()
             } else {
@@ -691,7 +662,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         let animation = UIViewPropertyAnimator(duration: stepDuration, curve: .easeIn) {
             for slot in 0..<self.self.selectedPlayers.count {
                 self.selectedPlayersView.setAlpha(slot: slot, alpha: 0.0)
-                if slot + 1 != self.scorecard.dealerIs {
+                if slot + 1 != Scorecard.game.dealerIs {
                     self.cutCardView[slot].alpha = 0.0
                 }
             }
@@ -711,7 +682,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         let animation = UIViewPropertyAnimator(duration: stepDuration, curve: .easeIn) {
             // Update the outcome
             self.selectedPlayersView.messageAlpha = 1.0
-            let cutCard = self.cutCardView[self.scorecard.dealerIs - 1]
+            let cutCard = self.cutCardView[Scorecard.game.dealerIs - 1]
             cutCard.frame = self.selectedPlayersView.getMessageViewFrame(size: cutCard.frame.size, in: self.view)
         }
         animation.addCompletion({ _ in
@@ -751,7 +722,7 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
     }
     
     private func createCutCards() {
-        for _ in 0..<self.scorecard.numberPlayers {
+        for _ in 0..<Scorecard.shared.maxPlayers {
             let cardView = UILabel(frame: CGRect(origin: CGPoint(), size: CGSize(width: cutCardWidth, height: cutCardHeight)))
             cardView.backgroundColor = Palette.cardFace
             ScorecardUI.roundCorners(cardView)
@@ -768,33 +739,14 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         }
     }
     
-    // MARK: - Show scorepad ================================================================ -
-
-    private func showScorepadViewController() {
-        
-        let gameSettings = self.scorecard.currentGameSettings()
-        
-        _ = ScorepadViewController.show(from: self, scorepadMode: (self.scorecard.isHosting || self.scorecard.hasJoined ? .display : .amend), rounds: gameSettings.rounds, cards: gameSettings.cards, bounce: gameSettings.bounceNumberCards, bonus2: scorecard.settingBonus2, suits: scorecard.suits, recoveryMode: self.scorecard.recoveryMode, computerPlayerDelegate: self.computerPlayerDelegate, completion:
-                { (returnHome) in
-                    self.delegate?.gamePreviewStopGame?()
-                    if returnHome {
-                        self.dismiss(returnHome: true)
-                    } else {
-                        self.showCurrentDealer()
-                        self.scorecard.setGameInProgress(false)
-                    }
-                })
-        
-        self.scorecard.recoveryMode = false
-    }
-    
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class func show(from viewController: CustomViewController, selectedPlayers: [PlayerMO], title: String = "Preview", backText: String = "", readOnly: Bool = true, faceTimeAddress: [String] = [], computerPlayerDelegates: [Int : ComputerPlayerDelegate]? = nil, delegate: GamePreviewDelegate? = nil, showCompletion: (()->())? = nil) -> GamePreviewViewController {
+    class func show(from viewController: ScorecardViewController, selectedPlayers: [PlayerMO], title: String = "Preview", backText: String = "", readOnly: Bool = true, faceTimeAddress: [String] = [], animated: Bool = true, computerPlayerDelegates: [Int : ComputerPlayerDelegate]? = nil, delegate: GamePreviewDelegate? = nil, controllerDelegate: ScorecardAppControllerDelegate? = nil) -> GamePreviewViewController {
         let storyboard = UIStoryboard(name: "GamePreviewViewController", bundle: nil)
         let gamePreviewViewController = storyboard.instantiateViewController(withIdentifier: "GamePreviewViewController") as! GamePreviewViewController
         
         gamePreviewViewController.preferredContentSize = CGSize(width: 400, height: 700)
+        gamePreviewViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         gamePreviewViewController.selectedPlayers = selectedPlayers
         gamePreviewViewController.formTitle = title
@@ -803,32 +755,12 @@ class GamePreviewViewController: CustomViewController, ImageButtonDelegate, Sele
         gamePreviewViewController.faceTimeAddress = faceTimeAddress
         gamePreviewViewController.computerPlayerDelegate = computerPlayerDelegates
         gamePreviewViewController.delegate = delegate
-        
-        if let viewController = viewController as? SelectionViewController {
-            // Animating from selection - use special view controller
-            gamePreviewViewController.transitioningDelegate = viewController
-        }
-        
+        gamePreviewViewController.controllerDelegate = controllerDelegate
+                
         gamePreviewViewController.firstTime =  true
         
-        viewController.present(gamePreviewViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: {
-            showCompletion?()
-        })
+        viewController.present(gamePreviewViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: animated)
         return gamePreviewViewController
-    }
-    
-    private func dismiss(returnHome: Bool = false) {
-        self.dismiss(animated: true, completion: {
-            self.delegate?.gamePreviewCompletion?(returnHome: returnHome, completion: nil)
-        })
-    }
-    
-    override internal func didDismiss() {
-        if !self.scorecard.isHosting && !self.scorecard.hasJoined {
-            NotificationCenter.default.removeObserver(observer!)
-            self.scorecard.resetOverrideSettings()
-        }
-        self.delegate?.gamePreviewCompletion?(returnHome: false, completion: nil)
     }
 }
 

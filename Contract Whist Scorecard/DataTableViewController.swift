@@ -47,12 +47,9 @@ import CoreData
     
 }
 
-class DataTableViewController: CustomViewController, UITableViewDataSource, UITableViewDelegate {
+class DataTableViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate {
     
     // MARK: - Class Properties ======================================================================== -
-    
-    // Main state properties
-    private let scorecard = Scorecard.shared
     
     private var displayedFields: [DataTableField] = []
     private var firstTime = true
@@ -67,7 +64,7 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
     
     // Properties to control how viewer works
     private var recordList: [DataTableViewerDataSource]!
-    private var delegate: DataTableViewerDelegate?
+    private weak var delegate: DataTableViewerDelegate?
     
     // UI component pointers
     private var headerCollectionView: UICollectionView!
@@ -108,7 +105,7 @@ class DataTableViewController: CustomViewController, UITableViewDataSource, UITa
         
         // Check for network / iCloud login
         if self.delegate?.allowSync ?? true {
-            scorecard.checkNetworkConnection(button: syncButton, label: nil)
+            Scorecard.shared.checkNetworkConnection(button: syncButton, label: nil)
         } else {
             syncButton.isHidden = true
         }

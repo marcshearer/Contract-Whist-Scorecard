@@ -28,9 +28,9 @@ import UIKit
 
 public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteractionDelegate {
     
-    public var delegate: PlayerViewDelegate?
+    public weak var delegate: PlayerViewDelegate?
     
-    public var parent: UIView
+    public weak var parent: UIView!
     public var tag: Int
     public var type: PlayerViewType
     public var thumbnailView: ThumbnailView!

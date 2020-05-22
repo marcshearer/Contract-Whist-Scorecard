@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WalkthroughViewController: CustomViewController {
+class WalkthroughViewController: ScorecardViewController {
     
     // MARK: - Class Properties ======================================================================== -
     
@@ -20,11 +20,11 @@ class WalkthroughViewController: CustomViewController {
     var numberOfPages = 0
     
     // MARK: - IB Outlets ============================================================================== -
-    @IBOutlet var headingTitle: UINavigationItem!
-    @IBOutlet var contentLabel: UILabel!
-    @IBOutlet var contentImageView: UIImageView!
-    @IBOutlet var pageControl: UIPageControl!
-    @IBOutlet var forwardButton: UIButton!
+    @IBOutlet weak var headingTitle: UINavigationItem!
+    @IBOutlet weak var contentLabel: UILabel!
+    @IBOutlet weak var contentImageView: UIImageView!
+    @IBOutlet weak var pageControl: UIPageControl!
+    @IBOutlet weak var forwardButton: UIButton!
     @IBOutlet weak var finishButton: UIButton!
     
     @IBAction func nextPressed(sender: UIButton) {

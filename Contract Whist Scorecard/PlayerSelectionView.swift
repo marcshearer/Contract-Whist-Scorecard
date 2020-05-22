@@ -19,10 +19,9 @@ import CoreData
 
 class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    public var delegate: PlayerSelectionViewDelegate!
+    public weak var delegate: PlayerSelectionViewDelegate!
     
-    private var parent: CustomViewController!
-    private var scorecard = Scorecard.shared
+    private var parent: ScorecardViewController!
     private var playerList: [PlayerMO]!
     private var thumbnailWidth: CGFloat = 0.0
     private var thumbnailHeight: CGFloat = 0.0
@@ -69,7 +68,7 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
         self.loadPlayerSelectionView()
     }
     
-    convenience init(parent: CustomViewController, frame: CGRect, interRowSpacing: CGFloat = 10.0) {
+    convenience init(parent: ScorecardViewController, frame: CGRect, interRowSpacing: CGFloat = 10.0) {
         self.init(frame: frame)
         self.parent = parent
         self.interRowSpacing = interRowSpacing
@@ -80,7 +79,7 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
         self.collectionView.layoutIfNeeded()
     }
     
-    public func set(parent: CustomViewController) {
+    public func set(parent: ScorecardViewController) {
         self.parent = parent
     }
     
@@ -197,7 +196,7 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
     // MARK: - Create players ============================================================ -
     
     func addNewPlayer() {
-        if scorecard.settingSyncEnabled && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
+        if Scorecard.shared.settings.syncEnabled && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
             self.showSelectPlayers()
         } else {
             PlayerDetailViewController.show(from: self.parent, playerDetail: PlayerDetail(visibleLocally: true), mode: .create, sourceView: self,

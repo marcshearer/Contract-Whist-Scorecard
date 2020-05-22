@@ -102,8 +102,8 @@ class WatchGameInterfaceController: WKInterfaceController, WatchStateDelegate {
 }
 
 class WatchGameRowController: NSObject {
-    @IBOutlet var playerNameLabel: WKInterfaceLabel!
-    @IBOutlet var playerScoreLabel: WKInterfaceLabel!
+    @IBOutlet weak var playerNameLabel: WKInterfaceLabel!
+    @IBOutlet weak var playerScoreLabel: WKInterfaceLabel!
     var winner = false
     
     var playerName:String! {

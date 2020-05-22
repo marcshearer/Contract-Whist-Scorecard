@@ -31,7 +31,6 @@ extension ComputerPlayerDelegate {
 
 class ComputerPlayer: NSObject, ComputerPlayerDelegate {
     
-    private let scorecard = Scorecard.shared
     private var thisPlayer: String
     private var thisPlayerName: String
     private var thisPlayerNumber: Int!
@@ -62,25 +61,26 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
     }
     
     internal func autoBid(completion: (()->())?) {
-        let round = self.scorecard.handState.round
+        let round = Scorecard.game?.handState.round ?? 1
         var bids: [Int] = []
         
-        for playerNumber in 1...self.scorecard.currentPlayers {
-            let bid = scorecard.entryPlayer(playerNumber).bid(round)
+        for playerNumber in 1...Scorecard.game.currentPlayers {
+            let bid = Scorecard.game.scores.get(round: round, playerNumber: playerNumber, sequence: .entry).bid
             if bid != nil {
                 bids.append(bid!)
             }
         }
         
-        if self.scorecard.entryPlayerNumber(self.thisPlayerNumber, round: round) == bids.count + 1 {
+        if Scorecard.game.roundPlayerNumber(enteredPlayerNumber: self.thisPlayerNumber, round: round) == bids.count + 1 {
             
             Utility.executeAfter("autoBid", delay: self.autoPlayTimeUnit, completion: {
                 
-                let computerBidding = ComputerBidding(hand: self.hand, trumpSuit: self.scorecard.roundSuit(self.scorecard.handState.round, suits: self.scorecard.handState.suits), bids: bids, numberPlayers: self.scorecard.currentPlayers)
+                let computerBidding = ComputerBidding(hand: self.hand, trumpSuit: Scorecard.game.roundSuit(Scorecard.game?.handState.round ?? 1), bids: bids, numberPlayers: Scorecard.game.currentPlayers)
                 
                 let bid = computerBidding.bid()
                 
-                self.scorecard.sendScores(playerNumber: self.thisPlayerNumber, round: round, mode: .bid, overrideBid: bid, to: self.hostPeer, using: self.loopbackService)
+                _ = Scorecard.game.scores.set(round: round, playerNumber: self.thisPlayerNumber, value: bid, mode: .bid)
+                Scorecard.shared.sendBid(playerNumber: self.thisPlayerNumber, round: round, to: self.hostPeer, using: self.loopbackService)
                 
                 completion?()
             })
@@ -91,13 +91,13 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
     }
     
     internal func autoPlay(completion: (()->())?) {
-        let round = self.scorecard.handState.round
-        let roundCards = self.scorecard.roundCards(round)
-        let trick = self.scorecard.handState.trick!
-        let trickCards = self.scorecard.handState.trickCards
+        let round = Scorecard.game!.handState.round
+        let roundCards = Scorecard.game!.roundCards(round)
+        let trick = Scorecard.game!.handState.trick!
+        let trickCards = Scorecard.game!.handState.trickCards
         let cardsPlayed = trickCards!.count
         
-        if trick <= roundCards && self.scorecard.handState.toPlay == self.thisPlayerNumber && self.hand.cards.count >= (roundCards - trick + 1) {
+        if trick <= roundCards && Scorecard.game?.handState.toPlay == self.thisPlayerNumber && self.hand.cards.count >= (roundCards - trick + 1) {
                     
             Utility.executeAfter("autoPlay", delay: self.autoPlayTimeUnit, completion: {
                 
@@ -121,7 +121,7 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
                     trySuitLed = false
                 }
                 
-                self.scorecard.sendCardPlayed(round: round, trick: trick, playerNumber: self.thisPlayerNumber, card: cardPlayed, using: self.loopbackService)
+                Scorecard.shared.sendCardPlayed(round: round, trick: trick, playerNumber: self.thisPlayerNumber, card: cardPlayed, using: self.loopbackService)
                 
                 completion?()
             })

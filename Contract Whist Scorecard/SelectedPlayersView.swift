@@ -31,16 +31,19 @@ public enum ArrowDirection: Int {
     case right = 3
 }
 
+class MyView: UIView {
+    
+}
+
 class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate {
 
     // Public properties
     public var playerViews: [PlayerView]!
-    public var delegate: SelectedPlayersViewDelegate?
+    public weak var delegate: SelectedPlayersViewDelegate?
     
     // Internal properties
-    private var scorecard = Scorecard.shared
     private var messageLabel = UILabel()
-    private var roomPath: CGPath?
+    private weak var roomPath: CGPath?
     private var tableLayers: [CAShapeLayer] = []
     private var tablePoints: [PolygonPoint]!
     private var roomFrame: CGRect!
@@ -60,7 +63,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
 
     // MARK: - IB Outlets ============================================================================== -
     
-    @IBOutlet private weak var contentView: UIView!
+    @IBOutlet private weak var contentView: MyView!
     
     // MARK: - Calculated properties ====================================================================== -
     
@@ -192,7 +195,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         
         // Save leg height and thumbnail sizes etc
         self.setThumbnailSize(width: thumbnailWidth ?? 60.0, height: thumbnailHeight ?? 90.0)
-        self.players = players ?? self.scorecard.currentPlayers
+        self.players = players ?? Scorecard.game.currentPlayers
         
         // save arrow directions
         self.arrowDirections = [:]
@@ -254,12 +257,12 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         }
     }
     
-    private func setupSelectedPlayers(dropAction: ((PlayerView?, CGPoint?, PlayerViewType, String)->())? = nil, tapAction: ((PlayerView)->())? = nil) {
+    private func setupSelectedPlayers() {
         
         // Add buttons to view
         self.playerViews = []
         
-        for index in 0..<self.scorecard.numberPlayers {
+        for index in 0..<Scorecard.shared.maxPlayers {
             
             let playerView = PlayerView(type: .selected, parent: self.contentView, width: self.width, height: self.height, tag: index, haloWidth: self.haloWidth, allowHaloWidth: self.allowHaloWidth)
             playerView.delegate = self
@@ -580,7 +583,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         }
         
         let viewSize = CGSize(width: self.width, height: self.height)
-        let middleX: CGFloat = (self.players == self.scorecard.numberPlayers ? 0.0 : (self.tableFrame.width / 8.0)) + (self.width / 2.0)
+        let middleX: CGFloat = (self.players == Scorecard.shared.maxPlayers ? 0.0 : (self.tableFrame.width / 8.0)) + (self.width / 2.0)
         var position: [Int]
         switch self.players {
         case 1:
@@ -626,7 +629,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
     internal func playerViewWasDroppedOn(_ playerView: PlayerView, from source: PlayerViewType, withEmail: String) {
         
         // Nothing to do here - pass on to delegate
-        if let playerMO = self.scorecard.playerList.first(where: { $0.email == withEmail }) {
+        if let playerMO = Scorecard.shared.playerList.first(where: { $0.email == withEmail }) {
             self.delegate?.selectedPlayersView?(wasDroppedOn: playerView.tag, from: source, playerMO: playerMO)
         }
         
@@ -649,7 +652,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
     
     internal func selectedViewDropAction(dropLocation: CGPoint, source: PlayerViewType, withEmail: String) {
         
-        if let addedPlayerMO = scorecard.playerList.first(where: { $0.email == withEmail }) {
+        if let addedPlayerMO = Scorecard.shared.playerList.first(where: { $0.email == withEmail }) {
             // Found the player from their email
             
             if source == .selected {
@@ -736,7 +739,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         var distance: [(slot: Int, distance: CGFloat)] = []
         
         // Build list of distances to players
-        for slot in 0..<self.playerViews.count {
+        for slot in 0..<self.players {
             if self.playerViews[slot].isEnabled {
                 distance.append((slot, self.playerViews[slot].frame.center.distance(to: dropLocation)))
             }

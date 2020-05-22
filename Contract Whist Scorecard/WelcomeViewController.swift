@@ -25,7 +25,7 @@ public enum Position: String {
     case right = "right"
 }
 
-class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollViewDelegate, ReconcileDelegate, SyncDelegate, MFMailComposeViewControllerDelegate, UIPopoverPresentationControllerDelegate {
+class WelcomeViewController: ScorecardViewController, ScrollViewDataSource, ScrollViewDelegate, ReconcileDelegate, SyncDelegate, MFMailComposeViewControllerDelegate, UIPopoverPresentationControllerDelegate {
     
     private enum Shape {
         case arrowTop
@@ -37,7 +37,6 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     // MARK: - Class Properties ================================================================ -
     
     // Main state properties
-    private let scorecard = Scorecard.shared
     private let sync = Sync()
     
     // Local state variables
@@ -107,7 +106,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     }
     
     @IBAction func rotationGesture(recognizer:UIRotationGestureRecognizer) {
-        if scorecard.iCloudUserIsMe && recognizer.state == .ended {
+        if Scorecard.shared.iCloudUserIsMe && recognizer.state == .ended {
             let value: CGFloat = (recognizer.rotation < 0.0 ? -1.0 : 1.0)
             if code[matching] == value {
                 matching += 1
@@ -135,17 +134,12 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         // Possible clear all data in test mode
         TestMode.resetApp()
         
-        scorecard.initialise(from: self, players: 4, maxRounds: 25)
-        
-        // Check if recovering
-        self.checkRecovery()
-        
         // Setup scroll view
         self.scrollView = ScrollView(self.actionScrollView)
         self.scrollView.dataSource = self
         self.scrollView.delegate = self
         
-        scorecard.checkNetworkConnection(button: nil, label: syncLabel)
+        Scorecard.shared.checkNetworkConnection(button: nil, label: syncLabel)
         
         // Setup screen
         self.setupButtons()
@@ -155,10 +149,10 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+                
         if firstTime {
             // Get local and cloud version
-            scorecard.getVersion(completion: {
+            Scorecard.shared.getVersion(completion: {
                 // Don't call this until any upgrade has taken place
                 self.getCloudVersion()
             })
@@ -191,7 +185,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     // MARK: - Sync class delegate methods ============================================== -
     
     func getCloudVersion(async: Bool = false) {
-        if scorecard.isNetworkAvailable {
+        if Scorecard.shared.isNetworkAvailable {
             self.sync.delegate = self
             if self.sync.synchronise(syncMode: .syncGetVersion, timeout: nil, waitFinish: async) {
                 // Running or queued (if async)
@@ -208,7 +202,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         Utility.debugMessage("Welcome", "Version returned")
         
         // Continue to Get Started if necessary pending version lookup - a risk but probably OK
-        if scorecard.playerList.count == 0 && getStarted {
+        if Scorecard.shared.playerList.count == 0 && getStarted {
             // No players setup - go to Get Started
             getStarted = false
             self.showGetStarted()
@@ -216,13 +210,13 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         
         if self.firstTime {
             
-            if !scorecard.upgradeToVersion(from: self) {
+            if !Scorecard.shared.upgradeToVersion(from: self) {
                 self.alertMessage("Error upgrading to current version", okHandler: {
                     exit(0)
                 })
             }
             
-            if scorecard.playerList.count != 0 && !scorecard.settingVersionBlockSync && scorecard.isNetworkAvailable && scorecard.isLoggedIn {
+            if Scorecard.shared.playerList.count != 0 && !Scorecard.version.blockSync && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
                 // Rebuild any players who have a sync in progress flag set
                 self.reconcilePlayers()
             }
@@ -233,7 +227,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     
     func syncAlert(_ message: String, completion: @escaping ()->()) {
         self.alertMessage(message, title: "Contract Whist Scorecard", okHandler: {
-            if self.scorecard.settingVersionBlockAccess {
+            if Scorecard.version.blockAccess {
                 exit(0)
             } else {
                 completion()
@@ -357,34 +351,34 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         
         self.actionButtons = []
         
-        self.addAction(section: mainSection, title: "Get Started", isHidden: {self.scorecard.playerList.count != 0}, action: { (_) in
+        self.addAction(section: mainSection, title: "Get Started", isHidden: {Scorecard.shared.playerList.count != 0}, action: { (_) in
             self.showGetStarted()
         })
         
-        self.addAction(section: mainSection, title: "Play Game", isHidden: {!self.scorecard.settingSyncEnabled || !((self.scorecard.settingOnlinePlayerEmail ?? "") != "" || self.scorecard.onlineEnabled) || self.scorecard.playerList.count == 0}, action: newOnlineGame)
+        self.addAction(section: mainSection, title: "Play Game", isHidden: {!Scorecard.activeSettings.syncEnabled || !((Scorecard.activeSettings.onlinePlayerEmail ?? "") != "" || Scorecard.shared.onlineEnabled) || Scorecard.shared.playerList.count == 0}, action: newOnlineGame)
         
         self.addAction(section: mainSection, title: "Resume Playing", highlight: true, isHidden: {!self.recoveryAvailable || !self.recoverOnline || !allowRecovery
         }, action: resumeGame)
         
-        self.addAction(section: mainSection, title: (self.scorecard.settingSyncEnabled ? "Resume Scoring" : "Resume"), highlight: true, isHidden: {!self.recoveryAvailable || self.recoverOnline || !allowRecovery}, action: resumeGame)
+        self.addAction(section: mainSection, title: (Scorecard.activeSettings.syncEnabled ? "Resume Scoring" : "Resume"), highlight: true, isHidden: {!self.recoveryAvailable || self.recoverOnline || !allowRecovery}, action: resumeGame)
 
         self.addAction(section: mainSection, title: "Score Game", action: { (_) in
             self.scoreGame()
         })
         
-        self.addAction(section: infoSection, title: "Players", isHidden: {self.scorecard.playerList.count == 0}, action: { (_) in
+        self.addAction(section: infoSection, title: "Players", isHidden: {Scorecard.shared.playerList.count == 0}, action: { (_) in
             self.showPlayers()
         })
         
-        self.addAction(section: infoSection, title: "Statistics", isHidden: {self.scorecard.playerList.count == 0}, action: { (_) in
+        self.addAction(section: infoSection, title: "Statistics", isHidden: {Scorecard.shared.playerList.count == 0}, action: { (_) in
             let _ = StatisticsViewer(from: self)
         })
         
-        self.addAction(section: infoSection, title: "History", isHidden: {!self.scorecard.settingSaveHistory || self.scorecard.playerList.count == 0}, action: { (_) in
+        self.addAction(section: infoSection, title: "History", isHidden: {!Scorecard.activeSettings.saveHistory || Scorecard.shared.playerList.count == 0}, action: { (_) in
             let _ = HistoryViewer(from: self)
         })
         
-        self.addAction(section: infoSection, title: "High Scores", isHidden: {!self.scorecard.settingSaveHistory || self.scorecard.playerList.count == 0}, action: { (_) in
+        self.addAction(section: infoSection, title: "High Scores", isHidden: {!Scorecard.activeSettings.saveHistory || Scorecard.shared.playerList.count == 0}, action: { (_) in
             self.showHighScores()
         })
         
@@ -411,7 +405,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
         self.checkButtons()
         
         
-        self.viewOnlineButton.isHidden = !self.scorecard.settingSyncEnabled || !self.scorecard.settingAllowBroadcast
+        self.viewOnlineButton.isHidden = !Scorecard.activeSettings.syncEnabled || !Scorecard.activeSettings.allowBroadcast
         
     }
     
@@ -540,7 +534,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     // MARK: - Show other views =================================================== -
     
     private func scoreGame() {
-        if self.scorecard.recovery.checkRecovery() {
+        if Scorecard.recovery.recoveryAvailable {
             // Warn that this is irreversible
             warnResumeGame(okHandler: {
                 self.startNewGame()
@@ -552,7 +546,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     
     private func showSelection() {
         self.selectionViewController = SelectionViewController.show(from: self, existing: self.selectionViewController, mode: .players, formTitle: "Selection", smallFormTitle: "Select", backText: "", backImage: "home", fullScreen: false, completion: { (_, _) in
-            self.scorecard.checkNetworkConnection(button: nil, label: self.syncLabel)
+            Scorecard.shared.checkNetworkConnection(button: nil, label: self.syncLabel)
             self.recoveryAvailable = false
             self.getCloudVersion(async: true)
             self.checkButtons()
@@ -564,7 +558,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     }
     
     private func showClient(purpose: CommsPurpose? = nil, title: String? = nil) {
-        ClientViewController.show(from: self, backText: "", backImage: "home", formTitle: title, purpose: purpose, completion: self.optionCompletion)
+        // ClientViewController.show(from: self, backText: "", backImage: "home", formTitle: title, purpose: purpose, completion: self.optionCompletion)
     }
     
     private func showHighScores() {
@@ -580,34 +574,13 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     }
     
     private func optionCompletion() {
-        self.scorecard.checkNetworkConnection(button: nil, label: self.syncLabel, labelHeightConstraint: self.syncLabelHeightConstraint, labelHeight: self.syncLabelHeight)
+        Scorecard.shared.checkNetworkConnection(button: nil, label: self.syncLabel, labelHeightConstraint: self.syncLabelHeightConstraint, labelHeight: self.syncLabelHeight)
         self.getCloudVersion(async: true)
-        self.checkRecovery()
         self.setupButtons()
     }
     
-    // MARK: - Popover Overrides ================================================================ -
-    
-    func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
-        let viewController = popoverPresentationController.presentedViewController
-        if viewController is ClientViewController {
-            let clientViewController = viewController as! ClientViewController
-            clientViewController.finishClient()
-        }
-        return true
-    }
-
     // MARK: - Utility Routines ======================================================================== -
-    
-    private func checkRecovery() {
         
-        (self.recoveryAvailable, self.recoverOnline) = scorecard.recovery.checkOnlineRecovery()
-        
-        if !recoveryAvailable {
-            scorecard.reset()
-        }
-    }
-    
     private func setTitle() {
         if Scorecard.adminMode {
             self.titleLabel.text = "Admin Mode"
@@ -625,21 +598,20 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     }
     
     private func startNewGame() {
-        self.scorecard.setGameInProgress(false)
-        self.scorecard.reset()
+        Scorecard.shared.setGameInProgress(false)
+        Scorecard.game?.resetValues()
         self.showSelection()
     }
     
     private func resumeGame(_ cell: WelcomeActionCell) {
         // Recover game
-        if self.scorecard.recovery.checkRecovery() {
+        if Scorecard.recovery.recoveryAvailable {
             self.setupButtons(allowRecovery: false)
-            self.scorecard.loadGameDefaults()
-            self.scorecard.recovery.loadSavedValues()
-            scorecard.recoveryMode = true
-            if scorecard.recoveryOnlinePurpose != nil && scorecard.recoveryOnlinePurpose == .playing {
-                if scorecard.recoveryOnlineType == .server {
-                    if self.scorecard.recoveryOnlineMode == .loopback {
+            Scorecard.recovery.loadSavedValues()
+            Scorecard.recovery.recovering = true
+            if Scorecard.recovery.onlinePurpose != nil && Scorecard.recovery.onlinePurpose == .playing {
+                if Scorecard.recovery.onlineType == .server {
+                    if Scorecard.recovery.onlineProximity == .loopback {
                         self.showClient(purpose: .playing, title: "Play Computer")
                     } else {
                         self.hostGame()
@@ -655,7 +627,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     }
     
     private func newOnlineGame(_ cell: WelcomeActionCell) {
-        if self.scorecard.recovery.checkRecovery() {
+        if Scorecard.recovery.recoveryAvailable {
             // Warn that this is irreversible
             self.warnResumeGame(gameType: "online", okHandler: {
                 self.onlineGame(cell)
@@ -666,10 +638,10 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     }
     
     private func onlineGame(_ cell: WelcomeActionCell) {
-        if Utility.compareVersions(version1: self.scorecard.settingVersion,
-                                   version2: self.scorecard.latestVersion) == .lessThan {
+        if Utility.compareVersions(version1: Scorecard.version.version,
+                                   version2: Scorecard.version.latestVersion) == .lessThan {
             self.alertMessage("You must upgrade to the latest version of the app to use this option")
-        } else if self.scorecard.settingSyncEnabled && (self.scorecard.settingOnlinePlayerEmail != nil) {
+        } else if Scorecard.activeSettings.syncEnabled && (Scorecard.activeSettings.onlinePlayerEmail != nil) {
             self.showClient(purpose: .playing, title: "Play a Game")
         }
     }
@@ -696,7 +668,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
     private func reconcilePlayers(allPlayers: Bool = false) {
         
         var playerMOList: [PlayerMO] = []
-        for playerMO in scorecard.playerList {
+        for playerMO in Scorecard.shared.playerList {
             if allPlayers || playerMO.syncInProgress {
                 playerMOList.append(playerMO)
             }
@@ -720,7 +692,7 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
             self.reconcileIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 0, y: 150,
                                                                                 width: self.reconcileAlertController.view.frame.width,
                                                                                 height: 100))
-            self.reconcileIndicatorView.style = .whiteLarge
+            self.reconcileIndicatorView.style = UIActivityIndicatorView.Style.large
             self.reconcileIndicatorView.color = UIColor.black
             self.reconcileIndicatorView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             self.reconcileAlertController.view.addSubview(self.reconcileIndicatorView)
@@ -756,6 +728,8 @@ class WelcomeViewController: CustomViewController, ScrollViewDataSource, ScrollV
             self.reconcileContinue.isEnabled = true
         }
     }
+    
+    // MARK: - Background arrow shape drawers ================================================================= -
     
     private func backgroundShape(view: UIView, shape: Shape, strokeColor: UIColor, fillColor: UIColor, pointType: PolygonPointType = .rounded, lineWidth: CGFloat = 3.0, clipTop: Bool = false, clipBottom: Bool = false, reflected: Bool = false) -> UIBezierPath {
         

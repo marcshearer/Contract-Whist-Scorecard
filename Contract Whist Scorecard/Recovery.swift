@@ -12,77 +12,95 @@ import CoreLocation
 
 class Recovery {
     
-    private let scorecard = Scorecard.shared
-    var recoveryInProgress = false
+    public var recoveryAvailable: Bool = false
+    public var onlineRecovery: Bool = false
+    public var onlinePurpose: CommsPurpose!
+    public var onlineType: CommsConnectionType!
+    public var onlineProximity: CommsConnectionProximity!
+    public var onlineMode: CommsConnectionMode!
+    public var connectionUUID: String!
+    public var connectionEmail: String!
+    public var connectionRemoteEmail: String!
+    public var connectionRemoteDeviceName: String!
+    public var reloadInProgress = false
     
-    func saveGameInProgress() {
+    public var recovering: Bool = false
+    
+    init(load: Bool = true) {
+        if load {
+            self.recoveryAvailable = UserDefaults.standard.bool(forKey: "recoveryGameInProgress")
+            if self.recoveryAvailable {
+                self.loadOnlineRecovery()
+            }
+        }
+    }
+    
+    public func saveGameInProgress() {
         var online = ""
-        UserDefaults.standard.set(scorecard.gameInProgress, forKey: "recoveryGameInProgress")
+        let gameInProgress = Scorecard.game?.inProgress ?? false
+        UserDefaults.standard.set(gameInProgress, forKey: "recoveryGameInProgress")
         UserDefaults.standard.synchronize()
-        if scorecard.gameInProgress {
-            if let delegate = self.scorecard.commsDelegate {
-                if self.scorecard.commsPurpose == .playing {
+        if gameInProgress {
+            if let delegate = Scorecard.shared.commsDelegate {
+                if Scorecard.shared.commsPurpose == .playing {
                     let purpose = CommsPurpose.playing.rawValue
                     let type = delegate.connectionType.rawValue
+                    let proximity = delegate.connectionProximity.rawValue
                     let mode = delegate.connectionMode.rawValue
-                    online = purpose +  "-" + type + "-" + mode
+                    online = "\(purpose)-\(type)-\(proximity)-\(mode)"
                     if delegate.connectionType == .server  {
                         if delegate.connectionMode == .invite {
                             UserDefaults.standard.set(delegate.connectionUUID, forKey: "recoveryConnectionUUID")
                         }
-                    } else {
-                        UserDefaults.standard.set(delegate.connectionDeviceName, forKey: "recoveryConnectionDevice")
-                        UserDefaults.standard.set(delegate.connectionEmail, forKey: "recoveryConnectionEmail")
                     }
+                    UserDefaults.standard.set(delegate.connectionRemoteDeviceName, forKey: "recoveryConnectionRemoteDevice")
+                    UserDefaults.standard.set(delegate.connectionEmail, forKey: "recoveryConnectionEmail")
+                    UserDefaults.standard.set(delegate.connectionRemoteEmail, forKey: "recoveryConnectionRemoteEmail")
                 }
             }
         }
         UserDefaults.standard.set(online, forKey: "recoveryOnline")
     }
-    
-    func saveRoundError(round: Int) {
-        UserDefaults.standard.set(scorecard.roundError(round), forKey: "recoveryRoundError\(round)")
-    }
-    
-    func saveBid(round: Int, playerNumber: Int) {
+       
+    public func saveBid(round: Int, playerNumber: Int) {
         let key = "recoveryBid\(round)-\(playerNumber)"
-        var bid: Int? = scorecard.enteredPlayer(playerNumber).bid(round)
+        var bid: Int? = Scorecard.game.scores.get(round: round, playerNumber: playerNumber, sequence: .entered).bid
         if bid == nil {
             bid = -1
         }
         UserDefaults.standard.set(bid, forKey: key)
     }
     
-    func saveMade(round: Int, playerNumber: Int) {
+    public func saveMade(round: Int, playerNumber: Int) {
         let key = "recoveryMade\(round)-\(playerNumber)"
-        var made: Int? = scorecard.enteredPlayer(playerNumber).made(round)
+        var made: Int? = Scorecard.game.scores.get(round: round, playerNumber: playerNumber, sequence: .entered).made
         if made == nil {
             made = -1
         }
         UserDefaults.standard.set(made, forKey: key)
     }
     
-    func saveTwos(round: Int, playerNumber: Int) {
+    public func saveTwos(round: Int, playerNumber: Int) {
         let key = "recoveryTwos\(round)-\(playerNumber)"
-        var twos: Int? = scorecard.enteredPlayer(playerNumber).twos(round)
+        var twos: Int? = Scorecard.game.scores.get(round: round, playerNumber: playerNumber, sequence: .entered).twos
         if twos == nil{
             twos = -1
         }
         UserDefaults.standard.set(twos, forKey: key)
     }
     
-    func saveHands(deal: Deal, made: [Int], twos: [Int]) {
+    public func saveHands(deal: Deal, made: [Int], twos: [Int]) {
         UserDefaults.standard.set(deal.toNumbers(), forKey: "recoveryHands")
         UserDefaults.standard.set(made, forKey: "recoveryMade")
         UserDefaults.standard.set(twos, forKey: "recoveryTwos")
     }
     
-    func saveTrick(toLead: Int, trickCards: [Card]) {
+    public func saveTrick(toLead: Int, trickCards: [Card]) {
         UserDefaults.standard.set(toLead, forKey: "recoveryToLead")
         UserDefaults.standard.set(Hand(fromCards: trickCards).toNumbers(), forKey: "recoveryTrick")
     }
     
-    func saveLastTrick(lastToLead: Int!, lastCards: [Card]!) {
+    public func saveLastTrick(lastToLead: Int!, lastCards: [Card]!) {
         UserDefaults.standard.set(lastToLead, forKey: "recoveryLastToLead")
         if lastCards == nil {
             UserDefaults.standard.set(nil, forKey: "recoveryLastTrick")
@@ -91,36 +109,33 @@ class Recovery {
         }
     }
     
-    func saveLocationAndDate() {
-        UserDefaults.standard.set(scorecard.gameLocation.description, forKey: "recoveryLocationText")
-        if scorecard.gameLocation.locationSet {
-            UserDefaults.standard.set(scorecard.gameLocation.latitude, forKey: "recoveryLocationLatitude")
-            UserDefaults.standard.set(scorecard.gameLocation.longitude, forKey: "recoveryLocationLongitude")
+    public func saveLocationAndDate() {
+        UserDefaults.standard.set(Scorecard.game.location.description, forKey: "recoveryLocationText")
+        if Scorecard.game.location.locationSet {
+            UserDefaults.standard.set(Scorecard.game.location.latitude, forKey: "recoveryLocationLatitude")
+            UserDefaults.standard.set(Scorecard.game.location.longitude, forKey: "recoveryLocationLongitude")
         }
-        UserDefaults.standard.set(scorecard.gameDatePlayed, forKey: "recoveryDatePlayed")
-        UserDefaults.standard.set(scorecard.gameUUID, forKey: "recoveryGameUUID")
+        UserDefaults.standard.set(Scorecard.game.datePlayed, forKey: "recoveryDatePlayed")
+        UserDefaults.standard.set(Scorecard.game.gameUUID, forKey: "recoveryGameUUID")
     }
     
-    func saveOverride() {
-        UserDefaults.standard.set(scorecard.overrideSelected, forKey: "recoveryOverrideSelected")
-        UserDefaults.standard.set(scorecard.overrideSettings.cards, forKey: "recoveryOverrideCards")
-        UserDefaults.standard.set(scorecard.overrideSettings.bounceNumberCards, forKey: "recoveryOverrideBounceNumberCards")
-        UserDefaults.standard.set(scorecard.overrideSettings.excludeHistory, forKey: "recoveryOverrideExcludeHistory")
-        UserDefaults.standard.set(scorecard.overrideSettings.excludeStats, forKey: "recoveryOverrideStats")
+    public func saveOverride() {
+        UserDefaults.standard.set(Scorecard.activeSettings.cards, forKey: "recoveryOverrideCards")
+        UserDefaults.standard.set(Scorecard.activeSettings.bounceNumberCards, forKey: "recoveryOverrideBounceNumberCards")
+        UserDefaults.standard.set(Scorecard.activeSettings.saveHistory, forKey: "recoveryOverrideSaveHistory")
+        UserDefaults.standard.set(Scorecard.activeSettings.saveStats, forKey: "recoveryOverrideSaveStats")
     }
     
-    func saveDeal(round: Int, deal: Deal) {
+    public func saveDeal(round: Int, deal: Deal) {
         UserDefaults.standard.set(deal.toNumbers(), forKey: "recoveryDeal\(round)")
     }
     
-    func saveInitialValues() {
+    public func saveInitialValues() {
         // Called at the start of a game to clear out any old values
         
-        for round in 1...scorecard.rounds {
+        for round in 1...Scorecard.game.rounds {
             
-            self.saveRoundError(round: round)
-            
-            for playerNumber in 1...scorecard.numberPlayers {
+            for playerNumber in 1...Scorecard.shared.maxPlayers {
                 
                 self.saveBid(round: round, playerNumber: playerNumber)
                 self.saveMade(round: round, playerNumber: playerNumber)
@@ -129,161 +144,148 @@ class Recovery {
         }
     }
     
-    func checkRecovery() -> Bool {
-        let gameInProgress = UserDefaults.standard.bool(forKey: "recoveryGameInProgress")
-        return gameInProgress
-    }
-    
-    func checkOnlineRecovery() -> (Bool, Bool) {
-        var online = ""
-        let gameInProgress = checkRecovery()
-        if gameInProgress {
-            online = UserDefaults.standard.string(forKey: "recoveryOnline") ?? ""
+    private func loadOnlineRecovery() {
+        // Load online details
+        var online: String!
+        self.onlineRecovery = false
+        online = UserDefaults.standard.string(forKey: "recoveryOnline")
+        if online != nil && online != "" {
+            self.onlineRecovery = true
+            let components = online.split(at: "-")
+            self.onlinePurpose = CommsPurpose(rawValue: components[0])
+            self.onlineType = CommsConnectionType(rawValue: components[1])
+            self.onlineProximity = CommsConnectionProximity(rawValue: components[2])
+            self.onlineMode = CommsConnectionMode(rawValue: components[3])
+            if self.onlinePurpose == .playing {
+                if self.onlineType == .server {
+                    if self.onlineMode == .invite {
+                        self.connectionUUID = UserDefaults.standard.string(forKey: "recoveryConnectionUUID")
+                    }
+                }
+                self.connectionRemoteDeviceName = UserDefaults.standard.string(forKey: "recoveryConnectionRemoteDevice")
+                self.connectionEmail = UserDefaults.standard.string(forKey: "recoveryConnectionEmail")
+                self.connectionRemoteEmail = UserDefaults.standard.string(forKey: "recoveryConnectionRemoteEmail")
+            } else {
+                self.connectionUUID = nil
+                self.connectionEmail = nil
+                self.connectionRemoteDeviceName = nil
+            }
+        } else {
+            self.onlinePurpose = nil
+            self.onlineType = nil
+            self.onlineProximity = nil
+            self.connectionUUID = nil
+            self.connectionEmail = nil
+            self.connectionRemoteDeviceName = nil
         }
-        return (gameInProgress, online != "")
     }
     
     
-    func loadSavedValues() {
+    public func loadSavedValues() {
         // Load in the saved values from UserDefaults
         
-        self.recoveryInProgress = true
-        scorecard.setGameInProgress(true, save: false)
-        scorecard.maxEnteredRound = 1
+        self.reloadInProgress = true
+        Scorecard.shared.setGameInProgress(true, save: false)
+        Scorecard.game.maxEnteredRound = 1
+        
+        if self.onlinePurpose == .playing && self.onlineType == .server {
+            // If hosting and hand is in progress need to recover deal
+            let deal:[[Int]] = UserDefaults.standard.array(forKey: "recoveryHands") as! [[Int]]
+            Scorecard.game?.deal = Deal(fromNumbers: deal)
+        }
         
         // Reload scores
-        for round in 1...scorecard.rounds {
-            
-            scorecard.setRoundError(round, UserDefaults.standard.bool(forKey: "recoveryRoundError\(round)"))
-            
-            for playerNumber in 1...scorecard.currentPlayers {
+        for round in 1...Scorecard.game.rounds {
+                        
+            for playerNumber in 1...Scorecard.game.currentPlayers {
                 let bid = UserDefaults.standard.integer(forKey: "recoveryBid\(round)-\(playerNumber)")
                 if bid >= 0 {
-                    _ = scorecard.enteredPlayer(playerNumber).setBid(round, bid)
-                    scorecard.maxEnteredRound = max(round, scorecard.maxEnteredRound)
+                    _ = Scorecard.game.scores.set(round: round, playerNumber: playerNumber, bid: bid)
+                    Scorecard.game.maxEnteredRound = max(round, Scorecard.game.maxEnteredRound)
                 }
                 let made = UserDefaults.standard.integer(forKey: "recoveryMade\(round)-\(playerNumber)")
                 if made >= 0 {
-                    scorecard.enteredPlayer(playerNumber).setMade(round, made)
+                    _ = Scorecard.game.scores.set(round: round, playerNumber: playerNumber, made: made)
                 }
                 let twos = UserDefaults.standard.integer(forKey: "recoveryTwos\(round)-\(playerNumber)")
                 if twos >= 0 {
-                    scorecard.enteredPlayer(playerNumber).setTwos(round, twos)
+                    _ = Scorecard.game.scores.set(round: round, playerNumber: playerNumber, twos: twos)
                 }
             }
         }
         
         // Update current round
-        if scorecard.roundComplete(scorecard.maxEnteredRound) && scorecard.maxEnteredRound < scorecard.rounds {
+        if Scorecard.shared.roundComplete(Scorecard.game.maxEnteredRound) && Scorecard.game.maxEnteredRound < Scorecard.game.rounds {
             // Round complete - move to next
-            scorecard.maxEnteredRound = scorecard.maxEnteredRound + 1
+            Scorecard.game.maxEnteredRound = Scorecard.game.maxEnteredRound + 1
         }
-        scorecard.selectedRound = scorecard.maxEnteredRound
+        Scorecard.game.selectedRound = Scorecard.game.maxEnteredRound
         
         // Reload location
-        scorecard.gameLocation.description = UserDefaults.standard.string(forKey: "recoveryLocationText")
+        Scorecard.game.location.description = UserDefaults.standard.string(forKey: "recoveryLocationText")
         let latitude = UserDefaults.standard.double(forKey: "recoveryLocationLatitude")
         let longitude = UserDefaults.standard.double(forKey: "recoveryLocationLongitude")
         if latitude != 0 || longitude != 0 {
-            scorecard.gameLocation.setLocation(latitude: latitude, longitude: longitude)
+            Scorecard.game.location.setLocation(latitude: latitude, longitude: longitude)
         }
         
         // Reload game unique key / date
-        scorecard.gameDatePlayed = UserDefaults.standard.object(forKey: "recoveryDatePlayed") as? Date
-        scorecard.gameUUID = UserDefaults.standard.string(forKey: "recoveryGameUUID")
-        
-        // Load online details
-        var online: String!
-        online = UserDefaults.standard.string(forKey: "recoveryOnline")
-        if online != nil && online != "" {
-            let components = online.split(at: "-")
-            scorecard.recoveryOnlinePurpose = CommsPurpose(rawValue: components[0])
-            scorecard.recoveryOnlineType = CommsConnectionType(rawValue: components[1])
-            scorecard.recoveryOnlineMode = CommsConnectionMode(rawValue: components[2])
-            if scorecard.recoveryOnlinePurpose == .playing {
-                if scorecard.recoveryOnlineType == .server {
-                    if scorecard.recoveryOnlineMode == .invite {
-                        scorecard.recoveryConnectionUUID = UserDefaults.standard.string(forKey: "recoveryConnectionUUID")
-                    }
-                } else {
-                    scorecard.recoveryConnectionDevice = UserDefaults.standard.string(forKey: "recoveryConnectionDevice")
-                    scorecard.recoveryConnectionEmail = UserDefaults.standard.string(forKey: "recoveryConnectionEmail")
-                }
-            } else {
-                scorecard.recoveryConnectionUUID = nil
-                scorecard.recoveryConnectionEmail = nil
-                scorecard.recoveryConnectionDevice = nil
-            }
-            if scorecard.recoveryOnlinePurpose == .playing && scorecard.recoveryOnlineType == .server {
-                // If hosting and hand is in progress need to recover deal
-                let deal:[[Int]] = UserDefaults.standard.array(forKey: "recoveryHands") as! [[Int]]
-                self.scorecard.deal = Deal(fromNumbers: deal)
-            }
-        } else {
-            scorecard.recoveryOnlinePurpose = nil
-            scorecard.recoveryOnlineType = nil
-            scorecard.recoveryOnlineMode = nil
-            scorecard.recoveryConnectionUUID = nil
-            scorecard.recoveryConnectionEmail = nil
-            scorecard.recoveryConnectionDevice = nil
-        }
+        Scorecard.game.datePlayed = UserDefaults.standard.object(forKey: "recoveryDatePlayed") as? Date
+        Scorecard.game.gameUUID = UserDefaults.standard.string(forKey: "recoveryGameUUID")
         
         // Load deal history
-        if self.scorecard.recoveryOnlinePurpose == .playing {
-            for round in 1...self.scorecard.selectedRound {
+        if self.onlinePurpose == .playing {
+            for round in 1...Scorecard.game.selectedRound {
                 if let dealNumbers = UserDefaults.standard.array(forKey: "recoveryDeal\(round)") as? [[Int]] {
-                    self.scorecard.dealHistory[round] = Deal(fromNumbers: dealNumbers)
+                    Scorecard.game?.dealHistory[round] = Deal(fromNumbers: dealNumbers)
                 }
             }
         }
         
         // Reload overrides
-        scorecard.overrideSelected = UserDefaults.standard.bool(forKey: "recoveryOverrideSelected")
-        if scorecard.overrideSelected {
-            scorecard.overrideSettings.cards = UserDefaults.standard.array(forKey: "recoveryOverrideCards")! as! [Int]
-            scorecard.overrideSettings.bounceNumberCards = UserDefaults.standard.bool(forKey: "recoveryOverrideBounceNumberCards")
-            scorecard.overrideSettings.excludeHistory = UserDefaults.standard.bool(forKey: "recoveryOverrideExcludeHistory")
-            scorecard.overrideSettings.excludeStats = UserDefaults.standard.bool(forKey: "recoveryOverrideExcludeStats")
-        } else {
-            self.scorecard.resetOverrideSettings()
+        if UserDefaults.standard.bool(forKey: "recoveryOverride") {
+            Scorecard.activeSettings.cards = UserDefaults.standard.array(forKey: "recoveryOverrideCards")! as! [Int]
+            Scorecard.activeSettings.bounceNumberCards = UserDefaults.standard.bool(forKey: "recoveryOverrideBounceNumberCards")
+            Scorecard.activeSettings.saveHistory = UserDefaults.standard.bool(forKey: "recoveryOverrideSaveHistory")
+            Scorecard.activeSettings.saveStats = UserDefaults.standard.bool(forKey: "recoveryOverrideSaveStats")
         }
         
         // Finished
-        self.recoveryInProgress = false
-        self.scorecard.watchManager.updateScores()
+        self.reloadInProgress = false
+        Scorecard.shared.watchManager.updateScores()
     }
     
     public func loadCurrentTrick() {
         // Set up player to lead
-        scorecard.handState.toLead = UserDefaults.standard.integer(forKey: "recoveryToLead")
+        Scorecard.game!.handState.toLead = UserDefaults.standard.integer(forKey: "recoveryToLead")
         // Get trick cards - will never be all cards since then would have been removed from hands
-        scorecard.handState.trickCards = Hand(fromNumbers: UserDefaults.standard.array(forKey: "recoveryTrick") as! [Int]).cards
-        scorecard.handState.toPlay = scorecard.handState.playerNumber(scorecard.handState.trickCards.count + 1)
+        Scorecard.game!.handState.trickCards = Hand(fromNumbers: UserDefaults.standard.array(forKey: "recoveryTrick") as! [Int]).cards
+        Scorecard.game!.handState.toPlay = Scorecard.game?.handState.playerNumber(Scorecard.game!.handState.trickCards.count + 1)
         // Remove cards in current trick from deal
-        for (index, card) in self.scorecard.handState.trickCards.enumerated() {
-            let playerNumber = self.scorecard.handState.playerNumber(index + 1)
-            _ = self.scorecard.deal.hands[playerNumber - 1].remove(card: card)
+        for (index, card) in Scorecard.game!.handState.trickCards.enumerated() {
+            let playerNumber = Scorecard.game!.handState.playerNumber(index + 1)
+            _ = Scorecard.game!.deal.hands[playerNumber - 1].remove(card: card)
         }
         // Get number of tricks and twos made
-        scorecard.handState.made = UserDefaults.standard.array(forKey: "recoveryMade") as? [Int]
-        scorecard.handState.twos = UserDefaults.standard.array(forKey: "recoveryTwos") as? [Int]
+        Scorecard.game?.handState.made = UserDefaults.standard.array(forKey: "recoveryMade") as? [Int]
+        Scorecard.game?.handState.twos = UserDefaults.standard.array(forKey: "recoveryTwos") as? [Int]
         
         // Work out trick
         var trick = 0
-        for made in scorecard.handState.made {
+        for made in Scorecard.game!.handState.made {
             trick += made
         }
-        scorecard.handState.trick = min(trick + 1, self.scorecard.rounds)
+        Scorecard.game!.handState.trick = min(trick + 1, Scorecard.game.rounds)
     }
     
     public func loadLastTrick() {
         // Set up last player to lead
-        scorecard.handState.lastToLead = UserDefaults.standard.integer(forKey: "recoveryLastToLead")
+        Scorecard.game!.handState.lastToLead = UserDefaults.standard.integer(forKey: "recoveryLastToLead")
         // Get last trick cards
-        if scorecard.handState.lastToLead == nil || scorecard.handState.lastToLead <= 0 {
-            scorecard.handState.lastCards = []
+        if Scorecard.game!.handState.lastToLead == nil || Scorecard.game!.handState.lastToLead <= 0 {
+            Scorecard.game!.handState.lastCards = []
         } else {
-            scorecard.handState.lastCards = Hand(fromNumbers: UserDefaults.standard.array(forKey: "recoveryLastTrick") as! [Int]).cards
+            Scorecard.game!.handState.lastCards = Hand(fromNumbers: UserDefaults.standard.array(forKey: "recoveryLastTrick") as! [Int]).cards
         }
     }
 }

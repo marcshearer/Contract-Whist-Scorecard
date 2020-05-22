@@ -11,6 +11,14 @@ import AudioToolbox
 
 extension UIViewController {
     
+    public enum AlertSound: Int {
+        case shake = 1109
+        case descent = 1024
+        case photeShutter = 1108
+        case alarm = 1304
+        case lock = 1305
+    }
+
     public func alertMessage(_ message: String, title: String = "Warning", buttonText: String = "OK", okHandler: (() -> ())? = nil) {
         
         func alertMessageCompletion(alertAction: UIAlertAction) {
@@ -73,10 +81,8 @@ extension UIViewController {
         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
     }
     
-    public func alertSound() {
-        
-        AudioServicesPlayAlertSound(SystemSoundID(1109))
-        
+    public func alertSound(sound: AlertSound = .shake) {
+        AudioServicesPlayAlertSound(SystemSoundID(sound.rawValue))
     }
     
     public func alertWait(_ message: String, title: String = "", completion: (()->())? = nil) -> UIAlertController {

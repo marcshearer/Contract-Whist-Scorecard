@@ -93,7 +93,7 @@ class WatchRoundInterfaceController: WKInterfaceController, WatchStateDelegate {
 }
 
 class WatchRoundRowController: NSObject {
-    @IBOutlet var playerLabel: WKInterfaceLabel!
+    @IBOutlet weak var playerLabel: WKInterfaceLabel!
     
     var player:String! {
         didSet {

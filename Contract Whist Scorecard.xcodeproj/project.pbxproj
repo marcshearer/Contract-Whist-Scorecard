@@ -120,6 +120,7 @@
 		B2BC51C71F7B5E8C0065F07D /* String Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BC51C61F7B5E8C0065F07D /* String Extensions.swift */; };
 		B2BE8690234C6BF000766CF2 /* PlayerSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2BE868F234C6BF000766CF2 /* PlayerSelectionView.xib */; };
 		B2BE8692234C6C1600766CF2 /* PlayerSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BE8691234C6C1600766CF2 /* PlayerSelectionView.swift */; };
+		B2BFB5C0247AD6770044F8B6 /* Scoring Controller Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BFB5BE247AC0D80044F8B6 /* Scoring Controller Class.swift */; };
 		B2C051041EDF194C009DE37F /* Multipeer Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C051031EDF194C009DE37F /* Multipeer Class.swift */; };
 		B2C054781FB8B55700846F6E /* ConfirmCountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */; };
 		B2C0966B24616E4900C19447 /* Player Managed Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C0966A24616E4900C19447 /* Player Managed Object.swift */; };
@@ -329,6 +330,7 @@
 		B2BC51C61F7B5E8C0065F07D /* String Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String Extensions.swift"; sourceTree = "<group>"; };
 		B2BE868F234C6BF000766CF2 /* PlayerSelectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayerSelectionView.xib; sourceTree = "<group>"; };
 		B2BE8691234C6C1600766CF2 /* PlayerSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSelectionView.swift; sourceTree = "<group>"; };
+		B2BFB5BE247AC0D80044F8B6 /* Scoring Controller Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Scoring Controller Class.swift"; sourceTree = "<group>"; };
 		B2C051031EDF194C009DE37F /* Multipeer Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Multipeer Class.swift"; sourceTree = "<group>"; };
 		B2C054771FB8B55700846F6E /* ConfirmCountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmCountViewController.swift; sourceTree = "<group>"; };
 		B2C0966A24616E4900C19447 /* Player Managed Object.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Player Managed Object.swift"; sourceTree = "<group>"; };
@@ -608,6 +610,7 @@
 				B2D2D2DB1ED9975A00CA7B3A /* ClientViewController.swift */,
 				B2F70E511EE8BC470092C19F /* Host Controller Class.swift */,
 				B2CB5C5124669CDA009B44C5 /* Client Controller Class.swift */,
+				B2BFB5BE247AC0D80044F8B6 /* Scoring Controller Class.swift */,
 			);
 			name = Client;
 			sourceTree = "<group>";
@@ -1409,6 +1412,7 @@
 				CC395F4D1E064EC500165D1C /* Card Class.swift in Sources */,
 				B26A11AA2460803500449FCC /* Game.swift in Sources */,
 				B28033341F7E046B00CF4696 /* Sync Class.swift in Sources */,
+				B2BFB5C0247AD6770044F8B6 /* Scoring Controller Class.swift in Sources */,
 				B2D74252246AE6C200C58802 /* Scorecard Controller.swift in Sources */,
 				B24AABE21EC0BC08000D34B0 /* Upgrade.swift in Sources */,
 				B2EA98E51E28609A000B7E54 /* WalkthroughPageViewController.swift in Sources */,

@@ -1,5 +1,5 @@
 //
-//  Client Service.swift
+//  Client Controller Class.swift
 //  Contract Whist Scorecard
 //
 //  Created by Marc Shearer on 09/05/2020.
@@ -32,12 +32,9 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     private var onlineClientService: CommsClientServiceDelegate?
     private var clientService: CommsClientServiceDelegate?
     
-    private weak var scorepadViewController: ScorepadViewController!
     private weak var gamePreviewViewController: GamePreviewViewController!
     private weak var alertController: UIAlertController!
     
-    private var gameUUID: String!
-    private var newGame: Bool!
     private var gameOver = false
     
     private var thisPlayer: String!
@@ -46,6 +43,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     
     private var matchDeviceName: String?
     private var matchProximity: CommsConnectionProximity?
+    private var matchGameUUID: String?
     private var purpose: CommsPurpose
     
     private var playerConnected: [String : Bool] = [:]
@@ -57,13 +55,14 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     private var checkInviteTimer: Timer!
     private var connectingTimer: Timer!
     
-    init(from parentViewController: ScorecardViewController, purpose: CommsPurpose, playerEmail: String, playerName: String, matchDeviceName: String?, matchProximity: CommsConnectionProximity?) {
+    init(from parentViewController: ScorecardViewController, purpose: CommsPurpose, playerEmail: String, playerName: String, matchDeviceName: String?, matchProximity: CommsConnectionProximity?, matchGameUUID: String?) {
                 
         self.purpose = purpose
         self.thisPlayer = playerEmail
         self.thisPlayerName = playerName
         self.matchDeviceName = matchDeviceName
         self.matchProximity = matchProximity
+        self.matchGameUUID = matchGameUUID
 
         super.init(from: parentViewController, type: .client)
 
@@ -94,6 +93,9 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         case .gamePreview:
             self.refreshGamePreview()
             
+        case .roundSummary:
+            self.refreshRoundSummary()
+            
         case .hand:
             if let handViewController = self.activeViewController as? HandViewController {
                 handViewController.refreshAll()
@@ -104,8 +106,8 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         }
     }
     
-    override internal func presentView(view: ScorecardView) -> ScorecardAppViewController? {
-        var viewController: ScorecardAppViewController?
+    override internal func presentView(view: ScorecardView, context: [String:Any?]? = nil, completion: (([String:Any?]?)->())?) -> ScorecardViewController? {
+        var viewController: ScorecardViewController?
         
         switch view {
         case .gamePreview:
@@ -115,10 +117,24 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             viewController = self.playHand()
             
         case .scorepad:
-            viewController = self.showScorepad()
+            viewController = self.showScorepad(scorepadMode: (self.purpose == .playing ? .joining : .viewing))
+            
+        case .roundSummary:
+            viewController = self.showRoundSummary()
             
         case .gameSummary:
-            viewController = self.showGameSummary()
+            viewController = self.showGameSummary(mode: .joining)
+            
+        case .confirmPlayed:
+            viewController = self.showConfirmPlayed(context: context, completion: completion)
+            
+        case .highScores:
+            viewController = self.showHighScores()
+            
+        case .review:
+            if let round = context?["round"] as? Int {
+                viewController = self.showReview(round: round, playerNumber: self.thisPlayerNumber)
+            }
             
         case .exit:
             self.delegate?.stateChange(to: .finished)
@@ -129,7 +145,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         return viewController
     }
     
-    override internal func didDismissView(view: ScorecardView, viewController: ScorecardAppViewController?) {
+    override internal func didDismissView(view: ScorecardView, viewController: ScorecardViewController?) {
         // Tidy up after view dismissed
         
         switch self.activeView {
@@ -143,7 +159,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     
     // MARK: - View Delegate Handlers  =================================================== -
     
-    var canProceed: Bool {
+    override internal var canProceed: Bool {
         get {
             var canProceed = true
             
@@ -151,8 +167,10 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             case .gamePreview:
                 canProceed = false
                 
-                case .scorepad:
-                   canProceed = true
+            case .scorepad:
+                canProceed = (self.purpose != .sharing ||
+                    !Scorecard.shared.roundComplete(Scorecard.game.maxEnteredRound) ||
+                    Scorecard.game.maxEnteredRound == Scorecard.game.rounds)
                 
             default:
                 break
@@ -162,13 +180,13 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         }
     }
     
-    var canCancel: Bool {
+    override internal var canCancel: Bool {
         get {
             var canCancel = true
             
             switch self.activeView {
             case .scorepad:
-                canCancel = !Scorecard.game.gameComplete()
+                canCancel = (self.purpose != .sharing || !Scorecard.game.gameComplete())
                 
             default:
                 break
@@ -178,7 +196,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         }
     }
     
-    func didLoad() {
+    override internal func didLoad() {
         switch self.activeView {
             
         default:
@@ -186,7 +204,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         }
     }
     
-    func didAppear() {
+    override internal func didAppear() {
         switch self.activeView {
         case .gamePreview:
             self.gamePreviewViewController?.showStatus(status: self.lastStatus)
@@ -195,32 +213,36 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         }
     }
     
-    func didCancel() {
+    override internal func didCancel() {
         switch self.activeView {
         case .gamePreview:
             // Exit
             Scorecard.game.resetValues()
             self.gamePreviewViewController = nil
-            self.appController(nextView: .exit)
+            self.present(nextView: .exit)
             
         case .hand:
             // Link to scorepad
-            self.appController(nextView: .scorepad)
+            self.present(nextView: .scorepad)
+            
+        case .roundSummary:
+            // Go back to scorepad
+            self.present(nextView: .scorepad)
             
         case .scorepad:
             // Exit - game left
-            self.appController(nextView: .exit)
+            self.present(nextView: .exit)
             
         case .gameSummary:
             // Go back to scorepad
-            self.appController(nextView: .scorepad)
+            self.present(nextView: .scorepad)
             
         default:
             break
         }
     }
     
-    func didProceed(context: [String:Any]?) {
+    override internal func didProceed(context: [String:Any]?) {
         switch self.activeView {
         case .hand:
             // Link to scorecard or game summary
@@ -228,27 +250,28 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             
         case .scorepad:
             // Link to hand unless game is complete
-            self.appController(nextView: (Scorecard.game.gameComplete() ? .gameSummary : .hand))
+            if self.purpose == .sharing {
+                _ = self.checkSharedScores(maxRound: Scorecard.game.maxEnteredRound)
+            } else {
+                self.present(nextView: (Scorecard.game.gameComplete() ? .gameSummary : .hand))
+            }
             
         case .gameSummary:
             // Finished
-            self.appController(nextView: .exit)
+            self.present(nextView: .exit)
 
         default:
             break
         }
     }
     
-    func didInvoke(_ view: ScorecardView) {
-        
-    }
-    
     // MARK: - Process received data ==================================================== -
     
-    override internal func processQueue(descriptor: String, data: [String:Any?]?, peer: CommsPeer) {
+    override internal func processQueue(descriptor: String, data: [String:Any?]?, peer: CommsPeer) -> Bool {
+        var stopProcessing = false
         
         if let availableFound = availableFor(peer: peer) {
-            if availableFound.isConnected || (availableFound.state == .connected && descriptor == "state") {
+            if availableFound.isConnected || (availableFound.state == .connected && (descriptor == "state" || descriptor == "previewPlayers" || descriptor == "dealer")) {
                 // Ignore any incoming data (except state) if reconnecting and haven't seen state yet
                 
                 switch descriptor {
@@ -258,46 +281,62 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     
                     // Wrappered state - split out components
                     if let data = data?["settings"] as? [String:Any?]? {
-                        self.processQueue(descriptor: "settings", data: data, peer: peer)
+                        stopProcessing = self.processQueue(descriptor: "settings", data: data, peer: peer) || stopProcessing
                     }
-                    if let data = data?["players"] as? [String:Any?]? {
-                        self.processQueue(descriptor: "players", data: data, peer: peer)
+                    if let data = data?["gamePlayers"] as? [String:Any?]? {
+                        stopProcessing = self.processQueue(descriptor: "gamePlayers", data: data, peer: peer) || stopProcessing
                     }
                     if let data = data?["dealer"] as? [String:Any?]? {
-                        self.processQueue(descriptor: "dealer", data: data, peer: peer)
-                    }
-                    if let data = data?["deal"] as? [String:Any?]? {
-                        self.processQueue(descriptor: "deal", data: data, peer: peer)
+                        stopProcessing = self.processQueue(descriptor: "dealer", data: data, peer: peer) || stopProcessing
                     }
                     if let data = data?["allscores"] as? [String:Any?]? {
-                        self.processQueue(descriptor: "allscores", data: data, peer: peer)
+                        stopProcessing =  self.processQueue(descriptor: "allscores", data: data, peer: peer) || stopProcessing
                     }
                     if let data = data?["autoPlay"] as? [String:Any?]? {
-                        self.processQueue(descriptor: "autoPlay", data: data, peer: peer)
-                    }
-                    if let data = data?["handState"] as? [String:Any?]? {
-                        self.processQueue(descriptor: "handState", data: data, peer: peer)
-                        
-                    }
-                    if let _ = data?["playHand"] as? [String:Any?]? {
-                        self.processQueue(descriptor: "playHand", data: nil, peer: peer)
+                        stopProcessing =  self.processQueue(descriptor: "autoPlay", data: data, peer: peer) || stopProcessing
                     }
                     
+                    // Need to process the game UID before the hand state as game UUID will clear the deal history
+                    
+                    if let data = data?["gameUUID"] as? [String:Any?]? {
+                        stopProcessing = self.processQueue(descriptor: "gameUUID", data: data, peer: peer) || stopProcessing
+                    }
+                    if let data = data?["handState"] as? [String:Any?]? {
+                        stopProcessing =  self.processQueue(descriptor: "handState", data: data, peer: peer) || stopProcessing
+                        
+                    }
+
                     // Can now consider ourselves connected
                     self.controllerStateChange(to: .connected)
                     
+                    if let _ = data?["playHand"] as? [String:Any?]? {
+                        stopProcessing =  self.processQueue(descriptor: "playHand", data: nil, peer: peer) || stopProcessing
+                    }
+                    
+                case "gameUUID":
+                    
+                    if let gameUUID = data!["gameUUID"] as? String {
+                        Scorecard.game.gameUUID = gameUUID
+                        if Scorecard.recovery.recoveryAvailable {
+                            if gameUUID == Scorecard.recovery.gameUUID {
+                                // Matches last game we had - recover deal history
+                                Scorecard.recovery.loadDealHistory()
+                            } else {
+                                // Looks like a different game - game history is not useful
+                                Scorecard.game.dealHistory = [:]
+                            }
+                        } else {
+                            // Not recovering - remove history
+                            Scorecard.game.dealHistory = [:]
+                        }
+                    }
+                    
                 case "settings":
-                    Scorecard.activeSettings.cards = data!["cards"] as! [Int]
+                    // Only ever received as part of a complete state
+                    Scorecard.activeSettings.cards = data!["numberCards"] as! [Int]
                     Scorecard.activeSettings.bounceNumberCards = data!["bounceNumberCards"] as! Bool
                     Scorecard.activeSettings.trumpSequence = data!["trumpSequence"] as! [String]
                     Scorecard.activeSettings.bonus2 = data!["bonus2"] as! Bool
-                    let gameUUID = data!["gameUUID"] as! String
-                    if self.gameUUID == nil || self.gameUUID != gameUUID {
-                        self.newGame = true
-                    } else {
-                        self.newGame = false
-                    }
-                    self.gameUUID = gameUUID
                     self.thisPlayerNumber = nil
                     
                 case "dealer":
@@ -306,7 +345,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                         self.gamePreviewViewController?.showCurrentDealer(clear: true)
                     }
                     
-                case "players":
+                case "previewPlayers", "gamePlayers":
                     Scorecard.shared.setCurrentPlayers(players: data!.count)
                     Scorecard.game.resetPlayers()
                     self.playerConnected = [:]
@@ -336,9 +375,9 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     }
                     
                     // Show or refresh game preview
-                    if self.activeView == .gamePreview || (self.activeView == .none && self.matchProximity == nil) {
-                        self.appController(nextView: .gamePreview, willDismiss: true)
-                        break
+                    if descriptor == "previewPlayers" && (self.activeView == .gamePreview || (self.activeView == .none && self.matchProximity == nil)) {
+                        self.present(nextView: .gamePreview, willDismiss: true)
+                        stopProcessing = true
                     }
                     
                 case "status":
@@ -361,48 +400,9 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     
                 case "scores", "allscores":
                     
-                    self.gameOver = false
-                    let gameWasOver = Scorecard.game.gameComplete()
-                    
-                    // Avoid echo
-                    var maxRound = Scorecard.shared.processScores(descriptor: descriptor, data: data!)
-                    if Scorecard.game.scores.score(round: maxRound, playerNumber: Scorecard.game.currentPlayers, sequence: .entry) != nil {
-                        // Current round all finished
-                        if maxRound == Scorecard.game.rounds {
-                            // This is the last round - end of the game - show game summary
-                            self.gameOver = true
-                        } else {
-                            // Move to the next round
-                            maxRound += 1
-                        }
-                    }
-                    
-                    if !self.gameOver {
-                        // Update dealer and advance round
-                        if self.scorepadViewController != nil && Scorecard.game.maxEnteredRound > 0 {
-                            self.scorepadViewController.highlightCurrentDealer(false)
-                        }
-                        Scorecard.game.selectedRound = min(maxRound, Scorecard.game.rounds)
-                        Scorecard.game.maxEnteredRound = max(1, Scorecard.game.selectedRound)
-                        if self.scorepadViewController != nil {
-                            self.scorepadViewController.highlightCurrentDealer(true)
-                        }
-                    }
-                    
+                    let maxRound = Scorecard.shared.processScores(descriptor: descriptor, data: data!)
                     if self.purpose == .sharing {
-                        // Queue game / round summary
-                        var summaryDescriptor: String
-                        if self.gameOver {
-                            summaryDescriptor = "gameSummary"
-                        } else {
-                            summaryDescriptor = "roundSummary"
-                        }
-                        self.addQueue(descriptor: summaryDescriptor, data: nil, peer: peer)
-                    } else if self.purpose == .playing {
-                        if Scorecard.game.gameComplete() && !gameWasOver {
-                            // Game just completed - show summary
-                            self.addQueue(descriptor: "gameSummary", data: nil, peer: peer)
-                        }
+                        stopProcessing = checkSharedScores(maxRound: maxRound)
                     }
                     
                 case "thumbnail":
@@ -419,28 +419,18 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     }
                     
                 case "deal":
+                    // Only ever sent with a hand state
                     if let round = data!["round"] as? Int {
-                        if let dealCards = data!["deal"] as? [[Int]] {
-                            let deal = Deal(fromNumbers: dealCards)
-                            
-                            // Save in history
-                            Scorecard.game?.dealHistory[round] = deal
-                            
-                            // Store hand
-                            if let thisPlayerNumber = self.thisPlayerNumber {
-                                let hand = deal.hands[thisPlayerNumber - 1].copy() as? Hand
-                                if let handState = Scorecard.game?.handState {
-                                    handState.hand = hand
-                                } else {
-                                    self.setupHandState(hand: hand)
-                                }
-                                self.newGame = false
+                        if Scorecard.game?.dealHistory[round] == nil {
+                            if let dealCards = data!["deal"] as? [[Int]] {
+                                let deal = Deal(fromNumbers: dealCards)
+                                
+                                // Save in history
+                                Scorecard.game?.dealHistory[round] = deal
+                                
+                                // Save for recovery
+                                Scorecard.recovery.saveDeal(round: round, deal: deal)
                             }
-                            
-                            // Save for recovery
-                            Scorecard.recovery.saveDeal(round: round, deal: deal)
-                            
-                            // Initialise hand state
                         }
                     }
                     
@@ -453,8 +443,10 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                         var lastCards: [Card]!
                         var lastToLead: Int!
                         
-                        let cardNumbers = data!["cards"] as! [String:[Int]]
-                        let hand = Hand(fromNumbers: cardNumbers["\(self.thisPlayerNumber!)"]!, sorted: true)
+                        let hands = data!["hands"] as! [String:[String:[Int]]]
+                        let thisHand = hands["\(self.thisPlayerNumber!)"]!
+                        let cardNumbers = thisHand["cards"]!
+                        let hand = Hand(fromNumbers: cardNumbers, sorted: true)
                         let trick = data!["trick"] as! Int
                         let made = data!["made"] as! [Int]
                         let twos = data!["twos"] as! [Int]
@@ -469,6 +461,9 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                         let round = data!["round"] as! Int
                         Scorecard.game.maxEnteredRound = round
                         Scorecard.game.selectedRound = Scorecard.game.maxEnteredRound
+                        if let data = data!["deal"] as? [String:Any?]? {
+                            stopProcessing = self.processQueue(descriptor: "deal", data: data, peer: peer) || stopProcessing
+                        }
                         
                         self.setupHandState(hand: hand, round: round, trick: trick, made: made, twos: twos, trickCards: trickCards, toLead: toLead, lastCards: lastCards, lastToLead: lastToLead)
                     }
@@ -478,17 +473,8 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     if self.purpose == .playing {
                         Scorecard.shared.setGameInProgress(true)
                     }
-                    self.appController(nextView: .hand, willDismiss: true)
-                    break
-                    
-                    
-                    // Special cases which are not transmitted but added to queue locally
-                    
-                case "roundSummary":
-                    self.refreshRoundSummary()
-                    
-                case "gameSummary":
-                    _ = self.showGameSummary()
+                    self.present(nextView: .hand, willDismiss: true)
+                    stopProcessing = true
                     
                 default:
                     // Try test messages
@@ -500,6 +486,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                 }
             }
         }
+        return stopProcessing
     }
     
     // MARK: - State Delegate handlers ===================================================================== -
@@ -526,7 +513,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                         // Remote has disconnected intentionally - go back to home screen and reset recovery
                         self.controllerStateChange(to: .notConnected, startTimers: false)
                         Utility.debugMessage("controller \(self.uuid)", "Intentional disconnect - exit")
-                        self.appController(nextView: .exit, willDismiss: true)
+                        self.present(nextView: .exit, willDismiss: true)
                     }
                     
                     // Flush the queue
@@ -536,7 +523,6 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     // Connected - send a state refresh request and flag as waiting for it
                     Scorecard.shared.sendRefreshRequest()
                     refreshRequired = true
-                    
                     self.whisper.hide("Connection restored")
                     
                 case .connecting:
@@ -665,7 +651,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         var handViewController: HandViewController?
         
         if let parentViewController = self.parentViewController {
-            handViewController = Scorecard.shared.playHand(from: parentViewController, sourceView: parentViewController.view, animated: true, controllerDelegate: self)
+            handViewController = Scorecard.shared.playHand(from: parentViewController, appController: self, sourceView: parentViewController.view, animated: true)
         }
         
         return handViewController
@@ -673,9 +659,9 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     
     private func handComplete() {
         if Scorecard.game!.handState.finished && Scorecard.game.gameComplete() {
-            self.appController(nextView: .gameSummary)
+            self.present(nextView: .gameSummary)
         } else {
-            self.appController(nextView: .scorepad)
+            self.present(nextView: .scorepad)
         }
     }
     
@@ -698,7 +684,6 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                 
             } else if self.controllerState != .reconnecting && (self.matchDeviceName == nil || peer.deviceName == self.matchDeviceName) {
                 // New peer - add to list
-                Utility.debugMessage("controller \(self.uuid)", "Add \(peer.deviceName) to \(self.available.map{$0.deviceName})") // TODO Remove
                 self.available.insert(Available(peer: peer), at: 0)
                 self.delegate?.addPeer(deviceName: peer.deviceName, name: peer.playerName!, oldState: .notConnected, state: peer.state, connecting: false, proximity: peer.proximity, at: 0)
             }
@@ -728,7 +713,6 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     private func removeEntry(peer: CommsPeer) {
         if let row = availableIndexFor(peer: peer, checkMode: false) {
             // Remove entry
-            Utility.debugMessage("controller \(self.uuid)", "remove \(row) (\(peer.deviceName)) from \(self.available.map{$0.deviceName})") // TODO Remove
             self.available.remove(at: row)
             self.delegate?.removePeer(at: row)
         }
@@ -744,7 +728,6 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                 for index in (0..<self.available.count).reversed() {
                     if index != row {
                         // Need to lose any other peers
-                        Utility.debugMessage("controller \(self.uuid)", "Removing \(self.available[index].deviceName) for other connection") // TODO Remove
                         self.removeEntry(peer: self.available[index].peer)
                     }
                 }
@@ -753,6 +736,39 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         }
     }
 
+    // MARK: - Sharing state checker ========================================================================= -
+    
+    private func checkSharedScores(maxRound: Int) -> Bool {
+        var stopProcessing = false
+        var nextView: ScorecardView
+        
+        if maxRound > Scorecard.game.maxEnteredRound {
+            Scorecard.game.maxEnteredRound = maxRound
+            if !Scorecard.shared.roundStarted(maxRound) {
+                Scorecard.game.selectedRound = max(1, maxRound-1)
+            } else {
+                Scorecard.game.selectedRound = maxRound
+            }
+        }
+        
+        if !Scorecard.shared.roundComplete(Scorecard.game.selectedRound) {
+            nextView = .roundSummary
+        } else if Scorecard.game.selectedRound == Scorecard.game.rounds {
+            nextView = .gameSummary
+        } else {
+            nextView = .scorepad
+        }
+        
+        if nextView != self.activeView {
+            self.present(nextView: nextView)
+            stopProcessing = true
+        } else if nextView == .roundSummary {
+            self.refreshRoundSummary()
+        }
+        
+        return stopProcessing
+    }
+    
     // MARK: - Game Preview Delegate handlers ================================================================ -
     
     internal func gamePreview(isConnected playerMO: PlayerMO) -> Bool {
@@ -761,12 +777,12 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     
     // MARK: - Show/ refresh other views ======================================================================== -
 
-    private func showGamePreview() -> ScorecardAppViewController? {
+    private func showGamePreview() -> ScorecardViewController? {
         // Create new view controller
         self.gamePreviewViewController = nil
         let selectedPlayers = getSelectedPlayers()
         if let parentViewController = self.parentViewController {
-            self.gamePreviewViewController = GamePreviewViewController.show(from: parentViewController, selectedPlayers: selectedPlayers, title: "Join a Game", backText: "", delegate: self, controllerDelegate: self)
+            self.gamePreviewViewController = GamePreviewViewController.show(from: parentViewController, appController: self, selectedPlayers: selectedPlayers, title: "Join a Game", backText: "", delegate: self)
         }
         return self.gamePreviewViewController
     }
@@ -778,6 +794,10 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         self.gamePreviewViewController?.refreshPlayers()
     }
     
+    private func refreshRoundSummary() {
+        self.roundSummaryViewController?.refresh()
+    }
+    
     private func getSelectedPlayers() -> [PlayerMO] {
         var selectedPlayers: [PlayerMO] = []
         for playerNumber in 1...Scorecard.game.currentPlayers {
@@ -787,43 +807,13 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         }
         return selectedPlayers
     }
-
-    private func showScorepad() -> ScorecardAppViewController? {
-    
-        if let parentViewController = self.parentViewController {
-            self.scorepadViewController = ScorepadViewController.show(from: parentViewController, existing: self.scorepadViewController, scorepadMode: .joining, controllerDelegate: self)
-        }
-        return self.scorepadViewController
-    }
-    
-    private func showRoundSummary() {
-        // TODO
-    }
-    
-    private func refreshRoundSummary() {
-        
-    }
-    
-    private func showGameSummary() -> ScorecardAppViewController? {
-        var gameSummaryViewController: GameSummaryViewController?
-        
-        // Avoid resuming once game summary shown
-        Scorecard.shared.setGameInProgress(false)
-        Scorecard.recovery = Recovery(load: false)
-        
-        if let parentViewController = self.parentViewController {
-            gameSummaryViewController = GameSummaryViewController.show(from: parentViewController, gameSummaryMode: .hosting, controllerDelegate: self)
-        }
-        return gameSummaryViewController
-    }
-    
+       
     // MARK: - Create / remove connections ======================================================== -
     
     @objc private func refreshInvites(_ sender: Any? = nil) {
         // Refresh online game invites
         Utility.mainThread { [unowned self] in
             if Scorecard.shared.onlineEnabled && (self.controllerState == .notConnected || self.controllerState == .reconnecting) {
-                Utility.debugMessage("controller \(self.uuid)", "Timer - refresh invites") // TODO Remove
                 self.onlineClientService?.checkOnlineInvites(email: self.thisPlayer)
             }
         }
@@ -839,20 +829,20 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     private func createConnections() {
         // Create nearby comms service, take delegates and start listening
         if self.matchProximity == nil || self.matchProximity == .nearby {
-            self.nearbyClientService = CommsHandler.client(proximity: .nearby, mode: .broadcast, serviceID: Scorecard.shared.serviceID(.playing), deviceName: Scorecard.deviceName)
+            self.nearbyClientService = CommsHandler.client(proximity: .nearby, mode: .broadcast, serviceID: Scorecard.shared.serviceID(self.purpose), deviceName: Scorecard.deviceName)
             self.nearbyClientService?.stateDelegate = self
             self.nearbyClientService?.dataDelegate = self
             self.nearbyClientService?.browserDelegate = self
-            self.nearbyClientService?.start(email: self.thisPlayer, name: self.thisPlayerName, recoveryMode: self.matchProximity != nil, matchDeviceName: self.matchDeviceName)
+            self.nearbyClientService?.start(email: self.thisPlayer, name: self.thisPlayerName, recoveryMode: self.matchProximity != nil, matchDeviceName: self.matchDeviceName, matchGameUUID: self.matchGameUUID)
         }
         
         // Create online comms service, take delegates and start listening
-        if self.matchProximity == nil || self.matchProximity == .online {
+        if (self.matchProximity == nil || self.matchProximity == .online) && self.purpose == .playing {
             self.onlineClientService = CommsHandler.client(proximity: .online, mode: .invite, serviceID: nil, deviceName: Scorecard.deviceName)
             self.onlineClientService?.stateDelegate = self
             self.onlineClientService?.dataDelegate = self
             self.onlineClientService?.browserDelegate = self
-            self.onlineClientService?.start(email: self.thisPlayer, name: self.thisPlayerName, recoveryMode: self.matchProximity != nil, matchDeviceName: self.matchDeviceName)
+            self.onlineClientService?.start(email: self.thisPlayer, name: self.thisPlayerName, recoveryMode: self.matchProximity != nil, matchDeviceName: self.matchDeviceName, matchGameUUID: self.matchGameUUID)
             self.startCheckInviteTimer()
         }
     }
@@ -900,9 +890,9 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             self.delegate?.stateChange(to: state)
             
             if state == .finished {
-                self.appController(nextView: .exit, willDismiss: true)
+                self.present(nextView: .exit, willDismiss: true)
             } else if state == .notConnected {
-                self.appController(nextView: .none, willDismiss: true)
+                self.present(nextView: .none, willDismiss: true)
             }
         }
     }

@@ -273,7 +273,7 @@ class RabbitMQServerService : RabbitMQService, CommsHostServiceDelegate, CommsCo
     
     // MARK: - Comms Handler Server handlers ========================================================================= -
     
-    internal func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool) {
+    internal func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool, matchGameUUID: String!) {
         self.debugMessage("Start Server \(self.connectionMode) \(serverInviteUUID ?? "")")
         
         super.startService(email: email, recoveryMode: recoveryMode)
@@ -414,7 +414,7 @@ class RabbitMQClientService : RabbitMQService, CommsClientServiceDelegate, Comms
         super.init(mode: mode, type: .client, serviceID: serviceID, deviceName: deviceName)
     }
 
-    internal func start(email: String!, name: String!, recoveryMode: Bool, matchDeviceName: String!) {
+    internal func start(email: String!, name: String!, recoveryMode: Bool, matchDeviceName: String!, matchGameUUID: String!) {
         self.debugMessage("Start Client \(self.connectionMode) \((recoveryMode ? "recovering" : ""))")
 
         if self.connectionMode != .invite {

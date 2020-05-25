@@ -8,16 +8,11 @@
 
 import UIKit
 
-class ReviewViewController: ScorecardAppViewController, UITableViewDataSource, UITableViewDelegate, ScorecardAlertDelegate {
-
-    // Whist view properties
-    override internal var scorecardView: ScorecardView? { return ScorecardView.review }
-    public weak var controllerDelegate: ScorecardAppControllerDelegate?
+class ReviewViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, ScorecardAlertDelegate {
 
     // Properties passed
     public var round: Int!
     public var thisPlayer: Int!
-    private var completion: (()->())?
     
     // Other properties
     private var maxContentSize: [CGFloat] = []
@@ -319,7 +314,7 @@ class ReviewViewController: ScorecardAppViewController, UITableViewDataSource, U
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: ScorecardViewController, round: Int, thisPlayer: Int, completion: (()->())? = nil) {
+    class public func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, round: Int, thisPlayer: Int) -> ReviewViewController?{
         
         let storyboard = UIStoryboard(name: "ReviewViewController", bundle: nil)
         let reviewViewController = storyboard.instantiateViewController(withIdentifier: "ReviewViewController") as! ReviewViewController
@@ -329,14 +324,14 @@ class ReviewViewController: ScorecardAppViewController, UITableViewDataSource, U
         
         reviewViewController.round = round
         reviewViewController.thisPlayer = thisPlayer
-        reviewViewController.completion = completion
         
-        viewController.present(reviewViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
-        
+        viewController.present(reviewViewController, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+     
+        return reviewViewController
     }
     
     private func dismiss() {
-        self.dismiss(animated: true, completion: completion)
+        self.dismiss(animated: true, completion: nil)
     }
 }
 

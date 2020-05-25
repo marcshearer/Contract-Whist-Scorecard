@@ -8,17 +8,12 @@
 
 import UIKit
 
-class EntryViewController: ScorecardAppViewController, UITableViewDataSource, UITableViewDelegate {
+class EntryViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate {
     
-    // Whist view properties
-    override internal var scorecardView: ScorecardView? { return ScorecardView.entry }
-    public weak var controllerDelegate: ScorecardAppControllerDelegate?
-
     // MARK: - Class Properties ======================================================================== -
     
     // Properties to pass state
     private var reeditMode = false
-    private var completion: ((Bool)->())? = nil
     
     // Main state properties
     private var selection = Selection(player: 0, mode: Mode.bid)
@@ -82,14 +77,12 @@ class EntryViewController: ScorecardAppViewController, UITableViewDataSource, UI
     
     @IBAction func summaryClicked(_ sender: Any) {
         // Round in toolbar - show summary
-        if Scorecard.game.scores.get(round: Scorecard.game.selectedRound, playerNumber: Scorecard.game.currentPlayers, sequence: .round).bid != nil {
-            self.showRoundSummary()
-        }
+        self.controllerDelegate?.didProceed()
     }
     
     @IBAction func saveScorePressed(_ sender: Any) {
         if canFinish() {
-            self.dismiss()
+            self.controllerDelegate?.didCancel()
         }
     }
     
@@ -117,9 +110,13 @@ class EntryViewController: ScorecardAppViewController, UITableViewDataSource, UI
     }
 
     override func viewWillLayoutSubviews() {
-        
+        self.refreshScreen(firstTime: self.firstTime)
+        self.firstTime = false
+    }
+    
+    private func refreshScreen(firstTime: Bool) {
         self.setupScreen()
-        
+           
         if firstTime {
             self.bidOnlyMode = !Scorecard.shared.roundBiddingComplete(Scorecard.game.selectedRound) ? true : false
             self.setupColumns()
@@ -145,13 +142,10 @@ class EntryViewController: ScorecardAppViewController, UITableViewDataSource, UI
         Scorecard.shared.watchManager.updateScores()
         
         self.setupSize(to: entryView.safeAreaLayoutGuide.layoutFrame.size)
-     
+        
         if firstTime {
             self.entryTableView.reloadData()
         }
-        
-        self.firstTime = false
-        
     }
 
     func setupSize(to size: CGSize) {
@@ -613,44 +607,27 @@ class EntryViewController: ScorecardAppViewController, UITableViewDataSource, UI
         }
     }
     
-    // MARK: - Show round summary =================================================================== -
-
-    private func showRoundSummary() {
-    
-        self.roundSummaryViewController = RoundSummaryViewController.show(from: self, existing: roundSummaryViewController)
-        
-    }
-    
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: ScorecardViewController, existing entryViewController: EntryViewController! = nil, reeditMode: Bool = false, completion: ((Bool)->())? = nil) -> EntryViewController {
+    class public func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, existing entryViewController: EntryViewController! = nil, reeditMode: Bool = false) -> EntryViewController {
         
         var entryViewController: EntryViewController! = entryViewController
         
         if entryViewController == nil {
             let storyboard = UIStoryboard(name: "EntryViewController", bundle: nil)
             entryViewController = storyboard.instantiateViewController(withIdentifier: "EntryViewController") as? EntryViewController
+        } else {
+            entryViewController.refreshScreen(firstTime: true)
         }
         
         entryViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
         entryViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         entryViewController.reeditMode = reeditMode
-        entryViewController.completion = completion
         
-        viewController.present(entryViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        viewController.present(entryViewController, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
         
         return entryViewController
-    }
-    
-    private func dismiss(linkToGameSummary: Bool = false) {
-        self.dismiss(animated: false, completion: {
-            self.completion?(linkToGameSummary)
-        })
-    }
-    
-    override internal func didDismiss() {
-        self.completion?(false)
     }
 }
 
@@ -867,11 +844,9 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
             if !self.reeditMode && !Scorecard.game.scores.error(round: Scorecard.game.selectedRound) {
                 // Finished - return
                 if bidOnlyMode {
-                    self.showRoundSummary()
                     self.leaveBidOnlyMode()
-                } else {
-                    self.dismiss(linkToGameSummary: Scorecard.game.gameComplete())
                 }
+                self.controllerDelegate?.didProceed()
             } else {
                 self.selection = Selection(player: 0, mode: Mode.bid)
             }

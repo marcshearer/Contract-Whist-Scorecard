@@ -17,7 +17,7 @@ class Config {
     public static let pushNotifications_onlineQueue = true
     
     // Time unit for auto-play testing (in seconds) - card is played every unit
-    public static var autoPlayTimeUnit = 0.05
+    public static var autoPlayTimeUnit = 0.2
     
     // Auto-connect clients for quicker testing
     public static let autoConnectClient = false

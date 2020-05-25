@@ -13,6 +13,7 @@ import CoreLocation
 class Recovery {
     
     public var recoveryAvailable: Bool = false
+    public var gameUUID: String = ""
     public var onlineRecovery: Bool = false
     public var onlinePurpose: CommsPurpose!
     public var onlineType: CommsConnectionType!
@@ -30,6 +31,7 @@ class Recovery {
         if load {
             self.recoveryAvailable = UserDefaults.standard.bool(forKey: "recoveryGameInProgress")
             if self.recoveryAvailable {
+                self.gameUUID = UserDefaults.standard.string(forKey: "recoveryGameUUID") ?? ""
                 self.loadOnlineRecovery()
             }
         }
@@ -39,8 +41,8 @@ class Recovery {
         var online = ""
         let gameInProgress = Scorecard.game?.inProgress ?? false
         UserDefaults.standard.set(gameInProgress, forKey: "recoveryGameInProgress")
-        UserDefaults.standard.synchronize()
         if gameInProgress {
+            UserDefaults.standard.set(Scorecard.game.gameUUID ?? "", forKey: "recoveryGameUUID")
             if let delegate = Scorecard.shared.commsDelegate {
                 if Scorecard.shared.commsPurpose == .playing {
                     let purpose = CommsPurpose.playing.rawValue
@@ -60,6 +62,7 @@ class Recovery {
             }
         }
         UserDefaults.standard.set(online, forKey: "recoveryOnline")
+        UserDefaults.standard.synchronize()
     }
        
     public func saveBid(round: Int, playerNumber: Int) {
@@ -69,6 +72,7 @@ class Recovery {
             bid = -1
         }
         UserDefaults.standard.set(bid, forKey: key)
+        UserDefaults.standard.synchronize()
     }
     
     public func saveMade(round: Int, playerNumber: Int) {
@@ -78,6 +82,7 @@ class Recovery {
             made = -1
         }
         UserDefaults.standard.set(made, forKey: key)
+        UserDefaults.standard.synchronize()
     }
     
     public func saveTwos(round: Int, playerNumber: Int) {
@@ -87,6 +92,7 @@ class Recovery {
             twos = -1
         }
         UserDefaults.standard.set(twos, forKey: key)
+        UserDefaults.standard.synchronize()
     }
     
     public func saveHands(deal: Deal, made: [Int], twos: [Int]) {
@@ -233,14 +239,8 @@ class Recovery {
         Scorecard.game.datePlayed = UserDefaults.standard.object(forKey: "recoveryDatePlayed") as? Date
         Scorecard.game.gameUUID = UserDefaults.standard.string(forKey: "recoveryGameUUID")
         
-        // Load deal history
-        if self.onlinePurpose == .playing {
-            for round in 1...Scorecard.game.selectedRound {
-                if let dealNumbers = UserDefaults.standard.array(forKey: "recoveryDeal\(round)") as? [[Int]] {
-                    Scorecard.game?.dealHistory[round] = Deal(fromNumbers: dealNumbers)
-                }
-            }
-        }
+        // Reload deal history
+        self.loadDealHistory()
         
         // Reload overrides
         if UserDefaults.standard.bool(forKey: "recoveryOverride") {
@@ -253,6 +253,17 @@ class Recovery {
         // Finished
         self.reloadInProgress = false
         Scorecard.shared.watchManager.updateScores()
+    }
+    
+    public func loadDealHistory() {
+        // Load deal history
+        if self.onlinePurpose == .playing {
+            for round in 1...Scorecard.game.selectedRound {
+                if let dealNumbers = UserDefaults.standard.array(forKey: "recoveryDeal\(round)") as? [[Int]] {
+                    Scorecard.game?.dealHistory[round] = Deal(fromNumbers: dealNumbers)
+                }
+            }
+        }
     }
     
     public func loadCurrentTrick() {

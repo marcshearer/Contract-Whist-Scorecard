@@ -17,7 +17,7 @@ enum HighScoreType {
 class HighScoresViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate {
     
     // MARK: - Class Properties ======================================================================== -
-    
+        
     // Properties to pass state
     private var backText = "Back"
     private var backImage = "back"
@@ -221,7 +221,6 @@ class HighScoresViewController: ScorecardViewController, UITableViewDataSource, 
             } else {
                 name = participantMO.name!
             }
-            let game = History(gameUUID: participantMO.gameUUID).games.first!
             
             cell.name.text = name
             Utility.setThumbnail(data: thumbnail,
@@ -288,7 +287,7 @@ class HighScoresViewController: ScorecardViewController, UITableViewDataSource, 
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: ScorecardViewController, backText: String = "Back", backImage: String = "back"){
+    class public func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, backText: String = "Back", backImage: String = "back") -> HighScoresViewController? {
         
         let storyboard = UIStoryboard(name: "HighScoresViewController", bundle: nil)
         let highScoresViewController: HighScoresViewController = storyboard.instantiateViewController(withIdentifier: "HighScoresViewController") as! HighScoresViewController
@@ -299,7 +298,9 @@ class HighScoresViewController: ScorecardViewController, UITableViewDataSource, 
         highScoresViewController.backText = backText
         highScoresViewController.backImage = backImage
         
-        viewController.present(highScoresViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        viewController.present(highScoresViewController, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        
+        return highScoresViewController
     }
     
     private func dismiss() {

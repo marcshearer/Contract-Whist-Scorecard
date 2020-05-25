@@ -8,13 +8,7 @@
 
 import UIKit
 
-class RoundSummaryViewController: ScorecardAppViewController {
-
-    // Whist view properties
-    override internal var scorecardView: ScorecardView? { return ScorecardView.roundSummary }
-    public weak var controllerDelegate: ScorecardAppControllerDelegate?
-
-    // MARK: - Class Properties ======================================================================== -
+class RoundSummaryViewController: ScorecardViewController {
         
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet weak var roundSummaryView: UIView!
@@ -57,7 +51,7 @@ class RoundSummaryViewController: ScorecardAppViewController {
     // MARK: - Gesture Action Handlers ================================================================= -
 
     func finishPressed() {
-        self.dismiss()
+        self.controllerDelegate?.didCancel()
     }
     
     // MARK: - Form Presentation / Handling Routines =================================================== -
@@ -98,7 +92,7 @@ class RoundSummaryViewController: ScorecardAppViewController {
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: ScorecardViewController, existing roundSummaryViewController: RoundSummaryViewController! = nil) -> RoundSummaryViewController {
+    class public func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, existing roundSummaryViewController: RoundSummaryViewController! = nil) -> RoundSummaryViewController {
         
         var roundSummaryViewController: RoundSummaryViewController! = roundSummaryViewController
         
@@ -110,7 +104,7 @@ class RoundSummaryViewController: ScorecardAppViewController {
         roundSummaryViewController.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
         roundSummaryViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
-        viewController.present(roundSummaryViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        viewController.present(roundSummaryViewController, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
         
         return roundSummaryViewController
     }

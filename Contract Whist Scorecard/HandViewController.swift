@@ -9,12 +9,8 @@
 import UIKit
 import Combine
 
-class HandViewController: ScorecardAppViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ScorecardAlertDelegate {
+class HandViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, ScorecardAlertDelegate {
     
-    // Whist app view properties
-    override internal var scorecardView: ScorecardView? { return ScorecardView.hand }
-    public weak var controllerDelegate: ScorecardAppControllerDelegate?
-
     // MARK: - Class Properties ======================================================================== -
     
     // Local state properties
@@ -22,16 +18,16 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
     internal var bidMode: Bool!
     private var firstBidRefresh = true
     private var firstHandRefresh = true
-    private var firstTime = true
+    internal var firstTime = true
     private var resizing = false
     internal var enteredPlayerNumber: Int!          // local version of player number
     internal var round: Int!                        // local version of round number
     internal var suitEnabled = [Bool](repeating: false, count: 6)
     private var lastHand = false
     internal var handTestData = HandTestData()
-    private var collectionHand: Hand!    // Mirror of the hand in state - updated to reflect in collection
+    private var mirroredHand: Hand!                 // Mirror of the hand in state - updated to reflect in collection
+    private var mirroredTrickCards: [Card]!         // Mirror of the played cards in state - updated to reflect in collection
     private var bidSubscription: AnyCancellable?
-    private var cardSubscription: AnyCancellable?
     private let whisper = Whisper()
     
     // Delegates
@@ -144,12 +140,13 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
         self.round = Scorecard.game.handState.round
         Scorecard.game.selectedRound = self.round
         Scorecard.game.maxEnteredRound = self.round
+        self.updatedMirroredTrickCards()
         
         // Setup grid tags
         bidCollectionTag = bidCollectionView.tag
         playedCardCollectionTag = playedCardCollectionView.tag
         
-        self.mirrorHandSuitsToCollection()
+        self.updateMirroredHand()
         self.currentCards = Scorecard.game.roundCards(round)
         
         // Put suit on summary button
@@ -161,17 +158,21 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
         setupOverUnder()
         
         // Subscribe to score changes
-        self.setupBidCardSubscriptions()
+        self.setupBidSubscriptions()
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
         
         viewHeight = view.safeAreaLayoutGuide.layoutFrame.height
         viewWidth = view.safeAreaLayoutGuide.layoutFrame.width
         
         // Take responsibility for alerts
         Scorecard.shared.alertDelegate = self
+        
+        super.viewDidAppear(true)
+        
+        // Catch up on any auto bids that arrived too early
+        NotificationCenter.default.post(name: .checkAutoPlayInput, object: self, userInfo: nil)
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -195,10 +196,10 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
             self.firstHandRefresh = true
         }
         if self.firstTime || self.resizing {
+            self.resizing = false
+            self.firstTime = false
             self.stateController()
         }
-        self.resizing = false
-        self.firstTime = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -214,17 +215,17 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
     
     override internal func willDismiss() {
         self.handTableViewTrailingConstraint = nil
-        self.cancelBidCardSubscriptions()
+        self.cancelBidSubscriptions()
     }
     
     // MARK: - TableView Overrides ===================================================================== -
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (handCardWidth == nil ? 0 : self.collectionHand.handSuits.count)
+        return (handCardWidth == nil ? 0 : self.mirroredHand.handSuits.count)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return handCardHeight * CGFloat(Int((self.collectionHand.handSuits[indexPath.row].cards.count - 1) / handCardsPerRow) + 1)
+        return handCardHeight * CGFloat(Int((self.mirroredHand.handSuits[indexPath.row].cards.count - 1) / handCardsPerRow) + 1)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -235,7 +236,7 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
         
         cell = tableView.dequeueReusableCell(withIdentifier: "Suit Table Cell", for: indexPath) as! SuitTableCell
         cell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row)
-        suitEnable(enable: suitEnabled[indexPath.row], suitNumber: indexPath.row + 1)
+        self.suitEnable(suitCollectionView: cell.cardCollection, enable: suitEnabled[indexPath.row], suitNumber: indexPath.row + 1)
         
         self.checkTestWait()
         
@@ -266,7 +267,7 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
             }
         } else {
             // Hand cards
-            return self.collectionHand.handSuits[collectionView.tag].cards.count
+            return self.mirroredHand.handSuits[collectionView.tag].cards.count
         }
     }
     
@@ -312,7 +313,7 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
                 cards = Scorecard.game.handState.lastCards ?? Scorecard.game.handState.lastCards
             } else {
                 toLead = Scorecard.game.handState.toLead
-                cards = Scorecard.game.handState.trickCards
+                cards = mirroredTrickCards
             }
             
             // Name
@@ -359,10 +360,10 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Card Collection Cell", for: indexPath) as! CardCollectionCell
             
             cell.cardLabel.textColor = UIColor.white
-            cell.cardLabel.attributedText = self.collectionHand.handSuits[suit-1].cards[card - 1].toAttributedString()
+            cell.cardLabel.attributedText = self.mirroredHand.handSuits[suit-1].cards[card - 1].toAttributedString()
             cell.cardLabel.font = UIFont.systemFont(ofSize: self.handCardFontSize)
             ScorecardUI.roundCorners(cell.cardView, percent: 10)
-            cell.tag = self.collectionHand.handSuits[suit-1].cards[card - 1].toNumber()
+            cell.tag = self.mirroredHand.handSuits[suit-1].cards[card - 1].toNumber()
             
             return cell
         }
@@ -416,15 +417,8 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
     */
     func stateController(updateState: Bool = true, currentTrickCards: Int = Scorecard.game.handState.trickCards.count) {
         // Check whether bidding finished
-        var bids: [Int] = []
-        for playerNumber in 1...Scorecard.game.currentPlayers {
-            let bid = Scorecard.game.scores.get(round: round, playerNumber: playerNumber, sequence: .entry).bid
-            if bid != nil {
-                bids.append(bid!)
-            }
-        }
-        
-        let newBidMode = (bids.count < Scorecard.game.currentPlayers)
+        let bidsMade = Scorecard.game.scores.bidsMade(round: round)
+        let newBidMode = (bidsMade < Scorecard.game.currentPlayers)
         if self.bidMode != newBidMode {
             if newBidMode == false && !firstBidRefresh {
                 // About to exit bid mode - delay 1 second
@@ -437,7 +431,7 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
                 self.executeAfter(delay: 1.0) {
                     self.finishButton.isHidden = false
                     self.controllerDelegate?.lock(false)
-                    NotificationCenter.default.post(name: .appControllerViewPresentingCompleted, object: self, userInfo: nil)
+                    NotificationCenter.default.post(name: .checkAutoPlayInput, object: self, userInfo: nil)
                     self.bidMode(newBidMode)
                     self.stateController()
                 }
@@ -450,19 +444,19 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
         if bidMode {
         // Bidding
             cardsEnable(false)
-            if Scorecard.game.roundPlayerNumber(enteredPlayerNumber: self.enteredPlayerNumber, round: self.round) == bids.count + 1 {
+            if Scorecard.game.roundPlayerNumber(enteredPlayerNumber: self.enteredPlayerNumber, round: self.round) == bidsMade + 1 {
                 // Your bid
-                bidsEnable(true, blockRemaining: bids.count == Scorecard.game.currentPlayers - 1)
+                bidsEnable(true, blockRemaining: bidsMade == Scorecard.game.currentPlayers - 1)
                 self.instructionLabel.text = "You to bid"
                 self.setInstructionsHighlight(to: true)
                 Scorecard.shared.alertUser(remindAfter: 10.0)
                 self.autoBid()
             } else {
                 bidsEnable(false)
-                self.instructionLabel.text = "\(Scorecard.game.player(entryPlayerNumber: bids.count + 1).playerMO!.name!) to bid"
+                self.instructionLabel.text = "\(Scorecard.game.player(entryPlayerNumber: bidsMade + 1).playerMO!.name!) to bid"
                 self.setInstructionsHighlight(to: false)
                 // Get computer player to bid
-                // TODO reinstate self.computerPlayerDelegate?[Scorecard.game.player(entryPlayerNumber: bids.count + 1).playerNumber]??.autoBid()
+                // TODO reinstate self.computerPlayerDelegate?[Scorecard.game.player(entryPlayerNumber: bidsMade + 1).playerNumber]??.autoBid()
             }
             setupOverUnder()
             lastHandButton.isHidden = true
@@ -496,7 +490,7 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
                         self.executeAfter(delay: 1.0) {
                             self.finishButton.isHidden = false
                             self.controllerDelegate?.lock(false)
-                            NotificationCenter.default.post(name: .appControllerViewPresentingCompleted, object: self, userInfo: nil)
+                            NotificationCenter.default.post(name: .checkAutoPlayInput, object: self, userInfo: nil)
                         }
                     }	
                 } else {
@@ -590,7 +584,7 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
     
     // MARK: - Bid / card publisher subscription =========================================================== -
     
-    private func setupBidCardSubscriptions() {
+    private func setupBidSubscriptions() {
         self.bidSubscription = Scorecard.shared.subscribeBid { [unowned self] (round, enteredPlayerNumber, bid) in
             self.reflectBid(round: round, enteredPlayerNumber: enteredPlayerNumber)
             // Check if this makes it your bid
@@ -598,17 +592,11 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
                 Scorecard.shared.alertUser(remindAfter: 10.0)
             }
         }
-        
-        // TODO Remove self.cardSubscription = Scorecard.shared.subscribeCard { [unowned self] (round, trick, enteredPlayerNumber, card) in
-        //    self.reflectCardPlayed(round: round, trick: trick, playerNumber: enteredPlayerNumber, card: card)
-        // }
     }
     
-    private func cancelBidCardSubscriptions() {
+    private func cancelBidSubscriptions() {
         self.bidSubscription?.cancel()
         self.bidSubscription = nil
-        self.cardSubscription?.cancel()
-        self.cardSubscription = nil
     }
     
     // MARK: - Form Presentation / Handling Routines =================================================== -
@@ -755,19 +743,25 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
     }
     
     func suitEnable(enable: Bool, suitNumber: Int, matchSuit: Suit! = nil) {
-        let suit = Scorecard.game.handState.hand.handSuits[suitNumber - 1]
-        if enable && suit.cards.count != 0 && (matchSuit == nil || matchSuit == suit.cards[0].suit) {
-            suitCollectionView(suitNumber-1)?.isUserInteractionEnabled = true
-            suitCollectionView(suitNumber-1)?.alpha = 1.0
-            suitEnabled[suitNumber-1] = true
-        } else {
-            suitCollectionView(suitNumber-1)?.isUserInteractionEnabled = false
-            if bidMode {
-                suitCollectionView(suitNumber-1)?.alpha = 0.9
+        suitEnable(suitCollectionView: suitCollectionView(suitNumber-1), enable: enable, suitNumber: suitNumber, matchSuit: matchSuit)
+    }
+    
+    func suitEnable(suitCollectionView: UICollectionView?, enable: Bool, suitNumber: Int, matchSuit: Suit! = nil) {
+        if suitNumber <= Scorecard.game.handState.hand?.handSuits?.count ?? 0 {
+            let suit = Scorecard.game.handState.hand.handSuits[suitNumber - 1]
+            if enable && suit.cards.count != 0 && (matchSuit == nil || matchSuit == suit.cards[0].suit) {
+                suitCollectionView?.isUserInteractionEnabled = true
+                suitCollectionView?.alpha = 1.0
+                suitEnabled[suitNumber-1] = true
             } else {
-                suitCollectionView(suitNumber-1)?.alpha = 0.5
+                suitCollectionView?.isUserInteractionEnabled = false
+                if bidMode ?? false {
+                    suitCollectionView?.alpha = 0.9
+                } else {
+                    suitCollectionView?.alpha = 0.5
+                }
+                suitEnabled[suitNumber-1] = false
             }
-            suitEnabled[suitNumber-1] = false
         }
     }
     
@@ -861,7 +855,7 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
         label.textAlignment = .center
         ScorecardUI.roundCorners(label)
         
-        ConfirmPlayedViewController.show(title: "Confirm Card", content: label, sourceView: self.handSourceView, confirmText: "Play card", cancelText: "Change card", offsets: (0.5, nil), backgroundColor: Palette.tableTop, confirmHandler: { self.playCard(card: card) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
+        self.confirmPlayed(title: "Confirm Card", content: label, sourceView: self.handSourceView, confirmText: "Play card", cancelText: "Change card", backgroundColor: Palette.tableTop, confirmHandler: { self.playCard(card: card) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
     }
     
     func playCard(card: Card) {
@@ -879,13 +873,18 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
         self.cardsEnable(false)
 
         // Remove the card from your hand
-        if let (suitNumber, cardNumber) = self.collectionHand.find(card: card) {
+        if let (suitNumber, cardNumber) = self.mirroredHand.find(card: card) {
             let collectionView = suitCollectionView(suitNumber)!
             let indexPath = IndexPath(row: cardNumber, section: 0)
             collectionView.performBatchUpdates({
                 collectionView.deleteItems(at: [indexPath])
-                self.mirrorHandSuitsToCollection()
+                self.updateMirroredHand()
             })
+        }
+        
+        if Scorecard.game.handState.trickCards.count > 0 {
+            // Show current state unless have just started a new trick
+            self.updatedMirroredTrickCards()
         }
         
         // Refresh played cards
@@ -905,7 +904,7 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
         label.textAlignment = .center
         ScorecardUI.roundCorners(label)
         
-        ConfirmPlayedViewController.show(title: "Confirm Bid", content: label, sourceView: self.handSourceView, confirmText: "Confirm bid", cancelText: "Change bid", offsets: (0.5, nil), confirmHandler: { self.makeBid(bid) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
+        self.confirmPlayed(title: "Confirm Bid", content: label, sourceView: self.handSourceView, confirmText: "Confirm Bid", cancelText: "Change Bid", backgroundColor: Palette.background, confirmHandler: { self.makeBid(bid) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
     }
     
     func makeBid(_ bid: Int) {
@@ -919,6 +918,25 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
             self.bidCollectionView.reloadData()
         }
         self.stateController()
+    }
+    
+    private func confirmPlayed(title: String, content: UIView, sourceView: UIView, confirmText: String, cancelText: String, backgroundColor: UIColor, confirmHandler: (()->())? = nil, cancelHandler: (()->())? = nil) {
+     
+        let context: [String : Any?] =
+            ["title" : title,
+             "label" : content,
+             "sourceView" : sourceView,
+             "confirmText" : confirmText,
+             "cancelText" : cancelText,
+             "backgroundColor" : backgroundColor ]
+        
+        self.controllerDelegate?.didInvoke(.confirmPlayed, context: context, completion: { (context) in
+            if context?["confirm"] as? Bool == true {
+                confirmHandler?()
+            } else {
+                cancelHandler?()
+            }
+        })
     }
     
     func resetPopover() {
@@ -988,10 +1006,19 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
         }
     }
     
-    private func mirrorHandSuitsToCollection() {
-        // Copy the hand suits to the version used by the collection (inside performBatchUpdates)
+    private func updateMirroredHand() {
+        // Copy the hand to the version used by the collection (inside performBatchUpdates)
         // Need to copy individual values rather than pointers
-        self.collectionHand = Scorecard.game.handState.hand.copy() as? Hand
+        self.mirroredHand = Scorecard.game.handState.hand.copy() as? Hand
+    }
+    
+    private func updatedMirroredTrickCards() {
+        // Copy the trick cards to the version used by the collection (inside performBatchUpdates)
+        // Need to copy individual values rather than pointers
+        self.mirroredTrickCards = []
+        for card in Scorecard.game.handState.trickCards {
+            self.mirroredTrickCards.append(Card(fromNumber: card.toNumber()))
+        }
     }
     
     func setInstructionsHighlight(to highlight: Bool) {
@@ -1032,7 +1059,7 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
 
     // MARK: - Function to present this view ==============================================================
     
-    class func show(from viewController: ScorecardViewController, sourceView: UIView, existing handViewController: HandViewController? = nil, controllerDelegate: ScorecardAppControllerDelegate? = nil, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil, animated: Bool = true) -> HandViewController {
+    class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, sourceView: UIView, existing handViewController: HandViewController? = nil, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil, animated: Bool = true) -> HandViewController {
         var handViewController: HandViewController! = handViewController
         
         if handViewController == nil {
@@ -1043,11 +1070,11 @@ class HandViewController: ScorecardAppViewController, UITableViewDataSource, UIT
         handViewController!.preferredContentSize = CGSize(width: 400, height: Scorecard.shared.scorepadBodyHeight)
         handViewController!.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
-        handViewController!.controllerDelegate = controllerDelegate
+        handViewController!.controllerDelegate = appController
         // TODO Reinstate handViewController!.computerPlayerDelegate = computerPlayerDelegate
         
         Utility.mainThread("playHand", execute: {
-            viewController.present(handViewController!, sourceView: sourceView, animated: animated, completion: nil)
+            viewController.present(handViewController!, appController: appController, sourceView: sourceView, animated: animated, completion: nil)
         })
         
         return handViewController

@@ -641,7 +641,7 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
     
     // MARK: - Function to show and dismiss this view  ============================================================================== -
     
-    public class func show(from viewController: ScorecardViewController, specificEmail: String = "", descriptionMode: DescriptionMode = .none, backText: String = "Cancel", actionText: String = "Download", allowOtherPlayer: Bool = true, allowNewPlayer: Bool = true, completion: ((Int?, [PlayerDetail]?, [Bool]?)->())? = nil) {
+    public class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, specificEmail: String = "", descriptionMode: DescriptionMode = .none, backText: String = "Cancel", actionText: String = "Download", allowOtherPlayer: Bool = true, allowNewPlayer: Bool = true, completion: ((Int?, [PlayerDetail]?, [Bool]?)->())? = nil) -> SelectPlayersViewController? {
         
         let storyboard = UIStoryboard(name: "SelectPlayersViewController", bundle: nil)
         let selectPlayersViewController = storyboard.instantiateViewController(withIdentifier: "SelectPlayersViewController") as! SelectPlayersViewController
@@ -657,7 +657,9 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
         selectPlayersViewController.allowNewPlayer = allowNewPlayer
         selectPlayersViewController.completion = completion
     
-        viewController.present(selectPlayersViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        viewController.present(selectPlayersViewController, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        
+        return selectPlayersViewController
     }
     
     private func dismiss(selected: Int? = nil, playerList: [PlayerDetail]? = nil, selection: [Bool]? = nil)->() {

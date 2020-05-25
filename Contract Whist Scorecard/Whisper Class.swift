@@ -34,8 +34,6 @@ class Whisper {
     }
     
      public func show(_ message: String, hideAfter: TimeInterval! = nil) {
-        return
-    /* TODO Reinstate
         Utility.mainThread {
             Utility.debugMessage("whisper", "Show '\(message)' - hide after \(hideAfter ?? 0)")
             var newLabel = true
@@ -96,7 +94,7 @@ class Whisper {
                     }
                 })
             }
-        }*/
+        }
     }
     
     private func setupFrames() {

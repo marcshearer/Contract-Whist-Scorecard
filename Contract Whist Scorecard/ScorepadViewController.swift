@@ -17,16 +17,12 @@ enum ScorepadMode {
     case viewing
 }
     
-class ScorepadViewController: ScorecardAppViewController,
+class ScorepadViewController: ScorecardViewController,
                               UITableViewDataSource, UITableViewDelegate,
                               UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout,
                               ScorecardAlertDelegate {
  
     
-    // Whist view properties
-    override internal var scorecardView: ScorecardView? { return ScorecardView.scorepad }
-    public weak var controllerDelegate: ScorecardAppControllerDelegate?
-        
     // MARK: - Class Properties ======================================================================== -
     
     // Properties to pass state
@@ -72,14 +68,11 @@ class ScorepadViewController: ScorecardAppViewController,
     private var lastViewHeight:CGFloat = 0.0
     private var rotated = false
     private var observer: NSObjectProtocol?
-    private var firstGameSummary = true
     private var paddingGradientLayer: [CAGradientLayer] = []
     private var scoresSubscription: AnyCancellable?
 
     // UI component pointers
     private var imageCollectionView: UICollectionView!
-    public var roundSummaryViewController: RoundSummaryViewController!
-    public var gameSummaryViewController: GameSummaryViewController!
     
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var bannerContinuationHeightConstraint: NSLayoutConstraint!
@@ -99,12 +92,13 @@ class ScorepadViewController: ScorecardAppViewController,
     
     @IBAction internal func scorePressed(_ sender: Any) {
         self.willDismiss()
+        Scorecard.game.selectedRound = Scorecard.game.maxEnteredRound
         self.controllerDelegate?.didProceed()
     }
     
     @IBAction private func finishGamePressed(_ sender: Any) {
         Utility.debugMessage("scorepad", "Cancel pressed")
-        if scorepadMode == .scoring || scorepadMode == .hosting {
+        if scorepadMode == .hosting {
             self.alertDecision("Warning: This will clear the existing score card and start a new game.\n\n Are you sure you want to do this?", title: "Finish Game", okButtonText: "Confirm", okHandler: {
             
                 Scorecard.shared.exitScorecard(advanceDealer: false, resetOverrides: true) {
@@ -161,10 +155,10 @@ class ScorepadViewController: ScorecardAppViewController,
     override internal func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if scorepadMode != .scoring {
-            headerTableView.isUserInteractionEnabled = false
-            footerTableView.isUserInteractionEnabled = false
-            tapGestureRecognizer.isEnabled = false
+        if scorepadMode == .viewing {
+            headerTableView.isUserInteractionEnabled = true
+            footerTableView.isUserInteractionEnabled = true
+            tapGestureRecognizer.isEnabled = true
         } else {
             tapGestureRecognizer.isEnabled = false
         }
@@ -504,6 +498,8 @@ class ScorepadViewController: ScorecardAppViewController,
         finishButton.isHidden = !(self.controllerDelegate?.canCancel ?? true)
     }
     
+    // MARK: - Utility methods to find or update specific cells ========================================== -
+    
     private func cellForItemAt(_ tableView: UITableView, row: Int, playerNumber: Int, mode: Mode, bodyColumns:Int) -> ScorepadCollectionViewCell? {
         var cell: ScorepadCollectionViewCell?
         if let tableViewCell = tableView.cellForRow(at: IndexPath(row: row, section: 0)) as? ScorepadTableViewCell {
@@ -617,11 +613,9 @@ class ScorepadViewController: ScorecardAppViewController,
         cell.scorepadCellLabel.text = "\(playerTotal)"
     }
         
-    // MARK: - Utility Routines ======================================================================== -
-    
     // MARK: - Function to present this view ==============================================================
     
-    class func show(from viewController: ScorecardViewController, existing scorepadViewController: ScorepadViewController? = nil, scorepadMode: ScorepadMode? = nil, recoveryMode: Bool = false, controllerDelegate: ScorecardAppControllerDelegate? = nil, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil) -> ScorepadViewController {
+    class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, existing scorepadViewController: ScorepadViewController? = nil, scorepadMode: ScorepadMode? = nil, recoveryMode: Bool = false, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil) -> ScorepadViewController {
         var scorepadViewController: ScorepadViewController! = scorepadViewController
         
         if scorepadViewController == nil {
@@ -634,9 +628,9 @@ class ScorepadViewController: ScorecardAppViewController,
         scorepadViewController.scorepadMode = scorepadMode
         scorepadViewController.recoveryMode = recoveryMode
         scorepadViewController.computerPlayerDelegate = computerPlayerDelegate
-        scorepadViewController.controllerDelegate = controllerDelegate
+        scorepadViewController.controllerDelegate = appController
         
-        viewController.present(scorepadViewController, sourceView: nil, animated: !recoveryMode)
+        viewController.present(scorepadViewController, appController: appController, sourceView: nil, animated: !recoveryMode)
         
         return scorepadViewController
     }
@@ -902,6 +896,8 @@ class ScorepadViewController: ScorecardAppViewController,
                 let round = collectionView.tag + 1
                 if (scorepadMode == .hosting || scorepadMode == .joining) && Scorecard.game!.dealHistory[round] != nil && (round < Scorecard.game!.handState.round || (round == Scorecard.game!.handState.round && Scorecard.game!.handState.finished)) {
                     return true
+                } else if scorepadMode == .scoring {
+                    return true
                 } else {
                     return false
                 }
@@ -925,12 +921,12 @@ class ScorepadViewController: ScorecardAppViewController,
                   } else {
                     Scorecard.game.selectedRound = round
                 }
+            } else if scorepadMode == .hosting || scorepadMode == .joining {
+                self.controllerDelegate?.didInvoke(.review, context: ["round" : round])
             }
         }
-        if scorepadMode == .hosting || scorepadMode == .joining {
-            self.controllerDelegate?.didInvoke(.review)
-        } else if scorepadMode == .scoring {
-            self.controllerDelegate?.didInvoke(.entry)
+        if self.scorepadMode == .scoring {
+            self.controllerDelegate?.didProceed(context: ["reeditMode" : true])
             rotated = false
         }
     }

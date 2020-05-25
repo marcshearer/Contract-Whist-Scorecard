@@ -19,10 +19,7 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         case bounce = 5
     }
     
-    private var message: String!
-    private var formTitle: String!
     private var value = 1
-    private var completion: (()->())?
     private var skipOptions = 0
     
     // UI elements
@@ -42,14 +39,12 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func confirmPressed(_ sender: UIButton) {
-        self.completion?()
         self.dismiss()
     }
     
     @IBAction func revertPressed(_ sender: UIButton) {
         // Disable override
         Scorecard.game.reset()
-        self.completion?()
         self.dismiss()
     }
     
@@ -224,29 +219,24 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     
     // Mark: - Main instatiation routine =============================================================== -
     
-    public func show(completion: (()->())? = nil) {
+    public static func show(from parentViewController: ScorecardViewController, appController: ScorecardAppController? = nil) -> OverrideViewController? {
+        
         let storyboard = UIStoryboard(name: "OverrideViewController", bundle: nil)
+        
         let viewController = storyboard.instantiateViewController(withIdentifier: "OverrideViewController") as! OverrideViewController
-        let parentViewController = Utility.getActiveViewController()! as! ScorecardViewController
-        viewController.completion = completion
-        viewController.formTitle = title
-        viewController.message = message
-
+        
         viewController.preferredContentSize = CGSize(width: 400, height: 700)
         viewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
-        parentViewController.present(viewController, sourceView: parentViewController.popoverPresentationController?.sourceView ?? parentViewController.view, animated: true, completion: nil)
+        parentViewController.present(viewController, appController: appController, sourceView: parentViewController.popoverPresentationController?.sourceView ?? parentViewController.view, animated: true, completion: nil)
+        
+        return viewController
     }
     
     private func dismiss() {
         self.dismiss(animated: true, completion: nil)
     }
-    
-    override internal func didDismiss() {
-        // Reset any changes this time
-        self.completion?()
-    }
-            
+         
     private func includeText(from: String) -> NSMutableAttributedString {
         let attributedString = NSMutableAttributedString()
         var attributes: [NSAttributedString.Key : Any] = [:]

@@ -65,7 +65,6 @@ class Scorecard {
     public var alertDelegate: ScorecardAlertDelegate?
     internal var reminderTimer: Timer?
     internal var bidSubscription = PassthroughSubject<(Int, Int, Int), Never>()
-    internal var cardSubscription = PassthroughSubject<(Int, Int, Int, Card), Never>()
 
     // Remote logging
     public var logService: CommsClientServiceDelegate!
@@ -102,12 +101,14 @@ class Scorecard {
     public var iCloudUserIsMe = false
     
     // Comms services
-    public weak var sharingService: CommsHostServiceDelegate?
+    public var sharingService: CommsHostServiceDelegate?
     internal weak var _commsDelegate: CommsServiceDelegate?
     internal var _commsPurpose: CommsPurpose?
+    internal var _commsPlayerDelegate: ScorecardAppPlayerDelegate?
     internal var commsScoresSubscription: AnyCancellable?
     public weak var commsDelegate: CommsServiceDelegate? { get { return _commsDelegate } }
     public var commsPurpose: CommsPurpose? { get { return _commsPurpose } }
+    public var commsPlayerDelegate: ScorecardAppPlayerDelegate? { get { return _commsPlayerDelegate }}
     
     // Admin mode
     static var adminMode = false
@@ -146,9 +147,6 @@ class Scorecard {
         
         self.getPlayerList()
                 
-        // Setup sharing object and take broadcast delegates
-        self.setupSharing()
-        
         // Set icloud user flag
         self.setICloudUserIsMe()
         
@@ -359,7 +357,7 @@ class Scorecard {
     public func saveDealer(_ dealerIs: Int) {
         if Scorecard.game.dealerIs != dealerIs {
             Scorecard.game.dealerIs = dealerIs
-            if Scorecard.game.isHosting {
+            if Scorecard.game.isHosting || Scorecard.game.isSharing {
                 self.sendDealer()
             }
         }
@@ -706,5 +704,5 @@ class Scorecard {
 }
 
 extension Notification.Name {
-    static let appControllerViewPresentingCompleted = Notification.Name(".appControllerViewPresentingCompleted")
+    static let checkAutoPlayInput = Notification.Name(".checkAutoPlayInput")
 }

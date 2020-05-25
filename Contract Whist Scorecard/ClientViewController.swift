@@ -36,12 +36,17 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
     // Main state properties
     internal let sync = Sync()
     private var hostController: HostController!
+    private var scoringController: ScoringController!
     private var clientController: ClientController!
+    
+    private var historyViewer: HistoryViewer!
+    private var statisticsViewer: StatisticsViewer!
 
     // Properties to pass state
-    public let commsPurpose: CommsPurpose = .playing
+    public var commsPurpose: CommsPurpose = .playing
     private var matchDeviceName: String!
     private var matchProximity: CommsConnectionProximity!
+    private var matchGameUUID: String!
  
     // Local class variables
     private var availablePeers: [AvailablePeer] = []
@@ -165,7 +170,7 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
         
         // Check if recovering
         self.recoveryMode = Scorecard.recovery.recoveryAvailable
-        if self.recoveryMode && Scorecard.recovery.onlineType == .server {
+        if self.recoveryMode && (!Scorecard.recovery.onlineRecovery || Scorecard.recovery.onlineType == .server) {
             Scorecard.recovery.recovering = true
             Scorecard.recovery.loadSavedValues()
         }
@@ -235,7 +240,7 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
     }
         
     private func showHighScores() {
-        HighScoresViewController.show(from: self, backText: "", backImage: "home")
+        _ = HighScoresViewController.show(from: self, backText: "", backImage: "home")
     }
     
     private func showSettings() {
@@ -251,10 +256,6 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
         PlayersViewController.show(from: self, completion: {self.restart()})
     }
     
-    private func scoreGame() {
-        // TODO: Need to write a scoring appController like client or host
-    }
-            
     // MARK: - Player Selection View Delegate Handlers ======================================================= -
     
     private func showPlayerSelection() {
@@ -351,11 +352,15 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
         })
         
         self.addAction(section: infoSection, title: "Statistics", isHidden: {Scorecard.shared.playerList.count == 0}, action: { () in
-            let _ = StatisticsViewer(from: self)
+            self.statisticsViewer = StatisticsViewer(from: self) {
+                self.statisticsViewer = nil
+            }
         })
         
         self.addAction(section: infoSection, title: "History", isHidden: {!Scorecard.activeSettings.saveHistory || Scorecard.shared.playerList.count == 0}, action: { () in
-            let _ = HistoryViewer(from: self)
+            self.historyViewer = HistoryViewer(from: self) {
+                self.historyViewer = nil
+            }
         })
         
         self.addAction(section: infoSection, title: "High Scores", isHidden: {!Scorecard.activeSettings.saveHistory || Scorecard.shared.playerList.count == 0}, action: { () in
@@ -370,7 +375,17 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
         self.addAction(section: adminSection, title: "Delete iCloud Database", isHidden: {!Scorecard.adminMode}, action: { () in
             DataAdmin.deleteCloudDatabase(from: self)
         })
-
+        
+        self.addAction(section: adminSection, title: "Switch to playing mode", isHidden: {self.commsPurpose == .playing}, action: { () in
+            self.commsPurpose = .playing
+            self.restart()
+        })
+        
+        self.addAction(section: adminSection, title: "Switch to sharing mode", isHidden: {self.commsPurpose == .sharing}, action: { () in
+            self.commsPurpose = .sharing
+            self.restart()
+        })
+        
         self.addAction(section: adminSection, title: "Reset Sync Record IDs", isHidden: {!Scorecard.adminMode}, action: { () in
             DataAdmin.resetSyncRecordIDs(from: self)
         })
@@ -426,6 +441,7 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
     internal func restart(createController: Bool = true) {
         self.destroyClientController()
         self.hostController = nil
+        self.scoringController = nil
         self.setupHostingOptions()
         self.appStateChange(to: .notConnected)
         self.changePlayerAvailable()
@@ -502,11 +518,14 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
             
             self.clientTableView.reloadData()
             
-            // Link to host if recovering a server
-            if self.recoveryMode && Scorecard.recovery.onlineType == .server {
-                self.hostGame(recoveryMode: true)
+            // Link to host if recovering a server or scoring if recovering a game
+            if self.recoveryMode {
+                if !Scorecard.recovery.onlineRecovery {
+                    self.scoreGame(recoveryMode: true)
+                } else if Scorecard.recovery.onlineType == .server {
+                    self.hostGame(recoveryMode: true)
+                }
             }
-            
         }
     }
     
@@ -860,6 +879,29 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
         })
     }
     
+    private func scoreGame(recoveryMode: Bool = false) -> Void {
+        // Stop any Client controller
+        if self.clientController != nil {
+            self.clientController.stop()
+            self.clientController = nil
+        }
+                
+        // Create Scoring controller
+        if self.scoringController == nil {
+            self.scoringController = ScoringController(from: self)
+        }
+        
+        // Start Host controller
+        scoringController.start(recoveryMode: recoveryMode, completion: { (returnHome) in
+            if returnHome {
+                self.cancelRecovery()
+            }
+            self.scoringController?.stop()
+            self.scoringController = nil
+            self.restart()
+        })
+    }
+    
     @objc private func selectPeerSelector(_ sender: UIButton) {
         self.selectPeer(sender.tag)
     }
@@ -895,7 +937,7 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
         self.clientTableView.reloadData()
         self.clientTableView.layoutIfNeeded()
         if self.thisPlayer != nil {
-            self.clientController = ClientController(from: self, purpose: self.commsPurpose, playerEmail: self.thisPlayer, playerName: self.thisPlayerName, matchDeviceName: self.matchDeviceName, matchProximity: self.matchProximity)
+            self.clientController = ClientController(from: self, purpose: self.commsPurpose, playerEmail: self.thisPlayer, playerName: self.thisPlayerName, matchDeviceName: self.matchDeviceName, matchProximity: self.matchProximity, matchGameUUID: matchGameUUID)
             self.clientController.delegate = self
         }
     }
@@ -937,6 +979,7 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
                 self.thisPlayerName = Scorecard.shared.findPlayerByEmail(self.thisPlayer)?.name
                 self.matchDeviceName = Scorecard.recovery.connectionRemoteDeviceName
                 self.matchProximity = Scorecard.recovery.onlineProximity
+                self.matchGameUUID = Scorecard.recovery.gameUUID
                 if self.recoveryMode && Scorecard.recovery.onlineMode == .invite {
                     if self.thisPlayer == nil {
                         self.alertMessage("Error recovering game", okHandler: {
@@ -1103,6 +1146,7 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
         self.recoveryMode = false
         self.matchDeviceName = nil
         self.matchProximity = nil
+        self.matchGameUUID = nil
     }
 }
 

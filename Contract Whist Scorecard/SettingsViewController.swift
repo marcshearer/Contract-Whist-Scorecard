@@ -620,12 +620,6 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         
         Scorecard.shared.settings.allowBroadcast = shareScorecardSwitch.isOn
             
-        if Scorecard.shared.settings.allowBroadcast {
-            Scorecard.shared.setupSharing()
-        } else {
-            self.clearSharing()
-        }
-        
         // Save it
         UserDefaults.standard.set(Scorecard.shared.settings.allowBroadcast, forKey: "allowBroadcast")
     }

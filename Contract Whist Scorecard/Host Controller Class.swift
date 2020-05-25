@@ -1,5 +1,5 @@
  //
-//  HostViewController.swift
+//  Host Controller.swift
 //  Contract Whist Scorecard
 //
 //  Created by Marc Shearer on 07/06/2017.
@@ -13,7 +13,6 @@ enum ConnectionMode {
     case unknown
     case nearby
     case online
-    case loopback
 }
 
 enum InviteStatus {
@@ -23,21 +22,15 @@ enum InviteStatus {
     case reconnecting
 }
  
- class HostController: ScorecardAppController, CommsStateDelegate, CommsConnectionDelegate, CommsServiceStateDelegate, CommsServicePlayerDelegate, GamePreviewDelegate {
+ class HostController: ScorecardAppController, CommsStateDelegate, CommsConnectionDelegate, CommsServiceStateDelegate, ScorecardAppPlayerDelegate, GamePreviewDelegate {
     
     // MARK: - Class Properties ======================================================================== -
-    
-    // Controller delegate
-    public weak var delegate: ClientControllerDelegate?
-    
+        
     private var selectedPlayers: [PlayerMO]!
     private var faceTimeAddress: [String] = []
-    private var playingComputer = false
-    private var computerPlayerDelegate: [ Int : ComputerPlayerDelegate? ]?
         
     private weak var selectionViewController: SelectionViewController!
     private weak var gamePreviewViewController: GamePreviewViewController!
-    private weak var scorepadViewController: ScorepadViewController!
     
     private var playerData: [PlayerData] = []
     private var completion: ((Bool)->())?
@@ -49,12 +42,10 @@ enum InviteStatus {
     private var defaultConnectionMode: ConnectionMode!
     private var nearbyHostService: CommsHostServiceDelegate!
     private var onlineHostService: CommsHostServiceDelegate!
-    private var loopbackHost: LoopbackService!
     private var hostService: CommsHostServiceDelegate!
     private var currentState: CommsServiceState = .notStarted
     private var exiting = false
     private var resetting = false
-    private var computerPlayers: [Int : ComputerPlayerDelegate]?
     private var firstTime = true
     private var canStartGame: Bool = false
     private var lastMessage: String = ""
@@ -96,8 +87,6 @@ enum InviteStatus {
             
             // Set mode
             switch Scorecard.recovery.onlineMode! {
-            case .loopback:
-                self.startMode = .loopback
             case .broadcast:
                 self.startMode = .nearby
             case .invite:
@@ -108,8 +97,9 @@ enum InviteStatus {
             
             // Restore players
             self.resetResumedPlayers()
-            let playerMO = self.selectedPlayers[0]
-            _ = self.addPlayer(name: playerMO.name!, email: playerMO.email!, playerMO: playerMO, peer: nil, host: true)
+            for playerMO in self.selectedPlayers {
+                _ = self.addPlayer(name: playerMO.name!, email: playerMO.email!, playerMO: playerMO, peer: nil, host: true)
+            }
             
         } else {
             
@@ -117,20 +107,18 @@ enum InviteStatus {
             let playerMO = Scorecard.shared.findPlayerByEmail(playerEmail!)
             _ = self.addPlayer(name: playerMO!.name!, email: playerMO!.email!, playerMO: playerMO, peer: nil, host: true)
         }
-        
-        
-                        
+                         
         if self.recoveryMode {
-            // Just go straight to hand without animation
+            // Just go straight to hand without preview
             self.initCompletion()
             self.gameInProgress = true
             self.startGame()
         } else if self.startMode == .online {
             // Show selection
-            self.appController(nextView: .selection)
+            self.present(nextView: .selection)
         } else {
             // Show game preview
-            self.appController(nextView: .gamePreview)
+            self.present(nextView: .gamePreview)
         }
     }
     
@@ -143,8 +131,6 @@ enum InviteStatus {
         
         // Start communication
         switch self.startMode! {
-        case .loopback:
-            self.setConnectionMode(.loopback)
         case .online:
             self.setConnectionMode(.online)
         case .nearby:
@@ -160,10 +146,10 @@ enum InviteStatus {
         
     }
     
-    override internal func presentView(view: ScorecardView) -> ScorecardAppViewController? {
-        var viewController: ScorecardAppViewController?
+    override internal func presentView(view: ScorecardView, context: [String:Any?]?, completion: (([String:Any?]?)->())?) -> ScorecardViewController? {
+        var viewController: ScorecardViewController?
         
-        switch self.activeView {
+        switch view {
         case .selection:
             viewController = self.showSelection()
             
@@ -171,16 +157,36 @@ enum InviteStatus {
             let selectedPlayers = self.playerData.map { $0.playerMO! }
             viewController = self.showGamePreview(selectedPlayers: selectedPlayers)
             
+        case .location:
+            viewController = self.showLocation()
+            
         case .hand:
             viewController = self.playHand()
             
         case .scorepad:
-            viewController = self.showScorepad()
+            viewController = self.showScorepad(scorepadMode: .hosting)
             self.autoDeal()
             
         case .gameSummary:
-            viewController = self.showGameSummary()
+            viewController = self.showGameSummary(mode: .hosting)
             
+        case .confirmPlayed:
+            viewController = self.showConfirmPlayed(context: context, completion: completion)
+                
+        case .highScores:
+            viewController = self.showHighScores()
+            
+        case .review:
+            if let round = context?["round"] as? Int {
+                viewController = self.showReview(round: round, playerNumber: 1)
+            }
+            
+        case .overrideSettings:
+            viewController = self.showOverrideSettings()
+            
+        case .selectPlayers:
+            viewController = self.showSelectPlayers(completion: completion)
+        
         case .exit:
             self.exitHost(returnHome: true)
             
@@ -190,7 +196,7 @@ enum InviteStatus {
         return viewController
     }
     
-    override internal func didDismissView(view: ScorecardView, viewController: ScorecardAppViewController?) {
+    override internal func didDismissView(view: ScorecardView, viewController: ScorecardViewController?) {
         // Tidy up after view dismissed
         
         switch self.activeView {
@@ -207,7 +213,7 @@ enum InviteStatus {
      
      // MARK: - View Delegate Handlers  =================================================== -
      
-     var canProceed: Bool {
+     override internal var canProceed: Bool {
          get {
              var canProceed = true
              switch self.activeView {
@@ -225,7 +231,7 @@ enum InviteStatus {
          }
      }
      
-     var canCancel: Bool {
+     override internal var canCancel: Bool {
          get {
              var canCancel = true
              switch self.activeView {
@@ -240,7 +246,7 @@ enum InviteStatus {
          }
      }
      
-     func didLoad() {
+     override internal func didLoad() {
          switch self.activeView {
          case .gamePreview:
             self.initCompletion()
@@ -249,58 +255,67 @@ enum InviteStatus {
          }
      }
      
-     func didAppear() {
+     override internal func didAppear() {
          switch self.activeView {
          default:
              break
          }
      }
      
-    func didCancel() {
+    override internal func didCancel() {
         switch self.activeView {
         case .selection:
-            self.appController(nextView: .exit)
+            self.present(nextView: .exit)
             
         case .gamePreview:
             self.gameInProgress = false
             
             self.stopBroadcast() {
                 if self.connectionMode == .online {
-                    self.appController(nextView: .selection)
+                    self.present(nextView: .selection)
                 } else {
-                    self.appController(nextView: .exit)
+                    self.present(nextView: .exit)
                 }
             }
             
+        case .location:
+            // Link back to game preview
+            self.present(nextView: .exit)
+            
         case .hand:
             // Link to scorepad
-            self.appController(nextView: .scorepad)
+            self.present(nextView: .scorepad)
             
         case .scorepad:
             // Exit - game abandoned
-            self.appController(nextView: .exit)
+            self.present(nextView: .exit)
             
         case .gameSummary:
             // Go back to scorepad
-            self.appController(nextView: .scorepad)
+            self.present(nextView: .scorepad)
             
         default:
             break
         }
      }
      
-    func didProceed(context: [String:Any]?) {
+    override internal func didProceed(context: [String:Any]?) {
         switch self.activeView {
         case .selection:
             // Set up comms connection and then send invitations
             self.initCompletion()
             self.sendInvites()
-            self.appController(nextView: .gamePreview)
+            self.present(nextView: .gamePreview)
             
         case .gamePreview:
             // Start the new game
             self.newGame()
             self.startGame()
+            
+        case .location:
+        // Got location - show hand
+            Scorecard.recovery.saveLocationAndDate()
+            self.present(nextView: .hand)
             
         case .hand:
             // Link to scorecard or game summary
@@ -312,16 +327,12 @@ enum InviteStatus {
             
         case .scorepad:
             // Link to hand unless game is complete
-            self.appController(nextView: (Scorecard.game.gameComplete() ? .gameSummary : .hand))
+            self.present(nextView: (Scorecard.game.gameComplete() ? .gameSummary : .hand))
             
         default:
             break
         }
-     }
-     
-     func didInvoke(_ view: ScorecardView) {
-         
-     }
+    }
      
     private func newGame() {
         Scorecard.game.resetValues()
@@ -339,20 +350,20 @@ enum InviteStatus {
         
         // Link to hand or location
         if Scorecard.game.gameComplete() {
-            self.appController(nextView: .gameSummary)
-        } else if !(Scorecard.game?.isPlayingComputer ?? false) && Scorecard.activeSettings.saveLocation &&
-             (Scorecard.game.location.description == nil || Scorecard.game.location.description == "" ||
-                 (Scorecard.game.selectedRound == 1 &&
-                     !Scorecard.shared.roundStarted(Scorecard.game.selectedRound))) {
-            self.appController(nextView: .location)
+            self.present(nextView: .gameSummary)
+        } else if self.connectionMode == .nearby && Scorecard.activeSettings.saveLocation &&
+             (Scorecard.game.location.description == nil || Scorecard.game.location.description == "") {
+            self.present(nextView: .location)
         } else {
-            self.appController(nextView: .hand)
+            self.present(nextView: .hand)
         }
     }
      
     // MARK: - Process received data ==================================================== -
 
-    override internal func processQueue(descriptor: String, data: [String:Any?]?, peer: CommsPeer) {
+    override internal func processQueue(descriptor: String, data: [String:Any?]?, peer: CommsPeer) -> Bool {
+        var stopProcessing = false
+        
         if let playerData = playerDataFor(peer: peer) {
             if playerData.isConnected || (playerData.peer.state == .connected && descriptor == "refreshRequest") {
                 // Ignore any incoming data (except refresh request) if reconnecting and haven't seen refresh request yet
@@ -364,7 +375,7 @@ enum InviteStatus {
                     _ = Scorecard.shared.processCardPlayed(data: data! as Any as! [String : Any], from: self)
                     self.removeCardPlayed(data: data! as Any as! [String : Any])
                 case "refreshRequest":
-                    // Remote device wants a refresh of the currentstate
+                    // Remote device wants a refresh of the current state
                     if playerData.refreshRequired {
                         // Have been expecting this
                         playerData.refreshRequired = false
@@ -381,6 +392,7 @@ enum InviteStatus {
                 }
             }
         }
+        return stopProcessing
     }
     
     // MARK: - Connection Delegate handlers ===================================================================== -
@@ -537,8 +549,8 @@ enum InviteStatus {
     
     private func checkCanStartGame() {
         self.canStartGame = false
-        if (Scorecard.recovery.recovering || self.playingComputer) && self.connectedPlayers == Scorecard.game.currentPlayers {
-            // Recovering or playing computer  - go straight to game setup
+        if Scorecard.recovery.recovering && self.connectedPlayers == Scorecard.game.currentPlayers {
+            // Recovering - go straight to game setup
             self.canStartGame = true
         } else if self.connectionMode == .online && self.playerData.count >= 3 && self.connectedPlayers == self.playerData.count {
             self.canStartGame = true
@@ -670,6 +682,7 @@ enum InviteStatus {
                 Scorecard.game?.handState.hand = Scorecard.game?.deal.hands[0]
             }
         }
+        
         Scorecard.shared.setGameInProgress(true)
         
         if self.recoveryMode {
@@ -679,11 +692,11 @@ enum InviteStatus {
         }
         
         // Send state to peers
-        Scorecard.shared.sendState(from: self)
+        Scorecard.shared.sendHostState(from: self)
         
     }
     
-    private func playHand() -> ScorecardAppViewController? {
+    private func playHand() -> ScorecardViewController? {
         var handViewController: HandViewController?
            
         Scorecard.shared.setGameInProgress(true)
@@ -691,7 +704,7 @@ enum InviteStatus {
         Scorecard.shared.sendPlayHand()
         
         if let parentViewController = self.parentViewController {
-            handViewController = Scorecard.shared.playHand(from: parentViewController, sourceView: parentViewController.view, animated: true, controllerDelegate: self, computerPlayerDelegate: self.computerPlayerDelegate)
+            handViewController = Scorecard.shared.playHand(from: parentViewController, appController: self, sourceView: parentViewController.view, animated: true)
         }
         
         return handViewController
@@ -702,7 +715,7 @@ enum InviteStatus {
             if Scorecard.game.gameComplete() {
                 // Game complete
                 _ = Scorecard.game.save()
-                self.appController(nextView: .gameSummary)
+                self.present(nextView: .gameSummary)
             } else {
                 // Not complete - move to next round and go to scorepad
                 if Scorecard.game.handState.round != Scorecard.game.rounds {
@@ -710,11 +723,11 @@ enum InviteStatus {
                     self.nextHand()
                     Scorecard.shared.sendHandState()
                 }
-                self.appController(nextView: .scorepad)
+                self.present(nextView: .scorepad)
             }
         } else {
             // Still in progress just go to scorepad
-            self.appController(nextView: .scorepad)
+            self.present(nextView: .scorepad)
         }
     }
     
@@ -725,7 +738,6 @@ enum InviteStatus {
             Scorecard.game.maxEnteredRound = Scorecard.game.handState.round
             Scorecard.game.handState.reset()
             Scorecard.shared.dealNextHand()
-            Scorecard.shared.sendDeal()
         }
     }
     
@@ -739,7 +751,7 @@ enum InviteStatus {
                 self.newGame()
                 self.startGame()
             } else {
-                self.appController(nextView: .exit)
+                self.present(nextView: .exit)
             }
         }
     }
@@ -854,17 +866,11 @@ enum InviteStatus {
         }
     }
     
-    // MARK: - Scorepad Host Delegate handlers ============================================================================== -
-     
-    func scorepadGameComplete() {
-        // Tried closing connection here but doesn't work if continue playing
-    }
-
     // MARK: - Show / refresh / hide other views ==================================================== -
     
-    private func showSelection() -> ScorecardAppViewController {
-        if let viewController = parentViewController {
-            self.selectionViewController = SelectionViewController.show(from: viewController, existing: self.selectionViewController, mode: .invitees, thisPlayer: self.playerData[0].email, formTitle: "Choose Players", smallFormTitle: "Select", backText: "", backImage: "back", controllerDelegate: self,
+    private func showSelection() -> ScorecardViewController {
+        if let viewController = self.fromViewController() {
+            self.selectionViewController = SelectionViewController.show(from: viewController, appController: self, existing: self.selectionViewController, mode: .invitees, thisPlayer: self.playerData[0].email, formTitle: "Choose Players", smallFormTitle: "Select", backText: "", backImage: "back",
                                                                         completion:
                 { [weak self] (returnHome, selectedPlayers) in
                     // Returned values coming back from select players. Just store them - should get a didProceed immediately after
@@ -874,33 +880,12 @@ enum InviteStatus {
         return self.selectionViewController
     }
     
-    private func showGamePreview(selectedPlayers: [PlayerMO]) -> ScorecardAppViewController? {
+    private func showGamePreview(selectedPlayers: [PlayerMO]) -> ScorecardViewController? {
         
-        if let viewController = parentViewController {
-            self.gamePreviewViewController = GamePreviewViewController.show(from: viewController, selectedPlayers: selectedPlayers, title: "Host a Game", backText: "", readOnly: false, faceTimeAddress: self.faceTimeAddress, animated: !self.recoveryMode, computerPlayerDelegates: self.computerPlayers, delegate: self, controllerDelegate: self)
+        if let viewController = self.fromViewController() {
+            self.gamePreviewViewController = GamePreviewViewController.show(from: viewController, appController: self, selectedPlayers: selectedPlayers, title: "Host a Game", backText: "", readOnly: false, faceTimeAddress: self.faceTimeAddress, animated: !self.recoveryMode, delegate: self)
         }
         return self.gamePreviewViewController
-    }
-    
-    private func showScorepad() -> ScorecardAppViewController? {
-    
-        if let parentViewController = self.parentViewController {
-            self.scorepadViewController = ScorepadViewController.show(from: parentViewController, existing: self.scorepadViewController, scorepadMode: .hosting, controllerDelegate: self)
-        }
-        return self.scorepadViewController
-    }
-    
-    private func showGameSummary() -> ScorecardAppViewController? {
-        var gameSummaryViewController: GameSummaryViewController?
-        
-        // Avoid resuming once game summary shown
-        Scorecard.shared.setGameInProgress(false)
-        Scorecard.recovery = Recovery(load: false)
-        
-        if let parentViewController = self.parentViewController {
-            gameSummaryViewController = GameSummaryViewController.show(from: parentViewController, gameSummaryMode: .hosting, controllerDelegate: self)
-        }
-        return gameSummaryViewController
     }
     
     // MARK: - Utility Routines ======================================================================== -
@@ -936,7 +921,9 @@ enum InviteStatus {
             // Disconnect any existing connected players
             if playerData.count > 1 {
                 for playerNumber in (2...playerData.count).reversed() {
-                    self.disconnectPlayer(playerNumber: playerNumber, reason: "Host has disconnected")
+                    if !self.recoveryMode || (playerData[playerNumber - 1].peer?.state ?? .notConnected) != .notConnected {
+                        self.disconnectPlayer(playerNumber: playerNumber, reason: "Host has disconnected")
+                    }
                 }
             }
             
@@ -949,8 +936,6 @@ enum InviteStatus {
                     break
                 case .nearby:
                      self.startNearbyConnection()
-                case .loopback:
-                    self.startLoopbackMode()
                 default:
                     break
                 }
@@ -967,7 +952,11 @@ enum InviteStatus {
         self.hostService = nearbyHostService
         self.takeDelegates(self)
         if self.playerData.count > 0 {
-            self.startHostBroadcast(email: playerData[0].email, name: playerData[0].name)
+            var invite: [String]?
+            if self.recoveryMode && self.playerData.count > 1 {
+                invite = Array(self.playerData.map{$0.email}[1..<self.playerData.count])
+            }
+            self.startHostBroadcast(email: playerData[0].email, name: playerData[0].name, invite: invite)
         }
     }
     
@@ -977,28 +966,6 @@ enum InviteStatus {
         Scorecard.shared.setCommsDelegate(onlineHostService, purpose: .playing)
         self.hostService = onlineHostService
         self.takeDelegates(self)
-    }
-    
-    private func startLoopbackMode() {
-        // Create loopback service, take delegate and then start loopback service
-        loopbackHost = LoopbackService(mode: .loopback, type: .server, serviceID: Scorecard.shared.serviceID(.playing), deviceName: Scorecard.deviceName)
-        Scorecard.shared.setCommsDelegate(loopbackHost, purpose: .playing)
-        self.hostService = loopbackHost
-        self.takeDelegates(self)
-        self.loopbackHost.start(email: playerData[0].email, name: playerData[0].name)
-        
-        // Set up other players - they should call the host back
-        let hostPeer = CommsPeer(parent: loopbackHost, deviceName: Scorecard.deviceName, playerEmail: self.playerData.first?.email, playerName: playerData.first?.playerMO.name)
-        self.computerPlayers = [:]
-        let names = ["Harry", "Snape", "Ron"]
-        for playerNumber in 2...4 {
-            self.startLoopbackClient(email: "_Player\(playerNumber)", name: names[playerNumber - 2], deviceName: "\(names[playerNumber - 2])'s iPhone", hostPeer: hostPeer, playerNumber: playerNumber)
-        }
-    }
-    
-    private func startLoopbackClient(email: String, name: String, deviceName: String, hostPeer: CommsPeer, playerNumber: Int) {
-        let computerPlayer = ComputerPlayer(email: email, name: name, deviceName: deviceName, hostPeer: hostPeer, playerNumber: playerNumber)
-        computerPlayers?[playerNumber] = computerPlayer as ComputerPlayerDelegate
     }
     
     private func takeDelegates(_ delegate: Any?) {
@@ -1034,7 +1001,7 @@ enum InviteStatus {
         var xref: [Int] = []
         
         for playerNumber in 1...playerData.count {
-            if Scorecard.recovery.recovering && !self.playingComputer {
+            if Scorecard.recovery.recovering {
                 // Ensure players are in same order as before
                 xref.append(self.playerIndexFor(email: self.selectedPlayers[playerNumber - 1].email)!)
             } else {
@@ -1091,7 +1058,7 @@ enum InviteStatus {
     
     private func startHostBroadcast(email: String!, name: String!, invite: [String]? = nil, queueUUID: String! = nil) {
         // Start host broadcast
-        self.hostService?.start(email: email, queueUUID: queueUUID, name: name, invite: invite, recoveryMode: Scorecard.recovery.recovering)
+        self.hostService?.start(email: email, queueUUID: queueUUID, name: name, invite: invite, recoveryMode: Scorecard.recovery.recovering, matchGameUUID: (Scorecard.recovery.recovering ? Scorecard.game.gameUUID : nil))
     }
     
     public func exitHost(returnHome: Bool) {

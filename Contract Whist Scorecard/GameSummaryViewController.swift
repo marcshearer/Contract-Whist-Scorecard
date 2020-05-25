@@ -15,11 +15,7 @@ enum GameSummaryReturnMode {
     case newGame
 }
 
-class GameSummaryViewController: ScorecardAppViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SyncDelegate, UIPopoverControllerDelegate, ImageButtonDelegate {
-
-    // Whist view properties
-    override internal var scorecardView: ScorecardView? { return ScorecardView.gameSummary }
-    public weak var controllerDelegate: ScorecardAppControllerDelegate?
+class GameSummaryViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SyncDelegate, UIPopoverControllerDelegate, ImageButtonDelegate {
 
     // Main state properties
     private let sync = Sync()
@@ -273,7 +269,7 @@ class GameSummaryViewController: ScorecardAppViewController, UICollectionViewDel
                 // Link to home via client (no sync)
                 self.controllerDelegate?.didProceed()
             } else {
-                self.finishGame(returnMode: .returnHome, resetOverrides: true)
+                self.finishGame(returnMode: .returnHome, resetOverrides: true, confirm: self.gameSummaryMode == .scoring)
             }
         }
     }
@@ -281,7 +277,7 @@ class GameSummaryViewController: ScorecardAppViewController, UICollectionViewDel
     private func playAgainPressed() {
         // Unwind to scorepad clearing current game and advancing dealer
         if gameSummaryMode == .scoring || gameSummaryMode == .hosting {
-            self.finishGame(returnMode: .newGame, advanceDealer: true, resetOverrides: false)
+            self.finishGame(returnMode: .newGame, advanceDealer: true, resetOverrides: false, confirm: self.gameSummaryMode == .scoring)
         }
     }
     
@@ -459,7 +455,7 @@ class GameSummaryViewController: ScorecardAppViewController, UICollectionViewDel
         }
     }
     
-    func finishGame(returnMode: GameSummaryReturnMode, advanceDealer: Bool = false, resetOverrides: Bool = true, confirm: Bool = true) {
+    func finishGame(returnMode: GameSummaryReturnMode, advanceDealer: Bool = false, resetOverrides: Bool = true, confirm: Bool = false) {
         
         func finish() {
             self.synchroniseAndReturn(returnMode: returnMode, advanceDealer: advanceDealer, resetOverrides: resetOverrides)
@@ -529,12 +525,12 @@ class GameSummaryViewController: ScorecardAppViewController, UICollectionViewDel
     // MARK: - Show other views ============================================================= -
     
     private func showHighScores() {
-        HighScoresViewController.show(from: self, backText: "", backImage: "cross white")
+        self.controllerDelegate?.didInvoke(.highScores)
     }
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: ScorecardViewController, gameSummaryMode: ScorepadMode? = nil, controllerDelegate: ScorecardAppControllerDelegate?) -> GameSummaryViewController {
+    class public func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, gameSummaryMode: ScorepadMode? = nil) -> GameSummaryViewController {
         
         let storyboard = UIStoryboard(name: "GameSummaryViewController", bundle: nil)
         let gameSummaryViewController: GameSummaryViewController = storyboard.instantiateViewController(withIdentifier: "GameSummaryViewController") as! GameSummaryViewController
@@ -543,9 +539,9 @@ class GameSummaryViewController: ScorecardAppViewController, UICollectionViewDel
         gameSummaryViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
 
         gameSummaryViewController.gameSummaryMode = gameSummaryMode
-        gameSummaryViewController.controllerDelegate = controllerDelegate
+        gameSummaryViewController.controllerDelegate = appController
        
-        viewController.present(gameSummaryViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        viewController.present(gameSummaryViewController, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
         
         return gameSummaryViewController
     }

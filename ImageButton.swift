@@ -19,7 +19,7 @@ class ImageButton: UIView {
     @IBInspectable var textColor: UIColor!
     @IBOutlet weak var delegate: ImageButtonDelegate?
     
-    @IBOutlet weak var contentView: UIView!          // TODO Should this be weak - changed it to see?
+    @IBOutlet weak var contentView: UIView!         
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     

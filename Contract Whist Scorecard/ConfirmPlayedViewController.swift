@@ -54,7 +54,7 @@ class ConfirmPlayedViewController : ScorecardViewController, UIPopoverPresentati
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+        super.viewWillAppear(animated)
         Utility.mainThread {
             // Have to wrap this in main thread for it to work!! Apparently fixed in iOS 13
             self.contentView.backgroundColor = self.backgroundColor ?? Palette.background
@@ -121,11 +121,11 @@ class ConfirmPlayedViewController : ScorecardViewController, UIPopoverPresentati
         return UIModalPresentationStyle.none
     }
     
-    class func show(title: String, content: UIView, sourceView: UIView? = nil, confirmText: String? = nil, cancelText: String? = nil, minWidth: CGFloat = 240, minHeight: CGFloat = 200.0, offsets: (portrait: CGFloat?, landscape: CGFloat?) = (0.0, nil), backgroundColor: UIColor? = nil, confirmHandler: (()->())? = nil, cancelHandler: (()->())? = nil) {
+    class func show(from parentViewController: ScorecardViewController, appController: ScorecardAppController? = nil, title: String, content: UIView, sourceView: UIView? = nil, confirmText: String? = nil, cancelText: String? = nil, minWidth: CGFloat = 240, minHeight: CGFloat = 200.0, offsets: (portrait: CGFloat?, landscape: CGFloat?) = (0.0, nil), backgroundColor: UIColor? = nil, confirmHandler: (()->())? = nil, cancelHandler: (()->())? = nil) -> ConfirmPlayedViewController {
         let storyboard = UIStoryboard(name: "ConfirmPlayedViewController", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "ConfirmPlayedViewController") as! ConfirmPlayedViewController
         
-        ConfirmPlayedViewController.parentViewController = Utility.getActiveViewController()!
+        ConfirmPlayedViewController.parentViewController = parentViewController
         viewController.formTitle = title
         viewController.content = content
         viewController.confirmText = confirmText
@@ -147,7 +147,9 @@ class ConfirmPlayedViewController : ScorecardViewController, UIPopoverPresentati
         viewController.preferredContentSize = CGSize(width: max(minWidth, content.frame.width), height: ConfirmPlayedViewController.preferredHeight)
         viewController.popoverPresentationController?.sourceRect = CGRect(origin: CGPoint(x: sourceView!.bounds.midX, y: sourceView!.bounds.midY - self.yOffset()), size: CGSize())
         
-        parentViewController.present(viewController, animated: true, completion: nil)
+        parentViewController.present(viewController, appController: appController, animated: true)
+        
+        return viewController
     }
     
     private func dismiss(completion: (()->())? = nil) {

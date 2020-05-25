@@ -123,10 +123,10 @@ extension ScorepadViewController {
 extension HostController {
     
     func autoDeal() {
-        if Scorecard.shared.autoPlayHands != 0 && Scorecard.game.isHosting {
+        if (Scorecard.shared.autoPlayHands > 0 && (Scorecard.shared.autoPlayHands > 1 || Scorecard.game.handState.round <= Scorecard.shared.autoPlayGames)) && Scorecard.game.isHosting {
             // Automatically start the hand
             Utility.executeAfter(delay: 10 * Config.autoPlayTimeUnit, completion: {
-                self.appController(nextView: .hand)
+                self.present(nextView: .hand)
             })
         }
     }
@@ -156,14 +156,8 @@ extension HandViewController {
     
     func autoBid() {
         if Scorecard.shared.autoPlayHands > 0 && (Scorecard.shared.autoPlayHands > 1 || round <= Scorecard.shared.autoPlayGames) {
-            var bids: [Int] = []
-            for playerNumber in 1...Scorecard.game.currentPlayers {
-                let bid = Scorecard.game.scores.get(round: round, playerNumber: playerNumber, sequence: .entry).bid
-                if bid != nil {
-                    bids.append(bid!)
-                }
-            }
-            if Scorecard.game.roundPlayerNumber(enteredPlayerNumber: self.enteredPlayerNumber, round: self.round) == bids.count + 1 {
+            let bidsMade = Scorecard.game.scores.bidsMade(round: self.round)
+            if Scorecard.game.roundPlayerNumber(enteredPlayerNumber: self.enteredPlayerNumber, round: self.round) == bidsMade + 1 {
                 let cards = Scorecard.game.roundCards(round)
                 var range = ((Double(cards) / Double(Scorecard.game.currentPlayers)) * 2) + 1
                 range.round()
@@ -215,9 +209,9 @@ extension HandViewController {
     }
     
     func checkBidAvailable() -> Bool {
-        if Scorecard.shared.viewPresenting != .none {
+        if Scorecard.shared.viewPresenting != .none && Scorecard.shared.viewPresenting != .processing {
             self.handTestData.waitAutoBid=true
-            self.setHandlerCompleteNotification()
+            self.setcheckAutoPlayInputNotification()
         }
         return !self.handTestData.waitAutoBid
     }
@@ -241,9 +235,9 @@ extension HandViewController {
         }
     }
     
-    func setHandlerCompleteNotification() {
+    func setcheckAutoPlayInputNotification() {
         // Set a notification for handler complete
-        self.handTestData.observer = NotificationCenter.default.addObserver(forName: .appControllerViewPresentingCompleted, object: nil, queue: nil) {
+        self.handTestData.observer = NotificationCenter.default.addObserver(forName: .checkAutoPlayInput, object: nil, queue: nil) {
             (notification) in
             NotificationCenter.default.removeObserver(self.handTestData.observer!)
             self.checkTestWait()
@@ -270,10 +264,20 @@ extension ClientController {
             if hands != Scorecard.shared.autoPlayHands || games != Scorecard.shared.autoPlayGames {
                 // Changed - need to play if can
                 if self.activeView == .hand {
-                    if let handViewController = self.activeViewController as? HandViewController {
-                        if Scorecard.game.handState.toPlay == handViewController.enteredPlayerNumber {
-                            // Me to play
-                            handViewController.autoPlay()
+                    if let handViewController = self.activeViewController as? HandViewController,
+                        let enteredPlayerNumber = handViewController.enteredPlayerNumber,
+                        let bidMode = handViewController.bidMode {
+                        if bidMode {
+                            let bidsMade = Scorecard.game.scores.bidsMade(round: Scorecard.game.handState.round)
+                            if Scorecard.game.roundPlayerNumber(enteredPlayerNumber: enteredPlayerNumber, round: Scorecard.game.handState.round) == bidsMade + 1 {
+                                // Me to bid
+                                handViewController.autoBid()
+                            }
+                        } else {
+                            if Scorecard.game.handState.toPlay == enteredPlayerNumber {
+                                // Me to play
+                                handViewController.autoPlay()
+                            }
                         }
                     }
                 }

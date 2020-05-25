@@ -77,7 +77,7 @@ class MultipeerService: NSObject, CommsServiceDelegate, MCSessionDelegate {
         }
     }
     
-    internal func startService(email: String!, name: String!, recoveryMode: Bool, matchDeviceName: String! = nil) {
+    internal func startService(email: String!, name: String!, recoveryMode: Bool) {
         self._connectionEmail = email
         self._connectionName = name
         self.started = true
@@ -178,7 +178,7 @@ class MultipeerService: NSObject, CommsServiceDelegate, MCSessionDelegate {
     internal func connectionInfo(message: String) {
         var message = message + "\n\nPeers"
         for (deviceName, peer) in self.broadcastPeerList {
-            message = message + "\nDevice: \(deviceName), Player: \(peer.playerName ?? ""), \(peer.state.rawValue)\n"
+            message = message + "\nDevice: \(deviceName), Player: \(peer.playerName!), \(peer.state.rawValue)\n"
         }
         
         message = message + "\nSessions"
@@ -206,6 +206,10 @@ class MultipeerService: NSObject, CommsServiceDelegate, MCSessionDelegate {
     }
     
     internal func startBrowsingForPeers() {
+        // Overridden by client
+    }
+    
+    internal func stopBrowsingForPeers() {
         // Overridden by client
     }
 
@@ -351,14 +355,16 @@ class MultipeerServerService : MultipeerService, CommsHostServiceDelegate, MCNea
     
     // MARK: - Comms Handler Server handlers ========================================================================= -
     
-    internal func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool) {
-        self.debugMessage("Start Server \(self.connectionMode)")
+    internal func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool, matchGameUUID: String!) {
+        self.debugMessage("Start Server (\(self.connectionMode) \(self.serviceID))")
         
         super.startService(email: email, name: name, recoveryMode: recoveryMode)
         
-        var discoveryInfo: [String : String] = [:]
+        var discoveryInfo: [String : String]! = [:]
         discoveryInfo["playerEmail"] = email
-        discoveryInfo["playerName"] = name
+        discoveryInfo["playerName"] = name ?? self.connectionName ?? self.myPeerID.displayName
+        discoveryInfo["gameUUID"] = matchGameUUID
+        discoveryInfo["invite"] = invite?.joined(separator: ";")
         
         let advertiser = MCNearbyServiceAdvertiser(peer: self.myPeerID, discoveryInfo: discoveryInfo, serviceType: self.serviceID)
         self.server = ServerConnection(advertiser: advertiser)
@@ -478,6 +484,7 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
     
     private var client: ClientConnection!
     private var matchDeviceName: String!
+    private var matchGameUUID: String?
     private var invite: Invite!
     private var onlineInviteObserver: NSObjectProtocol?
     
@@ -490,22 +497,25 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
     
     // Comms Handler Client Service handlers ========================================================================= -
     
-    internal func start(email: String!, name: String!, recoveryMode: Bool, matchDeviceName: String!) {
+    internal func start(email: String!, name: String!, recoveryMode: Bool, matchDeviceName: String!, matchGameUUID: String!) {
         if self.connectionMode != .queue {
             // Don't log start for other since it might be (probably is) the logger starting! While this works on simulator it crashes devices
-            self.debugMessage("Start Client \(self.connectionMode)")
+            self.debugMessage("Start Client (\(self.connectionMode) \(self.serviceID))")
         }
         
         if self.connectionMode != .broadcast {
             fatalError("start(email: is only valid for broadcast mode in Multi-peer Connectivity")
         }
         
-        super.startService(email: email, name: name, recoveryMode: recoveryMode, matchDeviceName: matchDeviceName)
+        super.startService(email: email, name: name, recoveryMode: recoveryMode)
         
-        let browser = MCNearbyServiceBrowser(peer: self.myPeerID, serviceType: serviceID)
+        self.matchDeviceName = matchDeviceName
+        self.matchGameUUID = matchGameUUID
+        
+        let browser = MCNearbyServiceBrowser(peer: self.myPeerID, serviceType: self.serviceID)
         self.client = ClientConnection(browser: browser)
         self.client?.browser?.delegate = self
-        self.client?.browser?.startBrowsingForPeers()
+        self.startBrowsingForPeers()
     }
     
     internal func start(queue: String, filterEmail: String!) {
@@ -525,7 +535,7 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
         self.broadcastPeerList = [:]
         if self.client != nil {
             if self.client.browser != nil {
-                self.client?.browser?.stopBrowsingForPeers()
+                self.stopBrowsingForPeers()
                 self.client?.browser?.delegate = nil
                 self.client?.browser = nil
             }
@@ -544,7 +554,7 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
             self.debugMessage("Connect to ", peerID: broadcastPeer.mcPeer)
             
             // Stop browsing for other peers
-            self.client?.browser?.stopBrowsingForPeers()
+            self.stopBrowsingForPeers()
             
             // Set up peer
             broadcastPeer.shouldReconnect = reconnect
@@ -594,12 +604,16 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
         // Disconnect and then start looking for peers again - should reconnect automatically when find peer
         self.debugMessage("Restart nearby peer browsing")
         self.endSessions()
-        self.client?.browser?.stopBrowsingForPeers()
-        self.client?.browser?.startBrowsingForPeers()
+        self.stopBrowsingForPeers()
+        self.startBrowsingForPeers()
     }
     
     override internal func startBrowsingForPeers() {
         self.client?.browser?.startBrowsingForPeers()
+    }
+    
+    override internal func stopBrowsingForPeers() {
+        self.client?.browser?.stopBrowsingForPeers()
     }
     
     func checkOnlineInvites(email: String, checkExpiry: Bool = true) {
@@ -623,28 +637,34 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
                 // End any pre-existing sessions
                 self.endSessions(matchDeviceName: deviceName)
                 
-                var broadcastPeer = self.broadcastPeerList[deviceName]
-                if broadcastPeer == nil {
-                    broadcastPeer = BroadcastPeer(parent: self, mcPeer: peerID, deviceName: deviceName)
-                    self.broadcastPeerList[deviceName] = broadcastPeer
-                } else {
-                    broadcastPeer?.mcPeer = peerID
-                }
-                broadcastPeer?.playerName = info?["playerName"]
-                broadcastPeer?.playerEmail = info?["playerEmail"]
-                
-                // Notify delegate
-                self.browserDelegate?.peerFound(peer: broadcastPeer!.commsPeer)
-                
-                if broadcastPeer!.reconnect {
-                    // Auto-reconnect set - try to connect
-                    if !self.connect(to: broadcastPeer!.commsPeer, playerEmail: self.connectionEmail, playerName: self.connectionName, reconnect: true) {
-                        // Not good - shouldn't happen - try stopping browsing and restarting - will retry when find peer again
-                        self.debugMessage("Shouldn't happen - connect failed")
-                        self.client?.browser?.stopBrowsingForPeers()
-                        self.client?.browser?.startBrowsingForPeers()
-                        broadcastPeer!.state = .reconnecting
-                        self.stateDelegate?.stateChange(for: broadcastPeer!.commsPeer)
+                let gameUUID = info?["gameUUID"]
+                let invite = info?["invite"]?.components(separatedBy: ";")
+                if invite == nil || invite!.isEmpty || invite?.first(where: {$0 == self.connectionEmail}) != nil {
+                    if self.matchGameUUID == nil || self.matchGameUUID! == gameUUID {
+                        var broadcastPeer = self.broadcastPeerList[deviceName]
+                        if broadcastPeer == nil {
+                            broadcastPeer = BroadcastPeer(parent: self, mcPeer: peerID, deviceName: deviceName)
+                            self.broadcastPeerList[deviceName] = broadcastPeer
+                        } else {
+                            broadcastPeer?.mcPeer = peerID
+                        }
+                        broadcastPeer?.playerName = info?["playerName"]
+                        broadcastPeer?.playerEmail = info?["playerEmail"]
+                        
+                        // Notify delegate
+                        self.browserDelegate?.peerFound(peer: broadcastPeer!.commsPeer)
+                        
+                        if broadcastPeer!.reconnect {
+                            // Auto-reconnect set - try to connect
+                            if !self.connect(to: broadcastPeer!.commsPeer, playerEmail: self.connectionEmail, playerName: self.connectionName, reconnect: true) {
+                                // Not good - shouldn't happen - try stopping browsing and restarting - will retry when find peer again
+                                self.debugMessage("Shouldn't happen - connect failed")
+                                self.stopBrowsingForPeers()
+                                self.startBrowsingForPeers()
+                                broadcastPeer!.state = .reconnecting
+                                self.stateDelegate?.stateChange(for: broadcastPeer!.commsPeer)
+                            }
+                        }
                     }
                 }
             }
@@ -705,7 +725,7 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
                 
                 // Need to start browsing for another peer
                 self.debugMessage("Start browsing")
-                self.client?.browser?.startBrowsingForPeers()
+                self.startBrowsingForPeers()
             } else if state == .connected {
                 // Connected
             }

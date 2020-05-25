@@ -159,6 +159,14 @@ class Scores {
     public func reset() {
         self.roundScore = [:]
     }
+    
+    public func bidsMade(round: Int) -> Int {
+        var bids = 0
+        if let roundScore = self.roundScore[round] {
+            bids = roundScore.playerScore.filter{$0.value.bid != nil}.count
+        }
+        return bids
+    }
         
     public func subscribe(dedupPlayer: Bool = false, completion: @escaping (Int, Int)->()) -> AnyCancellable {
         return self.changedRound

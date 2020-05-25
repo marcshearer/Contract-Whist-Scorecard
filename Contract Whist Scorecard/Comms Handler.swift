@@ -157,14 +157,6 @@ public protocol CommsServiceStateDelegate : class {
     
 }
 
-public protocol CommsServicePlayerDelegate {
-    
-    // Can be implemented by server controllers to allow them to override the players to be sent to remotes
-    
-    func currentPlayers() -> [(email: String, name: String, connected: Bool)]?
-    
-}
-
 // MARK: - Protocols from abstraction layer to communication handlers ==================================== -
 
 // These protocols must be implemented by communication handlers to allow the abstraction layer to communicate with them
@@ -236,7 +228,7 @@ public protocol CommsHostServiceDelegate : CommsServiceDelegate {
     
     init(mode: CommsConnectionMode, serviceID: String?, deviceName: String)
     
-    func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool)
+    func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool, matchGameUUID: String!)
     
     func stop(completion: (()->())?)
 }
@@ -248,27 +240,27 @@ extension CommsHostServiceDelegate {
     }
     
     func start() {
-        start(email: nil, queueUUID: nil, name: nil, invite: nil, recoveryMode: false)
+        start(email: nil, queueUUID: nil, name: nil, invite: nil, recoveryMode: false, matchGameUUID: nil)
     }
     
     func start(email: String!) {
-        start(email: email, queueUUID: nil, name: nil, invite: nil, recoveryMode: false)
+        start(email: email, queueUUID: nil, name: nil, invite: nil, recoveryMode: false, matchGameUUID: nil)
     }
     
     func start(email: String!, name: String!) {
-        start(email: email, queueUUID: nil, name: name, invite: nil, recoveryMode: false)
+        start(email: email, queueUUID: nil, name: name, invite: nil, recoveryMode: false, matchGameUUID: nil)
     }
     
     func start(email: String!, recoveryMode: Bool) {
-        start(email: email, queueUUID: nil, name: nil, invite: nil, recoveryMode: recoveryMode)
+        start(email: email, queueUUID: nil, name: nil, invite: nil, recoveryMode: recoveryMode, matchGameUUID: nil)
     }
     
     func start(email: String!, name: String!, invite: [String]!) {
-        start(email: email, queueUUID: nil, name: name, invite: invite, recoveryMode: false)
+        start(email: email, queueUUID: nil, name: name, invite: invite, recoveryMode: false, matchGameUUID: nil)
     }
     
     func start(email: String!, queueUUID: String!, recoveryMode: Bool) {
-        start(email: email, queueUUID: queueUUID, name: nil, invite: nil, recoveryMode: recoveryMode)
+        start(email: email, queueUUID: queueUUID, name: nil, invite: nil, recoveryMode: recoveryMode, matchGameUUID: nil)
     }
     
     func stop() {
@@ -283,7 +275,7 @@ public protocol CommsClientServiceDelegate : CommsServiceDelegate {
     
     init(mode: CommsConnectionMode, serviceID: String?, deviceName: String)
     
-    func start(email: String!, name: String!, recoveryMode: Bool, matchDeviceName: String!)
+    func start(email: String!, name: String!, recoveryMode: Bool, matchDeviceName: String!, matchGameUUID: String!)
     
     func start(queue: String, filterEmail: String!)
     
@@ -297,27 +289,27 @@ public protocol CommsClientServiceDelegate : CommsServiceDelegate {
 extension CommsClientServiceDelegate {
     
   func start() {
-        start(email: nil, name: nil, recoveryMode: false, matchDeviceName: nil)
+    start(email: nil, name: nil, recoveryMode: false, matchDeviceName: nil, matchGameUUID: nil)
     }
     
     func start(email: String!) {
-        start(email: email, name: nil, recoveryMode: false, matchDeviceName: nil)
+        start(email: email, name: nil, recoveryMode: false, matchDeviceName: nil, matchGameUUID: nil)
     }
     
     func start(email: String!, name: String!) {
-        start(email: email, name: name, recoveryMode: false, matchDeviceName: nil)
+        start(email: email, name: name, recoveryMode: false, matchDeviceName: nil, matchGameUUID: nil)
     }
     
     func start(email: String!, name: String!, recoveryMode: Bool) {
-        start(email: email, name: name, recoveryMode: recoveryMode, matchDeviceName: nil)
+        start(email: email, name: name, recoveryMode: recoveryMode, matchDeviceName: nil, matchGameUUID: nil)
     }
     
     func start(email: String!, recoveryMode: Bool) {
-        start(email: email, name: nil, recoveryMode: recoveryMode, matchDeviceName: nil)
+        start(email: email, name: nil, recoveryMode: recoveryMode, matchDeviceName: nil, matchGameUUID: nil)
     }
     
     func start(email: String!, recoveryMode: Bool, matchDeviceName: String!) {
-        start(email: email, name: nil, recoveryMode: recoveryMode, matchDeviceName: matchDeviceName)
+        start(email: email, name: nil, recoveryMode: recoveryMode, matchDeviceName: matchDeviceName, matchGameUUID: nil)
     }
     
     func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, reconnect: Bool) -> Bool {

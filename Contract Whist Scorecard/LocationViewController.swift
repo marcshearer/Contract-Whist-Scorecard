@@ -10,11 +10,7 @@ import UIKit
 import CoreLocation
 import MapKit
 
-class LocationViewController: ScorecardAppViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, CLLocationManagerDelegate {
-
-    // Whist view properties
-    override internal var scorecardView: ScorecardView? { return ScorecardView.location }
-    public weak var controllerDelegate: ScorecardAppControllerDelegate?
+class LocationViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, CLLocationManagerDelegate {
     
     // MARK: - Class Properties ======================================================================== -
 
@@ -52,11 +48,20 @@ class LocationViewController: ScorecardAppViewController, UITableViewDataSource,
     // MARK: - IB Actions ============================================================================== -
  
     @IBAction func finishPressed(_ sender: UIButton) {
-        self.dismiss()
+        if let delegate = self.controllerDelegate {
+            delegate.didCancel()
+        } else {
+            self.dismiss(nil)
+        }
     }
     
     @IBAction func continuePressed(_ sender: UIButton) {
-        self.dismiss(location: self.newLocation)
+        if let delegate = self.controllerDelegate {
+            self.newLocation.copy(to: Scorecard.game.location)
+            delegate.didProceed()
+        } else {
+            self.dismiss(self.newLocation)
+        }
     }
 
      // MARK: - View Overrides ========================================================================== -
@@ -512,7 +517,11 @@ class LocationViewController: ScorecardAppViewController, UITableViewDataSource,
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class public func show(from viewController: ScorecardViewController, gameLocation: GameLocation, useCurrentLocation: Bool = true, mustChange: Bool = false, bannerColor: UIColor? = nil, completion: ((GameLocation?)->())? = nil) {
+    class public func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, gameLocation: GameLocation, useCurrentLocation: Bool = true, mustChange: Bool = false, bannerColor: UIColor? = nil, completion: ((GameLocation?)->())? = nil) -> LocationViewController {
+        
+        if appController != nil && completion != nil {
+            fatalError("Completion not used in app controller")
+        }
         
         let storyboard = UIStoryboard(name: "LocationViewController", bundle: nil)
         let locationViewController = storyboard.instantiateViewController(withIdentifier: "LocationViewController") as! LocationViewController
@@ -526,16 +535,13 @@ class LocationViewController: ScorecardAppViewController, UITableViewDataSource,
         locationViewController.bannerColor = bannerColor
         locationViewController.completion = completion
         
-        viewController.present(locationViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        viewController.present(locationViewController, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
         
+        return locationViewController
     }
     
-    private func dismiss(location: GameLocation? = nil) {
-        self.alertDecision(if: Scorecard.game.isHosting && location == nil, "Warning: This will clear the existing score card and start a new game.\n\n Are you sure you want to do this?", title: "Finish Game", okButtonText: "Confirm", okHandler: {
-                self.dismiss(animated: true, completion: {
-                    self.completion?(location)
-                })
-            })
+    private func dismiss(_ location: GameLocation?) {
+        self.dismiss(animated: true, completion: { self.completion?(location) })
     }
     
     override internal func didDismiss() {

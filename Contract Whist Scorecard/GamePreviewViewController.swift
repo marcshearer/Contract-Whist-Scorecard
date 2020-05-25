@@ -21,17 +21,13 @@ import CoreData
     
     @objc optional func gamePreview(moved playerMO: PlayerMO, to slot: Int)
     
-    @objc optional func gamePreviewShakeGestureHandler() // TODO Replaced by controller reset
+    @objc optional func gamePreviewShakeGestureHandler() 
     
 }
 
-class GamePreviewViewController: ScorecardAppViewController, ImageButtonDelegate, SelectedPlayersViewDelegate {
+class GamePreviewViewController: ScorecardViewController, ImageButtonDelegate, SelectedPlayersViewDelegate {
     
     // MARK: - Class Properties ================================================================ -
-    
-    // Whist view properties
-    override internal var scorecardView: ScorecardView? { return ScorecardView.gamePreview }
-    public weak var controllerDelegate: ScorecardAppControllerDelegate?
     
     // Delegate
     public weak var delegate: GamePreviewDelegate?
@@ -39,7 +35,6 @@ class GamePreviewViewController: ScorecardAppViewController, ImageButtonDelegate
     // Properties to determine how view operates
     public var selectedPlayers = [PlayerMO?]()          // Selected players passed in from player selection
     private var faceTimeAddress: [String] = []          // FaceTime addresses for the above
-    private var computerPlayerDelegate: [Int: ComputerPlayerDelegate?]?
     private var readOnly = false
     private var formTitle = "Preview"
     private var backText = ""
@@ -514,7 +509,7 @@ class GamePreviewViewController: ScorecardAppViewController, ImageButtonDelegate
         
         // Carry out cut and broadcast
         cutCards = self.cutCards(preCutCards: preCutCards)
-        if Scorecard.game.isHosting {
+        if Scorecard.game.isHosting || Scorecard.game.isSharing {
             Scorecard.shared.sendCut(cutCards: cutCards, playerNames: self.selectedPlayers.map{ $0!.name! })
         }
         
@@ -741,7 +736,7 @@ class GamePreviewViewController: ScorecardAppViewController, ImageButtonDelegate
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class func show(from viewController: ScorecardViewController, selectedPlayers: [PlayerMO], title: String = "Preview", backText: String = "", readOnly: Bool = true, faceTimeAddress: [String] = [], animated: Bool = true, computerPlayerDelegates: [Int : ComputerPlayerDelegate]? = nil, delegate: GamePreviewDelegate? = nil, controllerDelegate: ScorecardAppControllerDelegate? = nil) -> GamePreviewViewController {
+    class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, selectedPlayers: [PlayerMO], title: String = "Preview", backText: String = "", readOnly: Bool = true, faceTimeAddress: [String] = [], animated: Bool = true, delegate: GamePreviewDelegate? = nil) -> GamePreviewViewController {
         let storyboard = UIStoryboard(name: "GamePreviewViewController", bundle: nil)
         let gamePreviewViewController = storyboard.instantiateViewController(withIdentifier: "GamePreviewViewController") as! GamePreviewViewController
         
@@ -753,13 +748,12 @@ class GamePreviewViewController: ScorecardAppViewController, ImageButtonDelegate
         gamePreviewViewController.backText = backText
         gamePreviewViewController.readOnly = readOnly
         gamePreviewViewController.faceTimeAddress = faceTimeAddress
-        gamePreviewViewController.computerPlayerDelegate = computerPlayerDelegates
         gamePreviewViewController.delegate = delegate
-        gamePreviewViewController.controllerDelegate = controllerDelegate
+        gamePreviewViewController.controllerDelegate = appController
                 
         gamePreviewViewController.firstTime =  true
         
-        viewController.present(gamePreviewViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: animated)
+        viewController.present(gamePreviewViewController, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: animated)
         return gamePreviewViewController
     }
 }

@@ -16,14 +16,10 @@ enum SelectionMode {
     case players
 }
 
-class SelectionViewController: ScorecardAppViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, UIDropInteractionDelegate, UIGestureRecognizerDelegate, PlayerViewDelegate, SelectedPlayersViewDelegate {
+class SelectionViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource,UICollectionViewDelegateFlowLayout, UIDropInteractionDelegate, UIGestureRecognizerDelegate, PlayerViewDelegate, SelectedPlayersViewDelegate {
 
     // MARK: - Class Properties ======================================================================== -
 
-    // Whist view properties
-    override internal var scorecardView: ScorecardView? { return ScorecardView.selection }
-    public weak var controllerDelegate: ScorecardAppControllerDelegate?
-    
     // Variables to decide how view behaves
     private var selectionMode: SelectionMode!
     private var completion: ((Bool, [PlayerMO]?)->())? = nil
@@ -850,8 +846,11 @@ class SelectionViewController: ScorecardAppViewController, UICollectionViewDeleg
     }
     
     private func showSelectPlayers() {
-        SelectPlayersViewController.show(from: self, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: true, completion: { (selected, playerList, selection) in
-            if let selected = selected, let playerList = playerList, let selection = selection {
+        self.controllerDelegate?.didInvoke(.selectPlayers) { (context) in
+            if let selected = context?["selected"] as? Int,
+               let playerList = context?["playerList"] as? [PlayerDetail],
+               let selection = context?["selection"] as? [Bool] {
+               
                 if selected > 0 {
                     var createPlayerList: [PlayerDetail] = []
                     for playerNumber in 1...playerList.count {
@@ -862,7 +861,7 @@ class SelectionViewController: ScorecardAppViewController, UICollectionViewDeleg
                     self.createPlayers(newPlayers: createPlayerList, createMO: false)
                 }
             }
-        })
+        }
     }
     
     // MARK: - Selected Players View delegate handlers =============================================== -
@@ -961,7 +960,7 @@ class SelectionViewController: ScorecardAppViewController, UICollectionViewDeleg
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class func show(from viewController: ScorecardViewController, existing selectionViewController: SelectionViewController? = nil, mode: SelectionMode, thisPlayer: String? = nil, thisPlayerFrame: CGRect? = nil, showThisPlayerName: Bool = false, formTitle: String = "Selection", smallFormTitle: String? = nil, backText: String = "Back", backImage: String = "", bannerColor: UIColor? = nil, fullScreen: Bool = false, controllerDelegate: ScorecardAppControllerDelegate? = nil, completion: ((Bool, [PlayerMO]?)->())? = nil) -> SelectionViewController {
+    class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, existing selectionViewController: SelectionViewController? = nil, mode: SelectionMode, thisPlayer: String? = nil, thisPlayerFrame: CGRect? = nil, showThisPlayerName: Bool = false, formTitle: String = "Selection", smallFormTitle: String? = nil, backText: String = "Back", backImage: String = "", bannerColor: UIColor? = nil, fullScreen: Bool = false, completion: ((Bool, [PlayerMO]?)->())? = nil) -> SelectionViewController {
         var selectionViewController = selectionViewController
         
         if selectionViewController == nil {
@@ -981,12 +980,12 @@ class SelectionViewController: ScorecardAppViewController, UICollectionViewDeleg
         selectionViewController!.backText = backText
         selectionViewController!.backImage = backImage
         selectionViewController!.completion = completion
-        selectionViewController?.controllerDelegate = controllerDelegate
+        selectionViewController?.controllerDelegate = appController
 
         // Let view controller know that this is a new 'instance' even though possibly re-using
         selectionViewController!.firstTime = true
         
-        viewController.present(selectionViewController!, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true)
+        viewController.present(selectionViewController!, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true)
         
         return selectionViewController!
     }

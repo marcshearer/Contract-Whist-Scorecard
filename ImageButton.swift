@@ -17,6 +17,7 @@ class ImageButton: UIView {
     @IBInspectable var image: UIImage!
     @IBInspectable var title: String!
     @IBInspectable var textColor: UIColor!
+    @IBInspectable var cornerRadius: Double!
     @IBOutlet weak var delegate: ImageButtonDelegate?
     
     @IBOutlet weak var contentView: UIView!         
@@ -72,6 +73,9 @@ class ImageButton: UIView {
         self.imageView.image = self.image
         self.contentView.backgroundColor = self.backgroundColor
         self.titleLabel.textColor = self.textColor
+        if let cornerRadius = CGFloat(self.cornerRadius) {
+            self.contentView.layer.cornerRadius = cornerRadius
+        }
     }
     
 }

@@ -69,6 +69,7 @@ class SlideOutButtonView: UIView {
         self.addSubview(contentView)
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
         self.buttonFillColor = Palette.darkHighlight
         self.buttonStrokeColor = Palette.darkHighlightText
         self.buttonTextColor = Palette.darkHighlightText
@@ -88,6 +89,7 @@ class SlideOutButtonView: UIView {
     
     private func showToolbar(animated: Bool = true) {
         if self.superview != nil {
+            
             self.button.fillColor = self.buttonFillColor
             self.button.strokeColor = self.buttonStrokeColor
             self.button.normalTextColor = self.buttonTextColor
@@ -122,3 +124,4 @@ class SlideOutButtonView: UIView {
         }
     }
 }
+

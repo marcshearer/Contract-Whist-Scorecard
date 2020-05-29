@@ -807,7 +807,7 @@ class ScorepadViewController: ScorecardViewController,
             
             footerCell.scorepadLeftLineGradientLayer?.removeFromSuperlayer()
             footerCell.scorepadLeftLineGradientLayer = nil
-            footerCell.scorepadCellLabel.textColor = Palette.roomInteriorText
+            footerCell.scorepadCellLabel.textColor = Palette.totalText
             footerCell.scorepadCellLabelHeight.constant = cellHeight - thickLineWeight + (ScorecardUI.landscapePhone() ? self.view.safeAreaInsets.bottom / 2.0 : 0.0)
             footerCell.layoutIfNeeded()
             
@@ -840,9 +840,9 @@ class ScorepadViewController: ScorecardViewController,
                 footerCell.backgroundColor = Palette.tableTop
                 footerCell.scorepadFooterPadding.backgroundColor = UIColor.clear
                 footerCell.scorepadLeftLine.backgroundColor = Palette.tableTop
-                footerCell.scorepadCellGradientLayer = ScorecardUI.gradient(footerCell, color: Palette.roomInterior, gradients: self.footerGradient)
+                footerCell.scorepadCellGradientLayer = ScorecardUI.gradient(footerCell, color: Palette.total, gradients: self.footerGradient)
             } else {
-                footerCell.backgroundColor = Palette.roomInterior
+                footerCell.backgroundColor = Palette.total
             }
             
             footerCell.scorepadTopLineWeight.constant = thinLineWeight
@@ -1004,7 +1004,7 @@ extension ScorepadViewController {
 
         self.bannerContinuation.backgroundColor = Palette.tableTop
         self.bannerPaddingView.bannerColor = Palette.tableTop
-        self.footerTableView.backgroundColor = Palette.roomInterior
+        self.footerTableView.backgroundColor = Palette.total
         self.leftPaddingView.bannerColor = Palette.tableTop
         self.navigationBar.textColor = Palette.tableTopTextContrast
         self.navigationBar.bannerColor = Palette.tableTop
@@ -1023,8 +1023,8 @@ extension ScorepadViewController {
             cell.scorepadLeftLine.backgroundColor = Palette.grid
             cell.scorepadTopLine.backgroundColor = Palette.grid
         case "Footer Collection Cell":
-            cell.scorepadFooterPadding.backgroundColor = Palette.roomInterior
-            cell.scorepadLeftLine.backgroundColor = Palette.roomInterior
+            cell.scorepadFooterPadding.backgroundColor = Palette.total
+            cell.scorepadLeftLine.backgroundColor = Palette.total
             cell.scorepadTopLine.backgroundColor = Palette.grid
         case "Header Collection Cell":
             cell.scorepadCellLabel.textColor = Palette.emphasisText

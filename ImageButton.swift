@@ -73,8 +73,8 @@ class ImageButton: UIView {
         self.imageView.image = self.image
         self.contentView.backgroundColor = self.backgroundColor
         self.titleLabel.textColor = self.textColor
-        if let cornerRadius = CGFloat(self.cornerRadius) {
-            self.contentView.layer.cornerRadius = cornerRadius
+        if let cornerRadius = self.cornerRadius {
+            self.contentView.layer.cornerRadius = CGFloat(cornerRadius)
         }
     }
     

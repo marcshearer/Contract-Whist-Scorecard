@@ -35,6 +35,11 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     @IBOutlet private weak var revertButton: UIButton!
     @IBOutlet private weak var bannerContinuation: BannerContinuation!
     @IBOutlet private weak var bannerContinuationHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
+    @IBOutlet private weak var insetPaddingView: InsetPaddingView!
+    @IBOutlet private weak var instructionView: UIView!
+    @IBOutlet private weak var instructionLabel: UILabel!
+    @IBOutlet private weak var navigationBar: NavigationBar!
     
     // MARK: - IB Actions ============================================================================== -
     
@@ -50,6 +55,10 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultViewColors()
+
         ScorecardUI.roundCorners(view)
         
         self.existingOverride = (Scorecard.game.settings != Scorecard.shared.settings)
@@ -118,6 +127,9 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
             switch option {
             case .saveHistory:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Save", for: indexPath) as? OverrideTableCell
+                // Setup default colors (previously done in StoryBoard)
+                self.defaultCellColors(cell: cell)
+
                 cell.saveLabel.attributedText = self.includeText(from: "History")
                 cell.saveSelection.addTarget(self, action: #selector(OverrideViewController.saveHistoryAction(_:)), for: UIControl.Event.valueChanged)
                 cell.saveSelection.selectedSegmentIndex = (Scorecard.game.settings.saveHistory ? 1 : 0)
@@ -126,6 +138,9 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
                 
             case .saveStats:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Save", for: indexPath) as? OverrideTableCell
+                // Setup default colors (previously done in StoryBoard)
+                self.defaultCellColors(cell: cell)
+
                 cell.saveLabel.attributedText = self.includeText(from: "Statistics")
                 cell.saveSelection.addTarget(self, action: #selector(OverrideViewController.saveStatsAction(_:)), for: UIControl.Event.valueChanged)
                 cell.saveSelection.selectedSegmentIndex = (Scorecard.game.settings.saveStats ? 1 : 0)
@@ -133,11 +148,17 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
                 
             case .subHeading:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Sub Heading", for: indexPath) as? OverrideTableCell
+                // Setup default colors (previously done in StoryBoard)
+                self.defaultCellColors(cell: cell)
+
                 cell.subHeadingLabel.text = "Number of cards in hands"
                 
             case .startCards, .endCards:
                 let index = (option == .startCards ? 0 : 1)
                 cell = tableView.dequeueReusableCell(withIdentifier: "Cards", for: indexPath) as? OverrideTableCell
+                // Setup default colors (previously done in StoryBoard)
+                self.defaultCellColors(cell: cell)
+
                 cell.cardsLabel.text = (index == 0 ? "Start:" : "End:")
                 cell.cardsSlider.tag = index
                 cell.cardsSlider.addTarget(self, action: #selector(OverrideViewController.cardsSliderAction(_:)), for: UIControl.Event.valueChanged)
@@ -148,6 +169,9 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
                 
             case .bounce:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Bounce", for: indexPath) as? OverrideTableCell
+                // Setup default colors (previously done in StoryBoard)
+                self.defaultCellColors(cell: cell)
+
                 cell.bounceSelection.addTarget(self, action: #selector(OverrideViewController.bounceAction(_:)), for: UIControl.Event.valueChanged)
                 cell.bounceSelection.selectedSegmentIndex = (Scorecard.game.settings.bounceNumberCards ? 1 : 0)
                 cell.bounceSelection.layer.cornerRadius = 5.0
@@ -263,4 +287,40 @@ class OverrideTableCell: UITableViewCell {
     @IBOutlet weak var saveLabel: UILabel!
 }
 
+extension OverrideViewController {
+
+    /** _Note that this code was generated as part of the move to themed colors_ */
+
+    private func defaultViewColors() {
+
+        self.bannerContinuation.borderColor = Palette.bannerText
+        self.bannerPaddingView.bannerColor = Palette.banner
+        self.insetPaddingView.backgroundColor = Palette.background
+        self.insetPaddingView.bannerColor = Palette.background
+        self.instructionLabel.textColor = Palette.bannerText
+        self.instructionView.backgroundColor = Palette.banner
+        self.navigationBar.textColor = Palette.gameBannerText
+        self.navigationBar.bannerColor = Palette.banner
+        self.view.backgroundColor = Palette.background
+    }
+
+    private func defaultCellColors(cell: OverrideTableCell) {
+        switch cell.reuseIdentifier {
+        case "Bounce":
+            cell.bounceSelection.tintColor = Palette.segmentedControls
+        case "Cards":
+            cell.cardsLabel.textColor = Palette.text
+            cell.cardsSlider.minimumTrackTintColor = Palette.segmentedControls
+            cell.cardsSlider.thumbTintColor = Palette.segmentedControls
+            cell.cardsValue.textColor = Palette.text
+        case "Save":
+            cell.saveLabel.textColor = Palette.text
+        case "Sub Heading":
+            cell.subHeadingLabel.textColor = Palette.text
+        default:
+            break
+        }
+    }
+
+}
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -261,10 +261,13 @@
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="bannerContinuation" destination="XTv-6o-LLq" id="wWh-Eq-baI"/>
+                        <outlet property="bannerPaddingView" destination="Clx-ll-10L" id="aCA-TO-alT"/>
                         <outlet property="changePlayerButton" destination="Yy9-i2-EGh" id="FLT-x8-Z69"/>
                         <outlet property="clientTableView" destination="dtV-HG-agM" id="ShH-Ew-7io"/>
                         <outlet property="clientTableViewHeightConstraint" destination="YN1-GM-lKq" id="ZGx-QT-0n6"/>
                         <outlet property="menuButton" destination="tsU-cx-2yK" id="TTl-Lc-1WJ"/>
+                        <outlet property="navigationBar" destination="y3A-eA-Tmp" id="KdH-9T-Vj9"/>
                         <outlet property="playerSelectionView" destination="OVx-NQ-fbM" id="xpO-V7-Fbx"/>
                         <outlet property="playerSelectionViewHeightConstraint" destination="0qO-Lb-0Dm" id="8QS-8Z-jdb"/>
                         <outlet property="scrollView" destination="zWK-vn-Rqd" id="2gR-tD-a11"/>

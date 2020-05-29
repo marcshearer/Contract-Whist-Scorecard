@@ -57,6 +57,7 @@ class ScrollView : NSObject, UIScrollViewDelegate {
         let scrollViewTap = UITapGestureRecognizer(target: self, action: #selector(scrollViewTapped(_:)))
         scrollViewTap.numberOfTapsRequired = 1
         self.scrollView.addGestureRecognizer(scrollViewTap)
+        self.scrollView.isMultipleTouchEnabled = false
     }
 
     @objc private func scrollViewTapped(_ touch: UITouch) {

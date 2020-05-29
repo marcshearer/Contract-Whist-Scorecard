@@ -197,6 +197,7 @@
                                                                 <outlet property="scorepadCellLabel" destination="mlQ-gE-e09" id="ZLx-Fl-jEQ"/>
                                                                 <outlet property="scorepadLeftLine" destination="003-9S-puq" id="0Fg-cU-8Zf"/>
                                                                 <outlet property="scorepadLeftLineWeight" destination="Kto-Mf-vch" id="7Xc-19-2nB"/>
+                                                                <outlet property="scorepadTopLine" destination="4SF-rg-dYh" id="yTH-pt-vYB"/>
                                                                 <outlet property="scorepadTopLineWeight" destination="7L0-wc-Lhi" id="c8m-7l-yMl"/>
                                                             </connections>
                                                         </collectionViewCell>
@@ -319,6 +320,7 @@
                                                                 <outlet property="scorepadImage" destination="grq-ja-GuI" id="nI7-3r-oM0"/>
                                                                 <outlet property="scorepadLeftLine" destination="xgi-DP-c4v" id="lJq-s7-aCt"/>
                                                                 <outlet property="scorepadLeftLineWeight" destination="vpZ-Lr-rnK" id="87k-zc-u2C"/>
+                                                                <outlet property="scorepadTopLine" destination="XYq-c4-gCU" id="6Of-oa-t5C"/>
                                                                 <outlet property="scorepadTopLineWeight" destination="wC2-jO-NS8" id="Vpm-Tg-4a1"/>
                                                             </connections>
                                                         </collectionViewCell>
@@ -432,7 +434,9 @@
                                                             </constraints>
                                                             <connections>
                                                                 <outlet property="scorepadCellLabel" destination="BXX-PT-3Zr" id="zww-Sg-9bC"/>
+                                                                <outlet property="scorepadLeftLine" destination="ejQ-iq-y0f" id="ZbY-H2-uAP"/>
                                                                 <outlet property="scorepadLeftLineWeight" destination="Zen-Tv-ScO" id="CJ6-8i-DWX"/>
+                                                                <outlet property="scorepadTopLine" destination="37L-NB-jCF" id="yIR-mX-gnZ"/>
                                                                 <outlet property="scorepadTopLineWeight" destination="0o7-g1-wJ8" id="dRq-7U-wFN"/>
                                                             </connections>
                                                         </collectionViewCell>
@@ -523,7 +527,9 @@
                                                             <connections>
                                                                 <outlet property="scorepadCellLabel" destination="ruM-Kd-B1H" id="bhw-mA-HOs"/>
                                                                 <outlet property="scorepadImage" destination="V6l-Qk-3LW" id="3kn-cD-25J"/>
+                                                                <outlet property="scorepadLeftLine" destination="dgz-aL-UBK" id="fGT-on-nsj"/>
                                                                 <outlet property="scorepadLeftLineWeight" destination="QGA-nw-8SZ" id="NDl-ek-Wef"/>
+                                                                <outlet property="scorepadTopLine" destination="vJe-M8-5kj" id="6GL-AN-4xI"/>
                                                                 <outlet property="scorepadTopLineWeight" destination="KXW-Ry-olz" id="dEH-vK-vey"/>
                                                             </connections>
                                                         </collectionViewCell>
@@ -656,6 +662,7 @@
                                                                 <outlet property="scorepadFooterPadding" destination="eAN-Ja-B4W" id="YaY-FK-xUw"/>
                                                                 <outlet property="scorepadLeftLine" destination="bke-dz-ngP" id="sBS-ix-5i2"/>
                                                                 <outlet property="scorepadLeftLineWeight" destination="gLO-OB-NzD" id="y7l-yq-hB4"/>
+                                                                <outlet property="scorepadTopLine" destination="7s4-i2-IBi" id="3f9-m8-JIQ"/>
                                                                 <outlet property="scorepadTopLineWeight" destination="EEh-na-JUx" id="VQH-Zp-A6h"/>
                                                             </connections>
                                                         </collectionViewCell>
@@ -733,14 +740,18 @@
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <toolbarItems/>
                     <connections>
+                        <outlet property="bannerContinuation" destination="hre-aD-pgw" id="v5u-y3-Reh"/>
                         <outlet property="bannerContinuationHeightConstraint" destination="drX-Fn-Wuz" id="xBE-zN-Ufc"/>
+                        <outlet property="bannerPaddingView" destination="7Jo-C4-vPV" id="Azz-Ws-vOP"/>
                         <outlet property="bodyTableView" destination="m5j-3V-hPG" id="Wop-NN-xY0"/>
                         <outlet property="finishButton" destination="bgf-Na-549" id="eao-hf-fCb"/>
                         <outlet property="footerTableView" destination="uWQ-Kt-TjV" id="Mqp-Hf-x3Z"/>
                         <outlet property="footerViewHeightConstraint" destination="ANn-tw-pp4" id="zfj-BL-ozh"/>
                         <outlet property="headerTableView" destination="CoM-o8-drH" id="REW-4H-bzB"/>
                         <outlet property="headerViewHeightConstraint" destination="Nae-oA-mIW" id="gzq-lY-isr"/>
+                        <outlet property="leftPaddingView" destination="4mH-Ut-Ta9" id="Cz5-ot-eNZ"/>
                         <outlet property="navigationBar" destination="Skq-xy-HKr" id="jEp-W5-THd"/>
+                        <outlet property="rightPaddingView" destination="2V4-Rn-jn9" id="cFu-5X-uGw"/>
                         <outlet property="scoreEntryButton" destination="s5c-DG-O7P" id="1TD-Ep-oUA"/>
                         <outlet property="scorepadView" destination="8bC-Xf-vdC" id="5On-pJ-fOR"/>
                         <outlet property="tapGestureRecognizer" destination="AaK-e0-qgV" id="klw-dw-bMu"/>

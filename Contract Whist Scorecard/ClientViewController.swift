@@ -90,18 +90,22 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
     private var hostingOptions: Int = 0
     private var onlineRow: Int = -1
     private var nearbyRow: Int = -1
+    private var robotRow: Int = -1
     
     // MARK: - IB Outlets ============================================================================== -
     
     @IBOutlet private weak var scrollView: UIScrollView!
+    @IBOutlet private weak var navigationBar: NavigationBar!
     @IBOutlet private weak var titleBar: UINavigationItem!
+    @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
+    @IBOutlet private weak var bannerContinuation: BannerContinuation!
     @IBOutlet private weak var clientTableView: UITableView!
     @IBOutlet private weak var clientTableViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var thisPlayerTitle: UILabel!
     @IBOutlet private weak var thisPlayerThumbnail: ThumbnailView!
     @IBOutlet private weak var thisPlayerNameLabel: UILabel!
     @IBOutlet private weak var thisPlayerThumbnailWidthConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var changePlayerButton: RoundedButton!
+    @IBOutlet private weak var changePlayerButton: AngledButton!
     @IBOutlet private weak var playerSelectionView: PlayerSelectionView!
     @IBOutlet private weak var playerSelectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var menuButton: ClearButton!
@@ -147,6 +151,9 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Setup colours (previously in storyboard)
+        self.defaultViewColors()
         
         // Setup game
         Scorecard.game = Game()
@@ -446,7 +453,7 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
         self.appStateChange(to: .notConnected)
         self.changePlayerAvailable()
         Scorecard.game?.resetValues()
-        Scorecard.shared.setGameInProgress(false)
+        Scorecard.game.setGameInProgress(false)
         self.availablePeers = []
         self.clientTableView.reloadData()
 
@@ -642,9 +649,9 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
             let width: CGFloat = 150.0
             let button = AngledButton(frame: CGRect(x: (headerView.frame.width - width) / 2.0, y: (ScorecardUI.landscapePhone() ? 4 : 40), width: width, height: 30))
             button.setTitle("Host a Game")
-            button.fillColor = Palette.roomInterior
-            button.strokeColor = Palette.roomInterior
-            button.normalTextColor = Palette.roomInteriorText
+            button.fillColor = Palette.hand
+            button.strokeColor = Palette.hand
+            button.normalTextColor = Palette.handText
             headerView.backgroundView = UIView()
             headerView.addSubview(button)
             return headerView
@@ -680,6 +687,7 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
             // List of remote peers
             
             cell = tableView.dequeueReusableCell(withIdentifier: "Service Cell", for: indexPath) as? ClientTableCell
+            self.defaultCellColors(cell: cell)
             cell.hexagonLayer?.removeFromSuperlayer()
             cell.serviceLabelWidthConstraint.constant = labelWidth
             cell.serviceButton.setTitle((self.commsPurpose == .playing ? "Join a Game" : "View Scorecard"), for: .normal)
@@ -761,15 +769,16 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
             // Hosting options
             
             cell = tableView.dequeueReusableCell(withIdentifier: "Host Cell", for: indexPath) as? ClientTableCell
+            self.defaultCellColors(cell: cell)
             cell.hexagonLayer?.removeFromSuperlayer()
             cell.serviceLabelWidthConstraint.constant = labelWidth
             
             let frame = CGRect(x: hexagonInset, y: 4.0, width: hexagonWidth, height: cell.frame.height - 8.0)
-            cell.hexagonLayer = Polygon.hexagonFrame(in: cell, frame: frame, strokeColor: Palette.roomInterior.withAlphaComponent((self.availablePeers.count == 0 ? 1.0 : 1.0)), lineWidth: (self.availablePeers.count == 0 ? 2.0 : 1.0), radius: 10.0)
+            cell.hexagonLayer = Polygon.hexagonFrame(in: cell, frame: frame, strokeColor: Palette.hand.withAlphaComponent((self.availablePeers.count == 0 ? 1.0 : 1.0)), lineWidth: (self.availablePeers.count == 0 ? 2.0 : 1.0), radius: 10.0)
             
-            cell.serviceLabel.textColor = Palette.roomInterior
+            cell.serviceLabel.textColor = Palette.hand
             let hostText = NSMutableAttributedString()
-            let normalText = [NSAttributedString.Key.foregroundColor: Palette.roomInterior.withAlphaComponent((self.availablePeers.count == 0 ? 1.0 : 1.0))]
+            let normalText = [NSAttributedString.Key.foregroundColor: Palette.hand.withAlphaComponent((self.availablePeers.count == 0 ? 1.0 : 1.0))]
             var boldText: [NSAttributedString.Key : Any] = normalText
             boldText[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 18.0, weight: .black)
             let errorText = [NSAttributedString.Key.foregroundColor: Palette.error]
@@ -789,6 +798,9 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
                     hostText.append(NSMutableAttributedString(string: "Host an", attributes: normalText))
                     hostText.append(NSMutableAttributedString(string: " online ", attributes: boldText))
                     hostText.append(NSMutableAttributedString(string: "game to play over the internet", attributes: normalText))
+                case self.robotRow:
+                    hostText.append(NSMutableAttributedString(string: "Play against", attributes: normalText))
+                    hostText.append(NSMutableAttributedString(string: " computer", attributes: boldText))
                 default:
                     break
                 }
@@ -842,6 +854,10 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
                 switch indexPath.row {
                 case nearbyRow:
                     mode = .nearby
+                case onlineRow:
+                    mode = .online
+                case robotRow:
+                    mode = .loopback
                 default:
                     mode = .online
                 }
@@ -967,6 +983,8 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
                 self.hostingOptions += 1
                 self.onlineRow = self.hostingOptions
                 self.hostingOptions += 1
+                self.robotRow = self.hostingOptions
+                self.hostingOptions += 1
             }
         }
     }
@@ -1015,6 +1033,13 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
                         }
                     }
                 }
+            }
+        }
+        if self.thisPlayer == nil && Scorecard.game.currentPlayers >= 1 {
+            let player = Scorecard.game.player(enteredPlayerNumber: 1)
+            if let playerMO = player.playerMO {
+                self.thisPlayer = playerMO.email
+                self.thisPlayerName = playerMO.name
             }
         }
     }
@@ -1138,7 +1163,7 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
     
     private func cancelRecovery() {
         Scorecard.recovery = Recovery(load: false)
-        Scorecard.shared.setGameInProgress(false)
+        Scorecard.game.setGameInProgress(false)
         self.hostController?.stop()
         self.hostController = nil
         self.clientController?.stop()
@@ -1153,7 +1178,7 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
     
 class ClientTableCell: UITableViewCell {
-    @IBOutlet weak var serviceButton: UIButton!
+    @IBOutlet weak var serviceButton: AngledButton!
     @IBOutlet weak var serviceLabel: UILabel!
     @IBOutlet weak var serviceLabelWidthConstraint: NSLayoutConstraint!
     public var hexagonLayer: CAShapeLayer!
@@ -1180,5 +1205,38 @@ fileprivate class AvailablePeer {
         self.state = state
         self.connecting = connecting
         self.proximity = proximity
+    }
+}
+
+extension ClientViewController {
+
+    /** _Note that this code was generated as part of the move to themed colors_ */
+
+    private func defaultViewColors() {
+        self.bannerContinuation.bannerColor = Palette.gameBanner
+        self.bannerContinuation.borderColor = Palette.gameBanner
+        self.bannerPaddingView.bannerColor = Palette.gameBanner
+        self.changePlayerButton.setTitleColor(Palette.gameBanner, for: .normal)
+        self.changePlayerButton.strokeColor = Palette.gameBanner
+        self.menuButton.setTitleColor(Palette.gameBannerText, for: .normal)
+        self.navigationBar.textColor = Palette.gameBannerText
+        self.navigationBar.bannerColor = Palette.gameBanner
+        self.playerSelectionView.backgroundColor = Palette.background
+        self.thisPlayerTitle.textColor = Palette.text
+        self.view.backgroundColor = Palette.background
+    }
+
+    private func defaultCellColors(cell: ClientTableCell) {
+        switch cell.reuseIdentifier {
+        case "Host Cell":
+            cell.serviceLabel.textColor = Palette.hand
+        case "Service Cell":
+            cell.serviceButton.setTitleColor(Palette.tableTopTextContrast, for: .normal)
+            cell.serviceButton.fillColor = Palette.tableTop
+            cell.serviceButton.strokeColor = Palette.tableTop
+            cell.serviceLabel.textColor = Palette.text
+        default:
+            break
+        }
     }
 }

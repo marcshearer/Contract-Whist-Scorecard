@@ -11,13 +11,14 @@ import UIKit
 class RoundSummaryViewController: ScorecardViewController {
         
     // MARK: - IB Outlets ============================================================================== -
-    @IBOutlet weak var roundSummaryView: UIView!
-    @IBOutlet weak var trumpSuit: UILabel!
-    @IBOutlet weak var overUnder: UILabel!
-    @IBOutlet weak var player1Bid: UILabel!
-    @IBOutlet weak var player2Bid: UILabel!
-    @IBOutlet weak var player3Bid: UILabel!
-    @IBOutlet weak var player4Bid: UILabel!
+    @IBOutlet private weak var roundSummaryView: UIView!
+    @IBOutlet private weak var trumpSuit: UILabel!
+    @IBOutlet private weak var overUnder: UILabel!
+    @IBOutlet private weak var player1Bid: UILabel!
+    @IBOutlet private weak var player2Bid: UILabel!
+    @IBOutlet private weak var player3Bid: UILabel!
+    @IBOutlet private weak var player4Bid: UILabel!
+    @IBOutlet private weak var finishButton: ClearButton!
     
     // MARK: - IB Actions ============================================================================== -
 
@@ -35,6 +36,12 @@ class RoundSummaryViewController: ScorecardViewController {
     
     // MARK: - View Overrides ========================================================================== -
    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultViewColors()
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
        
@@ -113,3 +120,20 @@ class RoundSummaryViewController: ScorecardViewController {
         self.dismiss(animated: false, completion: nil)
     }
 }
+
+extension RoundSummaryViewController {
+
+    /** _Note that this code was generated as part of the move to themed colors_ */
+
+    private func defaultViewColors() {
+
+        self.finishButton.setTitleColor(Palette.darkHighlightText, for: .normal)
+        self.player1Bid.textColor = Palette.darkHighlightText
+        self.player2Bid.textColor = Palette.darkHighlightText
+        self.player3Bid.textColor = Palette.darkHighlightText
+        self.player4Bid.textColor = Palette.darkHighlightText
+        self.roundSummaryView.backgroundColor = Palette.roomInterior
+    }
+
+}
+

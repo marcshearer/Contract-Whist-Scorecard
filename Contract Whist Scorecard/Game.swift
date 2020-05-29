@@ -235,10 +235,14 @@ class Game {
         self.scores.reset()
     }
     
-    /** Load game defaults from user defaults */
-    private func loadGameDefaults() {
+    /**
+     Load game defaults from user defaults
+      - Parameters:
+         -  isPlayingComputer: Overrides the standard flag
+    */
+    public func loadGameDefaults() {
         // Load saved values from last session
-        
+         
         // Number of players
         var currentPlayers = UserDefaults.standard.integer(forKey: "numberPlayers")
         if currentPlayers != 3 && currentPlayers != 4 {
@@ -248,7 +252,7 @@ class Game {
         
         // Player names
         for player in 1...currentPlayers {
-            let prefix = (self.isPlayingComputer ? "computerPlayer" : "player")
+            let prefix = (self.isPlayingComputer ? "robot" : "player")
             if let defaultPlayerURI = UserDefaults.standard.string(forKey: "\(prefix)\(player)") {
                 // Got a URI - search player list for a match
                 if let playerMO = Scorecard.shared.playerList.first(where: { $0.uri == defaultPlayerURI }) {
@@ -298,7 +302,7 @@ class Game {
             }
             if result {
                 // Can't recover once we've saved
-                Scorecard.shared.setGameInProgress(false, suppressWatch: true)
+                Scorecard.game.setGameInProgress(false, suppressWatch: true)
             }
         } else {
             result = true
@@ -570,6 +574,48 @@ class Game {
             return (enteredIndex! + (self.dealerIs - 1)) % self.currentPlayers
         }
     }
+    
+    // MARK: - Mainpulate players =========================================================== -
+    
+    /**
+     Saves the provided list of players as the default players on the device
+     - Parameters:
+        - selectedPlayers: The list of player managed objects to set as default
+    */
+    public func saveSelectedPlayers(_ selectedPlayers: [PlayerMO?]) {
+        // Update the currently selected players on return from the player selection view
+        
+        if selectedPlayers.count > 1 {
+            self.setCurrentPlayers(players: selectedPlayers.count)
+            UserDefaults.standard.set(Scorecard.game.currentPlayers, forKey: "numberPlayers")
+            
+            for playerNumber in 1...Scorecard.game.currentPlayers {
+                let playerMO = selectedPlayers[playerNumber-1]!
+                Scorecard.game.player(enteredPlayerNumber: playerNumber).playerMO = playerMO
+                let prefix = ((Scorecard.game?.isPlayingComputer ?? false) ? "robot" : "player")
+                UserDefaults.standard.set(playerMO.uri, forKey: "\(prefix)\(playerNumber)")
+                UserDefaults.standard.set(playerMO.name, forKey: "\(prefix)\(playerNumber)name")
+                UserDefaults.standard.set(playerMO.email, forKey: "\(prefix)\(playerNumber)email")
+            }
+        }
+    }
+    
+    /**
+     Change the current number of players
+     - Parameters:
+        - players: The new number of players
+    */
+    public func setCurrentPlayers(players: Int) {
+        if players != Scorecard.game.currentPlayers {
+            // Changing number of players
+            
+            Scorecard.game.currentPlayers = players
+            if Scorecard.game.dealerIs > Scorecard.game.currentPlayers {
+                self.saveDealer(1)
+            }
+        }
+    }
+    
         
     /**
      Move a player from one position in the player array to another (all in originally entered sequence)
@@ -585,5 +631,74 @@ class Game {
         for playerNumber in 1...self.currentPlayers {
             self.player![playerNumber-1].playerNumber = playerNumber
         }
+    }
+    
+    // MARK: - Start / stop game ================================================================ -
+    
+    /**
+     Toggle the game in progress flag (and possibly save it for recovery)
+     - Parameters:
+        - gameInProgres: The new value for the game in progress flag
+        - suppressWatch: Don't update watch as result of this change
+        - save: Save the value to persistent storage for recovery purposes
+    */
+    public func setGameInProgress(_ gameInProgress: Bool, suppressWatch: Bool = false, save: Bool = true) {
+        Scorecard.game?.inProgress = gameInProgress
+        if save && (!Scorecard.recovery.recoveryAvailable || gameInProgress == true) {
+            Scorecard.recovery.saveGameInProgress()
+            if !suppressWatch || gameInProgress {
+                Scorecard.shared.watchManager.updateScores()
+            }
+        }
+    }
+    
+    // MARK: - Dealer manipulation =============================================================== -
+    
+    public func nextDealer() {
+        self.saveDealer((Scorecard.game.dealerIs % Scorecard.game.currentPlayers) + 1)
+    }
+    
+    public func previousDealer() {
+        self.saveDealer(((Scorecard.game.dealerIs + Scorecard.game.currentPlayers - 2) % Scorecard.game.currentPlayers) + 1)
+    }
+    
+    public func saveDealer(_ dealerIs: Int) {
+        if Scorecard.game.dealerIs != dealerIs {
+            Scorecard.game.dealerIs = dealerIs
+            if Scorecard.game.isHosting || Scorecard.game.isSharing {
+                Scorecard.shared.sendDealer()
+            }
+        }
+        UserDefaults.standard.set(Scorecard.game.dealerIs, forKey: "dealerIs")
+    }
+    
+    public func isScorecardDealer() -> Int {
+        // Returns the player number of the dealer - for use in the Scorecard view
+        return (((Scorecard.game.maxEnteredRound - 1)) % Scorecard.game.currentPlayers) + 1
+    }
+    
+    // MARK: - Check state of a particular round ======================================================== -
+        
+    public func roundStarted(_ round: Int) -> Bool {
+        return Scorecard.game.scores.get(round: round, playerNumber: 1, sequence: .round).bid != nil
+    }
+    
+    public func roundBiddingComplete(_ round: Int) -> Bool {
+        return Scorecard.game.scores.get(round: round, playerNumber: Scorecard.game.currentPlayers, sequence: .round).bid != nil
+    }
+    
+    public func roundMadeStarted(_ round: Int) -> Bool {
+        return Scorecard.game.scores.get(round: round, playerNumber: 1, sequence: .round).made != nil
+    }
+    
+    public func roundComplete(_ round: Int) -> Bool {
+        var result = true
+        if Scorecard.game.scores.score(round: round, playerNumber: Scorecard.game.currentPlayers, sequence: .round) == nil {
+            result = false
+        }
+        if self.settings.bonus2 && Scorecard.game.scores.get(round: round, playerNumber: Scorecard.game.currentPlayers, sequence: .round).twos == nil {
+            result = false
+        }
+        return result
     }
 }

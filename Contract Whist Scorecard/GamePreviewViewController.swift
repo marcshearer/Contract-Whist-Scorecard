@@ -63,19 +63,20 @@ class GamePreviewViewController: ScorecardViewController, ImageButtonDelegate, S
     
     // MARK: - IB Outlets ================================================================ -
     
-    @IBOutlet private weak var navigationBar: UINavigationBar!
+    @IBOutlet private weak var navigationBar: NavigationBar!
     @IBOutlet private weak var navigationBarHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var navigationTitle: UINavigationItem!
+    @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
     @IBOutlet private weak var bannerContinuationView: UIView!
     @IBOutlet private weak var bannerContinueButton: UIButton!
     @IBOutlet private weak var bannerContinuationLabel: UILabel!
-    @IBOutlet private weak var continueButton: UIButton!
+    @IBOutlet private weak var continueButton: AngledButton!
     @IBOutlet private weak var continueButtonHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var cancelButton: UIButton!
+    @IBOutlet private weak var cancelButton: AngledButton!
     @IBOutlet public weak var selectedPlayersView: SelectedPlayersView!
     @IBOutlet private weak var selectedPlayersTopConstraint: NSLayoutConstraint!
     @IBOutlet private weak var selectedPlayersHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var overrideSettingsButton: UIButton!
+    @IBOutlet private weak var overrideSettingsButton: AngledButton!
     @IBOutlet private weak var overrideSettingsBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var actionButtonView: UIView!
     @IBOutlet private weak var rightViewTrailingConstraint: NSLayoutConstraint!
@@ -111,7 +112,7 @@ class GamePreviewViewController: ScorecardViewController, ImageButtonDelegate, S
         case 2:
             // Next dealer
             self.showDealer(playerNumber: Scorecard.game.dealerIs, forceHide: true)
-            Scorecard.shared.nextDealer()
+            Scorecard.game.nextDealer()
             self.showCurrentDealer()
             
         default:
@@ -124,9 +125,9 @@ class GamePreviewViewController: ScorecardViewController, ImageButtonDelegate, S
             if !self.readOnly {
                 showDealer(playerNumber: Scorecard.game.dealerIs, forceHide: true)
                 if recognizer.rotation > 0 {
-                    Scorecard.shared.nextDealer()
+                    Scorecard.game.nextDealer()
                 } else {
-                    Scorecard.shared.previousDealer()
+                    Scorecard.game.previousDealer()
                 }
                 showCurrentDealer()
             }
@@ -138,6 +139,9 @@ class GamePreviewViewController: ScorecardViewController, ImageButtonDelegate, S
     override internal func viewDidLoad() {
         super.viewDidLoad()
         
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultViewColors()
+
         self.waitAnimation = !ScorecardUI.landscapePhone() && (self.delegate?.gamePreviewHosting ?? false) && !Scorecard.recovery.recovering
         
         // Set title
@@ -148,7 +152,7 @@ class GamePreviewViewController: ScorecardViewController, ImageButtonDelegate, S
         
         // Make sure dealer not too high
         if Scorecard.game.dealerIs > Scorecard.game.currentPlayers {
-            Scorecard.shared.saveDealer(1)
+            Scorecard.game.saveDealer(1)
         }
         
         // Setup screen
@@ -159,6 +163,9 @@ class GamePreviewViewController: ScorecardViewController, ImageButtonDelegate, S
         // Set nofification for image download
         self.observer = setImageDownloadNotification()
 
+        // Call controller delegate to notify loading complete
+        self.controllerDelegate?.didLoad()
+        
         // Setup buttons
         self.setupButtons(animate: false)
         
@@ -168,9 +175,6 @@ class GamePreviewViewController: ScorecardViewController, ImageButtonDelegate, S
         
         // Become delegate of selected players view
         self.selectedPlayersView.delegate = self
-        
-        // Call controller delegate to notify loading complete
-        self.controllerDelegate?.didLoad()
     }
         
     override internal func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -404,7 +408,7 @@ class GamePreviewViewController: ScorecardViewController, ImageButtonDelegate, S
             self.cutForDealerButton.isEnabled = true
             self.cutForDealerButton.alpha = 1.0
             self.nextDealerButton.isHidden = false
-            self.selectedPlayersView.isEnabled = true
+            self.selectedPlayersView.isEnabled = !Scorecard.game.isPlayingComputer
             if (self.delegate?.gamePreviewHosting ?? false) {
                 self.selectedPlayersView.setEnabled(slot: 0, enabled: false)
             }
@@ -474,7 +478,7 @@ class GamePreviewViewController: ScorecardViewController, ImageButtonDelegate, S
     // MARK: - Utility Routines ================================================================ -
 
     private func updateSelectedPlayers(_ selectedPlayers: [PlayerMO?]) {
-        Scorecard.shared.updateSelectedPlayers(selectedPlayers)
+        Scorecard.game.saveSelectedPlayers(selectedPlayers)
         self.selectedPlayersView.setAlpha(alpha: 0.3)
         self.selectedPlayersView.setAlpha(slot: 0, alpha: 1.0)
 
@@ -559,7 +563,7 @@ class GamePreviewViewController: ScorecardViewController, ImageButtonDelegate, S
         }
         
         // Save it
-        Scorecard.shared.saveDealer(dealerIs)
+        Scorecard.game.saveDealer(dealerIs)
         
         return cards
     }
@@ -758,4 +762,26 @@ class GamePreviewViewController: ScorecardViewController, ImageButtonDelegate, S
     }
 }
 
+extension GamePreviewViewController {
 
+    /** _Note that this code was generated as part of the move to themed colors_ */
+
+    private func defaultViewColors() {
+
+        self.bannerContinuationLabel.textColor = Palette.gameBannerText
+        self.bannerContinuationView.backgroundColor = Palette.gameBanner
+        self.bannerPaddingView.bannerColor = Palette.gameBanner
+        self.continueButton.setTitleColor(Palette.continueButtonText, for: .normal)
+        self.continueButton.fillColor = Palette.continueButton
+        self.continueButton.strokeColor = Palette.continueButton
+        self.cutForDealerButton.textColor = Palette.tableTopTextContrast
+        self.navigationBar.textColor = Palette.gameBannerText
+        self.navigationBar.bannerColor = Palette.gameBanner
+        self.nextDealerButton.textColor = Palette.tableTopTextContrast
+        self.overrideSettingsButton.setTitleColor(Palette.tableTopTextContrast, for: .normal)
+        self.overrideSettingsButton.fillColor = Palette.tableTop
+        self.overrideSettingsButton.strokeColor = Palette.tableTopTextContrast
+        self.view.backgroundColor = Palette.tableTop
+    }
+
+}

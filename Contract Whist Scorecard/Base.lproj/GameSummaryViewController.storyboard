@@ -125,7 +125,7 @@
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zSr-Sg-tk4" userLabel="Right Side">
                                                                 <rect key="frame" x="207" y="0.0" width="207" height="179.33333333333334"/>
                                                                 <subviews>
-                                                                    <view tag="2" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="OFe-jn-Bt6" userLabel="Play Again Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                                    <view tag="2" contentMode="scaleAspectFit" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OFe-jn-Bt6" userLabel="Play Again Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                                         <rect key="frame" x="26.666666666666657" y="0.0" width="153.66666666666666" height="143.33333333333334"/>
                                                                         <color key="backgroundColor" name="Clear"/>
                                                                         <constraints>
@@ -153,7 +153,7 @@
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Om1-UX-kdo" userLabel="Left Side">
                                                                 <rect key="frame" x="0.0" y="0.0" width="207" height="179.33333333333334"/>
                                                                 <subviews>
-                                                                    <view tag="1" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="5J7-Q9-k63" userLabel="Stop Playing Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                                    <view tag="1" contentMode="scaleAspectFit" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5J7-Q9-k63" userLabel="Stop Playing Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                                         <rect key="frame" x="26.666666666666671" y="0.0" width="153.66666666666663" height="143.33333333333334"/>
                                                                         <color key="backgroundColor" name="Clear"/>
                                                                         <constraints>
@@ -354,7 +354,10 @@
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="actionButtonView" destination="bw4-mC-p9W" id="T7g-Qo-jNf"/>
                         <outlet property="activityIndicator" destination="k0v-pi-t17" id="IJU-lQ-0Jg"/>
+                        <outlet property="bannerContinuation" destination="m4C-Bn-wVa" id="uQJ-Ch-nbF"/>
+                        <outlet property="bottomArea" destination="4Xn-Vn-q9j" id="RMR-FT-8TY"/>
                         <outlet property="leftSwipeGesture" destination="zEq-NV-S5h" id="gQF-vP-a7W"/>
                         <outlet property="otherCollectionView" destination="2h7-Jf-CHY" id="Rn9-W1-Hib"/>
                         <outlet property="otherCollectionViewWidth" destination="8L9-vx-Fqr" id="7K4-I3-OpP"/>

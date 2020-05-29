@@ -51,6 +51,9 @@ class HighScoresViewController: ScorecardViewController, UITableViewDataSource, 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultViewColors()
+        
         setupScores()
         
         finishButton.setImage(UIImage(named: self.backImage), for: .normal)
@@ -155,6 +158,9 @@ class HighScoresViewController: ScorecardViewController, UITableViewDataSource, 
             var cell: HighScoresSectionCell
             
             cell = tableView.dequeueReusableCell(withIdentifier: "High Scores Section Cell", for: indexPath) as! HighScoresSectionCell
+            // Setup default colors (previously done in StoryBoard)
+            self.defaultCellColors(cell: cell)
+
             let rightJustify = (indexPath.row % 2 == 0)
             let height = self.sectionHeight - 10.0
             let width = height / 3.0
@@ -187,6 +193,9 @@ class HighScoresViewController: ScorecardViewController, UITableViewDataSource, 
             var name: String
             
             cell = tableView.dequeueReusableCell(withIdentifier: "High Scores Score Cell", for: indexPath) as! HighScoresScoreCell
+            // Setup default colors (previously done in StoryBoard)
+            self.defaultCellColors(cell: cell)
+
             
             switch tableView.tag % 1000000 {
             case 0:
@@ -341,3 +350,36 @@ class HighScoresScoreCell: UITableViewCell {
     @IBOutlet weak var separator: UIView!
 }
 
+extension HighScoresViewController {
+
+    /** _Note that this code was generated as part of the move to themed colors_ */
+
+    private func defaultViewColors() {
+
+        self.finishButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.view.backgroundColor = Palette.background
+    }
+
+    private func defaultCellColors(cell: HighScoresScoreCell) {
+        switch cell.reuseIdentifier {
+        case "High Scores Score Cell":
+            cell.date.textColor = Palette.text
+            cell.location.textColor = Palette.text
+            cell.name.textColor = Palette.text
+            cell.value.textColor = Palette.text
+        default:
+            break
+        }
+    }
+
+    private func defaultCellColors(cell: HighScoresSectionCell) {
+        switch cell.reuseIdentifier {
+        case "High Scores Section Cell":
+            cell.leftFiller.backgroundColor = Palette.banner
+            cell.rightFiller.backgroundColor = Palette.banner
+        default:
+            break
+        }
+    }
+
+}

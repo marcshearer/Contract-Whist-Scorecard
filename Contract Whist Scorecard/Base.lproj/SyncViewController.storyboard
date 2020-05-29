@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -75,7 +72,7 @@
                                 </constraints>
                             </imageView>
                             <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="50" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="nwp-Sg-9Mi">
-                                <rect key="frame" x="0.0" y="284.5" width="400" height="204.5"/>
+                                <rect key="frame" x="0.0" y="284.5" width="400" height="238.5"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Sync Stage Table Cell" id="eAw-Zo-yUH" customClass="SyncStageTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
@@ -86,7 +83,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="box" translatesAutoresizingMaskIntoConstraints="NO" id="KO1-2j-7mg">
-                                                    <rect key="frame" x="20" y="10" width="29.5" height="29.5"/>
+                                                    <rect key="frame" x="20" y="10" width="30" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="KO1-2j-7mg" secondAttribute="height" multiplier="1:1" id="RB9-G4-BUB"/>
                                                     </constraints>
@@ -95,7 +92,7 @@
                                                     <rect key="frame" x="25" y="15" width="20" height="20"/>
                                                 </activityIndicatorView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="XQT-C4-XeR">
-                                                    <rect key="frame" x="59.5" y="0.0" width="340.5" height="49.5"/>
+                                                    <rect key="frame" x="60" y="0.0" width="340" height="50"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                                     <color key="textColor" name="Text"/>
@@ -129,7 +126,7 @@
                                 </connections>
                             </tableView>
                             <tableView clipsSubviews="YES" tag="2" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="24" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Y7G-kk-6TA">
-                                <rect key="frame" x="0.0" y="489" width="400" height="0.0"/>
+                                <rect key="frame" x="0.0" y="523" width="400" height="0.0"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="height" id="pye-Qo-nQI"/>
@@ -139,10 +136,10 @@
                                         <rect key="frame" x="0.0" y="28" width="400" height="24"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="yzJ-ug-4qc" id="3A8-LK-MrF">
-                                            <rect key="frame" x="0.0" y="0.0" width="400" height="23.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="400" height="24"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="WDk-9K-pR3">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="WDk-9K-pR3">
                                                     <rect key="frame" x="20" y="0.0" width="380" height="23.5"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -204,11 +201,13 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="400" height="523"/>
                     <connections>
+                        <outlet property="bannerContinuation" destination="HqI-q0-LEC" id="RU1-s2-78o"/>
                         <outlet property="finishButton" destination="4KG-BW-XxS" id="xMw-ZJ-Rg9"/>
                         <outlet property="navigationBar" destination="pPE-oz-OCx" id="Nxh-Ru-xLK"/>
                         <outlet property="syncImage" destination="owS-TZ-KyE" id="cqo-1g-J2T"/>
                         <outlet property="syncMessageTableView" destination="Y7G-kk-6TA" id="5ea-gc-n0o"/>
                         <outlet property="syncStageTableView" destination="nwp-Sg-9Mi" id="RPb-VW-eb8"/>
+                        <outlet property="topBackgroundView" destination="3Pa-06-685" id="dqC-QE-oi9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n3I-Qc-PVB" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -219,15 +218,12 @@
     <resources>
         <image name="back" width="22" height="22"/>
         <image name="box" width="22" height="22"/>
-        <image name="sync" width="100" height="100"/>
+        <image name="sync" width="139" height="139"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Banner">
             <color red="0.89800000190734863" green="0.74900001287460327" blue="0.37299999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Banner Text">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Banner Text">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

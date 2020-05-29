@@ -28,7 +28,9 @@ class GetStartedViewController: ScorecardViewController, UITableViewDelegate, UI
     
     // MARK: - IB Outlets ============================================================================== -
     
-    @IBOutlet weak var finishButton: UIButton!
+    @IBOutlet private weak var leftBanner: UIView!
+    @IBOutlet private weak var rightBanner: UIView!
+    @IBOutlet private weak var finishButton: UIButton!
     
     // MARK: - IB Actions ============================================================================== -
     
@@ -40,6 +42,10 @@ class GetStartedViewController: ScorecardViewController, UITableViewDelegate, UI
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultViewColors()
+
         Scorecard.shared.checkNetworkConnection(button: self.downloadPlayersButton, label: self.syncLabel, labelHeightConstraint: self.syncLabelHeightConstraint, labelHeight: self.syncLabelHeight, disable: true)
         enableButtons()
     }
@@ -78,6 +84,9 @@ class GetStartedViewController: ScorecardViewController, UITableViewDelegate, UI
         case 0:
             // Get Started message
             cell = tableView.dequeueReusableCell(withIdentifier: "Get Started Cell", for: indexPath) as? GetStartedCell
+            // Setup default colors (previously done in StoryBoard)
+            self.defaultCellColors(cell: cell)
+
             self.syncLabel = cell.headerSyncLabel
             self.syncLabelHeightConstraint = cell.headerSyncLabelHeightConstraint
             Scorecard.shared.reflectNetworkConnection(button: self.downloadPlayersButton, label: self.syncLabel, labelHeightConstraint: self.syncLabelHeightConstraint, labelHeight: self.syncLabelHeight, action: nil)
@@ -85,6 +94,9 @@ class GetStartedViewController: ScorecardViewController, UITableViewDelegate, UI
         case 1:
             // Sync Enabled
             cell = tableView.dequeueReusableCell(withIdentifier: "Sync Enabled Cell", for: indexPath) as? GetStartedCell
+            // Setup default colors (previously done in StoryBoard)
+            self.defaultCellColors(cell: cell)
+
             cell.syncInfo.removeTarget(nil, action: nil, for: .allEvents)
             cell.syncInfo.addTarget(self, action: #selector(GetStartedViewController.syncInfoPressed(_:)), for: UIControl.Event.touchUpInside)
             
@@ -115,6 +127,9 @@ class GetStartedViewController: ScorecardViewController, UITableViewDelegate, UI
         case 2, 3, 4, 5:
            // Action buttons
             cell = tableView.dequeueReusableCell(withIdentifier: "Action Button Cell", for: indexPath) as? GetStartedCell
+            // Setup default colors (previously done in StoryBoard)
+            self.defaultCellColors(cell: cell)
+
             cell.actionButton.removeTarget(nil, action: nil, for: .allEvents)
             
             switch indexPath.row {
@@ -323,4 +338,30 @@ class GetStartedCell: UITableViewCell {
     @IBOutlet weak var instructionLabel: UILabel!
     @IBOutlet weak var headerSyncLabel: UILabel!
     @IBOutlet weak var headerSyncLabelHeightConstraint: NSLayoutConstraint!
+}
+
+extension GetStartedViewController {
+
+    /** _Note that this code was generated as part of the move to themed colors_ */
+
+    private func defaultViewColors() {
+
+        self.leftBanner.backgroundColor = Palette.banner
+        self.rightBanner.backgroundColor = Palette.banner
+        self.view.backgroundColor = Palette.background
+    }
+
+    private func defaultCellColors(cell: GetStartedCell) {
+        switch cell.reuseIdentifier {
+        case "Get Started Cell":
+            cell.headerSyncLabel.textColor = Palette.textMessage
+            cell.instructionLabel.textColor = Palette.banner
+        case "Sync Enabled Cell":
+            cell.instructionLabel.textColor = Palette.text
+            cell.syncEmail.textColor = Palette.text
+        default:
+            break
+        }
+    }
+
 }

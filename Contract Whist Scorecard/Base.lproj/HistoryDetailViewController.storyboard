@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -20,10 +17,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hEU-UB-5K2" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="20"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
                             </view>
                             <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y6r-2O-8jb" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" name="Banner Text"/>
                                 </textAttributes>
@@ -50,7 +47,7 @@
                                 </items>
                             </navigationBar>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jfH-ib-leT" userLabel="Body View">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="623"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nDe-x0-Zfu">
                                         <rect key="frame" x="0.0" y="310" width="375" height="40"/>
@@ -127,17 +124,17 @@
                                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OGZ-Fq-UC4" id="e1k-jI-vlO">
-                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="adH-9J-E1r">
-                                                            <rect key="frame" x="16" y="0.0" width="160" height="43.5"/>
+                                                            <rect key="frame" x="16" y="0.0" width="160" height="44"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                             <color key="textColor" name="Text"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Score" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="Gc4-eb-UX4">
-                                                            <rect key="frame" x="180" y="31" width="60" height="2"/>
+                                                            <rect key="frame" x="180" y="11" width="60" height="22"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="8nZ-AP-Qqg"/>
                                                             </constraints>
@@ -146,7 +143,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Made" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="h3I-Th-017">
-                                                            <rect key="frame" x="244" y="31" width="60" height="2"/>
+                                                            <rect key="frame" x="244" y="11" width="60" height="22"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="57R-0A-HUg"/>
                                                             </constraints>
@@ -155,7 +152,7 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Twos" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="zj4-QV-zjc">
-                                                            <rect key="frame" x="308" y="31" width="60" height="2"/>
+                                                            <rect key="frame" x="308" y="11" width="60" height="22"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="F7R-2q-5xR"/>
                                                             </constraints>
@@ -196,7 +193,7 @@
                                         </connections>
                                     </tableView>
                                     <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" rotateEnabled="NO" pitchEnabled="NO" showsPointsOfInterest="NO" showsScale="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e7x-Iq-giA">
-                                        <rect key="frame" x="0.0" y="350" width="375" height="253"/>
+                                        <rect key="frame" x="0.0" y="350" width="375" height="273"/>
                                     </mapView>
                                 </subviews>
                                 <color key="backgroundColor" name="Clear"/>
@@ -239,6 +236,7 @@
                         <outlet property="actionButton" destination="qm5-ma-qEr" id="lHk-7q-OhZ"/>
                         <outlet property="bodyView" destination="jfH-ib-leT" id="201-BD-i3u"/>
                         <outlet property="excludeStatsHeightConstraint" destination="mbh-wp-yi2" id="Fiq-su-GHG"/>
+                        <outlet property="excludeStatsLabel" destination="bH6-fp-Kga" id="rrD-ZE-Iil"/>
                         <outlet property="excludeStatsView" destination="PPI-r2-8QP" id="gVH-uG-O6C"/>
                         <outlet property="finishButton" destination="C99-Bz-aQ9" id="NA8-zW-6a5"/>
                         <outlet property="locationBackground" destination="nDe-x0-Zfu" id="cTQ-uU-jKk"/>
@@ -247,6 +245,7 @@
                         <outlet property="locationBackgroundTrailingConstraint" destination="2sw-Zh-vCa" id="Kif-FC-b3f"/>
                         <outlet property="locationText" destination="OnX-jC-bPu" id="qFA-Od-Ohm"/>
                         <outlet property="mapView" destination="e7x-Iq-giA" id="bfl-gf-Id1"/>
+                        <outlet property="navigationBar" destination="Y6r-2O-8jb" id="0BC-Eh-Xei"/>
                         <outlet property="participantTableView" destination="f3E-iU-lrl" id="W2x-Y7-mP5"/>
                         <outlet property="participantTableViewHeightConstraint" destination="IZK-Am-B2Y" id="xMv-xC-kdK"/>
                         <outlet property="titleNavigationItem" destination="Seg-LW-F6o" id="S7u-oE-gbp"/>
@@ -272,9 +271,6 @@
         <image name="back" width="22" height="22"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Banner Text">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Banner Text">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

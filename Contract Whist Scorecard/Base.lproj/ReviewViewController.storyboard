@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -88,7 +87,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="dg7-pq-npw">
-                                                    <rect key="frame" x="15" y="11" width="0.0" height="8"/>
+                                                    <rect key="frame" x="15" y="11" width="150" height="8"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" name="Room Interior Text"/>
@@ -127,7 +126,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="lvK-92-U7h">
-                                                    <rect key="frame" x="15" y="11" width="0.0" height="13"/>
+                                                    <rect key="frame" x="15" y="11" width="110" height="13"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" name="Room Interior Text"/>
@@ -166,7 +165,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="EmK-iV-9Bz">
-                                                    <rect key="frame" x="15" y="11" width="0.0" height="13"/>
+                                                    <rect key="frame" x="15" y="11" width="150" height="13"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" name="Room Interior Text"/>
@@ -205,7 +204,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="acB-bZ-1dI">
-                                                    <rect key="frame" x="0.0" y="0.0" width="0.0" height="30"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="140" height="30"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" name="Room Interior Text"/>
@@ -318,21 +317,27 @@
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="bannerPaddingView" destination="22l-fD-ik1" id="GZC-yr-2Y2"/>
+                        <outlet property="bottomLineView" destination="4Aj-Xo-34G" id="S7o-dV-Lh2"/>
                         <outlet property="dummyLabel" destination="bab-Kf-C0n" id="URl-UO-Pga"/>
                         <outlet property="finishButton" destination="bz4-29-ZE2" id="cbT-x5-xtd"/>
                         <outlet property="hand1TableView" destination="Sws-v1-Zuq" id="LBU-9j-9JW"/>
                         <outlet property="hand2TableView" destination="OhV-jr-BYl" id="CZE-Lf-Xrd"/>
                         <outlet property="hand3TableView" destination="VQZ-9b-rXI" id="xnk-oI-wUI"/>
                         <outlet property="hand4TableView" destination="i2h-cH-RO4" id="vtr-qH-zi2"/>
+                        <outlet property="leftLineView" destination="leO-27-kKf" id="eAz-bA-yag"/>
                         <outlet property="overUnderLabel" destination="fRi-Eh-euY" id="1Mt-5N-u2X"/>
+                        <outlet property="rightLineView" destination="ge5-PD-iPp" id="O4S-UU-b1h"/>
                         <outlet property="roundTitleLabel" destination="Mzm-ri-OLh" id="UGR-dD-38A"/>
                         <outlet property="tableTopHeightConstraint" destination="0RE-hP-jwh" id="ITp-7g-3cf"/>
                         <outlet property="tableTopLeadingConstraint" destination="4g8-KR-oHp" id="Uep-CZ-Xj0"/>
                         <outlet property="tableTopTopConstraint" destination="iLR-0w-qfD" id="Ubq-hb-2w9"/>
                         <outlet property="tableTopView" destination="EZf-wk-Pej" id="ePw-F5-DO4"/>
                         <outlet property="tableTopWidthConstraint" destination="MgQ-aU-HVJ" id="UJq-a5-CZo"/>
+                        <outlet property="titlePadderView" destination="fNx-6D-Fun" id="Ouc-Ho-bD8"/>
                         <outlet property="titleView" destination="wym-eE-JCq" id="x99-fG-a7d"/>
                         <outlet property="titleViewHeight" destination="MeZ-zx-Vfz" id="9l6-sa-YPr"/>
+                        <outlet property="topLineView" destination="Ci7-9s-kVO" id="oCB-sv-LZY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K66-SZ-3aC" userLabel="First Responder" sceneMemberID="firstResponder"/>

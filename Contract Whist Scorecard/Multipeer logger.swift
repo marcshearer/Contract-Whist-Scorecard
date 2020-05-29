@@ -39,13 +39,14 @@ class MultipeerLogger : CommsBrowserDelegate, CommsStateDelegate, CommsDataDeleg
     }
     
     init() {
-        
+        Utility.sendingMessage = true
         self.service = CommsHandler.client(proximity: .nearby, mode: .broadcast, serviceID: MultipeerLoggerConfig.logService, deviceName: Scorecard.deviceName)
         self.service?.browserDelegate = self
         self.service?.stateDelegate = self
         self.service?.dataDelegate = self
         self.service?.start()
         self.logUUID = UUID().uuidString
+        Utility.sendingMessage = false
     }
     
     func peerFound(peer: CommsPeer, reconnect: Bool = true) {

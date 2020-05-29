@@ -67,15 +67,17 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     @IBOutlet private weak var unselectedCollectionViewTopConstraint: NSLayoutConstraint!
     @IBOutlet private weak var unselectedCollectionViewLandscapeTopConstraint: NSLayoutConstraint!
     @IBOutlet private weak var unselectedCollectionViewBottomConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var cancelButton: UIButton!
-    @IBOutlet private weak var bannerContinueButton: UIButton!
-    @IBOutlet private weak var continueButton: UIButton!
+    @IBOutlet private weak var cancelButton: ClearButton!
+    @IBOutlet private weak var bannerContinueButton: ClearButton!
+    @IBOutlet private weak var continueButton: AngledButton!
     @IBOutlet private weak var continueButtonView: UIView!
     @IBOutlet private weak var continueButtonViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var continueButtonFooterView: Footer!
+    @IBOutlet private weak var continueButtonFooterPaddingView: UIView!
     @IBOutlet private weak var selectedPlayersView: SelectedPlayersView!
     @IBOutlet private weak var selectedViewHeight: NSLayoutConstraint!
     @IBOutlet private weak var selectedViewWidth: NSLayoutConstraint!
-    @IBOutlet private weak var clearAllButton: UIButton!
+    @IBOutlet private weak var clearAllButton: AngledButton!
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
     @IBOutlet private weak var navigationBar: NavigationBar!
     @IBOutlet private weak var navigationBarHeightConstraint: NSLayoutConstraint!
@@ -118,6 +120,9 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultViewColors()
 
         // Set test mode
         self.setTestMode()
@@ -1019,4 +1024,28 @@ class TaplessView: UIView {
             return hitView
         }
     }
+}
+
+extension SelectionViewController {
+
+    /** _Note that this code was generated as part of the move to themed colors_ */
+
+    private func defaultViewColors() {
+
+        self.bannerContinuationView.bannerColor = Palette.gameBanner
+        self.bannerContinuationView.borderColor = Palette.gameBanner
+        self.bannerPaddingView.bannerColor = Palette.gameBanner
+        self.clearAllButton.setTitleColor(Palette.roomInteriorText, for: .normal)
+        self.clearAllButton.fillColor = Palette.roomInterior
+        self.clearAllButton.strokeColor = Palette.roomInteriorText
+        self.continueButton.setTitleColor(Palette.continueButtonText, for: .normal)
+        self.continueButton.fillColor = Palette.continueButton
+        self.continueButton.strokeColor = Palette.continueButton
+        self.continueButtonFooterPaddingView.backgroundColor = Palette.tableTop
+        self.continueButtonFooterView.footerColor = Palette.tableTop
+        self.continueButtonFooterView.borderColor = Palette.gameBannerText
+        self.navigationBar.bannerColor = Palette.gameBanner
+        self.view.backgroundColor = Palette.background
+    }
+
 }

@@ -41,6 +41,12 @@ class ReviewViewController: ScorecardViewController, UITableViewDataSource, UITa
     @IBOutlet private weak var overUnderLabel: UILabel!
     @IBOutlet private weak var titleView: UIView!
     @IBOutlet private weak var titleViewHeight: NSLayoutConstraint!
+    @IBOutlet private weak var bottomLineView: UIView!
+    @IBOutlet private weak var topLineView: UIView!
+    @IBOutlet private weak var leftLineView: UIView!
+    @IBOutlet private weak var rightLineView: UIView!
+    @IBOutlet private weak var titlePadderView: UIView!
+    @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
     
     @IBAction func finishPressed(_ sender: UIButton) {
         self.dismiss()
@@ -52,6 +58,10 @@ class ReviewViewController: ScorecardViewController, UITableViewDataSource, UITa
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultViewColors()
+
         for _ in 1...Scorecard.shared.maxPlayers {
             maxContentSize.append(0.0)
             height.append(0)
@@ -106,6 +116,9 @@ class ReviewViewController: ScorecardViewController, UITableViewDataSource, UITa
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Hand Cell \(tableView.tag)", for: indexPath) as! ReviewTableViewCell
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultCellColors(cell: cell)
+
         if let handNumber = tableViewPlayer[tableView.tag] {
             if indexPath.row == 0 {
                 cell.label.font = UIFont.boldSystemFont(ofSize: 17.0)
@@ -340,3 +353,41 @@ class ReviewTableViewCell: UITableViewCell {
     @IBOutlet public weak var label: UILabel!
 
 }
+
+extension ReviewViewController {
+
+    /** _Note that this code was generated as part of the move to themed colors_ */
+
+    private func defaultViewColors() {
+
+        self.bannerPaddingView.bannerColor = Palette.roomInterior
+        self.bottomLineView.backgroundColor = Palette.text
+        self.dummyLabel.textColor = Palette.darkHighlightText
+        self.finishButton.setTitleColor(Palette.darkHighlightText, for: .normal)
+        self.leftLineView.backgroundColor = Palette.text
+        self.overUnderLabel.textColor = Palette.roomInteriorText
+        self.rightLineView.backgroundColor = Palette.text
+        self.roundTitleLabel.textColor = Palette.roomInteriorText
+        self.tableTopView.backgroundColor = Palette.background
+        self.titlePadderView.backgroundColor = Palette.roomInterior
+        self.topLineView.backgroundColor = Palette.text
+        self.view.backgroundColor = Palette.background
+    }
+
+    private func defaultCellColors(cell: ReviewTableViewCell) {
+        switch cell.reuseIdentifier {
+        case "Hand Cell 1":
+            cell.label.textColor = Palette.roomInteriorText
+        case "Hand Cell 2":
+            cell.label.textColor = Palette.roomInteriorText
+        case "Hand Cell 3":
+            cell.label.textColor = Palette.roomInteriorText
+        case "Hand Cell 4":
+            cell.label.textColor = Palette.roomInteriorText
+        default:
+            break
+        }
+    }
+
+}
+

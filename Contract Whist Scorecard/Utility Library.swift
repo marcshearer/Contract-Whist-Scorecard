@@ -463,7 +463,7 @@ class Utility {
         return activeViewController
     }
     
-    static private var sendingMessage = false
+    static public var sendingMessage = false
     
     class func debugMessage(_ from: String, _ message: String, showDevice: Bool = false, force: Bool = false, mainThread: Bool = true) {
         
@@ -503,9 +503,9 @@ class Utility {
                     MultipeerLogger.logger.write(timestamp: timestamp, source: from, message: message)
                 }
             #endif
-            Utility.sendingMessage = false
         }
         
+        let sendingMessage = Utility.sendingMessage
         var loggerConnected = false
         if !Utility.sendingMessage {
             Utility.sendingMessage = true
@@ -516,12 +516,14 @@ class Utility {
             if mainThread {
                 Utility.mainThread(suppressDebug: true, execute: {
                     closure()
+                    Utility.sendingMessage = sendingMessage
                 })
             } else {
                 closure()
+                Utility.sendingMessage = sendingMessage
             }
         } else {
-            Utility.sendingMessage = false
+            Utility.sendingMessage = sendingMessage
         }
 
     }

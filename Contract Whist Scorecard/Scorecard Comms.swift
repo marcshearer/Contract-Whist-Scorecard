@@ -178,22 +178,16 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         }
     }
     
-    public func playHand(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, sourceView: UIView, animated: Bool = true, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil) -> HandViewController? {
+    public func playHand(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, sourceView: UIView, animated: Bool = true) -> HandViewController? {
         var handViewController: HandViewController?
         
         if Scorecard.game.isHosting || Scorecard.game.hasJoined {
             // Now play the hand
             if Scorecard.game.isHosting {
-               
-                // Set up hands in computer player mode
-                if computerPlayerDelegate != nil {
-                    for (playerNumber, computerPlayerDelegate) in computerPlayerDelegate! {
-                        computerPlayerDelegate?.newHand(hand: Scorecard.game.deal.hands[playerNumber-1])
-                    }
-                }
+                appController?.robotAction(action: .deal)
             }
             if Scorecard.game.handState.hand != nil && (Scorecard.game.handState.hand.cards.count > 0 || Scorecard.game.handState.trickCards.count != 0) {
-                handViewController = HandViewController.show(from: viewController, appController: appController, sourceView: sourceView, existing: handViewController, computerPlayerDelegate: computerPlayerDelegate, animated: animated)
+                handViewController = HandViewController.show(from: viewController, appController: appController, sourceView: sourceView, existing: handViewController, animated: animated)
             } else {
                 fatalError("Trying to display hand with no hand setup")
             }
@@ -392,7 +386,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     }
     
     public func sendBid(playerNumber: Int, round: Int, to commsPeer: CommsPeer! = nil, using commsDelegate: CommsServiceDelegate? = nil) {
-        if !(Scorecard.game.isHosting || Scorecard.game.isSharing) {
+        if !(Scorecard.game.isHosting || Scorecard.game.isSharing) || Scorecard.game.isPlayingComputer {
             // No need to send if hosting/sharing as all changes automatically sent
             self.sendScores(playerNumber: playerNumber, round: round, mode: .bid, to: commsPeer, using: commsDelegate, sendJoined: true)
         }
@@ -557,7 +551,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             let currentTrickCards = Scorecard.game.handState.trickCards.count
             
             // Update state
-            self.updateState()
+            self.updateState(alertUser: handViewController == nil)
             
             // Reflect updated state on view if it is showing
             handViewController?.reflectCurrentState(currentTrickCards: currentTrickCards)

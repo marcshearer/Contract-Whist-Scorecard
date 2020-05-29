@@ -61,19 +61,22 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     var excludeStats = false
 
     // MARK: - IB Outlets ============================================================================== -
-    @IBOutlet weak var syncMessage: UILabel!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var winnerCollectionView: UICollectionView!
-    @IBOutlet weak var winnerCollectionViewWidth: NSLayoutConstraint!
-    @IBOutlet weak var otherCollectionView: UICollectionView!
-    @IBOutlet weak var otherCollectionViewWidth: NSLayoutConstraint!
-    @IBOutlet weak var stopPlayingButton: ImageButton!
-    @IBOutlet weak var playAgainButton: ImageButton!
-    @IBOutlet weak var scorecardButton: UIButton!
-    @IBOutlet weak var leftSwipeGesture: UISwipeGestureRecognizer!
-    @IBOutlet weak var rightSwipeGesture: UISwipeGestureRecognizer!
-    @IBOutlet weak var tapGesture: UITapGestureRecognizer!
+    @IBOutlet private weak var bottomArea: UIView!
+    @IBOutlet private weak var actionButtonView: UIView!
+    @IBOutlet private weak var bannerContinuation: BannerContinuation!
+    @IBOutlet private weak var syncMessage: UILabel!
+    @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var scrollView: UIScrollView!
+    @IBOutlet private weak var winnerCollectionView: UICollectionView!
+    @IBOutlet private weak var winnerCollectionViewWidth: NSLayoutConstraint!
+    @IBOutlet private weak var otherCollectionView: UICollectionView!
+    @IBOutlet private weak var otherCollectionViewWidth: NSLayoutConstraint!
+    @IBOutlet private weak var stopPlayingButton: ImageButton!
+    @IBOutlet private weak var playAgainButton: ImageButton!
+    @IBOutlet private weak var scorecardButton: UIButton!
+    @IBOutlet private weak var leftSwipeGesture: UISwipeGestureRecognizer!
+    @IBOutlet private weak var rightSwipeGesture: UISwipeGestureRecognizer!
+    @IBOutlet private weak var tapGesture: UITapGestureRecognizer!
     
     // MARK: - IB Actions ============================================================================== -
     
@@ -98,6 +101,9 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultViewColors()
+
         self.excludeHistory = !Scorecard.activeSettings.saveHistory
         self.excludeStats = self.excludeHistory || !Scorecard.activeSettings.saveStats
         
@@ -552,4 +558,33 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
 class GameSummaryCollectionCell: UICollectionViewCell {
     @IBOutlet weak var thumbnailView: ThumbnailView!
     @IBOutlet weak var playerScoreButton: UIButton!
+}
+
+extension GameSummaryViewController {
+
+    /** _Note that this code was generated as part of the move to themed colors_ */
+
+    private func defaultViewColors() {
+
+        self.actionButtonView.backgroundColor = Palette.tableTop
+        self.activityIndicator.color = Palette.darkHighlightText
+        self.bannerContinuation.backgroundColor = Palette.tableTop
+        self.bannerContinuation.bannerColor = Palette.roomInterior
+        self.bottomArea.backgroundColor = Palette.tableTop
+        self.playAgainButton.textColor = Palette.tableTopTextContrast
+        self.stopPlayingButton.textColor = Palette.tableTopTextContrast
+        self.syncMessage.textColor = Palette.darkHighlightText
+        self.view.backgroundColor = Palette.roomInterior
+    }
+
+    private func defaultCellColors(cell: GameSummaryCollectionCell) {
+        switch cell.reuseIdentifier {
+        case "Game Summary Cell":
+            cell.playerScoreButton.setTitleColor(Palette.roomInteriorText, for: .normal)
+            cell.playerScoreButton.setTitleColor(Palette.roomInteriorText, for: .normal)
+        default:
+            break
+        }
+    }
+
 }

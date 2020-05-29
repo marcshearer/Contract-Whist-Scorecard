@@ -191,7 +191,7 @@ class Recovery {
         // Load in the saved values from UserDefaults
         
         self.reloadInProgress = true
-        Scorecard.shared.setGameInProgress(true, save: false)
+        Scorecard.game.setGameInProgress(true, save: false)
         Scorecard.game.maxEnteredRound = 1
         
         if self.onlinePurpose == .playing && self.onlineType == .server {
@@ -221,7 +221,7 @@ class Recovery {
         }
         
         // Update current round
-        if Scorecard.shared.roundComplete(Scorecard.game.maxEnteredRound) && Scorecard.game.maxEnteredRound < Scorecard.game.rounds {
+        if Scorecard.game.roundComplete(Scorecard.game.maxEnteredRound) && Scorecard.game.maxEnteredRound < Scorecard.game.rounds {
             // Round complete - move to next
             Scorecard.game.maxEnteredRound = Scorecard.game.maxEnteredRound + 1
         }

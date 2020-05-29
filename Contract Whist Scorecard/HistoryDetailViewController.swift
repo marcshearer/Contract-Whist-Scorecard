@@ -25,21 +25,23 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
     var updated = false
     
     // MARK: - IB Outlets ============================================================================== -
-    @IBOutlet weak var participantTableView: UITableView!
-    @IBOutlet weak var locationText: UILabel!
-    @IBOutlet weak var locationBackground: UIView!
-    @IBOutlet weak var locationBackgroundHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var locationBackgroundLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var locationBackgroundTrailingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var mapView: MKMapView!
-    @IBOutlet weak var participantTableViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var titleNavigationItem: UINavigationItem!
-    @IBOutlet weak var updateButton: RoundedButton!
-    @IBOutlet weak var finishButton: RoundedButton!
-    @IBOutlet weak var actionButton: UIBarButtonItem!
-    @IBOutlet weak var bodyView: UIView!
-    @IBOutlet weak var excludeStatsView: UIView!
-    @IBOutlet weak var excludeStatsHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var participantTableView: UITableView!
+    @IBOutlet private weak var locationText: UILabel!
+    @IBOutlet private weak var locationBackground: UIView!
+    @IBOutlet private weak var locationBackgroundHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var locationBackgroundLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var locationBackgroundTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var mapView: MKMapView!
+    @IBOutlet private weak var participantTableViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var navigationBar: NavigationBar!
+    @IBOutlet private weak var titleNavigationItem: UINavigationItem!
+    @IBOutlet private weak var updateButton: AngledButton!
+    @IBOutlet private weak var finishButton: RoundedButton!
+    @IBOutlet private weak var actionButton: UIBarButtonItem!
+    @IBOutlet private weak var bodyView: UIView!
+    @IBOutlet private weak var excludeStatsView: UIView!
+    @IBOutlet private weak var excludeStatsLabel: UILabel!
+    @IBOutlet private weak var excludeStatsHeightConstraint: NSLayoutConstraint!
     
     // MARK: - IB Actions ============================================================================== -
 
@@ -64,6 +66,9 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultViewColors()
+
         if !Scorecard.activeSettings.saveLocation {
             locationBackgroundHeightConstraint.constant = 0
             locationText.isHidden = true
@@ -121,6 +126,8 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
         var cell: HistoryDetailTableCell
         
         cell = tableView.dequeueReusableCell(withIdentifier: "History Detail Cell", for: indexPath) as! HistoryDetailTableCell
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultCellColors(cell: cell)
         
         switch indexPath.row {
         case 0:
@@ -410,4 +417,36 @@ class HistoryDetailTableCell: UITableViewCell {
     @IBOutlet weak var totalScore: UILabel!
     @IBOutlet weak var handsMade: UILabel!
     @IBOutlet weak var otherValue: UILabel!
+}
+
+extension HistoryDetailViewController {
+
+    /** _Note that this code was generated as part of the move to themed colors_ */
+
+    private func defaultViewColors() {
+
+        self.excludeStatsLabel.tintColor = Palette.bold
+        self.finishButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.locationBackground.backgroundColor = Palette.darkHighlight
+        self.locationText.textColor = Palette.darkHighlightText
+        self.navigationBar.textColor = Palette.bannerText
+        self.participantTableView.separatorColor = Palette.separator
+        self.updateButton.setTitleColor(Palette.shapeFillText, for: .normal)
+        self.updateButton.fillColor = Palette.shapeStroke
+        self.updateButton.strokeColor = Palette.shapeStroke
+        self.view.backgroundColor = Palette.background
+    }
+
+    private func defaultCellColors(cell: HistoryDetailTableCell) {
+        switch cell.reuseIdentifier {
+        case "History Detail Cell":
+            cell.handsMade.textColor = Palette.text
+            cell.name.textColor = Palette.text
+            cell.otherValue.textColor = Palette.text
+            cell.totalScore.textColor = Palette.text
+        default:
+            break
+        }
+    }
+
 }

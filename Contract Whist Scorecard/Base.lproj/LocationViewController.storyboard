@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -33,7 +32,7 @@
                                 <items>
                                     <navigationItem title="Location" id="pNH-3X-XqU">
                                         <barButtonItem key="leftBarButtonItem" id="EEw-7m-r04">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="3Rg-nf-UEe" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="3Rg-nf-UEe" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                 <rect key="frame" x="16" y="0.0" width="100" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Cancel" image="back">
@@ -45,7 +44,7 @@
                                             </button>
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" id="Uie-mR-UhK">
-                                            <button key="customView" hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Zb2-G3-4jd" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <button key="customView" hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Zb2-G3-4jd" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
                                                 <rect key="frame" x="242" y="0.0" width="117" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="ContinueButton"/>
@@ -206,6 +205,7 @@
                         <outlet property="activityIndicator" destination="X7E-aZ-m9h" id="hwZ-Q7-Jtm"/>
                         <outlet property="bannerContinuationView" destination="8qh-o6-LGR" id="vu4-bh-WkT"/>
                         <outlet property="bannerPaddingView" destination="syy-j8-mMN" id="tPN-EV-RuL"/>
+                        <outlet property="cancelButton" destination="3Rg-nf-UEe" id="XSo-o2-BeX"/>
                         <outlet property="continueButton" destination="Zb2-G3-4jd" id="gni-2H-THW"/>
                         <outlet property="locationMapView" destination="KRq-QD-SP0" id="FCf-Od-HV5"/>
                         <outlet property="locationTableView" destination="uko-az-7BL" id="xwd-Kw-i6P"/>
@@ -225,9 +225,6 @@
         <image name="forward" width="22" height="22"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Banner Text">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Banner Text">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

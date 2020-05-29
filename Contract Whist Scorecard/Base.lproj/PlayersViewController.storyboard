@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="landscape" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -55,7 +54,7 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dU2-44-xkb">
+                            <scrollView clipsSubviews="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dU2-44-xkb">
                                 <rect key="frame" x="0.0" y="32" width="667" height="343"/>
                                 <color key="backgroundColor" name="Clear"/>
                             </scrollView>
@@ -130,12 +129,15 @@
                         <outlet property="leftPadView" destination="zKl-vc-bKj" id="RvT-VH-gZI"/>
                         <outlet property="leftPadWidthConstraint" destination="ETw-lW-tz8" id="4EK-gv-aGL"/>
                         <outlet property="navigationBar" destination="CMD-pe-gDa" id="YJZ-oV-eHG"/>
+                        <outlet property="newPlayerButton" destination="anD-NV-QFc" id="RMb-TV-iRO"/>
                         <outlet property="playersScrollView" destination="dU2-44-xkb" id="xRx-J2-b3O"/>
                         <outlet property="rightPadHeightConstraint" destination="RAM-z5-uXv" id="gdz-Yf-KyN"/>
                         <outlet property="rightPadTextLeadingConstraint" destination="wN3-va-R8F" id="rI5-nX-2Dm"/>
                         <outlet property="rightPadTextTrailingConstraint" destination="aju-mO-scW" id="4kF-xE-Qq4"/>
                         <outlet property="rightPadView" destination="jNc-qk-XEu" id="KIh-39-fZx"/>
                         <outlet property="rightPadWidthConstraint" destination="wfy-iu-TLk" id="E0e-bc-weI"/>
+                        <outletCollection property="instructionsLabel" destination="0tj-pH-co7" collectionClass="NSMutableArray" id="sSI-QJ-f8X"/>
+                        <outletCollection property="instructionsLabel" destination="OpE-Oo-ENB" collectionClass="NSMutableArray" id="FCg-k6-13R"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pQb-Du-Rpn" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -155,9 +157,6 @@
         </namedColor>
         <namedColor name="Banner">
             <color red="0.89800000190734863" green="0.74900001287460327" blue="0.37299999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Banner Text">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Banner Text">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

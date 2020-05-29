@@ -1,5 +1,5 @@
 //
-//  Computer Player Class.swift
+//  Robot Player Class.swift
 //  Contract Whist Scorecard
 //
 //  Created by Marc Shearer on 31/07/2018.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol ComputerPlayerDelegate : class {
+protocol RobotDelegate : class {
     
     func autoBid(completion: (()->())?)
     
@@ -17,7 +17,7 @@ protocol ComputerPlayerDelegate : class {
     func newHand(hand: Hand)
 }
 
-extension ComputerPlayerDelegate {
+extension RobotDelegate {
     
     func autoBid() {
         self.autoBid(completion: nil)
@@ -29,7 +29,13 @@ extension ComputerPlayerDelegate {
     
 }
 
-class ComputerPlayer: NSObject, ComputerPlayerDelegate {
+enum RobotAction {
+    case bid
+    case play
+    case deal
+}
+
+class RobotPlayer: NSObject, RobotDelegate {
     
     private var thisPlayer: String
     private var thisPlayerName: String
@@ -75,7 +81,7 @@ class ComputerPlayer: NSObject, ComputerPlayerDelegate {
             
             Utility.executeAfter("autoBid", delay: self.autoPlayTimeUnit, completion: {
                 
-                let computerBidding = ComputerBidding(hand: self.hand, trumpSuit: Scorecard.game.roundSuit(Scorecard.game?.handState.round ?? 1), bids: bids, numberPlayers: Scorecard.game.currentPlayers)
+                let computerBidding = RobotBidding(hand: self.hand, trumpSuit: Scorecard.game.roundSuit(Scorecard.game?.handState.round ?? 1), bids: bids, numberPlayers: Scorecard.game.currentPlayers)
                 
                 let bid = computerBidding.bid()
                 

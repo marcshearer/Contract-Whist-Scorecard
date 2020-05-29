@@ -13,6 +13,7 @@ enum ConnectionMode {
     case unknown
     case nearby
     case online
+    case loopback
 }
 
 enum InviteStatus {
@@ -28,7 +29,9 @@ enum InviteStatus {
         
     private var selectedPlayers: [PlayerMO]!
     private var faceTimeAddress: [String] = []
-        
+    private var playingComputer = false
+    private var robots: [Int : RobotDelegate]?
+
     private weak var selectionViewController: SelectionViewController!
     private weak var gamePreviewViewController: GamePreviewViewController!
     
@@ -42,6 +45,7 @@ enum InviteStatus {
     private var defaultConnectionMode: ConnectionMode!
     private var nearbyHostService: CommsHostServiceDelegate!
     private var onlineHostService: CommsHostServiceDelegate!
+    private var loopbackHostService: CommsHostServiceDelegate!
     private var hostService: CommsHostServiceDelegate!
     private var currentState: CommsServiceState = .notStarted
     private var exiting = false
@@ -83,7 +87,7 @@ enum InviteStatus {
         self.recoveryMode = recoveryMode
         self.completion = completion
         
-        if Scorecard.recovery.recovering {
+        if self.recoveryMode {
             
             // Set mode
             switch Scorecard.recovery.onlineMode! {
@@ -91,34 +95,39 @@ enum InviteStatus {
                 self.startMode = .nearby
             case .invite:
                 self.startMode = .online
+            case .loopback:
+                self.startMode = .loopback
             default:
                 self.startMode = .unknown
             }
             
             // Restore players
             self.resetResumedPlayers()
-            for playerMO in self.selectedPlayers {
-                _ = self.addPlayer(name: playerMO.name!, email: playerMO.email!, playerMO: playerMO, peer: nil, host: true)
+            for (index, playerMO) in self.selectedPlayers.enumerated() {
+                if index == 0 || self.startMode != .loopback {
+                    _ = self.addPlayer(name: playerMO.name!, email: playerMO.email!, playerMO: playerMO, peer: nil, host: index == 0)
+                }
             }
+            
+            // Start game
+            self.initCompletion()
+            self.gameInProgress = true
+            self.startGame()
             
         } else {
             
             // Use passed in player
             let playerMO = Scorecard.shared.findPlayerByEmail(playerEmail!)
             _ = self.addPlayer(name: playerMO!.name!, email: playerMO!.email!, playerMO: playerMO, peer: nil, host: true)
-        }
-                         
-        if self.recoveryMode {
-            // Just go straight to hand without preview
-            self.initCompletion()
-            self.gameInProgress = true
-            self.startGame()
-        } else if self.startMode == .online {
-            // Show selection
-            self.present(nextView: .selection)
-        } else {
-            // Show game preview
-            self.present(nextView: .gamePreview)
+            
+            // Got to selection or game preview
+            if self.startMode == .online {
+                // Show selection
+                self.present(nextView: .selection)
+            } else {
+                // Show game preview
+                self.present(nextView: .gamePreview)
+            }
         }
     }
     
@@ -135,6 +144,8 @@ enum InviteStatus {
             self.setConnectionMode(.online)
         case .nearby:
             self.setConnectionMode(.nearby)
+        case .loopback:
+            self.setConnectionMode(.loopback)
         default:
             return
         }
@@ -333,6 +344,23 @@ enum InviteStatus {
             break
         }
     }
+    
+    override func robotAction(playerNumber: Int! = nil, action: RobotAction) {
+        if self.connectionMode == .loopback {
+            for (robotNumber, robot) in self.robots! {
+                if playerNumber == nil || playerNumber == robotNumber {
+                    switch action {
+                    case .bid:
+                        robot.autoBid()
+                    case .play:
+                        robot.autoPlay()
+                    case .deal:
+                        robot.newHand(hand: Scorecard.game.deal.hands[robotNumber - 1])
+                    }
+                }
+            }
+        }
+    }
      
     private func newGame() {
         Scorecard.game.resetValues()
@@ -362,7 +390,7 @@ enum InviteStatus {
     // MARK: - Process received data ==================================================== -
 
     override internal func processQueue(descriptor: String, data: [String:Any?]?, peer: CommsPeer) -> Bool {
-        var stopProcessing = false
+        let stopProcessing = false
         
         if let playerData = playerDataFor(peer: peer) {
             if playerData.isConnected || (playerData.peer.state == .connected && descriptor == "refreshRequest") {
@@ -427,7 +455,7 @@ enum InviteStatus {
                 addPlayer(name: name, email: peer.playerEmail!, playerMO: playerMO, peer: peer, inviteStatus: InviteStatus.none, disconnectReason: "\(name ?? "This player") has not been invited to a game on this device")
             }
         } else {
-            addPlayer(name: peer.playerName!, email: peer.playerEmail!, playerMO: playerMO, peer: peer)
+            addPlayer(name: peer.playerName!, email: peer.playerEmail!, playerMO: playerMO, peer: peer, robot: self.connectionMode == .loopback)
         }
         return true
     }
@@ -440,7 +468,7 @@ enum InviteStatus {
         }
     }
     
-    private func addPlayer(name: String, email: String, playerMO: PlayerMO?, peer: CommsPeer?, inviteStatus: InviteStatus! = nil, disconnectReason: String? = nil, refreshPlayers: Bool = true, host: Bool = false) {
+    private func addPlayer(name: String, email: String, playerMO: PlayerMO?, peer: CommsPeer?, inviteStatus: InviteStatus! = nil, disconnectReason: String? = nil, refreshPlayers: Bool = true, host: Bool = false, robot: Bool = false) {
         var disconnectReason = disconnectReason
         
         if disconnectReason == nil {
@@ -472,7 +500,7 @@ enum InviteStatus {
             if playerMO == nil {
                 playerMO = self.createLocalPlayer(name: name, email: email, peer: peer)
             }
-            playerData.insert(PlayerData(name: name, email: email, playerMO: playerMO, peer: peer, unique: self.unique, disconnectReason: disconnectReason, inviteStatus: inviteStatus, host: host), at: self.visiblePlayers)
+            playerData.insert(PlayerData(name: name, email: email, playerMO: playerMO, peer: peer, unique: self.unique, disconnectReason: disconnectReason, inviteStatus: inviteStatus, host: host, robot: robot), at: self.visiblePlayers)
             self.refreshPlayers()
         }
     }
@@ -487,8 +515,8 @@ enum InviteStatus {
                 let currentState = playerData.peer?.state ?? .notConnected
                 playerNumber = row + 1
                 
-                // Always require a refresh on change of state
-                playerData.refreshRequired = true
+                // Always require a refresh on change of state if not a robot
+                playerData.refreshRequired = (self.connectionMode != .loopback)
                 
                 switch peer.state {
                 case .connected:
@@ -555,6 +583,8 @@ enum InviteStatus {
         } else if self.connectionMode == .online && self.playerData.count >= 3 && self.connectedPlayers == self.playerData.count {
             self.canStartGame = true
         } else if self.connectionMode == .nearby && self.connectedPlayers >= 3 {
+            self.canStartGame = true
+        } else if self.connectionMode == .loopback && self.connectedPlayers >= 3 {
             self.canStartGame = true
         }
     }
@@ -683,7 +713,7 @@ enum InviteStatus {
             }
         }
         
-        Scorecard.shared.setGameInProgress(true)
+        Scorecard.game.setGameInProgress(true)
         
         if self.recoveryMode {
             // Recovering - resend hand state to other players
@@ -699,7 +729,7 @@ enum InviteStatus {
     private func playHand() -> ScorecardViewController? {
         var handViewController: HandViewController?
            
-        Scorecard.shared.setGameInProgress(true)
+        Scorecard.game.setGameInProgress(true)
 
         Scorecard.shared.sendPlayHand()
         
@@ -858,6 +888,11 @@ enum InviteStatus {
                                 self.sendInvite(playerMO: playerMO)
                             }
                         }
+                        
+                    case .loopback:
+                        // Start connection
+                        self.setConnectionMode(.loopback)
+                        
                     default:
                         break
                     }
@@ -883,7 +918,7 @@ enum InviteStatus {
     private func showGamePreview(selectedPlayers: [PlayerMO]) -> ScorecardViewController? {
         
         if let viewController = self.fromViewController() {
-            self.gamePreviewViewController = GamePreviewViewController.show(from: viewController, appController: self, selectedPlayers: selectedPlayers, title: "Host a Game", backText: "", readOnly: false, faceTimeAddress: self.faceTimeAddress, animated: !self.recoveryMode, delegate: self)
+            self.gamePreviewViewController = GamePreviewViewController.show(from: viewController, appController: self, selectedPlayers: selectedPlayers, title: (self.startMode == .loopback ? "Play Computer" : "Host a Game"), backText: "", readOnly: false, faceTimeAddress: self.faceTimeAddress, animated: !self.recoveryMode, delegate: self)
         }
         return self.gamePreviewViewController
     }
@@ -936,6 +971,8 @@ enum InviteStatus {
                     break
                 case .nearby:
                      self.startNearbyConnection()
+                case .loopback:
+                    self.startLoopbackConnection()
                 default:
                     break
                 }
@@ -947,7 +984,7 @@ enum InviteStatus {
     
     private func startNearbyConnection() {
         // Create comms service and take hosting delegate
-        nearbyHostService = CommsHandler.server(proximity: .nearby, mode: .broadcast, serviceID: Scorecard.shared.serviceID(.playing), deviceName: Scorecard.deviceName)
+        self.nearbyHostService = CommsHandler.server(proximity: .nearby, mode: .broadcast, serviceID: Scorecard.shared.serviceID(.playing), deviceName: Scorecard.deviceName)
         Scorecard.shared.setCommsDelegate(nearbyHostService, purpose: .playing)
         self.hostService = nearbyHostService
         self.takeDelegates(self)
@@ -962,10 +999,32 @@ enum InviteStatus {
     
     private func startOnlineConnection() {
         // Create comms service and take hosting delegate
-        onlineHostService = CommsHandler.server(proximity: .online, mode: .invite, serviceID: nil)
+        self.onlineHostService = CommsHandler.server(proximity: .online, mode: .invite, serviceID: nil)
         Scorecard.shared.setCommsDelegate(onlineHostService, purpose: .playing)
         self.hostService = onlineHostService
         self.takeDelegates(self)
+    }
+    
+    private func startLoopbackConnection() {
+        // Create loopback service, take delegate and then start loopback service
+        self.loopbackHostService = LoopbackService(mode: .loopback, type: .server, serviceID: Scorecard.shared.serviceID(.playing), deviceName: Scorecard.deviceName)
+        Scorecard.shared.setCommsDelegate(self.loopbackHostService, purpose: .playing)
+        self.hostService = self.loopbackHostService
+        self.takeDelegates(self)
+        self.loopbackHostService.start(email: playerData[0].email, name: playerData[0].name)
+        
+        // Set up other players - they should call the host back
+        let hostPeer = CommsPeer(parent: self.loopbackHostService, deviceName: Scorecard.deviceName, playerEmail: self.playerData.first?.email, playerName: playerData.first?.playerMO.name)
+        self.robots = [:]
+        let names = ["Harry", "Snape", "Ron"]
+        for playerNumber in 2...4 {
+            self.startLoopbackClient(email: "_Player\(playerNumber)", name: names[playerNumber - 2], deviceName: "\(names[playerNumber - 2])'s iPhone", hostPeer: hostPeer, playerNumber: playerNumber)
+        }
+    }
+    
+    private func startLoopbackClient(email: String, name: String, deviceName: String, hostPeer: CommsPeer, playerNumber: Int) {
+        let robot = RobotPlayer(email: email, name: name, deviceName: deviceName, hostPeer: hostPeer, playerNumber: playerNumber)
+        robots?[playerNumber] = robot as RobotDelegate
     }
     
     private func takeDelegates(_ delegate: Any?) {
@@ -1001,7 +1060,7 @@ enum InviteStatus {
         var xref: [Int] = []
         
         for playerNumber in 1...playerData.count {
-            if Scorecard.recovery.recovering {
+            if Scorecard.recovery.recovering && !Scorecard.game.isPlayingComputer {
                 // Ensure players are in same order as before
                 xref.append(self.playerIndexFor(email: self.selectedPlayers[playerNumber - 1].email)!)
             } else {
@@ -1024,7 +1083,7 @@ enum InviteStatus {
             self.selectedPlayers.append(playerMO!)
             self.faceTimeAddress.append(playerData.faceTimeAddress ?? "")
         }
-        Scorecard.shared.updateSelectedPlayers(self.selectedPlayers)
+        Scorecard.game.saveSelectedPlayers(self.selectedPlayers)
     }
     
     private func createLocalPlayer(name: String, email: String, peer: CommsPeer? = nil) -> PlayerMO! {
@@ -1034,7 +1093,12 @@ enum InviteStatus {
         playerDetail.dedupName()
         if let playerMO = playerDetail.createMO() {
             // Get picture
-            if let peer = peer {
+            if peer?.mode == .loopback {
+                let image = UIImage(named: name.lowercased())
+                if let pngData = image?.pngData() {
+                    playerMO.thumbnail = Data(pngData)
+                }
+            } else if let peer = peer {
                 Scorecard.shared.requestPlayerThumbnail(from: peer, playerEmail: playerDetail.email)
             }
             return playerMO
@@ -1115,7 +1179,7 @@ enum InviteStatus {
         }
     }
     
-    init(name: String, email: String, playerMO: PlayerMO!, peer: CommsPeer!, unique: Int,  disconnectReason: String!, inviteStatus: InviteStatus!, host: Bool) {
+    init(name: String, email: String, playerMO: PlayerMO!, peer: CommsPeer!, unique: Int,  disconnectReason: String!, inviteStatus: InviteStatus!, host: Bool, robot: Bool = false) {
         self.name = name
         self.email = email
         self.playerMO = playerMO
@@ -1124,6 +1188,7 @@ enum InviteStatus {
         self.disconnectReason = disconnectReason
         self.inviteStatus = inviteStatus
         self.host = host
+        self.refreshRequired = !robot
     }
     
     

@@ -533,9 +533,9 @@ class Sync {
                 if gameUUIDList == nil {
                     predicateList = []
                 } else {
-                    let split = 50
+                    let split = 30
                     if gameUUIDList != nil && gameUUIDList!.count > split {
-                        remainder = Array(gameUUIDList!.suffix(from: split))
+                        remainder = nil //Array(gameUUIDList!.suffix(from: split))
                         gameUUIDList = Array(gameUUIDList!.prefix(upTo: split))
                     }
                     predicateList = gameUUIDList!

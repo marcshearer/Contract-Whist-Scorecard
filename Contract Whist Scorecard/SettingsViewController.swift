@@ -86,8 +86,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     // MARK: - IB Outlets ============================================================================== -
-    @IBOutlet weak var finishButton: RoundedButton!
-    @IBOutlet weak var settingsTableView: UITableView!
+    @IBOutlet private weak var finishButton: RoundedButton!
+    @IBOutlet private weak var settingsTableView: UITableView!
+    @IBOutlet private weak var navigationBar: NavigationBar!
     
     // MARK: - IB Actions ============================================================================== -
     
@@ -100,6 +101,10 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultViewColors()
+
         finishButton.setImage(UIImage(named: self.backImage), for: .normal)
         finishButton.setTitle(self.backText)
         
@@ -234,6 +239,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             switch section {
             case .sync:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Header Switch") as! SettingsTableCell
+                // Setup default colors (previously done in StoryBoard)
+                self.defaultCellColors(cell: cell)
+                
                 let header = SettingsHeaderFooterView(cell)
                 cell.label.text = "Sync with iCloud"
                 cell.separator.isHidden = true
@@ -244,6 +252,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                 
             case .displayStatus:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Header Switch") as! SettingsTableCell
+                // Setup default colors (previously done in StoryBoard)
+                self.defaultCellColors(cell: cell)
+                
                 let header = SettingsHeaderFooterView(cell)
                 cell.label.text = "Show Status Bar"
                 cell.toggleSwitch.isHidden = false
@@ -253,6 +264,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                 
             case .inGame:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Header Switch") as! SettingsTableCell
+                // Setup default colors (previously done in StoryBoard)
+                self.defaultCellColors(cell: cell)
+                
                 let header = SettingsHeaderFooterView(cell)
                 cell.label.text = "In Game"
                 cell.toggleSwitch.isHidden = true
@@ -260,6 +274,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                 
             case .saveHistory:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Header Switch") as! SettingsTableCell
+                // Setup default colors (previously done in StoryBoard)
+                self.defaultCellColors(cell: cell)
+                
                 let header = SettingsHeaderFooterView(cell)
                 cell.label.text = "Save Game History"
                 cell.toggleSwitch.isHidden = false
@@ -270,6 +287,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                 
             case .generalInfo:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Header Collapse") as! SettingsTableCell
+                // Setup default colors (previously done in StoryBoard)
+                self.defaultCellColors(cell: cell)
+                
                 let header = SettingsHeaderFooterView(cell)
                 cell.collapseButton.setImage(UIImage(named: (generalInfoExpanded ? "arrow down" : "arrow right")), for: .normal)
                 cell.label.text = "About"
@@ -278,6 +298,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                 
             case .dataInfo:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Header Collapse") as! SettingsTableCell
+                // Setup default colors (previously done in StoryBoard)
+                self.defaultCellColors(cell: cell)
+                
                 let header = SettingsHeaderFooterView(cell)
                 cell.collapseButton.setImage(UIImage(named: (dataInfoExpanded ? "arrow down" : "arrow right")), for: .normal)
                 cell.label.text = "Data"
@@ -299,6 +322,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                     switch option {
                     case .shareScorecard:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Switch") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
                         cell.resizeSwitch(0.75)
                         cell.label.text = "Scorecard sharing"
                         cell.labelLeadingConstraint.constant = 20.0
@@ -308,6 +334,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         
                     case .onlineGames:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Switch") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
                         cell.resizeSwitch(0.75)
                         cell.label.text = "Online games enabled"
                         cell.labelLeadingConstraint.constant = 20.0
@@ -317,12 +346,18 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         
                     case .onlinePlayer:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Online Player") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
                         cell.onlinePlayerButton.addTarget(self, action: #selector(SettingsViewController.onlinePlayerClicked(_:)), for: .touchUpInside)
                         cell.setEnabled(enabled: self.onlineEnabled)
                         self.displayOnlineCell(cell: cell, reload: false)
                         
                     case .vibrateAlert:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Switch") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+
                         cell.resizeSwitch(0.75)
                         cell.label.text = "Vibrate when turn to play"
                         cell.labelLeadingConstraint.constant = 40
@@ -332,6 +367,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         
                     case .facetimeCalls:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Switch") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
                         cell.resizeSwitch(0.75)
                         cell.label.text = "Facetime calls in online games"
                         cell.labelLeadingConstraint.constant = 40
@@ -341,6 +379,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         
                     case .facetimeAddress:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Text Field") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
                         cell.textField.addTarget(self, action: #selector(SettingsViewController.facetimeAddressChanged(_:)), for: UIControl.Event.editingChanged)
                         cell.textField.addTarget(self, action: #selector(SettingsViewController.facetimeAddressEndEdit(_:)), for: UIControl.Event.editingDidEnd)
                         cell.textField.addTarget(self, action: #selector(SettingsViewController.facetimeAddressBeginEdit(_:)), for: UIControl.Event.editingDidBegin)
@@ -350,6 +391,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         
                     case .receiveNotifications:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Switch") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
                         cell.resizeSwitch(0.75)
                         cell.label.text = "Receive game notifications"
                         cell.labelLeadingConstraint.constant = 20.0
@@ -368,11 +412,17 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                     switch option {
                     case .cardsInHandSubheading:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Sub Heading") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
                         cell.subHeadingLabel.text = "Number of cards in hands"
                         
                     case .cardsInHandStart, .cardsInHandEnd:
                         let index = (option == .cardsInHandStart ? 0 : 1)
                         cell = tableView.dequeueReusableCell(withIdentifier: "Slider") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+
                         cell.slider.tag = index
                         cell.sliderLabel.text = (index == 0 ? "Start:" : "End:")
                         cell.slider.addTarget(self, action: #selector(SettingsViewController.cardsSliderChanged(_:)), for: .valueChanged)
@@ -381,16 +431,25 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         
                     case .cardsInHandBounce:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Segmented") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
                         self.cardsChanged(bounceSegmentedControl: cell.segmentedControl)
                         cell.segmentedControl.addTarget(self, action: #selector(SettingsViewController.cardsInHandBounceChanged(_:)), for: .valueChanged)
                         cell.segmentedControl.selectedSegmentIndex = (Scorecard.shared.settings.bounceNumberCards ? 1 : 0)
                         
                     case .bonus2Subheading:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Sub Heading") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
                         cell.subHeadingLabel.text = "Bonus for winning a trick with a 2"
                         
                     case .bonus2:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Segmented") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
                         cell.segmentedControl.setTitle("No bonus", forSegmentAt: 0)
                         cell.segmentedControl.setTitle("10 Point Bonus", forSegmentAt: 1)
                         cell.segmentedControl.addTarget(self, action: #selector(SettingsViewController.bonus2Changed(_:)), for: .valueChanged)
@@ -398,6 +457,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         
                     case .includeNoTrump:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Switch") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
                         cell.resizeSwitch(0.75)
                         cell.label.text = "Include No Trump (NT)"
                         cell.labelLeadingConstraint.constant = 20.0
@@ -407,15 +469,24 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         
                     case .trumpSequenceEdit:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Edit Button") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
                         cell.editLabel.text = "Trump suit sequence"
                         cell.editButton.addTarget(self, action: #selector(SettingsViewController.trumpSequenceEditClicked(_:)), for: .touchUpInside)
                         
                     case .trumpSequenceSuits:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Trump Collection") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
                         cell.setEnabled(enabled: false)
                         
                     case .spacer1, .spacer2:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Spacer") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
                     }
 
                 }
@@ -425,6 +496,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                     switch option {
                     case .saveGameLocation:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Switch") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
                         cell.resizeSwitch(0.75)
                         cell.label.text = "Save game location"
                         cell.labelLeadingConstraint.constant = 20.0
@@ -439,12 +513,18 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                     switch option {
                     case .version:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Info Single") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
                         cell.infoLabel.text = "Version:"
                         cell.infoValue1.text = "\(Scorecard.version.version) (\(Scorecard.version.build))"
                         
                     case .database:
                         // Database
                         cell = tableView.dequeueReusableCell(withIdentifier: "Info Single") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
                         cell.infoLabel.text = "Database:"
                         cell.infoValue1.text = Scorecard.shared.database
                     }
@@ -455,6 +535,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                     switch option {
                     case .header:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Info Three Heading") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
                         cell.infoLabel.text = "Table Sizes"
                         cell.infoValue1.text = "Local"
                         cell.infoValue2.text = "Cloud"
@@ -462,6 +545,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         
                     case .players:
                          cell = tableView.dequeueReusableCell(withIdentifier: "Info Three") as? SettingsTableCell
+                         // Setup default colors (previously done in StoryBoard)
+                         self.defaultCellColors(cell: cell)
+                         
                         let totalScore = Scorecard.shared.playerList.reduce(0) { $0 + $1.totalScore }
                         cell.infoLabel.text = "Players:"
                         cell.infoValue1.text = "\(Scorecard.shared.playerList.count)"
@@ -477,6 +563,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         
                     case .games:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Info Three") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
                         let historyGames: [GameMO] = CoreData.fetch(from: "Game")
                         cell.infoLabel.text = "Games:"
                         cell.infoValue1.text = "\(historyGames.count)"
@@ -492,6 +581,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         
                     case .participants:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Info Three") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
                         let historyParticipants: [ParticipantMO] = CoreData.fetch(from: "Participant")
                         var totalScore:Int64 = 0
                         for participantMO in historyParticipants {
@@ -837,6 +929,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         var cell: TrumpCollectionCell
         
         cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Trump Collection Cell", for: indexPath) as! TrumpCollectionCell
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultCellColors(cell: cell)
+        
         cell.trumpSuitLabel.attributedText = Suit(fromString: Scorecard.shared.settings.trumpSequence[indexPath.row]).toAttributedString(font: UIFont.systemFont(ofSize: 36.0), noTrumpScale: 0.8)
         if self.trumpSequenceEdit {
             self.startCellWiggle(cell: cell)
@@ -1527,3 +1622,79 @@ class TrumpCollectionCell : UICollectionViewCell {
     @IBOutlet weak var trumpSuitLabel: UILabel!
 }
 
+extension SettingsViewController {
+
+    /** _Note that this code was generated as part of the move to themed colors_ */
+
+    private func defaultViewColors() {
+
+        self.navigationBar.textColor = Palette.bannerText
+        self.view.backgroundColor = Palette.background
+    }
+
+    private func defaultCellColors(cell: SettingsTableCell) {
+        switch cell.reuseIdentifier {
+        case "Edit Button":
+            cell.editButton.setTitleColor(Palette.textEmphasised, for: .normal)
+            cell.editButton.fillColor = Palette.background
+            cell.editButton.strokeColor = Palette.emphasis
+            cell.editLabel.textColor = Palette.text
+        case "Header Collapse":
+            cell.collapseButton.tintColor = Palette.emphasis
+            cell.collapseButton.setTitleColor(Palette.textEmphasised, for: .normal)
+            cell.label.textColor = Palette.textEmphasised
+            cell.separator.backgroundColor = Palette.disabled
+        case "Header Switch":
+            cell.label.textColor = Palette.textEmphasised
+            cell.separator.backgroundColor = Palette.disabled
+            cell.toggleSwitch.tintColor = Palette.emphasis
+            cell.toggleSwitch.onTintColor = Palette.emphasis
+        case "Info Single":
+            cell.infoLabel.textColor = Palette.text
+            cell.infoValue1.textColor = Palette.text
+        case "Info Three":
+            cell.infoLabel.textColor = Palette.text
+            cell.infoValue1.textColor = Palette.text
+            cell.infoValue2.textColor = Palette.text
+            cell.infoValue3.textColor = Palette.text
+        case "Info Three Heading":
+            cell.infoLabel.textColor = Palette.text
+            cell.infoValue1.textColor = Palette.text
+            cell.infoValue2.textColor = Palette.text
+            cell.infoValue3.textColor = Palette.text
+        case "Online Player":
+            cell.onlinePlayerButton.setTitleColor(Palette.textEmphasised, for: .normal)
+            cell.onlinePlayerButton.fillColor = Palette.background
+            cell.onlinePlayerButton.strokeColor = Palette.emphasis
+            cell.onlinePlayerNameLabel.textColor = Palette.text
+        case "Slider":
+            cell.slider.minimumTrackTintColor = Palette.segmentedControls
+            cell.slider.thumbTintColor = Palette.segmentedControls
+            cell.sliderLabel.textColor = Palette.text
+            cell.sliderValue.textColor = Palette.inputControlText
+        case "Sub Heading":
+            cell.subHeadingLabel.textColor = Palette.text
+        case "Switch":
+            cell.label.textColor = Palette.text
+            cell.toggleSwitch.tintColor = Palette.emphasis
+            cell.toggleSwitch.onTintColor = Palette.emphasis
+        case "Text Field":
+            cell.textField.backgroundColor = Palette.background
+            cell.textField.textColor = Palette.text
+        default:
+            break
+        }
+    }
+
+    private func defaultCellColors(cell: UICollectionViewCell) {
+        switch cell.reuseIdentifier {
+        case "Header Collapse":
+            cell.backgroundColor = Palette.background
+        case "Header Switch":
+            cell.backgroundColor = Palette.background
+        default:
+            break
+        }
+    }
+
+}

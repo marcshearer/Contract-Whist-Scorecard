@@ -62,6 +62,8 @@ class LoopbackService: NSObject, CommsServiceDelegate, CommsHostServiceDelegate,
     public func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool, matchGameUUID: String!) {
         self.myPeer = LoopbackPeer(parent: self, deviceName: self.connectionRemoteDeviceName!, playerEmail: email, playerName: name)
         
+        self.connectionEmail = email
+        
         // Add myself to the shared peer list
         LoopbackService.peerList[self.myPeer.deviceName] = LoopbackDelegates(peer: self.myPeer , connectionDelegate: self.connectionDelegate, stateDelegate: self.stateDelegate, dataDelegate: self.dataDelegate, loopbackServiceDelegate: self)
     }

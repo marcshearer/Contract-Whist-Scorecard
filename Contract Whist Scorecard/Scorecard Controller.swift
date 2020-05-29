@@ -62,6 +62,15 @@ protocol ScorecardAppControllerDelegate : class {
     func didProceed(context: [String: Any]?)
         
     func lock(_ active: Bool)
+    
+    func robotAction(playerNumber: Int!, action: RobotAction)
+}
+
+extension ScorecardAppControllerDelegate {
+    
+    func robotAction(action: RobotAction) {
+        robotAction(playerNumber: nil, action: action)
+    }
 }
 
 extension ScorecardAppControllerDelegate {
@@ -189,6 +198,9 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
                     // Put up a screenshot of this view behind it on the parent, dismiss this one without animation, and then when next view is visible
                     // remove the screenshot from behind it
                     self.parentViewController.dismissImageView.image = self.screenshot()
+                    if let view = self.activeViewController?.view {
+                        self.parentViewController.dismissImageView.frame = view.superview!.convert(view.frame, to: nil)
+                    }
                     self.parentViewController.dismissView = self.activeView
                     self.parentViewController.view.bringSubviewToFront(self.parentViewController.dismissImageView)
                     animated = false
@@ -345,7 +357,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         var gameSummaryViewController: GameSummaryViewController?
         
         // Avoid resuming once game summary shown
-        Scorecard.shared.setGameInProgress(false)
+        Scorecard.game.setGameInProgress(false)
         Scorecard.recovery = Recovery(load: false)
         
         if let parentViewController = self.fromViewController() {
@@ -471,6 +483,10 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     
     internal func didProceed(context: [String : Any]?) {
         fatalError("Must be overridden")
+    }
+    
+    internal func robotAction(playerNumber: Int! = nil, action: RobotAction) {
+        // No action in base class
     }
     
     // MARK: - Utility Routines ======================================================================== -
@@ -629,20 +645,27 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         
+        var duration = 0.25
+        var animation: ScorecardAnimation? = nil
+        
         if self.dismissView != .none {
-            if presented is ScorepadViewController {
-                return ScorecardAnimator(duration: 0.25, animation: .fromLeft, presenting: true)
+            if presented is ScorepadViewController || self.dismissView == .roundSummary || self.dismissView == .gameSummary {
+                animation = .fromLeft
                 
-            } else if self.dismissView == .scorepad {
-                return ScorecardAnimator(duration: 0.25, animation: .fromRight, presenting: true)
-                
+            } else if self.dismissView == .scorepad || presented is RoundSummaryViewController || presented is GameSummaryViewController {
+                animation = .fromRight
+                                
             } else if (presented is SelectionViewController && self.dismissView == .gamePreview) ||
-                      (presented is GamePreviewViewController && self.dismissView == .selection) {
-                return ScorecardAnimator(duration: 0.5, animation: .fade, presenting: true)
-            
+                (presented is GamePreviewViewController && self.dismissView == .selection) {
+                duration = 0.5
+                animation = .fade
+                
             } else {
                 return nil
             }
+        }
+        if let animation = animation {
+            return ScorecardAnimator(duration: duration, animation: animation, presenting: true)
         } else {
             return nil
         }

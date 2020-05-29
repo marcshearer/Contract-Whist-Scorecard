@@ -81,7 +81,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
     private var emailCell: PlayerDetailCell!
 
     // MARK: - IB Outlets ============================================================================== -
-    @IBOutlet private weak var navigationBar: UINavigationBar!
+    @IBOutlet private weak var navigationBar: NavigationBar!
     @IBOutlet private weak var footerPaddingView: UIView!
     @IBOutlet private weak var finishButton: UIButton!
     @IBOutlet private weak var actionButton: UIButton!
@@ -145,6 +145,9 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultViewColors()
+
         // Store email on entry
         emailOnEntry = playerDetail.email
         
@@ -246,6 +249,9 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
                 text = "Personal statistics:"
             }
             let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as! PlayerDetailCell
+            // Setup default colors (previously done in StoryBoard)
+            self.defaultCellColors(cell: cell)
+            
             cell.headerLabel.text = text
             cell.headerErrorLabel?.text = ""
             header = PlayerDetailHeaderFooterView(cell)
@@ -291,6 +297,9 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
             switch UniqueIdOptions(rawValue: indexPath.row)! {
             case .uniqueID:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Unique ID", for: indexPath) as? PlayerDetailCell
+                // Setup default colors (previously done in StoryBoard)
+                self.defaultCellColors(cell: cell)
+                
                 cell.uniqueIdField.text = playerDetail.email
                 cell.uniqueIdField.tag = self.emailFieldTag
                 cell.uniqueIdField.isSecureTextEntry = (self.mode != .create && self.mode != .download && self.mode != .downloaded)
@@ -306,6 +315,9 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
                 
             case .deletePlayer:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Action Button", for: indexPath) as? PlayerDetailCell
+                // Setup default colors (previously done in StoryBoard)
+                self.defaultCellColors(cell: cell)
+                
                 if mode == .amend {
                     cell.actionButton.setTitle("Delete Player", for: .normal)
                     cell.actionButton.tag = self.deleteButtonTag
@@ -317,6 +329,9 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
             switch LastPlayedOptions(rawValue: indexPath.row)! {
             case .lastPlayed:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Single", for: indexPath) as? PlayerDetailCell
+                // Setup default colors (previously done in StoryBoard)
+                self.defaultCellColors(cell: cell)
+                
                 if playerDetail.datePlayed != nil {
                     let formatter = DateFormatter()
                     formatter.dateStyle = DateFormatter.Style.full
@@ -328,6 +343,8 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
             
         case .records:
             cell = tableView.dequeueReusableCell(withIdentifier: "Record", for: indexPath) as? PlayerDetailCell
+            // Setup default colors (previously done in StoryBoard)
+            self.defaultCellColors(cell: cell)
             
             switch RecordsOptions(rawValue: indexPath.row)! {
             case .totalScore:
@@ -386,6 +403,8 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
             
         case .stats:
             cell = tableView.dequeueReusableCell(withIdentifier: "Stat", for: indexPath) as? PlayerDetailCell
+            // Setup default colors (previously done in StoryBoard)
+            self.defaultCellColors(cell: cell)
             
             switch StatsOptions(rawValue: indexPath.row)! {
             case .played:
@@ -596,7 +615,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
             if let rawImage = self.playerImageView!.image {
                 rotatedImage = rotateImage(image: rawImage)
                 if let imageData = rotatedImage.pngData() {
-                    playerDetail.thumbnail  = Data(imageData)
+                    playerDetail.thumbnail = Data(imageData)
                     playerDetail.thumbnailDate = Date()
                 }
                 self.playerImageView!.image = rotatedImage
@@ -655,7 +674,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
             self.cloudIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 0, y: 100,
                                                                 width: self.cloudAlertController.view.frame.width,
                                                                 height: 100))
-            self.cloudIndicatorView.style = .whiteLarge
+            self.cloudIndicatorView.style = UIActivityIndicatorView.Style.large
             self.cloudIndicatorView.color = UIColor.black
             self.cloudIndicatorView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             self.cloudAlertController.view.addSubview(self.cloudIndicatorView)
@@ -885,7 +904,7 @@ class PlayerDetailCell: UITableViewCell {
     @IBOutlet weak var headerLabel: UILabel!
     @IBOutlet weak var headerErrorLabel: UILabel!
     @IBOutlet weak var uniqueIdField: UITextField!
-    @IBOutlet weak var actionButton: UIButton!
+    @IBOutlet weak var actionButton: AngledButton!
     @IBOutlet weak var singleLabel: UILabel!
     @IBOutlet weak var recordDescLabel: UILabel!
     @IBOutlet weak var recordValueLabel: UILabel!
@@ -894,6 +913,7 @@ class PlayerDetailCell: UITableViewCell {
     @IBOutlet weak var statValueLabel1: UILabel!
     @IBOutlet weak var statDescLabel2: UILabel!
     @IBOutlet weak var statValueLabel2: UILabel!
+    @IBOutlet weak var separator: UIView!
 }
 
 class PlayerDetailHeaderFooterView: UITableViewHeaderFooterView {
@@ -932,4 +952,63 @@ fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [U
 // Helper function inserted by Swift 4.2 migrator.
 fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
 	return input.rawValue
+}
+
+extension PlayerDetailViewController {
+
+    /** _Note that this code was generated as part of the move to themed colors_ */
+
+    private func defaultViewColors() {
+
+        self.actionButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.addImageLabel.textColor = Palette.bannerText
+        self.finishButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.footerPaddingView.backgroundColor = Palette.background
+        self.navigationBar.textColor = Palette.bannerText
+        self.playerErrorLabel.textColor = Palette.textError
+        self.playerNameField.textColor = Palette.text
+        self.view.backgroundColor = Palette.background
+    }
+
+    private func defaultCellColors(cell: PlayerDetailCell) {
+        switch cell.reuseIdentifier {
+        case "Action Button":
+            cell.actionButton.setTitleColor(Palette.text, for: .normal)
+            cell.actionButton.fillColor = Palette.background
+            cell.actionButton.strokeColor = Palette.disabled
+            cell.separator.backgroundColor = Palette.disabled
+        case "Header":
+            cell.headerLabel.textColor = Palette.textEmphasised
+        case "Header Error":
+            cell.headerErrorLabel.textColor = Palette.textError
+            cell.headerLabel.textColor = Palette.textEmphasised
+        case "Record":
+            cell.recordDateLabel.textColor = Palette.text
+            cell.recordDescLabel.textColor = Palette.text
+            cell.recordValueLabel.textColor = Palette.text
+        case "Single":
+            cell.singleLabel.textColor = Palette.text
+        case "Stat":
+            cell.statDescLabel1.textColor = Palette.text
+            cell.statDescLabel2.textColor = Palette.text
+            cell.statValueLabel1.textColor = Palette.text
+            cell.statValueLabel2.textColor = Palette.text
+        case "Unique ID":
+            cell.uniqueIdField.textColor = Palette.text
+        default:
+            break
+        }
+    }
+
+    private func defaultCellColors(cell: UICollectionViewCell) {
+        switch cell.reuseIdentifier {
+        case "Header":
+            cell.backgroundColor = Palette.background
+        case "Header Error":
+            cell.backgroundColor = Palette.background
+        default:
+            break
+        }
+    }
+
 }

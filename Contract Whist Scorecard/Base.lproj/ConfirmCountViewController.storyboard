@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -29,7 +26,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="4" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="DAO-cZ-oYO">
-                                <rect key="frame" x="80" y="139" width="120" height="36"/>
+                                <rect key="frame" x="80" y="136" width="120" height="36"/>
                                 <color key="backgroundColor" name="Alternate Background"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <accessibilityTraits key="traits" notEnabled="YES"/>
@@ -43,7 +40,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minimumValue="1" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="4pf-zB-FZK">
-                                <rect key="frame" x="93" y="190" width="94" height="29"/>
+                                <rect key="frame" x="93" y="187" width="94" height="32"/>
                                 <color key="tintColor" name="Highlight Text"/>
                                 <connections>
                                     <action selector="stepperValueChanged:" destination="Rc0-IA-yNN" eventType="valueChanged" id="HzK-TB-5ZC"/>
@@ -131,10 +128,14 @@
                     <value key="contentSizeForViewInPopover" type="size" width="300" height="400"/>
                     <size key="freeformSize" width="280" height="280"/>
                     <connections>
+                        <outlet property="cancelButton" destination="eXj-jl-wGR" id="Snk-Bg-jhp"/>
+                        <outlet property="confirmButton" destination="8a5-3E-AzD" id="Zeq-v5-7N2"/>
+                        <outlet property="horizontalSeparator" destination="4Zr-46-lBd" id="Rqa-Nt-bXr"/>
                         <outlet property="labelMessage" destination="Y46-N0-al4" id="vvP-JJ-RZa"/>
                         <outlet property="labelTitle" destination="1Vp-Oq-5IG" id="Bre-ub-6Kt"/>
                         <outlet property="stepperCount" destination="4pf-zB-FZK" id="qMg-qU-XYn"/>
                         <outlet property="textFieldCount" destination="DAO-cZ-oYO" id="lB4-QD-ksd"/>
+                        <outlet property="verticalSeparator" destination="5Cd-JM-sBU" id="Bvs-Nc-cJc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DbR-Md-BQ6" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -144,13 +145,13 @@
     </scenes>
     <resources>
         <namedColor name="Alternate Background">
-            <color red="0.69019607843137254" green="0.96078431372549022" blue="0.89803921568627454" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.97254901960784312" green="0.97254901960784312" blue="0.97254901960784312" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Highlight Text">
-            <color red="0.49799999594688416" green="0.49799999594688416" blue="0.49799999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Room Interior">
             <color red="0.29411764705882354" green="0.6588235294117647" blue="0.6470588235294118" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -159,7 +160,7 @@
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Separator">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Text">
             <color red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

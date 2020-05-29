@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ComputerBidding {
+class RobotBidding {
     
     private var hand: Hand
     private var trumpSuit: Suit

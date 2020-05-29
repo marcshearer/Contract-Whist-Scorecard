@@ -38,6 +38,8 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
     @IBOutlet weak var navigationBar: NavigationBar!
     @IBOutlet weak var finishButton: UIButton!
     @IBOutlet weak var syncImage: UIImageView!
+    @IBOutlet private weak var bannerContinuation: BannerContinuation!
+    @IBOutlet private weak var topBackgroundView: UIView!
     
     @IBAction func finishPressed(_ sender: UIButton) {
         returnToCaller()
@@ -47,6 +49,10 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultViewColors()
+
         self.navigationBar.setTitle("Syncing with iCloud")
    }
     
@@ -174,6 +180,8 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
         case stageTableView:
             
             let stageCell = tableView.dequeueReusableCell(withIdentifier: "Sync Stage Table Cell", for: indexPath) as! SyncStageTableCell
+            // Setup default colors (previously done in StoryBoard)
+            self.defaultCellColors(cell: stageCell)
             
             let stage = SyncStage(rawValue: indexPath.row)!
             
@@ -185,6 +193,9 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
         case messageTableView:
             
             let messageCell = tableView.dequeueReusableCell(withIdentifier: "Sync Message Table Cell", for: indexPath) as! SyncMessageTableCell
+            // Setup default colors (previously done in StoryBoard)
+            self.defaultCellColors(cell: messageCell)
+
             
             messageCell.label.text = output[indexPath.row]
             
@@ -264,11 +275,44 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
 }
 
 class SyncStageTableCell: UITableViewCell {
-    @IBOutlet weak var statusImage: UIImageView!
-    @IBOutlet weak var label: UILabel!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet fileprivate weak var statusImage: UIImageView!
+    @IBOutlet fileprivate weak var label: UILabel!
+    @IBOutlet fileprivate weak var activityIndicator: UIActivityIndicatorView!
 }
 
 class SyncMessageTableCell: UITableViewCell {
     @IBOutlet weak var label: UILabel!
+}
+
+extension SyncViewController {
+
+    /** _Note that this code was generated as part of the move to themed colors_ */
+
+    private func defaultViewColors() {
+
+        self.bannerContinuation.bannerColor = Palette.banner
+        self.finishButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.navigationBar.textColor = Palette.bannerText
+        self.topBackgroundView.backgroundColor = Palette.banner
+        self.view.backgroundColor = Palette.background
+    }
+
+    private func defaultCellColors(cell: SyncMessageTableCell) {
+        switch cell.reuseIdentifier {
+        case "Sync Message Table Cell":
+            cell.label.textColor = Palette.text
+        default:
+            break
+        }
+    }
+
+    private func defaultCellColors(cell: SyncStageTableCell) {
+        switch cell.reuseIdentifier {
+        case "Sync Stage Table Cell":
+            cell.label.textColor = Palette.text
+        default:
+            break
+        }
+    }
+
 }

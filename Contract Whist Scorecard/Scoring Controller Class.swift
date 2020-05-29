@@ -272,7 +272,7 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
             self.present(nextView: .gameSummary)
         } else if Scorecard.activeSettings.saveLocation &&
              (Scorecard.game.location.description == nil || Scorecard.game.location.description == "" ||
-                 !Scorecard.shared.roundStarted(1)) {
+                 !Scorecard.game.roundStarted(1)) {
             self.present(nextView: .location)
         } else {
             self.present(nextView: .entry)
@@ -330,7 +330,7 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
     
     private func showEntry(reeditMode: Bool = false) -> ScorecardViewController? {
            
-        Scorecard.shared.setGameInProgress(true)
+        Scorecard.game.setGameInProgress(true)
 
         if let parentViewController = self.parentViewController {
             self.entryViewController = EntryViewController.show(from: parentViewController, appController: self, existing: self.entryViewController, reeditMode: reeditMode)
@@ -347,11 +347,11 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
         } else {
             // Not complete - move to next round and go to scorepad
             let round = Scorecard.game!.selectedRound
-            if Scorecard.shared.roundComplete(round) && round != Scorecard.game.rounds {
+            if Scorecard.game.roundComplete(round) && round != Scorecard.game.rounds {
                 // Reset state and prepare for next round
                 self.nextHand()
                 self.present(nextView: .scorepad)
-            } else if Scorecard.shared.roundBiddingComplete(round) && !Scorecard.shared.roundMadeStarted(round) {
+            } else if Scorecard.game.roundBiddingComplete(round) && !Scorecard.game.roundMadeStarted(round) {
                 self.present(nextView: .roundSummary)
             } else {
                 self.present(nextView: .scorepad)
@@ -383,7 +383,7 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
 
     // MARK: - Game Preview Delegate handlers ============================================================================== -
     
-    internal let gamePreviewHosting: Bool = true
+    internal let gamePreviewHosting: Bool = false
     
     internal var gamePreviewWaitMessage: NSAttributedString {
         get {
@@ -436,7 +436,7 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
     }
     
     private func setupPlayers() {
-        Scorecard.shared.updateSelectedPlayers(self.selectedPlayers)
+        Scorecard.game.saveSelectedPlayers(self.selectedPlayers)
     }
     
     private func resetResumedPlayers() {

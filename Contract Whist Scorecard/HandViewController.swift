@@ -30,9 +30,6 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     private var bidSubscription: AnyCancellable?
     private let whisper = Whisper()
     
-    // Delegates
-    // TODO Reinstate public var computerPlayerDelegate: [ Int : ComputerPlayerDelegate? ]?
-    
     // Component sizes
     private var viewWidth: CGFloat!
     private var viewHeight: CGFloat!
@@ -71,6 +68,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     // MARK: - IB Outlets -
     
     @IBOutlet private weak var handView: UIView!
+    @IBOutlet private weak var separator: UIView!
     @IBOutlet private weak var handTableView: UITableView!
     @IBOutlet private weak var handHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var handTableViewTrailingConstraint: NSLayoutConstraint!
@@ -80,6 +78,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     @IBOutlet private weak var bidView: UIView!
     @IBOutlet private weak var bidCollectionView: UICollectionView!
     @IBOutlet private weak var bidSeparator: UIView!
+    @IBOutlet private weak var bidTitleSeparator: UIView!
     @IBOutlet private weak var instructionView: UIView!
     @IBOutlet private weak var instructionViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var instructionViewTrailingConstraint: NSLayoutConstraint!
@@ -93,6 +92,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     @IBOutlet private weak var statusPlayer4BidLabel: UILabel!
     @IBOutlet private weak var playedCardCollectionView: UICollectionView!
     @IBOutlet private weak var bannerPaddingView: UIView!
+    @IBOutlet private weak var footerPaddingView: UIView!
     @IBOutlet private weak var leftFooterPaddingView: UIView!
     @IBOutlet private weak var leftPaddingView: UIView!
     @IBOutlet private weak var finishButton: UIButton!
@@ -135,6 +135,9 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultViewColors()
+
         // Setup initial state and local references for global state
         self.enteredPlayerNumber = Scorecard.game.handState.enteredPlayerNumber
         self.round = Scorecard.game.handState.round
@@ -235,6 +238,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         // Suits
         
         cell = tableView.dequeueReusableCell(withIdentifier: "Suit Table Cell", for: indexPath) as! SuitTableCell
+
         cell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row)
         self.suitEnable(suitCollectionView: cell.cardCollection, enable: suitEnabled[indexPath.row], suitNumber: indexPath.row + 1)
         
@@ -290,6 +294,9 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         if collectionView.tag == bidCollectionTag {
             // Bid buttons
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Bid Collection Cell", for: indexPath) as! BidCollectionCell
+            // Setup default colors (previously done in StoryBoard)
+            self.defaultCellColors(cell: cell)
+
             if indexPath.row <= maxBidButton || (moreMode && indexPath.row <= currentCards) {
                 cell.bidButton.text = "\(indexPath.row)"
             } else if !moreMode {
@@ -305,7 +312,9 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         } else if collectionView.tag == playedCardCollectionTag {
             // Played cards
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Played Card Collection Cell", for: indexPath) as! PlayedCardCollectionCell
-            
+            // Setup default colors (previously done in StoryBoard)
+            self.defaultCellColors(cell: cell)
+
             var toLead: Int!
             var cards: [Card]!
             if lastHand {
@@ -358,7 +367,9 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
             var cell: CardCollectionCell
             
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Card Collection Cell", for: indexPath) as! CardCollectionCell
-            
+            // Setup default colors (previously done in StoryBoard)
+            self.defaultCellColors(cell: cell)
+
             cell.cardLabel.textColor = UIColor.white
             cell.cardLabel.attributedText = self.mirroredHand.handSuits[suit-1].cards[card - 1].toAttributedString()
             cell.cardLabel.font = UIFont.systemFont(ofSize: self.handCardFontSize)
@@ -456,7 +467,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
                 self.instructionLabel.text = "\(Scorecard.game.player(entryPlayerNumber: bidsMade + 1).playerMO!.name!) to bid"
                 self.setInstructionsHighlight(to: false)
                 // Get computer player to bid
-                // TODO reinstate self.computerPlayerDelegate?[Scorecard.game.player(entryPlayerNumber: bidsMade + 1).playerNumber]??.autoBid()
+                self.controllerDelegate?.robotAction(playerNumber: Scorecard.game.player(entryPlayerNumber: bidsMade + 1).playerNumber, action: .bid)
             }
             setupOverUnder()
             lastHandButton.isHidden = true
@@ -555,7 +566,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
             self.instructionLabel.text = "\(Scorecard.game.player(enteredPlayerNumber: Scorecard.game.handState.toPlay).playerMO!.name!) to play"
             self.setInstructionsHighlight(to: false)
             // Get computer player to play
-            // TODO Reinstate self.computerPlayerDelegate?[self.state.toPlay]??.autoPlay()
+            self.controllerDelegate?.robotAction(playerNumber: Scorecard.game.handState.toPlay, action: .play)
         }
     }
     
@@ -589,7 +600,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
             self.reflectBid(round: round, enteredPlayerNumber: enteredPlayerNumber)
             // Check if this makes it your bid
             if (enteredPlayerNumber % Scorecard.game.currentPlayers) + 1 == Scorecard.game.handState.enteredPlayerNumber {
-                Scorecard.shared.alertUser(remindAfter: 10.0)
+                // TODO Scorecard.shared.alertUser(remindAfter: 10.0)
             }
         }
     }
@@ -970,7 +981,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         overUnderButton.setTitle("\(totalRemaining >= 0 ? "-" : "+")\(abs(Int64(totalRemaining)))", for: .normal)
         overUnderButton.setTitleColor((totalRemaining >= 0 ? Palette.contractUnder : Palette.contractOver), for: .normal)
 
-        if !Scorecard.shared.roundStarted(Scorecard.game.selectedRound) {
+        if !Scorecard.game.roundStarted(Scorecard.game.selectedRound) {
             statusOverUnderLabel.text = ""
         } else {
             statusOverUnderLabel.textColor = (totalRemaining == 0 ? Palette.contractEqual : (totalRemaining > 0 ? Palette.contractUnderLight : Palette.contractOver))
@@ -1059,7 +1070,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
 
     // MARK: - Function to present this view ==============================================================
     
-    class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, sourceView: UIView, existing handViewController: HandViewController? = nil, computerPlayerDelegate: [Int : ComputerPlayerDelegate?]? = nil, animated: Bool = true) -> HandViewController {
+    class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, sourceView: UIView, existing handViewController: HandViewController? = nil, RobotDelegate: [Int : RobotDelegate?]? = nil, animated: Bool = true) -> HandViewController {
         var handViewController: HandViewController! = handViewController
         
         if handViewController == nil {
@@ -1071,7 +1082,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         handViewController!.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         handViewController!.controllerDelegate = appController
-        // TODO Reinstate handViewController!.computerPlayerDelegate = computerPlayerDelegate
+        // TODO Reinstate handViewController!.RobotDelegate = RobotDelegate
         
         Utility.mainThread("playHand", execute: {
             viewController.present(handViewController!, appController: appController, sourceView: sourceView, animated: animated, completion: nil)
@@ -1196,4 +1207,60 @@ class HandState {
     public func playerNumber(_ sequence: Int) -> Int {
         return (((self.toLead - 1) + (sequence - 1)) % self.players) + 1
     }
+}
+
+extension HandViewController {
+
+    /** _Note that this code was generated as part of the move to themed colors_ */
+
+    private func defaultViewColors() {
+
+        self.bidSeparator.backgroundColor = Palette.separator
+        self.bidTitleSeparator.backgroundColor = Palette.separator
+        self.bidView.backgroundColor = Palette.background
+        self.footerPaddingView.backgroundColor = Palette.hand
+        self.handView.backgroundColor = Palette.hand
+        self.instructionLabel.textColor = Palette.handText
+        self.leftFooterPaddingView.backgroundColor = Palette.hand
+        self.leftPaddingView.backgroundColor = Palette.hand
+        self.roundSummaryButton.setTitleColor(Palette.darkHighlightText, for: .normal)
+        self.separator.backgroundColor = Palette.hand
+        self.statusPlayer1BidLabel.textColor = Palette.text
+        self.statusPlayer2BidLabel.textColor = Palette.text
+        self.statusPlayer3BidLabel.textColor = Palette.text
+        self.statusPlayer4BidLabel.textColor = Palette.text
+        self.tabletopView.backgroundColor = Palette.tableTop
+        self.view.backgroundColor = Palette.hand
+    }
+
+    private func defaultCellColors(cell: BidCollectionCell) {
+        switch cell.reuseIdentifier {
+        case "Bid Collection Cell":
+            cell.bidButton.textColor = Palette.bidButtonText
+        default:
+            break
+        }
+    }
+
+    private func defaultCellColors(cell: CardCollectionCell) {
+        switch cell.reuseIdentifier {
+        case "Card Collection Cell":
+            cell.cardView.backgroundColor = Palette.cardFace
+        default:
+            break
+        }
+    }
+
+    private func defaultCellColors(cell: PlayedCardCollectionCell) {
+        switch cell.reuseIdentifier {
+        case "Played Card Collection Cell":
+            cell.cardView.backgroundColor = Palette.cardFace
+            cell.playerBidLabel.textColor = Palette.tableTopText
+            cell.playerMadeLabel.textColor = Palette.tableTopText
+            cell.playerNameLabel.textColor = Palette.tableTopText
+        default:
+            break
+        }
+    }
+
 }

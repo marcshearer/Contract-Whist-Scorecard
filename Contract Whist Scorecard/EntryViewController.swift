@@ -54,8 +54,12 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
 
     @IBOutlet private weak var toolbarHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var navigationBar: NavigationBar!
     @IBOutlet private weak var navigationImageHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
     @IBOutlet private weak var footerView: Footer!
+    @IBOutlet private weak var footerPaddingView: InsetPaddingView!
+    @IBOutlet private weak var toolbar: UIToolbar!
     @IBOutlet private weak var footerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var entryView: UIView!
     @IBOutlet private weak var entryTableView: UITableView!
@@ -94,6 +98,9 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Setup default colors (previously done in StoryBoard
+        self.defaultViewColors()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -118,7 +125,7 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         self.setupScreen()
            
         if firstTime {
-            self.bidOnlyMode = !Scorecard.shared.roundBiddingComplete(Scorecard.game.selectedRound) ? true : false
+            self.bidOnlyMode = !Scorecard.game.roundBiddingComplete(Scorecard.game.selectedRound) ? true : false
             self.setupColumns()
             self.setupFlow()
             self.getInitialState()
@@ -198,6 +205,10 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         case 0:
             // Score summary
             let entryPlayerTableCell = tableView.dequeueReusableCell(withIdentifier: "Entry Player Table Cell", for: indexPath) as! EntryPlayerTableCell
+            
+            // Setup default colors (previously done in StoryBoard
+            self.defaultCellColors(cell: entryPlayerTableCell)
+
             entryPlayerTableCell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row)
             if indexPath.row==0 {
                 Palette.tableTopStyle(view: entryPlayerTableCell)
@@ -211,6 +222,10 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         case 1:
             // Instructions
             let instructionCell = tableView.dequeueReusableCell(withIdentifier: "Entry Instruction Cell", for: indexPath) as! EntryInstructionCell
+            
+            // Setup default colors (previously done in StoryBoard
+            self.defaultCellColors(cell: instructionCell)
+
             let frame = CGRect(x: 8.0, y: 16.0, width: instructionCell.frame.width - 16.0, height: instructionCell.frame.height - 32.0)
             instructionCell.hexagonShapeLayer?.removeFromSuperlayer()
             instructionCell.hexagonShapeLayer = Polygon.hexagonFrame(in: instructionCell, frame: frame, strokeColor: Palette.instruction, fillColor: Palette.instruction, radius: 10.0)
@@ -223,6 +238,7 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         default:
             // Score buttons
             let scoreCell = tableView.dequeueReusableCell(withIdentifier: "Entry Score Table Cell", for: indexPath) as! EntryScoreTableCell
+            
             scoreCell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row)
             self.scoreCollection = scoreCell.scoreCollection
             cell = scoreCell as UITableViewCell
@@ -683,6 +699,7 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
             // Player summary table
         
             let entryPlayerCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Entry Player Cell", for: indexPath) as! EntryPlayerCell
+            
             let playerLabel = entryPlayerCell.entryPlayerLabel!
             let instructionLabel = entryPlayerCell.entryInstructionLabel!
             instructionLabel.text = ""
@@ -772,6 +789,7 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
         } else {
         
             self.scoreCell[indexPath.row] = collectionView.dequeueReusableCell(withReuseIdentifier: "Entry Score Cell",for: indexPath) as? EntryScoreCell
+            
             ScorecardUI.roundCorners(self.scoreCell[indexPath.row]!.scoreButton)
             self.scoreCell[indexPath.row]!.scoreButton.setTitle("\(indexPath.row)", for: .normal)
             self.scoreCell[indexPath.row]!.scoreButton.addTarget(self, action: #selector(EntryViewController.scoreActionButtonPressed(_:)), for: UIControl.Event.touchUpInside)
@@ -831,7 +849,7 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
     @objc func scoreActionButtonPressed(_ button: UIButton) {
         
         // Mark as in progress
-        Scorecard.shared.setGameInProgress(true)
+        Scorecard.game.setGameInProgress(true)
         
         let oldValue = getScore()
         setScore(button.tag)
@@ -1013,4 +1031,50 @@ class Flow {
         return intMode
     }
     
+}
+
+extension EntryViewController {
+
+    /** _Note that this code was generated as part of the move to themed colors_ */
+
+    private func defaultViewColors() {
+
+        self.bannerPaddingView.bannerColor = Palette.tableTop
+        self.entryView.backgroundColor = Palette.background
+        self.errorsButton.forEach { $0.backgroundColor = Palette.error }
+        self.finishButton.first?.backgroundColor = Palette.roomInteriorTextContrast
+        self.footerPaddingView.bannerColor = Palette.roomInterior
+        self.footerView.footerColor = Palette.roomInterior
+        self.navigationBar.bannerColor = Palette.tableTop
+        self.toolbar.barTintColor = Palette.roomInterior
+    }
+
+    private func defaultCellColors(cell: EntryInstructionCell) {
+        switch cell.reuseIdentifier {
+        case "Entry Instruction Cell":
+            cell.instructionLabel.textColor = Palette.instructionText
+        default:
+            break
+        }
+    }
+
+    private func defaultCellColors(cell: EntryPlayerTableCell) {
+        switch cell.reuseIdentifier {
+        case "Entry Player Table Cell":
+            cell.entryPlayerSeparator.backgroundColor = Palette.separator
+        default:
+            break
+        }
+    }
+
+    private func defaultCellColors(cell: EntryScoreCell) {
+        switch cell.reuseIdentifier {
+        case "Entry Score Cell":
+            cell.scoreButton.backgroundColor = Palette.bidButton
+            cell.scoreButton.setTitleColor(Palette.bidButtonText, for: .normal)
+        default:
+            break
+        }
+    }
+
 }

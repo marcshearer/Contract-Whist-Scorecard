@@ -690,8 +690,10 @@
                         <outlet property="bannerPaddingView" destination="wNn-Ll-ZaQ" id="0rw-le-T6l"/>
                         <outlet property="bidCollectionView" destination="K4h-7g-xvz" id="o8C-XL-ASX"/>
                         <outlet property="bidSeparator" destination="Lqo-LI-C5H" id="wbv-zg-YdT"/>
+                        <outlet property="bidTitleSeparator" destination="5er-PT-zVx" id="7Nz-UP-ta3"/>
                         <outlet property="bidView" destination="WOm-6F-AOV" id="Xu3-Yg-Bbf"/>
                         <outlet property="finishButton" destination="Bna-lC-tI3" id="4MW-oM-JM7"/>
+                        <outlet property="footerPaddingView" destination="Wxh-DW-yHT" id="Sce-Dp-69Z"/>
                         <outlet property="handHeightConstraint" destination="5qd-B2-R8P" id="tkd-xt-XXU"/>
                         <outlet property="handSourceView" destination="OBj-ch-rRU" id="LQn-Dh-ZZd"/>
                         <outlet property="handTableView" destination="bGt-JH-4so" id="Vy7-OY-ApE"/>
@@ -707,6 +709,7 @@
                         <outlet property="overUnderButton" destination="UQz-yS-oME" id="E73-Kr-JWm"/>
                         <outlet property="playedCardCollectionView" destination="VIC-65-geT" id="Wex-rN-iA0"/>
                         <outlet property="roundSummaryButton" destination="FKB-Yh-KbS" id="VEM-ap-8eE"/>
+                        <outlet property="separator" destination="bHw-XW-Iiy" id="ujd-ft-R9E"/>
                         <outlet property="separatorHeightConstraint" destination="OhD-ST-Soc" id="XDu-C5-QTE"/>
                         <outlet property="statusOverUnderLabel" destination="8eS-ht-l72" id="apB-C2-iBk"/>
                         <outlet property="statusPlayer1BidLabel" destination="89y-V6-3Ez" id="Y0N-Ed-jMA"/>

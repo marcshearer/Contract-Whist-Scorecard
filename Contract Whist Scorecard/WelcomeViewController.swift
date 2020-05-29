@@ -598,7 +598,7 @@ class WelcomeViewController: ScorecardViewController, ScrollViewDataSource, Scro
     }
     
     private func startNewGame() {
-        Scorecard.shared.setGameInProgress(false)
+        Scorecard.game.setGameInProgress(false)
         Scorecard.game?.resetValues()
         self.showSelection()
     }

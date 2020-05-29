@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
@@ -293,7 +292,12 @@
                     <connections>
                         <outlet property="bannerContinuation" destination="R7X-Kw-3i1" id="gpW-Qz-bXX"/>
                         <outlet property="bannerContinuationHeightConstraint" destination="jap-Rq-z48" id="Hkz-OT-EPa"/>
+                        <outlet property="bannerPaddingView" destination="F6E-8M-LIy" id="xEO-LW-Zx6"/>
                         <outlet property="confirmButton" destination="5eL-j1-NvT" id="FLa-TW-APi"/>
+                        <outlet property="insetPaddingView" destination="Wiu-MJ-nOh" id="poC-hO-jpA"/>
+                        <outlet property="instructionLabel" destination="HiB-TH-SwI" id="Gul-Ua-WU0"/>
+                        <outlet property="instructionView" destination="HoR-O2-RaM" id="r5A-Xz-1NM"/>
+                        <outlet property="navigationBar" destination="BMC-qc-qAk" id="zXj-Mc-ilG"/>
                         <outlet property="revertButton" destination="kCS-dn-rxk" id="RJQ-ms-lIo"/>
                     </connections>
                 </viewController>

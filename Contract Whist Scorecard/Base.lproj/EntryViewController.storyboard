@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -38,10 +37,10 @@
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
                                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yiv-DE-A0X">
-                                                        <rect key="frame" x="0.0" y="0.0" width="70" height="0.0"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="55" height="0.0"/>
                                                         <subviews>
                                                             <button autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pge-ad-xW7" userLabel="Errors Button" customClass="ErrorRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="0.0" width="30" height="0.0"/>
+                                                                <rect key="frame" x="0.0" y="0.0" width="25" height="0.0"/>
                                                                 <color key="backgroundColor" name="Error"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="30" id="PHL-Xz-e8E"/>
@@ -52,11 +51,11 @@
                                                                 </connections>
                                                             </button>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VGH-oE-ROK" userLabel="Finish Button" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                                                <rect key="frame" x="30" y="0.0" width="40" height="0.0"/>
+                                                                <rect key="frame" x="25" y="0.0" width="30" height="0.0"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="30" id="Awa-De-Kxt"/>
                                                                 </constraints>
-                                                                <state key="normal" image="cross white"/>
+                                                                <state key="normal" image="back"/>
                                                                 <connections>
                                                                     <action selector="saveScorePressed:" destination="mEi-hH-CUE" eventType="touchUpInside" id="NnD-sA-4cp"/>
                                                                 </connections>
@@ -483,11 +482,15 @@
                     <toolbarItems/>
                     <connections>
                         <outlet property="bannerHeightConstraint" destination="ObX-hJ-jYj" id="03E-xR-8iu"/>
+                        <outlet property="bannerPaddingView" destination="otp-xs-7Jm" id="msq-OK-HSO"/>
                         <outlet property="entryTableView" destination="jGM-gE-2rv" id="Gak-Rp-AWB"/>
                         <outlet property="entryView" destination="pS0-jq-6eE" id="n4n-SH-4Cj"/>
                         <outlet property="footerHeightConstraint" destination="qWp-rt-6Oc" id="zAv-AC-cHU"/>
+                        <outlet property="footerPaddingView" destination="KHn-i7-Tqu" id="7LC-eX-gX2"/>
                         <outlet property="footerView" destination="tcK-Gd-mMd" id="Ipx-rB-4Do"/>
+                        <outlet property="navigationBar" destination="DPO-Rs-tuj" id="LWV-WO-pQU"/>
                         <outlet property="navigationImageHeightConstraint" destination="npG-ro-RUa" id="oF6-9b-vMc"/>
+                        <outlet property="toolbar" destination="Y1H-0M-Egj" id="enX-Ux-EMO"/>
                         <outlet property="toolbarHeightConstraint" destination="OOG-Hv-y1d" id="6Gg-AK-BWU"/>
                         <outletCollection property="errorsButton" destination="IVB-I0-IfC" collectionClass="NSMutableArray" id="Ll8-WX-4Kj"/>
                         <outletCollection property="finishButton" destination="8rw-oz-v5h" collectionClass="NSMutableArray" id="tPh-Fy-nx8"/>
@@ -512,7 +515,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="cross white" width="20" height="20"/>
+        <image name="back" width="22" height="22"/>
         <image name="navigationImage tabletop accent" width="73" height="43"/>
         <image name="undo" width="21.5" height="22"/>
         <namedColor name="Background">

@@ -43,6 +43,10 @@ class GraphViewController: ScorecardViewController, GraphDetailDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultViewColors()
+
         drawGraph()
     }
     
@@ -153,4 +157,16 @@ class GraphViewController: ScorecardViewController, GraphDetailDelegate {
             HistoryDetailViewController.show(from: self, gameDetail: history.games.first!, sourceView: self.view)
         }
     }
+}
+
+extension GraphViewController {
+
+    /** _Note that this code was generated as part of the move to themed colors_ */
+
+    private func defaultViewColors() {
+
+        self.graphView.backgroundColor = Palette.background
+        self.view.backgroundColor = Palette.background
+    }
+
 }

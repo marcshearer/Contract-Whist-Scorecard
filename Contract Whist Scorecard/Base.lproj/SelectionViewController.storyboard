@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -275,6 +275,8 @@
                         <outlet property="cancelButton" destination="eQy-4V-yYX" id="SEw-Oj-5yl"/>
                         <outlet property="clearAllButton" destination="Eyy-DC-T6m" id="qqj-cw-TrH"/>
                         <outlet property="continueButton" destination="7SY-Bw-ahm" id="JM3-ek-6LL"/>
+                        <outlet property="continueButtonFooterPaddingView" destination="2Lb-i4-lla" id="RC8-ZX-jD6"/>
+                        <outlet property="continueButtonFooterView" destination="ETT-tR-NhL" id="ZtY-lT-RQy"/>
                         <outlet property="continueButtonItem" destination="FL2-Z1-EDp" id="8BS-ib-PMm"/>
                         <outlet property="continueButtonView" destination="JiD-Ie-jwK" id="24I-Oj-q0H"/>
                         <outlet property="continueButtonViewBottomConstraint" destination="wWz-vU-Rvp" id="Ofc-DP-1td"/>

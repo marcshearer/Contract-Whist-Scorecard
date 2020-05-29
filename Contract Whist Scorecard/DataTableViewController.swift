@@ -70,17 +70,19 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
     private var headerCollectionView: UICollectionView!
  
     // MARK: - IB Outlets ============================================================================== -
-    @IBOutlet private var headerView: UITableView!
-    @IBOutlet private var bodyView: UITableView!
-    @IBOutlet private var navigationBar: UINavigationBar!
-    @IBOutlet private var syncButton: RoundedButton!
-    @IBOutlet private var finishButton: UIButton!
-    @IBOutlet private var navigationHeaderItem: UINavigationItem!
-    @IBOutlet private var headerHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private var leftPaddingHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private var rightPaddingHeightConstraint: NSLayoutConstraint!
-    @IBOutlet public var customHeaderView: UIView!
-    @IBOutlet public var customHeaderViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var headerView: UITableView!
+    @IBOutlet private weak var bodyView: UITableView!
+    @IBOutlet private weak var navigationBar: NavigationBar!
+    @IBOutlet private weak var leftPaddingView: UIView!
+    @IBOutlet private weak var rightPaddingView: UIView!
+    @IBOutlet private weak var syncButton: RoundedButton!
+    @IBOutlet private weak var finishButton: UIButton!
+    @IBOutlet private weak var navigationHeaderItem: UINavigationItem!
+    @IBOutlet private weak var headerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var leftPaddingHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var rightPaddingHeightConstraint: NSLayoutConstraint!
+    @IBOutlet public weak var customHeaderView: UIView!
+    @IBOutlet public weak var customHeaderViewHeightConstraint: NSLayoutConstraint!
     
     // MARK: - IB Actions ============================================================================== -
 
@@ -102,6 +104,9 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Setup default colors (previously done in StoryBoard
+        self.defaultViewColors()
         
         // Check for network / iCloud login
         if self.delegate?.allowSync ?? true {
@@ -354,6 +359,7 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
             
             // Header
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Data Table Header Cell", for: indexPath) as! DataTableCollectionCell
+            self.defaultCellColors(cell: cell)
             cell.tag = indexPath.row
 
             Palette.sectionHeadingStyle(cell.textLabel)
@@ -603,7 +609,8 @@ class DataTableCell: UITableViewCell {
     
     @IBOutlet weak var dataTableCollection: UICollectionView!
     @IBOutlet weak var separatorHeightConstraint: NSLayoutConstraint!
-    
+    @IBOutlet weak var separator: UIView!
+
     func setCollectionViewDataSourceDelegate
         <D: UICollectionViewDataSource & UICollectionViewDelegate>
         (_ dataSourceDelegate: D, forRow row: Int) {
@@ -707,3 +714,43 @@ public enum DataTableVariableType {
     }
 }
 
+extension DataTableViewController {
+
+    /** _Note that this code was generated as part of the move to themed colors_ */
+
+    private func defaultViewColors() {
+
+        self.customHeaderView.backgroundColor = Palette.banner
+        self.finishButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.leftPaddingView.backgroundColor = Palette.sectionHeading
+        self.navigationBar.textColor = Palette.bannerText
+        self.rightPaddingView.backgroundColor = Palette.sectionHeading
+        self.syncButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.view.backgroundColor = Palette.background
+    }
+
+    private func defaultCellColors(cell: DataTableCell) {
+        switch cell.reuseIdentifier {
+        case "Data Table Body Cell":
+            cell.separator.backgroundColor = Palette.separator
+        default:
+            break
+        }
+    }
+
+    private func defaultCellColors(cell: DataTableCollectionCell) {
+        switch cell.reuseIdentifier {
+        case "Data Table Body Button Cell":
+            cell.bodyButton.setTitleColor(Palette.text, for: .normal)
+        case "Data Table Body Normal Cell":
+            cell.textLabel.textColor = Palette.text
+        case "Data Table Body Thumbnail Cell":
+            cell.bodyThumbnailDisc.textColor = Palette.text
+        case "Data Table Header Cell":
+            cell.textLabel.textColor = Palette.text
+        default:
+            break
+        }
+    }
+
+}

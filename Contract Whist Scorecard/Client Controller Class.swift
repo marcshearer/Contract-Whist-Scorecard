@@ -169,7 +169,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                 
             case .scorepad:
                 canProceed = (self.purpose != .sharing ||
-                    !Scorecard.shared.roundComplete(Scorecard.game.maxEnteredRound) ||
+                    !Scorecard.game.roundComplete(Scorecard.game.maxEnteredRound) ||
                     Scorecard.game.maxEnteredRound == Scorecard.game.rounds)
                 
             default:
@@ -346,7 +346,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     }
                     
                 case "previewPlayers", "gamePlayers":
-                    Scorecard.shared.setCurrentPlayers(players: data!.count)
+                    Scorecard.game.setCurrentPlayers(players: data!.count)
                     Scorecard.game.resetPlayers()
                     self.playerConnected = [:]
                     for (playerNumberData, playerData) in data as! [String : [String : Any]] {
@@ -471,7 +471,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                 case "playHand":
                     // Play the hand
                     if self.purpose == .playing {
-                        Scorecard.shared.setGameInProgress(true)
+                        Scorecard.game.setGameInProgress(true)
                     }
                     self.present(nextView: .hand, willDismiss: true)
                     stopProcessing = true
@@ -744,14 +744,14 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         
         if maxRound > Scorecard.game.maxEnteredRound {
             Scorecard.game.maxEnteredRound = maxRound
-            if !Scorecard.shared.roundStarted(maxRound) {
+            if !Scorecard.game.roundStarted(maxRound) {
                 Scorecard.game.selectedRound = max(1, maxRound-1)
             } else {
                 Scorecard.game.selectedRound = maxRound
             }
         }
         
-        if !Scorecard.shared.roundComplete(Scorecard.game.selectedRound) {
+        if !Scorecard.game.roundComplete(Scorecard.game.selectedRound) {
             nextView = .roundSummary
         } else if Scorecard.game.selectedRound == Scorecard.game.rounds {
             nextView = .gameSummary

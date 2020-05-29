@@ -44,6 +44,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
     @IBOutlet weak private var continueButton: UIButton!
     @IBOutlet weak private var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak private var locationTableViewHeight: NSLayoutConstraint!
+    @IBOutlet private weak var cancelButton: UIButton!
     
     // MARK: - IB Actions ============================================================================== -
  
@@ -68,6 +69,10 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
 
     override internal func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultViewColors()
+
         if let testModeValue = ProcessInfo.processInfo.environment["TEST_MODE"] {
             if testModeValue.lowercased() == "true" {
                 self.testMode = true
@@ -213,6 +218,9 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         }
     
         cell = tableView.dequeueReusableCell(withIdentifier: "Location Table Cell", for: indexPath) as! LocationTableCell
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultCellColors(cell: cell)
+
         cell.locationTopLabel.text = topRow
         cell.locationBottomLabel.text = bottomRow
         
@@ -554,4 +562,36 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
 class LocationTableCell: UITableViewCell {
     @IBOutlet weak var locationTopLabel: UILabel!
     @IBOutlet weak var locationBottomLabel: UILabel!
+}
+
+extension LocationViewController {
+
+    /** _Note that this code was generated as part of the move to themed colors_ */
+
+    private func defaultViewColors() {
+
+        self.activityIndicator.color = Palette.text
+        self.bannerContinuationView.bannerColor = Palette.tableTop
+        self.bannerContinuationView.borderColor = Palette.tableTop
+        self.bannerPaddingView.bannerColor = Palette.tableTop
+        self.cancelButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.continueButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.locationTableView.backgroundColor = Palette.tableTop
+        self.locationTableView.separatorColor = Palette.background
+        self.navigationBar.textColor = Palette.bannerText
+        self.navigationBar.bannerColor = Palette.tableTop
+        self.searchBarBackgroundView.backgroundColor = Palette.tableTop
+        self.view.backgroundColor = Palette.background
+    }
+
+    private func defaultCellColors(cell: LocationTableCell) {
+        switch cell.reuseIdentifier {
+        case "Location Table Cell":
+            cell.locationBottomLabel.textColor = Palette.background
+            cell.locationTopLabel.textColor = Palette.tableTopTextContrast
+        default:
+            break
+        }
+    }
+
 }

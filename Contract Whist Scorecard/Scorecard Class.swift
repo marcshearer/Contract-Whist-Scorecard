@@ -60,8 +60,6 @@ class Scorecard {
     // Variables for online games
     public var viewPresenting = ScorecardView.none
     public var notificationSimulator: NotificationSimulator!
-    internal var lastRefresh: Date?
-    internal var lastPeerRefresh: [String : Date] = [:]
     public var alertDelegate: ScorecardAlertDelegate?
     internal var reminderTimer: Timer?
     internal var bidSubscription = PassthroughSubject<(Int, Int, Int), Never>()
@@ -109,7 +107,9 @@ class Scorecard {
     public weak var commsDelegate: CommsServiceDelegate? { get { return _commsDelegate } }
     public var commsPurpose: CommsPurpose? { get { return _commsPurpose } }
     public var commsPlayerDelegate: ScorecardAppPlayerDelegate? { get { return _commsPlayerDelegate }}
-    
+    internal var lastRefresh: Date?
+    internal var lastPeerRefresh: [String : Date] = [:]
+
     // Admin mode
     static var adminMode = false
     
@@ -303,103 +303,6 @@ class Scorecard {
         }
     }
    
-    public func setGameInProgress(_ gameInProgress: Bool, suppressWatch: Bool = false, save: Bool = true) {
-        Scorecard.game?.inProgress = gameInProgress
-        if save && (!Scorecard.recovery.recoveryAvailable || gameInProgress == true) {
-            Scorecard.recovery.saveGameInProgress()
-            if !suppressWatch || gameInProgress {
-                self.watchManager.updateScores()
-            }
-        }
-    }
-    
-    public func updateSelectedPlayers(_ selectedPlayers: [PlayerMO?]) {
-        // Update the currently selected players on return from the player selection view
-        
-        if selectedPlayers.count > 1 {
-            self.setCurrentPlayers(players: selectedPlayers.count)
-            UserDefaults.standard.set(Scorecard.game.currentPlayers, forKey: "numberPlayers")
-            
-            for playerNumber in 1...Scorecard.game.currentPlayers {
-                let playerMO = selectedPlayers[playerNumber-1]!
-                Scorecard.game.player(enteredPlayerNumber: playerNumber).playerMO = playerMO
-                let prefix = ((Scorecard.game?.isPlayingComputer ?? false) ? "computerPlayer" : "player")
-                UserDefaults.standard.set(playerMO.uri, forKey: "\(prefix)\(playerNumber)")
-                UserDefaults.standard.set(playerMO.name, forKey: "\(prefix)\(playerNumber)name")
-                UserDefaults.standard.set(playerMO.email, forKey: "\(prefix)\(playerNumber)email")
-            }
-        }
-    }
-    
-    public func setCurrentPlayers(players: Int) {
-        if players != Scorecard.game.currentPlayers {
-            // Changing number of players
-            
-            Scorecard.game.currentPlayers = players
-            if Scorecard.game.dealerIs > Scorecard.game.currentPlayers {
-                self.saveDealer(1)
-            }
-        }
-    }
-    
-    public func nextDealer() {
-        self.saveDealer((Scorecard.game.dealerIs % Scorecard.game.currentPlayers) + 1)
-    }
-    
-    public func previousDealer() {
-        self.saveDealer(((Scorecard.game.dealerIs + Scorecard.game.currentPlayers - 2) % Scorecard.game.currentPlayers) + 1)
-    }
-    
-    public func randomDealer() {
-        self.saveDealer(Int(arc4random_uniform(UInt32(Scorecard.game.currentPlayers))) + 1)
-    }
-    
-    public func saveDealer(_ dealerIs: Int) {
-        if Scorecard.game.dealerIs != dealerIs {
-            Scorecard.game.dealerIs = dealerIs
-            if Scorecard.game.isHosting || Scorecard.game.isSharing {
-                self.sendDealer()
-            }
-        }
-        UserDefaults.standard.set(Scorecard.game.dealerIs, forKey: "dealerIs")
-    }
-    
-    public func isScorecardDealer() -> Int {
-        // Returns the player number of the dealer - for use in the Scorecard view
-        return (((Scorecard.game.maxEnteredRound - 1)) % Scorecard.game.currentPlayers) + 1
-    }
-    
-    public func advanceMaximumRound(rounds: Int) {
-        if self.roundComplete(Scorecard.game.maxEnteredRound) {
-            // Have now completed the entire row
-            Scorecard.game.maxEnteredRound = min(rounds, Scorecard.game.maxEnteredRound + 1)
-        }
-        Scorecard.game.selectedRound = Scorecard.game.maxEnteredRound
-    }
-    
-    public func roundStarted(_ round: Int) -> Bool {
-        return Scorecard.game.scores.get(round: round, playerNumber: 1, sequence: .round).bid != nil
-    }
-    
-    public func roundBiddingComplete(_ round: Int) -> Bool {
-        return Scorecard.game.scores.get(round: round, playerNumber: Scorecard.game.currentPlayers, sequence: .round).bid != nil
-    }
-    
-    public func roundMadeStarted(_ round: Int) -> Bool {
-        return Scorecard.game.scores.get(round: round, playerNumber: 1, sequence: .round).made != nil
-    }
-    
-    public func roundComplete(_ round: Int) -> Bool {
-        var result = true
-        if Scorecard.game.scores.score(round: round, playerNumber: Scorecard.game.currentPlayers, sequence: .round) == nil {
-            result = false
-        }
-        if self.settings.bonus2 && Scorecard.game.scores.get(round: round, playerNumber: Scorecard.game.currentPlayers, sequence: .round).twos == nil {
-            result = false
-        }
-        return result
-    }
-    
     public func saveMaxScores() {
         
         for player in 1...Scorecard.game.currentPlayers {
@@ -414,7 +317,7 @@ class Scorecard {
             Scorecard.game.resetValues()
             if advanceDealer {
                 // If necessary advance the dealer
-                self.nextDealer()
+                Scorecard.game.nextDealer()
             }
             // Store max scores ready for next game in case we don't go right back to home
             self.saveMaxScores()
@@ -601,7 +504,7 @@ class Scorecard {
     
     // MARK: - Functions to get view controllers, use main thread and wrapper system level stuff ==============
     
-    class func getWelcomeViewController() -> WelcomeViewController? {
+    class func getWelcomeViewController() -> WelcomeViewController? { // TODO replace
         if let rootViewController = UIApplication.shared.keyWindow?.rootViewController {
             let childViewControllers = rootViewController.children
             if childViewControllers.count > 0 {

@@ -203,9 +203,11 @@ class Footer: UIView {
 class NavigationBar: UINavigationBar {
     
     @IBInspectable var bannerColor: UIColor
+    @IBInspectable var textColor: UIColor
     
     required init?(coder: NSCoder) {
         self.bannerColor = Palette.banner
+        self.textColor = Palette.bannerText
         super.init(coder: coder)
         self.setBackgroundImage(UIImage(), for: .default)
         self.shadowImage = UIImage()
@@ -254,7 +256,7 @@ class NavigationBar: UINavigationBar {
             titleLabel.frame = CGRect(x: 0.0, y: 0.0, width: titleSize.width, height: self.frame.height)
             titleLabel.textAlignment = .center
             titleLabel.text = titleText
-            titleLabel.textColor = Palette.bannerText
+            titleLabel.textColor = self.textColor
         }
     }
 }

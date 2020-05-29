@@ -42,7 +42,7 @@ class PlayersViewController: ScorecardViewController, ScrollViewDataSource, Scro
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var playersScrollView: UIScrollView!
     @IBOutlet private weak var finishButton: RoundedButton!
-    @IBOutlet private weak var navigationBar: UINavigationBar!
+    @IBOutlet private weak var navigationBar: NavigationBar!
     @IBOutlet private weak var leftPadView: UIView!
     @IBOutlet private weak var rightPadView: UIView!
     @IBOutlet private weak var leftPadWidthConstraint: NSLayoutConstraint!
@@ -53,6 +53,8 @@ class PlayersViewController: ScorecardViewController, ScrollViewDataSource, Scro
     @IBOutlet private weak var rightPadTextTrailingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var rightPadWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var rightPadHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var newPlayerButton: ClearButton!
+    @IBOutlet private var instructionsLabel: [UILabel]!
     
     // MARK: - IB Actions ============================================================================== -
     
@@ -84,6 +86,9 @@ class PlayersViewController: ScorecardViewController, ScrollViewDataSource, Scro
     // MARK: - View Overrides ========================================================================== -
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultViewColors()
         
         // Set nofifications for player image download
         playerObserver = setPlayerDownloadNotification(name: .playerDownloaded)
@@ -338,7 +343,7 @@ class PlayersViewController: ScorecardViewController, ScrollViewDataSource, Scro
     // MARK: - Utility routines ============================================================================== -
     
     private func showSelectPlayers() {
-        SelectPlayersViewController.show(from: self, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: true, completion: { (selected, playerList, selection) in
+        _ = SelectPlayersViewController.show(from: self, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: true, completion: { (selected, playerList, selection) in
             if selected != nil {
                 self.refreshView()
             }
@@ -493,4 +498,22 @@ class PlayerCell: ScrollViewCell {
         self.playerTileName.font = UIFont.systemFont(ofSize: 24.0)
         self.playerTileName.adjustsFontSizeToFitWidth = true
     }
+}
+
+extension PlayersViewController {
+
+    /** _Note that this code was generated as part of the move to themed colors_ */
+
+    private func defaultViewColors() {
+
+        self.finishButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.instructionsLabel.forEach { $0.textColor = Palette.bannerText }    // Warning outlet collection - check all members want this
+        self.instructionsLabel.forEach { $0.textColor = Palette.bannerText }    // Warning outlet collection - check all members want this
+        self.leftPadView.backgroundColor = Palette.banner
+        self.navigationBar.textColor = Palette.bannerText
+        self.newPlayerButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.rightPadView.backgroundColor = Palette.banner
+        self.view.backgroundColor = Palette.background
+    }
+
 }

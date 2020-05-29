@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -11,7 +11,7 @@
         <!--Welcome-->
         <scene sceneID="R22-7m-aji">
             <objects>
-                <viewController storyboardIdentifier="WelcomeViewController" title="Welcome" useStoryboardIdentifierAsRestorationIdentifier="YES" id="s50-DJ-DGN" customClass="WelcomeViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LaunchScreenViewController" title="Welcome" useStoryboardIdentifierAsRestorationIdentifier="YES" id="s50-DJ-DGN" customClass="LaunchScreenViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="jyL-Wg-M4O">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -158,10 +158,13 @@
                     <toolbarItems/>
                     <connections>
                         <outlet property="actionScrollView" destination="RwW-IW-wzd" id="Gde-JA-DlU"/>
+                        <outlet property="leftBanner" destination="XlQ-ht-Cyf" id="f5x-Zj-e5o"/>
+                        <outlet property="rightBanner" destination="pE1-ST-peb" id="hDQ-7r-mjX"/>
                         <outlet property="syncLabel" destination="xhn-Yh-ogb" id="Rse-qo-dlT"/>
                         <outlet property="syncLabelHeightConstraint" destination="UMP-1N-3q2" id="1kB-LZ-v9p"/>
                         <outlet property="titleLabel" destination="GfL-2p-s30" id="dXZ-BM-nPN"/>
                         <outlet property="viewOnlineButton" destination="QP0-uS-vsK" id="XOr-dJ-w33"/>
+                        <outlet property="walkThroughButton" destination="iC9-CO-hun" id="0YA-It-ckP"/>
                         <outlet property="welcomeView" destination="jyL-Wg-M4O" id="Xlq-wg-uBg"/>
                     </connections>
                 </viewController>

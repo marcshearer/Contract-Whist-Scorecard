@@ -64,6 +64,7 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
     @IBOutlet private weak var navigationBar: UINavigationBar!
     @IBOutlet private weak var toolbarViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var footerPaddingTopConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var bannerContinuation: UIView!
     
     // MARK: - IB Actions ============================================================================== -
     
@@ -100,6 +101,10 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultViewColors()
+
         self.setupView()
         self.formatButtons()
     }
@@ -203,6 +208,8 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
             
             // Create cell
             cell = tableView.dequeueReusableCell(withIdentifier: "Action Cell", for: indexPath) as! SelectPlayersCell
+            // Setup default colors (previously done in StoryBoard)
+            self.defaultCellColors(cell: cell)
             
             // Fill in text
             var titleText = ""
@@ -229,6 +236,8 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
             
             // Create cell
             cell = tableView.dequeueReusableCell(withIdentifier: "Player Cell", for: indexPath) as! SelectPlayersCell
+            // Setup default colors (previously done in StoryBoard)
+            self.defaultCellColors(cell: cell)
             
             // Set sizes for no description
             if descriptionMode == .none {
@@ -383,7 +392,7 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
             self.cloudIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 0, y: 100,
                                                       width: self.cloudAlertController.view.frame.width,
                                                       height: 100))
-            self.cloudIndicatorView.style = .whiteLarge
+            self.cloudIndicatorView.style = UIActivityIndicatorView.Style.large
             self.cloudIndicatorView.color = UIColor.black
             self.cloudIndicatorView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
             self.cloudAlertController.view.addSubview(self.cloudIndicatorView)
@@ -693,4 +702,28 @@ class SelectPlayersCell: UITableViewCell {
     @IBOutlet public weak var playerNameBottomConstraint: NSLayoutConstraint!
     @IBOutlet public weak var playerDescriptionHeightConstraint: NSLayoutConstraint!
     @IBOutlet public weak var playerSeparatorView: UIView!
+}
+
+extension SelectPlayersViewController {
+
+    /** _Note that this code was generated as part of the move to themed colors_ */
+
+    private func defaultViewColors() {
+
+        self.bannerContinuation.backgroundColor = Palette.banner
+        self.continueButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.view.backgroundColor = Palette.background
+    }
+
+    private func defaultCellColors(cell: SelectPlayersCell) {
+        switch cell.reuseIdentifier {
+        case "Player Cell":
+            cell.playerDescription.textColor = Palette.text
+            cell.playerName.textColor = Palette.text
+            cell.playerSeparatorView.backgroundColor = Palette.separator
+        default:
+            break
+        }
+    }
+
 }

@@ -155,14 +155,12 @@ class Notifications {
         if viewController is ClientViewController {
             let clientViewController = viewController as! ClientViewController
             // Check that we're looking to play (rather than share) and emails match
-            if clientViewController.commsPurpose == .playing {
-                if clientViewController.thisPlayer == args[3] {
-                    // Already in the right place and right player - just send notification
-                    NotificationCenter.default.post(name: .onlineInviteReceived, object: self, userInfo: nil)
-                }
-                // Don't give alert if already joining an online game - even if player didn't match
-                skipNotification = true
+            if clientViewController.thisPlayer == args[3] {
+                // Already in the right place and right player - just send notification
+                NotificationCenter.default.post(name: .onlineInviteReceived, object: self, userInfo: nil)
             }
+            // Don't give alert if already joining an online game - even if player didn't match
+            skipNotification = true
         } else {
             // Do not interrupt a game in progress
             if Scorecard.game?.inProgress ?? false {
@@ -170,24 +168,9 @@ class Notifications {
             }
         }
         if !skipNotification {
-            let message = String(format: "%@ has invited you to join an online game of Contract Whist", arguments: args)
-            if let welcomeViewController = Scorecard.getWelcomeViewController() {
-                if confirm {
-                    viewController?.alertDecision(message, title: "Online Invitation", okButtonText: "Accept", okHandler: {
-                        Scorecard.dismissChildren(parent: welcomeViewController, completion: {
-                            Notifications.launchOnlineGame(welcomeViewController: welcomeViewController, matchDeviceName: args[2])
-                        })
-                    }, cancelButtonText: "Decline")
-                } else {
-                    Notifications.launchOnlineGame(welcomeViewController: welcomeViewController, matchDeviceName: args[2])
-                }
-            } else {
-                viewController?.alertMessage(message, title: "Notification")
-            }
+            // let message = String(format: "%@ has invited you to join an online game of Contract Whist", arguments: args)
+            // Need to launch online game from within app
         }
     }
     
-    public static func launchOnlineGame(welcomeViewController: WelcomeViewController, matchDeviceName: String) {
-       // ClientViewController.show(from: welcomeViewController, backText: "", backImage: "home", formTitle: "Play a Game", purpose: .playing, matchDeviceName: matchDeviceName)
-    }
 }

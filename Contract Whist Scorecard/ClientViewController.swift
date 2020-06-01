@@ -12,9 +12,7 @@ import MessageUI
 
 struct MenuAction {
     var tag: Int
-    var section: Int
     var title: String
-    var highlight: Bool
     var sequence: Int
     var isHidden: (()->Bool)?
     var action: ()->()
@@ -29,7 +27,7 @@ public enum ClientAppState: String {
     case finished = "Finished"
 }
 
-class ClientViewController: ScorecardViewController, UITableViewDelegate, UITableViewDataSource, MFMailComposeViewControllerDelegate, PlayerSelectionViewDelegate, SyncDelegate, ReconcileDelegate, ClientControllerDelegate {
+class ClientViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, MFMailComposeViewControllerDelegate, PlayerSelectionViewDelegate, SyncDelegate, ReconcileDelegate, ClientControllerDelegate, ImageButtonDelegate {
 
     // MARK: - Class Properties ======================================================================== -
     
@@ -43,7 +41,6 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
     private var statisticsViewer: StatisticsViewer!
 
     // Properties to pass state
-    public var commsPurpose: CommsPurpose = .playing
     private var matchDeviceName: String!
     private var matchProximity: CommsConnectionProximity!
     private var matchGameUUID: String!
@@ -53,7 +50,7 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
     public var thisPlayer: String!
     public var thisPlayerName: String!
     internal var choosingPlayer = false
-    internal var tableViewHeight: CGFloat = 0.0
+    private var displayingPeer = 0
 
     // Timers
     internal var networkTimer: Timer!
@@ -64,22 +61,18 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
     internal var reconcileAlertController: UIAlertController!
     internal var reconcileContinue: UIAlertAction!
     internal var reconcileIndicatorView: UIActivityIndicatorView!
-    
-    // Actions
-    private var sections: [Int:Int]!
-    private var sectionActions: [Int : [(frame: CGRect, position: Position, action: MenuAction)]]!
-    private var menuActions: [MenuAction]!
-    private let mainSection = 1
-    private let infoSection = 2
-    private let adminSection = 3
 
+    // Actions
+    private var menuActions: [MenuAction]!
+    
     // Debug rotations code
     private let code: [CGFloat] = [ -1.0, -1.0, 1.0, -1.0, 1.0]
     private var matching = 0
     
     private var appState: ClientAppState!
-    private var peerSection: Int! = 0
-    private var hostSection: Int! = 1
+    private var hostCollection: Int! = 1
+    private var peerCollection: Int! = 2
+    private var peerScrollCollection: Int! = 3
     internal var invite: Invite!
     internal var recoveryMode = false
     internal var firstTime = true
@@ -88,27 +81,55 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
     private var isLoggedIn: Bool?
     
     private var hostingOptions: Int = 0
-    private var onlineRow: Int = -1
-    private var nearbyRow: Int = -1
-    private var robotRow: Int = -1
+    private var onlineItem: Int = -1
+    private var nearbyItem: Int = -1
+    private var scoringItem: Int = -1
+    private var robotItem: Int = -1
+    private var playersItem: Int = -1
+    private var resultsItem: Int = -2
+    private var settingsItem: Int = -3
     
     // MARK: - IB Outlets ============================================================================== -
     
-    @IBOutlet private weak var scrollView: UIScrollView!
-    @IBOutlet private weak var navigationBar: NavigationBar!
-    @IBOutlet private weak var titleBar: UINavigationItem!
+    @IBOutlet private weak var topSection: UIView!
+    @IBOutlet private weak var topHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var upperMiddleSection: UIView!
+    @IBOutlet private weak var upperMiddleHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var lowerMiddleSection: UIView!
+    @IBOutlet private weak var lowerMiddleHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var bottomSection: UIView!
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
+    @IBOutlet private weak var bannerView: UIView!
     @IBOutlet private weak var bannerContinuation: BannerContinuation!
-    @IBOutlet private weak var clientTableView: UITableView!
-    @IBOutlet private weak var clientTableViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var thisPlayerTitle: UILabel!
+    @IBOutlet private weak var bannerOverlap: UIView!
+    @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var thisPlayerThumbnail: ThumbnailView!
-    @IBOutlet private weak var thisPlayerNameLabel: UILabel!
-    @IBOutlet private weak var thisPlayerThumbnailWidthConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var changePlayerButton: AngledButton!
+    @IBOutlet private weak var hostTitleBar: TitleBar!
+    @IBOutlet private weak var hostCollectionContainerView: UIView!
+    @IBOutlet private weak var hostCollectionContentView: UIView!
+    @IBOutlet private weak var hostCollectionView: UICollectionView!
+    @IBOutlet private weak var peerTitleBar: TitleBar!
+    @IBOutlet private weak var peerCollectionContainerView: UIView!
+    @IBOutlet private weak var peerCollectionContentView: UIView!
+    @IBOutlet private weak var peerCollectionView: UICollectionView!
+    @IBOutlet private weak var peerScrollCollectionView: UICollectionView!
+    @IBOutlet private weak var peerScrollCollectionViewWidthConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var playersButton: ImageButton!
+    @IBOutlet private weak var resultsButton: ImageButton!
+    @IBOutlet private weak var settingsButton: ImageButton!
+    @IBOutlet private weak var bottomSectionBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var playerSelectionView: PlayerSelectionView!
     @IBOutlet private weak var playerSelectionViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var menuButton: ClearButton!
+
+
+    // MARK: - TODO Remove OLD IB Outlets ============================================================================== -
+    
+     private weak var scrollView: UIScrollView!
+     private weak var navigationBar: NavigationBar!
+     private weak var thisPlayerTitle: UILabel!
+     private weak var thisPlayerNameLabel: UILabel!
+     private weak var changePlayerButton: AngledButton!
+     private weak var menuButton: ClearButton!
     
     // MARK: - IB Actions ============================================================================== -
         
@@ -153,7 +174,7 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
         super.viewDidLoad()
         
         // Setup colours (previously in storyboard)
-        self.defaultViewColors()
+        self.DefaultScreenColors()
         
         // Setup game
         Scorecard.game = Game()
@@ -172,9 +193,6 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
         // Stop any existing sharing activity
         Scorecard.shared.stopSharing()
                 
-        // Update instructions / title
-        self.titleBar.title = "Play a Game"
-        
         // Check if recovering
         self.recoveryMode = Scorecard.recovery.recoveryAvailable
         if self.recoveryMode && (!Scorecard.recovery.onlineRecovery || Scorecard.recovery.onlineType == .server) {
@@ -192,7 +210,6 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
         
         // Setup action menu
         self.setupMenuActions()
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -228,8 +245,10 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
         }
         if self.firstTime || self.rotated {
             self.rotated = false
-            self.clientTableView.reloadData()
+            self.peerReloadData()
         }
+        
+        self.layoutControls()
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
@@ -287,15 +306,8 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
         }
         if !alreadyChoosingPlayer {
             self.scrollView.scrollRectToVisible(CGRect(), animated: false)
-            self.tableViewHeight = self.clientTableViewHeightConstraint.constant
         }
         
-        Utility.animate(view: self.view, duration: 0.5, completion: {
-            self.clientTableViewHeightConstraint.constant = 0.0
-
-        }) {
-            self.playerSelectionViewHeightConstraint.constant = max(requiredHeight, selectionHeight)
-        }
         let playerList = Scorecard.shared.playerList.filter { $0.email != self.thisPlayer }
         self.playerSelectionView.set(players: playerList, addButton: true, updateBeforeSelect: false)
         
@@ -309,8 +321,7 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
         Utility.animate(view: self.view, duration: 0.5) {
             self.playerSelectionViewHeightConstraint.constant = 0.0
         }
-        self.clientTableViewHeightConstraint.constant = self.tableViewHeight
-        self.clientTableView.reloadData()
+        self.peerReloadData()
     }
     
     internal func didSelect(playerMO: PlayerMO) {
@@ -342,78 +353,68 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
         
         self.menuActions = []
         
-        self.addAction(section: mainSection, title: "Get Started", isHidden: {Scorecard.shared.playerList.count != 0}, action: { () in
+        self.addAction(title: "Get Started", isHidden: {Scorecard.shared.playerList.count != 0}, action: { () in
             self.showGetStarted()
         })
         
-        self.addAction(section: mainSection, title: "Settings", action: { () in
+        self.addAction(title: "Settings", action: { () in
             self.showSettings()
         })
         
-        self.addAction(section: mainSection, title: "Score Game", action: { () in
+        self.addAction(title: "Score Game", action: { () in
             self.scoreGame()
         })
         
-        self.addAction(section: infoSection, title: "Players", isHidden: {Scorecard.shared.playerList.count == 0}, action: { () in
+        self.addAction(title: "Players", isHidden: {Scorecard.shared.playerList.count == 0}, action: { () in
             self.showPlayers()
         })
         
-        self.addAction(section: infoSection, title: "Statistics", isHidden: {Scorecard.shared.playerList.count == 0}, action: { () in
+        self.addAction(title: "Statistics", isHidden: {Scorecard.shared.playerList.count == 0}, action: { () in
             self.statisticsViewer = StatisticsViewer(from: self) {
                 self.statisticsViewer = nil
             }
         })
         
-        self.addAction(section: infoSection, title: "History", isHidden: {!Scorecard.activeSettings.saveHistory || Scorecard.shared.playerList.count == 0}, action: { () in
+        self.addAction(title: "History", isHidden: {!Scorecard.activeSettings.saveHistory || Scorecard.shared.playerList.count == 0}, action: { () in
             self.historyViewer = HistoryViewer(from: self) {
                 self.historyViewer = nil
             }
         })
         
-        self.addAction(section: infoSection, title: "High Scores", isHidden: {!Scorecard.activeSettings.saveHistory || Scorecard.shared.playerList.count == 0}, action: { () in
+        self.addAction(title: "High Scores", isHidden: {!Scorecard.activeSettings.saveHistory || Scorecard.shared.playerList.count == 0}, action: { () in
             self.showHighScores()
         })
         
-        self.addAction(section: infoSection, title: "Cancel recovery", isHidden: {!Scorecard.recovery.recoveryAvailable}, action: { () in
+        self.addAction(title: "Cancel recovery", isHidden: {!Scorecard.recovery.recoveryAvailable}, action: { () in
             self.cancelRecovery()
             self.restart()
         })
         
-        self.addAction(section: adminSection, title: "Delete iCloud Database", isHidden: {!Scorecard.adminMode}, action: { () in
+        self.addAction(title: "Delete iCloud Database", isHidden: {!Scorecard.adminMode}, action: { () in
             DataAdmin.deleteCloudDatabase(from: self)
         })
-        
-        self.addAction(section: adminSection, title: "Switch to playing mode", isHidden: {self.commsPurpose == .playing}, action: { () in
-            self.commsPurpose = .playing
-            self.restart()
-        })
-        
-        self.addAction(section: adminSection, title: "Switch to sharing mode", isHidden: {self.commsPurpose == .sharing}, action: { () in
-            self.commsPurpose = .sharing
-            self.restart()
-        })
-        
-        self.addAction(section: adminSection, title: "Reset Sync Record IDs", isHidden: {!Scorecard.adminMode}, action: { () in
+                
+        self.addAction(title: "Reset Sync Record IDs", isHidden: {!Scorecard.adminMode}, action: { () in
             DataAdmin.resetSyncRecordIDs(from: self)
         })
 
-        self.addAction(section: adminSection, title: "Remove Duplicate Games", isHidden: {!Scorecard.adminMode}, action: { () in
+        self.addAction(title: "Remove Duplicate Games", isHidden: {!Scorecard.adminMode}, action: { () in
             DataAdmin.removeDuplicates(from: self)
         })
         
-        self.addAction(section: adminSection, title: "Rebuild All Players", isHidden: {!Scorecard.adminMode}, action: { () in
+        self.addAction(title: "Rebuild All Players", isHidden: {!Scorecard.adminMode}, action: { () in
             self.reconcilePlayers(allPlayers: true)
         })
 
-        self.addAction(section: adminSection, title: "Backup Device", isHidden: {!Scorecard.adminMode}, action: { () in
+        self.addAction(title: "Backup Device", isHidden: {!Scorecard.adminMode}, action: { () in
             self.backupDevice()
         })
         
     }
     
-    private func addAction(section: Int, title: String, highlight: Bool = false, isHidden: (()->Bool)? = nil, action: @escaping ()->()) {
+    private func addAction(title: String, isHidden: (()->Bool)? = nil, action: @escaping ()->()) {
         let tag = self.menuActions.count
-        self.menuActions.append(MenuAction(tag: tag, section: section, title: title, highlight: highlight, sequence: self.menuActions.count, isHidden: isHidden, action: action))
+        self.menuActions.append(MenuAction(tag: tag, title: title, sequence: self.menuActions.count, isHidden: isHidden, action: action))
     }
     
     private func showActionMenu() {
@@ -455,12 +456,12 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
         Scorecard.game?.resetValues()
         Scorecard.game.setGameInProgress(false)
         self.availablePeers = []
-        self.clientTableView.reloadData()
+        self.peerReloadData()
 
         // Check network / iCloud
         Scorecard.shared.checkNetworkConnection() {
             if (self.isNetworkAvailable != Scorecard.shared.isNetworkAvailable || self.isLoggedIn != Scorecard.shared.isLoggedIn) {
-                self.clientTableView.reloadData()
+                self.peerReloadData()
             }
             self.isNetworkAvailable = Scorecard.shared.isNetworkAvailable
             self.isLoggedIn = Scorecard.shared.isLoggedIn
@@ -478,7 +479,7 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
         // Check network
         self.restart()
     }
-    
+        
     // MARK: - iCloud fetch and sync delegates ======================================================== -
     
     private func getCloudVersion(async: Bool = false) {
@@ -523,7 +524,7 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
             // Create a client controller to manage connections
             self.createClientController()
             
-            self.clientTableView.reloadData()
+            self.peerReloadData()
             
             // Link to host if recovering a server or scoring if recovering a game
             if self.recoveryMode {
@@ -612,107 +613,90 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
         }
     }
     
-    // MARK: - TableView Overrides ===================================================================== -
-    
-    internal func numberOfSections(in tableView: UITableView) -> Int {
-        if commsPurpose == .playing && !recoveryMode {
-            return 2
-        } else {
-            return 1
+    // MARK: - Host Collection View Overrides ===================================================================== -
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        var items = 0
+        switch collectionView.tag {
+        case hostCollection:
+            items = hostingOptions
+        case peerCollection, peerScrollCollection:
+            items = (self.firstTime ? 0 : max(1, self.availablePeers.count))
+         default:
+            break
         }
+        return items
     }
     
-    internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // Defer showing entries until view is fully loaded (i.e. firstTime is false)
-        switch section {
-        case peerSection:
-            return (self.firstTime ? 0 : max(1, self.availablePeers.count))
-        case hostSection:
-            return ((!Scorecard.shared.isNetworkAvailable || !Scorecard.shared.isLoggedIn) ? 1 : (self.firstTime ? 0 : self.hostingOptions))
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+        var size = CGSize()
+        switch collectionView.tag {
+        case hostCollection:
+            size = CGSize(width: (self.hostCollectionView.frame.width / 3.0) - 0.01, height: self.hostCollectionView.frame.height)
+        case peerScrollCollection:
+            size = CGSize(width: 10, height: 10)
+        case peerCollection:
+            size = CGSize(width: self.peerCollectionView.frame.width, height: self.peerCollectionView.frame.height)
         default:
-            return 0
+            break
         }
+        return size
     }
     
-    internal func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        switch section {
-        case hostSection:
-            return (ScorecardUI.landscapePhone() ? 40 : 76)
-        default:
-            return 0
-        }
-    }
-    
-    internal func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if section == hostSection {
-            let headerView = UITableViewHeaderFooterView(frame: CGRect(origin: CGPoint(), size: CGSize(width: tableView.frame.width, height: 76.0)))
-            let width: CGFloat = 150.0
-            let button = AngledButton(frame: CGRect(x: (headerView.frame.width - width) / 2.0, y: (ScorecardUI.landscapePhone() ? 4 : 40), width: width, height: 30))
-            button.setTitle("Host a Game")
-            button.fillColor = Palette.hand
-            button.strokeColor = Palette.hand
-            button.normalTextColor = Palette.handText
-            headerView.backgroundView = UIView()
-            headerView.addSubview(button)
-            return headerView
-        } else {
-            return nil
-        }
-    }
-    
-    internal func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.section {
-        case self.peerSection:
-            // List of remote peers
-            return (ScorecardUI.landscapePhone() ? 80 : 100)
-            
-        case self.hostSection:
-            // Hosting options
-            return (ScorecardUI.landscapePhone() ? 60 : 80)
-            
-        default:
-            return 0
-        }
-    }
-    
-    internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell: ClientTableCell!
-        let labelWidth: CGFloat = min(self.view.frame.width - 128, self.view.frame.height)
-        let arrowWidth: CGFloat = 80.0 / 3.0
-        let hexagonInset: CGFloat = ((self.view.frame.width - labelWidth) / 2.0) - arrowWidth
-        let hexagonWidth: CGFloat = labelWidth + (2 * arrowWidth)
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        var cell = UICollectionViewCell()
         
-        switch indexPath.section {
-        case self.peerSection:
-            // List of remote peers
+        switch collectionView.tag {
+        case hostCollection:
+            let hostCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Host Cell", for: indexPath) as! HostCollectionViewCell
             
-            cell = tableView.dequeueReusableCell(withIdentifier: "Service Cell", for: indexPath) as? ClientTableCell
-            self.defaultCellColors(cell: cell)
-            cell.hexagonLayer?.removeFromSuperlayer()
-            cell.serviceLabelWidthConstraint.constant = labelWidth
-            cell.serviceButton.setTitle((self.commsPurpose == .playing ? "Join a Game" : "View Scorecard"), for: .normal)
+            hostCell.button.setProportions(top: 8, image: 20, imageBottom: 3, title: 10, titleBottom: 5, message: 30, bottom: 5)
+            hostCell.button.delegate = self
+            hostCell.button.tag = indexPath.row
+            self.defaultCellColors(cell: hostCell)
             
-            if self.availablePeers.count == 0 && !self.recoveryMode {
+            switch indexPath.row {
+            case nearbyItem:
+                hostCell.button.set(image: UIImage(systemName: "dot.radiowaves.left.and.right"))
+                hostCell.button.set(title: "Nearby")
+                hostCell.button.set(message: "Host a local,\nbluetooth game\nfor nearby players")
+            case onlineItem:
+                hostCell.button.set(image: UIImage(systemName: "globe"))
+                hostCell.button.set(title: "Online")
+                hostCell.button.set(message: "Host an online\ngame to play\nover the internet")
+            case scoringItem:
+                hostCell.button.set(image: UIImage(systemName: "square.and.pencil"))
+                hostCell.button.set(title: "Score")
+                hostCell.button.set(message: "Score a game\n while playing with\n physical cards")
+            case robotItem:
+                hostCell.button.set(image: UIImage(systemName: "desktopcomputer"))
+                hostCell.button.set(title: "Computer")
+                hostCell.button.set(message: "Play a game\nagainst the computer")
+            default:
+                break
+            }
+            cell = hostCell
+            
+        case peerCollection:
+             let peerCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Peer Cell", for: indexPath) as! PeerCollectionViewCell
+             self.defaultCellColors(cell: peerCell)
+             
+             if self.availablePeers.count == 0 && !self.recoveryMode {
                 
-                cell.serviceLabel.textColor = Palette.text
-                if self.commsPurpose == .sharing {
-                    cell.serviceLabel.text = "There are no other devices currently offering to share with you"
-                } else {
-                    cell.serviceLabel.text = "There are no other players currently offering to host a game for you to join"
-                }
-                cell.serviceLabel.font = UIFont.systemFont(ofSize: 18.0, weight: .regular)
+                peerCell.label.backgroundColor = Palette.background
+                peerCell.label.textColor = Palette.text
+                peerCell.label.text = "No devices are currently offering\nto host a game for you to join"
                 
             } else {
-                
-                let lineWidth: CGFloat = 3.5
-                let frame = CGRect(x: hexagonInset, y: cell.serviceButton.frame.midY - (lineWidth / 2.0), width: hexagonWidth, height: cell.frame.height - cell.serviceButton.frame.midY - 2.0)
-                cell.hexagonLayer = Polygon.hexagonFrame(in: cell, frame: frame, strokeColor: Palette.tableTop, lineWidth: lineWidth, radius: 10.0)
                 var name: String
                 var state: CommsConnectionState = .notConnected
                 var oldState: CommsConnectionState = .notConnected
                 var deviceName = ""
                 var proximity = ""
                 var connecting = false
+                var purpose = CommsPurpose.playing
                 if self.availablePeers.count == 0 && recoveryMode {
                     name = Scorecard.shared.findPlayerByEmail(Scorecard.recovery.connectionRemoteEmail ?? "")?.name ?? "Unknown"
                 } else {
@@ -723,6 +707,7 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
                     deviceName = availableFound.deviceName!
                     connecting = availableFound.connecting
                     proximity = availableFound.proximity?.rawValue ?? ""
+                    purpose = availableFound.purpose
                 }
                 var serviceText: String
                 
@@ -732,7 +717,7 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
                         serviceText = "\(name) has disconnected"
                     } else if self.recoveryMode {
                         serviceText = (Scorecard.recovery.onlineType == .server ? "Trying to resume game..." : "Trying to reconnect to \(name)...")
-                    } else if self.commsPurpose == .sharing {
+                    } else if purpose == .sharing {
                         serviceText = "View scorecard on \(deviceName)"
                     } else if connecting {
                         serviceText = "Connecting to \(name)..."
@@ -740,7 +725,7 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
                         serviceText = "Join \(name)'s \(proximity) game"
                     }
                 case .connected:
-                    if self.commsPurpose == .sharing {
+                    if purpose == .sharing {
                         serviceText = "Viewing Scorecard on\n\(deviceName).\nWaiting to start..."
                     } else {
                         serviceText = "Connected to \(name). Waiting to start..."
@@ -756,107 +741,115 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
                 case .reconnecting:
                     serviceText = "Trying to reconnect to \(name)"
                 }
-                cell.serviceLabel.font = UIFont.systemFont(ofSize: 18.0, weight: .bold)
-                
-                cell.serviceButton.addTarget(self, action: #selector(ClientViewController.selectPeerSelector(_:)), for: UIControl.Event.touchUpInside)
-                cell.serviceButton.tag = indexPath.row
-                
-                cell.serviceLabel.textColor = Palette.tableTop
-                cell.serviceLabel.text = serviceText
+                                
+                peerCell.label.backgroundColor = Palette.gameBanner
+                peerCell.label.textColor = Palette.gameBannerText
+                peerCell.label.text = serviceText
             }
+            cell = peerCell
+
+        case peerScrollCollection:
+            let peerScrollCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Peer Scroll Cell", for: indexPath) as! PeerScrollCollectionViewCell
             
-        case hostSection:
-            // Hosting options
+            peerScrollCell.indicator.image = UIImage(systemName: (indexPath.row == self.displayingPeer ? "circle.fill" : "circle"))
+            peerScrollCell.indicator.tintColor = Palette.gameBannerText
+            cell = peerScrollCell
             
-            cell = tableView.dequeueReusableCell(withIdentifier: "Host Cell", for: indexPath) as? ClientTableCell
-            self.defaultCellColors(cell: cell)
-            cell.hexagonLayer?.removeFromSuperlayer()
-            cell.serviceLabelWidthConstraint.constant = labelWidth
-            
-            let frame = CGRect(x: hexagonInset, y: 4.0, width: hexagonWidth, height: cell.frame.height - 8.0)
-            cell.hexagonLayer = Polygon.hexagonFrame(in: cell, frame: frame, strokeColor: Palette.hand.withAlphaComponent((self.availablePeers.count == 0 ? 1.0 : 1.0)), lineWidth: (self.availablePeers.count == 0 ? 2.0 : 1.0), radius: 10.0)
-            
-            cell.serviceLabel.textColor = Palette.hand
-            let hostText = NSMutableAttributedString()
-            let normalText = [NSAttributedString.Key.foregroundColor: Palette.hand.withAlphaComponent((self.availablePeers.count == 0 ? 1.0 : 1.0))]
-            var boldText: [NSAttributedString.Key : Any] = normalText
-            boldText[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 18.0, weight: .black)
-            let errorText = [NSAttributedString.Key.foregroundColor: Palette.error]
-            
-            
-            if !Scorecard.shared.isNetworkAvailable || !Scorecard.shared.isLoggedIn {
-                let action = (Scorecard.shared.isNetworkAvailable ? "Login to iCloud" : "Join a network")
-                hostText.append(NSMutableAttributedString(string: action, attributes: errorText))
-                hostText.append(NSMutableAttributedString(string: " to enable online games and sync", attributes: normalText))
-            } else {
-                switch indexPath.row {
-                case self.nearbyRow:
-                    hostText.append(NSMutableAttributedString(string: "Host a", attributes: normalText))
-                    hostText.append(NSMutableAttributedString(string: " local ", attributes: boldText))
-                    hostText.append(NSMutableAttributedString(string: "bluetooth game for nearby players", attributes: normalText))
-                case self.onlineRow:
-                    hostText.append(NSMutableAttributedString(string: "Host an", attributes: normalText))
-                    hostText.append(NSMutableAttributedString(string: " online ", attributes: boldText))
-                    hostText.append(NSMutableAttributedString(string: "game to play over the internet", attributes: normalText))
-                case self.robotRow:
-                    hostText.append(NSMutableAttributedString(string: "Play against", attributes: normalText))
-                    hostText.append(NSMutableAttributedString(string: " computer", attributes: boldText))
-                default:
-                    break
-                }
-            }
-            cell.serviceLabel.attributedText = hostText
         default:
             break
         }
         
-        // Make sure all off table view is shown without scrolling - scrolling handled by underlying scroll view
-        let newHeight = self.clientTableView.contentSize.height
-        if newHeight > self.clientTableView.frame.height && !self.choosingPlayer {
-            self.clientTableViewHeightConstraint.constant = newHeight
-        }
-        
-       return cell!
+        return cell
     }
     
-    internal func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        switch indexPath.section {
-        case peerSection:
+    internal func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        switch collectionView.tag {
+        case peerCollection:
             if self.availablePeers.count == 0 {
-                return nil
+                return false
             } else if !Scorecard.shared.isNetworkAvailable || !Scorecard.shared.isLoggedIn {
-                return indexPath
+                return true
             } else {
                 let availableFound = self.availablePeers[indexPath.row]
-                if (appState == .notConnected && availableFound.state == .notConnected) && indexPath.section == self.peerSection {
-                    return indexPath
+                if (appState == .notConnected && availableFound.state == .notConnected) {
+                    return true
                 } else {
-                    return nil
+                    return false
                 }
             }
-        case hostSection:
-            return indexPath
         default:
-            return nil
+            return false
         }
     }
     
-    internal func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        switch indexPath.section {
-        case self.peerSection:
+    internal func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch collectionView.tag {            
+        case self.peerCollection:
             self.selectPeer(indexPath.row)
-        case self.hostSection:
-            if !Scorecard.shared.isNetworkAvailable || !Scorecard.shared.isLoggedIn {
-                self.restart()
+            
+        default:
+            break
+        }
+    }
+    
+    internal func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+        Utility.mainThread {
+            self.displayingPeer = self.displayedPeer()
+            self.peerScrollCollectionView.reloadData()
+        }
+    }
+    
+    
+    internal func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        Utility.mainThread {
+            self.displayingPeer = self.displayedPeer()
+            self.peerScrollCollectionView.reloadData()
+            self.separators(areHidden: true)
+        }
+    }
+    
+    private func displayedPeer() -> Int {
+        let offset = peerCollectionView.contentOffset.x
+        return Utility.round(Double(offset / self.peerCollectionView.frame.width))
+    }
+    
+    private func separators(index: Int? = nil, areHidden: Bool) {
+        let item = self.displayedPeer()
+        if let cell = peerCollectionView.cellForItem(at: IndexPath(item: item, section: 0)) as? PeerCollectionViewCell {
+            if let index = index {
+                cell.separator[index].isHidden = areHidden
             } else {
+                cell.separator.forEach { $0.isHidden = areHidden}
+            }
+            
+        }
+    }
+    
+    // MARK: - Image button delegate handlers =============================================== -
+    
+    internal func imageButtonPressed(_ button: ImageButton) {
+        if !Scorecard.shared.isNetworkAvailable || !Scorecard.shared.isLoggedIn {
+            self.restart()
+        } else {
+            switch button.tag {
+            case scoringItem:
+                self.scoreGame()
+            case playersItem:
+                self.showPlayers()
+            case resultsItem:
+                self.historyViewer = HistoryViewer(from: self) {
+                    self.historyViewer = nil
+                }
+            case settingsItem:
+                self.showSettings()
+            default:
                 var mode: ConnectionMode
-                switch indexPath.row {
-                case nearbyRow:
+                switch button.tag {
+                case nearbyItem:
                     mode = .nearby
-                case onlineRow:
+                case onlineItem:
                     mode = .online
-                case robotRow:
+                case robotItem:
                     mode = .loopback
                 default:
                     mode = .online
@@ -866,11 +859,10 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
                 
                 self.hostGame(mode: mode, playerEmail: self.thisPlayer)
             }
-            
-        default:
-            break
         }
     }
+    
+    // MARK: - Action buttons =============================================================== -
     
     private func hostGame(mode: ConnectionMode? = nil, playerEmail: String? = nil, recoveryMode: Bool = false) -> Void {
         // Stop any Client controller
@@ -950,10 +942,10 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
 
     private func createClientController() {
         self.availablePeers = []
-        self.clientTableView.reloadData()
-        self.clientTableView.layoutIfNeeded()
+        self.peerReloadData()
+        self.peerCollectionView.layoutIfNeeded()
         if self.thisPlayer != nil {
-            self.clientController = ClientController(from: self, purpose: self.commsPurpose, playerEmail: self.thisPlayer, playerName: self.thisPlayerName, matchDeviceName: self.matchDeviceName, matchProximity: self.matchProximity, matchGameUUID: matchGameUUID)
+            self.clientController = ClientController(from: self, playerEmail: self.thisPlayer, playerName: self.thisPlayerName, matchDeviceName: self.matchDeviceName, matchProximity: self.matchProximity, matchGameUUID: matchGameUUID)
             self.clientController.delegate = self
         }
     }
@@ -965,72 +957,63 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
     
     private func setupHostingOptions() {
         // Set up sections
-        if self.commsPurpose == .playing {
-            peerSection = 0
-            hostSection = 1
-        } else {
-            peerSection = 0
-            hostSection = -1
-        }
         
         // Setup hosting options
         self.hostingOptions = 0
         
-        if self.commsPurpose == .playing {
-            
             if Scorecard.activeSettings.onlinePlayerEmail != nil {
-                self.nearbyRow = self.hostingOptions
+                self.nearbyItem = self.hostingOptions
                 self.hostingOptions += 1
-                self.onlineRow = self.hostingOptions
+                self.onlineItem = self.hostingOptions
                 self.hostingOptions += 1
-                self.robotRow = self.hostingOptions
+                self.scoringItem = self.hostingOptions
+                self.hostingOptions += 1
+                self.robotItem = self.hostingOptions
                 self.hostingOptions += 1
             }
-        }
     }
     
     private func setupThisPlayer() {
-        if self.commsPurpose == .playing {
-            if self.recoveryMode && Scorecard.recovery.onlineMode != nil {
-                // Recovering - use same player
-                self.thisPlayer = Scorecard.recovery.connectionEmail
-                self.thisPlayerName = Scorecard.shared.findPlayerByEmail(self.thisPlayer)?.name
-                self.matchDeviceName = Scorecard.recovery.connectionRemoteDeviceName
-                self.matchProximity = Scorecard.recovery.onlineProximity
-                self.matchGameUUID = Scorecard.recovery.gameUUID
-                if self.recoveryMode && Scorecard.recovery.onlineMode == .invite {
-                    if self.thisPlayer == nil {
-                        self.alertMessage("Error recovering game", okHandler: {
-                            self.cancelRecovery()
-                            self.restart()
-                        })
-                        return
-                    }
+        
+        if self.recoveryMode && Scorecard.recovery.onlineMode != nil {
+            // Recovering - use same player
+            self.thisPlayer = Scorecard.recovery.connectionEmail
+            self.thisPlayerName = Scorecard.shared.findPlayerByEmail(self.thisPlayer)?.name
+            self.matchDeviceName = Scorecard.recovery.connectionRemoteDeviceName
+            self.matchProximity = Scorecard.recovery.onlineProximity
+            self.matchGameUUID = Scorecard.recovery.gameUUID
+            if self.recoveryMode && Scorecard.recovery.onlineMode == .invite {
+                if self.thisPlayer == nil {
+                    self.alertMessage("Error recovering game", okHandler: {
+                        self.cancelRecovery()
+                        self.restart()
+                    })
+                    return
                 }
             }
-            if !self.recoveryMode || Scorecard.recovery.onlineType == .client {
-                if self.thisPlayer == nil || self.matchDeviceName == nil {
-                    // Not got player and device name from recovery - use default
-                    var defaultPlayer: String!
-                    if Scorecard.shared.onlineEnabled {
-                        defaultPlayer = Scorecard.activeSettings.onlinePlayerEmail
+        }
+        if !self.recoveryMode || Scorecard.recovery.onlineType == .client {
+            if self.thisPlayer == nil || self.matchDeviceName == nil {
+                // Not got player and device name from recovery - use default
+                var defaultPlayer: String!
+                if Scorecard.shared.onlineEnabled {
+                    defaultPlayer = Scorecard.activeSettings.onlinePlayerEmail
+                } else {
+                    defaultPlayer = Scorecard.shared.defaultPlayerOnDevice
+                }
+                if defaultPlayer != nil {
+                    let playerMO = Scorecard.shared.findPlayerByEmail(defaultPlayer)
+                    if playerMO != nil {
+                        self.thisPlayer = defaultPlayer
+                        self.thisPlayerName = playerMO!.name
                     } else {
-                        defaultPlayer = Scorecard.shared.defaultPlayerOnDevice
+                        defaultPlayer = nil
                     }
-                    if defaultPlayer != nil {
-                        let playerMO = Scorecard.shared.findPlayerByEmail(defaultPlayer)
-                        if playerMO != nil {
-                            self.thisPlayer = defaultPlayer
-                            self.thisPlayerName = playerMO!.name
-                        } else {
-                            defaultPlayer = nil
-                        }
-                    }
-                    if defaultPlayer == nil {
-                        if let playerMO = Scorecard.shared.playerList.min(by: {($0.localDateCreated! as Date) < ($1.localDateCreated! as Date)}) {
-                            self.thisPlayer = playerMO.email
-                            self.thisPlayerName = playerMO.name
-                        }
+                }
+                if defaultPlayer == nil {
+                    if let playerMO = Scorecard.shared.playerList.min(by: {($0.localDateCreated! as Date) < ($1.localDateCreated! as Date)}) {
+                        self.thisPlayer = playerMO.email
+                        self.thisPlayerName = playerMO.name
                     }
                 }
             }
@@ -1045,17 +1028,8 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
     }
     
     private func showThisPlayer() {
-        if self.commsPurpose == .playing {
-            if let player = self.thisPlayer, let playerMO = Scorecard.shared.findPlayerByEmail(player) {
-                let size = SelectionViewController.thumbnailSize(labelHeight: 0.0)
-                self.thisPlayerThumbnailWidthConstraint.constant = size.width
-                self.thisPlayerThumbnail.set(data: playerMO.thumbnail, name: playerMO.name!, nameHeight: 0.0, diameter: size.width)
-                self.thisPlayerNameLabel.text = "Play as \(playerMO.name!)"
-                self.changePlayerButton.setTitle("Change", for: .normal)
-            }
-        } else {
-            self.thisPlayerNameLabel.text = "Choose Device to View"
-            self.changePlayerButton.isHidden = true
+        if let player = self.thisPlayer, let playerMO = Scorecard.shared.findPlayerByEmail(player) {
+            self.thisPlayerThumbnail.set(data: playerMO.thumbnail, name: playerMO.name!, nameHeight: 20.0, diameter: self.thisPlayerThumbnail.frame.width)
         }
     }
     
@@ -1092,55 +1066,68 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
     }
     
     internal func changePlayerAvailable() {
-        let available = (self.appState == .notConnected && !self.recoveryMode && self.commsPurpose == .playing)
+        let available = (self.appState == .notConnected && !self.recoveryMode)
         self.changePlayerButton?.isHidden = !available
     }
     
     public func refreshStatus() {
         // Just refresh all
-        self.clientTableView.reloadData()
+        self.peerReloadData()
+    }
+    
+    private func peerReloadData() {
+        self.peerCollectionView.reloadData()
+        self.peerScrollCollectionView.reloadData()
     }
     
     // MARK: - Client controller delegates ======================================================================== -
     
-    internal func addPeer(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity, at row: Int) {
-        self.clientTableView.beginUpdates()
-        if self.availablePeers.count == 0 {
-            // Need to remove previous placeholder and refresh hosting options
-            self.clientTableView.deleteRows(at: [IndexPath(row: 0, section: self.peerSection)], with: .right)
-            if !self.recoveryMode && self.hostingOptions > 0 {
-                let hostingRows = self.clientTableView.numberOfRows(inSection: self.hostSection)
-                if hostingRows > 0 {
-                    for row in 0..<hostingRows {
-                        self.clientTableView.reloadRows(at: [IndexPath(row: row, section: self.hostSection)], with: .automatic)
-                    }
+    internal func addPeer(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity, purpose: CommsPurpose, at row: Int) {
+        self.peerCollectionView.performBatchUpdates( {
+            self.peerScrollCollectionView.performBatchUpdates( {
+                let host = AvailablePeer(deviceName: deviceName, name: name, oldState: oldState, state: state, connecting: connecting, proximity: proximity, purpose: purpose)
+                self.availablePeers.insert(host, at: row)
+                if self.availablePeers.count > 1 {
+                    // Add to collection view
+                    self.peerCollectionView.insertItems(at: [IndexPath(row: row, section: 0)])
+                } else {
+                    // Replace placeholder
+                    self.peerCollectionView.reloadItems(at: [IndexPath(row: row, section: 0)])
                 }
-            }
-        }
-        
-        let host = AvailablePeer(deviceName: deviceName, name: name, oldState: oldState, state: state, connecting: connecting, proximity: proximity)
-        self.availablePeers.insert(host, at: row)
-        self.clientTableView.insertRows(at: [IndexPath(row: row, section: peerSection)], with: .left)
-        self.clientTableView.endUpdates()
+                self.setScrollWidth()
+            })
+        })
     }
     
     internal func removePeer(at row: Int) {
         Utility.mainThread {
-            self.clientTableView.beginUpdates()
-            self.availablePeers.remove(at: row)
-            self.clientTableView.deleteRows(at: [IndexPath(row: row, section: self.peerSection)], with: .left)
-            if self.availablePeers.count == 0 {
-                // Just lost last one - need to insert placeholder and update hosting options
-                self.clientTableView.insertRows(at: [IndexPath(row: 0, section: self.peerSection)], with: .right)
-            }
-            self.clientTableView.endUpdates()
+            self.peerCollectionView.performBatchUpdates( {
+                self.peerScrollCollectionView.performBatchUpdates( {
+                    self.availablePeers.remove(at: row)
+                    if self.availablePeers.count == 0 {
+                        // Replace with placeholder
+                        self.peerCollectionView.reloadItems(at: [IndexPath(row: row, section: 0)])
+                    } else {
+                        // Remove from collection view
+                        self.peerCollectionView.deleteItems(at: [IndexPath(row: row, section: 0)])
+                    }
+                    self.setScrollWidth()
+                })
+            })
         }
     }
     
-    internal func reflectPeer(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity) {
+    private func setScrollWidth() {
+        let items = self.availablePeers.count
+        self.peerScrollCollectionViewWidthConstraint.constant = (items <= 1 ? 0.0 : (CGFloat(items) * 15.0) - 5.0)
+        self.displayingPeer = self.displayedPeer()
+        self.peerScrollCollectionView.reloadData()
+    }
+    
+    internal func reflectPeer(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity, purpose: CommsPurpose) {
         if let row = self.availablePeers.firstIndex(where: {$0.deviceName == deviceName && $0.proximity == proximity}) {
-            self.availablePeers[row].set(deviceName: deviceName, name: name, oldState: oldState, state: state, connecting: connecting, proximity: proximity)
-            self.clientTableView.reloadRows(at: [IndexPath(row: row, section: peerSection)], with: .automatic)
+            self.availablePeers[row].set(deviceName: deviceName, name: name, oldState: oldState, state: state, connecting: connecting, proximity: proximity, purpose: purpose)
+            self.peerCollectionView.reloadItems(at: [IndexPath(row: row, section: 0)])
         }
     }
         
@@ -1176,12 +1163,18 @@ class ClientViewController: ScorecardViewController, UITableViewDelegate, UITabl
 }
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
-    
-class ClientTableCell: UITableViewCell {
-    @IBOutlet weak var serviceButton: AngledButton!
-    @IBOutlet weak var serviceLabel: UILabel!
-    @IBOutlet weak var serviceLabelWidthConstraint: NSLayoutConstraint!
-    public var hexagonLayer: CAShapeLayer!
+
+class HostCollectionViewCell: UICollectionViewCell {
+    @IBOutlet fileprivate weak var button: ImageButton!
+}
+
+class PeerCollectionViewCell: UICollectionViewCell {
+    @IBOutlet fileprivate weak var label: UILabel!
+    @IBOutlet fileprivate var separator: [UIView]!
+}
+
+class PeerScrollCollectionViewCell: UICollectionViewCell {
+    @IBOutlet fileprivate weak var indicator: UIImageView!
 }
 
 // MARK: - Other Classes =========================================================== -
@@ -1193,18 +1186,20 @@ fileprivate class AvailablePeer {
     fileprivate var state: CommsConnectionState!
     fileprivate var connecting: Bool = false
     fileprivate var proximity: CommsConnectionProximity!
+    fileprivate var purpose: CommsPurpose!
     
-    init(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity) {
-        self.set(deviceName: deviceName, name: name, oldState: oldState, state: state, connecting: connecting, proximity: proximity)
+    init(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity, purpose: CommsPurpose) {
+        self.set(deviceName: deviceName, name: name, oldState: oldState, state: state, connecting: connecting, proximity: proximity, purpose: purpose)
     }
         
-    public func set(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity) {
+    public func set(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity, purpose: CommsPurpose) {
         self.deviceName = deviceName
         self.name = name
         self.oldState = oldState
         self.state = state
         self.connecting = connecting
         self.proximity = proximity
+        self.purpose = purpose
     }
 }
 
@@ -1212,31 +1207,53 @@ extension ClientViewController {
 
     /** _Note that this code was generated as part of the move to themed colors_ */
 
-    private func defaultViewColors() {
-        self.bannerContinuation.bannerColor = Palette.gameBanner
-        self.bannerContinuation.borderColor = Palette.gameBanner
+    private func DefaultScreenColors() {
+        self.topSection.backgroundColor = Palette.gameBanner
         self.bannerPaddingView.bannerColor = Palette.gameBanner
-        self.changePlayerButton.setTitleColor(Palette.gameBanner, for: .normal)
-        self.changePlayerButton.strokeColor = Palette.gameBanner
-        self.menuButton.setTitleColor(Palette.gameBannerText, for: .normal)
-        self.navigationBar.textColor = Palette.gameBannerText
-        self.navigationBar.bannerColor = Palette.gameBanner
+        self.bannerOverlap.backgroundColor = Palette.gameBanner
+        self.hostTitleBar.backgroundColor = Palette.buttonFace
+        self.hostTitleBar.set(faceColor: Palette.buttonFace)
+        self.hostTitleBar.set(textColor: Palette.buttonFaceText)
+        self.titleLabel.textColor = Palette.gameBannerText
+        self.thisPlayerThumbnail.set(textColor: Palette.gameBannerText)
+        self.thisPlayerThumbnail.set(font: UIFont.systemFont(ofSize: 15, weight: .bold))
+        self.hostCollectionView.backgroundColor = Palette.buttonFace
+        self.peerTitleBar.set(faceColor: Palette.buttonFace)
+        self.peerTitleBar.set(textColor: Palette.buttonFaceText)
+        self.playersButton.set(faceColor: Palette.buttonFace)
+        self.playersButton.set(textColor: Palette.gameBanner)
+        self.playersButton.set(titleFont: UIFont.systemFont(ofSize: 18, weight: .bold))
+        self.resultsButton.set(faceColor: Palette.buttonFace)
+        self.resultsButton.set(textColor: Palette.gameBanner)
+        self.resultsButton.set(titleFont: UIFont.systemFont(ofSize: 18, weight: .bold))
+        self.settingsButton.set(faceColor: Palette.buttonFace)
+        self.settingsButton.set(textColor: Palette.gameBanner)
+        self.settingsButton.set(titleFont: UIFont.systemFont(ofSize: 18, weight: .bold))
+
         self.playerSelectionView.backgroundColor = Palette.background
-        self.thisPlayerTitle.textColor = Palette.text
         self.view.backgroundColor = Palette.background
     }
+    
+    private func layoutControls() {
+        self.hostCollectionContentView.roundCorners(cornerRadius: 8.0, topRounded: false, bottomRounded: true)
+        self.hostCollectionContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0), shadowOpacity: 0.1, shadowRadius: 2.0)
+        self.peerCollectionContentView.roundCorners(cornerRadius: 8.0, topRounded: false, bottomRounded: true)
+        self.peerCollectionContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0), shadowOpacity: 0.1, shadowRadius: 2.0)
+        self.bottomSectionBottomConstraint.constant = (self.view.safeAreaInsets.bottom == 0.0 ? 10.0 : 0.0)
+        self.playersButton.setProportions(top: 30, image: 0, imageBottom: 0, title: 15, titleBottom: 0, message: 0, bottom: 30)
+        self.resultsButton.setProportions(top: 30, image: 0, imageBottom: 0, title: 15, titleBottom: 0, message: 0, bottom: 30)
+        self.settingsButton.setProportions(top: 30, image: 0, imageBottom: 0, title: 15, titleBottom: 0, message: 0, bottom: 30)
+    }
 
-    private func defaultCellColors(cell: ClientTableCell) {
-        switch cell.reuseIdentifier {
-        case "Host Cell":
-            cell.serviceLabel.textColor = Palette.hand
-        case "Service Cell":
-            cell.serviceButton.setTitleColor(Palette.tableTopTextContrast, for: .normal)
-            cell.serviceButton.fillColor = Palette.tableTop
-            cell.serviceButton.strokeColor = Palette.tableTop
-            cell.serviceLabel.textColor = Palette.text
-        default:
-            break
-        }
+    private func defaultCellColors(cell: HostCollectionViewCell) {
+        cell.button.set(faceColor: Palette.buttonFace)
+        cell.button.set(titleColor: Palette.buttonFaceText)
+        cell.button.set(messageColor: Palette.buttonFaceText)
+        cell.button.set(imageTintColor: Palette.gameBanner)
+    }
+    
+    private func defaultCellColors(cell: PeerCollectionViewCell) {
+        cell.separator.forEach { $0.backgroundColor = UIColor.clear }
+        self.separators(areHidden: true)
     }
 }

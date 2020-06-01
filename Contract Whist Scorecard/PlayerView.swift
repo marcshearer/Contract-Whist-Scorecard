@@ -146,6 +146,10 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         self.thumbnailView.set(textColor: textColor)
     }
     
+    public func set(font: UIFont) {
+        self.thumbnailView.set(font: font)
+       }
+       
     public func set(backgroundColor: UIColor) {
         self.thumbnailView.set(backgroundColor: backgroundColor)
     }

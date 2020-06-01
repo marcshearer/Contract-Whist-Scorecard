@@ -54,7 +54,7 @@ class RobotPlayer: NSObject, RobotDelegate {
         self.hostPeer = hostPeer
         
         // Create loopback client service
-        self.loopbackService = LoopbackService(mode:.loopback, type: .client, serviceID: nil, deviceName: deviceName)
+        self.loopbackService = LoopbackService(mode:.loopback, type: .client, serviceID: nil, deviceName: deviceName, purpose: .playing)
         
         // Initialise super-class
         super.init()

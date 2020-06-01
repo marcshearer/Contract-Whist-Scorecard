@@ -36,7 +36,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Cache main context for core data
         CoreData.context = self.persistentContainer.viewContext
 
-        // Check if lauchned from notification
+        // Check if launched from notification
         if let options = launchOptions {
             let remoteNotification = options[.remoteNotification] as? [AnyHashable : Any]
             if let userInfo = remoteNotification {

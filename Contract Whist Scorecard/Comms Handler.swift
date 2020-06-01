@@ -61,13 +61,15 @@ public class CommsPeer {
     private weak var parent: CommsServiceDelegate!
     private var _autoReconnect: Bool
     public var autoReconnect: Bool { get { return _autoReconnect } }
+    private var _purpose: CommsPurpose!
+    public var purpose: CommsPurpose! { get {return _purpose } }
     
     public var mode: CommsConnectionMode { get { return self.parent.connectionMode } }
     public var proximity: CommsConnectionProximity { get { return self.parent.connectionProximity } }
     public var type: CommsConnectionType { get { return self.parent.connectionType } }
     
 
-    init(parent: CommsServiceDelegate, deviceName: String, playerEmail: String? = "", playerName: String? = "", state: CommsConnectionState = .notConnected, reason: String? = nil, autoReconnect: Bool = false) {
+    init(parent: CommsServiceDelegate, deviceName: String, playerEmail: String? = "", playerName: String? = "", state: CommsConnectionState = .notConnected, reason: String? = nil, autoReconnect: Bool = false, purpose: CommsPurpose = .playing) {
         self.parent = parent
         self.deviceName = deviceName
         self.playerEmail = playerEmail
@@ -75,6 +77,7 @@ public class CommsPeer {
         self.state = state
         self.reason = reason
         self._autoReconnect = autoReconnect
+        self._purpose = purpose
     }
 }
 
@@ -226,7 +229,7 @@ public protocol CommsHostServiceDelegate : CommsServiceDelegate {
     var connectionDelegate: CommsConnectionDelegate! { get set }
     var handlerStateDelegate: CommsServiceStateDelegate! { get set }
     
-    init(mode: CommsConnectionMode, serviceID: String?, deviceName: String)
+    init(mode: CommsConnectionMode, serviceID: String?, deviceName: String, purpose: CommsPurpose)
     
     func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool, matchGameUUID: String!)
     
@@ -235,8 +238,8 @@ public protocol CommsHostServiceDelegate : CommsServiceDelegate {
 
 extension CommsHostServiceDelegate {
     
-    init(mode: CommsConnectionMode, serviceID: String?) {
-        self.init(mode: mode, serviceID: serviceID, deviceName: "")
+    init(mode: CommsConnectionMode, serviceID: String?, purpose: CommsPurpose) {
+        self.init(mode: mode, serviceID: serviceID, deviceName: "", purpose: purpose)
     }
     
     func start() {
@@ -344,17 +347,18 @@ public class CommsHandler {
     public static func server(proximity: CommsConnectionProximity,
                               mode: CommsConnectionMode,
                               serviceID: String?,
-                              deviceName: String = "") -> CommsHostServiceDelegate? {
+                              deviceName: String = "",
+                              purpose: CommsPurpose) -> CommsHostServiceDelegate? {
         
         if proximity == .nearby && mode == .broadcast {
             // Nearby broadcast = Multi-peer connectivity
-            return MultipeerServerService(mode: mode, serviceID: serviceID, deviceName: deviceName)
+            return MultipeerServerService(mode: mode, serviceID: serviceID, deviceName: deviceName, purpose: purpose)
         } else if proximity == .online && (mode == .invite || mode == .queue) {
             // Online invite or online queue = RabbitMQ connectivity
-            return RabbitMQServerService(mode: mode, serviceID: serviceID, deviceName: deviceName)
+            return RabbitMQServerService(mode: mode, serviceID: serviceID, deviceName: deviceName, purpose: purpose)
         } else if proximity == .loopback && mode == .loopback {
             // Loopback = loopback
-            return LoopbackService(mode: mode, type: .server, serviceID: serviceID, deviceName: deviceName)
+            return LoopbackService(mode: mode, type: .server, serviceID: serviceID, deviceName: deviceName, purpose: purpose)
         } else {
             return nil
         }

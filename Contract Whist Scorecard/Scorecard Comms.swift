@@ -21,7 +21,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     
     public func setupSharing(playerDelegate: ScorecardAppPlayerDelegate? = nil) {
         if self.settings.allowBroadcast {
-            self.sharingService = CommsHandler.server(proximity: .nearby, mode: .broadcast, serviceID: self.serviceID(.sharing), deviceName: Scorecard.deviceName)
+            self.sharingService = CommsHandler.server(proximity: .nearby, mode: .broadcast, serviceID: self.serviceID(), deviceName: Scorecard.deviceName, purpose: .sharing)
             self.resetSharing(playerDelegate: playerDelegate)
         }
     }
@@ -63,9 +63,9 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         }
     }
     
-    public func serviceID(_ purpose: CommsPurpose) -> String {
+    public func serviceID() -> String {
         let servicePrefix = (self.database == "development" ? "whdev" : "whist")
-        return "\(servicePrefix)-\(purpose)"
+        return "\(servicePrefix)"
     }
     
     // MARK: - State and Data delegate implementations ================================== -
@@ -349,8 +349,10 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         var state: [String : Any] = [:]
         
         state["settings"] = self.settingsData()
-        let (descriptor, data) = self.playersData(from: playerDelegate)
-        state[descriptor] = data
+        if playerDelegate != nil || Scorecard.game.inProgress {
+            let (descriptor, data) = self.playersData(from: playerDelegate)
+            state[descriptor] = data
+        }
         state["dealer"] = self.dealerData()
         if Scorecard.game.inProgress {
             state["allscores"] = self.scoresData()

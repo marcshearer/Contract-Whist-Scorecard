@@ -571,8 +571,8 @@ extension GameSummaryViewController {
         self.bannerContinuation.backgroundColor = Palette.tableTop
         self.bannerContinuation.bannerColor = Palette.roomInterior
         self.bottomArea.backgroundColor = Palette.tableTop
-        self.playAgainButton.textColor = Palette.tableTopTextContrast
-        self.stopPlayingButton.textColor = Palette.tableTopTextContrast
+        self.playAgainButton.set(titleColor: Palette.tableTopTextContrast)
+        self.stopPlayingButton.set(titleColor: Palette.tableTopTextContrast)
         self.syncMessage.textColor = Palette.darkHighlightText
         self.view.backgroundColor = Palette.roomInterior
     }

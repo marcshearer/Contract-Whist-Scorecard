@@ -30,7 +30,6 @@
 		B20B1262245EFC2B001DD632 /* Contract Whist Comms Protocols.docx in Resources */ = {isa = PBXBuildFile; fileRef = B20B1261245EFC2B001DD632 /* Contract Whist Comms Protocols.docx */; };
 		B20DA0401E139C450040221D /* HighScoresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DA03F1E139C450040221D /* HighScoresViewController.swift */; };
 		B20DA0441E142D1E0040221D /* SelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DA0431E142D1E0040221D /* SelectionViewController.swift */; };
-		B20DA04C1E179DC70040221D /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DA04B1E179DC70040221D /* WelcomeViewController.swift */; };
 		B20DA0521E1FED040040221D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B20DA0511E1FED040040221D /* CloudKit.framework */; };
 		B211E137224164FB00B48D64 /* SelectPlayersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211E136224164FB00B48D64 /* SelectPlayersViewController.swift */; };
 		B2144C4F2465334200CF56B7 /* Version.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2144C4E2465334200CF56B7 /* Version.swift */; };
@@ -47,7 +46,6 @@
 		B221EED7210B0E2D00F7FBA0 /* HandViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B221EED6210B0E2D00F7FBA0 /* HandViewController.swift */; };
 		B22500F11F48425C0042D566 /* Scorecard Comms.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22500F01F48425C0042D566 /* Scorecard Comms.swift */; };
 		B22789001FB83AA7009BABCA /* GetStartedViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22788FA1FB83AA7009BABCA /* GetStartedViewController.storyboard */; };
-		B22789011FB83AA7009BABCA /* WelcomeViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22788FC1FB83AA7009BABCA /* WelcomeViewController.storyboard */; };
 		B22789021FB83AA7009BABCA /* SelectionViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22788FE1FB83AA7009BABCA /* SelectionViewController.storyboard */; };
 		B22789071FB83AC4009BABCA /* WalkthroughViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789031FB83AC4009BABCA /* WalkthroughViewController.storyboard */; };
 		B22789081FB83AC4009BABCA /* WalkthroughPageViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789051FB83AC4009BABCA /* WalkthroughPageViewController.storyboard */; };
@@ -79,6 +77,10 @@
 		B243385E22E0AEA8002EBD40 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B243385D22E0AEA8002EBD40 /* PlayerView.swift */; };
 		B243386022E57BBC002EBD40 /* ImageButton.xib in Resources */ = {isa = PBXBuildFile; fileRef = B243385F22E57BBC002EBD40 /* ImageButton.xib */; };
 		B243386322E57BE7002EBD40 /* ImageButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B243386222E57BE7002EBD40 /* ImageButton.swift */; };
+		B247A7282482B61000591BBA /* Old ClientViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B247A7262482B60F00591BBA /* Old ClientViewController.storyboard */; };
+		B247A72B248359F500591BBA /* TitleBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = B247A72A248359F500591BBA /* TitleBar.xib */; };
+		B247A72D24835A7C00591BBA /* Title Bar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B247A72C24835A7C00591BBA /* Title Bar.swift */; };
+		B247A72F2483657600591BBA /* Shadow View.swift in Sources */ = {isa = PBXBuildFile; fileRef = B247A72E2483657600591BBA /* Shadow View.swift */; };
 		B24AABE01EC07274000D34B0 /* Backup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABDF1EC07274000D34B0 /* Backup.swift */; };
 		B24AABE21EC0BC08000D34B0 /* Upgrade.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABE11EC0BC08000D34B0 /* Upgrade.swift */; };
 		B24AABE41EC4DC5F000D34B0 /* Core Data Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABE31EC4DC5F000D34B0 /* Core Data Class.swift */; };
@@ -239,7 +241,6 @@
 		B20B1261245EFC2B001DD632 /* Contract Whist Comms Protocols.docx */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Contract Whist Comms Protocols.docx"; sourceTree = "<group>"; };
 		B20DA03F1E139C450040221D /* HighScoresViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HighScoresViewController.swift; sourceTree = "<group>"; };
 		B20DA0431E142D1E0040221D /* SelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SelectionViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		B20DA04B1E179DC70040221D /* WelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		B20DA04F1E1FEC5F0040221D /* Contract Whist Scorecard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Contract Whist Scorecard.entitlements"; sourceTree = "<group>"; };
 		B20DA0511E1FED040040221D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B211E136224164FB00B48D64 /* SelectPlayersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPlayersViewController.swift; sourceTree = "<group>"; };
@@ -259,7 +260,6 @@
 		B221EED6210B0E2D00F7FBA0 /* HandViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandViewController.swift; sourceTree = "<group>"; };
 		B22500F01F48425C0042D566 /* Scorecard Comms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Scorecard Comms.swift"; sourceTree = "<group>"; };
 		B22788FB1FB83AA7009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/GetStartedViewController.storyboard; sourceTree = "<group>"; };
-		B22788FD1FB83AA7009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/WelcomeViewController.storyboard; sourceTree = "<group>"; };
 		B22788FF1FB83AA7009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SelectionViewController.storyboard; sourceTree = "<group>"; };
 		B22789041FB83AC4009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/WalkthroughViewController.storyboard; sourceTree = "<group>"; };
 		B22789061FB83AC4009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/WalkthroughPageViewController.storyboard; sourceTree = "<group>"; };
@@ -291,6 +291,10 @@
 		B243385D22E0AEA8002EBD40 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		B243385F22E57BBC002EBD40 /* ImageButton.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImageButton.xib; sourceTree = "<group>"; };
 		B243386222E57BE7002EBD40 /* ImageButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageButton.swift; sourceTree = "<group>"; };
+		B247A7272482B60F00591BBA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = "Base.lproj/Old ClientViewController.storyboard"; sourceTree = "<group>"; };
+		B247A72A248359F500591BBA /* TitleBar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TitleBar.xib; sourceTree = "<group>"; };
+		B247A72C24835A7C00591BBA /* Title Bar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Title Bar.swift"; sourceTree = "<group>"; };
+		B247A72E2483657600591BBA /* Shadow View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shadow View.swift"; sourceTree = "<group>"; };
 		B24AABDF1EC07274000D34B0 /* Backup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Backup.swift; sourceTree = "<group>"; };
 		B24AABE11EC0BC08000D34B0 /* Upgrade.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Upgrade.swift; sourceTree = "<group>"; };
 		B24AABE31EC4DC5F000D34B0 /* Core Data Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Core Data Class.swift"; sourceTree = "<group>"; };
@@ -510,15 +514,6 @@
 			path = "Contract Whist Watch Extension";
 			sourceTree = "<group>";
 		};
-		B221EED9210B191300F7FBA0 /* Welcome */ = {
-			isa = PBXGroup;
-			children = (
-				B22788FC1FB83AA7009BABCA /* WelcomeViewController.storyboard */,
-				B20DA04B1E179DC70040221D /* WelcomeViewController.swift */,
-			);
-			name = Welcome;
-			sourceTree = "<group>";
-		};
 		B221EEDA210B192400F7FBA0 /* Get Started */ = {
 			isa = PBXGroup;
 			children = (
@@ -594,7 +589,6 @@
 		B221EEE3210B1A7000F7FBA0 /* Scorepad Views */ = {
 			isa = PBXGroup;
 			children = (
-				B221EED9210B191300F7FBA0 /* Welcome */,
 				B221EEDA210B192400F7FBA0 /* Get Started */,
 				B221EEDB210B194300F7FBA0 /* Selection */,
 				B221EEDC210B194C00F7FBA0 /* Game Preview */,
@@ -624,6 +618,7 @@
 				B2F70E511EE8BC470092C19F /* Host Controller Class.swift */,
 				B2CB5C5124669CDA009B44C5 /* Client Controller Class.swift */,
 				B2BFB5BE247AC0D80044F8B6 /* Scoring Controller Class.swift */,
+				B247A7262482B60F00591BBA /* Old ClientViewController.storyboard */,
 			);
 			name = Client;
 			sourceTree = "<group>";
@@ -774,6 +769,7 @@
 				B243385C22E0AE97002EBD40 /* Player View */,
 				B243385722E0A68F002EBD40 /* Selected Players View */,
 				B243386122E57BD1002EBD40 /* Image Button View */,
+				B247A729248359D700591BBA /* Title Bar */,
 				B2430CCA22EABD4800C4FC77 /* Slide Out Button */,
 			);
 			name = "Custom Views";
@@ -804,6 +800,15 @@
 			);
 			name = "Image Button View";
 			path = ..;
+			sourceTree = "<group>";
+		};
+		B247A729248359D700591BBA /* Title Bar */ = {
+			isa = PBXGroup;
+			children = (
+				B247A72A248359F500591BBA /* TitleBar.xib */,
+				B247A72C24835A7C00591BBA /* Title Bar.swift */,
+			);
+			name = "Title Bar";
 			sourceTree = "<group>";
 		};
 		B2594E8922524FBA004398FB /* Scripts */ = {
@@ -877,6 +882,7 @@
 				B2BC51C61F7B5E8C0065F07D /* String Extensions.swift */,
 				B2F41B221FB6BBA70043F974 /* Other Extensions.swift */,
 				B2519456230C4284006240DE /* Custom Transitions.swift */,
+				B247A72E2483657600591BBA /* Shadow View.swift */,
 			);
 			name = "Core Class Extensions";
 			sourceTree = "<group>";
@@ -1277,7 +1283,6 @@
 				B2E556C122C9F86200C49821 /* Colors.xlsx in Resources */,
 				B2DCEFDC246FFBE2007D409B /* View flow host.xlsx in Resources */,
 				B22789081FB83AC4009BABCA /* WalkthroughPageViewController.storyboard in Resources */,
-				B22789011FB83AA7009BABCA /* WelcomeViewController.storyboard in Resources */,
 				CCEA53E31DF3D19F0045292C /* Notes.txt in Resources */,
 				B22789241FB882F7009BABCA /* ClientViewController.storyboard in Resources */,
 				B22789361FB8911F009BABCA /* PlayersViewController.storyboard in Resources */,
@@ -1302,6 +1307,7 @@
 				B25FC7CB22D0733C00D2E651 /* ReviewViewController.storyboard in Resources */,
 				B25FC7CA22D0733C00D2E651 /* OverrideViewController.storyboard in Resources */,
 				B227891E1FB84F66009BABCA /* LocationViewController.storyboard in Resources */,
+				B247A72B248359F500591BBA /* TitleBar.xib in Resources */,
 				B243385922E0A6C3002EBD40 /* SelectedPlayersView.xib in Resources */,
 				B22789001FB83AA7009BABCA /* GetStartedViewController.storyboard in Resources */,
 				B2BE8690234C6BF000766CF2 /* PlayerSelectionView.xib in Resources */,
@@ -1309,6 +1315,7 @@
 				B22789421FB894AE009BABCA /* PlayerDetailViewController.storyboard in Resources */,
 				B227893C1FB8932A009BABCA /* SyncViewController.storyboard in Resources */,
 				B22789391FB8924C009BABCA /* HighScoresViewController.storyboard in Resources */,
+				B247A7282482B61000591BBA /* Old ClientViewController.storyboard in Resources */,
 				B2430CC722EABD1D00C4FC77 /* SlideOutButtonView.xib in Resources */,
 				B22789181FB84A75009BABCA /* RoundSummaryViewController.storyboard in Resources */,
 				CC4CC0FE1DEADC32007FB24F /* Main.storyboard in Resources */,
@@ -1418,6 +1425,7 @@
 				B24AABE41EC4DC5F000D34B0 /* Core Data Class.swift in Sources */,
 				B202A06B1FD122F30070D5DC /* OverrideViewController.swift in Sources */,
 				B2E894D42369EF2E0011AD3D /* ConfettiView.swift in Sources */,
+				B247A72F2483657600591BBA /* Shadow View.swift in Sources */,
 				B2767C1E2110061B0029155E /* Loopback Class.swift in Sources */,
 				B20A66FC1E23921E00E75190 /* Buttons.swift in Sources */,
 				B2021D80247FFE2000A82EBB /* Themes.swift in Sources */,
@@ -1469,10 +1477,10 @@
 				B2B755091E5B363200B1313B /* History Class.swift in Sources */,
 				B2BC51C71F7B5E8C0065F07D /* String Extensions.swift in Sources */,
 				CC4CC1161DEAF0F9007FB24F /* GamePreviewViewController.swift in Sources */,
-				B20DA04C1E179DC70040221D /* WelcomeViewController.swift in Sources */,
 				B2B180122110128C008D3BAA /* (null) in Sources */,
 				B2F7281B1F6D74F9006F0941 /* Invite.swift in Sources */,
 				B20A66FA1E2385B500E75190 /* Reachability.swift in Sources */,
+				B247A72D24835A7C00591BBA /* Title Bar.swift in Sources */,
 				B243385322D89B4E002EBD40 /* ThumbnailView.swift in Sources */,
 				B2FA298E1EA9E215002A5D03 /* Alert.swift in Sources */,
 				B2D2D2DC1ED9975A00CA7B3A /* ClientViewController.swift in Sources */,
@@ -1549,14 +1557,6 @@
 				B22788FB1FB83AA7009BABCA /* Base */,
 			);
 			name = GetStartedViewController.storyboard;
-			sourceTree = "<group>";
-		};
-		B22788FC1FB83AA7009BABCA /* WelcomeViewController.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B22788FD1FB83AA7009BABCA /* Base */,
-			);
-			name = WelcomeViewController.storyboard;
 			sourceTree = "<group>";
 		};
 		B22788FE1FB83AA7009BABCA /* SelectionViewController.storyboard */ = {
@@ -1709,6 +1709,14 @@
 				B22789441FB8951A009BABCA /* Base */,
 			);
 			name = GraphViewController.storyboard;
+			sourceTree = "<group>";
+		};
+		B247A7262482B60F00591BBA /* Old ClientViewController.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B247A7272482B60F00591BBA /* Base */,
+			);
+			name = "Old ClientViewController.storyboard";
 			sourceTree = "<group>";
 		};
 		B25FC7C322D0733C00D2E651 /* SelectPlayersViewController.storyboard */ = {

@@ -267,7 +267,7 @@ class RabbitMQServerService : RabbitMQService, CommsHostServiceDelegate, CommsCo
         }
     }
 
-    required init(mode: CommsConnectionMode, serviceID: String?, deviceName: String) {
+    required init(mode: CommsConnectionMode, serviceID: String?, deviceName: String, purpose: CommsPurpose) {
         super.init(mode: mode, type: .server, serviceID: serviceID, deviceName: deviceName)
     }
     
@@ -368,7 +368,7 @@ class RabbitMQServerService : RabbitMQService, CommsHostServiceDelegate, CommsCo
     
     public class func reset(queueUUIDs: [String]) {
         // Start and stop a list of queues (to notify anyone listening on them to stop)
-        let service = RabbitMQServerService(mode: .queue, serviceID: nil, deviceName: Scorecard.deviceName)
+        let service = RabbitMQServerService(mode: .queue, serviceID: nil, deviceName: Scorecard.deviceName, purpose: .other)
         for queueUUID in queueUUIDs {
             _ = service.startQueue(queueUUID: queueUUID)
             service.sendReset(mode: "stop")

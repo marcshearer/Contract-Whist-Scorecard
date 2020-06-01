@@ -343,13 +343,15 @@ class MultipeerServerService : MultipeerService, CommsHostServiceDelegate, MCNea
     }
     
     internal var handlerState: CommsServiceState = .notStarted
+    private var purpose: CommsPurpose
     private var server: ServerConnection!
 
     // Delegates
     public weak var connectionDelegate: CommsConnectionDelegate!
     public weak var handlerStateDelegate: CommsServiceStateDelegate!
     
-    required init(mode: CommsConnectionMode, serviceID: String?, deviceName: String) {
+    required init(mode: CommsConnectionMode, serviceID: String?, deviceName: String, purpose: CommsPurpose) {
+        self.purpose = purpose
         super.init(mode: mode, type: .server, serviceID: serviceID, deviceName: deviceName)
     }
     
@@ -361,6 +363,7 @@ class MultipeerServerService : MultipeerService, CommsHostServiceDelegate, MCNea
         super.startService(email: email, name: name, recoveryMode: recoveryMode)
         
         var discoveryInfo: [String : String]! = [:]
+        discoveryInfo["purpose"] = self.purpose.rawValue
         discoveryInfo["playerEmail"] = email
         discoveryInfo["playerName"] = name ?? self.connectionName ?? self.myPeerID.displayName
         discoveryInfo["gameUUID"] = matchGameUUID
@@ -452,7 +455,7 @@ class MultipeerServerService : MultipeerService, CommsHostServiceDelegate, MCNea
             self.endSessions(matchDeviceName: deviceName)
             
             // Create / replace peer data
-            let broadcastPeer = BroadcastPeer(parent: self, mcPeer: peerID, deviceName: deviceName, playerEmail: playerEmail, playerName: playerName)
+            let broadcastPeer = BroadcastPeer(parent: self, mcPeer: peerID, deviceName: deviceName, playerEmail: playerEmail, playerName: playerName, purpose: self.purpose)
             self.broadcastPeerList[deviceName] = broadcastPeer
             
             // Create session
@@ -639,11 +642,12 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
                 
                 let gameUUID = info?["gameUUID"]
                 let invite = info?["invite"]?.components(separatedBy: ";")
+                let purpose = CommsPurpose(rawValue: info?["purpose"] ?? "") ?? CommsPurpose.playing
                 if invite == nil || invite!.isEmpty || invite?.first(where: {$0 == self.connectionEmail}) != nil {
                     if self.matchGameUUID == nil || self.matchGameUUID! == gameUUID {
                         var broadcastPeer = self.broadcastPeerList[deviceName]
                         if broadcastPeer == nil {
-                            broadcastPeer = BroadcastPeer(parent: self, mcPeer: peerID, deviceName: deviceName)
+                            broadcastPeer = BroadcastPeer(parent: self, mcPeer: peerID, deviceName: deviceName, purpose: purpose)
                             self.broadcastPeerList[deviceName] = broadcastPeer
                         } else {
                             broadcastPeer?.mcPeer = peerID
@@ -758,6 +762,7 @@ public class BroadcastPeer {
     public var playerEmail: String?    // Remote player email
     public var playerName: String?     // Remote playername
     public var state: CommsConnectionState
+    public var purpose: CommsPurpose
     public var reason: String?
     public var reconnect: Bool = false
     public var shouldReconnect: Bool = false
@@ -768,17 +773,18 @@ public class BroadcastPeer {
         }
     }
     
-    init(parent: MultipeerService, mcPeer: MCPeerID, deviceName: String, playerEmail: String? = "", playerName: String? = "") {
+    init(parent: MultipeerService, mcPeer: MCPeerID, deviceName: String, playerEmail: String? = "", playerName: String? = "", purpose: CommsPurpose) {
         self.parent = parent
         self.mcPeer = mcPeer
         self.playerEmail = playerEmail
         self.playerName = playerName
         self.state = .notConnected
+        self.purpose = purpose
     }
     
     public var commsPeer: CommsPeer {
         get {
-            return CommsPeer(parent: self.parent as CommsServiceDelegate, deviceName: self.deviceName, playerEmail: self.playerEmail, playerName: self.playerName, state: self.state, reason: reason, autoReconnect: reconnect)
+            return CommsPeer(parent: self.parent as CommsServiceDelegate, deviceName: self.deviceName, playerEmail: self.playerEmail, playerName: self.playerName, state: self.state, reason: self.reason, autoReconnect: self.reconnect, purpose: self.purpose)
         }
     }
     

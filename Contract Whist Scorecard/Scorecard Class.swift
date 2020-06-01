@@ -502,52 +502,6 @@ class Scorecard {
         }
     }
     
-    // MARK: - Functions to get view controllers, use main thread and wrapper system level stuff ==============
-    
-    class func getWelcomeViewController() -> WelcomeViewController? { // TODO replace
-        if let rootViewController = UIApplication.shared.keyWindow?.rootViewController {
-            let childViewControllers = rootViewController.children
-            if childViewControllers.count > 0 {
-                let welcomeViewController = childViewControllers[0]
-                if welcomeViewController is WelcomeViewController {
-                    return welcomeViewController as? WelcomeViewController
-                }
-            }
-        }
-        return nil
-    }
-    
-    class func dismissChildren(parent: UIViewController, completion: @escaping ()->()) {
-        if let navigation = Scorecard.getWelcomeViewController()!.navigationController {
-            Scorecard.dismissLastChild(parent: parent, navigation: navigation, child: nil, completion: completion)
-        }
-    }
-    
-    class func dismissLastChild(parent: UIViewController, navigation: UINavigationController, child: UIViewController?, completion: @escaping ()->()) {
-        var nextChild: UIViewController?
-        if child == nil {
-            nextChild = navigation.viewControllers.last
-        } else {
-            nextChild = child
-        }
-        if let nextChild = nextChild {
-            if let presenting = nextChild.presentedViewController {
-                presenting.dismiss(animated: true, completion: {
-                    dismissLastChild(parent: parent, navigation: navigation, child: nextChild, completion: completion)
-                })
-            } else {
-                if let lastChild = nextChild.children.last {
-                    lastChild.dismiss(animated: true, completion: {
-                        dismissLastChild(parent: parent, navigation: navigation, child: nextChild, completion: completion)
-                    })
-                } else {
-                    navigation.popToViewController(parent, animated: true)
-                    completion()
-                }
-            }
-        }
-    }
-    
     // MARK: - Get device name ======================================================================= -
     
     public static var deviceName: String {

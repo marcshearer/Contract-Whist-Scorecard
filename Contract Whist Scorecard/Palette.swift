@@ -18,6 +18,8 @@ class Palette {
     static var bidButtonText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.bidButtonText, traitCollection)})
     static var bold = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.bold, traitCollection)})
     static var boldText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.boldText, traitCollection)})
+    static var buttonFace = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.buttonFace, traitCollection)})
+    static var buttonFaceText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.buttonFaceText, traitCollection)})
     static var continueButton = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.continueButton, traitCollection)})
     static var continueButtonText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.continueButtonText, traitCollection)})
     static var darkHighlight = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.darkHighlight, traitCollection)})

@@ -20,6 +20,8 @@ class Themes {
                             .bidButton                   : (#colorLiteral(red: 0.7164452672, green: 0.7218510509, blue: 0.7215295434, alpha: 1), nil) ,
                             .bold                        : (#colorLiteral(red: 0, green: 0.1469757259, blue: 0.6975850463, alpha: 1), nil) ,
                             .boldText                    : (#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), nil) ,
+                            .buttonFace                  : (#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), nil) ,
+                            .buttonFaceText              : (#colorLiteral(red: 0.4989748001, green: 0.494086206, blue: 0.4981276989, alpha: 1), nil) ,
                             .cardBack                    : (#colorLiteral(red: 0.001431431621, green: 0.06626898795, blue: 0.3973870575, alpha: 1), nil) ,
                             .cardFace                    : (#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), nil) ,
                             .clear                       : (#colorLiteral(red: 0, green: 0, blue: 0, alpha: 0), nil) ,
@@ -158,6 +160,8 @@ enum ThemeColor: String {
     case bidButtonText = "Bid Button Text"
     case bold = "Bold"
     case boldText = "Bold Text"
+    case buttonFace = "Button Face"
+    case buttonFaceText = "Button Face Text"
     case clear = "Clear"
     case continueButton = "Continue Button"
     case continueButtonText = "Continue Button Text"

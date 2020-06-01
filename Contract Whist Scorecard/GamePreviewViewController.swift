@@ -401,7 +401,7 @@ class GamePreviewViewController: ScorecardViewController, ImageButtonDelegate, S
             self.continueButton.isHidden = true
             self.cutForDealerButton.isEnabled = false
             self.cutForDealerButton.alpha = 0.7
-            self.cutForDealerButton.title = ""
+            self.cutForDealerButton.set(title: "")
             self.nextDealerButton.isHidden = true
             self.selectedPlayersView.isEnabled = false
         } else {
@@ -774,10 +774,10 @@ extension GamePreviewViewController {
         self.continueButton.setTitleColor(Palette.continueButtonText, for: .normal)
         self.continueButton.fillColor = Palette.continueButton
         self.continueButton.strokeColor = Palette.continueButton
-        self.cutForDealerButton.textColor = Palette.tableTopTextContrast
+        self.cutForDealerButton.set(titleColor: Palette.tableTopTextContrast)
         self.navigationBar.textColor = Palette.gameBannerText
         self.navigationBar.bannerColor = Palette.gameBanner
-        self.nextDealerButton.textColor = Palette.tableTopTextContrast
+        self.nextDealerButton.set(titleColor: Palette.tableTopTextContrast)
         self.overrideSettingsButton.setTitleColor(Palette.tableTopTextContrast, for: .normal)
         self.overrideSettingsButton.fillColor = Palette.tableTop
         self.overrideSettingsButton.strokeColor = Palette.tableTopTextContrast

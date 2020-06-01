@@ -43,7 +43,7 @@ class LoopbackService: NSObject, CommsServiceDelegate, CommsHostServiceDelegate,
     
     // MARK: - Comms Handler delegate implementation ======================================================== -
 
-    init(mode: CommsConnectionMode, type: CommsConnectionType, serviceID: String?, deviceName: String) {
+    init(mode: CommsConnectionMode, type: CommsConnectionType, serviceID: String?, deviceName: String, purpose: CommsPurpose) {
         self.connectionMode = mode
         self.connectionType = type
         if mode != .loopback {
@@ -55,8 +55,8 @@ class LoopbackService: NSObject, CommsServiceDelegate, CommsHostServiceDelegate,
 
     }
     
-    convenience required init(mode: CommsConnectionMode, serviceID: String?, deviceName: String) {
-        self.init(mode: mode, type: .server, serviceID: serviceID, deviceName: deviceName)
+    convenience required init(mode: CommsConnectionMode, serviceID: String?, deviceName: String, purpose: CommsPurpose) {
+        self.init(mode: mode, type: .server, serviceID: serviceID, deviceName: deviceName, purpose: purpose)
     }
     
     public func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool, matchGameUUID: String!) {

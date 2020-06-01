@@ -10,11 +10,11 @@ import UIKit
 
 protocol ClientControllerDelegate : ScorecardViewController {
     
-    func addPeer(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity, at row: Int)
+    func addPeer(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity, purpose: CommsPurpose, at row: Int)
     
     func removePeer(at row: Int)
     
-    func reflectPeer(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity)
+    func reflectPeer(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity, purpose: CommsPurpose)
     
     func stateChange(to state: ClientAppState)
 }
@@ -44,7 +44,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     private var matchDeviceName: String?
     private var matchProximity: CommsConnectionProximity?
     private var matchGameUUID: String?
-    private var purpose: CommsPurpose
+    private var purpose: CommsPurpose!
     
     private var playerConnected: [String : Bool] = [:]
     private var lastStatus = ""
@@ -55,9 +55,8 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     private var checkInviteTimer: Timer!
     private var connectingTimer: Timer!
     
-    init(from parentViewController: ScorecardViewController, purpose: CommsPurpose, playerEmail: String, playerName: String, matchDeviceName: String?, matchProximity: CommsConnectionProximity?, matchGameUUID: String?) {
+    init(from parentViewController: ScorecardViewController, playerEmail: String, playerName: String, matchDeviceName: String?, matchProximity: CommsConnectionProximity?, matchGameUUID: String?) {
                 
-        self.purpose = purpose
         self.thisPlayer = playerEmail
         self.thisPlayerName = playerName
         self.matchDeviceName = matchDeviceName
@@ -538,7 +537,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                 
                 if peer.state != .notConnected {
                     // Set framework based on this connection (for reconnect at lower level)
-                    self.selectService(proximity: peer.proximity)
+                    self.selectService(proximity: peer.proximity, purpose: peer.purpose)
                     
                     // Don't allow device to timeout
                     UIApplication.shared.isIdleTimerDisabled = true
@@ -571,7 +570,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             playerName = playerMO?.name
         }
         
-        self.selectService(proximity: peer.proximity)
+        self.selectService(proximity: peer.proximity, purpose: peer.purpose)
         
         if faceTimeAddress != nil {
             // Send face time address to remote
@@ -592,7 +591,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         return success
     }
     
-    private func selectService(proximity: CommsConnectionProximity) {
+    private func selectService(proximity: CommsConnectionProximity, purpose: CommsPurpose) {
         // Wire up the selected connection
         switch proximity {
         case .nearby:
@@ -602,7 +601,8 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         default:
             break
         }
-        Scorecard.shared.setCommsDelegate(self.clientService, purpose: self.purpose)
+        self.purpose = (self.clientService == nil ? nil : purpose)
+        Scorecard.shared.setCommsDelegate(self.clientService, purpose: purpose)
         self.setCommsDelegate = true
     }
     
@@ -616,7 +616,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             if refreshRequired {
                 availableFound.stateRequired = true
             }
-            self.delegate?.reflectPeer(deviceName: peer.deviceName, name: peer.playerName!, oldState: availableFound.oldState, state: peer.state, connecting: availableFound.connecting, proximity: peer.proximity)
+            self.delegate?.reflectPeer(deviceName: peer.deviceName, name: peer.playerName!, oldState: availableFound.oldState, state: peer.state, connecting: availableFound.connecting, proximity: peer.proximity, purpose: peer.purpose)
         }
     }
     
@@ -685,7 +685,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             } else if self.controllerState != .reconnecting && (self.matchDeviceName == nil || peer.deviceName == self.matchDeviceName) {
                 // New peer - add to list
                 self.available.insert(Available(peer: peer), at: 0)
-                self.delegate?.addPeer(deviceName: peer.deviceName, name: peer.playerName!, oldState: .notConnected, state: peer.state, connecting: false, proximity: peer.proximity, at: 0)
+                self.delegate?.addPeer(deviceName: peer.deviceName, name: peer.playerName!, oldState: .notConnected, state: peer.state, connecting: false, proximity: peer.proximity, purpose: peer.purpose, at: 0)
             }
         }
         if Config.autoConnectClient || (self.matchDeviceName != nil && peer.deviceName == self.matchDeviceName) {
@@ -732,7 +732,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     }
                 }
             }
-            self.reflectState(peer: available[row].peer)
+            self.reflectState(peer: available[0].peer)
         }
     }
 
@@ -829,7 +829,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     private func createConnections() {
         // Create nearby comms service, take delegates and start listening
         if self.matchProximity == nil || self.matchProximity == .nearby {
-            self.nearbyClientService = CommsHandler.client(proximity: .nearby, mode: .broadcast, serviceID: Scorecard.shared.serviceID(self.purpose), deviceName: Scorecard.deviceName)
+            self.nearbyClientService = CommsHandler.client(proximity: .nearby, mode: .broadcast, serviceID: Scorecard.shared.serviceID(), deviceName: Scorecard.deviceName)
             self.nearbyClientService?.stateDelegate = self
             self.nearbyClientService?.dataDelegate = self
             self.nearbyClientService?.browserDelegate = self

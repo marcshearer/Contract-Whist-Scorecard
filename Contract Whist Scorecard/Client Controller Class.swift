@@ -270,7 +270,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         var stopProcessing = false
         
         if let availableFound = availableFor(peer: peer) {
-            if availableFound.isConnected || (availableFound.state == .connected && (descriptor == "state" || descriptor == "previewPlayers" || descriptor == "dealer")) {
+            if availableFound.isConnected || (availableFound.state == .connected && (descriptor == "state" || descriptor == "previewPlayers" || descriptor == "dealer" || descriptor == "status")) {
                 // Ignore any incoming data (except state) if reconnecting and haven't seen state yet
                 
                 switch descriptor {
@@ -617,6 +617,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                 availableFound.stateRequired = true
             }
             self.delegate?.reflectPeer(deviceName: peer.deviceName, name: peer.playerName!, oldState: availableFound.oldState, state: peer.state, connecting: availableFound.connecting, proximity: peer.proximity, purpose: peer.purpose)
+            self.updateStatus(peer: peer)
         }
     }
     
@@ -634,6 +635,25 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                 }
             }
         }
+    }
+    
+    private func updateStatus(peer: CommsPeer) {
+        if self.activeView == .gamePreview {
+            let personDevice = peer.playerName ?? peer.deviceName
+            switch peer.state {
+            case .notConnected:
+                self.lastStatus = "Disconnected from \(personDevice)"
+            case .connecting:
+                self.lastStatus = "Connecting to \(personDevice)..."
+            case .reconnecting:
+                self.lastStatus = "Reconnecting to \(personDevice)..."
+            case .connected:
+                self.lastStatus = "Waiting for other\n players to connect..."
+            default:
+                break
+            }
+        }
+        self.gamePreviewViewController?.showStatus(status: self.lastStatus)
     }
     
     // MARK: - Play the hand ======================================================================== -
@@ -684,8 +704,9 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                 
             } else if self.controllerState != .reconnecting && (self.matchDeviceName == nil || peer.deviceName == self.matchDeviceName) {
                 // New peer - add to list
-                self.available.insert(Available(peer: peer), at: 0)
-                self.delegate?.addPeer(deviceName: peer.deviceName, name: peer.playerName!, oldState: .notConnected, state: peer.state, connecting: false, proximity: peer.proximity, purpose: peer.purpose, at: 0)
+                let item = self.available.count
+                self.available.insert(Available(peer: peer), at: item)
+                self.delegate?.addPeer(deviceName: peer.deviceName, name: peer.playerName!, oldState: .notConnected, state: peer.state, connecting: false, proximity: peer.proximity, purpose: peer.purpose, at: item)
             }
         }
         if Config.autoConnectClient || (self.matchDeviceName != nil && peer.deviceName == self.matchDeviceName) {
@@ -711,10 +732,10 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     }
     
     private func removeEntry(peer: CommsPeer) {
-        if let row = availableIndexFor(peer: peer, checkMode: false) {
+        if let item = availableIndexFor(peer: peer, checkMode: false) {
             // Remove entry
-            self.available.remove(at: row)
-            self.delegate?.removePeer(at: row)
+            self.available.remove(at: item)
+            self.delegate?.removePeer(at: item)
         }
     }
      
@@ -724,12 +745,10 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     
     public func connect(row: Int, faceTimeAddress: String) {
         if row < available.count {
-            if self.connect(peer: available[row].peer, faceTimeAddress: faceTimeAddress) {
-                for index in (0..<self.available.count).reversed() {
-                    if index != row {
-                        // Need to lose any other peers
-                        self.removeEntry(peer: self.available[index].peer)
-                    }
+            if let peer = available[row].peer {
+                if self.connect(peer: peer, faceTimeAddress: faceTimeAddress) {
+                    self.lastStatus = ("Connecting to \((peer.playerName ?? peer.deviceName))...")
+                    self.present(nextView: .gamePreview)
                 }
             }
             self.reflectState(peer: available[0].peer)
@@ -871,7 +890,6 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
 
             self.controllerState = state
             
-            
             if state == .notConnected || state == .reconnecting {
                 if startTimers {
                     self.startCheckInviteTimer(interval: (state == .reconnecting ? 1 : 5))
@@ -879,6 +897,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             } else {
                 self.stopCheckInviteTimer()
             }
+            
             if state == .connecting {
                 if startTimers {
                     self.startConnectingTimer()

@@ -102,6 +102,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var bannerView: UIView!
     @IBOutlet private weak var bannerContinuation: BannerContinuation!
     @IBOutlet private weak var bannerOverlap: UIView!
+    @IBOutlet private weak var adminMenuButton: ClearButton!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var thisPlayerThumbnail: ThumbnailView!
     @IBOutlet private weak var hostTitleBar: TitleBar!
@@ -120,20 +121,11 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var bottomSectionBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var playerSelectionView: PlayerSelectionView!
     @IBOutlet private weak var playerSelectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var tapGestureRecognizer: UITapGestureRecognizer!
 
-
-    // MARK: - TODO Remove OLD IB Outlets ============================================================================== -
-    
-     private weak var scrollView: UIScrollView!
-     private weak var navigationBar: NavigationBar!
-     private weak var thisPlayerTitle: UILabel!
-     private weak var thisPlayerNameLabel: UILabel!
-     private weak var changePlayerButton: AngledButton!
-     private weak var menuButton: ClearButton!
-    
     // MARK: - IB Actions ============================================================================== -
         
-    @IBAction func changePlayerPressed(_ sender: UIButton) {
+    @IBAction private func tapGesture(recognizer: UITapGestureRecognizer) {
         if self.choosingPlayer {
             self.hidePlayerSelection()
         } else {
@@ -291,21 +283,13 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             self.playerSelectionView.set(parent: self)
             self.playerSelectionView.delegate = self
         }
-        let selectionHeight = self.view.frame.height - self.playerSelectionView.frame.minY - self.scrollView.frame.minY
-        self.playerSelectionView.set(size: CGSize(width: UIScreen.main.bounds.width, height: selectionHeight))
-        let requiredHeight = self.playerSelectionView.getHeightFor(items: Scorecard.shared.playerList.count + 1)
-        if requiredHeight > selectionHeight {
-            self.playerSelectionView.set(size: CGSize(width: UIScreen.main.bounds.width, height: requiredHeight))
-        }
-        UIView.performWithoutAnimation {
-            // Update labels without animation to avoid distraction
-            self.thisPlayerNameLabel.text = "Choose Player"
-            self.thisPlayerNameLabel.layoutIfNeeded()
-            self.changePlayerButton.setTitle("Cancel", for: .normal)
-            self.changePlayerButton.layoutIfNeeded()
-        }
-        if !alreadyChoosingPlayer {
-            self.scrollView.scrollRectToVisible(CGRect(), animated: false)
+        
+        Utility.animate(view: self.view, duration: 0.5) {
+            let selectionHeight = self.view.frame.height - self.playerSelectionView.frame.minY + self.view.safeAreaInsets.bottom
+            self.playerSelectionView.set(size: CGSize(width: UIScreen.main.bounds.width, height: selectionHeight))
+            self.playerSelectionViewHeightConstraint.constant = selectionHeight
+            self.bottomSectionBottomConstraint.constant = self.bottomSectionBottomConstraint.constant - selectionHeight
+            self.thisPlayerThumbnail.name.text = "Cancel"
         }
         
         let playerList = Scorecard.shared.playerList.filter { $0.email != self.thisPlayer }
@@ -316,10 +300,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private func hidePlayerSelection() {
         self.choosingPlayer = false
         self.showThisPlayer()
-        self.scrollView.isScrollEnabled = true
 
         Utility.animate(view: self.view, duration: 0.5) {
             self.playerSelectionViewHeightConstraint.constant = 0.0
+            self.bottomSectionBottomConstraint.constant = 0.0
         }
         self.peerReloadData()
     }
@@ -357,27 +341,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             self.showGetStarted()
         })
         
-        self.addAction(title: "Settings", action: { () in
-            self.showSettings()
-        })
-        
-        self.addAction(title: "Score Game", action: { () in
-            self.scoreGame()
-        })
-        
-        self.addAction(title: "Players", isHidden: {Scorecard.shared.playerList.count == 0}, action: { () in
-            self.showPlayers()
-        })
-        
         self.addAction(title: "Statistics", isHidden: {Scorecard.shared.playerList.count == 0}, action: { () in
             self.statisticsViewer = StatisticsViewer(from: self) {
                 self.statisticsViewer = nil
-            }
-        })
-        
-        self.addAction(title: "History", isHidden: {!Scorecard.activeSettings.saveHistory || Scorecard.shared.playerList.count == 0}, action: { () in
-            self.historyViewer = HistoryViewer(from: self) {
-                self.historyViewer = nil
             }
         })
         
@@ -638,7 +604,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         case peerScrollCollection:
             size = CGSize(width: 10, height: 10)
         case peerCollection:
-            size = CGSize(width: self.peerCollectionView.frame.width, height: self.peerCollectionView.frame.height)
+            size = self.peerCollectionView.bounds.size
         default:
             break
         }
@@ -688,6 +654,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 peerCell.label.backgroundColor = Palette.background
                 peerCell.label.textColor = Palette.text
                 peerCell.label.text = "No devices are currently offering\nto host a game for you to join"
+                peerCell.label.font = UIFont.systemFont(ofSize: 20.0, weight: .light)
+                peerCell.leftScrollButton.isHidden = true
+                peerCell.rightScrollButton.isHidden = true
                 
             } else {
                 var name: String
@@ -741,11 +710,21 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 case .reconnecting:
                     serviceText = "Trying to reconnect to \(name)"
                 }
-                                
+
+                peerCell.label.font = UIFont.systemFont(ofSize: 20.0, weight: .bold)
                 peerCell.label.backgroundColor = Palette.gameBanner
                 peerCell.label.textColor = Palette.gameBannerText
                 peerCell.label.text = serviceText
-            }
+             }
+             
+             peerCell.leftScrollButton.isHidden = (indexPath.row <= 0 || self.availablePeers.count <= 1)
+             peerCell.leftScrollButton.addTarget(self, action: #selector(ClientViewController.scrollPeers(_:)), for: .touchUpInside)
+             peerCell.leftScrollButton.tag = indexPath.row - 1
+             
+             peerCell.rightScrollButton.isHidden = (indexPath.row >= self.availablePeers.count - 1 || self.availablePeers.count <= 1)
+             peerCell.rightScrollButton.addTarget(self, action: #selector(ClientViewController.scrollPeers(_:)), for: .touchUpInside)
+             peerCell.rightScrollButton.tag = indexPath.row + 1
+             
             cell = peerCell
 
         case peerScrollCollection:
@@ -804,7 +783,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         Utility.mainThread {
             self.displayingPeer = self.displayedPeer()
             self.peerScrollCollectionView.reloadData()
-            self.separators(areHidden: true)
         }
     }
     
@@ -812,19 +790,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         let offset = peerCollectionView.contentOffset.x
         return Utility.round(Double(offset / self.peerCollectionView.frame.width))
     }
-    
-    private func separators(index: Int? = nil, areHidden: Bool) {
-        let item = self.displayedPeer()
-        if let cell = peerCollectionView.cellForItem(at: IndexPath(item: item, section: 0)) as? PeerCollectionViewCell {
-            if let index = index {
-                cell.separator[index].isHidden = areHidden
-            } else {
-                cell.separator.forEach { $0.isHidden = areHidden}
-            }
-            
-        }
-    }
-    
+        
     // MARK: - Image button delegate handlers =============================================== -
     
     internal func imageButtonPressed(_ button: ImageButton) {
@@ -860,6 +826,14 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 self.hostGame(mode: mode, playerEmail: self.thisPlayer)
             }
         }
+    }
+    
+    // MARK: - Button actions =============================================================== -
+    
+    @objc private func scrollPeers(_ button: UIButton) {
+        self.peerCollectionView.scrollToItem(at: IndexPath(item: button.tag, section: 0), at: .centeredHorizontally, animated: true)
+        self.displayingPeer = button.tag
+        self.peerScrollCollectionView.reloadData()
     }
     
     // MARK: - Action buttons =============================================================== -
@@ -1067,7 +1041,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     internal func changePlayerAvailable() {
         let available = (self.appState == .notConnected && !self.recoveryMode)
-        self.changePlayerButton?.isHidden = !available
+        self.tapGestureRecognizer.isEnabled = available
     }
     
     public func refreshStatus() {
@@ -1082,34 +1056,36 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     // MARK: - Client controller delegates ======================================================================== -
     
-    internal func addPeer(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity, purpose: CommsPurpose, at row: Int) {
+    internal func addPeer(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity, purpose: CommsPurpose, at item: Int) {
         self.peerCollectionView.performBatchUpdates( {
             self.peerScrollCollectionView.performBatchUpdates( {
                 let host = AvailablePeer(deviceName: deviceName, name: name, oldState: oldState, state: state, connecting: connecting, proximity: proximity, purpose: purpose)
-                self.availablePeers.insert(host, at: row)
+                self.availablePeers.insert(host, at: item)
                 if self.availablePeers.count > 1 {
                     // Add to collection view
-                    self.peerCollectionView.insertItems(at: [IndexPath(row: row, section: 0)])
+                    self.peerCollectionView.insertItems(at: [IndexPath(item: item, section: 0)])
                 } else {
                     // Replace placeholder
-                    self.peerCollectionView.reloadItems(at: [IndexPath(row: row, section: 0)])
+                    self.peerCollectionView.reloadItems(at: [IndexPath(row: item, section: 0)])
                 }
+                self.peerScrollCollectionView.reloadData()
                 self.setScrollWidth()
             })
         })
     }
     
-    internal func removePeer(at row: Int) {
+    internal func removePeer(at item: Int) {
         Utility.mainThread {
             self.peerCollectionView.performBatchUpdates( {
                 self.peerScrollCollectionView.performBatchUpdates( {
-                    self.availablePeers.remove(at: row)
+                    self.availablePeers.remove(at: item)
                     if self.availablePeers.count == 0 {
                         // Replace with placeholder
-                        self.peerCollectionView.reloadItems(at: [IndexPath(row: row, section: 0)])
+                        self.peerCollectionView.reloadItems(at: [IndexPath(row: item, section: 0)])
                     } else {
                         // Remove from collection view
-                        self.peerCollectionView.deleteItems(at: [IndexPath(row: row, section: 0)])
+                        self.peerCollectionView.deleteItems(at: [IndexPath(row: item, section: 0)])
+                        self.peerScrollCollectionView.deleteItems(at: [IndexPath(row: item, section: 0)])
                     }
                     self.setScrollWidth()
                 })
@@ -1119,7 +1095,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     private func setScrollWidth() {
         let items = self.availablePeers.count
-        self.peerScrollCollectionViewWidthConstraint.constant = (items <= 1 ? 0.0 : (CGFloat(items) * 15.0) - 5.0)
+        self.peerScrollCollectionViewWidthConstraint.constant = (CGFloat(items) * 15.0) - 5.0
+        self.peerScrollCollectionView.isHidden = (items <= 1)
         self.displayingPeer = self.displayedPeer()
         self.peerScrollCollectionView.reloadData()
     }
@@ -1170,7 +1147,8 @@ class HostCollectionViewCell: UICollectionViewCell {
 
 class PeerCollectionViewCell: UICollectionViewCell {
     @IBOutlet fileprivate weak var label: UILabel!
-    @IBOutlet fileprivate var separator: [UIView]!
+    @IBOutlet fileprivate weak var leftScrollButton: UIButton!
+    @IBOutlet fileprivate weak var rightScrollButton: UIButton!
 }
 
 class PeerScrollCollectionViewCell: UICollectionViewCell {
@@ -1214,6 +1192,7 @@ extension ClientViewController {
         self.hostTitleBar.backgroundColor = Palette.buttonFace
         self.hostTitleBar.set(faceColor: Palette.buttonFace)
         self.hostTitleBar.set(textColor: Palette.buttonFaceText)
+        self.adminMenuButton.tintColor = Palette.gameBannerText
         self.titleLabel.textColor = Palette.gameBannerText
         self.thisPlayerThumbnail.set(textColor: Palette.gameBannerText)
         self.thisPlayerThumbnail.set(font: UIFont.systemFont(ofSize: 15, weight: .bold))
@@ -1239,7 +1218,10 @@ extension ClientViewController {
         self.hostCollectionContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0), shadowOpacity: 0.1, shadowRadius: 2.0)
         self.peerCollectionContentView.roundCorners(cornerRadius: 8.0, topRounded: false, bottomRounded: true)
         self.peerCollectionContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0), shadowOpacity: 0.1, shadowRadius: 2.0)
-        self.bottomSectionBottomConstraint.constant = (self.view.safeAreaInsets.bottom == 0.0 ? 10.0 : 0.0)
+        self.peerScrollCollectionView.isHidden = (self.availablePeers.count <= 1)
+        if self.firstTime {
+            self.bottomSectionBottomConstraint.constant = (self.view.safeAreaInsets.bottom == 0.0 ? 10.0 : 0.0)
+        }
         self.playersButton.setProportions(top: 30, image: 0, imageBottom: 0, title: 15, titleBottom: 0, message: 0, bottom: 30)
         self.resultsButton.setProportions(top: 30, image: 0, imageBottom: 0, title: 15, titleBottom: 0, message: 0, bottom: 30)
         self.settingsButton.setProportions(top: 30, image: 0, imageBottom: 0, title: 15, titleBottom: 0, message: 0, bottom: 30)
@@ -1253,7 +1235,7 @@ extension ClientViewController {
     }
     
     private func defaultCellColors(cell: PeerCollectionViewCell) {
-        cell.separator.forEach { $0.backgroundColor = UIColor.clear }
-        self.separators(areHidden: true)
+        cell.leftScrollButton.imageView?.tintColor = Palette.gameBannerText
+        cell.rightScrollButton.imageView?.tintColor = Palette.gameBannerText
     }
 }

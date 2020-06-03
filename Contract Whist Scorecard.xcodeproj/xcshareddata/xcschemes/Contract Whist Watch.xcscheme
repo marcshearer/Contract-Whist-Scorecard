@@ -29,7 +29,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "CC4CC0F41DEADC32007FB24F"
-               BuildableName = "Contract Whist Scorecard.app"
+               BuildableName = "Whist 2.app"
                BlueprintName = "Contract Whist Scorecard"
                ReferencedContainer = "container:Contract Whist Scorecard.xcodeproj">
             </BuildableReference>

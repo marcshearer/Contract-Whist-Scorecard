@@ -12,12 +12,20 @@ class CustomCollectionViewLayout: UICollectionViewFlowLayout {
 
     private var cache: [UICollectionViewLayoutAttributes] = []
     
-    private var contentWidth: CGFloat = 0
-    private var alphaFactor: CGFloat = 1.0
-    private var scaleFactor: CGFloat = 0.98
+    @IBInspectable private var fixedFactors: Bool = true
+    @IBInspectable private var alphaFactor: CGFloat = 1.0
+    @IBInspectable private var scaleFactor: CGFloat = 0.98
+    
+    private var contentWidth: CGFloat = 0.0
+    private var collectionViewWidth: CGFloat = 0.0
+    private var collectionViewHeight: CGFloat = 0.0
     
     private var contentHeight: CGFloat {
         return collectionView?.bounds.height ?? 0.0
+    }
+    
+    private var cellWidth: CGFloat {
+        return self.itemSize.width
     }
 
     override internal var collectionViewContentSize: CGSize {
@@ -28,38 +36,38 @@ class CustomCollectionViewLayout: UICollectionViewFlowLayout {
         cache = []
         if let collectionView = collectionView {
             let items = collectionView.numberOfItems(inSection: 0)
-            let width = collectionView.bounds.width
             
-            self.contentWidth = collectionView.bounds.width * CGFloat(items)
+            let delegate = self.collectionView?.delegate as! UICollectionViewDelegateFlowLayout
+            self.itemSize = delegate.collectionView!(collectionView, layout: self, sizeForItemAt: IndexPath(item: 0, section: 0))
+            self.collectionViewWidth = collectionView.bounds.width
+            self.collectionViewHeight = collectionView.bounds.height
+            self.contentWidth = (self.cellWidth * CGFloat(items)) + 20.0
             
             for item in 0..<items {
-                let frame = CGRect(x: CGFloat(item) * width, y: 0, width: width, height: self.contentHeight)
+                let frame = CGRect(x: CGFloat(item) * self.cellWidth, y: 0, width: self.cellWidth, height: self.itemSize.height)
                 let attributes = UICollectionViewLayoutAttributes(forCellWith: IndexPath(item: item, section: 0))
                 attributes.frame = frame
                 cache.append(attributes)
             }
-            
         }
     }
     
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        if let collectionView = collectionView {
-            var layoutAttributes: [UICollectionViewLayoutAttributes] = []
-            let items = cache.count
-            let minItem = max(0, Utility.round(Double(rect.minX / collectionView.bounds.width)))
-            let maxItem = min(Utility.round(Double(rect.maxX / collectionView.bounds.width)), max(0,items - 1))
+
+        var layoutAttributes: [UICollectionViewLayoutAttributes] = []
+        let items = cache.count
+        
+        let minItem = max(0, Utility.round(Double(rect.minX / self.cellWidth)))
+        let maxItem = min(Utility.round(Double(rect.maxX / self.cellWidth)), max(0,items - 1))
+        
+        if minItem < items {
             
-            if minItem < items {
-                
-                for item in minItem...maxItem {
-                    layoutAttributes.append(transformLayoutAttributes(cache[item].copy() as! UICollectionViewLayoutAttributes))
-                }
-                
-                return layoutAttributes
-                
-            } else {
-                return nil
+            for item in minItem...maxItem {
+                layoutAttributes.append(transformLayoutAttributes(cache[item].copy() as! UICollectionViewLayoutAttributes))
             }
+            
+            return layoutAttributes
+            
         } else {
             return nil
         }
@@ -76,42 +84,33 @@ class CustomCollectionViewLayout: UICollectionViewFlowLayout {
     fileprivate func transformLayoutAttributes(_ attributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
         guard let collectionView = self.collectionView else { return attributes }
         
-        let collectionCenter = collectionView.frame.size.width/2
-        let offset = collectionView.contentOffset.x
-        let normalizedCenter = attributes.center.x - offset
+        var alpha: CGFloat
+        var scale: CGFloat
         
-        let maxDistance = self.itemSize.width + self.minimumLineSpacing
-        let distance = min(abs(collectionCenter - normalizedCenter), maxDistance)
-        let ratio = (maxDistance - distance)/maxDistance
+        let offsetCenter = collectionView.contentOffset.x + (self.collectionViewWidth / 2.0)
+        let distanceFromOffsetCenter = abs(attributes.center.x - offsetCenter)
+        let itemsAcross = self.collectionViewWidth / self.cellWidth
+        let itemsFromCenter = (distanceFromOffsetCenter / self.cellWidth)
         
-        let alpha = ratio * (1 - alphaFactor) + alphaFactor
-        let scale = ratio * (1 - scaleFactor) + scaleFactor
+        if self.fixedFactors {
+            alpha = (itemsFromCenter == 0 ? 1 : alphaFactor)
+            scale = (itemsFromCenter == 0 ? 1 : scaleFactor)
+        } else {
+            let multiplier = itemsFromCenter / (itemsAcross / 2)
+            alpha = 1 - (multiplier * alphaFactor)
+            scale = 1 - (multiplier * scaleFactor)
+        }
+        
         attributes.alpha = alpha
-        attributes.transform3D = CATransform3DScale(CATransform3DIdentity, scale, 1, 1)
+        attributes.transform3D = CATransform3DScale(CATransform3DIdentity, scale, scale, 1)
         
         return attributes
     }
     
-    override open func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
-        guard let collectionView = collectionView , !collectionView.isPagingEnabled,
-            let layoutAttributes = self.layoutAttributesForElements(in: collectionView.bounds)
-            else { return super.targetContentOffset(forProposedContentOffset: proposedContentOffset) }
-        
-        let isHorizontal = (self.scrollDirection == .horizontal)
-        
-        let midSide = (isHorizontal ? collectionView.bounds.size.width : collectionView.bounds.size.height) / 2
-        let proposedContentOffsetCenterOrigin = (isHorizontal ? proposedContentOffset.x : proposedContentOffset.y) + midSide
-        
-        var targetContentOffset: CGPoint
-        if isHorizontal {
-            let closest = layoutAttributes.sorted { abs($0.center.x - proposedContentOffsetCenterOrigin) < abs($1.center.x - proposedContentOffsetCenterOrigin) }.first ?? UICollectionViewLayoutAttributes()
-            targetContentOffset = CGPoint(x: floor(closest.center.x - midSide), y: proposedContentOffset.y)
-        }
-        else {
-            let closest = layoutAttributes.sorted { abs($0.center.y - proposedContentOffsetCenterOrigin) < abs($1.center.y - proposedContentOffsetCenterOrigin) }.first ?? UICollectionViewLayoutAttributes()
-            targetContentOffset = CGPoint(x: proposedContentOffset.x, y: floor(closest.center.y - midSide))
-        }
-        
-        return targetContentOffset
+    override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
+        let proposedCenter = proposedContentOffset.x + (self.collectionViewWidth / 2.0)
+        let itemAtCenter = Int(proposedCenter / self.cellWidth)
+        let requiredOffset = ((CGFloat(itemAtCenter) + 0.5) * self.cellWidth) - (self.collectionViewWidth / 2.0)
+        return CGPoint(x: requiredOffset, y: proposedContentOffset.y)
     }
 }

@@ -10,6 +10,9 @@ import Foundation
 
 class Config {
     
+    // iCloud database identifer
+    public static let iCloudIdentifier = "iCloud.MarcShearer.Contract-Whist-Scorecard"
+    
     // In development don't use iCloud to notify invitees - hard-code as below
     public static let _debugNoICloudOnline = false
        
@@ -24,8 +27,6 @@ class Config {
     
     // Auto-start host for quicker testing
     public static let autoStartHost = false
-    
-    // MARK: - Utility code - should not need to be changed ============================================== -
     
     // MARK: - Debug online games without access to iCloud - always returns invites for Jack and Emma -
     

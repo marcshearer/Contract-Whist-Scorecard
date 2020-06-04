@@ -11,7 +11,7 @@ import UIKit
 class Themes {
     
     static let themes: [String : Theme] = [
-        "Default" : Theme(descriptino: "Default colour theme", color: [
+        "Default"         : Theme(description: "Default", color: [
                             .alternateBackground         : (#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil) ,
                             .background                  : (#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil) ,
                             .bannerText                  : (#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil) ,
@@ -41,6 +41,7 @@ class Themes {
                             .error                       : (#colorLiteral(red: 0.9166395068, green: 0.1978720129, blue: 0.137429297, alpha: 1), nil) ,
                             .errorText                   : (#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), nil) ,
                             .gameBanner                  : (#colorLiteral(red: 0.9281279445, green: 0.4577305913, blue: 0.4537009001, alpha: 1), nil) ,
+                            .gameBannerShadow            : (#colorLiteral(red: 0.968627451, green: 0.4980392157, blue: 0.4941176471, alpha: 1), nil) ,
                             .gameBannerText              : (#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), nil) ,
                             .grid                        : (#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), nil) ,
                             .halo                        : (#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil) ,
@@ -93,17 +94,35 @@ class Themes {
                             .text                        : (#colorLiteral(red: 0.4989748001, green: 0.494086206, blue: 0.4981276989, alpha: 1), nil) ,
                             .textEmphasised              : (#colorLiteral(red: 0.9009206891, green: 0.745765388, blue: 0.3741720319, alpha: 1), nil) ,
                             .textError                   : (#colorLiteral(red: 0.9210745692, green: 0.1963090301, blue: 0.1316265166, alpha: 1), nil) ,
-                            .textMessage                 : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil)
-            ]),
+                            .textMessage                 : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ]),
             
             
-            "Alternate" : Theme(descriptino: "Alternative colour theme", color: [
-                         .gameBanner                 : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)) ,
-                         .background                 : (#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)) ,
-                         .roomInterior               : (#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), #colorLiteral(red: 0.1694289744, green: 0.1694289744, blue: 0.1694289744, alpha: 1)) ,
-                         .hand                       : (#colorLiteral(red: 0.2931554019, green: 0.6582073569, blue: 0.6451457739, alpha: 1), #colorLiteral(red: 0.1694289744, green: 0.1694289744, blue: 0.1694289744, alpha: 1)) ,
-                         .tableTop                   : (#colorLiteral(red: 0.5406154394, green: 0.8017265201, blue: 0.5650425553, alpha: 1), #colorLiteral(red: 0.2255345461, green: 0.4820669776, blue: 0.2524022623, alpha: 1))
-            ])]
+        "Alternate"         : Theme(description: "Alternate", color: [
+                            .textEmphasised             : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), nil) ,
+                            .emphasis                   : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
+                            .gameBanner                 : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)) ,
+                            .gameBannerShadow           : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)) ,
+                            .background                 : (#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)) ,
+                            .roomInterior               : (#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), #colorLiteral(red: 0.1694289744, green: 0.1694289744, blue: 0.1694289744, alpha: 1)) ,
+                            .hand                       : (#colorLiteral(red: 0.2931554019, green: 0.6582073569, blue: 0.6451457739, alpha: 1), #colorLiteral(red: 0.1694289744, green: 0.1694289744, blue: 0.1694289744, alpha: 1)) ,
+                            .tableTop                   : (#colorLiteral(red: 0.5406154394, green: 0.8017265201, blue: 0.5650425553, alpha: 1), #colorLiteral(red: 0.2255345461, green: 0.4820669776, blue: 0.2524022623, alpha: 1)) ]),
+        
+        "Red"               : Theme(description: "Red", color: [
+                            .textEmphasised             : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), nil) ,
+                            .emphasis                   : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), nil) ,
+                            .banner                     : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)) ,
+                            .gameBanner                 : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)) ]),
+
+        "Blue"              : Theme(description: "Blue", color: [
+                            .textEmphasised             : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
+                            .emphasis                   : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
+                            .gameBanner                 : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)) ]),
+        
+        "Green"             : Theme(description: "Green", color: [
+                            .textEmphasised             : (#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), nil) ,
+                            .emphasis                   : (#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), nil) ,
+                            .gameBanner                 : (#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)) ])]
+    
     
     static var currentTheme: Theme!
     static var defaultName = "Default"
@@ -140,15 +159,33 @@ class Themes {
 
 class Theme {
     
-    let descriptino: String
+    let description: String
     let basedOn: String?
     var color: [ThemeColor : (any: UIColor , dark: UIColor?)]
     
-    init(descriptino: String, basedOn: String? = nil, color: [ThemeColor : (any: UIColor, dark: UIColor?)]) {
-        self.descriptino = descriptino
+    init(description: String, basedOn: String? = nil, color: [ThemeColor : (any: UIColor, dark: UIColor?)]) {
+        self.description = description
         self.basedOn = basedOn
         self.color = color
     }
+    
+    func color(_ themeColor: ThemeColor, _ traitCollection: UITraitCollection) -> UIColor {
+        
+        if self.color[themeColor]?.any == nil {
+            if let basedOn = self.basedOn, let basedOnTheme = Themes.themes[basedOn] {
+                return basedOnTheme.color(themeColor, traitCollection)
+            } else {
+                return Themes.themes[Themes.defaultName]?.color(themeColor, traitCollection) ?? UIColor.clear
+            }
+        }
+        
+        if UITraitCollection.current.userInterfaceStyle == .dark && self.color[themeColor]?.dark != nil {
+            return self.color[themeColor]?.dark ?? UIColor.clear
+        } else {
+            return self.color[themeColor]?.any ?? UIColor.clear
+        }
+    }
+
 }
 
 enum ThemeColor: String {
@@ -175,6 +212,7 @@ enum ThemeColor: String {
     case error = "Error"
     case errorText = "Error Text"
     case gameBanner = "Game Banner"
+    case gameBannerShadow = "Game Banner Shadow"
     case gameBannerText = "Game Banner Text"
     case halo = "Halo"
     case haloDealer = "Halo Dealer"

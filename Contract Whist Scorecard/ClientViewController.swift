@@ -81,10 +81,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private var isLoggedIn: Bool?
     
     private var hostingOptions: Int = 0
-    private var onlineItem: Int = -1
-    private var nearbyItem: Int = -1
-    private var scoringItem: Int = -1
-    private var robotItem: Int = -1
+    private var onlineItem: Int?
+    private var nearbyItem: Int?
+    private var scoringItem: Int?
+    private var robotItem: Int?
     private var playersItem: Int = -1
     private var resultsItem: Int = -2
     private var settingsItem: Int = -3
@@ -105,6 +105,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var adminMenuButton: ClearButton!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var thisPlayerThumbnail: ThumbnailView!
+    @IBOutlet private weak var infoButtonContainer: UIView!
+    @IBOutlet private weak var infoButton: RoundedButton!
     @IBOutlet private weak var hostTitleBar: TitleBar!
     @IBOutlet private weak var hostCollectionContainerView: UIView!
     @IBOutlet private weak var hostCollectionContentView: UIView!
@@ -135,6 +137,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     @IBAction func actionButtonPressed(_ sender: UIButton) {
         self.showActionMenu()
+    }
+    
+    @IBAction func infoButtonPressed(_ sender: UIButton) {
+        self.showWalkthrough()
     }
     
     @IBAction func rotationGesture(recognizer:UIRotationGestureRecognizer) {
@@ -267,11 +273,18 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     private func showSettingsCompletion() {
         Scorecard.game.reset()
+        self.setupThisPlayer()
+        self.showThisPlayer()
+        hostCollectionView.reloadData()
         self.restart()
     }
     
     private func showPlayers() {
         PlayersViewController.show(from: self, completion: {self.restart()})
+    }
+    
+    private func showWalkthrough() {
+        WalkthroughPageViewController.show(from: self)
     }
     
     // MARK: - Player Selection View Delegate Handlers ======================================================= -
@@ -618,7 +631,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         case hostCollection:
             let hostCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Host Cell", for: indexPath) as! HostCollectionViewCell
             
-            hostCell.button.setProportions(top: 8, image: 20, imageBottom: 3, title: 10, titleBottom: 5, message: 30, bottom: 5)
+            hostCell.button.setProportions(top: 12, image: 20, imageBottom: 3, title: 10, titleBottom: 1, message: 25, bottom: 5)
             hostCell.button.delegate = self
             hostCell.button.tag = indexPath.row
             self.defaultCellColors(cell: hostCell)
@@ -888,10 +901,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.selectPeer(sender.tag)
     }
     
-    private func selectPeer(_ row: Int) {
-        let availableFound = availablePeers[row]
+    private func selectPeer(_ item: Int) {
+        let availableFound = availablePeers[item]
         self.checkFaceTime(peer: availableFound, completion: { (faceTimeAddress) in
-            self.clientController.connect(row: row, faceTimeAddress: faceTimeAddress ?? "")
+            self.clientController.connect(row: item, faceTimeAddress: faceTimeAddress ?? "")
         })
     }
     
@@ -1064,6 +1077,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 if self.availablePeers.count > 1 {
                     // Add to collection view
                     self.peerCollectionView.insertItems(at: [IndexPath(item: item, section: 0)])
+                    if item != self.displayingPeer {
+                        self.peerCollectionView.reloadItems(at: [IndexPath(item: self.displayingPeer, section: 0)])
+                    }
                 } else {
                     // Replace placeholder
                     self.peerCollectionView.reloadItems(at: [IndexPath(row: item, section: 0)])
@@ -1085,6 +1101,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                     } else {
                         // Remove from collection view
                         self.peerCollectionView.deleteItems(at: [IndexPath(row: item, section: 0)])
+                        if item != self.displayingPeer {
+                            self.peerCollectionView.reloadItems(at: [IndexPath(item: self.displayingPeer, section: 0)])
+                        }
                         self.peerScrollCollectionView.deleteItems(at: [IndexPath(row: item, section: 0)])
                     }
                     self.setScrollWidth()
@@ -1196,6 +1215,8 @@ extension ClientViewController {
         self.titleLabel.textColor = Palette.gameBannerText
         self.thisPlayerThumbnail.set(textColor: Palette.gameBannerText)
         self.thisPlayerThumbnail.set(font: UIFont.systemFont(ofSize: 15, weight: .bold))
+        self.infoButton.backgroundColor = Palette.gameBannerShadow
+        self.infoButton.setTitleColor(Palette.gameBannerText, for: .normal)
         self.hostCollectionView.backgroundColor = Palette.buttonFace
         self.peerTitleBar.set(faceColor: Palette.buttonFace)
         self.peerTitleBar.set(textColor: Palette.buttonFaceText)
@@ -1214,6 +1235,8 @@ extension ClientViewController {
     }
     
     private func layoutControls() {
+        self.infoButton.toCircle()
+        self.infoButtonContainer.addShadow(shadowSize: CGSize(width: 2.0, height: 2.0), shadowOpacity: 0.2, shadowRadius: 1.0)
         self.hostCollectionContentView.roundCorners(cornerRadius: 8.0, topRounded: false, bottomRounded: true)
         self.hostCollectionContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0), shadowOpacity: 0.1, shadowRadius: 2.0)
         self.peerCollectionContentView.roundCorners(cornerRadius: 8.0, topRounded: false, bottomRounded: true)

@@ -32,6 +32,7 @@ class Palette {
     static var error = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.error, traitCollection)})
     static var errorText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.errorText, traitCollection)})
     static var gameBanner = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.gameBanner, traitCollection)})
+    static var gameBannerShadow = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.gameBannerShadow, traitCollection)})
     static var gameBannerText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.gameBannerText, traitCollection)})
     static var halo = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.halo, traitCollection)})
     static var haloDealer = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.haloDealer, traitCollection)})

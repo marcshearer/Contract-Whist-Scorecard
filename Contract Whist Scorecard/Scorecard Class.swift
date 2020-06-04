@@ -343,7 +343,7 @@ class Scorecard {
             self.reflectNetworkConnection(button: button, label: label, labelHeightConstraint: labelHeightConstraint, labelHeight: labelHeight, disable: disable, action: action)
             
             // Now check icloud asynchronously
-            CKContainer.default().accountStatus(completionHandler: { (accountStatus, errorMessage) -> Void in
+            CKContainer.init(identifier: Config.iCloudIdentifier).accountStatus(completionHandler: { (accountStatus, errorMessage) -> Void in
                 self.isLoggedIn = (accountStatus == .available)
                 self.reflectNetworkConnection(button: button, label: label, disable: disable, action: action)
             })
@@ -486,7 +486,7 @@ class Scorecard {
     private func setICloudUserIsMe() {
         
         self.iCloudUserIsMe = false
-        let container = CKContainer.default()
+        let container = CKContainer.init(identifier: Config.iCloudIdentifier)
         container.fetchUserRecordID() {
             recordID, error in
             if error == nil {

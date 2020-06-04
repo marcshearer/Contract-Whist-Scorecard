@@ -216,7 +216,7 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
             // First retrieve it from the cloud
             let syncDate = Date()
             var cloudObject: CKRecord!
-            let cloudContainer = CKContainer.default()
+            let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
             let publicDatabase = cloudContainer.publicCloudDatabase
             let predicate = NSPredicate(format: "gameUUID = %@", gameDetail.gameUUID)
             let query = CKQuery(recordType: "Games", predicate: predicate)
@@ -266,7 +266,7 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
     func saveParticipants(gameUUID: String, syncDate: Date) {
         // Retrieve participants of game and set sync date
         var cloudObjectList: [CKRecord] = []
-        let cloudContainer = CKContainer.default()
+        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
         let publicDatabase = cloudContainer.publicCloudDatabase
         let predicate = NSPredicate(format: "gameUUID = %@", gameUUID)
         let query = CKQuery(recordType: "Participants", predicate: predicate)

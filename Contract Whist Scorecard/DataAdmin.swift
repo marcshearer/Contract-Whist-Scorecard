@@ -39,7 +39,7 @@ class DataAdmin {
     class func deleteAllCloudRecords(viewController: UIViewController, recordType: String, cursor: CKQueryOperation.Cursor! = nil, completion: @escaping ()->()) {
         var recordIdList: [CKRecord.ID] = []
         var errors = false
-        let cloudContainer = CKContainer.default()
+        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
         let publicDatabase = cloudContainer.publicCloudDatabase
         var queryOperation:CKQueryOperation
         

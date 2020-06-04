@@ -63,15 +63,12 @@ private enum SyncPhase {
     case phaseGetExistingParticipants
     case phaseGetNewParticipants
     case phaseGetGameParticipants
-    case phaseGetSpecificParticipants
-    case phaseGetRelatedParticipants
-    case phaseBuildGameList
-    case phaseBuildPlayerList
     case phaseUpdateParticipants
     case phaseGetGames
     case phaseUpdateGames
     case phaseSendGamesAndParticipants
     case phaseGetPlayers
+    case phaseGetLinkedPlayers
     case phaseGetPlayerList
     case phaseSendPlayers
     case phaseGetSendImages
@@ -88,7 +85,6 @@ private enum GetParticipantMode {
     case getNew
     case getGame
     case getSpecific
-    case getRelated
 }
 
 class Sync {
@@ -185,26 +181,14 @@ class Sync {
                     // Got a specifc External Id - load players that match - not currently used
                     syncPhases = [.phaseGetVersion,
                                   .phaseGetPlayerList]
-                } else if self.specificEmail.count == 0 {
-                    // General request to get any players linked to currently loaded players - partial sync to update local participants and then deduce list
-                    syncPhases = [.phaseGetVersion,
-                                  .phaseGetLastSyncDate,
-                                  .phaseGetExistingParticipants, .phaseUpdateParticipants,
-                                  .phaseGetNewParticipants,      .phaseUpdateParticipants,
-                                  .phaseGetGames,                .phaseUpdateGames,
-                                  .phaseGetGameParticipants,     .phaseUpdateParticipants,
-                                  .phaseGetPlayerList]
                 } else {
-                    // Have been passed a list of (probably 1) email addresses - get a list of games that user has participated in and then get other participants
+                    // General request to get any players linked to currently loaded players or a specific email - now using links
                     syncPhases = [.phaseGetVersion,
-                                  .phaseGetSpecificParticipants,
-                                  .phaseBuildGameList,
-                                  .phaseGetRelatedParticipants,
-                                  .phaseBuildPlayerList,
+                                  .phaseGetLinkedPlayers,
                                   .phaseGetPlayerList]
                 }
             case .syncGetPlayerDetails:
-                // Downdload the player records for each player in the list of specific emails
+                // Download the player records for each player in the list of specific emails
                 syncPhases = [.phaseGetVersion,
                               .phaseGetPlayerList]
             }
@@ -261,10 +245,6 @@ class Sync {
                     nextPhase = self.getParticipantsFromCloud(.getNew)
                 case .phaseGetGameParticipants:
                     nextPhase = self.getParticipantsFromCloud(.getGame)
-                case .phaseGetSpecificParticipants:
-                    nextPhase = self.getParticipantsFromCloud(.getSpecific)
-                case .phaseGetRelatedParticipants:
-                    nextPhase = self.getParticipantsFromCloud(.getRelated)
                 case .phaseUpdateParticipants:
                     nextPhase = self.updateParticipantsFromCloud()
                 case .phaseGetGames:
@@ -281,11 +261,9 @@ class Sync {
                     self.fetchPlayerImagesFromCloud(self.playerImageFromCloud)
                     self.sendPlayerImagesToCloud(self.playerImageToCloud)
                     nextPhase = true
-                case .phaseBuildGameList:
-                    nextPhase = self.buildGameListFromParticipants()
-                case .phaseBuildPlayerList:
-                    nextPhase = self.buildPlayerListFromParticipants()
-                case .phaseGetPlayerList:
+                case .phaseGetLinkedPlayers:
+                    nextPhase = self.getLinkedPlayers(specificEmail: self.specificEmail)
+               case .phaseGetPlayerList:
                     nextPhase = self.downloadPlayersFromCloud(specificExternalId: self.specificExternalId,
                                                               specificEmail: self.specificEmail,
                                                               downloadAction: self.addPlayerList,
@@ -332,7 +310,7 @@ class Sync {
         var database: String! = ""
         var cloudRabbitMQUri = ""
         
-        let cloudContainer = CKContainer.default()
+        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
         let publicDatabase = cloudContainer.publicCloudDatabase
         let query = CKQuery(recordType: "Version", predicate: NSPredicate(value: true))
         let queryOperation = CKQueryOperation(query: query, qos: .userInteractive)
@@ -489,9 +467,6 @@ class Sync {
         case .getGame:
             // Get participants for a list of all games updated since the cutoff date
             gameUUIDList = History.getNewGames(cutoffDate: lastSyncDate)
-        case .getRelated:
-            // Get participant for a list of games set up elsewhere (usually a list of games a particular player was involved in)
-            gameUUIDList = self.gameUUIDList
         default:
             gameUUIDList = nil
         }
@@ -502,7 +477,7 @@ class Sync {
     private func getParticipantsFromCloudQuery(_ getParticipantMode: GetParticipantMode, gameUUIDList: [String]? = nil, remainder: [String]? = nil, cursor: CKQueryOperation.Cursor! = nil) -> Bool {
         // Fetch data from cloud
         var queryOperation: CKQueryOperation
-        let cloudContainer = CKContainer.default()
+        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
         let publicDatabase = cloudContainer.publicCloudDatabase
         var predicate: NSCompoundPredicate
         var predicateList: [String]
@@ -528,7 +503,7 @@ class Sync {
                 predicateList = self.specificEmail
                 let predicate1 = NSPredicate(format: "email IN %@", argumentArray: [predicateList])
                 predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate1])
-            case .getGame, .getRelated:
+            case .getGame:
                 // Get participants for a list of games - Can only fetch 50 at a time
                 if gameUUIDList == nil {
                     predicateList = []
@@ -549,10 +524,6 @@ class Sync {
                 return true
             }
             let query = CKQuery(recordType: "Participants", predicate: predicate)
-            if getParticipantMode == .getRelated {
-                let sortDescriptor = NSSortDescriptor(key: "email", ascending: true)
-                query.sortDescriptors = [sortDescriptor]
-            }
             queryOperation = CKQueryOperation(query: query, qos: .userInteractive)
         } else {
             queryOperation = CKQueryOperation(cursor: cursor, qos: .userInteractive)
@@ -649,40 +620,7 @@ class Sync {
         
         return true
     }
-    
-    private func buildGameListFromParticipants() -> Bool {
         
-        gameUUIDList = []
-        
-        if cloudObjectList.count == 0 {
-            self.syncReturnPlayers(nil)
-        } else {
-            for cloudObject in cloudObjectList {
-                let gameUUID = Utility.objectString(cloudObject: cloudObject, forKey: "gameUUID")
-                if gameUUID != nil {
-                    gameUUIDList.append(gameUUID!)
-                }
-            }
-        }
-        
-        return true
-    }
-    
-    private func buildPlayerListFromParticipants() -> Bool {
-        var lastEmail = ""
-        
-        specificEmail = []
-        for cloudObject in cloudObjectList {
-            let email = Utility.objectString(cloudObject: cloudObject, forKey: "email")
-            if email != nil && email != "" && email != lastEmail {
-                specificEmail.append(email!)
-                lastEmail = email!
-            }
-        }
-        
-        return true
-    }
-    
     // MARK: - Functions to update local games history from cloud ====================================================== -
     
     private func getGamesFromCloud() -> Bool {
@@ -701,7 +639,7 @@ class Sync {
         var remainder = remainder
         
         var queryOperation: CKQueryOperation
-        let cloudContainer = CKContainer.default()
+        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
         let publicDatabase = cloudContainer.publicCloudDatabase
         
         if cursor == nil {
@@ -848,6 +786,19 @@ class Sync {
                             participantsQueued += 1
                         }
                     }
+                    // Send any link records (might be duplicates)
+                    for historyParticipant in historyGame.participant {
+                        for linkedParticipant in historyGame.participant {
+                            let from = historyParticipant.participantMO.email!
+                            let to = linkedParticipant.participantMO.email!
+                            if from != to {
+                                let cloudObject = CKRecord(recordType: "Links", recordID:  CKRecord.ID(recordName: "\(from)->\(to)"))
+                                cloudObject.setValue(from, forKey: "fromPlayer")
+                                cloudObject.setValue(to, forKey: "toPlayer")
+                                self.cloudObjectList.append(cloudObject)
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -880,8 +831,9 @@ class Sync {
     
     private func sendRecordsToCloud(records: [CKRecord], remainder: [CKRecord]? = nil, completion: ((Bool)->())? = nil) {
         // Copes with limit being exceeed which splits the load in two and tries again
-        let cloudContainer = CKContainer.default()
+        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
         let publicDatabase = cloudContainer.publicCloudDatabase
+        var allLinkErrors = true
         
         let uploadOperation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
         
@@ -891,6 +843,11 @@ class Sync {
         uploadOperation.perRecordCompletionBlock = { (savedRecord: CKRecord, error: Error?) -> Void in
             // Ignore status as will just keep sending them until they come back down
             if error != nil {
+                let recordType = savedRecord.recordType
+                if recordType != "Links" {
+                    // An error other than on the links - worry about it
+                    allLinkErrors = false
+                }
             }
         }
         
@@ -910,18 +867,20 @@ class Sync {
                         let firstBlock = Array(allRecords.prefix(upTo: split))
                         let secondBlock = Array(allRecords.suffix(from: split))
                         self.sendRecordsToCloud(records: firstBlock, remainder: secondBlock, completion: completion)
+                    } else if error.code == .partialFailure {
+                        completion?(allLinkErrors)
+                    } else {
+                        completion?(false)
                     }
                 } else {
-                    if completion != nil {
-                        completion!(false)
-                    }
+                    completion?(false)
                 }
             } else {
                 if remainder != nil {
                     // Now need to send second block
                     self.sendRecordsToCloud(records: remainder!, completion: completion)
-                } else if completion != nil {
-                    completion!(true)
+                } else {
+                    completion?(true)
                 }
             }
         }
@@ -932,12 +891,100 @@ class Sync {
     
     // MARK: - Functions to synchronise players with cloud ====================================================== -
     
+    private func getLinkedPlayers(specificEmail: [String]) -> Bool {
+        var results: [String] = specificEmail
+        
+        return downloadLinksFromCloudQuery(specificEmail: specificEmail,
+                                                 downloadAction: { (record) in
+                                                    if let toPlayer = record.value(forKey: "toPlayer") as? String {
+                                                        if results.first(where: {$0 == toPlayer}) == nil {
+                                                            results.append(toPlayer)
+                                                        }
+                                                    }
+                                                 },
+                                                 completeAction: {
+                                                    self.specificEmail = results
+                                                    self.syncController()
+                                                 })
+        
+    }
+    
+    private func downloadLinksFromCloudQuery(specificEmail: [String],
+                                             cursor: CKQueryOperation.Cursor! = nil,
+                                             downloadAction: @escaping (CKRecord) -> (),
+                                             completeAction: @escaping () -> ()) -> Bool {
+        
+        var queryOperation: CKQueryOperation
+        var predicate: NSPredicate!
+
+        // Fetch link records from cloud
+        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let publicDatabase = cloudContainer.publicCloudDatabase
+        if cursor == nil {
+            // First time in - set up the query
+            var emailList: [String]
+            if self.specificEmail.count != 0 {
+                emailList = self.specificEmail
+            } else  {
+                emailList = Scorecard.shared.playerEmailList()
+            }
+            if emailList.count == 0 {
+                return true
+            }
+            predicate = NSPredicate(format: "fromPlayer IN %@", argumentArray: [emailList])
+            let query = CKQuery(recordType: "Links", predicate: predicate)
+            queryOperation = CKQueryOperation(query: query, qos: .userInteractive)
+        } else {
+            // Continue previous query
+            queryOperation = CKQueryOperation(cursor: cursor, qos: .userInteractive)
+        }
+        queryOperation.desiredKeys = ["toPlayer"]
+        queryOperation.queuePriority = .veryHigh
+        queryOperation.recordFetchedBlock = { (record) -> Void in
+            let cloudObject: CKRecord = record
+            downloadAction(cloudObject)
+        }
+        
+        queryOperation.queryCompletionBlock = { (cursor, error) -> Void in
+            if error != nil {
+                var message = "Unable to fetch links from cloud!"
+                if Scorecard.adminMode {
+                    message = message + " " + error.debugDescription
+                }
+                self.syncMessage(message)
+                self.errors += 1
+                self.syncController()
+                return
+            }
+            
+            if Scorecard.adminMode {
+                self.syncMessage("\(self.downloadedPlayerRecordList.count) player records downloaded")
+            }
+            
+            if cursor != nil {
+                // More to come - recurse
+                _ = self.downloadLinksFromCloudQuery(specificEmail: specificEmail,
+                                                       cursor: cursor,
+                                                       downloadAction: downloadAction,
+                                                       completeAction: completeAction)
+            } else {
+                completeAction()
+            }
+        }
+        
+        // Execute the query
+        publicDatabase.add(queryOperation)
+        
+        return false
+    }
+
     private func synchronisePlayersWithCloud(specificEmail: [String] = []) -> Bool {
         return downloadPlayersFromCloud(specificExternalId:nil,
                                         specificEmail: specificEmail,
                                         downloadAction: self.mergePlayerCloudObject,
                                         completeAction: self.completeSynchronisePlayersWithCloud)
     }
+    
     
     private func downloadPlayersFromCloud(specificExternalId: String! = nil,
                                   specificEmail: [String],
@@ -969,7 +1016,7 @@ class Sync {
         var predicate: NSPredicate!
         
         // Fetch player records from cloud
-        let cloudContainer = CKContainer.default()
+        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
         let publicDatabase = cloudContainer.publicCloudDatabase
         if cursor == nil {
             // First time in - set up the query
@@ -1289,7 +1336,7 @@ class Sync {
         }
         
         // Create a CKModifyRecordsOperation operation
-        let cloudContainer = CKContainer.default()
+        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
         let publicDatabase = cloudContainer.publicCloudDatabase
         
         let uploadOperation = CKModifyRecordsOperation(recordsToSave: self.cloudObjectList, recordIDsToDelete: nil)
@@ -1374,7 +1421,7 @@ class Sync {
     public func fetchPlayerImagesFromCloud(_ playerImageFromCloud: [PlayerMO]) {
         if playerImageFromCloud.count > 0 {
             
-            let cloudContainer = CKContainer.default()
+            let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
             let publicDatabase = cloudContainer.publicCloudDatabase
             var imageRecordID: [CKRecord.ID] = []
             self.cloudObjectList = []
@@ -1419,7 +1466,7 @@ class Sync {
     private func sendPlayerImagesToCloud(_ playerImageToCloud: [PlayerMO]) {
         if playerImageToCloud.count > 0 {
             
-            let cloudContainer = CKContainer.default()
+            let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
             let publicDatabase = cloudContainer.publicCloudDatabase
             
             for playerNumber in 1...playerImageToCloud.count {
@@ -1475,7 +1522,7 @@ class Sync {
             emailList.append(player)
         }
         // Fetch player records from cloud
-        let cloudContainer = CKContainer.default()
+        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
         let publicDatabase = cloudContainer.publicCloudDatabase
         predicate = NSPredicate(format: "email IN %@", argumentArray: [emailList])
         let query = CKQuery(recordType: "Players", predicate: predicate)
@@ -1508,7 +1555,7 @@ class Sync {
             }
             
             // Now send back the records with External Id updated
-            let cloudContainer = CKContainer.default()
+            let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
             let publicDatabase = cloudContainer.publicCloudDatabase
             
             let uploadOperation = CKModifyRecordsOperation(recordsToSave: downloadList, recordIDsToDelete: nil)

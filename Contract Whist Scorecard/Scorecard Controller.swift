@@ -449,9 +449,9 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     
     // MARK: - Properties and Methods to be overridden in sub-classes ================================= -
     
-    internal var canProceed: Bool { get { fatalError("Must be overridden") ; return true} }
+    internal var canProceed: Bool { get { fatalError("Must be overridden") } }
       
-    internal var canCancel: Bool { get { fatalError("Must be overridden") ; return true} }
+    internal var canCancel: Bool { get { fatalError("Must be overridden") } }
       
     internal func refreshView(view: ScorecardView) {
         fatalError("Must be overridden")

@@ -152,4 +152,11 @@ class WalkthroughPageViewController: UIPageViewController, UIPageViewControllerD
         }
     }
     
+    public static func show(from viewController: UIViewController) {
+        let storyboard = UIStoryboard(name: "WalkthroughPageViewController", bundle: nil)
+        if let pageViewController = storyboard.instantiateViewController(withIdentifier: "WalkthroughPageViewController") as? WalkthroughPageViewController {
+            pageViewController.modalPresentationStyle = .fullScreen
+            viewController.present(pageViewController, animated: true, completion: nil)
+        }
+    }
 }

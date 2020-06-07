@@ -14,8 +14,9 @@ class Themes {
         "Default"         : Theme(description: "Default", color: [
                             .alternateBackground         : (#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil) ,
                             .background                  : (#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil) ,
-                            .bannerText                  : (#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil) ,
                             .banner                      : (#colorLiteral(red: 0.8961163759, green: 0.7460593581, blue: 0.3743121624, alpha: 1), nil) ,
+                            .bannerShadow                : (#colorLiteral(red: 0.9176470588, green: 0.7647058824, blue: 0.3882352941, alpha: 1), nil) ,
+                            .bannerText                  : (#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil) ,
                             .bidButtonText               : (#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil) ,
                             .bidButton                   : (#colorLiteral(red: 0.7164452672, green: 0.7218510509, blue: 0.7215295434, alpha: 1), nil) ,
                             .bold                        : (#colorLiteral(red: 0, green: 0.1469757259, blue: 0.6975850463, alpha: 1), nil) ,
@@ -99,29 +100,38 @@ class Themes {
             
         "Alternate"         : Theme(description: "Alternate", color: [
                             .textEmphasised             : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), nil) ,
+                            .gameBanner                 : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
                             .emphasis                   : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
-                            .gameBanner                 : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)) ,
-                            .gameBannerShadow           : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)) ,
-                            .background                 : (#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)) ,
-                            .roomInterior               : (#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), #colorLiteral(red: 0.1694289744, green: 0.1694289744, blue: 0.1694289744, alpha: 1)) ,
-                            .hand                       : (#colorLiteral(red: 0.2931554019, green: 0.6582073569, blue: 0.6451457739, alpha: 1), #colorLiteral(red: 0.1694289744, green: 0.1694289744, blue: 0.1694289744, alpha: 1)) ,
-                            .tableTop                   : (#colorLiteral(red: 0.5406154394, green: 0.8017265201, blue: 0.5650425553, alpha: 1), #colorLiteral(red: 0.2255345461, green: 0.4820669776, blue: 0.2524022623, alpha: 1)) ]),
+                            .banner                     : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .bannerShadow               : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .gameBannerShadow           : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .background                 : (#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1))  ,
+                            .roomInterior               : (#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), #colorLiteral(red: 0.1694289744, green: 0.1694289744, blue: 0.1694289744, alpha: 1))  ,
+                            .hand                       : (#colorLiteral(red: 0.2931554019, green: 0.6582073569, blue: 0.6451457739, alpha: 1), #colorLiteral(red: 0.1694289744, green: 0.1694289744, blue: 0.1694289744, alpha: 1))  ,
+                            .tableTop                   : (#colorLiteral(red: 0.5406154394, green: 0.8017265201, blue: 0.5650425553, alpha: 1), #colorLiteral(red: 0.2255345461, green: 0.4820669776, blue: 0.2524022623, alpha: 1))  ]),
         
         "Red"               : Theme(description: "Red", color: [
                             .textEmphasised             : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), nil) ,
                             .emphasis                   : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), nil) ,
-                            .banner                     : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)) ,
-                            .gameBanner                 : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)) ]),
+                            .banner                     : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .bannerShadow               : (#colorLiteral(red: 0.6901960784, green: 0.2431372549, blue: 0.2235294118, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .gameBannerShadow           : (#colorLiteral(red: 0.6901960784, green: 0.2431372549, blue: 0.2235294118, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .gameBanner                 : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ]),
 
         "Blue"              : Theme(description: "Blue", color: [
                             .textEmphasised             : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
                             .emphasis                   : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
-                            .gameBanner                 : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)) ]),
+                            .banner                     : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .bannerShadow               : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .gameBannerShadow           : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .gameBanner                 : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ]),
         
         "Green"             : Theme(description: "Green", color: [
                             .textEmphasised             : (#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), nil) ,
                             .emphasis                   : (#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), nil) ,
-                            .gameBanner                 : (#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)) ])]
+                            .banner                     : (#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .gameBannerShadow           : (#colorLiteral(red: 0.431372549, green: 0.6901960784, blue: 0.6823529412, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .gameBanner                 : (#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ])]
     
     
     static var currentTheme: Theme!
@@ -148,12 +158,8 @@ class Themes {
         }
     }
     
-    static func color(_ themeColor: ThemeColor, _ traitCollection: UITraitCollection) -> UIColor {
-        if traitCollection.userInterfaceStyle == .dark && self.currentTheme.color[themeColor]?.dark != nil {
-            return self.currentTheme.color[themeColor]?.dark ?? UIColor.black
-        } else {
-            return self.currentTheme.color[themeColor]?.any ?? UIColor.white
-        }
+    static func color(_ themeColor: ThemeColor, _ traitCollection: UITraitCollection = UITraitCollection.current) -> UIColor {
+        return self.currentTheme.getColor(themeColor, traitCollection)
     }
 }
 
@@ -169,21 +175,27 @@ class Theme {
         self.color = color
     }
     
-    func color(_ themeColor: ThemeColor, _ traitCollection: UITraitCollection) -> UIColor {
+    public func color(_ themeColor: ThemeColor, _ traitCollection: UITraitCollection = UITraitCollection.current) -> UIColor {
+        return UIColor(dynamicProvider: { (traitCollection) in return self.getColor(themeColor, traitCollection) })
+    }
+    
+    fileprivate func getColor(_ themeColor: ThemeColor, _ traitCollection: UITraitCollection) -> UIColor {
+        var color: UIColor
         
         if self.color[themeColor]?.any == nil {
             if let basedOn = self.basedOn, let basedOnTheme = Themes.themes[basedOn] {
-                return basedOnTheme.color(themeColor, traitCollection)
+                color = basedOnTheme.getColor(themeColor, traitCollection)
             } else {
-                return Themes.themes[Themes.defaultName]?.color(themeColor, traitCollection) ?? UIColor.clear
+                color = Themes.themes[Themes.defaultName]?.getColor(themeColor, traitCollection) ?? UIColor.clear
+            }
+        } else {
+            if UITraitCollection.current.userInterfaceStyle == .dark && self.color[themeColor]?.dark != nil {
+                color = self.color[themeColor]?.dark ?? UIColor.clear
+            } else {
+                color = self.color[themeColor]?.any ?? UIColor.clear
             }
         }
-        
-        if UITraitCollection.current.userInterfaceStyle == .dark && self.color[themeColor]?.dark != nil {
-            return self.color[themeColor]?.dark ?? UIColor.clear
-        } else {
-            return self.color[themeColor]?.any ?? UIColor.clear
-        }
+        return color
     }
 
 }
@@ -191,8 +203,9 @@ class Theme {
 enum ThemeColor: String {
     case alternateBackground = "Alternate Background"
     case background = "Background"
-    case bannerText = "Banner Text"
     case banner = "Banner"
+    case bannerShadow = "Banner Shadow"
+    case bannerText = "Banner Text"
     case bidButton = "Bid Button"
     case bidButtonText = "Bid Button Text"
     case bold = "Bold"

@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol CustomCollectionViewLayoutDelegate : class {
+    func changed(_ collectionView: UICollectionView, itemAtCenter: Int, forceScroll: Bool)
+}
+
 class CustomCollectionViewLayout: UICollectionViewFlowLayout {
 
     private var cache: [UICollectionViewLayoutAttributes] = []
@@ -15,6 +19,8 @@ class CustomCollectionViewLayout: UICollectionViewFlowLayout {
     @IBInspectable private var fixedFactors: Bool = true
     @IBInspectable private var alphaFactor: CGFloat = 1.0
     @IBInspectable private var scaleFactor: CGFloat = 0.98
+    
+    public weak var delegate: CustomCollectionViewLayoutDelegate!
     
     private var contentWidth: CGFloat = 0.0
     private var collectionViewWidth: CGFloat = 0.0
@@ -82,27 +88,30 @@ class CustomCollectionViewLayout: UICollectionViewFlowLayout {
     }
     
     fileprivate func transformLayoutAttributes(_ attributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
-        guard let collectionView = self.collectionView else { return attributes }
         
-        var alpha: CGFloat
-        var scale: CGFloat
+        if let collectionView = self.collectionView {
         
-        let offsetCenter = collectionView.contentOffset.x + (self.collectionViewWidth / 2.0)
-        let distanceFromOffsetCenter = abs(attributes.center.x - offsetCenter)
-        let itemsAcross = self.collectionViewWidth / self.cellWidth
-        let itemsFromCenter = (distanceFromOffsetCenter / self.cellWidth)
-        
-        if self.fixedFactors {
-            alpha = (itemsFromCenter == 0 ? 1 : alphaFactor)
-            scale = (itemsFromCenter == 0 ? 1 : scaleFactor)
-        } else {
-            let multiplier = itemsFromCenter / (itemsAcross / 2)
-            alpha = 1 - (multiplier * alphaFactor)
-            scale = 1 - (multiplier * scaleFactor)
+            var alpha: CGFloat
+            var scale: CGFloat
+            
+            let offsetCenter = collectionView.contentOffset.x + (self.collectionViewWidth / 2.0)
+            let distanceFromOffsetCenter = abs(attributes.center.x - offsetCenter)
+            let itemsAcross = self.collectionViewWidth / self.cellWidth
+            let itemsFromCenter = (distanceFromOffsetCenter / self.cellWidth)
+            
+            if self.fixedFactors {
+                alpha = (itemsFromCenter == 0 ? 1 : alphaFactor)
+                scale = (itemsFromCenter == 0 ? 1 : scaleFactor)
+            } else {
+                let multiplier = itemsFromCenter / (itemsAcross / 2)
+                alpha = 1 - (multiplier * alphaFactor)
+                scale = 1 - (multiplier * scaleFactor)
+            }
+            
+            attributes.alpha = alpha
+            attributes.transform3D = CATransform3DScale(CATransform3DIdentity, scale, scale, 1)
+            
         }
-        
-        attributes.alpha = alpha
-        attributes.transform3D = CATransform3DScale(CATransform3DIdentity, scale, scale, 1)
         
         return attributes
     }
@@ -110,6 +119,9 @@ class CustomCollectionViewLayout: UICollectionViewFlowLayout {
     override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
         let proposedCenter = proposedContentOffset.x + (self.collectionViewWidth / 2.0)
         let itemAtCenter = Int(proposedCenter / self.cellWidth)
+        if let collectionView = collectionView {
+            self.delegate?.changed(collectionView, itemAtCenter: itemAtCenter, forceScroll: false)
+        }
         let requiredOffset = ((CGFloat(itemAtCenter) + 0.5) * self.cellWidth) - (self.collectionViewWidth / 2.0)
         return CGPoint(x: requiredOffset, y: proposedContentOffset.y)
     }

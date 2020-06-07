@@ -23,19 +23,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        
-        Themes.selectTheme(name: "Alternate")
-        
-        UINavigationBar.appearance().barTintColor = Palette.emphasis
-        UINavigationBar.appearance().tintColor = UIColor.white
-        UINavigationBar.appearance().isOpaque = true
-        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = Palette.background
-        
+                        
         registerDefaults()
         
         // Cache main context for core data
         CoreData.context = self.persistentContainer.viewContext
 
+        Themes.selectTheme(name: Scorecard.shared.settings.colorTheme)
+
+        UINavigationBar.appearance().barTintColor = Palette.emphasis
+        UINavigationBar.appearance().tintColor = UIColor.white
+        UINavigationBar.appearance().isOpaque = true
+        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = Palette.background
+        
         // Check if launched from notification
         if let options = launchOptions {
             let remoteNotification = options[.remoteNotification] as? [AnyHashable : Any]
@@ -67,7 +67,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             "database":                 "",
             "rabbitMQUri":              "",
             "alertVibrate":             true,
-            "onlinePlayerEmail":        "",
+            "thisPlayerEmail":          "",
             "tempOnlineEmail":          false,
             "trumpSequence":            ["♣︎", "♦︎", "♥︎" ,"♠︎", "NT"],
             "prefersStatusBarHidden":   true

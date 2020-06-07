@@ -10,88 +10,183 @@ import UIKit
 
 class Palette {
     
-    static var alternateBackground = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.alternateBackground, traitCollection)})
-    static var background = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.background, traitCollection)})
-    static var banner = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.banner, traitCollection)})
-    static var bannerText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.bannerText, traitCollection)})
-    static var bidButton = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.bidButton, traitCollection)})
-    static var bidButtonText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.bidButtonText, traitCollection)})
-    static var bold = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.bold, traitCollection)})
-    static var boldText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.boldText, traitCollection)})
-    static var buttonFace = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.buttonFace, traitCollection)})
-    static var buttonFaceText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.buttonFaceText, traitCollection)})
-    static var continueButton = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.continueButton, traitCollection)})
-    static var continueButtonText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.continueButtonText, traitCollection)})
-    static var darkHighlight = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.darkHighlight, traitCollection)})
-    static var darkHighlightText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.darkHighlightText, traitCollection)})
-    static var darkHighlightTextContrast = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.darkHighlightTextContrast, traitCollection)})
-    static var disabledText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.disabledText, traitCollection)})
-    static var disabled = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.disabled, traitCollection)})
-    static var emphasis = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.emphasis, traitCollection)})
-    static var emphasisText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.emphasisText, traitCollection)})
-    static var error = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.error, traitCollection)})
-    static var errorText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.errorText, traitCollection)})
-    static var gameBanner = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.gameBanner, traitCollection)})
-    static var gameBannerShadow = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.gameBannerShadow, traitCollection)})
-    static var gameBannerText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.gameBannerText, traitCollection)})
-    static var halo = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.halo, traitCollection)})
-    static var haloDealer = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.haloDealer, traitCollection)})
-    static var hand = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.hand, traitCollection)})
-    static var handText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.handText, traitCollection)})
-    static var handTextContrast = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.handTextContrast, traitCollection)})
-    static var highlight = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.highlight, traitCollection)})
-    static var highlightText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.highlightText, traitCollection)})
-    static var inputControl = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.inputControl, traitCollection)})
-    static var inputControlText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.inputControlText, traitCollection)})
-    static var inputControlPlaceholder = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.inputControlPlaceholder, traitCollection)})
-    static var instruction = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.instruction, traitCollection)})
-    static var instructionText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.instructionText, traitCollection)})
-    static var madeContract = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.madeContract, traitCollection)})
-    static var madeContractText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.madeContractText, traitCollection)})
-    static var roomInterior = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.roomInterior, traitCollection)})
-    static var roomInteriorText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.roomInteriorText, traitCollection)})
-    static var roomInteriorTextContrast = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.roomInteriorTextContrast, traitCollection)})
-    static var sectionHeading = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.sectionHeading, traitCollection)})
-    static var sectionHeadingText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.sectionHeadingText, traitCollection)})
-    static var sectionHeadingTextContrast = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.sectionHeadingTextContrast, traitCollection)})
-    static var tableTop = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.tableTop, traitCollection)})
-    static var tableTopText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.tableTopText, traitCollection)})
-    static var tableTopTextContrast = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.tableTopTextContrast, traitCollection)})
-    static var total = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.total, traitCollection)})
-    static var totalText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.totalText, traitCollection)})
-    static var thumbnailDisc = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.thumbnailDisc, traitCollection)})
-    static var thumbnailDiscText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.thumbnailDiscText, traitCollection)})
-    static var thumbnailPlaceholder = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.thumbnailPlaceholder, traitCollection)})
-    static var thumbnailPlaceholderText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.thumbnailPlaceholderText, traitCollection)})
-    static var separator = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.separator, traitCollection)})
-    static var grid = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.grid, traitCollection)})
-    static var text = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.text, traitCollection)})
-    static var textEmphasised = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.textEmphasised, traitCollection)})
-    static var textError = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.textError, traitCollection)})
-    static var textMessage = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.textMessage, traitCollection)})
-    static var shapeStrokeText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.shapeStrokeText, traitCollection)})
-    static var shapeStroke = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.shapeStroke, traitCollection)})
-    static var shapeFillText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.shapeFillText, traitCollection)})
-    static var shapeFill = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.shapeFill, traitCollection)})
-    static var shapeAdminStroke = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.shapeAdminStroke, traitCollection)})
-    static var shapeAdminText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.shapeAdminText, traitCollection)})
-    static var shapeAdminFill = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.shapeAdminFill, traitCollection)})
-    static var shapeHighlightStrokeText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.shapeHighlightStrokeText, traitCollection)})
-    static var shapeHighlightStroke = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.shapeHighlightStroke, traitCollection)})
-    static var shapeHighlightFillText = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.shapeHighlightFillText, traitCollection)})
-    static var shapeHighlightFill = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.shapeHighlightFill, traitCollection)})
-    static var shapeTableLeg = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.shapeTableLeg, traitCollection)})
-    static var shapeTableLegShadow = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.shapeTableLegShadow, traitCollection)})
-    static var suitDiamondsHearts = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.suitDiamondsHearts, traitCollection)})
-    static var suitClubsSpades = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.suitClubsSpades, traitCollection)})
-    static var suitNoTrumps = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.suitNoTrumps, traitCollection)})
-    static var cardBack = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.cardBack, traitCollection)})
-    static var cardFace = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.cardFace, traitCollection)})
-    static var contractOver = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.contractOver, traitCollection)})
-    static var contractUnder = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.contractUnder, traitCollection)})
-    static var contractUnderLight = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.contractUnderLight, traitCollection)})
-    static var contractEqual = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.contractEqual, traitCollection)})
-    static var segmentedControls = UIColor(dynamicProvider: { (traitCollection) in return Themes.color(.segmentedControls, traitCollection)})
+    static var alternateBackground = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.alternateBackground, traitCollection)})
+    static var background = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.background, traitCollection)})
+    static var banner = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.banner, traitCollection)})
+    static var bannerShadow = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.bannerShadow, traitCollection)})
+    static var bannerText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.bannerText, traitCollection)})
+    static var bidButton = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.bidButton, traitCollection)})
+    static var bidButtonText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.bidButtonText, traitCollection)})
+    static var bold = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.bold, traitCollection)})
+    static var boldText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.boldText, traitCollection)})
+    static var buttonFace = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.buttonFace, traitCollection)})
+    static var buttonFaceText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.buttonFaceText, traitCollection)})
+    static var continueButton = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.continueButton, traitCollection)})
+    static var continueButtonText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.continueButtonText, traitCollection)})
+    static var darkHighlight = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.darkHighlight, traitCollection)})
+    static var darkHighlightText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.darkHighlightText, traitCollection)})
+    static var darkHighlightTextContrast = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.darkHighlightTextContrast, traitCollection)})
+    static var disabledText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.disabledText, traitCollection)})
+    static var disabled = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.disabled, traitCollection)})
+    static var emphasis = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.emphasis, traitCollection)})
+    static var emphasisText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.emphasisText, traitCollection)})
+    static var error = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.error, traitCollection)})
+    static var errorText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.errorText, traitCollection)})
+    static var gameBanner = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.gameBanner, traitCollection)})
+    static var gameBannerShadow = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.gameBannerShadow, traitCollection)})
+    static var gameBannerText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.gameBannerText, traitCollection)})
+    static var halo = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.halo, traitCollection)})
+    static var haloDealer = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.haloDealer, traitCollection)})
+    static var hand = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.hand, traitCollection)})
+    static var handText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.handText, traitCollection)})
+    static var handTextContrast = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.handTextContrast, traitCollection)})
+    static var highlight = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.highlight, traitCollection)})
+    static var highlightText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.highlightText, traitCollection)})
+    static var inputControl = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.inputControl, traitCollection)})
+    static var inputControlText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.inputControlText, traitCollection)})
+    static var inputControlPlaceholder = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.inputControlPlaceholder, traitCollection)})
+    static var instruction = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.instruction, traitCollection)})
+    static var instructionText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.instructionText, traitCollection)})
+    static var madeContract = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.madeContract, traitCollection)})
+    static var madeContractText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.madeContractText, traitCollection)})
+    static var roomInterior = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.roomInterior, traitCollection)})
+    static var roomInteriorText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.roomInteriorText, traitCollection)})
+    static var roomInteriorTextContrast = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.roomInteriorTextContrast, traitCollection)})
+    static var sectionHeading = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.sectionHeading, traitCollection)})
+    static var sectionHeadingText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.sectionHeadingText, traitCollection)})
+    static var sectionHeadingTextContrast = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.sectionHeadingTextContrast, traitCollection)})
+    static var tableTop = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.tableTop, traitCollection)})
+    static var tableTopText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.tableTopText, traitCollection)})
+    static var tableTopTextContrast = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.tableTopTextContrast, traitCollection)})
+    static var total = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.total, traitCollection)})
+    static var totalText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.totalText, traitCollection)})
+    static var thumbnailDisc = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.thumbnailDisc, traitCollection)})
+    static var thumbnailDiscText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.thumbnailDiscText, traitCollection)})
+    static var thumbnailPlaceholder = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.thumbnailPlaceholder, traitCollection)})
+    static var thumbnailPlaceholderText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.thumbnailPlaceholderText, traitCollection)})
+    static var separator = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.separator, traitCollection)})
+    static var grid = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.grid, traitCollection)})
+    static var text = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.text, traitCollection)})
+    static var textEmphasised = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.textEmphasised, traitCollection)})
+    static var textError = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.textError, traitCollection)})
+    static var textMessage = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.textMessage, traitCollection)})
+    static var shapeStrokeText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.shapeStrokeText, traitCollection)})
+    static var shapeStroke = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.shapeStroke, traitCollection)})
+    static var shapeFillText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.shapeFillText, traitCollection)})
+    static var shapeFill = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.shapeFill, traitCollection)})
+    static var shapeAdminStroke = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.shapeAdminStroke, traitCollection)})
+    static var shapeAdminText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.shapeAdminText, traitCollection)})
+    static var shapeAdminFill = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.shapeAdminFill, traitCollection)})
+    static var shapeHighlightStrokeText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.shapeHighlightStrokeText, traitCollection)})
+    static var shapeHighlightStroke = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.shapeHighlightStroke, traitCollection)})
+    static var shapeHighlightFillText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.shapeHighlightFillText, traitCollection)})
+    static var shapeHighlightFill = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.shapeHighlightFill, traitCollection)})
+    static var shapeTableLeg = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.shapeTableLeg, traitCollection)})
+    static var shapeTableLegShadow = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.shapeTableLegShadow, traitCollection)})
+    static var suitDiamondsHearts = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.suitDiamondsHearts, traitCollection)})
+    static var suitClubsSpades = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.suitClubsSpades, traitCollection)})
+    static var suitNoTrumps = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.suitNoTrumps, traitCollection)})
+    static var cardBack = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.cardBack, traitCollection)})
+    static var cardFace = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.cardFace, traitCollection)})
+    static var contractOver = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.contractOver, traitCollection)})
+    static var contractUnder = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.contractUnder, traitCollection)})
+    static var contractUnderLight = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.contractUnderLight, traitCollection)})
+    static var contractEqual = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.contractEqual, traitCollection)})
+    static var segmentedControls = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.segmentedControls, traitCollection)})
+    
+    class func colorDetail(color: UIColor) -> (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        
+        color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        
+        return (red: red, green: green, blue: blue, alpha: alpha)
+    }
     
     class func sectionHeadingStyle(_ cell: UITableViewCell) {
         cell.backgroundColor = Palette.sectionHeading

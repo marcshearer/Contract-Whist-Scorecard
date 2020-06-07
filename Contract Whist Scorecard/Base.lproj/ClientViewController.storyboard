@@ -21,7 +21,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
-                                        <color key="value" name="Game Banner"/>
+                                        <color key="value" name="Clear"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
@@ -99,6 +99,7 @@
                                                 </constraints>
                                             </view>
                                         </subviews>
+                                        <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstItem="Qjq-rE-5ew" firstAttribute="height" secondItem="XTv-6o-LLq" secondAttribute="height" multiplier="1:1.4" id="7Tq-nc-kgx"/>
                                             <constraint firstItem="Qjq-rE-5ew" firstAttribute="centerX" secondItem="XTv-6o-LLq" secondAttribute="centerX" id="HXe-JG-JIu"/>
@@ -442,7 +443,7 @@
                                 <subviews>
                                     <view tag="-1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aq5-vX-83I" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="20" y="10" width="116.5" height="147.5"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <color key="backgroundColor" name="Clear"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="string" keyPath="title" value="Profiles"/>
                                             <userDefinedRuntimeAttribute type="size" keyPath="shadowSize">
@@ -468,7 +469,7 @@
                                     </view>
                                     <view tag="-2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bNw-dF-hBm" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="148.5" y="10" width="117" height="147.5"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <color key="backgroundColor" name="Clear"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="string" keyPath="title" value="Results"/>
                                             <userDefinedRuntimeAttribute type="size" keyPath="shadowSize">
@@ -494,7 +495,7 @@
                                     </view>
                                     <view tag="-3" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pB1-JM-2cb" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="277.5" y="10" width="116.5" height="147.5"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <color key="backgroundColor" name="Clear"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="string" keyPath="title" value="Settings"/>
                                             <userDefinedRuntimeAttribute type="size" keyPath="shadowSize">
@@ -540,7 +541,6 @@
                             <constraint firstItem="X53-w8-J5S" firstAttribute="height" secondItem="N76-hf-VXY" secondAttribute="height" multiplier="10.25:38" id="2LZ-dx-Vdh"/>
                             <constraint firstItem="1FM-AB-vSS" firstAttribute="height" secondItem="w0v-BL-Raf" secondAttribute="height" id="7g0-AS-CXJ"/>
                             <constraint firstItem="baT-Lm-DyX" firstAttribute="trailing" secondItem="N76-hf-VXY" secondAttribute="trailing" id="CKy-zs-657"/>
-                            <constraint firstItem="e3D-oK-CzW" firstAttribute="top" secondItem="0OQ-Wp-Xtp" secondAttribute="bottom" id="FUS-D4-Pjr"/>
                             <constraint firstItem="pB1-JM-2cb" firstAttribute="width" secondItem="N76-hf-VXY" secondAttribute="width" multiplier="0.33" constant="-20" id="FqD-3H-3Iu"/>
                             <constraint firstItem="7pG-RR-uCS" firstAttribute="leading" secondItem="N76-hf-VXY" secondAttribute="leading" id="Ixp-XM-5SL"/>
                             <constraint firstItem="0OQ-Wp-Xtp" firstAttribute="top" secondItem="baT-Lm-DyX" secondAttribute="bottom" id="JVJ-yO-FIW"/>
@@ -557,6 +557,7 @@
                             <constraint firstItem="N76-hf-VXY" firstAttribute="bottom" secondItem="7pG-RR-uCS" secondAttribute="bottom" id="inc-aR-TRM"/>
                             <constraint firstItem="Clx-ll-10L" firstAttribute="trailing" secondItem="hFM-Q5-ViO" secondAttribute="trailing" id="ixm-Te-QmJ"/>
                             <constraint firstItem="X53-w8-J5S" firstAttribute="leading" secondItem="N76-hf-VXY" secondAttribute="leading" id="kHZ-Sc-TOi"/>
+                            <constraint firstItem="e3D-oK-CzW" firstAttribute="top" secondItem="0OQ-Wp-Xtp" secondAttribute="bottom" id="n2D-zv-RsK"/>
                             <constraint firstAttribute="trailing" secondItem="7pG-RR-uCS" secondAttribute="trailing" id="rh3-oH-Lxh"/>
                             <constraint firstItem="baT-Lm-DyX" firstAttribute="top" secondItem="Clx-ll-10L" secondAttribute="bottom" id="s8O-kv-JSw"/>
                             <constraint firstItem="baT-Lm-DyX" firstAttribute="height" secondItem="N76-hf-VXY" secondAttribute="height" multiplier="10.5:38" id="tDV-xc-iia"/>
@@ -577,6 +578,7 @@
                         <outlet property="bannerView" destination="yhA-Gb-reU" id="S7U-UB-S2F"/>
                         <outlet property="bottomSection" destination="7pG-RR-uCS" id="IKs-Pj-cRv"/>
                         <outlet property="bottomSectionBottomConstraint" destination="inc-aR-TRM" id="OJI-ZS-egG"/>
+                        <outlet property="flowLayout" destination="Aec-a3-Pfk" id="zjZ-PK-2Px"/>
                         <outlet property="hostCollectionContainerView" destination="tZH-0W-X3K" id="fgV-14-nBf"/>
                         <outlet property="hostCollectionContentView" destination="FhF-F8-jiI" id="bD0-zI-6g3"/>
                         <outlet property="hostCollectionView" destination="QLu-uS-rp7" id="eqx-cO-cVj"/>
@@ -636,9 +638,6 @@
         </namedColor>
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Game Banner">
-            <color red="0.92549019607843142" green="0.45882352941176469" blue="0.45490196078431372" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

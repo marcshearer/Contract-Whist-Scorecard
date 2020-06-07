@@ -20,9 +20,11 @@ class Settings : Equatable {
     public var receiveNotifications = false
     public var allowBroadcast = true
     public var alertVibrate = true
-    public var onlinePlayerEmail: String!
+    public var thisPlayerEmail: String!
+    public var onlineGamesEnabled: Bool = false
     public var faceTimeAddress: String!
     public var prefersStatusBarHidden = true
+    public var colorTheme = Themes.defaultName
     
     public var saveStats: Bool = true           // Only used in a game (not saved) - initially set to same as saveHistory but can be overridden
     
@@ -37,10 +39,12 @@ class Settings : Equatable {
                 lhs.receiveNotifications    == rhs.receiveNotifications &&
                 lhs.allowBroadcast          == rhs.allowBroadcast &&
                 lhs.alertVibrate            == rhs.alertVibrate &&
-                lhs.onlinePlayerEmail       == rhs.onlinePlayerEmail &&
+                lhs.thisPlayerEmail         == rhs.thisPlayerEmail &&
+                lhs.onlineGamesEnabled      == rhs.onlineGamesEnabled &&
                 lhs.faceTimeAddress         == rhs.faceTimeAddress &&
                 lhs.prefersStatusBarHidden  == rhs.prefersStatusBarHidden &&
-                lhs.saveStats               == rhs.saveStats)
+                lhs.saveStats               == rhs.saveStats &&
+                lhs.colorTheme              == rhs.colorTheme)
     }
 
     public func copy() -> Settings {
@@ -56,9 +60,11 @@ class Settings : Equatable {
         copy.receiveNotifications       = self.receiveNotifications
         copy.allowBroadcast             = self.allowBroadcast
         copy.alertVibrate               = self.alertVibrate
-        copy.onlinePlayerEmail          = self.onlinePlayerEmail
+        copy.thisPlayerEmail            = self.thisPlayerEmail
+        copy.onlineGamesEnabled         = self.onlineGamesEnabled
         copy.faceTimeAddress            = self.faceTimeAddress
         copy.prefersStatusBarHidden     = self.prefersStatusBarHidden
+        copy.colorTheme                 = self.colorTheme
         
         return copy
     }
@@ -91,14 +97,63 @@ class Settings : Equatable {
         // Load broadcast setting
         self.allowBroadcast = UserDefaults.standard.bool(forKey: "allowBroadcast")
         
-        // Load Online Game settings
-        self.onlinePlayerEmail = Scorecard.onlineEmail()
-        if self.onlinePlayerEmail != nil {
+        // Load this player email
+        self.thisPlayerEmail = Scorecard.onlineEmail()
+        if self.thisPlayerEmail != nil {
             self.faceTimeAddress = UserDefaults.standard.string(forKey: "faceTimeAddress")
         }
         
+        // Load online games enabled
+        self.onlineGamesEnabled = UserDefaults.standard.bool(forKey: "onlineGamesEnabled")
+        
         // Load status bar setting
         self.prefersStatusBarHidden = UserDefaults.standard.bool(forKey: "prefersStatusBarHidden")
+        
+        // Load color theme setting
+        self.colorTheme = UserDefaults.standard.string(forKey: "colorTheme") ?? Themes.defaultName
     }
     
+    public func save() {
+        
+        // Save bonus for making a trick with a 2
+        UserDefaults.standard.set(self.bonus2, forKey: "bonus2")
+                
+        // Save number of cards & bounce number of cards
+        UserDefaults.standard.set(self.cards, forKey: "cards")
+        UserDefaults.standard.set(self.bounceNumberCards, forKey: "bounceNumberCards")
+        
+        // Save trump sequence
+        UserDefaults.standard.set(self.trumpSequence, forKey: "trumpSequence")
+        
+        // Save sync enabled flag
+        UserDefaults.standard.set(self.syncEnabled, forKey: "syncEnabled")
+        
+        // Save save history settings
+        UserDefaults.standard.set(self.saveHistory, forKey: "saveHistory")
+        UserDefaults.standard.set(self.saveLocation, forKey: "saveLocation")
+        
+        // Save notification setting
+        UserDefaults.standard.set(self.receiveNotifications, forKey: "receiveNotifications")
+        
+        // Save alert settings
+        UserDefaults.standard.set(self.alertVibrate, forKey: "alertVibrate")
+        
+        // Save broadcast setting
+        UserDefaults.standard.set(self.allowBroadcast, forKey: "allowBroadcast")
+        
+        // Save this player setting
+        UserDefaults.standard.set(self.thisPlayerEmail, forKey: "thisPlayerEmail")
+        
+        // Save online game enabled setting
+        UserDefaults.standard.set(self.onlineGamesEnabled, forKey: "onlineGamesEnabled")
+
+        // Save facetime address setting
+        UserDefaults.standard.set(self.faceTimeAddress, forKey: "faceTimeAddress")
+        
+        // Save status bar setting
+        UserDefaults.standard.set(self.prefersStatusBarHidden, forKey: "prefersStatusBarHidden")
+        
+        // Save color theme
+        UserDefaults.standard.set(self.colorTheme, forKey: "colorTheme")
+    }
 }

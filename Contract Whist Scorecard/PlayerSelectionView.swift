@@ -21,6 +21,7 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
     
     public weak var delegate: PlayerSelectionViewDelegate!
     
+    
     private var parent: ScorecardViewController!
     private var playerList: [PlayerMO]!
     private var thumbnailWidth: CGFloat = 0.0
@@ -28,8 +29,8 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
     private var rowHeight: CGFloat = 0.0
     private var labelHeight: CGFloat = 30.0
     private var interRowSpacing:CGFloat = 10.0
-    private let collectionInset: CGFloat = 10.0
     private let collectionSpacing: CGFloat = 10.0
+    private var collectionInset: CGFloat = 10.0
     private var lastSize: CGSize!
     private var textColor: UIColor!
     private var addButton = false
@@ -50,9 +51,13 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
     
     // MARK: - IB Outlets ============================================================================== -
        
-       @IBOutlet private weak var contentView: UIView!
-       @IBOutlet private weak var collectionView: UICollectionView!
-    
+    @IBOutlet private weak var contentView: UIView!
+    @IBOutlet private weak var collectionView: UICollectionView!
+    @IBOutlet private weak var topInset: NSLayoutConstraint!
+    @IBOutlet private weak var bottomInset: NSLayoutConstraint!
+    @IBOutlet private weak var leadingInset: NSLayoutConstraint!
+    @IBOutlet private weak var trailingInset: NSLayoutConstraint!
+
     // MARK: - Constructors ============================================================================== -
     
     override init(frame: CGRect) {
@@ -83,12 +88,21 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
         self.parent = parent
     }
     
-    public func set(players: [PlayerMO], addButton: Bool = false, updateBeforeSelect: Bool = false, scrollEnabled: Bool = false) {
+    public func set(players: [PlayerMO], addButton: Bool = false, updateBeforeSelect: Bool = false, scrollEnabled: Bool = false, collectionViewInsets: UIEdgeInsets? = nil) {
         self.addButton = addButton
         self.offset = (addButton ? 1 : 0)
         self.playerList = players
         self.collectionView.isScrollEnabled = scrollEnabled
-        self.collectionView.reloadData()
+        if let collectionViewInsets = collectionViewInsets {
+            self.topInset.constant = collectionViewInsets.top
+            self.collectionView.contentInset = UIEdgeInsets(top: 10.0 - collectionViewInsets.top, left: 0, bottom: 0, right: 0)
+            self.bottomInset.constant = collectionViewInsets.bottom
+            self.leadingInset.constant = collectionViewInsets.left
+            self.trailingInset.constant = collectionViewInsets.right
+        }
+        UIView.performWithoutAnimation {
+            self.collectionView.reloadData()
+        }
     }
     
     public func set(textColor: UIColor) {
@@ -97,7 +111,9 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
     }
     
     public func set(size: CGSize? = nil) {
-        self.setSize(size: size)
+        UIView.performWithoutAnimation {
+            self.setSize(size: size)
+        }
     }
     
     public func getHeightFor(items: Int) -> CGFloat {

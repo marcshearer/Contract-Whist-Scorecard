@@ -32,6 +32,8 @@ class SampleTheme: UIView {
         self.addSubview(contentView)
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        self.leftButton.isEnabled = false
+        self.rightButton.isEnabled = false
         self.layoutSubviews()
         self.setColors()
     }
@@ -40,8 +42,8 @@ class SampleTheme: UIView {
         
         let theme = theme ?? Themes.currentTheme!
         
-        self.banner?.backgroundColor = theme.color(.gameBanner, .current)
-        self.bannerLabel?.textColor = theme.color(.gameBannerText, .current)
+        self.banner?.backgroundColor = theme.color(.banner, .current)
+        self.bannerLabel?.textColor = theme.color(.bannerText, .current)
         self.contentView?.backgroundColor = theme.color(.background, .current)
         self.titleBar?.set(faceColor: theme.color(.buttonFace, .current))
         self.titleBar?.set(textColor: theme.color(.buttonFaceText, .current))
@@ -49,12 +51,12 @@ class SampleTheme: UIView {
         self.leftButton?.set(faceColor: theme.color(.buttonFace, .current))
         self.leftButton?.set(titleColor: theme.color(.buttonFaceText, .current))
         self.leftButton?.set(titleFont: UIFont.systemFont(ofSize: 5))
-        self.leftButton?.set(imageTintColor: theme.color(.gameBanner, .current))
-        self.leftButton.setProportions(top: 1, image: 2, imageBottom: 1, title: 1, titleBottom: 0, message: 0, bottom: 1)
+        self.leftButton?.set(imageTintColor: theme.color(.banner, .current))
+        self.leftButton?.setProportions(top: 1, image: 2, imageBottom: 1, title: 1, titleBottom: 0, message: 0, bottom: 1)
         self.rightButton?.set(faceColor: theme.color(.buttonFace, .current))
         self.rightButton?.set(titleColor: theme.color(.buttonFaceText, .current))
         self.rightButton?.set(titleFont: UIFont.systemFont(ofSize: 5))
-        self.rightButton?.set(imageTintColor: theme.color(.gameBanner, .current))
-        self.rightButton.setProportions(top: 1, image: 2, imageBottom: 1, title: 1, titleBottom: 0, message: 0, bottom: 1)
+        self.rightButton?.set(imageTintColor: theme.color(.banner, .current))
+        self.rightButton?.setProportions(top: 1, image: 2, imageBottom: 1, title: 1, titleBottom: 0, message: 0, bottom: 1)
     }
 }

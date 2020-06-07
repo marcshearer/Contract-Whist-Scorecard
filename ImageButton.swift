@@ -100,6 +100,7 @@ class ImageButton: UIView {
     public func set(titleColor: UIColor) {
         self.titleColor = titleColor
         self.titleLabel.textColor = titleColor
+        self.titleLabel.setNeedsDisplay()
     }
 
     public func set(message: String) {
@@ -116,12 +117,9 @@ class ImageButton: UIView {
         self.messageLabel.textColor = messageColor
     }
     
-    public func set(textColor: UIColor) {
-        self.titleColor = textColor
-    }
-
     public func set(faceColor: UIColor) {
         self.faceColor = faceColor
+        self.contentView.backgroundColor = faceColor
     }
 
     public func set(shadowSize: CGSize? = nil, shadowColor: UIColor? = nil, shadowOpacity: CGFloat? = nil, shadowRadius: CGFloat? = nil) {

@@ -27,7 +27,7 @@ public enum ClientAppState: String {
     case finished = "Finished"
 }
 
-class ClientViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, MFMailComposeViewControllerDelegate, PlayerSelectionViewDelegate, SyncDelegate, ReconcileDelegate, ClientControllerDelegate, ImageButtonDelegate {
+class ClientViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, MFMailComposeViewControllerDelegate, PlayerSelectionViewDelegate, SyncDelegate, ReconcileDelegate, ClientControllerDelegate, ImageButtonDelegate, CustomCollectionViewLayoutDelegate {
 
     // MARK: - Class Properties ======================================================================== -
     
@@ -49,6 +49,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private var availablePeers: [AvailablePeer] = []
     public var thisPlayer: String!
     public var thisPlayerName: String!
+    private var thisPlayerBeforeSettings: String!
     internal var choosingPlayer = false
     private var displayingPeer = 0
 
@@ -124,6 +125,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var playerSelectionView: PlayerSelectionView!
     @IBOutlet private weak var playerSelectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var tapGestureRecognizer: UITapGestureRecognizer!
+    @IBOutlet private weak var flowLayout: CustomCollectionViewLayout!
 
     // MARK: - IB Actions ============================================================================== -
         
@@ -208,6 +210,12 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         
         // Setup action menu
         self.setupMenuActions()
+        
+        // Set flow layout delegate
+        if let flowLayout = self.flowLayout {
+            flowLayout.delegate = self
+        }
+        self.peerCollectionView.decelerationRate = UIScrollView.DecelerationRate.fast
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -268,14 +276,19 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     }
     
     private func showSettings() {
+        self.thisPlayerBeforeSettings = Scorecard.shared.settings.thisPlayerEmail
         SettingsViewController.show(from: self, backText: "", backImage: "home", completion: self.showSettingsCompletion)
     }
     
     private func showSettingsCompletion() {
         Scorecard.game.reset()
-        self.setupThisPlayer()
-        self.showThisPlayer()
+        if self.thisPlayerBeforeSettings != Scorecard.shared.settings.thisPlayerEmail {
+            self.setupThisPlayer()
+            self.showThisPlayer()
+        }
+        self.DefaultScreenColors()
         hostCollectionView.reloadData()
+        peerCollectionView.reloadData()
         self.restart()
     }
     
@@ -297,23 +310,26 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             self.playerSelectionView.delegate = self
         }
         
-        Utility.animate(view: self.view, duration: 0.5) {
+        Utility.animate(view: self.view, duration: 0.5, completion: {
+            self.hostTitleBar.isHidden = true
+        }, animations: {
             let selectionHeight = self.view.frame.height - self.playerSelectionView.frame.minY + self.view.safeAreaInsets.bottom
             self.playerSelectionView.set(size: CGSize(width: UIScreen.main.bounds.width, height: selectionHeight))
             self.playerSelectionViewHeightConstraint.constant = selectionHeight
             self.bottomSectionBottomConstraint.constant = self.bottomSectionBottomConstraint.constant - selectionHeight
             self.thisPlayerThumbnail.name.text = "Cancel"
-        }
+        })
         
         let playerList = Scorecard.shared.playerList.filter { $0.email != self.thisPlayer }
-        self.playerSelectionView.set(players: playerList, addButton: true, updateBeforeSelect: false)
+        self.playerSelectionView.set(players: playerList, addButton: true, updateBeforeSelect: false, scrollEnabled: true, collectionViewInsets: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10))
         
     }
     
     private func hidePlayerSelection() {
         self.choosingPlayer = false
         self.showThisPlayer()
-
+        self.hostTitleBar.isHidden = false
+        
         Utility.animate(view: self.view, duration: 0.5) {
             self.playerSelectionViewHeightConstraint.constant = 0.0
             self.bottomSectionBottomConstraint.constant = 0.0
@@ -323,7 +339,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     internal func didSelect(playerMO: PlayerMO) {
         // Save player as default for device
-        if let onlineEmail = Scorecard.activeSettings.onlinePlayerEmail {
+        if let onlineEmail = Scorecard.activeSettings.thisPlayerEmail {
             if playerMO.email == onlineEmail {
                 // Back to normal user - can remove temporary override
                 Notifications.removeTemporaryOnlineGameSubscription()
@@ -332,8 +348,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             }
         }
         self.thisPlayer = playerMO.email!
-        Scorecard.shared.defaultPlayerOnDevice = self.thisPlayer
-        UserDefaults.standard.set(self.thisPlayer, forKey: "defaultPlayerOnDevice")
         self.destroyClientController()
         self.createClientController()
         self.hidePlayerSelection()
@@ -784,26 +798,13 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         }
     }
     
-    internal func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+    internal func changed(_ collectionView: UICollectionView, itemAtCenter: Int, forceScroll: Bool) {
         Utility.mainThread {
-            self.displayingPeer = self.displayedPeer()
+            self.displayingPeer = itemAtCenter
             self.peerScrollCollectionView.reloadData()
         }
     }
-    
-    
-    internal func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        Utility.mainThread {
-            self.displayingPeer = self.displayedPeer()
-            self.peerScrollCollectionView.reloadData()
-        }
-    }
-    
-    private func displayedPeer() -> Int {
-        let offset = peerCollectionView.contentOffset.x
-        return Utility.round(Double(offset / self.peerCollectionView.frame.width))
-    }
-        
+
     // MARK: - Image button delegate handlers =============================================== -
     
     internal func imageButtonPressed(_ button: ImageButton) {
@@ -948,16 +949,16 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         // Setup hosting options
         self.hostingOptions = 0
         
-            if Scorecard.activeSettings.onlinePlayerEmail != nil {
-                self.nearbyItem = self.hostingOptions
-                self.hostingOptions += 1
-                self.onlineItem = self.hostingOptions
-                self.hostingOptions += 1
-                self.scoringItem = self.hostingOptions
-                self.hostingOptions += 1
-                self.robotItem = self.hostingOptions
-                self.hostingOptions += 1
-            }
+        if Scorecard.activeSettings.onlineGamesEnabled {
+            self.nearbyItem = self.hostingOptions
+            self.hostingOptions += 1
+            self.onlineItem = self.hostingOptions
+            self.hostingOptions += 1
+        }
+        self.scoringItem = self.hostingOptions
+        self.hostingOptions += 1
+        self.robotItem = self.hostingOptions
+        self.hostingOptions += 1
     }
     
     private func setupThisPlayer() {
@@ -983,11 +984,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             if self.thisPlayer == nil || self.matchDeviceName == nil {
                 // Not got player and device name from recovery - use default
                 var defaultPlayer: String!
-                if Scorecard.shared.onlineEnabled {
-                    defaultPlayer = Scorecard.activeSettings.onlinePlayerEmail
-                } else {
-                    defaultPlayer = Scorecard.shared.defaultPlayerOnDevice
-                }
+                defaultPlayer = Scorecard.activeSettings.thisPlayerEmail
                 if defaultPlayer != nil {
                     let playerMO = Scorecard.shared.findPlayerByEmail(defaultPlayer)
                     if playerMO != nil {
@@ -1116,7 +1113,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         let items = self.availablePeers.count
         self.peerScrollCollectionViewWidthConstraint.constant = (CGFloat(items) * 15.0) - 5.0
         self.peerScrollCollectionView.isHidden = (items <= 1)
-        self.displayingPeer = self.displayedPeer()
         self.peerScrollCollectionView.reloadData()
     }
     
@@ -1205,9 +1201,9 @@ extension ClientViewController {
     /** _Note that this code was generated as part of the move to themed colors_ */
 
     private func DefaultScreenColors() {
+        self.view.backgroundColor = Palette.background
         self.topSection.backgroundColor = Palette.gameBanner
         self.bannerPaddingView.bannerColor = Palette.gameBanner
-        self.bannerOverlap.backgroundColor = Palette.gameBanner
         self.hostTitleBar.backgroundColor = Palette.buttonFace
         self.hostTitleBar.set(faceColor: Palette.buttonFace)
         self.hostTitleBar.set(textColor: Palette.buttonFaceText)
@@ -1217,21 +1213,20 @@ extension ClientViewController {
         self.thisPlayerThumbnail.set(font: UIFont.systemFont(ofSize: 15, weight: .bold))
         self.infoButton.backgroundColor = Palette.gameBannerShadow
         self.infoButton.setTitleColor(Palette.gameBannerText, for: .normal)
+        self.infoButton.setTitleColor(Palette.gameBannerText, for: .disabled)
         self.hostCollectionView.backgroundColor = Palette.buttonFace
         self.peerTitleBar.set(faceColor: Palette.buttonFace)
         self.peerTitleBar.set(textColor: Palette.buttonFaceText)
         self.playersButton.set(faceColor: Palette.buttonFace)
-        self.playersButton.set(textColor: Palette.gameBanner)
+        self.playersButton.set(titleColor: Palette.gameBanner)
         self.playersButton.set(titleFont: UIFont.systemFont(ofSize: 18, weight: .bold))
         self.resultsButton.set(faceColor: Palette.buttonFace)
-        self.resultsButton.set(textColor: Palette.gameBanner)
+        self.resultsButton.set(titleColor: Palette.gameBanner)
         self.resultsButton.set(titleFont: UIFont.systemFont(ofSize: 18, weight: .bold))
         self.settingsButton.set(faceColor: Palette.buttonFace)
-        self.settingsButton.set(textColor: Palette.gameBanner)
+        self.settingsButton.set(titleColor: Palette.gameBanner)
         self.settingsButton.set(titleFont: UIFont.systemFont(ofSize: 18, weight: .bold))
-
         self.playerSelectionView.backgroundColor = Palette.background
-        self.view.backgroundColor = Palette.background
     }
     
     private func layoutControls() {

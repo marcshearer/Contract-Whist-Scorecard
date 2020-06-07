@@ -110,3 +110,20 @@ extension UIImage {
         self.init(data: image.pngData()!)!
     }
 }
+
+extension Array {
+    
+    mutating func rotate(by rotations: Int) {
+        if rotations == 0 || self.count <= 1 {
+            return
+        }
+
+       let length = self.count
+       let rotations = (length + rotations % length) % length
+
+       let reversed: Array = self.reversed()
+       let leftPart: Array = reversed[0..<rotations].reversed()
+       let rightPart: Array = reversed[rotations..<length].reversed()
+       self = leftPart + rightPart
+    }
+}

@@ -342,7 +342,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
                 self.customHeightConstraint.constant = viewHeight
                 self.filterInstructionHeightConstraint.constant = instructionHeight
             }
-            self.filterSelectionView.set(players: Scorecard.shared.playerList, scrollEnabled: true)
+            self.filterSelectionView.set(players: Scorecard.shared.playerList, scrollEnabled: true, collectionViewInsets: UIEdgeInsets(top: 0, left: 10, bottom: 00, right: 0))
         }
     }
     
@@ -388,7 +388,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
     private func setFilterSelectionViewRequiredHeight() {
         
         self.filterSelectionViewHeight = self.filterSelectionView.getHeightFor(items: Scorecard.shared.playerList.count)
-        self.filterSelectionViewHeight = min(self.filterSelectionViewHeight, self.dataTableViewController.view.frame.height - self.customView.frame.minY)
+        self.filterSelectionViewHeight = min(self.filterSelectionViewHeight, self.dataTableViewController.view.frame.height - self.customView.frame.minY - 88)
         
         self.landscape = ScorecardUI.landscape()
         

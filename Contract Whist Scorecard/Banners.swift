@@ -19,7 +19,11 @@ class InsetPaddingViewNoColor: UIView {
 
 class InsetPaddingView: InsetPaddingViewNoColor {
     
-    @IBInspectable var bannerColor: UIColor
+    @IBInspectable var bannerColor: UIColor {
+        didSet {
+            self.backgroundColor = bannerColor
+        }
+    }
     
     required init(coder aDecoder: NSCoder) {
         self.bannerColor = Palette.banner

@@ -11,7 +11,8 @@ release/5.1                         master plus feature/network-abstraction
 List of outstanding things to do
 
 // Tasks for upgrade
-Run 
+Run option to build links
+Conversion of settings - onlinePlayerEmail -> thisPlayerEmail and onlineGamesEnabled
 
 
 

@@ -55,8 +55,6 @@ class Scorecard {
     */
     public let numberSuits = 4
 
-    public var defaultPlayerOnDevice: String!
-    
     // Variables for online games
     public var viewPresenting = ScorecardView.none
     public var notificationSimulator: NotificationSimulator!
@@ -142,7 +140,6 @@ class Scorecard {
         TestMode.resetSettings()
         
         // Load defaults
-        self.loadDefaults()
         self.updatePrefersStatusBarHidden()
         
         self.getPlayerList()
@@ -279,12 +276,7 @@ class Scorecard {
         return true
         
     }
-    
-    private func loadDefaults() {
-        // Defaut player on device
-        self.defaultPlayerOnDevice = UserDefaults.standard.string(forKey: "defaultPlayerOnDevice")
-    }
-    
+        
     public func findPlayerByEmail(_ email: String) -> PlayerMO? {
         let index = self.playerList.firstIndex(where: {($0.email == email)})
         if index == nil {
@@ -405,7 +397,7 @@ class Scorecard {
         get {
             return ((Utility.isDevelopment || (self.isNetworkAvailable && self.isLoggedIn)) &&
                     RabbitMQConfig.rabbitMQUri != "" &&
-                    self.settings.onlinePlayerEmail ?? "" != "")
+                    self.settings.onlineGamesEnabled)
         }
     }
     
@@ -508,17 +500,6 @@ class Scorecard {
         get {
             var result = UIDevice.current.name
             var email: String? = nil
-            if false && Utility.isSimulator {
-                email = Scorecard.onlineEmail()
-                if email == nil {
-                    email = Scorecard.defaultPlayerOnDevice()
-                }
-                if email != nil {
-                    if let name = Scorecard.nameFromEmail(email!) {
-                        result = "\(name)'s iPhone"
-                    }
-                }
-            }
             return result
         }
     }
@@ -540,13 +521,8 @@ class Scorecard {
     }
     
     public static func onlineEmail() -> String? {
-        let onlinePlayerEmail = UserDefaults.standard.string(forKey: "onlinePlayerEmail")
-        return (onlinePlayerEmail == nil || onlinePlayerEmail == "" ? nil : onlinePlayerEmail)
-    }
-    
-    public static func defaultPlayerOnDevice() -> String? {
-        let defaultPlayerEmail = UserDefaults.standard.string(forKey: "defaultPlayerOnDevice")
-        return (defaultPlayerEmail == nil || defaultPlayerEmail == "" ? nil : defaultPlayerEmail)
+        let thisPlayerEmail = UserDefaults.standard.string(forKey: "thisPlayerEmail")
+        return (thisPlayerEmail == nil || thisPlayerEmail == "" ? nil : thisPlayerEmail)
     }
     
     public func updatePrefersStatusBarHidden(from viewController : UIViewController? = nil) {

@@ -672,15 +672,12 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     }
     
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        if #available(iOS 13.0, *) {
-            // TODO transitions don't work on IOS 13
-            return nil
+       
+        if dismissed is LaunchScreenViewController {
+            return ScorecardAnimator(duration: 2.0, animation: .fade, presenting: false)
         } else {
-            if dismissed is EntryViewController {
-                return ScorecardAnimator(duration: 0.5, animation: .fade, presenting: false)
-            } else {
-                return nil
-            }
+            return nil
         }
+        
     }
 }

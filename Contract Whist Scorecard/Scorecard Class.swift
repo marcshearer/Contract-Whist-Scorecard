@@ -498,8 +498,7 @@ class Scorecard {
     
     public static var deviceName: String {
         get {
-            var result = UIDevice.current.name
-            var email: String? = nil
+            let result = UIDevice.current.name
             return result
         }
     }

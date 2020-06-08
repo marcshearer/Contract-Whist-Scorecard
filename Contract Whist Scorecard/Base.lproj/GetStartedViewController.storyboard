@@ -11,12 +11,12 @@
         <!--Get Started-->
         <scene sceneID="bxj-G7-EJ4">
             <objects>
-                <viewController storyboardIdentifier="GetStartedViewController" title="Get Started" useStoryboardIdentifierAsRestorationIdentifier="YES" id="1IM-Ht-gqg" customClass="GetStartedViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="GetStartedViewController" title="Get Started" useStoryboardIdentifierAsRestorationIdentifier="YES" id="1IM-Ht-gqg" customClass="GetStartedViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" tag="-2" contentMode="scaleToFill" id="gBX-K1-URm">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZIb-OA-4ML" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZIb-OA-4ML" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="tSH-2T-gen">
@@ -24,7 +24,7 @@
                                 <color key="backgroundColor" name="Clear"/>
                                 <color key="sectionIndexBackgroundColor" name="Clear"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Get Started Cell" id="MuW-0x-O8Q" customClass="GetStartedCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Get Started Cell" id="MuW-0x-O8Q" customClass="GetStartedCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="MuW-0x-O8Q" id="GhH-T1-uHz">
@@ -65,21 +65,21 @@
                                             <outlet property="instructionLabel" destination="aHn-q4-DSR" id="Et7-Aa-NZf"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Sync Enabled Cell" rowHeight="220" id="ZK6-b6-zYn" customClass="GetStartedCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Sync Enabled Cell" rowHeight="220" id="ZK6-b6-zYn" customClass="GetStartedCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="72" width="375" height="220"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZK6-b6-zYn" id="7ge-Lc-4j1">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="220"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="JLe-pr-2Cf" customClass="SegmentedControl" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="JLe-pr-2Cf" customClass="SegmentedControl" customModule="Whist_2" customModuleProvider="target">
                                                     <rect key="frame" x="37" y="11" width="271" height="32"/>
                                                     <segments>
                                                         <segment title="Don't Sync"/>
                                                         <segment title="Sync with Cloud"/>
                                                     </segments>
                                                 </segmentedControl>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UKX-zP-rkK" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UKX-zP-rkK" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
                                                     <rect key="frame" x="313" y="11" width="30" height="30"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <constraints>
@@ -129,14 +129,14 @@
                                             <outlet property="syncInfo" destination="UKX-zP-rkK" id="Ndi-jO-amX"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Action Button Cell" rowHeight="64" id="Ycd-3z-zMS" customClass="GetStartedCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Action Button Cell" rowHeight="64" id="Ycd-3z-zMS" customClass="GetStartedCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="292" width="375" height="64"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ycd-3z-zMS" id="McG-gH-bOh">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mgY-ZD-9ME" userLabel="Action Button" customClass="EmphasisRoundedButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mgY-ZD-9ME" userLabel="Action Button" customClass="EmphasisRoundedButton" customModule="Whist_2" customModuleProvider="target">
                                                     <rect key="frame" x="30" y="10" width="315" height="44"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <state key="normal" title="Download Players from Cloud"/>
@@ -167,7 +167,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mpP-jt-1zE" userLabel="Left Banner">
                                 <rect key="frame" x="0.0" y="0.0" width="167.5" height="44"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gto-c0-DqX" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gto-c0-DqX" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="16" y="11" width="22" height="22"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="22" id="TOC-LN-ZFn"/>

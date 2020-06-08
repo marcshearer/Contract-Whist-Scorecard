@@ -27,12 +27,11 @@ public enum ClientAppState: String {
     case finished = "Finished"
 }
 
-class ClientViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, MFMailComposeViewControllerDelegate, PlayerSelectionViewDelegate, SyncDelegate, ReconcileDelegate, ClientControllerDelegate, ImageButtonDelegate, CustomCollectionViewLayoutDelegate {
+class ClientViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, MFMailComposeViewControllerDelegate, PlayerSelectionViewDelegate, ReconcileDelegate, ClientControllerDelegate, ImageButtonDelegate, CustomCollectionViewLayoutDelegate {
 
     // MARK: - Class Properties ======================================================================== -
     
     // Main state properties
-    internal let sync = Sync()
     private var hostController: HostController!
     private var scoringController: ScoringController!
     private var clientController: ClientController!
@@ -57,7 +56,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     internal var networkTimer: Timer!
     
     // Startup and reconcile
-    internal var getStarted = true
     internal var reconcile: Reconcile!
     internal var reconcileAlertController: UIAlertController!
     internal var reconcileContinue: UIAlertAction!
@@ -173,14 +171,17 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.hideNavigationBar()
+
+        // Cover with launch screen
+        self.showLaunchScreen()
+        
         // Setup colours (previously in storyboard)
         self.DefaultScreenColors()
         
         // Setup game
         Scorecard.game = Game()
                 
-        self.hideNavigationBar()
-        
         // Possible clear all data in test mode
         TestMode.resetApp()
         
@@ -222,14 +223,23 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         super.viewDidAppear(animated)
         self.showThisPlayer()
         self.changePlayerAvailable()
+        
         if firstTime {
-            // Get local and cloud version
-            Scorecard.shared.getVersion(completion: {
-                // Don't call this until any upgrade has taken place
-                self.getCloudVersion()
-            })
+            firstTime = false
             
-            // Note flow continues in completion handler of getCloudVersion
+            // Create a client controller to manage connections
+            self.createClientController()
+            
+            self.peerReloadData()
+            
+            // Link to host if recovering a server or scoring if recovering a game
+            if self.recoveryMode {
+                if !Scorecard.recovery.onlineRecovery {
+                    self.scoreGame(recoveryMode: true)
+                } else if Scorecard.recovery.onlineType == .server {
+                    self.hostGame(recoveryMode: true)
+                }
+            }
         }
     }
     
@@ -266,6 +276,15 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     }
 
     // MARK: - Show other views ======================================================================= -
+    
+    private func showLaunchScreen() {
+        LaunchScreenViewController.show(from: self) {
+            self.showSettingsCompletion()
+            if !Scorecard.shared.settings.syncEnabled {
+                self.showGetStarted()
+            }
+        }
+    }
     
     private func showGetStarted() {
         GetStartedViewController.show(from: self, completion: {self.restart()})
@@ -339,13 +358,12 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     internal func didSelect(playerMO: PlayerMO) {
         // Save player as default for device
-        if let onlineEmail = Scorecard.activeSettings.thisPlayerEmail {
-            if playerMO.email == onlineEmail {
-                // Back to normal user - can remove temporary override
-                Notifications.removeTemporaryOnlineGameSubscription()
-            } else {
-                Notifications.addTemporaryOnlineGameSubscription(email: playerMO.email!)
-            }
+        let onlineEmail = Scorecard.activeSettings.thisPlayerEmail
+        if playerMO.email == onlineEmail {
+            // Back to normal user - can remove temporary override
+            Notifications.removeTemporaryOnlineGameSubscription()
+        } else {
+            Notifications.addTemporaryOnlineGameSubscription(email: playerMO.email!)
         }
         self.thisPlayer = playerMO.email!
         self.destroyClientController()
@@ -363,10 +381,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private func setupMenuActions() {
         
         self.menuActions = []
-        
-        self.addAction(title: "Get Started", isHidden: {Scorecard.shared.playerList.count != 0}, action: { () in
-            self.showGetStarted()
-        })
         
         self.addAction(title: "Statistics", isHidden: {Scorecard.shared.playerList.count == 0}, action: { () in
             self.statisticsViewer = StatisticsViewer(from: self) {
@@ -471,73 +485,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @objc private func checkNetwork(_ sender: Any? = nil) {
         // Check network
         self.restart()
-    }
-        
-    // MARK: - iCloud fetch and sync delegates ======================================================== -
-    
-    private func getCloudVersion(async: Bool = false) {
-        if Scorecard.shared.isNetworkAvailable {
-            self.sync.delegate = self
-            if self.sync.synchronise(syncMode: .syncGetVersion, timeout: nil, waitFinish: async) {
-                // Running or queued (if async)
-            } else {
-                self.syncCompletion(0)
-            }
-        } else {
-            self.syncCompletion(0)
-        }
-    }
-    
-    internal func syncCompletion(_ errors: Int) {
-        
-        Utility.debugMessage("client", "Version returned")
-        
-        // Continue to Get Started if necessary pending version lookup - a risk but probably OK
-        if Scorecard.shared.playerList.count == 0 && getStarted {
-            // No players setup - go to Get Started
-            getStarted = false
-            self.showGetStarted()
-        }
-        
-        if self.firstTime {
-            
-            if !Scorecard.shared.upgradeToVersion(from: self) {
-                self.alertMessage("Error upgrading to current version", okHandler: {
-                    exit(0)
-                })
-            }
-            
-            if Scorecard.shared.playerList.count != 0 && !Scorecard.version.blockSync && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
-                // Rebuild any players who have a sync in progress flag set
-                self.reconcilePlayers()
-            }
-
-            self.firstTime = false
-            
-            // Create a client controller to manage connections
-            self.createClientController()
-            
-            self.peerReloadData()
-            
-            // Link to host if recovering a server or scoring if recovering a game
-            if self.recoveryMode {
-                if !Scorecard.recovery.onlineRecovery {
-                    self.scoreGame(recoveryMode: true)
-                } else if Scorecard.recovery.onlineType == .server {
-                    self.hostGame(recoveryMode: true)
-                }
-            }
-        }
-    }
-    
-    internal func syncAlert(_ message: String, completion: @escaping ()->()) {
-        self.alertMessage(message, title: "Contract Whist Scorecard", okHandler: {
-            if Scorecard.version.blockAccess {
-                exit(0)
-            } else {
-                completion()
-            }
-        })
     }
     
     // MARK: - Call reconcile and reconcile delegate methods =========================================================== -
@@ -739,8 +686,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 }
 
                 peerCell.label.font = UIFont.systemFont(ofSize: 20.0, weight: .bold)
-                peerCell.label.backgroundColor = Palette.gameBanner
-                peerCell.label.textColor = Palette.gameBannerText
+                peerCell.label.backgroundColor = Palette.banner
+                peerCell.label.textColor = Palette.bannerText
                 peerCell.label.text = serviceText
              }
              
@@ -758,7 +705,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             let peerScrollCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Peer Scroll Cell", for: indexPath) as! PeerScrollCollectionViewCell
             
             peerScrollCell.indicator.image = UIImage(systemName: (indexPath.row == self.displayingPeer ? "circle.fill" : "circle"))
-            peerScrollCell.indicator.tintColor = Palette.gameBannerText
+            peerScrollCell.indicator.tintColor = Palette.bannerText
             cell = peerScrollCell
             
         default:
@@ -910,8 +857,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     }
     
     private func checkFaceTime(peer: AvailablePeer, completion: @escaping (String?)->()) {
-        if peer.proximity == .online && (Scorecard.activeSettings.faceTimeAddress ?? "") != "" && Utility.faceTimeAvailable() {
-            self.alertDecision("\nWould you like the host to call you back on FaceTime at '\(Scorecard.activeSettings.faceTimeAddress!)'?\n\nNote that this will make this address visible to the host",
+        if peer.proximity == .online && Scorecard.activeSettings.faceTimeAddress != "" && Utility.faceTimeAvailable() {
+            self.alertDecision("\nWould you like the host to call you back on FaceTime at '\(Scorecard.activeSettings.faceTimeAddress)'?\n\nNote that this will make this address visible to the host",
                 title: "FaceTime",
                 okButtonText: "Yes",
                 okHandler: {
@@ -1202,29 +1149,30 @@ extension ClientViewController {
 
     private func DefaultScreenColors() {
         self.view.backgroundColor = Palette.background
-        self.topSection.backgroundColor = Palette.gameBanner
-        self.bannerPaddingView.bannerColor = Palette.gameBanner
+        self.topSection.backgroundColor = Palette.banner
+        self.bannerPaddingView.bannerColor = Palette.banner
         self.hostTitleBar.backgroundColor = Palette.buttonFace
         self.hostTitleBar.set(faceColor: Palette.buttonFace)
         self.hostTitleBar.set(textColor: Palette.buttonFaceText)
-        self.adminMenuButton.tintColor = Palette.gameBannerText
-        self.titleLabel.textColor = Palette.gameBannerText
-        self.thisPlayerThumbnail.set(textColor: Palette.gameBannerText)
+        self.adminMenuButton.tintColor = Palette.bannerEmbossed
+        self.titleLabel.textColor = Palette.bannerEmbossed
+        self.titleLabel.text = "W H I S T"
+        self.thisPlayerThumbnail.set(textColor: Palette.bannerText)
         self.thisPlayerThumbnail.set(font: UIFont.systemFont(ofSize: 15, weight: .bold))
-        self.infoButton.backgroundColor = Palette.gameBannerShadow
-        self.infoButton.setTitleColor(Palette.gameBannerText, for: .normal)
-        self.infoButton.setTitleColor(Palette.gameBannerText, for: .disabled)
+        self.infoButton.backgroundColor = Palette.bannerShadow
+        self.infoButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.infoButton.setTitleColor(Palette.bannerText, for: .disabled)
         self.hostCollectionView.backgroundColor = Palette.buttonFace
         self.peerTitleBar.set(faceColor: Palette.buttonFace)
         self.peerTitleBar.set(textColor: Palette.buttonFaceText)
         self.playersButton.set(faceColor: Palette.buttonFace)
-        self.playersButton.set(titleColor: Palette.gameBanner)
+        self.playersButton.set(titleColor: Palette.banner)
         self.playersButton.set(titleFont: UIFont.systemFont(ofSize: 18, weight: .bold))
         self.resultsButton.set(faceColor: Palette.buttonFace)
-        self.resultsButton.set(titleColor: Palette.gameBanner)
+        self.resultsButton.set(titleColor: Palette.banner)
         self.resultsButton.set(titleFont: UIFont.systemFont(ofSize: 18, weight: .bold))
         self.settingsButton.set(faceColor: Palette.buttonFace)
-        self.settingsButton.set(titleColor: Palette.gameBanner)
+        self.settingsButton.set(titleColor: Palette.banner)
         self.settingsButton.set(titleFont: UIFont.systemFont(ofSize: 18, weight: .bold))
         self.playerSelectionView.backgroundColor = Palette.background
     }
@@ -1249,11 +1197,11 @@ extension ClientViewController {
         cell.button.set(faceColor: Palette.buttonFace)
         cell.button.set(titleColor: Palette.buttonFaceText)
         cell.button.set(messageColor: Palette.buttonFaceText)
-        cell.button.set(imageTintColor: Palette.gameBanner)
+        cell.button.set(imageTintColor: Palette.banner)
     }
     
     private func defaultCellColors(cell: PeerCollectionViewCell) {
-        cell.leftScrollButton.imageView?.tintColor = Palette.gameBannerText
-        cell.rightScrollButton.imageView?.tintColor = Palette.gameBannerText
+        cell.leftScrollButton.imageView?.tintColor = Palette.bannerText
+        cell.rightScrollButton.imageView?.tintColor = Palette.bannerText
     }
 }

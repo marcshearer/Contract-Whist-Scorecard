@@ -32,7 +32,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="74.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="W H I S T" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9EB-QT-Tnd">
-                                                <rect key="frame" x="0.0" y="33.5" width="414" height="41"/>
+                                                <rect key="frame" x="0.0" y="30" width="414" height="41"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="41" id="OSQ-jV-UcD"/>
                                                 </constraints>
@@ -57,7 +57,7 @@
                                         </subviews>
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
-                                            <constraint firstAttribute="bottom" secondItem="9EB-QT-Tnd" secondAttribute="bottom" id="7Sa-Vt-3nv"/>
+                                            <constraint firstItem="9EB-QT-Tnd" firstAttribute="top" secondItem="yhA-Gb-reU" secondAttribute="top" constant="30" id="7Sa-Vt-3nv"/>
                                             <constraint firstItem="9EB-QT-Tnd" firstAttribute="leading" secondItem="yhA-Gb-reU" secondAttribute="leading" id="9Xl-YT-BIp"/>
                                             <constraint firstAttribute="trailing" secondItem="jVd-cr-1qi" secondAttribute="trailing" constant="20" id="SUY-CY-FET"/>
                                             <constraint firstAttribute="trailing" secondItem="9EB-QT-Tnd" secondAttribute="trailing" id="fRl-D8-dOE"/>

@@ -7,8 +7,11 @@
 //
 
 import Foundation
+import CloudKit
 
 class Settings : Equatable {
+    
+    /** Note that if you add a property you also need to add it to the setValue(forKey:) method */
     
     public var bonus2 = true
     public var cards = [13, 1]
@@ -20,140 +23,250 @@ class Settings : Equatable {
     public var receiveNotifications = false
     public var allowBroadcast = true
     public var alertVibrate = true
-    public var thisPlayerEmail: String!
+    public var thisPlayerEmail = ""
     public var onlineGamesEnabled: Bool = false
-    public var faceTimeAddress: String!
+    public var faceTimeAddress = ""
     public var prefersStatusBarHidden = true
     public var colorTheme = Themes.defaultName
     
     public var saveStats: Bool = true           // Only used in a game (not saved) - initially set to same as saveHistory but can be overridden
-    
-    public static func == (lhs: Settings, rhs: Settings) -> Bool {
-        return (lhs.bonus2                  == rhs.bonus2 &&
-                lhs.cards                   == rhs.cards &&
-                lhs.bounceNumberCards       == rhs.bounceNumberCards &&
-                lhs.trumpSequence           == rhs.trumpSequence &&
-                lhs.syncEnabled             == rhs.syncEnabled &&
-                lhs.saveHistory             == rhs.saveHistory &&
-                lhs.saveLocation            == rhs.saveLocation &&
-                lhs.receiveNotifications    == rhs.receiveNotifications &&
-                lhs.allowBroadcast          == rhs.allowBroadcast &&
-                lhs.alertVibrate            == rhs.alertVibrate &&
-                lhs.thisPlayerEmail         == rhs.thisPlayerEmail &&
-                lhs.onlineGamesEnabled      == rhs.onlineGamesEnabled &&
-                lhs.faceTimeAddress         == rhs.faceTimeAddress &&
-                lhs.prefersStatusBarHidden  == rhs.prefersStatusBarHidden &&
-                lhs.saveStats               == rhs.saveStats &&
-                lhs.colorTheme              == rhs.colorTheme)
+        
+    private func setValue(_ value: Any?, forKey label: String) {
+        switch label {
+        case "bonus2":
+            self.bonus2 = value as! Bool
+        case "cards":
+            self.cards = value as! [Int]
+        case "bounceNumberCards":
+            self.bounceNumberCards = value as! Bool
+        case "trumpSequence":
+            self.trumpSequence = value as! [String]
+        case "syncEnabled":
+            self.syncEnabled = value as! Bool
+        case "saveHistory":
+            self.saveHistory = value as! Bool
+        case "saveLocation":
+            self.saveLocation = value as! Bool
+        case "receiveNotifications":
+            self.receiveNotifications = value as! Bool
+        case "alertVibrate":
+            self.alertVibrate = value as! Bool
+        case "allowBroadcast":
+            self.allowBroadcast = value as! Bool
+        case "faceTimeAddress":
+            self.faceTimeAddress = value as! String
+        case "onlineGamesEnabled":
+            self.onlineGamesEnabled = value as! Bool
+        case "prefersStatusBarHidden":
+            self.prefersStatusBarHidden = value as! Bool
+        case "colorTheme":
+            self.colorTheme = value as! String
+        case "thisPlayerEmail":
+            self.thisPlayerEmail = value as! String
+        case "saveStats":
+            self.saveStats = value as! Bool
+        default:
+            fatalError("Error setting settings value")
+        }
     }
-
+    
     public func copy() -> Settings {
         let copy = Settings()
-        
-        copy.bonus2                     = self.bonus2
-        copy.cards                      = self.cards
-        copy.bounceNumberCards          = self.bounceNumberCards
-        copy.trumpSequence              = self.trumpSequence
-        copy.syncEnabled                = self.syncEnabled
-        copy.saveHistory                = self.saveHistory
-        copy.saveLocation               = self.saveLocation
-        copy.receiveNotifications       = self.receiveNotifications
-        copy.allowBroadcast             = self.allowBroadcast
-        copy.alertVibrate               = self.alertVibrate
-        copy.thisPlayerEmail            = self.thisPlayerEmail
-        copy.onlineGamesEnabled         = self.onlineGamesEnabled
-        copy.faceTimeAddress            = self.faceTimeAddress
-        copy.prefersStatusBarHidden     = self.prefersStatusBarHidden
-        copy.colorTheme                 = self.colorTheme
-        
+        _ = self.copy(from: self, to: copy)
         return copy
     }
+        
+    private func copy(from: Settings, to: Settings) -> Int {
+        var copied = 0
+        let toMirror = Mirror(reflecting: to)
+        let fromMirror = Mirror(reflecting: from)
+        for toChild in toMirror.children {
+            if let fromChild = fromMirror.children.first(where: { $0.label == toChild.label }) {
+                if let fromValue = fromChild.value as? NSObject, let label = toChild.label {
+                    to.setValue(fromValue, forKey: label)
+                    copied += 1
+                } else {
+                    fatalError("Error copying settings")
+                }
+            } else {
+                fatalError("Error copying settings")
+            }
+        }
+        return copied
+    }
     
+    public static func == (lhs: Settings, rhs: Settings) -> Bool {
+        var same = true
+        
+        let leftMirror = Mirror(reflecting: lhs)
+        let rightMirror = Mirror(reflecting: rhs)
+        for leftChild in leftMirror.children {
+            if let rightChild = rightMirror.children.first(where: { $0.label == leftChild.label }) {
+                if let leftValue = leftChild.value as? NSObject,
+                    let rightValue = rightChild.value as? NSObject {
+                    if leftValue != rightValue {
+                        same = false
+                    }
+                } else {
+                    fatalError("Invalid settings comparison")
+                }
+            } else {
+                fatalError("Invalid settings comparison")
+            }
+        }
+        return same
+    }
     public func load() {
         
-        // Load bonus for making a trick with a 2
-        self.bonus2 = UserDefaults.standard.bool(forKey: "bonus2")
-                
-        // Load number of cards & bounce number of cards
-        self.cards = UserDefaults.standard.array(forKey: "cards") as! [Int]
-        self.bounceNumberCards = UserDefaults.standard.bool(forKey: "bounceNumberCards")
-        
-        // Load trump sequence
-        self.trumpSequence = UserDefaults.standard.array(forKey: "trumpSequence") as! [String]
-        
-        // Load sync enabled flag
-        self.syncEnabled = UserDefaults.standard.bool(forKey: "syncEnabled")
-        
-        // Load save history settings
-        self.saveHistory = UserDefaults.standard.bool(forKey: "saveHistory")
-        self.saveLocation = UserDefaults.standard.bool(forKey: "saveLocation")
-        
-        // Load notification setting
-        self.receiveNotifications = UserDefaults.standard.bool(forKey: "receiveNotifications")
-        
-        // Load alert settings
-        self.alertVibrate = UserDefaults.standard.bool(forKey: "alertVibrate")
-        
-        // Load broadcast setting
-        self.allowBroadcast = UserDefaults.standard.bool(forKey: "allowBroadcast")
-        
-        // Load this player email
-        self.thisPlayerEmail = Scorecard.onlineEmail()
-        if self.thisPlayerEmail != nil {
-            self.faceTimeAddress = UserDefaults.standard.string(forKey: "faceTimeAddress")
+        let mirror = Mirror(reflecting: self)
+        for child in mirror.children {
+            if let label = child.label {
+                if label != "saveStats" {
+                    self.setValue(UserDefaults.standard.object(forKey: label), forKey: label)
+                }
+            } else {
+                fatalError("Error saving settings locally")
+            }
         }
-        
-        // Load online games enabled
-        self.onlineGamesEnabled = UserDefaults.standard.bool(forKey: "onlineGamesEnabled")
-        
-        // Load status bar setting
-        self.prefersStatusBarHidden = UserDefaults.standard.bool(forKey: "prefersStatusBarHidden")
-        
-        // Load color theme setting
-        self.colorTheme = UserDefaults.standard.string(forKey: "colorTheme") ?? Themes.defaultName
     }
     
     public func save() {
         
-        // Save bonus for making a trick with a 2
-        UserDefaults.standard.set(self.bonus2, forKey: "bonus2")
+        let mirror = Mirror(reflecting: self)
+        for child in mirror.children {
+            if let label = child.label, let value = child.value as? NSObject {
+                if label != "saveStats" {
+                    UserDefaults.standard.set(value, forKey: label)
+                }
+            } else {
+                fatalError("Error saving settings locally")
+            }
+        }
+    }
+    
+    public func saveToICloud() {
+        var cloudObjectList: [CKRecord] = []
+        var recordIDsToDelete: [CKRecord.ID] = []
+        
+        func saveRecord(label: String, type: String, value: Any) {
+            for pass in 1...2 {
+                var idString: String
+                if pass == 1 {
+                    idString = label
+                } else {
+                    idString = "\(Scorecard.deviceName)-\(label)"
+                }
+                let recordID = CKRecord.ID(recordName: idString)
                 
-        // Save number of cards & bounce number of cards
-        UserDefaults.standard.set(self.cards, forKey: "cards")
-        UserDefaults.standard.set(self.bounceNumberCards, forKey: "bounceNumberCards")
+                var data: String
+                switch type {
+                case "[String]":
+                    data = (value as! [String]).joined(separator: ";")
+                case "[Int]":
+                    data = (value as! [Int]).map{"\($0)"}.joined(separator: ";")
+                default:
+                    data = "\(value)"
+                }
+                
+                let cloudObject = CKRecord(recordType: "Settings", recordID: recordID)
+                if pass == 1 {
+                    cloudObject.setValue("", forKey: "deviceName")
+                } else {
+                    cloudObject.setValue(Scorecard.deviceName, forKey: "deviceName")
+                }
+                cloudObject.setValue(label, forKey: "name")
+                cloudObject.setValue(type, forKey: "type")
+                cloudObject.setValue(data, forKey: "value")
+                cloudObjectList.append(cloudObject)
+                recordIDsToDelete.append(recordID)
+            }
+        }
         
-        // Save trump sequence
-        UserDefaults.standard.set(self.trumpSequence, forKey: "trumpSequence")
+        let mirror = Mirror(reflecting: self)
+        for child in mirror.children {
+            if let label = child.label, let value = child.value as? NSObject {
+                if label != "saveStats" {
+                    var type: String
+                    if let _ = value as? [String] {
+                        type = "[String]"
+                    } else if let _ = value as? [NSNumber] {
+                        type = "[Int]"
+                    } else {
+                        if let _ = value as? Bool {
+                            type = "Bool"
+                        } else if let _ = value as? Int {
+                            type = "Int"
+                        } else {
+                            type = "String"
+                        }
+                    }
+                    saveRecord(label: label, type: type, value: value)
+                }
+            } else {
+                fatalError("Error saving settings to cloud")
+            }
+        }
+        // Save dummy entry for current players
+        saveRecord(label: "[players]", type: "[String]", value: Scorecard.shared.playerEmailList())
         
-        // Save sync enabled flag
-        UserDefaults.standard.set(self.syncEnabled, forKey: "syncEnabled")
+        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let database = cloudContainer.privateCloudDatabase
+        Sync.update(recordIDsToDelete: recordIDsToDelete, database: database) { (error) in
+            Sync.update(records: cloudObjectList, database: database) { (error) in
+                Utility.debugMessage("Settings","Settings to iCloud complete (\(error?.localizedDescription ?? "Success"))")
+                Utility.executeAfter(delay: 5.0) {
+                    self.loadFromICloud()
+                }
+            }
+        }
+    }
+    
+    public func loadFromICloud(completion: (([String])->())? = nil) {
+        // Note there should be 2 values for each column, the default and the device-specific
+        // By sorting by device name we should get the default first and then overwrite it
+        let downloaded = Settings()
+        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let database = cloudContainer.privateCloudDatabase
+        var columnsDownloaded = 0
+        var players: [String] = []
         
-        // Save save history settings
-        UserDefaults.standard.set(self.saveHistory, forKey: "saveHistory")
-        UserDefaults.standard.set(self.saveLocation, forKey: "saveLocation")
+        let predicate = NSPredicate(format: "deviceName IN %@", argumentArray: [["", Scorecard.deviceName]])
+        let sortBy = [NSSortDescriptor(key: "deviceName", ascending: true)]
         
-        // Save notification setting
-        UserDefaults.standard.set(self.receiveNotifications, forKey: "receiveNotifications")
+        Sync.read(recordType: "Settings", predicate: predicate, sortBy: sortBy, database: database, downloadAction: { (record) in
         
-        // Save alert settings
-        UserDefaults.standard.set(self.alertVibrate, forKey: "alertVibrate")
-        
-        // Save broadcast setting
-        UserDefaults.standard.set(self.allowBroadcast, forKey: "allowBroadcast")
-        
-        // Save this player setting
-        UserDefaults.standard.set(self.thisPlayerEmail, forKey: "thisPlayerEmail")
-        
-        // Save online game enabled setting
-        UserDefaults.standard.set(self.onlineGamesEnabled, forKey: "onlineGamesEnabled")
-
-        // Save facetime address setting
-        UserDefaults.standard.set(self.faceTimeAddress, forKey: "faceTimeAddress")
-        
-        // Save status bar setting
-        UserDefaults.standard.set(self.prefersStatusBarHidden, forKey: "prefersStatusBarHidden")
-        
-        // Save color theme
-        UserDefaults.standard.set(self.colorTheme, forKey: "colorTheme")
+            columnsDownloaded += 1
+            
+            let label = record.value(forKey: "name") as! String
+            let type = record.value(forKey: "type") as! String
+            let value = record.value(forKey: "value") as! String
+            
+            print(record.recordID)
+            
+            if label == "[players]" {
+                players = value.split(at: ";")
+            } else {
+                switch type {
+                case "[String]":
+                    let values: [String] = value.split(at: ";")
+                    downloaded.setValue(values, forKey: label)
+                case "[Int]":
+                    let values: [Int] = value.split(at: ";").map({Int($0) ?? 0})
+                    downloaded.setValue(values, forKey: label)
+                case "Bool":
+                    downloaded.setValue((Int(value) ?? 0 == 0 ? false : true), forKey: label)
+                case "Int":
+                    downloaded.setValue(Int(value) ?? 0, forKey: label)
+                default:
+                    downloaded.setValue(value, forKey: label)
+                }
+            }
+            
+        }, completeAction: { (error) in
+            if error == nil {
+                _ = self.copy(from: downloaded, to: self)
+                completion?(players)
+            }
+        })
     }
 }

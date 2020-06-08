@@ -68,6 +68,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             "rabbitMQUri":              "",
             "alertVibrate":             true,
             "thisPlayerEmail":          "",
+            "faceTimeAddress":          "",
+            "onlineGamesEnabled":       false,
+            "colorTheme":               "Default",
             "tempOnlineEmail":          false,
             "trumpSequence":            ["♣︎", "♦︎", "♥︎" ,"♠︎", "NT"],
             "prefersStatusBarHidden":   true

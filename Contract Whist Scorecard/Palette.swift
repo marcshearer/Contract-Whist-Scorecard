@@ -16,6 +16,8 @@ class Palette {
                         { (traitCollection) in return Themes.color(.background, traitCollection)})
     static var banner = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.banner, traitCollection)})
+    static var bannerEmbossed = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.bannerEmbossed, traitCollection)})
     static var bannerShadow = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.bannerShadow, traitCollection)})
     static var bannerText = UIColor(dynamicProvider:

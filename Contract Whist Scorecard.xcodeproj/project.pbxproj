@@ -160,7 +160,7 @@
 		CC4CC0F91DEADC32007FB24F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4CC0F81DEADC32007FB24F /* AppDelegate.swift */; };
 		CC4CC0FB1DEADC32007FB24F /* ScorepadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4CC0FA1DEADC32007FB24F /* ScorepadViewController.swift */; };
 		CC4CC0FE1DEADC32007FB24F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC4CC0FC1DEADC32007FB24F /* Main.storyboard */; };
-		CC4CC1061DEADC32007FB24F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC4CC1041DEADC32007FB24F /* LaunchScreen.storyboard */; };
+		CC4CC1061DEADC32007FB24F /* LaunchScreenViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC4CC1041DEADC32007FB24F /* LaunchScreenViewController.storyboard */; };
 		CC4CC1161DEAF0F9007FB24F /* GamePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC4CC1151DEAF0F9007FB24F /* GamePreviewViewController.swift */; };
 		CC7A49081DF28BEB00703D38 /* Scorecard UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC7A49071DF28BEB00703D38 /* Scorecard UI.swift */; };
 		CC8655861E036432000AF391 /* Player Detail Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8655851E036432000AF391 /* Player Detail Class.swift */; };
@@ -378,7 +378,7 @@
 		CC4CC0F81DEADC32007FB24F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CC4CC0FA1DEADC32007FB24F /* ScorepadViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ScorepadViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CC4CC0FD1DEADC32007FB24F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		CC4CC1051DEADC32007FB24F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CC4CC1051DEADC32007FB24F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreenViewController.storyboard; sourceTree = "<group>"; };
 		CC4CC1071DEADC32007FB24F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CC4CC1151DEAF0F9007FB24F /* GamePreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = GamePreviewViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CC7A49071DF28BEB00703D38 /* Scorecard UI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Scorecard UI.swift"; sourceTree = "<group>"; };
@@ -428,7 +428,7 @@
 		B2021D7C247FE9D900A82EBB /* Launch Screen */ = {
 			isa = PBXGroup;
 			children = (
-				CC4CC1041DEADC32007FB24F /* LaunchScreen.storyboard */,
+				CC4CC1041DEADC32007FB24F /* LaunchScreenViewController.storyboard */,
 				B2021D7D247FEA1900A82EBB /* LaunchScreenViewController.swift */,
 			);
 			name = "Launch Screen";
@@ -1307,7 +1307,7 @@
 				B2C19E932370541E009485E0 /* Assets.xcassets in Resources */,
 				B221EED5210B0DFE00F7FBA0 /* HandViewController.storyboard in Resources */,
 				B227892A1FB885AC009BABCA /* ConfirmCountViewController.storyboard in Resources */,
-				CC4CC1061DEADC32007FB24F /* LaunchScreen.storyboard in Resources */,
+				CC4CC1061DEADC32007FB24F /* LaunchScreenViewController.storyboard in Resources */,
 				B2361A3722D5B965007D88BB /* ConfirmPlayedViewController.storyboard in Resources */,
 				B22789071FB83AC4009BABCA /* WalkthroughViewController.storyboard in Resources */,
 				B2594E852251FEB2004398FB /* launch_multiple_simulators.sh in Resources */,
@@ -1751,12 +1751,12 @@
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		CC4CC1041DEADC32007FB24F /* LaunchScreen.storyboard */ = {
+		CC4CC1041DEADC32007FB24F /* LaunchScreenViewController.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				CC4CC1051DEADC32007FB24F /* Base */,
 			);
-			name = LaunchScreen.storyboard;
+			name = LaunchScreenViewController.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

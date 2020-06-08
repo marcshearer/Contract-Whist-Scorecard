@@ -121,6 +121,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     @IBAction func finishPressed(_ sender: UIButton) {
         Scorecard.shared.settings.save()
+        Scorecard.shared.settings.saveToICloud()
         self.dismiss()
     }
     
@@ -147,7 +148,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         }
         
         self.onlineEnabled = Scorecard.shared.settings.syncEnabled && Scorecard.shared.settings.onlineGamesEnabled
-        self.facetimeEnabled = Scorecard.shared.settings.syncEnabled && Scorecard.shared.settings.onlineGamesEnabled && Scorecard.shared.settings.faceTimeAddress ?? "" != ""
+        self.facetimeEnabled = Scorecard.shared.settings.syncEnabled && Scorecard.shared.settings.onlineGamesEnabled && Scorecard.shared.settings.faceTimeAddress != ""
         
         // Set observer for entering foreground
         NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -409,7 +410,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         cell.textField.addTarget(self, action: #selector(SettingsViewController.facetimeAddressEndEdit(_:)), for: UIControl.Event.editingDidEnd)
                         cell.textField.addTarget(self, action: #selector(SettingsViewController.facetimeAddressBeginEdit(_:)), for: UIControl.Event.editingDidBegin)
                         cell.textField.attributedPlaceholder = NSAttributedString(string: "Enter Facetime address", attributes:[NSAttributedString.Key.foregroundColor: Palette.inputControlPlaceholder])
-                        cell.textField.text = Scorecard.shared.settings.faceTimeAddress ?? ""
+                        cell.textField.text = Scorecard.shared.settings.faceTimeAddress
                         cell.setEnabled(enabled: self.facetimeEnabled)
                         
                     case .shareScorecard:
@@ -817,7 +818,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     @objc internal func facetimeAddressChanged(_ facetimeAddressTextField: UITextField) {
         
-        Scorecard.shared.settings.faceTimeAddress = facetimeAddressTextField.text
+        Scorecard.shared.settings.faceTimeAddress = facetimeAddressTextField.text ?? ""
     }
     
     @objc internal func facetimeAddressBeginEdit(_ facetimeAddressTextField: UITextField) {

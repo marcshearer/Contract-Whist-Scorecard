@@ -813,8 +813,8 @@ class Sync {
     private func sendUnconfirmedGamesAndParticipantsToCloud(gamesQueued: Int, participantsQueued: Int) -> Bool {
         // Send queued games and participants to cloud
         
-        self.sendRecordsToCloud(records: self.cloudObjectList, completion: { (success: Bool) in
-            if success {
+        Sync.update(records: self.cloudObjectList, completion: { (error: Error?) in
+            if error == nil {
                 OperationQueue.main.addOperation {
                     if Scorecard.adminMode {
                         self.syncMessage("\(gamesQueued) games uploaded - \(participantsQueued) participants uploaded")
@@ -827,66 +827,6 @@ class Sync {
             self.syncController()
         })
         return false
-    }
-    
-    private func sendRecordsToCloud(records: [CKRecord], remainder: [CKRecord]? = nil, completion: ((Bool)->())? = nil) {
-        // Copes with limit being exceeed which splits the load in two and tries again
-        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
-        let publicDatabase = cloudContainer.publicCloudDatabase
-        var allLinkErrors = true
-        
-        let uploadOperation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
-        
-        uploadOperation.isAtomic = true
-        uploadOperation.database = publicDatabase
-        
-        uploadOperation.perRecordCompletionBlock = { (savedRecord: CKRecord, error: Error?) -> Void in
-            // Ignore status as will just keep sending them until they come back down
-            if error != nil {
-                let recordType = savedRecord.recordType
-                if recordType != "Links" {
-                    // An error other than on the links - worry about it
-                    allLinkErrors = false
-                }
-            }
-        }
-        
-        // Assign a completion handler
-        uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecord.ID]?, error: Error?) -> Void in
-            if error != nil {
-                if let error = error as? CKError {
-                    if error.code == .limitExceeded {
-                        // Limit exceeded - split in two and try again
-                        let split = Int(records.count / 2)
-                        // Join records and remainder back together again
-                        var allRecords = records
-                        if remainder != nil {
-                            allRecords += remainder!
-                        }
-                        // Now split at new break point
-                        let firstBlock = Array(allRecords.prefix(upTo: split))
-                        let secondBlock = Array(allRecords.suffix(from: split))
-                        self.sendRecordsToCloud(records: firstBlock, remainder: secondBlock, completion: completion)
-                    } else if error.code == .partialFailure {
-                        completion?(allLinkErrors)
-                    } else {
-                        completion?(false)
-                    }
-                } else {
-                    completion?(false)
-                }
-            } else {
-                if remainder != nil {
-                    // Now need to send second block
-                    self.sendRecordsToCloud(records: remainder!, completion: completion)
-                } else {
-                    completion?(true)
-                }
-            }
-        }
-        
-        // Add the operation to an operation queue to execute it
-        OperationQueue().addOperation(uploadOperation)
     }
     
     // MARK: - Functions to synchronise players with cloud ====================================================== -
@@ -1698,6 +1638,124 @@ class Sync {
         case .uploadPlayers:
             return "Uploading player details"
         }
+    }
+    
+    // MARK: - Generic read/write=================================================================== -
+    
+    public class func update(records: [CKRecord]? = nil, recordIDsToDelete: [CKRecord.ID]? = nil, database: CKDatabase? = nil, remainder: [CKRecord]? = nil, completion: ((Error?)->())? = nil) {
+        // Copes with limit being exceeed which splits the load in two and tries again
+        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let database = database ?? cloudContainer.publicCloudDatabase
+        var allLinkErrors = true
+        
+        let uploadOperation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: recordIDsToDelete)
+        
+        uploadOperation.isAtomic = true
+        uploadOperation.database = database
+        
+        uploadOperation.perRecordCompletionBlock = { (savedRecord: CKRecord, error: Error?) -> Void in
+            // Ignore status as will just keep sending them until they come back down
+            if error != nil {
+                let recordType = savedRecord.recordType
+                if recordType != "Links" {
+                    // An error other than on the links - worry about it
+                    allLinkErrors = false
+                }
+            }
+        }
+        
+        // Assign a completion handler
+        uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecord.ID]?, error: Error?) -> Void in
+            if error != nil {
+                if let error = error as? CKError {
+                    if error.code == .limitExceeded {
+                        // Limit exceeded - split in two and try again
+                        let split = Int(records?.count ?? 0 / 2)
+                        // Join records and remainder back together again
+                        var allRecords = records ?? []
+                        if remainder != nil {
+                            allRecords += remainder!
+                        }
+                        // Now split at new break point
+                        let firstBlock = Array(allRecords.prefix(upTo: split))
+                        let secondBlock = Array(allRecords.suffix(from: split))
+                        self.update(records: firstBlock, remainder: secondBlock, completion: completion)
+                    } else if error.code == .partialFailure {
+                        completion?(allLinkErrors ? nil : error)
+                    } else {
+                        completion?(error)
+                    }
+                } else {
+                    completion?(error)
+                }
+            } else {
+                if remainder != nil {
+                    // Now need to send second block
+                    self.update(records: remainder!, database: database, completion: completion)
+                } else {
+                    completion?(nil)
+                }
+            }
+        }
+        
+        // Add the operation to an operation queue to execute it
+        OperationQueue().addOperation(uploadOperation)
+    }
+    
+    public class func read(recordType: CKRecord.RecordType,
+                                            predicate: NSPredicate? = nil,
+                                            sortBy: [NSSortDescriptor]? = nil,
+                                            database: CKDatabase? = nil,
+                                            desiredKeys: [String]? = nil,
+                                            cursor: CKQueryOperation.Cursor! = nil,
+                                            downloadAction: @escaping (CKRecord) -> (),
+                                            completeAction: @escaping (Error?) -> ()) {
+        
+        var queryOperation: CKQueryOperation
+        var recordsRead = 0
+        
+        // Fetch link records from cloud
+        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let database = database ?? cloudContainer.publicCloudDatabase
+        if cursor == nil {
+            // First time in - set up the query
+            let predicate = predicate ?? NSPredicate(value: true)
+            let query = CKQuery(recordType: recordType, predicate: predicate)
+            query.sortDescriptors = sortBy
+            queryOperation = CKQueryOperation(query: query, qos: .userInteractive)
+        } else {
+            // Continue previous query
+            queryOperation = CKQueryOperation(cursor: cursor, qos: .userInteractive)
+        }
+
+        queryOperation.desiredKeys = desiredKeys
+        queryOperation.queuePriority = .veryHigh
+        queryOperation.recordFetchedBlock = { (record) -> Void in
+            let cloudObject: CKRecord = record
+            recordsRead += 1
+            downloadAction(cloudObject)
+        }
+        
+        queryOperation.queryCompletionBlock = { (cursor, error) -> Void in
+            if error != nil {
+                completeAction(error)
+            }
+            
+            if cursor != nil {
+                // More to come - recurse
+                _ = self.read(recordType: recordType,
+                              predicate: predicate,
+                              database: database,
+                              cursor: cursor,
+                              downloadAction: downloadAction,
+                              completeAction: completeAction)
+            } else {
+                completeAction(nil)
+            }
+        }
+        
+        // Execute the query
+        database.add(queryOperation)
     }
 }
 

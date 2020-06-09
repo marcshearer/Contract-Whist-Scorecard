@@ -16,6 +16,7 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     // Sync
     internal let sync = Sync()
     private var syncGetPlayers = false
+    private weak var callingViewController: ScorecardViewController!
     
     // Reconcile
     internal var reconcile: Reconcile!
@@ -45,10 +46,17 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
             // New device - try to load from iCloud
             self.message.text = "New Installation\n\nTrying to load\nsettings from iCloud..."
             Scorecard.shared.settings.loadFromICloud() { (players) in
-                self.syncGetPlayers = true
-                self.sync.delegate = self
-                if !self.sync.synchronise(syncMode: .syncGetPlayerDetails, specificEmail: players, waitFinish: true) {
-                    self.dismiss()
+                if let players = players {
+                    self.checkReceiveNotifications() {
+                        Scorecard.shared.settings.save()
+                        self.syncGetPlayers = true
+                        self.sync.delegate = self
+                        if !self.sync.synchronise(syncMode: .syncGetPlayerDetails, specificEmail: players, waitFinish: true) {
+                            self.dismiss(showMessage: false)
+                        }
+                    }
+                } else {
+                    // New device / iCloud user
                 }
             }
         } else {
@@ -56,12 +64,12 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
         }
     }
     
-    private func dismiss() {
+    private func dismiss(showMessage: Bool = true) {
         Utility.mainThread {
-            self.message.text = "Loading..."
-            Utility.executeAfter(delay: 2.0) {
-                self.dismiss(animated: true, completion: self.completion)
+            if showMessage {
+                self.message.text = "Loading..."
             }
+            self.callingViewController.dismissWithScreenshot(viewController: self, completion: self.completion)
         }
     }
     
@@ -85,6 +93,7 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
         for player in playerList {
             _ = player.createMO()
         }
+        self.sync.fetchPlayerImagesFromCloud(playerList.map{$0.playerMO})
         self.dismiss()
        
     }
@@ -95,6 +104,7 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
         
             Utility.debugMessage("launch", "Version returned")
             
+            self.message.text = "Upgrading to\nCurrent Version..."
             if !Scorecard.shared.upgradeToVersion(from: self) {
                 self.alertMessage("Error upgrading to current version", okHandler: {
                     exit(0)
@@ -103,6 +113,7 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
             
             if Scorecard.shared.playerList.count != 0 && !Scorecard.version.blockSync && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
                 // Rebuild any players who have a sync in progress flag set
+                self.message.text = "Rebuilding\nPlayer Data..."
                 self.reconcilePlayers()
             } else {
                 self.viewDidContinue()
@@ -133,13 +144,12 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
         }
 
         if playerMOList.count != 0 {
-            // Create an alert controller
-            self.message.text = "Reconciling player data..."
-
             // Set reconcile running
             reconcile = Reconcile()
             reconcile.delegate = self
             reconcile.reconcilePlayers(playerMOList: playerMOList)
+        } else {
+            self.viewDidContinue()
         }
     }
     
@@ -160,6 +170,24 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
             self.viewDidContinue()
         }
     }
+    
+    // MARK: - Notification and location permissions ================================================= -
+    
+    private func checkReceiveNotifications(completion: @escaping ()->()) {
+        
+        Notifications.checkNotifications(
+            refused: { (requested) in
+                if !requested {
+                    self.alertMessage("You have previously refused permission for this app to send you notifications. \nThis will mean that you will not receive game invitation or completion notifications.\nTo change this, please authorise notifications in the Whist section of the main Settings App")
+                }
+                Scorecard.shared.settings.receiveNotifications = false
+                completion()
+            },
+            accepted: {
+                completion()
+            },
+            request: true)
+    }
 
     // MARK: - Routine to display this view ================================================================= -
     
@@ -171,6 +199,7 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
         launchScreenViewController.preferredContentSize = CGSize(width: 400, height: 700)
         launchScreenViewController.modalPresentationStyle = .fullScreen
         launchScreenViewController.completion = completion
+        launchScreenViewController.callingViewController = viewController
         
         viewController.present(launchScreenViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: false)
     }

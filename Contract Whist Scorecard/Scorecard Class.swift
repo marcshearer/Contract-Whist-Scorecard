@@ -246,6 +246,8 @@ class Scorecard {
             if !upgradeToVersion(from: Utility.getActiveViewController()!, completion: completion) {
                 Utility.getActiveViewController()?.alertMessage("Error upgrading to latest version")
                 exit(0)
+            } else {
+                completion?()
             }
         } else {
             completion?()

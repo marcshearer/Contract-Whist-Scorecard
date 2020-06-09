@@ -17,6 +17,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="cGs-48-Hmg">
+                                <rect key="frame" x="0.0" y="896" width="414" height="0.0"/>
+                            </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Clx-ll-10L" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                 <userDefinedRuntimeAttributes>
@@ -37,7 +40,7 @@
                                                     <constraint firstAttribute="height" constant="41" id="OSQ-jV-UcD"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="30"/>
-                                                <color key="textColor" name="Bold"/>
+                                                <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jVd-cr-1qi" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
@@ -539,8 +542,10 @@
                         <constraints>
                             <constraint firstItem="baT-Lm-DyX" firstAttribute="leading" secondItem="N76-hf-VXY" secondAttribute="leading" id="1OI-Uj-ods"/>
                             <constraint firstItem="X53-w8-J5S" firstAttribute="height" secondItem="N76-hf-VXY" secondAttribute="height" multiplier="10.25:38" id="2LZ-dx-Vdh"/>
+                            <constraint firstAttribute="trailing" secondItem="cGs-48-Hmg" secondAttribute="trailing" id="3JO-DS-gAi"/>
                             <constraint firstItem="1FM-AB-vSS" firstAttribute="height" secondItem="w0v-BL-Raf" secondAttribute="height" id="7g0-AS-CXJ"/>
                             <constraint firstItem="baT-Lm-DyX" firstAttribute="trailing" secondItem="N76-hf-VXY" secondAttribute="trailing" id="CKy-zs-657"/>
+                            <constraint firstAttribute="bottom" secondItem="cGs-48-Hmg" secondAttribute="bottom" id="CeL-dK-Qgm"/>
                             <constraint firstItem="pB1-JM-2cb" firstAttribute="width" secondItem="N76-hf-VXY" secondAttribute="width" multiplier="0.33" constant="-20" id="FqD-3H-3Iu"/>
                             <constraint firstItem="7pG-RR-uCS" firstAttribute="leading" secondItem="N76-hf-VXY" secondAttribute="leading" id="Ixp-XM-5SL"/>
                             <constraint firstItem="0OQ-Wp-Xtp" firstAttribute="top" secondItem="baT-Lm-DyX" secondAttribute="bottom" id="JVJ-yO-FIW"/>
@@ -550,6 +555,7 @@
                             <constraint firstItem="7pG-RR-uCS" firstAttribute="top" secondItem="X53-w8-J5S" secondAttribute="bottom" id="RCD-dj-VDi"/>
                             <constraint firstItem="0OQ-Wp-Xtp" firstAttribute="leading" secondItem="hFM-Q5-ViO" secondAttribute="leading" id="ZCV-Iz-ViU"/>
                             <constraint firstItem="Clx-ll-10L" firstAttribute="leading" secondItem="hFM-Q5-ViO" secondAttribute="leading" id="cjh-Jn-lzp"/>
+                            <constraint firstItem="cGs-48-Hmg" firstAttribute="leading" secondItem="hFM-Q5-ViO" secondAttribute="leading" id="eFy-Mu-g01"/>
                             <constraint firstItem="N76-hf-VXY" firstAttribute="top" secondItem="Clx-ll-10L" secondAttribute="bottom" id="f7K-cq-gB7"/>
                             <constraint firstItem="e3D-oK-CzW" firstAttribute="leading" secondItem="N76-hf-VXY" secondAttribute="leading" id="fSW-34-Uk4"/>
                             <constraint firstItem="X53-w8-J5S" firstAttribute="trailing" secondItem="N76-hf-VXY" secondAttribute="trailing" id="gjO-ps-Vws"/>
@@ -562,6 +568,7 @@
                             <constraint firstItem="baT-Lm-DyX" firstAttribute="top" secondItem="Clx-ll-10L" secondAttribute="bottom" id="s8O-kv-JSw"/>
                             <constraint firstItem="baT-Lm-DyX" firstAttribute="height" secondItem="N76-hf-VXY" secondAttribute="height" multiplier="10.5:38" id="tDV-xc-iia"/>
                             <constraint firstItem="e3D-oK-CzW" firstAttribute="height" secondItem="N76-hf-VXY" secondAttribute="height" multiplier="9.75:38" id="uN4-Sq-JxP"/>
+                            <constraint firstItem="cGs-48-Hmg" firstAttribute="top" secondItem="hFM-Q5-ViO" secondAttribute="bottom" id="vER-37-LAq"/>
                             <constraint firstItem="e3D-oK-CzW" firstAttribute="trailing" secondItem="N76-hf-VXY" secondAttribute="trailing" id="weM-wy-810"/>
                             <constraint firstItem="X53-w8-J5S" firstAttribute="top" secondItem="e3D-oK-CzW" secondAttribute="bottom" id="xhR-bu-qfe"/>
                         </constraints>
@@ -578,6 +585,7 @@
                         <outlet property="bannerView" destination="yhA-Gb-reU" id="S7U-UB-S2F"/>
                         <outlet property="bottomSection" destination="7pG-RR-uCS" id="IKs-Pj-cRv"/>
                         <outlet property="bottomSectionBottomConstraint" destination="inc-aR-TRM" id="OJI-ZS-egG"/>
+                        <outlet property="dismissScreenshotImageView" destination="cGs-48-Hmg" id="hf4-Go-fv8"/>
                         <outlet property="flowLayout" destination="Aec-a3-Pfk" id="zjZ-PK-2Px"/>
                         <outlet property="hostCollectionContainerView" destination="tZH-0W-X3K" id="fgV-14-nBf"/>
                         <outlet property="hostCollectionContentView" destination="FhF-F8-jiI" id="bD0-zI-6g3"/>
@@ -632,9 +640,6 @@
         <image name="person.3.fill" catalog="system" width="128" height="61"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Bold">
-            <color red="0.0" green="0.0" blue="0.70196078431372544" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>

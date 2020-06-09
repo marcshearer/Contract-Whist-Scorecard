@@ -575,6 +575,19 @@ class Utility {
         // Execute the query
         publicDatabase.add(queryOperation)
     }
+    
+    public static func screenshot() -> UIImage? {
+        let layer = self.getActiveViewController()!.view.layer
+        let scale = UIScreen.main.scale
+        UIGraphicsBeginImageContextWithOptions(layer.frame.size, false, scale);
+        layer.render(in: UIGraphicsGetCurrentContext()!)
+        let screenshot = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return screenshot
+    }
+    
+
 
     // MARK: - FaceTime ======================================================================== -
 

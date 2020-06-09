@@ -16,8 +16,6 @@ class Upgrade {
     class func upgradeTo41(from viewController: UIViewController, completion: (()->())? = nil) -> Bool {
         // Sort out corruption in number of hands that happened back in December 2017 / January 2018
         
-        let alertWaitController = viewController.alertWait("Upgrading to version 4.1")
-             
         // Reset all games with 25 hands to 13
         DataAdmin.patchLocalDatabase(from: viewController, silent: true)
         
@@ -25,8 +23,6 @@ class Upgrade {
         let reconcile = Reconcile()
         reconcile.reconcilePlayers(playerMOList: Scorecard.shared.playerList, syncFirst: false)
         
-        alertWaitController.dismiss(animated: true, completion: completion)
-            
         return true
     }
 }

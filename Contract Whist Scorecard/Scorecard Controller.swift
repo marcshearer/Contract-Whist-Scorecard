@@ -64,6 +64,8 @@ protocol ScorecardAppControllerDelegate : class {
     func lock(_ active: Bool)
     
     func robotAction(playerNumber: Int!, action: RobotAction)
+    
+    func set(noHideDismissImageView: Bool)
 }
 
 extension ScorecardAppControllerDelegate {
@@ -122,6 +124,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     internal var queue: [ScorecardAppQueue] = []
     private var clientHandlerObserver: NSObjectProtocol?
     internal var uuid: String
+    fileprivate var noHideDismissImageView: Bool = false
     fileprivate var invokedViews: [(view: ScorecardView, viewController: ScorecardViewController?, uuid: String)] = []
     
     // Properties for shared methods (client and server)
@@ -152,8 +155,10 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     internal func stop() {
         Utility.debugMessage("appController \(self.uuid)", "Stop \(debugReference)")
         clearViewPresentingCompleteNotification(observer: clientHandlerObserver)
-        self.parentViewController.view.sendSubviewToBack(self.parentViewController.dismissImageView)
-        self.parentViewController.dismissImageView.image = nil
+        if !noHideDismissImageView {
+            self.parentViewController.view.sendSubviewToBack(self.parentViewController.dismissImageView)
+            self.parentViewController.dismissImageView.image = nil
+        }
         clientHandlerObserver = nil
     }
     
@@ -197,7 +202,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
                     // Dismissing this view to present another but want it to look like new view is presenting (animated) on top of this one
                     // Put up a screenshot of this view behind it on the parent, dismiss this one without animation, and then when next view is visible
                     // remove the screenshot from behind it
-                    self.parentViewController.dismissImageView.image = self.screenshot()
+                    self.parentViewController.dismissImageView.image = Utility.screenshot()
                     if let view = self.activeViewController?.view {
                         self.parentViewController.dismissImageView.frame = view.superview!.convert(view.frame, to: nil)
                     }
@@ -229,6 +234,11 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         let invokedViewController = self.presentView(view: invokedView, context: context, completion: completion)
         invokedViews[invokedViews.count - 1].viewController = invokedViewController
     }
+    
+    internal func set(noHideDismissImageView: Bool) {
+        self.noHideDismissImageView = noHideDismissImageView
+    }
+
     
     private func nextView(view nextView: ScorecardView, context: [String:Any?]? = nil) {
         
@@ -491,17 +501,6 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     
     // MARK: - Utility Routines ======================================================================== -
     
-    private func screenshot() -> UIImage? {
-        let layer = self.activeViewController!.view.layer
-        let scale = UIScreen.main.scale
-        UIGraphicsBeginImageContextWithOptions(layer.frame.size, false, scale);
-        layer.render(in: UIGraphicsGetCurrentContext()!)
-        let screenshot = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return screenshot
-    }
-    
     internal func fromViewController() -> ScorecardViewController? {
         if self.activeViewController == nil {
             // No active views - show from parent
@@ -643,7 +642,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     
     // MARK: - Animations ============================================================================== -
     
-    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    internal func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         
         var duration = 0.25
         var animation: ScorecardAnimation? = nil
@@ -671,7 +670,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         }
     }
     
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+    internal func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
        
         if dismissed is LaunchScreenViewController {
             return ScorecardAnimator(duration: 2.0, animation: .fade, presenting: false)
@@ -679,5 +678,25 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
             return nil
         }
         
+    }
+    
+    // MARK: - Dismiss view under cover of a screen shot ================================================ -
+    
+    public func dismissWithScreenshot(viewController: ScorecardViewController, completion: (()->())? = nil) {
+        self.dismissImageView.image =  Utility.screenshot()
+        self.view.bringSubviewToFront(self.dismissImageView)
+        self.dismissImageView.alpha = 1.0
+        self.dismissImageView.isHidden = false
+        self.dismissImageView.frame = view.superview!.convert(view.frame, to: nil)
+        viewController.dismiss(animated: false) {
+            completion?()
+            Utility.animate(duration: 0.5, afterDelay: 1.0, completion: {
+                self.view.sendSubviewToBack(self.dismissImageView)
+                self.dismissImageView.image = nil
+                self.dismissImageView.alpha = 1.0
+            }, animations: {
+                self.dismissImageView.alpha = 0.0
+            })
+        }
     }
 }

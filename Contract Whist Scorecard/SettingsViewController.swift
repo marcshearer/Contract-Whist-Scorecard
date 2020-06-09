@@ -9,9 +9,9 @@
 import UIKit
 import UserNotifications
 import GameKit
-import CoreLocation
 
-class SettingsViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CLLocationManagerDelegate, CustomCollectionViewLayoutDelegate, PlayerSelectionViewDelegate {
+
+class SettingsViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CustomCollectionViewLayoutDelegate, PlayerSelectionViewDelegate {
     
     // MARK: - Class Properties ======================================================================== -
         
@@ -30,7 +30,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     private var infoHeight: CGFloat = 20.0
     private var reload = false
     private var notificationsRefused = false
-    private var locationManager: CLLocationManager! = nil
+    private var location = Location()
     private var useLocation: Bool?
     private var themeNames: [String] = Array(Themes.themes.keys)
     private var currentThemeIndex = 0
@@ -40,7 +40,6 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     private var themesTopLimit: Int = 0
     private var firstTime: Bool = true
     private var playerSelectionHeight: CGFloat = 0.0
-    private var disableAll: Bool = false
     private var thisPlayerHeight: CGFloat = 0.0
     
     // Sections
@@ -156,6 +155,10 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         self.setupThemes()
         
         self.checkReceiveNotifications()
+        
+        if Scorecard.shared.settings.saveLocation {
+            self.checkUseLocation(message: "You have blocked access to the current location for this app. Therefore the save location setting has been reset. To change this please allow location access 'While Using the App' in the Whist section of the main Settings App", prompt: false)
+        }
     }
     
     @objc internal func willEnterForeground() {
@@ -354,10 +357,6 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                 cell.collapseButton.addTarget(self, action: #selector(SettingsViewController.dataInfoClicked(_:)), for: .touchUpInside)
                 
             }
-        }
-        
-        if self.disableAll {
-            header?.cell?.setEnabled(enabled: false)
         }
         
         return header
@@ -647,10 +646,6 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         cell.selectedBackgroundView = UIView()
         cell.selectedBackgroundView?.backgroundColor = UIColor.clear
         
-        if self.disableAll {
-            cell?.setEnabled(enabled: false)
-        }
-        
         return cell
     
     }
@@ -753,7 +748,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
  
         if saveGameLocationSwitch.isOn {
             // Check if can switch it on
-            self.checkUseLocation(prompt: true)
+            self.checkUseLocation(message: "You have previously refused permission for this app to use your location. To change this, please allow location access 'While Using the App' in the Whist section of the main Settings App", prompt: true)
         } else {
             // Switch it off
             self.setSaveGameLocation(value: false)
@@ -777,13 +772,13 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     @objc internal func onlineGamesChanged(_ onlineGamesSwitch: UISwitch) {
         self.onlineEnabled = onlineGamesSwitch.isOn
         if self.onlineEnabled {
-            self.authoriseNotifications(
+            self.authoriseNotifications(message: "You have previously refused permission for this app to send you notifications. \nThis will mean that you will not receive game invitation notifications.\nTo change this, please authorise notifications in the Whist section of the main Settings App",
                 successAction: {
                     self.enableOnline()
                     Scorecard.shared.settings.save()
             },
                 failureAction: {
-                    self.clearOnline()
+                    self.enableOnline()
                     self.clearReceiveNotifications()
                     Scorecard.shared.settings.save()
             })
@@ -843,7 +838,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     @objc internal func receiveNotificationsChanged(_ receiveNotificationsSwitch: UISwitch) {
         if receiveNotificationsSwitch.isOn {
             Scorecard.shared.settings.receiveNotifications = true
-            authoriseNotifications(
+            authoriseNotifications(message: "You have previously refused permission for this app to send you notifications. \nThis will mean that you will not receive game completion notifications.\nTo change this, please authorise notifications in the Whist section of the main Settings App",
                 successAction: {
                     Notifications.updateHighScoreSubscriptions()
                 },
@@ -1115,8 +1110,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             self.playerSelectionViewHeightConstraint.constant = self.playerSelectionHeight
             self.thisPlayerChangeButton.setTitle("Cancel")
             self.settingsTableView.isScrollEnabled = false
-            self.disableAll = true
-            self.settingsTableView.reloadData()
+            self.disableAll()
         }
         
         let playerList = Scorecard.shared.playerList.filter { $0.email != Scorecard.shared.settings.thisPlayerEmail }
@@ -1130,7 +1124,6 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         }
         self.settingsTableView.isScrollEnabled = true
         self.thisPlayerChangeButton.setTitle("Change")
-        self.disableAll = false
         self.settingsTableView.reloadData()
     }
         
@@ -1224,7 +1217,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         }
     }
     
-    private func disableAll(exceptSection: Int, exceptOptions: Int...) {
+    private func disableAll(exceptSection: Int? = nil, exceptOptions: Int...) {
         self.forEachSection() { (section) in
             self.setSectionEnabled(section: section, enabled: false)
         }
@@ -1244,7 +1237,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         }
     }
     
-    private func forEachOption(exceptSection: Int, exceptOptions: [Int], action: (Int, Int)->()) {
+    private func forEachOption(exceptSection: Int?, exceptOptions: [Int], action: (Int, Int)->()) {
         var options: Int
         
         for section in Sections.allCases {
@@ -1261,48 +1254,32 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         }
     }
     
-    // MARK: - Location delegate ========================================================================= -
-    
-    private func checkUseLocation(prompt: Bool) {
-        let authorizationStatus = CLLocationManager.authorizationStatus()
-        switch authorizationStatus {
-        case .restricted, .denied:
-            // Not allowed to use location
-            self.useLocation = false
-            if prompt {
-                self.alertMessage("You have previously refused permission for this app to use your location. To change this, please allow location access 'While Using the App' in the Whist section of the main Settings App", title: "Error")
-            }
-        case .notDetermined:
-            self.useLocation = nil
-            if prompt {
-                locationManager = CLLocationManager()
-                locationManager.delegate = self
-                // Ask for permission and continue in authorization changed delegate
-                locationManager.requestWhenInUseAuthorization()
-            }
-        default:
-            self.useLocation = true
-            Scorecard.shared.settings.saveLocation = true
-        }
+    // MARK: - Location permissions============================================================= -
+        
+    private func checkUseLocation(message: String, prompt: Bool) {
+        self.location.checkUseLocation(
+            refused: { (requested) in
+                self.useLocation = false
+                if !requested {
+                    self.alertMessage(message, title: "Warning")
+                }
+                self.setSaveGameLocation(value: false)
+            },
+            accepted: {
+                self.useLocation = true
+                self.setSaveGameLocation(value: true)
+            },
+            unknown: {
+                self.useLocation = nil
+            },
+            request: prompt)
     }
     
     private func setSaveGameLocation(value: Bool) {
         Scorecard.shared.settings.saveLocation = value
         self.setOptionValue(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.saveGameLocation.rawValue, value: value)
     }
- 
-    internal func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        Utility.mainThread { [unowned self] in
-            if status == .authorizedWhenInUse {
-                // Authorization granted
-                self.useLocation = true
-             } else {
-                // Permission to use location refused
-                self.useLocation = false
-            }
-            self.setSaveGameLocation(value: self.useLocation ?? false)
-        }
-    }
+
     
     // MARK: - Theme routines ========================================================================== -
     
@@ -1341,48 +1318,24 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
 
     
     // MARK: - Utility Routines ======================================================================== -
-
+    
     private func checkReceiveNotifications() {
-        let current = UNUserNotificationCenter.current()
-        current.getNotificationSettings(completionHandler: { (settings) in
-            switch settings.authorizationStatus {
-            case .notDetermined, .provisional :
-                // Notification permission has not been asked yet, will ask if switch on relevant options
-                self.notificationsRefused = false
-            case .denied:
-                // Notification permission was previously denied, switch off relevant options
-                self.notificationsRefused = true
-                self.clearReceiveNotifications()
-                self.clearOnline()
-            case .authorized:
-                // Notification permission was already granted
-                self.notificationsRefused = false
-            @unknown default:
-                fatalError("Unexpected value for UNAuthorizationStatus")
-            }
+        Notifications.checkNotifications(refused: { (requested) in
+            self.notificationsRefused = true
+            self.clearReceiveNotifications()
+        }, accepted: {
+            self.notificationsRefused = false
+        }, unknown: {
+            self.notificationsRefused = false
         })
     }
     
-    private func authoriseNotifications(successAction: @escaping ()->(), failureAction: @escaping ()->()) {
+    private func authoriseNotifications(message: String, successAction: @escaping ()->(), failureAction: @escaping ()->()) {
         if self.notificationsRefused {
             failureAction()
-            self.alertMessage("You have previously refused permission for this app to send you notifications. To change this, please authorise notifications in the Whist section of the main Settings App", title: "Error")
+            self.alertMessage(message, title: "Error")
         } else {
-            let center = UNUserNotificationCenter.current()
-            center.requestAuthorization(options:[.badge, .alert, .sound]) { (granted, error) in
-                if error != nil || !granted {
-                    Utility.mainThread {
-                        failureAction()
-                    }
-                }
-                Utility.mainThread {
-                    UIApplication.shared.registerForRemoteNotifications()
-                    if Scorecard.shared.settings.syncEnabled {
-                        // Success
-                        successAction()
-                    }
-                }
-            }
+            Notifications.requestNotifications(successAction: successAction, failureAction: failureAction)
         }
     }
     

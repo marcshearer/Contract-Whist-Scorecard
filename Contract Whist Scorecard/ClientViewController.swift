@@ -9,6 +9,7 @@
 import UIKit
 import Combine
 import MessageUI
+import CoreData
 
 struct MenuAction {
     var tag: Int
@@ -78,6 +79,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private var rotated = false
     private var isNetworkAvailable: Bool?
     private var isLoggedIn: Bool?
+    private var imageObserver: NSObjectProtocol?
     
     private var hostingOptions: Int = 0
     private var onlineItem: Int?
@@ -124,6 +126,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var playerSelectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var tapGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet private weak var flowLayout: CustomCollectionViewLayout!
+    @IBOutlet private weak var dismissScreenshotImageView: UIImageView!
 
     // MARK: - IB Actions ============================================================================== -
         
@@ -203,8 +206,12 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
 
         // Setup playing as
         self.setupThisPlayer()
-                
+        
+        // Clear presenting views
         Scorecard.shared.viewPresenting = .none
+        
+        // Look out for images arriving
+        imageObserver = setPlayerDownloadNotification(name: .playerImageDownloaded)
         
         // Clear hand state
         Scorecard.game?.handState = nil
@@ -279,7 +286,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     private func showLaunchScreen() {
         LaunchScreenViewController.show(from: self) {
+            self.clientController?.set(noHideDismissImageView: true) // Suppress hiding of screenview since will do it later ourselves
             self.showSettingsCompletion()
+            self.clientController?.set(noHideDismissImageView: false)
             if !Scorecard.shared.settings.syncEnabled {
                 self.showGetStarted()
             }
@@ -755,37 +764,33 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     // MARK: - Image button delegate handlers =============================================== -
     
     internal func imageButtonPressed(_ button: ImageButton) {
-        if !Scorecard.shared.isNetworkAvailable || !Scorecard.shared.isLoggedIn {
-            self.restart()
-        } else {
-            switch button.tag {
-            case scoringItem:
-                self.scoreGame()
-            case playersItem:
-                self.showPlayers()
-            case resultsItem:
-                self.historyViewer = HistoryViewer(from: self) {
-                    self.historyViewer = nil
-                }
-            case settingsItem:
-                self.showSettings()
-            default:
-                var mode: ConnectionMode
-                switch button.tag {
-                case nearbyItem:
-                    mode = .nearby
-                case onlineItem:
-                    mode = .online
-                case robotItem:
-                    mode = .loopback
-                default:
-                    mode = .online
-                }
-                
-                self.destroyClientController()
-                
-                self.hostGame(mode: mode, playerEmail: self.thisPlayer)
+        switch button.tag {
+        case scoringItem:
+            self.scoreGame()
+        case playersItem:
+            self.showPlayers()
+        case resultsItem:
+            self.historyViewer = HistoryViewer(from: self) {
+                self.historyViewer = nil
             }
+        case settingsItem:
+            self.showSettings()
+        default:
+            var mode: ConnectionMode
+            switch button.tag {
+            case nearbyItem:
+                mode = .nearby
+            case onlineItem:
+                mode = .online
+            case robotItem:
+                mode = .loopback
+            default:
+                mode = .online
+            }
+            
+            self.destroyClientController()
+            
+            self.hostGame(mode: mode, playerEmail: self.thisPlayer)
         }
     }
     
@@ -899,8 +904,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         if Scorecard.activeSettings.onlineGamesEnabled {
             self.nearbyItem = self.hostingOptions
             self.hostingOptions += 1
-            self.onlineItem = self.hostingOptions
-            self.hostingOptions += 1
+            if Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
+                self.onlineItem = self.hostingOptions
+                self.hostingOptions += 1
+            }
         }
         self.scoringItem = self.hostingOptions
         self.hostingOptions += 1
@@ -1009,6 +1016,27 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private func peerReloadData() {
         self.peerCollectionView.reloadData()
         self.peerScrollCollectionView.reloadData()
+    }
+    
+    func setPlayerDownloadNotification(name: Notification.Name) -> NSObjectProtocol? {
+        // Set a notification for images downloaded
+        let observer = NotificationCenter.default.addObserver(forName: name, object: nil, queue: nil) {
+            (notification) in
+            self.updatePlayer(objectID: notification.userInfo?["playerObjectID"] as! NSManagedObjectID)
+        }
+        return observer
+    }
+    
+    func updatePlayer(objectID: NSManagedObjectID) {
+        // Find any cells containing an image/player which has just been downloaded asynchronously
+        Utility.mainThread {
+            if let playerMO = Scorecard.shared.findPlayerByEmail(self.thisPlayer) {
+                if playerMO.objectID == objectID {
+                    // This is this player - update player
+                    self.showThisPlayer()
+                }
+            }
+        }
     }
     
     // MARK: - Client controller delegates ======================================================================== -
@@ -1156,7 +1184,7 @@ extension ClientViewController {
         self.hostTitleBar.set(textColor: Palette.buttonFaceText)
         self.adminMenuButton.tintColor = Palette.bannerEmbossed
         self.titleLabel.textColor = Palette.bannerEmbossed
-        self.titleLabel.text = "W H I S T"
+        self.titleLabel.setNeedsDisplay() // Doesn't seem to change color otherwise!
         self.thisPlayerThumbnail.set(textColor: Palette.bannerText)
         self.thisPlayerThumbnail.set(font: UIFont.systemFont(ofSize: 15, weight: .bold))
         self.infoButton.backgroundColor = Palette.bannerShadow

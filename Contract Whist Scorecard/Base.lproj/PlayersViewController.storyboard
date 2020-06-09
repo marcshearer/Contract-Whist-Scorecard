@@ -11,15 +11,15 @@
         <!--Players-->
         <scene sceneID="4Dd-4x-fCp">
             <objects>
-                <viewController storyboardIdentifier="PlayersViewController" title="Players" useStoryboardIdentifierAsRestorationIdentifier="YES" id="aCF-cU-Oeh" userLabel="Players" customClass="PlayersViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PlayersViewController" title="Players" useStoryboardIdentifierAsRestorationIdentifier="YES" id="aCF-cU-Oeh" userLabel="Players" customClass="PlayersViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9pw-Pu-D89">
                         <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lP3-fI-JoD" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lP3-fI-JoD" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="667" height="0.0"/>
                             </view>
-                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CMD-pe-gDa" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CMD-pe-gDa" customClass="NavigationBar" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="667" height="32"/>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" name="Banner Text"/>
@@ -27,7 +27,7 @@
                                 <items>
                                     <navigationItem title="Players" largeTitleDisplayMode="always" id="tiP-qu-fbf">
                                         <barButtonItem key="leftBarButtonItem" width="50" id="0lq-Kn-ItV">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="KBX-t5-3kT" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="KBX-t5-3kT" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
                                                 <rect key="frame" x="20" y="0.0" width="50" height="32"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" image="home">
@@ -39,7 +39,7 @@
                                             </button>
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" width="50" id="cZu-N7-Ocv">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" id="anD-NV-QFc" userLabel="New Player Button" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageSizeForAccessibilityContentSizeCategory="YES" lineBreakMode="middleTruncation" id="anD-NV-QFc" userLabel="New Player Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
                                                 <rect key="frame" x="597" y="0.0" width="50" height="32"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>

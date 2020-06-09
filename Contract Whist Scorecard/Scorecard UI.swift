@@ -48,14 +48,6 @@ class ScorecardUI {
         textView.font = UIFont.boldSystemFont(ofSize: 20.0)
     }
 
-    class func swipeBackground1Style(_ rowAction: UITableViewRowAction) {
-        rowAction.backgroundColor = UIColor(red: 48.0/255.0, green: 173.0/255.0, blue: 99.0/255.0, alpha: 1.0)
-    }
-    
-    class func swipeBackground2Style(_ rowAction: UITableViewRowAction) {
-        rowAction.backgroundColor = UIColor(red: 202.0/255.0, green: 202.0/255.0, blue: 203.0/255.0, alpha: 1.0)
-    }
-    
     class func showSegmented(segmented: UISegmentedControl?, isEnabled: Bool) {
         
         if segmented != nil {

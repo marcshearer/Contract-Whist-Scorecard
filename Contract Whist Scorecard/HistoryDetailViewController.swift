@@ -370,7 +370,7 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
     
     private func showLocation() {
         
-        LocationViewController.show(from: self, gameLocation: self.gameDetail.gameLocation, useCurrentLocation: false, mustChange: true, bannerColor: Palette.banner, completion: { (location) in
+        _ = LocationViewController.show(from: self, gameLocation: self.gameDetail.gameLocation, useCurrentLocation: false, mustChange: true, bannerColor: Palette.banner, completion: { (location) in
             if let location = location {
                 // Copy location back
                 self.gameDetail.gameLocation = location

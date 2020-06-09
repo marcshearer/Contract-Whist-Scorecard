@@ -1565,8 +1565,8 @@ class Sync {
         
         if self.observer != nil {
             NotificationCenter.default.removeObserver(self.observer!)
-            NotificationCenter.default.post(name: .syncCompletion, object: self, userInfo: nil)
         }
+        NotificationCenter.default.post(name: .syncCompletion, object: self, userInfo: nil)
     }
     
     private func syncReturnPlayers(_ playerList: [PlayerDetail]!) {

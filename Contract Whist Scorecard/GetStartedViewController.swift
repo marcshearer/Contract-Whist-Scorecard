@@ -253,7 +253,7 @@ class GetStartedViewController: ScorecardViewController, UITableViewDelegate, UI
     
     private func showSelectPlayers() {
         
-        SelectPlayersViewController.show(from: self, specificEmail: self.syncEmailTextField.text!, descriptionMode: .lastPlayed, allowOtherPlayer: false, allowNewPlayer: false, completion: { (selected, playerList, selection) in
+        _ = SelectPlayersViewController.show(from: self, specificEmail: self.syncEmailTextField.text!, descriptionMode: .lastPlayed, allowOtherPlayer: false, allowNewPlayer: false, completion: { (selected, playerList, selection) in
             if let selected = selected, let playerList = playerList, let selection = selection {
                 if selected > 0 {
                     var createPlayerList: [PlayerDetail] = []

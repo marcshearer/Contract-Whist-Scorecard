@@ -69,11 +69,20 @@ class MultipeerService: NSObject, CommsServiceDelegate, MCSessionDelegate {
         var archivedPeerID = UserDefaults.standard.data(forKey: "MCPeerID")
         if archivedPeerID == nil {
             self.myPeerID = MCPeerID(displayName: Scorecard.deviceName)
-            archivedPeerID = NSKeyedArchiver.archivedData(withRootObject: myPeerID)
-            UserDefaults.standard.set(archivedPeerID, forKey: "MCPeerID")
-            UserDefaults.standard.synchronize()
+            do {
+                archivedPeerID = try NSKeyedArchiver.archivedData(withRootObject: myPeerID, requiringSecureCoding: false)
+                UserDefaults.standard.set(archivedPeerID, forKey: "MCPeerID")
+                UserDefaults.standard.synchronize()
+            } catch {
+                // Not a problem - just won't cache peer
+            }
         } else {
-            self.myPeerID = NSKeyedUnarchiver.unarchiveObject(with: archivedPeerID!) as! MCPeerID
+            do {
+                self.myPeerID = try NSKeyedUnarchiver.unarchivedObject(ofClass: MCPeerID.self, from: archivedPeerID!)!
+            } catch {
+                // Just create a new one
+                self.myPeerID = MCPeerID(displayName: Scorecard.deviceName)
+            }
         }
     }
     

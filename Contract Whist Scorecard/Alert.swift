@@ -93,7 +93,7 @@ extension UIViewController {
             UIActivityIndicatorView(frame: CGRect(x: 0, y: 100,
                                                   width: alertController.view.frame.width,
                                                   height: 100))
-        indicatorView.style = .whiteLarge
+        indicatorView.style = UIActivityIndicatorView.Style.large
         indicatorView.color = UIColor.black
         indicatorView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         alertController.view.addSubview(indicatorView)

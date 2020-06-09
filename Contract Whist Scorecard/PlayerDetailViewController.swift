@@ -106,6 +106,8 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
                         if Reconcile.rebuildLocalPlayer(playerMO: self.playerDetail.playerMO) {
                             self.playerDetail.fromManagedObject(playerMO: playerMO)
                         }
+                        // Save settings with list of players
+                        Scorecard.shared.settings.saveToICloud()
                     } else {
                         self.playerDetail.toManagedObject(playerMO: playerMO)
                     }

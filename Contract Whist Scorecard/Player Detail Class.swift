@@ -100,6 +100,8 @@ import CoreData
             } else {
                 // Remove the managed object
                 Scorecard.shared.playerList.remove(at: index!)
+                // Save settings with list of players to cloud
+                Scorecard.shared.settings.saveToICloud()
             }
         }
     }
@@ -129,6 +131,10 @@ import CoreData
                 Scorecard.shared.playerList.insert(playerMO, at: (index == nil ? Scorecard.shared.playerList.count : index!))
                 self.objectID = playerMO.objectID
             }
+        }
+        if playerMO != nil {
+            // Save settings with list of players
+            Scorecard.shared.settings.saveToICloud()
         }
         return playerMO
     }

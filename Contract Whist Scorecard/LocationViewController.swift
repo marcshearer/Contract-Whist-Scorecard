@@ -357,6 +357,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         let authorizationStatus = CLLocationManager.authorizationStatus()
         if authorizationStatus == .restricted || authorizationStatus == .denied {
             // Not allowed to use location - go straight to input
+            self.alertMessage("You have chosen not to allow this app to access your location. To change this go to the Whist option in the main Settings app and change the location permissions to 'Allow while using'")
             result = false
             
         } else {
@@ -372,7 +373,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
                 self.activityIndicator.startAnimating()
                 self.activityIndicator.isHidden = false
                 self.activityIndicator.superview!.bringSubviewToFront(self.activityIndicator)
-                 self.locationManager.requestLocation()
+                self.locationManager.requestLocation()
             }
             result = true
         }

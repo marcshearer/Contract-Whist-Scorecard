@@ -225,7 +225,7 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
     }
     
     private func showSelectPlayers() {
-        SelectPlayersViewController.show(from: self.parent, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: true, completion: { (selected, playerList, selection) in
+        _ = SelectPlayersViewController.show(from: self.parent, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: true, completion: { (selected, playerList, selection) in
             if let selected = selected, let playerList = playerList, let selection = selection {
                 if selected > 0 {
                     var createPlayerList: [PlayerDetail] = []

@@ -214,14 +214,11 @@ class Settings : Equatable {
         Sync.update(recordIDsToDelete: recordIDsToDelete, database: database) { (error) in
             Sync.update(records: cloudObjectList, database: database) { (error) in
                 Utility.debugMessage("Settings","Settings to iCloud complete (\(error?.localizedDescription ?? "Success"))")
-                Utility.executeAfter(delay: 5.0) {
-                    self.loadFromICloud()
-                }
             }
         }
     }
     
-    public func loadFromICloud(completion: (([String])->())? = nil) {
+    public func loadFromICloud(completion: (([String]?)->())? = nil) {
         // Note there should be 2 values for each column, the default and the device-specific
         // By sorting by device name we should get the default first and then overwrite it
         let downloaded = Settings()
@@ -240,9 +237,7 @@ class Settings : Equatable {
             let label = record.value(forKey: "name") as! String
             let type = record.value(forKey: "type") as! String
             let value = record.value(forKey: "value") as! String
-            
-            print(record.recordID)
-            
+                       
             if label == "[players]" {
                 players = value.split(at: ";")
             } else {

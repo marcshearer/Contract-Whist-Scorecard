@@ -8,6 +8,8 @@
 
 import Foundation
 import CloudKit
+import UserNotifications
+import UIKit
 
 class Notifications {
     
@@ -173,4 +175,43 @@ class Notifications {
         }
     }
     
+    // MARK: - Permissions ================================================================= -
+    
+    public class func checkNotifications(refused: ((Bool)->())? = nil, accepted: (()->())? = nil, unknown: (()->())? = nil, request: Bool = false) {
+        let current = UNUserNotificationCenter.current()
+        current.getNotificationSettings(completionHandler: { (settings) in
+            switch settings.authorizationStatus {
+            case .notDetermined, .provisional :
+                // Notification permission has not been asked yet, will ask if switch on relevant options
+                if request {
+                    self.requestNotifications(successAction: accepted, failureAction: {refused?(true)})
+                }
+                unknown?()
+            case .denied:
+                // Notification permission was previously denied, switch off relevant options
+                refused?(false)
+            case .authorized:
+                // Notification permission was already granted
+                accepted?()
+            @unknown default:
+                fatalError("Unexpected value for UNAuthorizationStatus")
+            }
+        })
+    }
+    
+    public class func requestNotifications(successAction: (()->())? = nil, failureAction: (()->())? = nil) {
+        let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options:[.badge, .alert, .sound]) { (granted, error) in
+            if error != nil || !granted {
+                Utility.mainThread {
+                    failureAction?()
+                }
+            } else {
+                Utility.mainThread {
+                    UIApplication.shared.registerForRemoteNotifications()
+                    successAction?()
+                }
+            }
+        }
+    }
 }

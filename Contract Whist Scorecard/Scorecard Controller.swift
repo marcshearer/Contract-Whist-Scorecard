@@ -103,8 +103,6 @@ public protocol ScorecardAppPlayerDelegate {
     
 }
 
-
-
 public struct ScorecardAppQueue {
     let descriptor: String
     let data: [String : Any?]?

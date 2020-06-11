@@ -82,6 +82,7 @@ class Utility {
             } else {
                 Palette.thumbnailDiscStyle(label)
             }
+            imageView.image = nil
             imageView.isHidden = true
             label.isHidden=false
             ScorecardUI.veryRoundCorners(label, radius: size / 2)
@@ -407,8 +408,8 @@ class Utility {
         }
         if animate {
             view!.layoutIfNeeded()
+            animations()
             let animation = UIViewPropertyAnimator(duration: duration, curve: curve) {
-                animations()
                 view!.layoutIfNeeded()
             }
             if completion != nil {

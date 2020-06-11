@@ -8,8 +8,8 @@
 
 import UIKit
 
-@objc protocol ImageButtonDelegate {
-    func imageButtonPressed(_ sender: ImageButton)
+@objc protocol ButtonDelegate {
+    func buttonPressed(_ sender: UIView)
 }
 
 class ImageButton: UIView {
@@ -29,8 +29,9 @@ class ImageButton: UIView {
     
     @IBInspectable private var backgroundImage: UIImage!
     @IBInspectable private var backgroundImageOpacity: CGFloat = 0.0
+    @IBInspectable private var backgroundImageTintColor: UIColor?
     
-    @IBOutlet weak public var delegate: ImageButtonDelegate?
+    @IBOutlet weak public var delegate: ButtonDelegate?
     
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet private weak var imageView: UIImageView!
@@ -80,6 +81,8 @@ class ImageButton: UIView {
     }
     
     public func set(image: UIImage?) {
+        let templateImage = image?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
+        let image = templateImage ?? image
         self.image = image
         self.imageView.image = image
     }
@@ -130,6 +133,8 @@ class ImageButton: UIView {
     }
     
     public func set(backgroundImage: UIImage?) {
+        let templateImage = backgroundImage?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
+        let backgroundImage = templateImage ?? backgroundImage
         self.backgroundImage = backgroundImage
         self.backgroundImageView.image = backgroundImage
     }
@@ -137,6 +142,11 @@ class ImageButton: UIView {
     public func set(backgroundImageOpacity: CGFloat) {
         self.backgroundImageOpacity = backgroundImageOpacity
         self.backgroundImageView.alpha = backgroundImageOpacity
+    }
+    
+    public func set(backgroundImageTintColor: UIColor) {
+        self.backgroundImageTintColor = backgroundImageTintColor
+        self.backgroundImageView.tintColor = backgroundImageTintColor
     }
     
     private func loadImageButtonView() {
@@ -153,14 +163,14 @@ class ImageButton: UIView {
     }
     
     @objc private func tapSelector(_ sender: Any) {
-        self.delegate?.imageButtonPressed(self)
+        self.delegate?.buttonPressed(self)
     }
     
     override func layoutSubviews() {
         self.titleLabel.text = self.title
         self.titleLabel.textColor = self.titleColor
-        self.imageView.image = self.image
-        self.backgroundImageView.image = self.backgroundImage
+        self.set(image: self.image)
+        self.set(backgroundImage: self.backgroundImage)
         self.backgroundImageView.alpha = self.backgroundImageOpacity
         self.backgroundImageView.tintColor = UIColor.black
         self.messageLabel.text = self.message

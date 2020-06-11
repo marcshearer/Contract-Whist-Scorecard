@@ -258,7 +258,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
             // Create add player thumbnail
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Add Player Cell", for: indexPath) as! SelectionCell
             if cell.playerView == nil {
-                cell.playerView = PlayerView(type: .addPlayer, parent: cell, width: self.thumbnailWidth, height: self.thumbnailHeight, tag: -1)
+                cell.playerView = PlayerView(type: .addPlayer, parentViewController: self, parentView: cell, width: self.thumbnailWidth, height: self.thumbnailHeight, tag: -1)
                 cell.playerView.delegate = self
             }
             cell.playerView.set(name: "", initials: "", alpha: 1.0)
@@ -269,7 +269,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
             // Create player thumbnail
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Unselected Cell", for: indexPath) as! SelectionCell
             if cell.playerView == nil {
-                cell.playerView = PlayerView(type: .unselected, parent: cell, width: self.thumbnailWidth, height: self.thumbnailHeight, tag: playerNumber-1, tapGestureDelegate: self)
+                cell.playerView = PlayerView(type: .unselected, parentViewController: self, parentView: cell, width: self.thumbnailWidth, height: self.thumbnailHeight, tag: playerNumber-1, tapGestureDelegate: self)
                 cell.playerView.delegate = self
             }
             if let playerMO = unselectedList[playerNumber-1] {
@@ -473,7 +473,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
                 self.thisPlayerViewContainerWidthConstraint.constant = size.width + 10.0
                 
                 self.thisPlayerView?.removeFromSuperview()
-                self.thisPlayerView = PlayerView(type: .addPlayer, parent: self.thisPlayerViewContainer, width: size.width, height: size.height, tag: -2)
+                self.thisPlayerView = PlayerView(type: .addPlayer, parentViewController: self, parentView: self.thisPlayerViewContainer, width: size.width, height: size.height, tag: -2)
                 self.thisPlayerView.delegate = self
                 self.thisPlayerView.set(playerMO: playerMO, nameHeight: nameHeight)
                 self.thisPlayerView.set(textColor: Palette.text)
@@ -609,7 +609,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     }
     
    private func setupAnimationView() {
-        self.animationView = PlayerView(type: .animation, parent: self.view, width: self.thumbnailWidth, height: self.thumbnailHeight, tag: -1, haloWidth: self.haloWidth, allowHaloWidth: self.dealerHaloWidth)
+        self.animationView = PlayerView(type: .animation, parentViewController: self, parentView: self.view, width: self.thumbnailWidth, height: self.thumbnailHeight, tag: -1, haloWidth: self.haloWidth, allowHaloWidth: self.dealerHaloWidth)
         // Move it off the screen
         self.animationView.frame = CGRect(x: -self.thumbnailWidth, y: -self.thumbnailHeight, width: self.thumbnailWidth, height: self.thumbnailHeight)
     }

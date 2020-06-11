@@ -14,6 +14,7 @@ import UIKit
     case unselected = 2
     case addPlayer = 3
     case animation = 4
+    case imagePicker = 5
 }
 
 @objc public protocol PlayerViewDelegate {
@@ -26,11 +27,17 @@ import UIKit
     
 }
 
-public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteractionDelegate {
+@objc public protocol PlayerViewImagePickerDelegate {
+    func playerViewImageChanged(to: Data?)
+}
+
+public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteractionDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
     
     public weak var delegate: PlayerViewDelegate?
+    public weak var imagePickerDelegate: PlayerViewImagePickerDelegate?
     
-    public weak var parent: UIView!
+    private weak var parentView: UIView!
+    private weak var parentViewController: UIViewController?
     public var tag: Int
     public var type: PlayerViewType
     public var thumbnailView: ThumbnailView!
@@ -41,10 +48,11 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     public var haloWidth: CGFloat = 0.0
     public var allowHaloWidth: CGFloat = 0.0
     
-    init(type: PlayerViewType, parent: UIView, width: CGFloat, height: CGFloat, tag: Int = 0, haloWidth: CGFloat = 0.0, allowHaloWidth: CGFloat = 0.0, tapGestureDelegate: UIGestureRecognizerDelegate? = nil) {
+    init(type: PlayerViewType, parentViewController: UIViewController? = nil, parentView: UIView! = nil, width: CGFloat, height: CGFloat, tag: Int = 0, haloWidth: CGFloat = 0.0, allowHaloWidth: CGFloat = 0.0, tapGestureDelegate: UIGestureRecognizerDelegate? = nil) {
         
         // Save properties
-        self.parent = parent
+        self.parentViewController = parentViewController
+        self.parentView = parentView ?? parentViewController?.view
         self.type = type
         self.tag = tag
         self.haloWidth = haloWidth
@@ -56,12 +64,14 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         self.haloWidth = haloWidth
         self.thumbnailView.tag = tag
     
-        parent.addSubview(self.thumbnailView)
-        parent.bringSubviewToFront(self.thumbnailView)
+        parentView.addSubview(self.thumbnailView)
+        parentView.bringSubviewToFront(self.thumbnailView)
         
         // Setup tap gesture
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(PlayerView.tapSelector(_:)))
-        tapGesture.delegate = tapGestureDelegate
+        if let tapGestureDelegate = tapGestureDelegate {
+            tapGesture.delegate = tapGestureDelegate
+        }
         self.thumbnailView.addGestureRecognizer(tapGesture)
         
         // Setup drag and drop
@@ -71,6 +81,9 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
             self.thumbnailView.addInteraction(dragInteraction)
             self.thumbnailView.isUserInteractionEnabled = true
         }
+        
+        // Set up image picker
+        self.updateCameraImage()
     }
     
     public var alpha: CGFloat {
@@ -114,11 +127,13 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         self.playerMO = nil
         self.thumbnailView.set(data: data, name: name, initials: initials, nameHeight: nameHeight ?? 30.0, alpha: alpha)
         self.stopDeleteWiggle()
+        self.updateCameraImage()
     }
     
     public func set(playerMO: PlayerMO, nameHeight: CGFloat? = nil) {
         self.set(data: playerMO.thumbnail, name: playerMO.name, nameHeight: nameHeight)
         self.playerMO = playerMO
+        self.updateCameraImage()
     }
     
     public func set(haloWidth: CGFloat, allowHaloWidth: CGFloat) {
@@ -140,10 +155,12 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         self.inUse = keepInUse
         self.playerMO = nil
         self.thumbnailView.set(initials: initials, nameHeight: 30.0, placeholder: true)
+        self.updateCameraImage()
     }
     
     public func set(textColor: UIColor) {
         self.thumbnailView.set(textColor: textColor)
+        self.thumbnailView.additionalImage.tintColor = textColor
     }
     
     public func set(font: UIFont) {
@@ -159,7 +176,9 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     }
     
     @objc private func tapSelector(_ sender: Any?) {
-        if self.inUse {
+        if self.type == .imagePicker {
+            self.imagePickerTapped()
+        } else if self.inUse {
             if self.deleteOnTap {
                 self.stopDeleteWiggle()
                 self.delegate?.playerViewWasDeleted?(self)
@@ -200,6 +219,17 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
             view.layer.removeAllAnimations()
             self.deleteView?.removeFromSuperview()
             self.deleteOnTap = false
+        }
+    }
+    
+    private func updateCameraImage() {
+        if self.type == .imagePicker {
+            if self.thumbnailView.discImage.image != nil {
+                self.thumbnailView.additionalImage.isHidden = true
+            } else {
+                 self.thumbnailView.additionalImage.isHidden = false
+                self.thumbnailView.additionalImage.image = UIImage(systemName: "camera")
+            }
         }
     }
     
@@ -253,6 +283,74 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         return UITargetedDragPreview(view: previewView, parameters: previewParameters, target: target)
     }
     
+    // MARK: - Image Picker Routines / Overrides ============================================================ -
+
+    private func imagePickerTapped() {
+        let actionSheet = ActionSheet("Thumbnail Image", message: "\(self.playerMO?.thumbnail == nil ? "Add a" : "Replace") thumbnail image for this player", view: parentView)
+        if !Utility.isSimulator {
+            actionSheet.add("Take Photo", handler: {
+                self.getPicture(from: .camera)
+            })
+        }
+        actionSheet.add("Use Photo Library",handler: {
+            self.getPicture(from: .photoLibrary)
+        })
+        if self.thumbnailView.discImage.image != nil {
+            actionSheet.add("Remove Photo", handler: {
+                self.set(data: nil)
+                self.imagePickerDelegate?.playerViewImageChanged(to: nil)
+                
+            })
+        }
+        actionSheet.add("Cancel", style: .cancel, handler:nil)
+        actionSheet.present()
+    }
+    
+    private func getPicture(from: UIImagePickerController.SourceType) {
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+            let imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.allowsEditing = false
+            imagePicker.sourceType = from
+            
+            self.parentViewController?.present(imagePicker, animated: true)
+        }
+    }
+    
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            let rotatedImage = self.rotateImage(image: selectedImage)
+            if let imageData = rotatedImage.pngData() {
+                self.thumbnailView.set(data: imageData)
+                self.imagePickerDelegate?.playerViewImageChanged(to: imageData)
+            } else {
+                self.thumbnailView.set(data: nil)
+                self.imagePickerDelegate?.playerViewImageChanged(to: nil)
+            }
+        }
+        picker.dismiss(animated: true, completion: nil)
+        self.updateCameraImage()
+    }
+    
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        print("here")
+    }
+        
+    func rotateImage(image: UIImage) -> UIImage {
+        
+        if (image.imageOrientation == UIImage.Orientation.up ) {
+            return image
+        }
+        
+        UIGraphicsBeginImageContext(image.size)
+        
+        image.draw(in: CGRect(origin: CGPoint.zero, size: image.size))
+        let copy = UIGraphicsGetImageFromCurrentImageContext()
+        
+        UIGraphicsEndImageContext()
+        
+        return copy!
+    }
 }
 
 // MARK: - Object for dragging and dropping a player ======================================================= -

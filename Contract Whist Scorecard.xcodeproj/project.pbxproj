@@ -595,6 +595,7 @@
 		B221EEE3210B1A7000F7FBA0 /* Scorepad Views */ = {
 			isa = PBXGroup;
 			children = (
+				B2021D7C247FE9D900A82EBB /* Launch Screen */,
 				B221EEDA210B192400F7FBA0 /* Get Started */,
 				B221EEDB210B194300F7FBA0 /* Selection */,
 				B221EEDC210B194C00F7FBA0 /* Game Preview */,
@@ -1061,7 +1062,6 @@
 		CC86557A1E021503000AF391 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				B2021D7C247FE9D900A82EBB /* Launch Screen */,
 				B221EEE3210B1A7000F7FBA0 /* Scorepad Views */,
 				B288FAB61FB801FC00633FD7 /* Online Game Views */,
 				B288FAB51FB801E200633FD7 /* Other Main Views */,

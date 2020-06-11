@@ -25,7 +25,7 @@ import CoreData
     
 }
 
-class GamePreviewViewController: ScorecardViewController, ImageButtonDelegate, SelectedPlayersViewDelegate {
+class GamePreviewViewController: ScorecardViewController, ButtonDelegate, SelectedPlayersViewDelegate {
     
     // MARK: - Class Properties ================================================================ -
     
@@ -104,7 +104,7 @@ class GamePreviewViewController: ScorecardViewController, ImageButtonDelegate, S
         self.controllerDelegate?.didInvoke(.overrideSettings)
     }
     
-    internal func imageButtonPressed(_ sender: ImageButton) {
+    internal func buttonPressed(_ sender: UIView) {
         switch sender.tag {
         case 1:
             // Cut for dealer

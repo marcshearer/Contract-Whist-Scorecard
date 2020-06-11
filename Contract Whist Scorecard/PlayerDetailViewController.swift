@@ -17,7 +17,7 @@ enum DetailMode {
     case none
 }
 
-class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate, SyncDelegate {
+class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, SyncDelegate, PlayerViewImagePickerDelegate {
     
     // MARK: - Class Properties ======================================================================== -
     
@@ -77,8 +77,10 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
     // Alert controller while waiting for cloud download
     private var cloudAlertController: UIAlertController!
     private var cloudIndicatorView: UIActivityIndicatorView!
+
     private var emailErrorLabel: UILabel? = nil
     private var emailCell: PlayerDetailCell!
+    private var playerView: PlayerView!
 
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var navigationBar: NavigationBar!
@@ -87,7 +89,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
     @IBOutlet private weak var actionButton: UIButton!
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var playerNameField: UITextField!
-    @IBOutlet private weak var playerImageView: UIImageView!
+    @IBOutlet private weak var imagePlayerView: UIView!
     @IBOutlet private weak var playerErrorLabel: UILabel!
     @IBOutlet private weak var addImageLabel: UILabel!
 
@@ -138,14 +140,13 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
         backButtonPressed(finishButton!)
     }
     
-    @IBAction private func tapGesture(recognizer: UITapGestureRecognizer) {
-        self.imageTapped()
-    }
-    
     // MARK: - View Overrides ========================================================================== -
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Set up player view for image picker (needs to be before colors are set)
+        self.setupImagePickerPlayerView()
         
         // Setup default colors (previously done in StoryBoard)
         self.defaultViewColors()
@@ -574,95 +575,25 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
             break
         }
     }
-
-   // MARK: - Image Picker Routines / Overrides ============================================================ -
-
-    private func imageTapped() {
-        let actionSheet = ActionSheet("Thumbnail Image", message: "\(playerDetail.thumbnail == nil ? "Add a" : "Replace") thumbnail image for this player", view: sourceView)
-        actionSheet.add("Take Photo", handler: {
-                self.getPicture(from: .camera)
-            })
-        actionSheet.add("Use Photo Library",handler: {
-                self.getPicture(from: .photoLibrary)
-            })
-        if playerDetail.thumbnail != nil {
-            actionSheet.add("Remove Photo", handler: {
-                self.removeImage()
-
-            })
-        }
-        actionSheet.add("Cancel", style: .cancel, handler:nil)
-        actionSheet.present()
-    }
     
-    private func getPicture(from: UIImagePickerController.SourceType) {
-       if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
-            let imagePicker = UIImagePickerController()
-            imagePicker.delegate = self
-            imagePicker.allowsEditing = false
-            imagePicker.sourceType = from
-            
-            present(imagePicker, animated: true, completion: nil)
-        }
-    }
-    
-    internal func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
-        
-        if let selectedImage = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage {
-            var rotatedImage:UIImage
-            
-            self.playerImageView!.image = selectedImage
-            
-            if let rawImage = self.playerImageView!.image {
-                rotatedImage = rotateImage(image: rawImage)
-                if let imageData = rotatedImage.pngData() {
-                    playerDetail.thumbnail = Data(imageData)
-                    playerDetail.thumbnailDate = Date()
-                }
-                self.playerImageView!.image = rotatedImage
-            }
-            self.playerImageView!.contentMode = .scaleAspectFill
-            self.playerImageView!.clipsToBounds = true
-            self.playerImageView!.alpha = 1.0
-            self.changed = true
-            self.enableButtons()
-            
-        }
-    }
-    
-    func rotateImage(image: UIImage) -> UIImage {
-        
-        if (image.imageOrientation == UIImage.Orientation.up ) {
-            return image
-        }
-        
-        UIGraphicsBeginImageContext(image.size)
-        
-        image.draw(in: CGRect(origin: CGPoint.zero, size: image.size))
-        let copy = UIGraphicsGetImageFromCurrentImageContext()
-        
-        UIGraphicsEndImageContext()
-        
-        return copy!
-    }
-    
-    func removeImage() {
+    private func removeImage() { // TODO Update
         playerDetail.thumbnail = nil
         playerDetail.thumbnailDate = nil
-        if mode == .create || mode == .amend {
-            self.playerImageView!.image = UIImage(named: "camera")
-        }
-        self.playerImageView!.contentMode = .center
-        self.playerImageView!.backgroundColor = Palette.disabled
-        ScorecardUI.veryRoundCorners(self.playerImageView!)
-        self.playerImageView!.clipsToBounds = false
-        self.playerImageView!.alpha = 0.5
-        self.view.bringSubviewToFront(self.addImageLabel)
         self.changed = true
         self.enableButtons()
     }
     
+    internal func playerViewImageChanged(to thumbnail: Data?) {
+        playerDetail.thumbnail = thumbnail
+        self.changed = true
+        if thumbnail != nil {
+            playerDetail.thumbnailDate = Date()
+            self.enableButtons()
+        } else {
+            self.removeImage()
+        }
+    }
+
     // MARK: - Sync routines including the delegate methods ======================================== -
     
     func getCloudPlayerDetails() {
@@ -820,17 +751,18 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
         self.playerNameField.text = self.playerDetail.name
         
         if mode != .create && mode != .amend {
-            self.playerImageView.isUserInteractionEnabled = false
+            self.playerView.isEnabled = false
         }
     }
     
     func updateHeaderFields() {
         self.playerNameField.text = playerDetail.name
-        if let thumbnail = self.playerDetail.thumbnail {
-            Utility.setThumbnail(data: thumbnail,imageView: self.playerImageView)
-        } else {
-            self.removeImage()
-        }
+        self.playerView.set(data: self.playerDetail.thumbnail)
+    }
+    
+    func setupImagePickerPlayerView() {
+        self.playerView = PlayerView(type: .imagePicker, parentViewController: self, parentView: self.imagePlayerView, width: self.imagePlayerView.frame.width, height: self.imagePlayerView.frame.height)
+        self.playerView.imagePickerDelegate = self
     }
     
     func checkDeletePlayer() {
@@ -946,16 +878,6 @@ class PlayerDetailHeaderFooterView: UITableViewHeaderFooterView {
     
 }
 
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
-	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
-}
-
-// Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
-	return input.rawValue
-}
-
 extension PlayerDetailViewController {
 
     /** _Note that this code was generated as part of the move to themed colors_ */
@@ -970,6 +892,8 @@ extension PlayerDetailViewController {
         self.playerErrorLabel.textColor = Palette.textError
         self.playerNameField.textColor = Palette.text
         self.view.backgroundColor = Palette.background
+        self.playerView.set(backgroundColor: Palette.thumbnailDisc)
+        self.playerView.set(textColor: Palette.thumbnailDiscText)
     }
 
     private func defaultCellColors(cell: PlayerDetailCell) {

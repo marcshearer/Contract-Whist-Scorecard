@@ -88,14 +88,14 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
         self.parent = parent
     }
     
-    public func set(players: [PlayerMO], addButton: Bool = false, updateBeforeSelect: Bool = false, scrollEnabled: Bool = false, collectionViewInsets: UIEdgeInsets? = nil) {
+    public func set(players: [PlayerMO], addButton: Bool = false, updateBeforeSelect: Bool = false, scrollEnabled: Bool = false, collectionViewInsets: UIEdgeInsets? = nil, contentInset: UIEdgeInsets? = nil) {
         self.addButton = addButton
         self.offset = (addButton ? 1 : 0)
         self.playerList = players
         self.collectionView.isScrollEnabled = scrollEnabled
         if let collectionViewInsets = collectionViewInsets {
             self.topInset.constant = collectionViewInsets.top
-            self.collectionView.contentInset = UIEdgeInsets(top: 10.0 - collectionViewInsets.top, left: 0, bottom: 0, right: 0)
+            self.collectionView.contentInset = contentInset ?? UIEdgeInsets(top: 10.0 - collectionViewInsets.top, left: 0, bottom: 0, right: 0)
             self.bottomInset.constant = collectionViewInsets.bottom
             self.leadingInset.constant = collectionViewInsets.left
             self.trailingInset.constant = collectionViewInsets.right

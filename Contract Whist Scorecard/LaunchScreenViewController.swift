@@ -42,6 +42,10 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     }
     
     private func viewDidContinue() {
+
+        self.showGetStarted() // TODO remove
+        return                // TODO remove
+
         if !Scorecard.shared.settings.syncEnabled {
             // New device - try to load from iCloud
             self.message.text = "New Installation\n\nTrying to load\nsettings from iCloud..."
@@ -57,6 +61,7 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
                     }
                 } else {
                     // New device / iCloud user
+                    self.showGetStarted()
                 }
             }
         } else {
@@ -187,6 +192,14 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
                 completion()
             },
             request: true)
+    }
+    
+    // MARK: - Show get started ============================================================================= -
+    
+    private func showGetStarted() {
+        GetStartedViewController.show(from: self) {
+            self.dismiss()
+        }
     }
 
     // MARK: - Routine to display this view ================================================================= -

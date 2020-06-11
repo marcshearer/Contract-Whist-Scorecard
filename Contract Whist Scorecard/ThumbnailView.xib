@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ThumbnailView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ThumbnailView" customModule="Whist_2" customModuleProvider="target">
             <connections>
                 <outlet property="additionalImage" destination="CSk-0Z-taK" id="Bou-3D-ER4"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="Wjz-xA-iIV"/>
@@ -43,8 +43,8 @@
                         <constraint firstAttribute="width" secondItem="PGG-ax-99W" secondAttribute="height" multiplier="1:1" id="ygX-ux-EP3"/>
                     </constraints>
                 </view>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CSk-0Z-taK" userLabel="AdditionalImage">
-                    <rect key="frame" x="9.5" y="9.5" width="56" height="56"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="CSk-0Z-taK" userLabel="AdditionalImage">
+                    <rect key="frame" x="9.5" y="15" width="56" height="45"/>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="kXi-0g-avo">
                     <rect key="frame" x="0.0" y="70" width="75" height="30"/>
@@ -65,7 +65,7 @@
                 <constraint firstAttribute="trailing" secondItem="kXi-0g-avo" secondAttribute="trailing" id="JjY-0J-bic"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="PGG-ax-99W" secondAttribute="trailing" id="SWp-vX-PiI"/>
                 <constraint firstItem="PGG-ax-99W" firstAttribute="width" secondItem="PGG-ax-99W" secondAttribute="height" multiplier="1:1" id="aUA-DG-TuD"/>
-                <constraint firstItem="CSk-0Z-taK" firstAttribute="height" secondItem="PGG-ax-99W" secondAttribute="height" multiplier="0.75" id="ck3-LR-EJR"/>
+                <constraint firstItem="CSk-0Z-taK" firstAttribute="height" secondItem="PGG-ax-99W" secondAttribute="height" multiplier="0.6" id="ck3-LR-EJR"/>
                 <constraint firstItem="kXi-0g-avo" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="eoF-bM-Q6N"/>
                 <constraint firstItem="PGG-ax-99W" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="gff-UU-Rnc"/>
                 <constraint firstItem="CSk-0Z-taK" firstAttribute="centerY" secondItem="PGG-ax-99W" secondAttribute="centerY" id="jDx-8i-xUW"/>

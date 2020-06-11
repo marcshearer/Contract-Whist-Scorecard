@@ -11,19 +11,19 @@
         <!--Player Detail-->
         <scene sceneID="Uey-IF-7Ov">
             <objects>
-                <viewController storyboardIdentifier="PlayerDetailViewController" title="Player Detail" useStoryboardIdentifierAsRestorationIdentifier="YES" id="bWc-Jl-GWH" customClass="PlayerDetailViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PlayerDetailViewController" title="Player Detail" useStoryboardIdentifierAsRestorationIdentifier="YES" id="bWc-Jl-GWH" customClass="PlayerDetailViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="rYz-bu-WB3" userLabel="Player Detail View">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="400"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oEM-x6-cmp" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oEM-x6-cmp" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="0.0"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w68-7y-hH1">
                                 <rect key="frame" x="0.0" y="400" width="320" height="0.0"/>
                                 <color key="backgroundColor" name="Background"/>
                             </view>
-                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gXs-Is-mIL" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gXs-Is-mIL" customClass="NavigationBar" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" name="Banner Text"/>
@@ -31,7 +31,7 @@
                                 <items>
                                     <navigationItem title="Player Name" id="c5v-ql-NOg">
                                         <barButtonItem key="leftBarButtonItem" width="70" id="PwO-mV-Smy">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="tailTruncation" id="nao-U2-GpM" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="tailTruncation" id="nao-U2-GpM" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
                                                 <rect key="frame" x="16" y="0.0" width="100" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Cancel" image="back">
@@ -43,7 +43,7 @@
                                             </button>
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" width="70" id="QGS-ra-h1h">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="9gf-xI-wrn" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="9gf-xI-wrn" customClass="RightClearButton" customModule="Whist_2" customModuleProvider="target">
                                                 <rect key="frame" x="208" y="0.0" width="96" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Action" image="forward">
@@ -57,7 +57,7 @@
                                     </navigationItem>
                                 </items>
                             </navigationBar>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gwq-z7-rmp" customClass="BannerContinuation" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gwq-z7-rmp" customClass="BannerContinuation" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="44" width="320" height="60"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
@@ -69,18 +69,14 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <imageView alpha="0.5" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" preservesSuperviewLayoutMargins="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oid-al-TdY" userLabel="Player Image">
-                                <rect key="frame" x="122.5" y="64" width="75" height="75"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JPX-a1-woW" userLabel="Player Image">
+                                <rect key="frame" x="122.5" y="124" width="75" height="75"/>
                                 <color key="backgroundColor" name="Clear"/>
-                                <gestureRecognizers/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="oid-al-TdY" secondAttribute="height" multiplier="1:1" id="0EW-2T-XZH"/>
-                                    <constraint firstAttribute="width" constant="75" id="q9G-Wh-lMX"/>
+                                    <constraint firstAttribute="width" secondItem="JPX-a1-woW" secondAttribute="height" multiplier="1:1" id="UDe-0z-Eyc"/>
+                                    <constraint firstAttribute="width" constant="75" id="m07-ms-JfC"/>
                                 </constraints>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="X8a-jy-AF4" appends="YES" id="Q4O-gv-AAJ"/>
-                                </connections>
-                            </imageView>
+                            </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap photo to change" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="YKS-Wj-8zi">
                                 <rect key="frame" x="20" y="39" width="80" height="40"/>
                                 <constraints>
@@ -91,7 +87,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Player name" textAlignment="center" minimumFontSize="13" translatesAutoresizingMaskIntoConstraints="NO" id="1IL-mG-MYa" userLabel="Player Name">
-                                <rect key="frame" x="20" y="143" width="280" height="50"/>
+                                <rect key="frame" x="20" y="195" width="280" height="50"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="O2g-1H-3hW"/>
@@ -104,7 +100,7 @@
                                 </connections>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tKT-sf-QpS" userLabel="Player Error">
-                                <rect key="frame" x="20" y="197" width="280" height="12"/>
+                                <rect key="frame" x="20" y="249" width="280" height="12"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="12" id="FT7-Qx-OYS"/>
                                 </constraints>
@@ -113,10 +109,10 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" canCancelContentTouches="NO" bouncesZoom="NO" keyboardDismissMode="interactive" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3Pf-sG-Che">
-                                <rect key="frame" x="0.0" y="217" width="320" height="183"/>
+                                <rect key="frame" x="0.0" y="269" width="320" height="131"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" tag="1" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Unique ID" id="VqQ-AO-cnP" customClass="PlayerDetailCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" tag="1" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Unique ID" id="VqQ-AO-cnP" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="VqQ-AO-cnP" id="bJZ-dV-GOe">
@@ -147,7 +143,7 @@
                                             <outlet property="uniqueIdField" destination="MO2-8I-9gY" id="nHd-4r-Ts1"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" tag="1" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Action Button" id="oVk-Gg-hN9" userLabel="Action Button" customClass="PlayerDetailCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" tag="1" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Action Button" id="oVk-Gg-hN9" userLabel="Action Button" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="72" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oVk-Gg-hN9" id="OT3-Xq-84X">
@@ -161,7 +157,7 @@
                                                         <constraint firstAttribute="height" constant="0.5" id="rub-ok-qxN"/>
                                                     </constraints>
                                                 </view>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gys-Wx-NCn" customClass="AngledButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gys-Wx-NCn" customClass="AngledButton" customModule="Whist_2" customModuleProvider="target">
                                                     <rect key="frame" x="100" y="20" width="120" height="24"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <constraints>
@@ -195,7 +191,7 @@
                                             <outlet property="separator" destination="B6U-sI-8vL" id="Ubk-mg-SSD"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Header" rowHeight="20" id="Iqn-31-i02" userLabel="Header" customClass="PlayerDetailCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Header" rowHeight="20" id="Iqn-31-i02" userLabel="Header" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="116" width="320" height="20"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Iqn-31-i02" id="DSq-Vy-Kpv">
@@ -223,20 +219,20 @@
                                             <outlet property="headerLabel" destination="WkP-Tx-qpp" id="Izf-Xb-M5t"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" tag="1" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Header Error" id="dpF-wS-I0c" userLabel="Header Error" customClass="PlayerDetailCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" tag="1" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Header Error" id="dpF-wS-I0c" userLabel="Header Error" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="136" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="dpF-wS-I0c" id="eAw-ZH-Oba">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Unique ID - E.g. email" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="oGW-eg-HcO">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Unique ID - E.g. email" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="oGW-eg-HcO">
                                                     <rect key="frame" x="20" y="26" width="148" height="18"/>
                                                     <fontDescription key="fontDescription" type="italicSystem" pointSize="15"/>
                                                     <color key="textColor" name="Text Emphasised"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" text="Duplicate not allowed" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f6L-iy-R0N">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" ambiguous="YES" text="Duplicate not allowed" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f6L-iy-R0N">
                                                     <rect key="frame" x="178" y="29.5" width="122" height="14.5"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                     <color key="textColor" name="Text Error"/>
@@ -257,14 +253,14 @@
                                             <outlet property="headerLabel" destination="oGW-eg-HcO" id="JxS-pi-dCO"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Single" rowHeight="20" id="936-LU-FpL" userLabel="Single value" customClass="PlayerDetailCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Single" rowHeight="20" id="936-LU-FpL" userLabel="Single value" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="180" width="320" height="20"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="936-LU-FpL" id="PAc-Yg-lUQ">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="vLC-wd-Vcw">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="vLC-wd-Vcw">
                                                     <rect key="frame" x="20" y="-5" width="280" height="21"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="21" id="glH-zm-Ifv"/>
@@ -285,7 +281,7 @@
                                             <outlet property="singleLabel" destination="vLC-wd-Vcw" id="qVb-Ku-fIl"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Record" rowHeight="20" id="3pR-kx-rqq" userLabel="Record" customClass="PlayerDetailCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Record" rowHeight="20" id="3pR-kx-rqq" userLabel="Record" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="200" width="320" height="20"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="3pR-kx-rqq" id="KDO-Ps-uVE">
@@ -332,7 +328,7 @@
                                             <outlet property="recordValueLabel" destination="bPx-gv-q3o" id="fIo-Dc-otH"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Stat" rowHeight="20" id="x7B-uJ-jOF" userLabel="Stats" customClass="PlayerDetailCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Stat" rowHeight="20" id="x7B-uJ-jOF" userLabel="Stats" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="220" width="320" height="20"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" tableViewCell="x7B-uJ-jOF" id="xaK-J7-p01">
@@ -401,10 +397,9 @@
                         <constraints>
                             <constraint firstItem="YKS-Wj-8zi" firstAttribute="top" secondItem="gwq-z7-rmp" secondAttribute="top" constant="-5" id="0B6-e6-3Go"/>
                             <constraint firstItem="tKT-sf-QpS" firstAttribute="top" secondItem="1IL-mG-MYa" secondAttribute="bottom" constant="4" id="5XL-Bf-6ZM"/>
-                            <constraint firstItem="oid-al-TdY" firstAttribute="top" secondItem="gwq-z7-rmp" secondAttribute="top" constant="20" id="6CG-3Q-GNN"/>
                             <constraint firstItem="gwq-z7-rmp" firstAttribute="top" secondItem="gXs-Is-mIL" secondAttribute="bottom" id="71R-WJ-Uic"/>
                             <constraint firstAttribute="trailing" secondItem="gwq-z7-rmp" secondAttribute="trailing" id="BVd-Ss-pbK"/>
-                            <constraint firstItem="1IL-mG-MYa" firstAttribute="top" secondItem="oid-al-TdY" secondAttribute="bottom" constant="4" id="ELA-5z-9yB"/>
+                            <constraint firstItem="JPX-a1-woW" firstAttribute="bottom" secondItem="1IL-mG-MYa" secondAttribute="top" constant="4" id="Cwh-ye-MwP"/>
                             <constraint firstAttribute="trailing" secondItem="gXs-Is-mIL" secondAttribute="trailing" id="EON-Um-gyK"/>
                             <constraint firstItem="o3W-OF-Z0q" firstAttribute="trailing" secondItem="1IL-mG-MYa" secondAttribute="trailing" constant="20" id="H8b-Vf-3QL"/>
                             <constraint firstAttribute="bottom" secondItem="w68-7y-hH1" secondAttribute="bottom" id="Htp-4e-PRh"/>
@@ -418,15 +413,16 @@
                             <constraint firstItem="tKT-sf-QpS" firstAttribute="centerX" secondItem="rYz-bu-WB3" secondAttribute="centerX" id="Uak-Xf-Uc9"/>
                             <constraint firstItem="gwq-z7-rmp" firstAttribute="leading" secondItem="rYz-bu-WB3" secondAttribute="leading" id="UeV-lA-qo9"/>
                             <constraint firstItem="1IL-mG-MYa" firstAttribute="leading" secondItem="o3W-OF-Z0q" secondAttribute="leading" constant="20" id="XpJ-ZR-Vr3"/>
-                            <constraint firstItem="oid-al-TdY" firstAttribute="centerX" secondItem="rYz-bu-WB3" secondAttribute="centerX" id="ZvJ-dQ-haO"/>
                             <constraint firstItem="YKS-Wj-8zi" firstAttribute="leading" secondItem="gwq-z7-rmp" secondAttribute="leading" constant="20" id="bUf-24-amn"/>
                             <constraint firstItem="w68-7y-hH1" firstAttribute="leading" secondItem="o3W-OF-Z0q" secondAttribute="leading" id="cVe-3N-9sr"/>
+                            <constraint firstItem="JPX-a1-woW" firstAttribute="centerX" secondItem="rYz-bu-WB3" secondAttribute="centerX" id="cbN-7e-ACh"/>
                             <constraint firstItem="gXs-Is-mIL" firstAttribute="leading" secondItem="rYz-bu-WB3" secondAttribute="leading" id="f27-dE-BJr"/>
                             <constraint firstItem="gXs-Is-mIL" firstAttribute="top" secondItem="o3W-OF-Z0q" secondAttribute="top" id="kP6-IP-iQy"/>
                             <constraint firstItem="w68-7y-hH1" firstAttribute="top" secondItem="o3W-OF-Z0q" secondAttribute="bottom" id="mbk-Pd-mel"/>
                             <constraint firstItem="3Pf-sG-Che" firstAttribute="leading" secondItem="rYz-bu-WB3" secondAttribute="leading" id="nKv-9x-RaD"/>
                             <constraint firstItem="tKT-sf-QpS" firstAttribute="leading" secondItem="o3W-OF-Z0q" secondAttribute="leading" constant="20" id="qpk-Fs-Dzy"/>
                             <constraint firstItem="1IL-mG-MYa" firstAttribute="centerX" secondItem="rYz-bu-WB3" secondAttribute="centerX" id="sP3-yx-Mqg"/>
+                            <constraint firstItem="JPX-a1-woW" firstAttribute="top" secondItem="gwq-z7-rmp" secondAttribute="bottom" constant="20" id="uRN-me-m8Q"/>
                             <constraint firstItem="oEM-x6-cmp" firstAttribute="top" secondItem="rYz-bu-WB3" secondAttribute="top" id="uoA-ZN-1fQ"/>
                             <constraint firstItem="3Pf-sG-Che" firstAttribute="top" secondItem="tKT-sf-QpS" secondAttribute="bottom" constant="8" id="wlW-hP-fse"/>
                             <constraint firstItem="o3W-OF-Z0q" firstAttribute="trailing" secondItem="w68-7y-hH1" secondAttribute="trailing" id="zLt-fO-a7k"/>
@@ -444,9 +440,9 @@
                         <outlet property="addImageLabel" destination="YKS-Wj-8zi" id="rMt-Xn-QHv"/>
                         <outlet property="finishButton" destination="nao-U2-GpM" id="aIe-2T-hSz"/>
                         <outlet property="footerPaddingView" destination="w68-7y-hH1" id="Xmj-iS-LZI"/>
+                        <outlet property="imagePlayerView" destination="JPX-a1-woW" id="PfF-wv-U4l"/>
                         <outlet property="navigationBar" destination="gXs-Is-mIL" id="X6w-8A-xWS"/>
                         <outlet property="playerErrorLabel" destination="tKT-sf-QpS" id="T6q-kh-npX"/>
-                        <outlet property="playerImageView" destination="oid-al-TdY" id="Lzb-eV-LDv"/>
                         <outlet property="playerNameField" destination="1IL-mG-MYa" id="xeF-zf-xzM"/>
                         <outlet property="tableView" destination="3Pf-sG-Che" id="wgU-9V-DwZ"/>
                     </connections>

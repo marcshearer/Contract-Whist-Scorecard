@@ -110,11 +110,21 @@ public class ThumbnailView: UIView {
     }
     
     public func set(imageName: String?) {
+        self.set(frame: frame)
         if let imageName = imageName {
             self.additionalImage.isHidden = false
             self.additionalImage.image = UIImage(named: imageName)
         } else {
             self.additionalImage.isHidden = true
+        }
+    }
+    
+    public func set(systemImageName: String, tintColor: UIColor? = nil) {
+        self.set(frame: frame)
+        self.additionalImage.isHidden = false
+        self.additionalImage.image = UIImage(systemName: systemImageName)
+        if let tintColor = tintColor {
+            self.additionalImage.tintColor = tintColor
         }
     }
     
@@ -140,6 +150,7 @@ public class ThumbnailView: UIView {
     
     public func set(backgroundColor: UIColor) {
         self.discInitials.backgroundColor = backgroundColor
+        self.additionalImage.backgroundColor = backgroundColor
     }
     
     public func set(thumbnailAlpha: CGFloat) {
@@ -161,5 +172,4 @@ public class ThumbnailView: UIView {
     public func set(font: UIFont) {
         self.name.font = font
     }
-    
 }

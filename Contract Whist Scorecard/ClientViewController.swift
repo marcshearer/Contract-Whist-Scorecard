@@ -28,7 +28,7 @@ public enum ClientAppState: String {
     case finished = "Finished"
 }
 
-class ClientViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, MFMailComposeViewControllerDelegate, PlayerSelectionViewDelegate, ReconcileDelegate, ClientControllerDelegate, ImageButtonDelegate, CustomCollectionViewLayoutDelegate {
+class ClientViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource, MFMailComposeViewControllerDelegate, PlayerSelectionViewDelegate, ReconcileDelegate, ClientControllerDelegate, ButtonDelegate, CustomCollectionViewLayoutDelegate {
 
     // MARK: - Class Properties ======================================================================== -
     
@@ -50,7 +50,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     public var thisPlayer: String!
     public var thisPlayerName: String!
     private var thisPlayerBeforeSettings: String!
-    internal var choosingPlayer = false
     private var displayingPeer = 0
 
     // Timers
@@ -131,7 +130,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     // MARK: - IB Actions ============================================================================== -
         
     @IBAction private func tapGesture(recognizer: UITapGestureRecognizer) {
-        if self.choosingPlayer {
+        if self.playerSelectionViewHeightConstraint.constant != 0 {
             self.hidePlayerSelection()
         } else {
             self.showPlayerSelection()
@@ -228,7 +227,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.showThisPlayer()
         self.changePlayerAvailable()
         
         if firstTime {
@@ -262,10 +260,13 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         // Update sizes to layout constraints immediately to aid calculations
         self.view.layoutIfNeeded()
         
-        if self.rotated && self.choosingPlayer {
+        self.showThisPlayer()
+        
+        if self.rotated && self.playerSelectionViewHeightConstraint.constant != 0 {
             // Resize player selection
             self.showPlayerSelection()
         }
+        
         if self.firstTime || self.rotated {
             self.rotated = false
             self.peerReloadData()
@@ -331,9 +332,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     // MARK: - Player Selection View Delegate Handlers ======================================================= -
     
     private func showPlayerSelection() {
-        let alreadyChoosingPlayer = self.choosingPlayer
-        if !alreadyChoosingPlayer {
-            self.choosingPlayer = true
+        if self.playerSelectionViewHeightConstraint.constant == 0 {
             self.playerSelectionView.set(parent: self)
             self.playerSelectionView.delegate = self
         }
@@ -354,7 +353,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     }
     
     private func hidePlayerSelection() {
-        self.choosingPlayer = false
         self.showThisPlayer()
         self.hostTitleBar.isHidden = false
         
@@ -608,15 +606,15 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             
             switch indexPath.row {
             case nearbyItem:
-                hostCell.button.set(image: UIImage(systemName: "dot.radiowaves.left.and.right"))
+                hostCell.button.set(image: UIImage(named: "local"))
                 hostCell.button.set(title: "Nearby")
                 hostCell.button.set(message: "Host a local,\nbluetooth game\nfor nearby players")
             case onlineItem:
-                hostCell.button.set(image: UIImage(systemName: "globe"))
+                hostCell.button.set(image: UIImage(named: "online"))
                 hostCell.button.set(title: "Online")
                 hostCell.button.set(message: "Host an online\ngame to play\nover the internet")
             case scoringItem:
-                hostCell.button.set(image: UIImage(systemName: "square.and.pencil"))
+                hostCell.button.set(image: UIImage(named: "score"))
                 hostCell.button.set(title: "Score")
                 hostCell.button.set(message: "Score a game\n while playing with\n physical cards")
             case robotItem:
@@ -763,7 +761,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
 
     // MARK: - Image button delegate handlers =============================================== -
     
-    internal func imageButtonPressed(_ button: ImageButton) {
+    internal func buttonPressed(_ button: UIView) {
         switch button.tag {
         case scoringItem:
             self.scoreGame()
@@ -1030,10 +1028,12 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     func updatePlayer(objectID: NSManagedObjectID) {
         // Find any cells containing an image/player which has just been downloaded asynchronously
         Utility.mainThread {
-            if let playerMO = Scorecard.shared.findPlayerByEmail(self.thisPlayer) {
-                if playerMO.objectID == objectID {
-                    // This is this player - update player
-                    self.showThisPlayer()
+            if let thisPlayer = self.thisPlayer {
+                if let playerMO = Scorecard.shared.findPlayerByEmail(thisPlayer) {
+                    if playerMO.objectID == objectID {
+                        // This is this player - update player
+                        self.showThisPlayer()
+                    }
                 }
             }
         }

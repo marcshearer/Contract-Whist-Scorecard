@@ -444,32 +444,6 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7pG-RR-uCS" userLabel="Bottom Section">
                                 <rect key="frame" x="0.0" y="700.5" width="414" height="161.5"/>
                                 <subviews>
-                                    <view tag="-1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aq5-vX-83I" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="10" width="116.5" height="147.5"/>
-                                        <color key="backgroundColor" name="Clear"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="title" value="Profiles"/>
-                                            <userDefinedRuntimeAttribute type="size" keyPath="shadowSize">
-                                                <size key="value" width="4" height="4"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
-                                                <real key="value" value="0.10000000000000001"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
-                                                <integer key="value" value="2"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="8"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="image" keyPath="backgroundImage" value="person.3.fill" catalog="system"/>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="backgroundImageOpacity">
-                                                <real key="value" value="0.040000000000000001"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <outlet property="delegate" destination="aZe-pG-rMs" id="JLL-n9-8Y2"/>
-                                        </connections>
-                                    </view>
                                     <view tag="-2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bNw-dF-hBm" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="148.5" y="10" width="117" height="147.5"/>
                                         <color key="backgroundColor" name="Clear"/>
@@ -513,13 +487,39 @@
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                 <real key="value" value="8"/>
                                             </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="image" keyPath="backgroundImage" value="gear" catalog="system"/>
+                                            <userDefinedRuntimeAttribute type="image" keyPath="backgroundImage" value="settings background"/>
                                             <userDefinedRuntimeAttribute type="number" keyPath="backgroundImageOpacity">
                                                 <real key="value" value="0.040000000000000001"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <outlet property="delegate" destination="aZe-pG-rMs" id="SS3-hS-aIk"/>
+                                        </connections>
+                                    </view>
+                                    <view tag="-1" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aq5-vX-83I" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="24" y="10" width="116.5" height="147.5"/>
+                                        <color key="backgroundColor" name="Clear"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="title" value="Profiles"/>
+                                            <userDefinedRuntimeAttribute type="size" keyPath="shadowSize">
+                                                <size key="value" width="4" height="4"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
+                                                <real key="value" value="0.040000000000000001"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                                <integer key="value" value="2"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="image" keyPath="backgroundImage" value="person.3.fill" catalog="system"/>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="backgroundImageOpacity">
+                                                <real key="value" value="0.040000000000000001"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <outlet property="delegate" destination="aZe-pG-rMs" id="JLL-n9-8Y2"/>
                                         </connections>
                                     </view>
                                 </subviews>
@@ -636,8 +636,8 @@
         <image name="chevron.right.circle" catalog="system" width="128" height="121"/>
         <image name="doc.text.fill" catalog="system" width="115" height="128"/>
         <image name="equal.square" catalog="system" width="128" height="114"/>
-        <image name="gear" catalog="system" width="128" height="119"/>
         <image name="person.3.fill" catalog="system" width="128" height="61"/>
+        <image name="settings background" width="120" height="120"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

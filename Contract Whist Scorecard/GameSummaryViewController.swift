@@ -15,7 +15,7 @@ enum GameSummaryReturnMode {
     case newGame
 }
 
-class GameSummaryViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SyncDelegate, UIPopoverControllerDelegate, ImageButtonDelegate {
+class GameSummaryViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, SyncDelegate, UIPopoverControllerDelegate, ButtonDelegate {
 
     // Main state properties
     private let sync = Sync()
@@ -254,7 +254,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     
     // MARK: - Image Button delegate handlers ========================================================== -
     
-    internal func imageButtonPressed(_ sender: ImageButton) {
+    internal func buttonPressed(_ sender: UIView) {
         switch sender.tag {
         case stopPlayingTag:
             self.stopPlayingPressed()

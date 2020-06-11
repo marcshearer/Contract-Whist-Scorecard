@@ -46,8 +46,8 @@ class RoundedButton: UIButton {
         self.layer.masksToBounds = true
     }
     
-    func toRounded() {
-        self.layer.cornerRadius = 5
+    func toRounded(cornerRadius: CGFloat = 5.0) {
+        self.layer.cornerRadius = cornerRadius
         self.layer.masksToBounds = true
     }
     

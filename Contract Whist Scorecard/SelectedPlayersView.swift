@@ -264,7 +264,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         
         for index in 0..<Scorecard.shared.maxPlayers {
             
-            let playerView = PlayerView(type: .selected, parent: self.contentView, width: self.width, height: self.height, tag: index, haloWidth: self.haloWidth, allowHaloWidth: self.allowHaloWidth)
+            let playerView = PlayerView(type: .selected, parentView: self.contentView, width: self.width, height: self.height, tag: index, haloWidth: self.haloWidth, allowHaloWidth: self.allowHaloWidth)
             playerView.delegate = self
             playerView.set(textColor: Palette.roomInteriorText)
             self.clear(playerView: playerView, slot: index)

@@ -23,8 +23,11 @@ class TitleBar: UIView {
     @IBInspectable private var shadowGradient = false
     @IBInspectable private var shadowRadius: CGFloat = 0.0
     
+    @IBOutlet weak public var delegate: ButtonDelegate?
+    
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet private weak var titleLabel: UILabel!
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -60,12 +63,28 @@ class TitleBar: UIView {
         self.titleLabel.font = font
     }
     
+    public func set(topRounded: Bool? = nil, bottomRounded: Bool? = nil) {
+        self.topRounded = topRounded ?? self.topRounded
+        self.bottomRounded = bottomRounded ?? self.bottomRounded
+        self.setNeedsLayout()
+    }
+    
     private func loadTitleBarView() {
         Bundle.main.loadNibNamed("TitleBar", owner: self, options: nil)
         self.addSubview(contentView)
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        // Setup tap gesture
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(TitleBar.tapSelector(_:)))
+        self.contentView.addGestureRecognizer(tapGesture)
+        
         self.layoutSubviews()
+        self.setNeedsLayout()
+    }
+    
+    @objc private func tapSelector(_ sender: UIView) {
+        self.delegate?.buttonPressed(self)
     }
     
     override internal func layoutSubviews() {

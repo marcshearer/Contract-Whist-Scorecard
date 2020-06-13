@@ -95,10 +95,10 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
         self.collectionView.isScrollEnabled = scrollEnabled
         if let collectionViewInsets = collectionViewInsets {
             self.topInset.constant = collectionViewInsets.top
-            self.collectionView.contentInset = contentInset ?? UIEdgeInsets(top: 10.0 - collectionViewInsets.top, left: 0, bottom: 0, right: 0)
             self.bottomInset.constant = collectionViewInsets.bottom
             self.leadingInset.constant = collectionViewInsets.left
             self.trailingInset.constant = collectionViewInsets.right
+            self.collectionView.contentInset = contentInset ?? UIEdgeInsets(top: 10.0 - collectionViewInsets.top, left: 0, bottom: 0, right: 0)
         }
         UIView.performWithoutAnimation {
             self.collectionView.reloadData()

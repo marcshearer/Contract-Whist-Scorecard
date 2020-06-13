@@ -598,10 +598,6 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     private func setupBidSubscriptions() {
         self.bidSubscription = Scorecard.shared.subscribeBid { [unowned self] (round, enteredPlayerNumber, bid) in
             self.reflectBid(round: round, enteredPlayerNumber: enteredPlayerNumber)
-            // Check if this makes it your bid
-            if (enteredPlayerNumber % Scorecard.game.currentPlayers) + 1 == Scorecard.game.handState.enteredPlayerNumber {
-                // TODO Scorecard.shared.alertUser(remindAfter: 10.0)
-            }
         }
     }
     

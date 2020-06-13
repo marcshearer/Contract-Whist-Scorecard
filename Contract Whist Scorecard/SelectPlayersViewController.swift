@@ -30,13 +30,14 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
     private var completion: ((Int?, [PlayerDetail]?, [Bool]?)->())? = nil
  
     // Properties to pass state 
-    public var specificEmail = ""
-    public var descriptionMode: DescriptionMode = .none
-    public var actionText = ""
-    public var backText = "Back"
-    public var backImage = "back"
-    public var allowOtherPlayer = false
-    public var allowNewPlayer = false
+    private var specificEmail = ""
+    private var descriptionMode: DescriptionMode = .none
+    private var actionText = ""
+    private var backText = "Back"
+    private var backImage = "back"
+    private var allowOtherPlayer = false
+    private var allowNewPlayer = false
+    private var saveToICloud = true
     
     // Local class variables
     private var combinedPlayerList: [Int : [PlayerDetail]] = [:]
@@ -574,7 +575,7 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
         for (section, list) in combinedPlayerList {
             for (index, playerDetail) in list.enumerated() {
                 if self.combinedSelection[section]?[index] ?? false {
-                    let playerMO = playerDetail.createMO()
+                    let playerMO = playerDetail.createMO(saveToICloud: false)
                     if playerMO != nil && playerDetail.thumbnailDate != nil {
                         imageList.append(playerMO!)
                     }
@@ -582,6 +583,9 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
                     self.selection.append(true)
                 }
             }
+        }
+        if self.saveToICloud {
+            Scorecard.shared.settings.saveToICloud()
         }
         
         if imageList.count > 0 {
@@ -650,7 +654,7 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
     
     // MARK: - Function to show and dismiss this view  ============================================================================== -
     
-    public class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, specificEmail: String = "", descriptionMode: DescriptionMode = .none, backText: String = "Cancel", actionText: String = "Download", allowOtherPlayer: Bool = true, allowNewPlayer: Bool = true, completion: ((Int?, [PlayerDetail]?, [Bool]?)->())? = nil) -> SelectPlayersViewController? {
+    public class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, specificEmail: String = "", descriptionMode: DescriptionMode = .none, backText: String = "Cancel", actionText: String = "Download", allowOtherPlayer: Bool = true, allowNewPlayer: Bool = true, saveToICloud: Bool = true, completion: ((Int?, [PlayerDetail]?, [Bool]?)->())? = nil) -> SelectPlayersViewController? {
         
         let storyboard = UIStoryboard(name: "SelectPlayersViewController", bundle: nil)
         let selectPlayersViewController = storyboard.instantiateViewController(withIdentifier: "SelectPlayersViewController") as! SelectPlayersViewController
@@ -664,6 +668,7 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
         selectPlayersViewController.actionText = actionText
         selectPlayersViewController.allowOtherPlayer = allowOtherPlayer
         selectPlayersViewController.allowNewPlayer = allowNewPlayer
+        selectPlayersViewController.saveToICloud = saveToICloud
         selectPlayersViewController.completion = completion
     
         viewController.present(selectPlayersViewController, appController: appController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)

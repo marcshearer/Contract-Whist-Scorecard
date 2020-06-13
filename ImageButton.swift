@@ -30,7 +30,8 @@ class ImageButton: UIView {
     @IBInspectable private var backgroundImage: UIImage!
     @IBInspectable private var backgroundImageOpacity: CGFloat = 0.0
     @IBInspectable private var backgroundImageTintColor: UIColor?
-    
+    @IBInspectable private var templateImages = true
+
     @IBOutlet weak public var delegate: ButtonDelegate?
     
     @IBOutlet private weak var contentView: UIView!
@@ -81,8 +82,11 @@ class ImageButton: UIView {
     }
     
     public func set(image: UIImage?) {
-        let templateImage = image?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
-        let image = templateImage ?? image
+        var image = image
+        if self.templateImages {
+            let templateImage = image?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
+            image = templateImage ?? image
+        }
         self.image = image
         self.imageView.image = image
     }
@@ -133,8 +137,11 @@ class ImageButton: UIView {
     }
     
     public func set(backgroundImage: UIImage?) {
-        let templateImage = backgroundImage?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
-        let backgroundImage = templateImage ?? backgroundImage
+        var backgroundImage = backgroundImage
+        if self.templateImages {
+            let templateImage = backgroundImage?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
+            backgroundImage = templateImage ?? backgroundImage
+        }
         self.backgroundImage = backgroundImage
         self.backgroundImageView.image = backgroundImage
     }

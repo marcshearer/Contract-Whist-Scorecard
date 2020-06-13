@@ -75,6 +75,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     internal var invite: Invite!
     internal var recoveryMode = false
     internal var firstTime = true
+    private var launchScreen = true
     private var rotated = false
     private var isNetworkAvailable: Bool?
     private var isLoggedIn: Bool?
@@ -175,9 +176,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         
         self.hideNavigationBar()
 
-        // Cover with launch screen
-        self.showLaunchScreen()
-        
         // Setup colours (previously in storyboard)
         self.DefaultScreenColors()
         
@@ -197,7 +195,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         Scorecard.shared.stopSharing()
                 
         // Check if recovering
-        self.recoveryMode = Scorecard.recovery.recoveryAvailable
+        self.recoveryMode = Scorecard.recovery.recoveryAvailable && Scorecard.recovery.onlineMode != .loopback
         if self.recoveryMode && (!Scorecard.recovery.onlineRecovery || Scorecard.recovery.onlineType == .server) {
             Scorecard.recovery.recovering = true
             Scorecard.recovery.loadSavedValues()
@@ -223,6 +221,16 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             flowLayout.delegate = self
         }
         self.peerCollectionView.decelerationRate = UIScrollView.DecelerationRate.fast
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if self.launchScreen {
+            // Cover with launch screen
+            self.showLaunchScreen()
+            self.launchScreen = false
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -353,7 +361,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     }
     
     private func hidePlayerSelection() {
-        self.showThisPlayer()
+        self.showThisPlayer(alwaysShow: true)
         self.hostTitleBar.isHidden = false
         
         Utility.animate(view: self.view, duration: 0.5) {
@@ -599,7 +607,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         case hostCollection:
             let hostCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Host Cell", for: indexPath) as! HostCollectionViewCell
             
-            hostCell.button.setProportions(top: 12, image: 20, imageBottom: 3, title: 10, titleBottom: 1, message: 25, bottom: 5)
+            hostCell.button.setProportions(top: 12, image: 40, imageBottom: 3, title: 10, titleBottom: 1, message: 15, bottom: 5)
             hostCell.button.delegate = self
             hostCell.button.tag = indexPath.row
             self.defaultCellColors(cell: hostCell)
@@ -963,9 +971,11 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         }
     }
     
-    private func showThisPlayer() {
+    private func showThisPlayer(alwaysShow: Bool = false) {
         if let player = self.thisPlayer, let playerMO = Scorecard.shared.findPlayerByEmail(player) {
-            self.thisPlayerThumbnail.set(data: playerMO.thumbnail, name: playerMO.name!, nameHeight: 20.0, diameter: self.thisPlayerThumbnail.frame.width)
+            if alwaysShow || playerSelectionViewHeightConstraint.constant == 0 {
+                self.thisPlayerThumbnail.set(data: playerMO.thumbnail, name: playerMO.name!, nameHeight: 20.0, diameter: self.thisPlayerThumbnail.frame.width)
+            }
         }
     }
     
@@ -1179,7 +1189,6 @@ extension ClientViewController {
         self.view.backgroundColor = Palette.background
         self.topSection.backgroundColor = Palette.banner
         self.bannerPaddingView.bannerColor = Palette.banner
-        self.hostTitleBar.backgroundColor = Palette.buttonFace
         self.hostTitleBar.set(faceColor: Palette.buttonFace)
         self.hostTitleBar.set(textColor: Palette.buttonFaceText)
         self.adminMenuButton.tintColor = Palette.bannerEmbossed

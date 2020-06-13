@@ -576,7 +576,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
         }
     }
     
-    private func removeImage() { // TODO Update
+    private func removeImage() {
         playerDetail.thumbnail = nil
         playerDetail.thumbnailDate = nil
         self.changed = true

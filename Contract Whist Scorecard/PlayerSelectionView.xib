@@ -24,7 +24,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WJW-02-tll">
-                    <rect key="frame" x="10" y="54" width="394" height="406"/>
+                    <rect key="frame" x="0.0" y="44" width="414" height="426"/>
                     <color key="backgroundColor" name="Clear"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Rd6-gU-2OP">
                         <size key="itemSize" width="50" height="50"/>
@@ -36,10 +36,10 @@
             </subviews>
             <color key="backgroundColor" name="Clear"/>
             <constraints>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="WJW-02-tll" secondAttribute="trailing" constant="10" id="1t2-ta-jEP"/>
-                <constraint firstItem="WJW-02-tll" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="10" id="2eU-OA-hDa"/>
-                <constraint firstItem="WJW-02-tll" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="10" id="dTr-Vn-2ON"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="WJW-02-tll" secondAttribute="bottom" constant="10" id="jx6-P2-efD"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="WJW-02-tll" secondAttribute="trailing" priority="250" id="1t2-ta-jEP"/>
+                <constraint firstItem="WJW-02-tll" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" priority="250" id="2eU-OA-hDa"/>
+                <constraint firstItem="WJW-02-tll" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" priority="250" id="dTr-Vn-2ON"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="WJW-02-tll" secondAttribute="bottom" priority="250" id="jx6-P2-efD"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>

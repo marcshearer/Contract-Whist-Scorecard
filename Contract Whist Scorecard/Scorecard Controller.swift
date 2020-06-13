@@ -531,6 +531,8 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         self.view.sendSubviewToBack(self.dismissImageView)
         
         self.presentationController?.delegate = self
+        
+        Utility.debugMessage(self.className, "didLoad")
     }
     
     override func viewDidAppear(_ animated: Bool) {

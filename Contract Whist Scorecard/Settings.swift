@@ -19,7 +19,7 @@ class Settings : Equatable {
     public var trumpSequence = ["♣︎", "♦︎", "♥︎", "♠︎", "NT"]
     public var syncEnabled = false
     public var saveHistory = true
-    public var saveLocation = true
+    public var saveLocation = false
     public var receiveNotifications = false
     public var allowBroadcast = true
     public var alertVibrate = true
@@ -28,6 +28,8 @@ class Settings : Equatable {
     public var faceTimeAddress = ""
     public var prefersStatusBarHidden = true
     public var colorTheme = Themes.defaultName
+    public var termsDate: Date!
+    public var termsDevice = ""
     
     public var saveStats: Bool = true           // Only used in a game (not saved) - initially set to same as saveHistory but can be overridden
         
@@ -63,6 +65,10 @@ class Settings : Equatable {
             self.colorTheme = value as! String
         case "thisPlayerEmail":
             self.thisPlayerEmail = value as! String
+        case "termsDate":
+            self.termsDate = value as! Date?
+        case "termsDevice":
+            self.termsDevice = value as! String
         case "saveStats":
             self.saveStats = value as! Bool
         default:
@@ -82,7 +88,8 @@ class Settings : Equatable {
         let fromMirror = Mirror(reflecting: from)
         for toChild in toMirror.children {
             if let fromChild = fromMirror.children.first(where: { $0.label == toChild.label }) {
-                if let fromValue = fromChild.value as? NSObject, let label = toChild.label {
+                if let label = toChild.label {
+                    let fromValue = fromChild.value as? NSObject
                     to.setValue(fromValue, forKey: label)
                     copied += 1
                 } else {
@@ -102,13 +109,10 @@ class Settings : Equatable {
         let rightMirror = Mirror(reflecting: rhs)
         for leftChild in leftMirror.children {
             if let rightChild = rightMirror.children.first(where: { $0.label == leftChild.label }) {
-                if let leftValue = leftChild.value as? NSObject,
-                    let rightValue = rightChild.value as? NSObject {
-                    if leftValue != rightValue {
-                        same = false
-                    }
-                } else {
-                    fatalError("Invalid settings comparison")
+                let leftValue = leftChild.value as? NSObject
+                let rightValue = rightChild.value as? NSObject
+                if leftValue != rightValue {
+                    same = false
                 }
             } else {
                 fatalError("Invalid settings comparison")
@@ -116,6 +120,7 @@ class Settings : Equatable {
         }
         return same
     }
+    
     public func load() {
         
         let mirror = Mirror(reflecting: self)
@@ -134,7 +139,8 @@ class Settings : Equatable {
         
         let mirror = Mirror(reflecting: self)
         for child in mirror.children {
-            if let label = child.label, let value = child.value as? NSObject {
+            if let label = child.label {
+                let value = child.value as? NSObject
                 if label != "saveStats" {
                     UserDefaults.standard.set(value, forKey: label)
                 }
@@ -148,7 +154,7 @@ class Settings : Equatable {
         var cloudObjectList: [CKRecord] = []
         var recordIDsToDelete: [CKRecord.ID] = []
         
-        func saveRecord(label: String, type: String, value: Any) {
+        func saveRecord(label: String, type: String, value: Any?) {
             for pass in 1...2 {
                 var idString: String
                 if pass == 1 {
@@ -165,7 +171,7 @@ class Settings : Equatable {
                 case "[Int]":
                     data = (value as! [Int]).map{"\($0)"}.joined(separator: ";")
                 default:
-                    data = "\(value)"
+                    data = "\(value ?? "")"
                 }
                 
                 let cloudObject = CKRecord(recordType: "Settings", recordID: recordID)
@@ -184,7 +190,8 @@ class Settings : Equatable {
         
         let mirror = Mirror(reflecting: self)
         for child in mirror.children {
-            if let label = child.label, let value = child.value as? NSObject {
+            if let label = child.label {
+                let value = child.value as? NSObject
                 if label != "saveStats" {
                     var type: String
                     if let _ = value as? [String] {
@@ -196,6 +203,11 @@ class Settings : Equatable {
                             type = "Bool"
                         } else if let _ = value as? Int {
                             type = "Int"
+                        } else if let _ = value as? Date {
+                            type = "Date"
+                        } else if value == nil {
+                            // Only type that allows nil is date
+                            type = "Date"
                         } else {
                             type = "String"
                         }
@@ -252,6 +264,8 @@ class Settings : Equatable {
                     downloaded.setValue((Int(value) ?? 0 == 0 ? false : true), forKey: label)
                 case "Int":
                     downloaded.setValue(Int(value) ?? 0, forKey: label)
+                case "Date":
+                    downloaded.setValue(Utility.dateFromString(value), forKey: label)
                 default:
                     downloaded.setValue(value, forKey: label)
                 }
@@ -259,8 +273,12 @@ class Settings : Equatable {
             
         }, completeAction: { (error) in
             if error == nil {
-                _ = self.copy(from: downloaded, to: self)
+                if columnsDownloaded > 0 {
+                    _ = self.copy(from: downloaded, to: self)
+                }
                 completion?(players)
+            } else {
+                completion?(nil)
             }
         })
     }

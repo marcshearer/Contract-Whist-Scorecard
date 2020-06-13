@@ -106,7 +106,7 @@ import CoreData
         }
     }
     
-    public func createMO(noSync: Bool = true) -> PlayerMO! {
+    public func createMO(noSync: Bool = true, saveToICloud: Bool = true) -> PlayerMO! {
         var playerMO: PlayerMO!
         if Scorecard.game?.isPlayingComputer ?? false {
             playerMO = CoreData.create(from: "Player") as? PlayerMO
@@ -132,7 +132,7 @@ import CoreData
                 self.objectID = playerMO.objectID
             }
         }
-        if playerMO != nil {
+        if playerMO != nil && saveToICloud {
             // Save settings with list of players
             Scorecard.shared.settings.saveToICloud()
         }

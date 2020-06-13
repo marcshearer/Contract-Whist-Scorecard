@@ -73,7 +73,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             "colorTheme":               "Default",
             "tempOnlineEmail":          false,
             "trumpSequence":            ["♣︎", "♦︎", "♥︎" ,"♠︎", "NT"],
-            "prefersStatusBarHidden":   true
+            "prefersStatusBarHidden":   true,
+            "termsDevice":              ""
         ])
     }
     

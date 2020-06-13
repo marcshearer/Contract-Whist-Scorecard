@@ -11,7 +11,7 @@
         <!--Game-->
         <scene sceneID="qJp-yc-8it">
             <objects>
-                <viewController storyboardIdentifier="GameSummaryViewController" title="Game Summary" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2Ye-nN-zMs" userLabel="Game" customClass="GameSummaryViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="GameSummaryViewController" title="Game Summary" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2Ye-nN-zMs" userLabel="Game" customClass="GameSummaryViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="dDC-WM-Jrb" userLabel="Game Summary View">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -39,7 +39,7 @@
                                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                         </collectionViewFlowLayout>
                                                         <cells>
-                                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Game Summary Cell" id="ldj-uf-TJJ" customClass="GameSummaryCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Game Summary Cell" id="ldj-uf-TJJ" customClass="GameSummaryCollectionCell" customModule="Whist_2" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="0.0" width="120" height="250"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -52,11 +52,11 @@
                                                                                 <constraint firstAttribute="height" constant="60" id="O3g-QT-PIY"/>
                                                                             </constraints>
                                                                         </imageView>
-                                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1M5-uf-JbU" userLabel="Player View" customClass="ThumbnailView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1M5-uf-JbU" userLabel="Player View" customClass="ThumbnailView" customModule="Whist_2" customModuleProvider="target">
                                                                             <rect key="frame" x="0.0" y="60" width="120" height="150"/>
                                                                             <color key="backgroundColor" name="Clear"/>
                                                                         </view>
-                                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wfp-ti-7kF" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wfp-ti-7kF" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
                                                                             <rect key="frame" x="0.0" y="210" width="120" height="40"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="height" constant="40" id="pEu-RS-k4r"/>
@@ -101,7 +101,7 @@
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Xn-Vn-q9j" userLabel="Bottom Area">
                                                 <rect key="frame" x="0.0" y="716.66666666666663" width="414" height="179.33333333333337"/>
                                                 <subviews>
-                                                    <view contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m4C-Bn-wVa" customClass="BannerContinuation" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                    <view contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m4C-Bn-wVa" customClass="BannerContinuation" customModule="Whist_2" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="-103.33333333333326" width="414" height="103.33333333333333"/>
                                                         <color key="backgroundColor" name="Table Top"/>
                                                         <constraints>
@@ -125,7 +125,7 @@
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zSr-Sg-tk4" userLabel="Right Side">
                                                                 <rect key="frame" x="207" y="0.0" width="207" height="179.33333333333334"/>
                                                                 <subviews>
-                                                                    <view tag="2" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="OFe-jn-Bt6" userLabel="Play Again Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                                    <view tag="2" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="OFe-jn-Bt6" userLabel="Play Again Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
                                                                         <rect key="frame" x="26.666666666666657" y="0.0" width="153.66666666666666" height="143.33333333333334"/>
                                                                         <color key="backgroundColor" name="Clear"/>
                                                                         <constraints>
@@ -137,6 +137,7 @@
                                                                             <userDefinedRuntimeAttribute type="color" keyPath="textColor">
                                                                                 <color key="value" name="Table Top Text Contrast"/>
                                                                             </userDefinedRuntimeAttribute>
+                                                                            <userDefinedRuntimeAttribute type="boolean" keyPath="templateImages" value="NO"/>
                                                                         </userDefinedRuntimeAttributes>
                                                                         <connections>
                                                                             <outlet property="delegate" destination="2Ye-nN-zMs" id="Y0P-zx-HdN"/>
@@ -153,7 +154,7 @@
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Om1-UX-kdo" userLabel="Left Side">
                                                                 <rect key="frame" x="0.0" y="0.0" width="207" height="179.33333333333334"/>
                                                                 <subviews>
-                                                                    <view tag="1" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="5J7-Q9-k63" userLabel="Stop Playing Button" customClass="ImageButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                                    <view tag="1" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="5J7-Q9-k63" userLabel="Stop Playing Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
                                                                         <rect key="frame" x="26.666666666666671" y="0.0" width="153.66666666666663" height="143.33333333333334"/>
                                                                         <color key="backgroundColor" name="Clear"/>
                                                                         <constraints>
@@ -165,6 +166,7 @@
                                                                             <userDefinedRuntimeAttribute type="color" keyPath="textColor">
                                                                                 <color key="value" name="Table Top Text Contrast"/>
                                                                             </userDefinedRuntimeAttribute>
+                                                                            <userDefinedRuntimeAttribute type="boolean" keyPath="templateImages" value="NO"/>
                                                                         </userDefinedRuntimeAttributes>
                                                                         <connections>
                                                                             <outlet property="delegate" destination="2Ye-nN-zMs" id="Ubm-FK-5kN"/>
@@ -220,19 +222,19 @@
                                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                         </collectionViewFlowLayout>
                                                         <cells>
-                                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Game Summary Cell" id="3z2-Gu-mp6" customClass="GameSummaryCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Game Summary Cell" id="3z2-Gu-mp6" customClass="GameSummaryCollectionCell" customModule="Whist_2" customModuleProvider="target">
                                                                 <rect key="frame" x="0.0" y="0.0" width="60" height="120"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                                                     <rect key="frame" x="0.0" y="0.0" width="60" height="120"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <subviews>
-                                                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3qn-bH-LIe" userLabel="Player View" customClass="ThumbnailView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3qn-bH-LIe" userLabel="Player View" customClass="ThumbnailView" customModule="Whist_2" customModuleProvider="target">
                                                                             <rect key="frame" x="0.0" y="0.0" width="60" height="100"/>
                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                             <color key="backgroundColor" name="Clear"/>
                                                                         </view>
-                                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aDW-MF-nlZ" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aDW-MF-nlZ" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
                                                                             <rect key="frame" x="0.0" y="100" width="60" height="20"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="height" constant="20" id="Ngt-4D-3aG"/>
@@ -321,7 +323,7 @@
                                 <color key="textColor" name="Dark Highlight Text"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bhv-M4-Rmr" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bhv-M4-Rmr" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="8" y="52" width="120" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="K7S-UN-Gbj"/>

@@ -29,11 +29,24 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Terms of Use" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gOp-hK-Mpd">
+                                        <rect key="frame" x="0.0" y="133.33333333333334" width="375" height="21"/>
+                                        <color key="backgroundColor" name="Clear"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="21" id="ifo-Ij-hdD"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstItem="gaZ-Hu-a3p" firstAttribute="top" secondItem="1xt-5r-Xq3" secondAttribute="top" constant="30" id="81U-4l-Nia"/>
+                                    <constraint firstItem="gOp-hK-Mpd" firstAttribute="leading" secondItem="1xt-5r-Xq3" secondAttribute="leading" id="B2y-hg-WwD"/>
                                     <constraint firstAttribute="trailing" secondItem="gaZ-Hu-a3p" secondAttribute="trailing" id="O1z-CF-SqV"/>
+                                    <constraint firstAttribute="trailing" secondItem="gOp-hK-Mpd" secondAttribute="trailing" id="d3y-lt-1LO"/>
+                                    <constraint firstAttribute="bottom" secondItem="gOp-hK-Mpd" secondAttribute="bottom" constant="8" id="qwE-nI-coG"/>
                                     <constraint firstItem="gaZ-Hu-a3p" firstAttribute="leading" secondItem="1xt-5r-Xq3" secondAttribute="leading" id="xce-ay-KbU"/>
                                 </constraints>
                             </view>
@@ -43,12 +56,22 @@
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Launch Image" translatesAutoresizingMaskIntoConstraints="NO" id="eOU-h8-lDh">
                                         <rect key="frame" x="16" y="16" width="343" height="374"/>
                                     </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AhN-gv-ik5">
+                                        <rect key="frame" x="16" y="16" width="343" height="374"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="eOU-h8-lDh" secondAttribute="trailing" constant="16" id="8t1-K6-CQy"/>
+                                    <constraint firstItem="AhN-gv-ik5" firstAttribute="bottom" secondItem="eOU-h8-lDh" secondAttribute="bottom" id="H25-C9-lLD"/>
                                     <constraint firstItem="eOU-h8-lDh" firstAttribute="leading" secondItem="3m5-MF-PI1" secondAttribute="leading" constant="16" id="LVn-ff-Wpq"/>
+                                    <constraint firstItem="AhN-gv-ik5" firstAttribute="top" secondItem="eOU-h8-lDh" secondAttribute="top" id="Ove-Jk-qag"/>
                                     <constraint firstItem="eOU-h8-lDh" firstAttribute="top" secondItem="3m5-MF-PI1" secondAttribute="top" constant="16" id="S6q-YQ-zh5"/>
+                                    <constraint firstItem="AhN-gv-ik5" firstAttribute="trailing" secondItem="eOU-h8-lDh" secondAttribute="trailing" id="jNm-pG-EYm"/>
+                                    <constraint firstItem="AhN-gv-ik5" firstAttribute="leading" secondItem="eOU-h8-lDh" secondAttribute="leading" id="k00-n9-0eP"/>
                                     <constraint firstAttribute="bottom" secondItem="eOU-h8-lDh" secondAttribute="bottom" constant="16" id="mBo-iY-Pon"/>
                                 </constraints>
                             </view>
@@ -64,12 +87,38 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M4l-Co-XAw" customClass="RoundedButton" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="67.666666666666671" y="18" width="100.00000000000001" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="l7T-08-yju"/>
+                                            <constraint firstAttribute="width" constant="100" id="m03-mB-xlG"/>
+                                        </constraints>
+                                        <state key="normal" title="Decline"/>
+                                        <connections>
+                                            <action selector="declinePressed:" destination="s50-DJ-DGN" eventType="touchUpInside" id="xiM-sd-Ei3"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dZe-xZ-YwC" userLabel="Terms Accept" customClass="RoundedButton" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="207.66666666666663" y="18" width="100" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="8zu-hy-0c6"/>
+                                            <constraint firstAttribute="width" constant="100" id="Jm3-nn-AOh"/>
+                                        </constraints>
+                                        <state key="normal" title="Accept"/>
+                                        <connections>
+                                            <action selector="acceptPressed:" destination="s50-DJ-DGN" eventType="touchUpInside" id="pf3-qb-reU"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
                                     <constraint firstItem="Kiq-ap-5hz" firstAttribute="leading" secondItem="8NM-ik-LTC" secondAttribute="leading" constant="20" id="9tw-Yj-oTu"/>
+                                    <constraint firstItem="M4l-Co-XAw" firstAttribute="top" secondItem="8NM-ik-LTC" secondAttribute="top" constant="18" id="Oa7-fm-FdV"/>
                                     <constraint firstAttribute="trailing" secondItem="Kiq-ap-5hz" secondAttribute="trailing" constant="20" id="Zpz-R7-Wl8"/>
                                     <constraint firstItem="Kiq-ap-5hz" firstAttribute="centerY" secondItem="8NM-ik-LTC" secondAttribute="centerY" id="cV6-L0-I9M"/>
+                                    <constraint firstItem="dZe-xZ-YwC" firstAttribute="centerX" secondItem="8NM-ik-LTC" secondAttribute="centerX" constant="70" id="e6z-eo-fUN"/>
+                                    <constraint firstItem="M4l-Co-XAw" firstAttribute="centerX" secondItem="8NM-ik-LTC" secondAttribute="centerX" constant="-70" id="qtw-d8-tVR"/>
+                                    <constraint firstItem="dZe-xZ-YwC" firstAttribute="centerY" secondItem="M4l-Co-XAw" secondAttribute="centerY" id="tG5-yd-F2i"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -81,7 +130,7 @@
                             <constraint firstItem="9e5-uf-7bY" firstAttribute="bottom" secondItem="8NM-ik-LTC" secondAttribute="bottom" id="BZx-oV-Ukz"/>
                             <constraint firstItem="8NM-ik-LTC" firstAttribute="leading" secondItem="9e5-uf-7bY" secondAttribute="leading" id="CyI-qi-xkg"/>
                             <constraint firstItem="1xt-5r-Xq3" firstAttribute="leading" secondItem="9e5-uf-7bY" secondAttribute="leading" id="Kd4-rx-asv"/>
-                            <constraint firstItem="3m5-MF-PI1" firstAttribute="top" secondItem="1xt-5r-Xq3" secondAttribute="bottom" id="NOL-In-Gxo"/>
+                            <constraint firstItem="3m5-MF-PI1" firstAttribute="top" secondItem="1xt-5r-Xq3" secondAttribute="bottom" id="NBg-uV-Akn"/>
                             <constraint firstItem="3m5-MF-PI1" firstAttribute="height" secondItem="jyL-Wg-M4O" secondAttribute="height" multiplier="0.5" id="Vq0-mA-lnS"/>
                             <constraint firstItem="1xt-5r-Xq3" firstAttribute="height" secondItem="jyL-Wg-M4O" secondAttribute="height" multiplier="1:5" id="ZyC-cd-JVf"/>
                             <constraint firstItem="9e5-uf-7bY" firstAttribute="trailing" secondItem="8NM-ik-LTC" secondAttribute="trailing" id="bft-xW-q9q"/>
@@ -99,20 +148,17 @@
                     <toolbarItems/>
                     <connections>
                         <outlet property="message" destination="Kiq-ap-5hz" id="bWY-l0-BRX"/>
+                        <outlet property="termsAccept" destination="dZe-xZ-YwC" id="AHT-cy-sn4"/>
+                        <outlet property="termsDecline" destination="M4l-Co-XAw" id="0Xa-uy-Z1X"/>
+                        <outlet property="termsText" destination="AhN-gv-ik5" id="hRA-FT-Xbk"/>
+                        <outlet property="termsTitle" destination="gOp-hK-Mpd" id="1kd-HW-1Sr"/>
+                        <outlet property="whistImage" destination="eOU-h8-lDh" id="XIx-S8-ng0"/>
                         <outlet property="whistTitle" destination="gaZ-Hu-a3p" id="E5d-Sd-ezO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UlI-9p-3xx" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="left" id="xss-yr-KoI" userLabel="Left Swipe Gesture Recognizer">
-                    <connections>
-                        <action selector="leftSwipeWithRecognizer:" destination="s50-DJ-DGN" id="NWw-Cj-Zhd"/>
-                    </connections>
-                </swipeGestureRecognizer>
-                <rotationGestureRecognizer rotation="90" id="PH8-5l-Lli">
-                    <connections>
-                        <action selector="rotationGestureWithRecognizer:" destination="s50-DJ-DGN" id="AEs-i8-Jem"/>
-                    </connections>
-                </rotationGestureRecognizer>
+                <swipeGestureRecognizer direction="left" id="xss-yr-KoI" userLabel="Left Swipe Gesture Recognizer"/>
+                <rotationGestureRecognizer rotation="90" id="PH8-5l-Lli"/>
             </objects>
             <point key="canvasLocation" x="6332" y="130.78817733990149"/>
         </scene>

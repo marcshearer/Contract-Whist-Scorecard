@@ -1091,7 +1091,7 @@ enum InviteStatus {
         playerDetail.name = name
         playerDetail.email = email
         playerDetail.dedupName()
-        if let playerMO = playerDetail.createMO() {
+        if let playerMO = playerDetail.createMO(noSync: true, saveToICloud: false) {
             // Get picture
             if peer?.mode == .loopback {
                 let image = UIImage(named: name.lowercased())

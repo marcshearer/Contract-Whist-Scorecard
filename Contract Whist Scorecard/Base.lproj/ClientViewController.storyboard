@@ -70,7 +70,7 @@
                                         <rect key="frame" x="0.0" y="74.5" width="414" height="124.5"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qjq-rE-5ew" customClass="ThumbnailView" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="173.5" y="18" width="67" height="88.5"/>
+                                                <rect key="frame" x="173.5" y="24" width="67" height="88.5"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <gestureRecognizers/>
                                                 <constraints>
@@ -107,7 +107,7 @@
                                             <constraint firstItem="Qjq-rE-5ew" firstAttribute="height" secondItem="XTv-6o-LLq" secondAttribute="height" multiplier="1:1.4" id="7Tq-nc-kgx"/>
                                             <constraint firstItem="Qjq-rE-5ew" firstAttribute="centerX" secondItem="XTv-6o-LLq" secondAttribute="centerX" id="HXe-JG-JIu"/>
                                             <constraint firstItem="7O6-U7-alt" firstAttribute="leading" secondItem="XTv-6o-LLq" secondAttribute="leading" constant="26" id="Y5b-nf-Nky"/>
-                                            <constraint firstItem="Qjq-rE-5ew" firstAttribute="centerY" secondItem="XTv-6o-LLq" secondAttribute="centerY" id="pao-W5-HZc"/>
+                                            <constraint firstItem="Qjq-rE-5ew" firstAttribute="centerY" secondItem="XTv-6o-LLq" secondAttribute="centerY" constant="6" id="pao-W5-HZc"/>
                                             <constraint firstAttribute="bottom" secondItem="7O6-U7-alt" secondAttribute="bottom" id="yJ5-PU-D9g"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
@@ -461,10 +461,10 @@
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                 <real key="value" value="8"/>
                                             </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="image" keyPath="backgroundImage" value="doc.text.fill" catalog="system"/>
                                             <userDefinedRuntimeAttribute type="number" keyPath="backgroundImageOpacity">
                                                 <real key="value" value="0.040000000000000001"/>
                                             </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="image" keyPath="backgroundImage" value="results background"/>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <outlet property="delegate" destination="aZe-pG-rMs" id="7W2-7s-S0X"/>
@@ -505,7 +505,7 @@
                                                 <size key="value" width="4" height="4"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
-                                                <real key="value" value="0.040000000000000001"/>
+                                                <real key="value" value="0.10000000000000001"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
                                                 <integer key="value" value="2"/>
@@ -513,10 +513,10 @@
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                 <real key="value" value="8"/>
                                             </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="image" keyPath="backgroundImage" value="person.3.fill" catalog="system"/>
                                             <userDefinedRuntimeAttribute type="number" keyPath="backgroundImageOpacity">
                                                 <real key="value" value="0.040000000000000001"/>
                                             </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="image" keyPath="backgroundImage" value="players background"/>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <outlet property="delegate" destination="aZe-pG-rMs" id="JLL-n9-8Y2"/>
@@ -634,9 +634,9 @@
     <resources>
         <image name="chevron.left.circle" catalog="system" width="128" height="121"/>
         <image name="chevron.right.circle" catalog="system" width="128" height="121"/>
-        <image name="doc.text.fill" catalog="system" width="115" height="128"/>
         <image name="equal.square" catalog="system" width="128" height="114"/>
-        <image name="person.3.fill" catalog="system" width="128" height="61"/>
+        <image name="players background" width="120" height="120"/>
+        <image name="results background" width="120" height="120"/>
         <image name="settings background" width="120" height="120"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

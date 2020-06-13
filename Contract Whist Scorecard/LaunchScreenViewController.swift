@@ -10,12 +10,11 @@ import UIKit
 
 class LaunchScreenViewController: ScorecardViewController, SyncDelegate, ReconcileDelegate {
 
-    @IBOutlet private weak var message: UILabel!
-    @IBOutlet private weak var whistTitle: UILabel!
-    
+   
     // Sync
     internal let sync = Sync()
     private var syncGetPlayers = false
+    private var syncGetVersion = false
     private weak var callingViewController: ScorecardViewController!
     
     // Reconcile
@@ -23,14 +22,53 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     
     private var completion: (()->())?
 
+    // MARK: - IB Outlets ============================================================================== -
+    
+    @IBOutlet private weak var message: UILabel!
+    @IBOutlet private weak var whistTitle: UILabel!
+    @IBOutlet private weak var whistImage: UIImageView!
+    @IBOutlet private weak var termsTitle: UILabel!
+    @IBOutlet private weak var termsText: UILabel!
+    @IBOutlet private weak var termsAccept: RoundedButton!
+    @IBOutlet private weak var termsDecline: RoundedButton!
+    
+    // MARK: - IB Actions ============================================================================== -
+    
+    @IBAction func acceptPressed(_ sender: UIButton) {
+        Scorecard.shared.settings.termsDate = Date()
+        Scorecard.shared.settings.termsDevice = Scorecard.deviceName
+        Scorecard.shared.settings.save()
+        self.enableControls()
+        self.checkICloud()
+    }
+    
+    @IBAction func declinePressed(_ sender: UIButton) {
+        exit(0)
+    }
+    
+    // MARK: - View Overrides ========================================================================== -
+ 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.backgroundColor = Palette.banner
-        self.whistTitle.textColor = Palette.bannerEmbossed
-        self.message.textColor = Palette.bannerText
+        self.setupControls()
         
-        self.message.text = "Checking Network\nand iCloud Login ..."
+        self.termsText.text = "Whist allows you to score or play Contract Whist.\n\nA record of the scores of your games and the players' names will be kept and synchronised with a central database.\n\nThis data will not be used for any marketing purposes.\nHowever it will be accessible to other users of the app who know your Unique ID.\n\nBy accepting these terms and conditions you agree to any data you enter being shared in this way."
+
+        self.enableControls()
+        
+        if Scorecard.shared.settings.termsDate == nil {
+            // Need to wait for terms acceptance
+        } else {
+            checkICloud()
+        }
+        
+        // Note flow continues in checkICloud
+    }
+    
+    private func checkICloud() {
+        
+        self.message.text = "Loading..."
         
         Utility.executeAfter(delay: 1.0) {
             Scorecard.shared.getVersion(completion: {
@@ -38,30 +76,33 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
                 self.getCloudVersion()
             })
         }
-        // Note flow continues in viewDidContinue
+        // Note flow continues in continueStartup
     }
     
-    private func viewDidContinue() {
+    private func continueStartup() {
 
-        self.showGetStarted() // TODO remove
-        return                // TODO remove
-
+        // self.showGetStarted() // TODO remove
+        // return                // TODO remove
+        
         if !Scorecard.shared.settings.syncEnabled {
             // New device - try to load from iCloud
-            self.message.text = "New Installation\n\nTrying to load\nsettings from iCloud..."
+            self.message.text = "Loading..."
             Scorecard.shared.settings.loadFromICloud() { (players) in
-                if let players = players {
-                    self.checkReceiveNotifications() {
-                        Scorecard.shared.settings.save()
-                        self.syncGetPlayers = true
-                        self.sync.delegate = self
-                        if !self.sync.synchronise(syncMode: .syncGetPlayerDetails, specificEmail: players, waitFinish: true) {
-                            self.dismiss(showMessage: false)
+                Utility.mainThread {
+                    let players = players
+                    if players != nil && !players!.isEmpty {
+                        self.checkReceiveNotifications() {
+                            Scorecard.shared.settings.save()
+                            self.syncGetPlayers = true
+                            self.sync.delegate = self
+                            if !self.sync.synchronise(syncMode: .syncGetPlayerDetails, specificEmail: players!, waitFinish: true) {
+                                self.dismiss(showMessage: false)
+                            }
                         }
+                    } else {
+                        // New device / iCloud user
+                        self.showGetStarted()
                     }
-                } else {
-                    // New device / iCloud user
-                    self.showGetStarted()
                 }
             }
         } else {
@@ -78,11 +119,38 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
         }
     }
     
+    private func setupControls() {
+        self.view.backgroundColor = Palette.banner
+        self.whistTitle.textColor = Palette.bannerEmbossed
+        self.message.textColor = Palette.bannerText
+        self.termsTitle.textColor = Palette.bannerText
+        self.termsText.backgroundColor = Palette.background
+        self.termsText.textColor = Palette.text
+        self.termsText.roundCorners(cornerRadius: 8.0)
+        self.termsDecline.backgroundColor = Palette.buttonFace
+        self.termsDecline.setTitleColor(Palette.buttonFaceText, for: .normal)
+        self.termsDecline.toCircle()
+        self.termsAccept.backgroundColor = Palette.darkHighlight
+        self.termsAccept.setTitleColor(Palette.darkHighlightText, for: .normal)
+        self.termsAccept.toCircle()
+    }
+    
+    private func enableControls() {
+        let termsAccepted = Scorecard.shared.settings.termsDate != nil
+        self.whistImage.isHidden = !termsAccepted
+        self.message.isHidden = !termsAccepted
+        self.termsTitle.isHidden = termsAccepted
+        self.termsText.isHidden = termsAccepted
+        self.termsAccept.isHidden = termsAccepted
+        self.termsDecline.isHidden = termsAccepted
+    }
+    
     // MARK: - iCloud fetch and sync delegates ======================================================== -
     
     private func getCloudVersion(async: Bool = false) {
         if Scorecard.shared.isNetworkAvailable {
             self.sync.delegate = self
+            self.syncGetVersion = true
             if self.sync.synchronise(syncMode: .syncGetVersion, timeout: nil, waitFinish: async) {
                 // Running or queued (if async)
             } else {
@@ -95,33 +163,40 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     
     func syncReturnPlayers(_ playerList: [PlayerDetail]!) {
        
-        for player in playerList {
-            _ = player.createMO()
+        Utility.mainThread {
+            self.syncGetPlayers = false
+            
+            for player in playerList {
+                _ = player.createMO(saveToICloud: false)
+            }
+            self.sync.fetchPlayerImagesFromCloud(playerList.map{$0.playerMO})
+            self.dismiss()
         }
-        self.sync.fetchPlayerImagesFromCloud(playerList.map{$0.playerMO})
-        self.dismiss()
        
     }
     
     internal func syncCompletion(_ errors: Int) {
-        
-        if !self.syncGetPlayers {
-        
-            Utility.debugMessage("launch", "Version returned")
-            
-            self.message.text = "Upgrading to\nCurrent Version..."
-            if !Scorecard.shared.upgradeToVersion(from: self) {
-                self.alertMessage("Error upgrading to current version", okHandler: {
-                    exit(0)
-                })
-            }
-            
-            if Scorecard.shared.playerList.count != 0 && !Scorecard.version.blockSync && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
-                // Rebuild any players who have a sync in progress flag set
-                self.message.text = "Rebuilding\nPlayer Data..."
-                self.reconcilePlayers()
-            } else {
-                self.viewDidContinue()
+        Utility.mainThread {
+            if self.syncGetVersion {
+                
+                self.syncGetVersion = false
+                
+                Utility.debugMessage("launch", "Version returned")
+                
+                self.message.text = "Upgrading to\nCurrent Version..."
+                if !Scorecard.shared.upgradeToVersion(from: self) {
+                    self.alertMessage("Error upgrading to current version", okHandler: {
+                        exit(0)
+                    })
+                }
+                
+                if Scorecard.shared.playerList.count != 0 && !Scorecard.version.blockSync && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
+                    // Rebuild any players who have a sync in progress flag set
+                    self.message.text = "Rebuilding\nPlayer Data..."
+                    self.reconcilePlayers()
+                } else {
+                    self.continueStartup()
+                }
             }
         }
     }
@@ -132,7 +207,7 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
                 exit(0)
             } else {
                 completion()
-                self.viewDidContinue()
+                self.continueStartup()
             }
         })
     }
@@ -154,7 +229,7 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
             reconcile.delegate = self
             reconcile.reconcilePlayers(playerMOList: playerMOList)
         } else {
-            self.viewDidContinue()
+            self.continueStartup()
         }
     }
     
@@ -172,7 +247,7 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     
     public func reconcileCompletion(_ errors: Bool) {
         Utility.mainThread {
-            self.viewDidContinue()
+            self.continueStartup()
         }
     }
     

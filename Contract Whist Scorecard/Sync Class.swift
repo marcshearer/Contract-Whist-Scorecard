@@ -771,8 +771,10 @@ class Sync {
                 // First check if game confirmed - i.e. we have a cloud RecordID - should all be unconfirmed
                 if historyGame.gameMO.syncRecordID == nil {
                     // Not confirmed yet - send it
-                    let cloudObject = CKRecord(recordType:"Games")
-                    History.cloudGameFromMo(cloudObject: cloudObject, gameMO: historyGame.gameMO, syncDate: self.nextSyncDate)
+                    let gameMO = historyGame.gameMO!
+                    let recordID = CKRecord.ID(recordName: "Games-\(gameMO.datePlayed!)-\(gameMO.deviceName!)-\(gameMO.gameUUID!)")
+                    let cloudObject = CKRecord(recordType:"Games", recordID: recordID)
+                    History.cloudGameFromMo(cloudObject: cloudObject, gameMO: gameMO, syncDate: self.nextSyncDate)
                     self.cloudObjectList.append(cloudObject)
                     gamesQueued += 1
                 }
@@ -780,8 +782,10 @@ class Sync {
                     for historyParticipant in historyGame.participant {
                         if historyGame.gameMO.syncRecordID == nil {
                             // Not confirmed yet - send it
-                            let cloudObject = CKRecord(recordType:"Participants")
-                            History.cloudParticipantFromMO(cloudObject: cloudObject, participantMO: historyParticipant.participantMO, syncDate: self.nextSyncDate)
+                            let participantMO = historyParticipant.participantMO!
+                            let recordID = CKRecord.ID(recordName: "Participants-\(participantMO.datePlayed!)-\(participantMO.email!)-\(participantMO.gameUUID!))")
+                            let cloudObject = CKRecord(recordType:"Participants", recordID: recordID)
+                            History.cloudParticipantFromMO(cloudObject: cloudObject, participantMO: participantMO, syncDate: self.nextSyncDate)
                             self.cloudObjectList.append(cloudObject)
                             participantsQueued += 1
                         }
@@ -792,7 +796,7 @@ class Sync {
                             let from = historyParticipant.participantMO.email!
                             let to = linkedParticipant.participantMO.email!
                             if from != to {
-                                let cloudObject = CKRecord(recordType: "Links", recordID:  CKRecord.ID(recordName: "\(from)->\(to)"))
+                                let cloudObject = CKRecord(recordType: "Links", recordID:  CKRecord.ID(recordName: "Links-\(from)-\(to)"))
                                 cloudObject.setValue(from, forKey: "fromPlayer")
                                 cloudObject.setValue(to, forKey: "toPlayer")
                                 self.cloudObjectList.append(cloudObject)
@@ -1241,7 +1245,7 @@ class Sync {
             
             if found == nil {
                 // Record is not in the cloud - send it
-                let cloudObject = CKRecord(recordType:"Players")
+                let cloudObject = CKRecord(recordType:"Players", recordID: CKRecord.ID(recordName: "Players-\(playerMO.name!)-\(playerMO.email!)"))
                 let cloudRecord = PlayerDetail()
                 cloudRecord.fromManagedObject(playerMO: playerMO)
                 cloudRecord.syncDate = Date()
@@ -1642,64 +1646,98 @@ class Sync {
     
     // MARK: - Generic read/write=================================================================== -
     
-    public class func update(records: [CKRecord]? = nil, recordIDsToDelete: [CKRecord.ID]? = nil, database: CKDatabase? = nil, remainder: [CKRecord]? = nil, completion: ((Error?)->())? = nil) {
+    public class func update(records: [CKRecord]? = nil, recordIDsToDelete: [CKRecord.ID]? = nil, database: CKDatabase? = nil, recordsRemainder: [CKRecord]? = nil, recordIDsToDeleteRemainder: [CKRecord.ID]? = nil, completion: ((Error?)->())? = nil) {
         // Copes with limit being exceeed which splits the load in two and tries again
-        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
-        let database = database ?? cloudContainer.publicCloudDatabase
-        var allLinkErrors = true
+        var lastSplit = 400
         
-        let uploadOperation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: recordIDsToDelete)
-        
-        uploadOperation.isAtomic = true
-        uploadOperation.database = database
-        
-        uploadOperation.perRecordCompletionBlock = { (savedRecord: CKRecord, error: Error?) -> Void in
-            // Ignore status as will just keep sending them until they come back down
-            if error != nil {
-                let recordType = savedRecord.recordType
-                if recordType != "Links" {
-                    // An error other than on the links - worry about it
-                    allLinkErrors = false
-                }
-            }
-        }
-        
-        // Assign a completion handler
-        uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecord.ID]?, error: Error?) -> Void in
-            if error != nil {
-                if let error = error as? CKError {
-                    if error.code == .limitExceeded {
-                        // Limit exceeded - split in two and try again
-                        let split = Int(records?.count ?? 0 / 2)
-                        // Join records and remainder back together again
-                        var allRecords = records ?? []
-                        if remainder != nil {
-                            allRecords += remainder!
+        if (records?.count ?? 0) + (recordIDsToDelete?.count ?? 0) > lastSplit {
+            // No point trying - split immediately
+            lastSplit = self.updatePortion(database: database, requireLess: true, lastSplit: lastSplit, records: records, recordIDsToDelete: recordIDsToDelete, recordsRemainder: recordsRemainder, recordIDsToDeleteRemainder: recordIDsToDeleteRemainder, completion: completion)
+        } else {
+            // Give it a go
+            let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+            let database = database ?? cloudContainer.publicCloudDatabase
+            
+            let uploadOperation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: recordIDsToDelete)
+            
+            uploadOperation.isAtomic = true
+            uploadOperation.database = database
+            
+            // Assign a completion handler
+            uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecord.ID]?, error: Error?) -> Void in
+                if error != nil {
+                    if let error = error as? CKError {
+                        if error.code == .limitExceeded {
+                            // Limit exceeded - start at 400 and then split in two and try again
+                            lastSplit = self.updatePortion(database: database, requireLess: true, lastSplit: lastSplit, records: records, recordIDsToDelete: recordIDsToDelete, recordsRemainder: recordsRemainder, recordIDsToDeleteRemainder: recordIDsToDeleteRemainder, completion: completion)
+                        } else if error.code == .partialFailure {
+                            completion?(error)
+                        } else {
+                            completion?(error)
                         }
-                        // Now split at new break point
-                        let firstBlock = Array(allRecords.prefix(upTo: split))
-                        let secondBlock = Array(allRecords.suffix(from: split))
-                        self.update(records: firstBlock, remainder: secondBlock, completion: completion)
-                    } else if error.code == .partialFailure {
-                        completion?(allLinkErrors ? nil : error)
                     } else {
                         completion?(error)
                     }
                 } else {
-                    completion?(error)
-                }
-            } else {
-                if remainder != nil {
-                    // Now need to send second block
-                    self.update(records: remainder!, database: database, completion: completion)
-                } else {
-                    completion?(nil)
+                    if recordsRemainder != nil || recordIDsToDeleteRemainder != nil {
+                        // Now need to send next block of records
+                        lastSplit = self.updatePortion(database: database, requireLess: false, lastSplit: lastSplit, records: nil, recordIDsToDelete: nil, recordsRemainder: recordsRemainder, recordIDsToDeleteRemainder: recordIDsToDeleteRemainder, completion: completion)
+                        
+                    } else {
+                        completion?(nil)
+                    }
                 }
             }
+            
+            // Add the operation to an operation queue to execute it
+            OperationQueue().addOperation(uploadOperation)
+        }
+    }
+    
+    private class func updatePortion(database: CKDatabase?, requireLess: Bool, lastSplit: Int, records: [CKRecord]?, recordIDsToDelete: [CKRecord.ID]?, recordsRemainder: [CKRecord]?, recordIDsToDeleteRemainder: [CKRecord.ID]?, completion: ((Error?)->())?) -> Int {
+        
+        // Limit exceeded - start at 400 and then split in two and try again
+
+        // Join records and remainder back together again
+        var allRecords = records ?? []
+        if recordsRemainder != nil {
+            allRecords += recordsRemainder!
+        }
+        var allRecordIDsToDelete = recordIDsToDelete ?? []
+        if recordIDsToDeleteRemainder != nil {
+            allRecordIDsToDelete += recordIDsToDeleteRemainder!
+        }
+
+        var split = lastSplit
+        let firstTime = (recordsRemainder == nil && recordIDsToDeleteRemainder == nil)
+        if requireLess {
+            if allRecords.count != 0 {
+                // Split the records
+                let half = Int((records?.count ?? 0) / 2)
+                split = (firstTime ? lastSplit : half)
+            } else {
+                // Split the record IDs to delete
+                let half = Int((recordIDsToDelete?.count ?? 0) / 2)
+                split = (firstTime ? lastSplit : half)
+            }
+        } else {
+            split = lastSplit
         }
         
-        // Add the operation to an operation queue to execute it
-        OperationQueue().addOperation(uploadOperation)
+        // Now split at new break point
+        if allRecords.count != 0 {
+            split = min(split, allRecords.count)
+            let firstBlock = Array(allRecords.prefix(upTo: split))
+            let secondBlock = (allRecords.count <= split ? nil : Array(allRecords.suffix(from: split)))
+            self.update(records: firstBlock, database: database, recordsRemainder: secondBlock, recordIDsToDeleteRemainder: allRecordIDsToDelete, completion: completion)
+        } else {
+            split = min(split, allRecordIDsToDelete.count)
+            let firstBlock = Array(allRecordIDsToDelete.prefix(upTo: split))
+            let secondBlock = (allRecordIDsToDelete.count <= split ? nil : Array(allRecordIDsToDelete.suffix(from: split)))
+            self.update(recordIDsToDelete: firstBlock, database: database, recordIDsToDeleteRemainder: secondBlock, completion: completion)
+        }
+        
+        return split
     }
     
     public class func read(recordType: CKRecord.RecordType,

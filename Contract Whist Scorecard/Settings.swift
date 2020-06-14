@@ -162,7 +162,7 @@ class Settings : Equatable {
                 } else {
                     idString = "\(Scorecard.deviceName)-\(label)"
                 }
-                let recordID = CKRecord.ID(recordName: idString)
+                let recordID = CKRecord.ID(recordName: "Settings-\(idString)")
                 
                 var data: String
                 switch type {
@@ -170,6 +170,8 @@ class Settings : Equatable {
                     data = (value as! [String]).joined(separator: ";")
                 case "[Int]":
                     data = (value as! [Int]).map{"\($0)"}.joined(separator: ";")
+                case "Date":
+                    data = Utility.dateString(value as! Date, format: "yyyy-MM-dd HH:mm:ss Z", localized: false)
                 default:
                     data = "\(value ?? "")"
                 }
@@ -265,7 +267,7 @@ class Settings : Equatable {
                 case "Int":
                     downloaded.setValue(Int(value) ?? 0, forKey: label)
                 case "Date":
-                    downloaded.setValue(Utility.dateFromString(value), forKey: label)
+                    downloaded.setValue(Utility.dateFromString(value, format: "yyyy-MM-dd HH:mm:ss Z", localized: false), forKey: label)
                 default:
                     downloaded.setValue(value, forKey: label)
                 }

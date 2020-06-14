@@ -172,8 +172,8 @@ class Invite {
         createRecords = []
         
         for inviteEmail in inviteEmails {
-            
-            let inviteRecord = CKRecord(recordType: "Invites")
+            let recordID = CKRecord.ID(recordName: "Invites-\(hostEmail)-\(inviteEmail)-\(inviteUUID)")
+            let inviteRecord = CKRecord(recordType: "Invites", recordID: recordID)
             
             inviteRecord.setValue(hostEmail, forKey: "hostEmail")
             inviteRecord.setValue(hostName, forKey: "hostName")

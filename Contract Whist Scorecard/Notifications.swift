@@ -66,7 +66,8 @@ class Notifications {
         queryOperation.queryCompletionBlock = { (cursor, error) -> Void in
             if error == nil && found == 0 {
                 // Write a new record
-                let record = CKRecord(recordType: "Notifications")
+                let recordID = CKRecord.ID(recordName: "Notifications-\(winnerEmail)")
+                let record = CKRecord(recordType: "Notifications", recordID: recordID)
                 record.setValue(message , forKey: "message")
                 record.setValue(winnerEmail , forKey: "email")
                 publicDatabase.save(record, completionHandler: { (record, error)  -> Void in })

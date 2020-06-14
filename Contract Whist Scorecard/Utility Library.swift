@@ -152,10 +152,15 @@ class Utility {
         return formatter.string(from: date)
     }
     
-    class func dateFromString(_ dateString: String, format: String = "dd/MM/yyyy") -> Date? {
+    class func dateFromString(_ dateString: String, format: String = "dd/MM/yyyy", localized: Bool = true) -> Date? {
         let formatter = DateFormatter()
-        formatter.dateFormat = format
-        return formatter.date(from: dateString)
+        if localized {
+            formatter.setLocalizedDateFormatFromTemplate(format)
+        } else {
+            formatter.dateFormat = format
+        }
+        let result = formatter.date(from: dateString)
+        return result
     }
 
     // MARK: - Percentages and quotients (with rounding to integer and protection from divide by zero) =============== -

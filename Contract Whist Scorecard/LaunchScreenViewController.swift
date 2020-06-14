@@ -16,6 +16,8 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     private var syncGetPlayers = false
     private var syncGetVersion = false
     private weak var callingViewController: ScorecardViewController!
+    private var syncPlayerList: [String]?
+    private var newDevice = false
     
     // Reconcile
     internal var reconcile: Reconcile!
@@ -39,7 +41,7 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
         Scorecard.shared.settings.termsDevice = Scorecard.deviceName
         Scorecard.shared.settings.save()
         self.enableControls()
-        self.checkICloud()
+        self.linkToNext()
     }
     
     @IBAction func declinePressed(_ sender: UIButton) {
@@ -55,13 +57,9 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
         
         self.termsText.text = "Whist allows you to score or play Contract Whist.\n\nA record of the scores of your games and the players' names will be kept and synchronised with a central database.\n\nThis data will not be used for any marketing purposes.\nHowever it will be accessible to other users of the app who know your Unique ID.\n\nBy accepting these terms and conditions you agree to any data you enter being shared in this way."
 
-        self.enableControls()
+        self.enableControls(showTerms: false)
         
-        if Scorecard.shared.settings.termsDate == nil {
-            // Need to wait for terms acceptance
-        } else {
-            checkICloud()
-        }
+        checkICloud()
         
         // Note flow continues in checkICloud
     }
@@ -86,24 +84,44 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
         
         if !Scorecard.shared.settings.syncEnabled {
             // New device - try to load from iCloud
+            self.newDevice = true
             self.message.text = "Loading..."
             Scorecard.shared.settings.loadFromICloud() { (players) in
                 Utility.mainThread {
-                    let players = players
                     if players != nil && !players!.isEmpty {
-                        self.checkReceiveNotifications() {
-                            Scorecard.shared.settings.save()
-                            self.syncGetPlayers = true
-                            self.sync.delegate = self
-                            if !self.sync.synchronise(syncMode: .syncGetPlayerDetails, specificEmail: players!, waitFinish: true) {
-                                self.dismiss(showMessage: false)
-                            }
-                        }
+                        self.syncPlayerList = players
+                    }
+                    if Scorecard.shared.settings.termsDate == nil {
+                        // Need to wait for terms acceptance
+                        self.enableControls()
                     } else {
-                        // New device / iCloud user
+                        self.linkToNext()
+                    }
+                }
+            }
+        } else if Scorecard.shared.settings.termsDate == nil {
+            // Need to wait for terms acceptance
+            self.enableControls()
+        } else {
+            self.linkToNext()
+        }
+    }
+    
+    private func linkToNext() {
+        if self.newDevice {
+            // New device check notifications and link to get started
+            if self.syncPlayerList != nil {
+                self.checkReceiveNotifications() {
+                    Scorecard.shared.settings.save()
+                    self.syncGetPlayers = true
+                    self.sync.delegate = self
+                    if !self.sync.synchronise(syncMode: .syncGetPlayerDetails, specificEmail: self.syncPlayerList!, waitFinish: true) {
                         self.showGetStarted()
                     }
                 }
+            } else {
+                // New device / iCloud user
+                self.showGetStarted()
             }
         } else {
             self.dismiss()
@@ -135,14 +153,14 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
         self.termsAccept.toCircle()
     }
     
-    private func enableControls() {
+    private func enableControls(showTerms: Bool = true) {
         let termsAccepted = Scorecard.shared.settings.termsDate != nil
-        self.whistImage.isHidden = !termsAccepted
-        self.message.isHidden = !termsAccepted
-        self.termsTitle.isHidden = termsAccepted
-        self.termsText.isHidden = termsAccepted
-        self.termsAccept.isHidden = termsAccepted
-        self.termsDecline.isHidden = termsAccepted
+        self.whistImage.isHidden = !termsAccepted && showTerms
+        self.message.isHidden = !termsAccepted && showTerms
+        self.termsTitle.isHidden = termsAccepted || !showTerms
+        self.termsText.isHidden = termsAccepted || !showTerms
+        self.termsAccept.isHidden = termsAccepted || !showTerms
+        self.termsDecline.isHidden = termsAccepted || !showTerms
     }
     
     // MARK: - iCloud fetch and sync delegates ======================================================== -

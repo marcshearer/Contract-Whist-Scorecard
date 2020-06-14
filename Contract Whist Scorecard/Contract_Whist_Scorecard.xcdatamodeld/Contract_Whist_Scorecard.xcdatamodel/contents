@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14135" systemVersion="17G65" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19F101" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Game" representedClassName="GameMO" syncable="YES" codeGenerationType="class">
-        <attribute name="datePlayed" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="deviceName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="deviceUUID" attributeType="String" syncable="YES"/>
-        <attribute name="excludeStats" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="gameUUID" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="localDateCreated" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="resendDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="syncDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="syncRecordID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="datePlayed" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="deviceName" optional="YES" attributeType="String"/>
+        <attribute name="deviceUUID" attributeType="String"/>
+        <attribute name="excludeStats" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="gameUUID" optional="YES" attributeType="String"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="localDateCreated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="location" optional="YES" attributeType="String"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="resendDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="syncDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="syncRecordID" optional="YES" attributeType="String"/>
         <fetchIndex name="byLocalDateCreatedIndex">
             <fetchIndexElement property="localDateCreated" type="Binary" order="ascending"/>
         </fetchIndex>
@@ -22,23 +22,23 @@
         </fetchIndex>
     </entity>
     <entity name="Participant" representedClassName="ParticipantMO" syncable="YES" codeGenerationType="class">
-        <attribute name="datePlayed" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="deviceUUID" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="excludeStats" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="gamesPlayed" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="gamesWon" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="gameUUID" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="handsMade" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="handsPlayed" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="localDateCreated" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="place" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="playerNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="syncDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="syncRecordID" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="totalScore" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="twosMade" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="datePlayed" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="deviceUUID" optional="YES" attributeType="String"/>
+        <attribute name="email" optional="YES" attributeType="String"/>
+        <attribute name="excludeStats" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="gamesPlayed" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="gamesWon" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="gameUUID" optional="YES" attributeType="String"/>
+        <attribute name="handsMade" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="handsPlayed" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="localDateCreated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="place" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="playerNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="syncDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="syncRecordID" optional="YES" attributeType="String"/>
+        <attribute name="totalScore" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="twosMade" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <fetchIndex name="byLocalDateCreatedIndex">
             <fetchIndexElement property="localDateCreated" type="Binary" order="ascending"/>
         </fetchIndex>
@@ -49,52 +49,45 @@
         </fetchIndex>
     </entity>
     <entity name="Player" representedClassName="PlayerMO" syncable="YES" codeGenerationType="class">
-        <attribute name="dateCreated" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="datePlayed" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="emailDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="externalId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="gamesPlayed" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="gamesWon" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="handsMade" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="handsPlayed" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="localDateCreated" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="maxMade" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="maxMadeDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="maxScore" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="maxScoreDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="maxTwos" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="maxTwosDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="name" attributeType="String" syncable="YES"/>
-        <attribute name="nameDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="playerUUID" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="syncDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="syncGamesPlayed" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="syncGamesWon" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="syncHandsMade" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="syncHandsPlayed" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="syncInProgress" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="syncRecordID" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="syncTotalScore" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="syncTwosMade" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="thumbnail" optional="YES" attributeType="Binary" syncable="YES"/>
-        <attribute name="thumbnailDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="totalScore" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="twosMade" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="visibleLocally" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="dateCreated" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="datePlayed" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="email" optional="YES" attributeType="String"/>
+        <attribute name="emailDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="externalId" optional="YES" attributeType="String"/>
+        <attribute name="gamesPlayed" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="gamesWon" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="handsMade" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="handsPlayed" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="localDateCreated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="maxMade" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="maxMadeDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="maxScore" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="maxScoreDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="maxTwos" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="maxTwosDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="nameDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="syncDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="syncGamesPlayed" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="syncGamesWon" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="syncHandsMade" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="syncHandsPlayed" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="syncInProgress" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="syncRecordID" optional="YES" attributeType="String"/>
+        <attribute name="syncTotalScore" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="syncTwosMade" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="thumbnail" optional="YES" attributeType="Binary"/>
+        <attribute name="thumbnailDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="totalScore" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="twosMade" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="visibleLocally" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <fetchIndex name="byNameIndex">
             <fetchIndexElement property="name" type="Binary" order="ascending"/>
         </fetchIndex>
     </entity>
-    <entity name="PlayerUUIDs" representedClassName="PlayerUUIDMO" syncable="YES" codeGenerationType="class">
-        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
-        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="playerUUID" optional="YES" attributeType="String" syncable="YES"/>
-    </entity>
     <elements>
         <element name="Game" positionX="0" positionY="0" width="128" height="225"/>
         <element name="Participant" positionX="0" positionY="0" width="128" height="300"/>
-        <element name="Player" positionX="0" positionY="0" width="128" height="540"/>
-        <element name="PlayerUUIDs" positionX="0" positionY="153" width="128" height="90"/>
+        <element name="Player" positionX="0" positionY="0" width="128" height="523"/>
     </elements>
 </model>

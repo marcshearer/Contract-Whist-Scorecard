@@ -137,10 +137,10 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        self.setupSizes()
-        self.setupControls()
         
         if self.firstTime {
+            self.setupSizes()
+            self.setupControls()
             self.change(section: .downloadPlayers)
             self.roundCorners()
         }

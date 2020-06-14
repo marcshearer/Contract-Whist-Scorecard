@@ -93,7 +93,8 @@ class SlideOutButtonView: UIView {
             self.button.fillColor = self.buttonFillColor
             self.button.strokeColor = self.buttonStrokeColor
             self.button.normalTextColor = self.buttonTextColor
-            self.button.normalAlpha = 1.0
+            self.button.normalBackgroundAlpha = 1.0
+            self.button.normalTextAlpha = 1.0
             self.button.normalBackgroundColor = UIColor.clear
             self.button.setTitle(self.title)
             self.button.isEnabled(true)

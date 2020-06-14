@@ -10,12 +10,14 @@ import UIKit
 
 class RoundedButton: UIButton {
     
-    var normalTextColor = UIColor.black
+    var normalTextColor = Palette.darkHighlightText
     var normalBackgroundColor = Palette.darkHighlight
-    var normalAlpha: CGFloat = 1.0
-    var disabledTextColor = UIColor.black
+    var normalTextAlpha: CGFloat = 1.0
+    var normalBackgroundAlpha: CGFloat = 1.0
+    var disabledTextColor = Palette.highlightText
     var disabledBackgroundColor = Palette.highlight
-    var disabledAlpha: CGFloat = 0.3
+    var disabledBackgroundAlpha: CGFloat = 0.3
+    var disabledTextAlpha: CGFloat = 1.0
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
@@ -29,14 +31,12 @@ class RoundedButton: UIButton {
     
     func isEnabled(_ enabled: Bool) {
         if enabled {
-            self.setTitleColor(self.normalTextColor, for: .normal)
-            self.backgroundColor = self.normalBackgroundColor
-            self.alpha = self.normalAlpha
+            self.setTitleColor(self.normalTextColor.withAlphaComponent(self.normalTextAlpha), for: .normal)
+            self.backgroundColor = self.normalBackgroundColor.withAlphaComponent(self.normalBackgroundAlpha)
             self.isEnabled = true
         } else {
-            self.setTitleColor(self.disabledTextColor, for: .normal)
-            self.backgroundColor = self.disabledBackgroundColor
-            self.alpha = self.disabledAlpha
+            self.setTitleColor(self.disabledTextColor.withAlphaComponent(self.disabledTextAlpha), for: .disabled)
+            self.backgroundColor = self.disabledBackgroundColor.withAlphaComponent(self.disabledBackgroundAlpha)
             self.isEnabled = false
         }
     }
@@ -68,10 +68,12 @@ class LightRoundedButton: RoundedButton {
         super.init(coder: aDecoder)
         self.normalTextColor = UIColor.black
         self.normalBackgroundColor = Palette.highlight
-        self.normalAlpha = 1.0
+        self.normalTextAlpha = 1.0
+        self.normalBackgroundAlpha = 1.0
         self.disabledTextColor = self.normalTextColor
         self.disabledBackgroundColor = self.normalBackgroundColor
-        self.disabledAlpha = 0.3
+        self.disabledTextAlpha = 0.9
+        self.disabledBackgroundAlpha = 0.3
         super.isEnabled(true)
     }
 }
@@ -82,10 +84,12 @@ class DarkRoundedButton: RoundedButton {
         super.init(coder: aDecoder)
         self.normalTextColor = Palette.darkHighlightText
         self.normalBackgroundColor = Palette.darkHighlight
-        self.normalAlpha = 1.0
+        self.normalTextAlpha = 1.0
+        self.normalBackgroundAlpha = 1.0
         self.disabledTextColor = Palette.darkHighlight
         self.disabledBackgroundColor = Palette.darkHighlight
-        self.disabledAlpha = 0.5
+        self.disabledTextAlpha = 0.9
+        self.disabledBackgroundAlpha = 0.5
         super.isEnabled(true)
     }
 }
@@ -96,10 +100,12 @@ class BidButton: RoundedButton {
         super.init(coder: aDecoder)
         self.normalTextColor = Palette.bidButtonText
         self.normalBackgroundColor = Palette.bidButton
-        self.normalAlpha = 1.0
+        self.normalTextAlpha = 1.0
+        self.normalBackgroundAlpha = 1.0
         self.disabledTextColor = Palette.bidButtonText
         self.disabledBackgroundColor = Palette.bidButton
-        self.disabledAlpha = 0.5
+        self.disabledTextAlpha = 0.9
+        self.disabledBackgroundAlpha = 0.5
         super.isEnabled(true)
     }
 }
@@ -110,10 +116,12 @@ class EmphasisRoundedButton: RoundedButton {
         super.init(coder: aDecoder)
         self.normalTextColor = Palette.emphasisText
         self.normalBackgroundColor = Palette.emphasis
-        self.normalAlpha = 1.0
+        self.normalTextAlpha = 1.0
+        self.normalBackgroundAlpha = 1.0
         self.disabledTextColor = Palette.emphasisText
         self.disabledBackgroundColor = Palette.emphasis
-        self.disabledAlpha = 0.5
+        self.disabledTextAlpha = 0.9
+        self.disabledBackgroundAlpha = 0.5
         super.isEnabled(true)
     }
 }
@@ -124,7 +132,8 @@ class DarkUnroundedButton: DarkRoundedButton {
         self.toUnrounded()
         self.disabledBackgroundColor = self.normalBackgroundColor
         self.disabledTextColor = UIColor.lightGray
-        self.disabledAlpha = 0.8
+        self.disabledTextAlpha = 0.9
+        self.disabledBackgroundAlpha = 0.8
     }
 }
 
@@ -134,10 +143,12 @@ class TotalRoundedButton: RoundedButton {
         super.init(coder: aDecoder)
         self.normalTextColor = UIColor.white
         self.normalBackgroundColor = Palette.total
-        self.normalAlpha = 1.0
+        self.normalTextAlpha = 1.0
+        self.normalBackgroundAlpha = 1.0
         self.disabledTextColor = self.normalTextColor
         self.disabledBackgroundColor = self.normalBackgroundColor
-        self.disabledAlpha = 0.5
+        self.disabledTextAlpha = 0.9
+        self.disabledBackgroundAlpha = 0.5
         super.isEnabled(true)
     }
 }
@@ -148,10 +159,12 @@ class ErrorRoundedButton: RoundedButton {
         super.init(coder: aDecoder)
         self.normalTextColor = UIColor.white
         self.normalBackgroundColor = Palette.error
-        self.normalAlpha = 1.0
+        self.normalTextAlpha = 1.0
+        self.normalBackgroundAlpha = 1.0
         self.disabledTextColor = self.normalTextColor
         self.disabledBackgroundColor = self.normalBackgroundColor
-        self.disabledAlpha = 0.0
+        self.disabledTextAlpha = 0.0
+        self.disabledBackgroundAlpha = 0.0
         super.isEnabled(true)
     }
 }
@@ -162,10 +175,12 @@ class ClearButton: RoundedButton {
         super.init(coder: aDecoder)
         self.normalTextColor = self.titleColor(for: .normal)! // Leave as declared
         self.normalBackgroundColor = UIColor.clear
-        self.normalAlpha = 1.0
+        self.normalTextAlpha = 1.0
+        self.normalBackgroundAlpha = 0.0
         self.disabledTextColor = self.normalTextColor
         self.disabledBackgroundColor = self.normalBackgroundColor
-        self.disabledAlpha = 0.3
+        self.disabledTextAlpha = 0.9
+        self.disabledBackgroundAlpha = 0.0
         super.isEnabled(true)
     }
     
@@ -173,18 +188,20 @@ class ClearButton: RoundedButton {
         super.init(frame:frame)
         self.normalTextColor = self.titleColor(for: .normal)! // Leave as declared
         self.normalBackgroundColor = UIColor.clear
-        self.normalAlpha = 1.0
+        self.normalTextAlpha = 1.0
+        self.normalBackgroundAlpha = 1.0
         self.disabledTextColor = self.normalTextColor
         self.disabledBackgroundColor = self.normalBackgroundColor
-        self.disabledAlpha = 0.3
+        self.disabledTextAlpha = 0.9
+        self.disabledBackgroundAlpha = 0.3
         super.isEnabled(true)
     }
 }
 
 class OutlineButton: RoundedButton {
-
+    
     @IBInspectable public var outlineColor: UIColor?
-    {
+        {
         set (color) {
             self.layer.borderColor = color?.cgColor
         }
@@ -241,12 +258,14 @@ class AngledButton: ClearButton {
         // Set button properties
         self.normalTextColor = self.titleColor(for: .normal)! // Leave as declared
         self.normalBackgroundColor = UIColor.clear
-        self.normalAlpha = 1.0
+        self.normalTextAlpha = 1.0
+        self.normalBackgroundAlpha = 1.0
         self.disabledTextColor = self.normalTextColor
         self.disabledBackgroundColor = self.normalBackgroundColor
-        self.disabledAlpha = 0.3
+        self.disabledTextAlpha = 0.9
+        self.disabledBackgroundAlpha = 0.3
         self.isEnabled(true)
-
+        
         self.superview?.bringSubviewToFront(self)
         self.bringSubviewToFront(self.titleLabel!)
         
@@ -292,14 +311,14 @@ class OldImageButton: RoundedButton {
         let totalHeight = imageSize.height + titleSize.height + self.spacing
         
         self.titleEdgeInsets = UIEdgeInsets(top: 0.0,
-                                                 left: -imageSize.width,
-                                                 bottom: -(totalHeight - titleSize.height),
-                                                 right: 0.0)
+                                            left: -imageSize.width,
+                                            bottom: -(totalHeight - titleSize.height),
+                                            right: 0.0)
         
         self.imageEdgeInsets = UIEdgeInsets(top: -(totalHeight - imageSize.height),
-                                                 left: 0.0,
-                                                 bottom: 0.0,
-                                                 right: -titleSize.width)
+                                            left: 0.0,
+                                            bottom: 0.0,
+                                            right: -titleSize.width)
         
         self.contentEdgeInsets = UIEdgeInsets(top: 0.0,
                                               left: 0.0,
@@ -309,7 +328,7 @@ class OldImageButton: RoundedButton {
 }
 
 class SideImageButton: RoundedButton {
-   
+    
     let spacing: CGFloat = 10.0
     
     required init(coder aDecoder: NSCoder) {
@@ -328,7 +347,6 @@ class SideImageButton: RoundedButton {
     func setImage(_ imageName: String) {
         super.setImage(UIImage(named: imageName), for: .normal)
     }
-    
 }
 
 

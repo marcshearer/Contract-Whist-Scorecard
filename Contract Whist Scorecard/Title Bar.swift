@@ -65,8 +65,9 @@ class TitleBar: UIView {
     
     public func set(topRounded: Bool? = nil, bottomRounded: Bool? = nil) {
         self.topRounded = topRounded ?? self.topRounded
-        self.bottomRounded = bottomRounded ?? self.bottomRounded
+        self.bottomRounded =  bottomRounded ?? self.bottomRounded
         self.setNeedsLayout()
+        self.layoutIfNeeded()
     }
     
     private func loadTitleBarView() {

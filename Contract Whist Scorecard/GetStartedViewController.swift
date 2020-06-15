@@ -208,7 +208,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     private func showThisPlayer() {
         if let playerMO = Scorecard.shared.findPlayerByEmail(Scorecard.shared.settings.thisPlayerEmail) {
             self.thisPlayerThumbnailView.set(playerMO: playerMO, nameHeight: 15.0, diameter: self.thisPlayerThumbnailView.frame.width)
-            if ScorecardUI.smallPhoneSize() {
+            if ScorecardUI.mediumPhoneSize() {
                 self.titleLabel.isHidden = true
             }
             self.getStartedLabel.isHidden = true

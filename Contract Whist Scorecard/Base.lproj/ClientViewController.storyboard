@@ -306,19 +306,27 @@
                                                                             <nil key="textColor"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
-                                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="32u-1q-MR3">
+                                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="32u-1q-MR3" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
                                                                             <rect key="frame" x="0.0" y="0.0" width="40" height="128"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="width" constant="40" id="gNh-PZ-vNT"/>
                                                                             </constraints>
                                                                             <state key="normal" image="chevron.left.circle" catalog="system"/>
                                                                         </button>
-                                                                        <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J9h-D3-ryt">
+                                                                        <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J9h-D3-ryt" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
                                                                             <rect key="frame" x="88" y="0.0" width="40" height="128"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="width" constant="40" id="oGX-5P-bDw"/>
                                                                             </constraints>
                                                                             <state key="normal" image="chevron.right.circle" catalog="system"/>
+                                                                        </button>
+                                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="umq-Vf-qy3" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
+                                                                            <rect key="frame" x="112" y="4" width="12" height="12"/>
+                                                                            <constraints>
+                                                                                <constraint firstAttribute="width" constant="12" id="VvL-6t-Ryw"/>
+                                                                                <constraint firstAttribute="height" constant="12" id="XAe-0O-pmu"/>
+                                                                            </constraints>
+                                                                            <state key="normal" image="cross white"/>
                                                                         </button>
                                                                     </subviews>
                                                                     <constraints>
@@ -329,12 +337,15 @@
                                                                         <constraint firstItem="WaK-9I-Rl1" firstAttribute="leading" secondItem="e3M-8L-XIx" secondAttribute="leading" id="NwC-ga-Jil"/>
                                                                         <constraint firstItem="J9h-D3-ryt" firstAttribute="top" secondItem="e3M-8L-XIx" secondAttribute="top" id="SGP-YH-5oW"/>
                                                                         <constraint firstItem="WaK-9I-Rl1" firstAttribute="top" secondItem="e3M-8L-XIx" secondAttribute="top" id="SUt-h6-2sh"/>
+                                                                        <constraint firstItem="umq-Vf-qy3" firstAttribute="top" secondItem="e3M-8L-XIx" secondAttribute="top" constant="4" id="eRQ-fM-kre"/>
                                                                         <constraint firstAttribute="bottom" secondItem="32u-1q-MR3" secondAttribute="bottom" id="j0T-4W-1uu"/>
                                                                         <constraint firstAttribute="bottom" secondItem="J9h-D3-ryt" secondAttribute="bottom" id="kQO-Ts-iTT"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="umq-Vf-qy3" secondAttribute="trailing" constant="4" id="qVk-17-n5S"/>
                                                                         <constraint firstAttribute="bottom" secondItem="WaK-9I-Rl1" secondAttribute="bottom" id="z3m-Mc-fpn"/>
                                                                     </constraints>
                                                                 </collectionViewCellContentView>
                                                                 <connections>
+                                                                    <outlet property="cancelButton" destination="umq-Vf-qy3" id="LrT-RM-4Mx"/>
                                                                     <outlet property="label" destination="WaK-9I-Rl1" id="cGU-dS-cky"/>
                                                                     <outlet property="leftScrollButton" destination="32u-1q-MR3" id="NyM-Ya-iyS"/>
                                                                     <outlet property="rightScrollButton" destination="J9h-D3-ryt" id="joK-zf-cY6"/>
@@ -634,6 +645,7 @@
     <resources>
         <image name="chevron.left.circle" catalog="system" width="128" height="121"/>
         <image name="chevron.right.circle" catalog="system" width="128" height="121"/>
+        <image name="cross white" width="20" height="20"/>
         <image name="equal.square" catalog="system" width="128" height="114"/>
         <image name="players background" width="120" height="120"/>
         <image name="results background" width="120" height="120"/>

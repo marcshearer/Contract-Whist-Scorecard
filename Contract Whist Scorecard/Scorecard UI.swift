@@ -89,8 +89,12 @@ class ScorecardUI {
         return UIScreen.main.traitCollection.verticalSizeClass == .compact || UIScreen.main.traitCollection.horizontalSizeClass == .compact
     }
     
+    class func mediumPhoneSize() -> Bool {
+        return (UIScreen.main.traitCollection.verticalSizeClass == .compact || UIScreen.main.traitCollection.horizontalSizeClass == .compact) && max(UIScreen.main.bounds.width, UIScreen.main.bounds.height) <= 667
+    }
+    
     class func smallPhoneSize() -> Bool {
-        return (UIScreen.main.traitCollection.verticalSizeClass == .compact || UIScreen.main.traitCollection.horizontalSizeClass == .compact) && min(UIScreen.main.bounds.width, UIScreen.main.bounds.height) <= 320
+        return (UIScreen.main.traitCollection.verticalSizeClass == .compact || UIScreen.main.traitCollection.horizontalSizeClass == .compact) && max(UIScreen.main.bounds.width, UIScreen.main.bounds.height) <= 568
     }
     
     class func landscape() -> Bool {

@@ -296,7 +296,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private func showLaunchScreen() {
         LaunchScreenViewController.show(from: self) {
             self.clientController?.set(noHideDismissImageView: true) // Suppress hiding of screenview since will do it later ourselves
-            self.showSettingsCompletion()
+            if !self.recoveryMode {
+                self.showSettingsCompletion()
+            }
             self.clientController?.set(noHideDismissImageView: false)
             if !Scorecard.shared.settings.syncEnabled {
                 self.showGetStarted()
@@ -646,6 +648,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 peerCell.label.font = UIFont.systemFont(ofSize: 20.0, weight: .light)
                 peerCell.leftScrollButton.isHidden = true
                 peerCell.rightScrollButton.isHidden = true
+                peerCell.cancelButton.isHidden = true
                 
             } else {
                 var name: String
@@ -704,15 +707,19 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 peerCell.label.backgroundColor = Palette.banner
                 peerCell.label.textColor = Palette.bannerText
                 peerCell.label.text = serviceText
+                
+                peerCell.leftScrollButton.isHidden = (indexPath.row <= 0 || self.availablePeers.count <= 1)
+                peerCell.rightScrollButton.isHidden = (indexPath.row >= self.availablePeers.count - 1 || self.availablePeers.count <= 1)
+                peerCell.cancelButton.isHidden = !(state == .connecting || state == .reconnecting || state == .recovering) && !recoveryMode
              }
              
-             peerCell.leftScrollButton.isHidden = (indexPath.row <= 0 || self.availablePeers.count <= 1)
              peerCell.leftScrollButton.addTarget(self, action: #selector(ClientViewController.scrollPeers(_:)), for: .touchUpInside)
              peerCell.leftScrollButton.tag = indexPath.row - 1
              
-             peerCell.rightScrollButton.isHidden = (indexPath.row >= self.availablePeers.count - 1 || self.availablePeers.count <= 1)
              peerCell.rightScrollButton.addTarget(self, action: #selector(ClientViewController.scrollPeers(_:)), for: .touchUpInside)
              peerCell.rightScrollButton.tag = indexPath.row + 1
+             
+             peerCell.cancelButton.addTarget(self, action: #selector(ClientViewController.cancelPeer(_:)), for: .touchUpInside)
              
             cell = peerCell
 
@@ -806,6 +813,11 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.peerCollectionView.scrollToItem(at: IndexPath(item: button.tag, section: 0), at: .centeredHorizontally, animated: true)
         self.displayingPeer = button.tag
         self.peerScrollCollectionView.reloadData()
+    }
+    
+    @objc private func cancelPeer(_ button: UIButton) {
+        self.cancelRecovery()
+        self.restart()
     }
     
     // MARK: - Action buttons =============================================================== -
@@ -1147,8 +1159,9 @@ class HostCollectionViewCell: UICollectionViewCell {
 
 class PeerCollectionViewCell: UICollectionViewCell {
     @IBOutlet fileprivate weak var label: UILabel!
-    @IBOutlet fileprivate weak var leftScrollButton: UIButton!
-    @IBOutlet fileprivate weak var rightScrollButton: UIButton!
+    @IBOutlet fileprivate weak var leftScrollButton: ClearButton!
+    @IBOutlet fileprivate weak var rightScrollButton: ClearButton!
+    @IBOutlet fileprivate weak var cancelButton: ClearButton!
 }
 
 class PeerScrollCollectionViewCell: UICollectionViewCell {
@@ -1240,5 +1253,6 @@ extension ClientViewController {
     private func defaultCellColors(cell: PeerCollectionViewCell) {
         cell.leftScrollButton.imageView?.tintColor = Palette.bannerText
         cell.rightScrollButton.imageView?.tintColor = Palette.bannerText
+        cell.cancelButton.imageView?.tintColor = Palette.bannerText
     }
 }

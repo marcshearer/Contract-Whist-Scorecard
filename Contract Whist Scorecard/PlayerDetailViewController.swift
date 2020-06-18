@@ -21,17 +21,12 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
     
     // MARK: - Class Properties ======================================================================== -
     
-    // Lines in view
-    private enum Sections: Int, CaseIterable {
-        case uniqueID = 0
-        case lastPlayed = 1
-        case records = 2
-        case stats = 3
-    }
-    
     private enum UniqueIdOptions: Int, CaseIterable {
         case uniqueID = 0
-        case deletePlayer = 1
+    }
+    
+    private enum DeleteOptions: Int, CaseIterable {
+        case deletePlayer = 0
     }
     
     private enum LastPlayedOptions: Int, CaseIterable {
@@ -58,6 +53,13 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
     private let settings = Scorecard.game.settings ?? Scorecard.shared.settings
     private let sync = Sync()
     
+    private var sections = 0
+    private var uniqueIDSection = -1
+    private var deleteSection = -1
+    private var lastPlayedSection = -1
+    private var recordsSection = -1
+    private var statsSection = -1
+    
     // Text field tags
     private let nameFieldTag = 0
     private let emailFieldTag = 1
@@ -70,15 +72,13 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
     private var callerCompletion: ((PlayerDetail?, Bool)->())?
     
     // Local class variables
-    private var emailOnEntry = ""
     private var actionSheet: ActionSheet!
     private var changed = false
-
+ 
     // Alert controller while waiting for cloud download
     private var cloudAlertController: UIAlertController!
     private var cloudIndicatorView: UIActivityIndicatorView!
 
-    private var emailErrorLabel: UILabel? = nil
     private var emailCell: PlayerDetailCell!
     private var playerView: PlayerView!
 
@@ -99,24 +99,12 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
         switch mode! {
         case .amend:
             // Update core data with any changes
-            self.warnEmailChanged(completion: {
-                if !CoreData.update(updateLogic: {
-                    let playerMO = self.playerDetail.playerMO!
-                    if playerMO.email != self.playerDetail.email {
-                        // Need to rebuild as email changed
-                        self.playerDetail.toManagedObject(playerMO: playerMO)
-                        if Reconcile.rebuildLocalPlayer(playerMO: self.playerDetail.playerMO) {
-                            self.playerDetail.fromManagedObject(playerMO: playerMO)
-                        }
-                        // Save settings with list of players
-                        Scorecard.shared.settings.saveToICloud()
-                    } else {
-                        self.playerDetail.toManagedObject(playerMO: playerMO)
-                    }
-                }) {
-                    self.alertMessage("Error saving player")
-                }
-            })
+            if !CoreData.update(updateLogic: {
+                let playerMO = self.playerDetail.playerMO!
+                self.playerDetail.toManagedObject(playerMO: playerMO)
+            }) {
+                self.alertMessage("Error saving player")
+            }
         case .create:
             // Player will be created in calling controller (selectPlayers)
             self.dismiss(playerDetail: self.playerDetail)
@@ -124,6 +112,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
             self.getCloudPlayerDetails()
         case .downloaded:
             // No further action required
+            self.playerDetail.tempEmail = nil
             self.dismiss(playerDetail: self.playerDetail)
         default:
             break
@@ -151,10 +140,8 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
         // Setup default colors (previously done in StoryBoard)
         self.defaultViewColors()
 
-        // Store email on entry
-        emailOnEntry = playerDetail.email
-        
-        // Setup player header fields
+        // Setup player header fields and sections
+        self.setupSections()
         self.setupHeaderFields()
                
         tableView.contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 20.0, right: 0.0)
@@ -193,25 +180,25 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
     // MARK: - TableView Overrides ===================================================================== -
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        if mode != .create {
-            return Sections.allCases.count
-        } else {
-            return 1
-        }
+        return self.sections
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var rows: Int
         
-        switch Sections(rawValue: section)! {
-        case .uniqueID:
+        switch section {
+        case uniqueIDSection:
             rows = UniqueIdOptions.allCases.count
-        case .lastPlayed:
+        case deleteSection:
+            rows = DeleteOptions.allCases.count
+        case lastPlayedSection:
             rows = LastPlayedOptions.allCases.count
-        case .records:
+        case recordsSection:
             rows = RecordsOptions.allCases.count - (self.settings.bonus2 ? 0 : 1)
-        case .stats:
+        case statsSection:
             rows = StatsOptions.allCases.count
+        default:
+            rows = 0
         }
         return rows
     }
@@ -219,9 +206,11 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         var height: CGFloat
         
-        switch Sections(rawValue: section)! {
-        case .uniqueID:
+        switch section {
+        case uniqueIDSection:
             height = 20.0
+        case deleteSection:
+            height = 0.0
         default:
             height = (ScorecardUI.landscapePhone() ? 30.0 : 50.0)
         }
@@ -229,40 +218,36 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        var header: PlayerDetailHeaderFooterView?
+        var header: PlayerDetailHeaderFooterView?        
+        var text = ""
         
-        if let section = Sections(rawValue: section) {
-            var reuseIdentifier = "Header"
-            var text: String
-            
-            switch section {
-            case .uniqueID:
-                reuseIdentifier = "Header Error"
-                switch mode! {
-                case .download:
-                   text = "Unique ID of player to download"
-                default:
-                    text = "Unique ID - E.g. email"
-                }
-            case .lastPlayed:
-                text = "Last played:"
-            case .records:
-                text = "Personal records:"
-            case .stats:
-                text = "Personal statistics:"
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Header") as! PlayerDetailCell
+        
+        // Setup default colors (previously done in StoryBoard)
+        self.defaultCellColors(cell: cell)
+        
+        switch section {
+        case uniqueIDSection:
+            switch mode! {
+            case .download:
+                text = "Unique ID of player to download"
+            default:
+                text = "Unique ID - E.g. email"
             }
-            let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier) as! PlayerDetailCell
-            // Setup default colors (previously done in StoryBoard)
-            self.defaultCellColors(cell: cell)
-            
-            cell.headerLabel.text = text
-            cell.headerErrorLabel?.text = ""
-            header = PlayerDetailHeaderFooterView(cell)
-                        
-            if section == .uniqueID {
-                self.emailErrorLabel = cell.headerErrorLabel
-            }
+        case lastPlayedSection:
+            text = "Last played:"
+        case recordsSection:
+            text = "Personal records:"
+        case statsSection:
+            text = "Personal statistics:"
+        default:
+            break
         }
+        
+        cell.headerLabel.text = text
+        
+        header = PlayerDetailHeaderFooterView(cell)
+        
         return header
     }
     
@@ -270,15 +255,13 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
         var height: CGFloat
         let landscape = ScorecardUI.landscapePhone()
         
-        switch Sections(rawValue: indexPath.section)! {
-        case .uniqueID:
-            switch UniqueIdOptions(rawValue: indexPath.row)! {
+        switch indexPath.section {
+        case deleteSection:
+            switch DeleteOptions(rawValue: indexPath.row)! {
             case .deletePlayer:
                 height = (landscape ? 30.0 : 40.0)
-            default:
-                height = 20.0
             }
-        case .stats:
+        case statsSection:
             switch StatsOptions(rawValue: indexPath.row)! {
             case .total:
                 height = 40.0
@@ -295,15 +278,15 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell: PlayerDetailCell!
         
-        switch Sections(rawValue: indexPath.section)! {
-        case .uniqueID:
+        switch indexPath.section {
+        case uniqueIDSection:
             switch UniqueIdOptions(rawValue: indexPath.row)! {
             case .uniqueID:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Unique ID", for: indexPath) as? PlayerDetailCell
                 // Setup default colors (previously done in StoryBoard)
                 self.defaultCellColors(cell: cell)
                 
-                cell.uniqueIdField.text = playerDetail.email
+                cell.uniqueIdField.text = playerDetail.tempEmail
                 cell.uniqueIdField.tag = self.emailFieldTag
                 cell.uniqueIdField.isSecureTextEntry = (self.mode != .create && self.mode != .download && self.mode != .downloaded)
                 cell.uniqueIdField.attributedPlaceholder = NSAttributedString(string: "Unique identifier - must not be blank", attributes:[NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15.0, weight: .thin)])
@@ -315,7 +298,10 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
                 if mode == .download {
                     cell.uniqueIdField.becomeFirstResponder()
                 }
-                
+            }
+            
+        case deleteSection:
+            switch DeleteOptions(rawValue: indexPath.row)! {
             case .deletePlayer:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Action Button", for: indexPath) as? PlayerDetailCell
                 // Setup default colors (previously done in StoryBoard)
@@ -328,7 +314,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
                 }
             }
             
-        case .lastPlayed:
+        case lastPlayedSection:
             switch LastPlayedOptions(rawValue: indexPath.row)! {
             case .lastPlayed:
                 cell = tableView.dequeueReusableCell(withIdentifier: "Single", for: indexPath) as? PlayerDetailCell
@@ -344,7 +330,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
                 }
             }
             
-        case .records:
+        case recordsSection:
             cell = tableView.dequeueReusableCell(withIdentifier: "Record", for: indexPath) as? PlayerDetailCell
             // Setup default colors (previously done in StoryBoard)
             self.defaultCellColors(cell: cell)
@@ -374,8 +360,8 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
                 
             case .winStreak:
                 cell.recordDescLabel.text = "Win streak"
-                if let playerMO = playerDetail.playerMO, let email = playerMO.email {
-                    let streaks = History.getWinStreaks(playerEmailList: [email])
+                if let playerMO = playerDetail.playerMO, let playerUUID = playerMO.playerUUID {
+                    let streaks = History.getWinStreaks(playerUUIDList: [playerUUID])
                     if streaks.first?.streak ?? 0 == 0 {
                         cell?.recordValueLabel.text = "0"
                         cell?.recordDateLabel.text = ""
@@ -404,7 +390,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
                 }
             }
             
-        case .stats:
+        case statsSection:
             cell = tableView.dequeueReusableCell(withIdentifier: "Stat", for: indexPath) as? PlayerDetailCell
             // Setup default colors (previously done in StoryBoard)
             self.defaultCellColors(cell: cell)
@@ -475,6 +461,8 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
                     cell.statValueLabel2.text = ""
                 }
             }
+        default:
+            break
         }
              
         let backgroundView = UIView()
@@ -485,12 +473,12 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
     }
     
     internal func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        switch Sections(rawValue: indexPath.section)! {
-        case .records:
+        switch indexPath.section {
+        case recordsSection:
             let record = RecordsOptions(rawValue: indexPath.row)!
             if record == .winStreak {
             // Win streak - special case
-                _ = HistoryViewer(from: self, winStreakPlayer: self.playerDetail.email)
+                _ = HistoryViewer(from: self, winStreakPlayer: self.playerDetail.playerUUID)
             } else {
                 var highScoreType: HighScoreType?
                 switch record {
@@ -504,7 +492,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
                     break
                 }
                 if let highScoreType = highScoreType {
-                    let participantMO = History.getHighScores(type: highScoreType, limit: 1, playerEmailList: [playerDetail.email])
+                    let participantMO = History.getHighScores(type: highScoreType, limit: 1, playerUUIDList: [playerDetail.playerUUID])
                 
                     if participantMO.count > 0 {
                         let history = History(gameUUID: participantMO[0].gameUUID, getParticipants: true)
@@ -535,9 +523,11 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
             playerDetail.name = textField.text!
             playerDetail.nameDate = Date()
         case self.emailFieldTag:
-            // Email
-            playerDetail.email = textField.text!
-            playerDetail.emailDate = Date()
+            // Email / unique ID
+            playerDetail.tempEmail = textField.text!
+            if self.mode == .create {
+                playerDetail.emailDate = Date()
+            }
         default:
             break
         }
@@ -601,7 +591,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
         self.cloudAlertController = UIAlertController(title: title, message: "Downloading player from Cloud\n\n\n\n", preferredStyle: .alert)
         
         self.sync.delegate = self
-        if self.sync.synchronise(syncMode: .syncGetPlayerDetails, specificEmail: [playerDetail.email], waitFinish: false) {
+        if self.sync.synchronise(syncMode: .syncGetPlayerDetails, specificEmail: playerDetail.tempEmail, waitFinish: false) {
             
             //add the activity indicator as a subview of the alert controller's view
             self.cloudIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 0, y: 100,
@@ -637,12 +627,15 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
         }
     }
     
-    internal func syncReturnPlayers(_ playerList: [PlayerDetail]!) {
+    internal func syncReturnPlayers(_ playerList: [PlayerDetail]!, _ thisPlayerUUID: String?) {
         
         Utility.mainThread {
+            
             self.cloudAlertController.dismiss(animated: true, completion: {
                 if playerList != nil && playerList.count > 0 {
+                    let email = self.playerDetail.tempEmail
                     self.playerDetail = playerList[0]
+                    self.playerDetail.tempEmail = email
                     self.mode = .downloaded
                     self.navigationBar.topItem?.title = self.playerDetail.name
                     self.footerPaddingView.backgroundColor = Palette.background
@@ -668,13 +661,15 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
         var invalid: Bool
         
         let duplicateName = Scorecard.shared.isDuplicateName(playerDetail)
-        let duplicateEmail = Scorecard.shared.isDuplicateEmail(playerDetail)
+        let duplicatePlayerUUID = Scorecard.shared.isDuplicatePlayerUUID(playerDetail)
         
         switch mode! {
         case .amend, .create:
-            invalid = duplicateName || duplicateEmail || playerDetail.name == "" || playerDetail.email == ""
+            invalid = duplicateName || duplicatePlayerUUID || playerDetail.name == "" || playerDetail.tempEmail ?? "" == ""
         case .download:
-            invalid = (playerDetail.email == "" || duplicateEmail)
+            invalid = (playerDetail.tempEmail ?? "" == "" || duplicatePlayerUUID)
+        case .downloaded:
+            invalid = duplicatePlayerUUID
         default:
             invalid = false
         }
@@ -699,7 +694,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
             actionButton.isHidden = invalid
             actionButton.setTitle("Check", for: .normal)
         case .downloaded:
-            actionButton.isHidden = false
+            actionButton.isHidden = invalid
             actionButton.setTitle("Add", for: .normal)
         default:
             actionButton.isHidden = true
@@ -712,22 +707,37 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
             self.addImageLabel.isHidden = true
         }
         
-        self.playerErrorLabel.text = (duplicateName ? "Duplicate not allowed" : "")
+        self.playerErrorLabel.text = (duplicateName || duplicatePlayerUUID ? "Duplicate not allowed" : "")
         
-        self.emailErrorLabel?.text = (duplicateEmail ? (mode == .download ? "Already on device" : "Duplicate not allowed") : "")
     }
     
     // MARK: - Utility Routines ======================================================================== -
 
+    private func setupSections() {
+        self.sections = 0
+        if self.mode == .download || self.mode == .downloaded || self.mode == .create {
+            uniqueIDSection = self.sections
+            self.sections += 1
+        }
+        deleteSection = self.sections
+        self.sections += 1
+        if self.mode != .create {
+            lastPlayedSection = self.sections
+            self.sections += 1
+            recordsSection = self.sections
+            self.sections += 1
+            statsSection = self.sections
+            self.sections += 1
+        }
+    }
+    
     func setupHeaderFields() {
         navigationBar.topItem?.title = playerDetail.name
         switch self.mode! {
         case .create:
-            // Smaller input
             navigationBar.topItem?.title = "New Player"
             
         case .download:
-            // Switch name and email
             navigationBar.topItem?.title = "Download"
         
         default:
@@ -767,7 +777,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
     
     func checkDeletePlayer() {
         var alertController: UIAlertController
-        alertController = UIAlertController(title: "Warning", message: "This will remove the player \n'\(playerDetail.name)'\nfrom this device.\n\nIf you are synchronising with iCloud the player will still be available to download in future.\n Otherwise this will remove their details permanently.\n\n Are you sure you want to do this?", preferredStyle: UIAlertController.Style.alert)
+        alertController = UIAlertController(title: "Warning", message: "This will remove the player \n'\(playerDetail.name)'\nfrom this device.\n\nIf you have synchronised with iCloud the player will still be available to download in future.\n Otherwise this will remove their details permanently.\n\n Are you sure you want to do this?", preferredStyle: UIAlertController.Style.alert)
         
         alertController.addAction(UIAlertAction(title: "Confirm", style: UIAlertAction.Style.default,
                                                 handler: { (action:UIAlertAction!) -> Void in
@@ -787,21 +797,6 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel, handler:nil))
         present(alertController, animated: true, completion: nil)
-    }
-    
-    func warnEmailChanged(completion: (()->())? = nil) {
-        if self.playerDetail.name != "" && self.emailOnEntry != "" && self.emailOnEntry != self.playerDetail.email {
-            self.alertDecision("If you change a player's unique ID this will separate them from their game history. Essentially this is the same as deleting the player and creating a new one.\n\nAre you sure you want to do this?", title: "Warning",
-            okHandler: {
-                completion?()
-                self.dismiss(playerDetail: self.playerDetail)
-            },
-            cancelHandler: {
-            })
-        } else {
-            completion?()
-            self.dismiss(playerDetail: self.playerDetail)
-        }
     }
     
     // MARK: - method to show this view controller ============================================================================== -
@@ -836,7 +831,6 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
 
 class PlayerDetailCell: UITableViewCell {
     @IBOutlet weak var headerLabel: UILabel!
-    @IBOutlet weak var headerErrorLabel: UILabel!
     @IBOutlet weak var uniqueIdField: UITextField!
     @IBOutlet weak var actionButton: AngledButton!
     @IBOutlet weak var singleLabel: UILabel!
@@ -884,6 +878,7 @@ extension PlayerDetailViewController {
 
     private func defaultViewColors() {
 
+        self.footerPaddingView.backgroundColor = Palette.background
         self.actionButton.setTitleColor(Palette.bannerText, for: .normal)
         self.addImageLabel.textColor = Palette.bannerText
         self.finishButton.setTitleColor(Palette.bannerText, for: .normal)
@@ -897,6 +892,7 @@ extension PlayerDetailViewController {
     }
 
     private func defaultCellColors(cell: PlayerDetailCell) {
+        cell.backgroundColor = Palette.background
         switch cell.reuseIdentifier {
         case "Action Button":
             cell.actionButton.setTitleColor(Palette.text, for: .normal)
@@ -904,9 +900,6 @@ extension PlayerDetailViewController {
             cell.actionButton.strokeColor = Palette.disabled
             cell.separator.backgroundColor = Palette.disabled
         case "Header":
-            cell.headerLabel.textColor = Palette.textEmphasised
-        case "Header Error":
-            cell.headerErrorLabel.textColor = Palette.textError
             cell.headerLabel.textColor = Palette.textEmphasised
         case "Record":
             cell.recordDateLabel.textColor = Palette.text
@@ -929,8 +922,6 @@ extension PlayerDetailViewController {
     private func defaultCellColors(cell: UICollectionViewCell) {
         switch cell.reuseIdentifier {
         case "Header":
-            cell.backgroundColor = Palette.background
-        case "Header Error":
             cell.backgroundColor = Palette.background
         default:
             break

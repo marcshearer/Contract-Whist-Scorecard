@@ -23,9 +23,9 @@ class LoopbackService: NSObject, CommsServiceDelegate, CommsHostServiceDelegate,
     public var handlerState: CommsServiceState = .notStarted
     public var connections = 0
     public var connectionUUID: String?
-    public var connectionEmail: String?
+    public var connectionPlayerUUID: String?
     public var connectionRemoteDeviceName: String?
-    public var connectionRemoteEmail: String?
+    public var connectionRemotePlayerUUID: String?
     
     // Delegates
     public weak var browserDelegate: CommsBrowserDelegate!
@@ -59,10 +59,10 @@ class LoopbackService: NSObject, CommsServiceDelegate, CommsHostServiceDelegate,
         self.init(mode: mode, type: .server, serviceID: serviceID, deviceName: deviceName, purpose: purpose)
     }
     
-    public func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool, matchGameUUID: String!) {
-        self.myPeer = LoopbackPeer(parent: self, deviceName: self.connectionRemoteDeviceName!, playerEmail: email, playerName: name)
+    public func start(playerUUID: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool, matchGameUUID: String!) {
+        self.myPeer = LoopbackPeer(parent: self, deviceName: self.connectionRemoteDeviceName!, playerUUID: playerUUID, playerName: name)
         
-        self.connectionEmail = email
+        self.connectionPlayerUUID = playerUUID
         
         // Add myself to the shared peer list
         LoopbackService.peerList[self.myPeer.deviceName] = LoopbackDelegates(peer: self.myPeer , connectionDelegate: self.connectionDelegate, stateDelegate: self.stateDelegate, dataDelegate: self.dataDelegate, loopbackServiceDelegate: self)
@@ -78,7 +78,7 @@ class LoopbackService: NSObject, CommsServiceDelegate, CommsHostServiceDelegate,
         // Not implemented
     }
 
-    public func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, context: [String : String]? = nil, reconnect: Bool) -> Bool {
+    public func connect(to commsPeer: CommsPeer, playerUUID: String?, playerName: String?, context: [String : String]? = nil, reconnect: Bool) -> Bool {
         if let loopbackDelegates = LoopbackService.peerList[commsPeer.deviceName] {
             
             // Add to local list of connected peers
@@ -114,11 +114,11 @@ class LoopbackService: NSObject, CommsServiceDelegate, CommsHostServiceDelegate,
         }
     }
     
-    public func send(_ descriptor: String, _ dictionary: Dictionary<String, Any?>!, to commsPeer: CommsPeer?, matchEmail: String?) {
+    public func send(_ descriptor: String, _ dictionary: Dictionary<String, Any?>!, to commsPeer: CommsPeer?, matchPlayerUUID: String?) {
         
         for (deviceName, commsPeer) in self.connectionList {
             if commsPeer.deviceName == deviceName {
-                if matchEmail == nil || matchEmail == commsPeer.playerEmail {
+                if matchPlayerUUID == nil || matchPlayerUUID == commsPeer.playerUUID {
                     // Want to send message to this peer
                     if let lookbackDelegates = LoopbackService.peerList[deviceName] {
                         lookbackDelegates.dataDelegate?.didReceiveData(descriptor: descriptor, data: dictionary, from: self.myPeer.commsPeer)
@@ -194,22 +194,22 @@ class LoopbackService: NSObject, CommsServiceDelegate, CommsHostServiceDelegate,
 class LoopbackPeer {
     
     public let parent: CommsServiceDelegate
-    public var playerEmail: String?
+    public var playerUUID: String?
     public var playerName: String?
     public var state: CommsConnectionState
     public let deviceName: String
     
-    init(parent: CommsServiceDelegate, deviceName: String, playerEmail: String? = "", playerName: String? = "") {
+    init(parent: CommsServiceDelegate, deviceName: String, playerUUID: String? = "", playerName: String? = "") {
         self.parent = parent
         self.deviceName = deviceName
-        self.playerEmail = playerEmail
+        self.playerUUID = playerUUID
         self.playerName = playerName
         self.state = .notConnected
     }
     
     public var commsPeer: CommsPeer {
         get {
-            return CommsPeer(parent: self.parent, deviceName: self.deviceName, playerEmail: self.playerEmail, playerName: self.playerName, state: self.state, reason: "")
+            return CommsPeer(parent: self.parent, deviceName: self.deviceName, playerUUID: self.playerUUID, playerName: self.playerName, state: self.state, reason: "")
         }
     }
     

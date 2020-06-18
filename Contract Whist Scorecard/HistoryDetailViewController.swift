@@ -156,7 +156,7 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
             Palette.normalStyle(cell.totalScore)
             Palette.normalStyle(cell.handsMade)
             Palette.normalStyle(cell.otherValue)
-            if Scorecard.shared.findPlayerByEmail(gameDetail.participant[playerNumber-1].participantMO.email!) == nil {
+            if Scorecard.shared.findPlayerByPlayerUUID(gameDetail.participant[playerNumber-1].participantMO.playerUUID!) == nil {
                 // Player not on device - grey them out
                 let grayedOut = Palette.text.withAlphaComponent(0.3)
                 cell.name.textColor = UIColor.lightGray
@@ -354,7 +354,7 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
         }
         message = message + ". " + winner + " won with a score of \(winningScore)."
         
-        highScores = History.getHighScores(type: .totalScore, playerEmailList: Scorecard.shared.playerEmailList(getPlayerMode: .getAll))
+        highScores = History.getHighScores(type: .totalScore, playerUUIDList: Scorecard.shared.playerUUIDList(getPlayerMode: .getAll))
         
         if winningScore == highScores[0].totalScore {
             message = message + " This was a new high score! Congratulations \(winner)."

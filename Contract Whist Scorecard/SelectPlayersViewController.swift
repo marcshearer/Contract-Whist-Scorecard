@@ -27,10 +27,10 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
     private var selection: [Bool] = []
     private var playerList: [PlayerDetail] = []
     private var selected = 0
-    private var completion: ((Int?, [PlayerDetail]?, [Bool]?)->())? = nil
+    private var completion: ((Int?, [PlayerDetail]?, [Bool]?, String?)->())? = nil
  
     // Properties to pass state 
-    private var specificEmail = ""
+    private var specificEmail: String?
     private var descriptionMode: DescriptionMode = .none
     private var actionText = ""
     private var backText = "Back"
@@ -42,6 +42,7 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
     // Local class variables
     private var combinedPlayerList: [Int : [PlayerDetail]] = [:]
     private var combinedSelection: [Int : [Bool]] = [:]
+    private var thisPlayerUUID: String?
     private var selectedPlayerHexagonView: [Int: HexagonView] = [:]
     private var selectedPlayer: IndexPath!
     private var syncStarted = false
@@ -80,7 +81,7 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
         self.sync?.stop()
         
         // Return to calling program
-        self.dismiss(selected: self.selected, playerList: self.playerList, selection: self.selection)
+        self.dismiss(selected: self.selected, playerList: self.playerList, selection: self.selection, thisPlayerUUID: self.thisPlayerUUID)
         
     }
     
@@ -374,11 +375,7 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
             self.sync?.delegate = self
             
             // Get related players from cloud
-            if self.specificEmail != "" {
-                _ = self.sync?.synchronise(syncMode: .syncGetPlayers, specificEmail: [self.specificEmail], waitFinish: true)
-            } else {
-                _ = self.sync?.synchronise(syncMode: .syncGetPlayers, waitFinish: true)
-            }
+            _ = self.sync?.synchronise(syncMode: .syncGetPlayers, specificEmail: self.specificEmail, waitFinish: true)
         }
         
         sync = Sync()
@@ -437,13 +434,13 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
         }
     }
     
-    internal func syncReturnPlayers(_ returnedList: [PlayerDetail]!) {
+    internal func syncReturnPlayers(_ returnedList: [PlayerDetail]!, _ thisPlayerUUID: String?) {
         
         syncComplete{
             self.syncFinished = true
             if returnedList != nil {
                 for playerDetail in returnedList {
-                    var index = Scorecard.shared.playerList.firstIndex(where: {($0.email == playerDetail.email)})
+                    var index = Scorecard.shared.playerList.firstIndex(where: {($0.playerUUID == playerDetail.playerUUID)})
                     if index == nil {
                         if self.combinedPlayerList[self.relatedPlayerSection]!.count == 0 {
                             // Replace status entry
@@ -464,6 +461,9 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
                                 self.tableView.insertRows(at: [IndexPath(row: index!, section: self.relatedPlayerSection)], with: .automatic)
                             })
                         }
+                    }
+                    if thisPlayerUUID != nil {
+                        self.thisPlayerUUID = thisPlayerUUID
                     }
                 }
             }
@@ -610,7 +610,7 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
             
             // Return to calling program
             self.dismiss(animated: true, completion: {
-                self.completion?(1, [playerDetail], [true])
+                self.completion?(1, [playerDetail], [true], nil)
             })
         }
     }
@@ -618,7 +618,7 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
     private func getOpponents(_ playerDetail: PlayerDetail) -> String {
         var result: String
         
-        let opponents = History.findOpponentNames(playerEmail: playerDetail.email)
+        let opponents = History.findOpponentNames(playerUUID: playerDetail.playerUUID)
         if opponents.count > 0 {
             result = "played " + Utility.toString(opponents)
         } else {
@@ -654,7 +654,7 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
     
     // MARK: - Function to show and dismiss this view  ============================================================================== -
     
-    public class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, specificEmail: String = "", descriptionMode: DescriptionMode = .none, backText: String = "Cancel", actionText: String = "Download", allowOtherPlayer: Bool = true, allowNewPlayer: Bool = true, saveToICloud: Bool = true, completion: ((Int?, [PlayerDetail]?, [Bool]?)->())? = nil) -> SelectPlayersViewController? {
+    public class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, specificEmail: String? = nil, descriptionMode: DescriptionMode = .none, backText: String = "Cancel", actionText: String = "Download", allowOtherPlayer: Bool = true, allowNewPlayer: Bool = true, saveToICloud: Bool = true, completion: ((Int?, [PlayerDetail]?, [Bool]?, String?)->())? = nil) -> SelectPlayersViewController? {
         
         let storyboard = UIStoryboard(name: "SelectPlayersViewController", bundle: nil)
         let selectPlayersViewController = storyboard.instantiateViewController(withIdentifier: "SelectPlayersViewController") as! SelectPlayersViewController
@@ -676,15 +676,15 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
         return selectPlayersViewController
     }
     
-    private func dismiss(selected: Int? = nil, playerList: [PlayerDetail]? = nil, selection: [Bool]? = nil)->() {
+    private func dismiss(selected: Int? = nil, playerList: [PlayerDetail]? = nil, selection: [Bool]? = nil, thisPlayerUUID: String? = nil)->() {
         self.dismiss(animated: true, completion: {
-            self.completion?(selected, playerList, selection)
+            self.completion?(selected, playerList, selection, thisPlayerUUID)
         })
     }
     
     override internal func didDismiss() {
         self.cancelAction()
-        self.completion?(0, [], [])
+        self.completion?(0, [], [], nil)
     }
     
     private func cancelAction() {

@@ -24,7 +24,6 @@
     <entity name="Participant" representedClassName="ParticipantMO" syncable="YES" codeGenerationType="class">
         <attribute name="datePlayed" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="deviceUUID" optional="YES" attributeType="String"/>
-        <attribute name="email" optional="YES" attributeType="String"/>
         <attribute name="excludeStats" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="gamesPlayed" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="gamesWon" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -35,6 +34,7 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="place" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="playerNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="playerUUID" optional="YES" attributeType="String"/>
         <attribute name="syncDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="syncRecordID" optional="YES" attributeType="String"/>
         <attribute name="totalScore" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
@@ -51,7 +51,6 @@
     <entity name="Player" representedClassName="PlayerMO" syncable="YES" codeGenerationType="class">
         <attribute name="dateCreated" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="datePlayed" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="email" optional="YES" attributeType="String"/>
         <attribute name="emailDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="externalId" optional="YES" attributeType="String"/>
         <attribute name="gamesPlayed" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
@@ -67,6 +66,7 @@
         <attribute name="maxTwosDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="nameDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="playerUUID" optional="YES" attributeType="String"/>
         <attribute name="syncDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="syncGamesPlayed" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="syncGamesWon" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -76,6 +76,7 @@
         <attribute name="syncRecordID" optional="YES" attributeType="String"/>
         <attribute name="syncTotalScore" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="syncTwosMade" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="tempEmail" optional="YES" attributeType="String"/>
         <attribute name="thumbnail" optional="YES" attributeType="Binary"/>
         <attribute name="thumbnailDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="totalScore" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
@@ -88,6 +89,6 @@
     <elements>
         <element name="Game" positionX="0" positionY="0" width="128" height="225"/>
         <element name="Participant" positionX="0" positionY="0" width="128" height="300"/>
-        <element name="Player" positionX="0" positionY="0" width="128" height="523"/>
+        <element name="Player" positionX="0" positionY="0" width="128" height="538"/>
     </elements>
 </model>

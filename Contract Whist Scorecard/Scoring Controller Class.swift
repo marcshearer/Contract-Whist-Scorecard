@@ -316,11 +316,11 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
     
     // MARK: - Controller player overrides =========================================================== -
     
-    func currentPlayers() -> [(email: String, name: String, connected: Bool)]? {
-        var players: [(email: String, name: String, connected: Bool)]?
+    func currentPlayers() -> [(playerUUID: String, name: String, connected: Bool)]? {
+        var players: [(playerUUID: String, name: String, connected: Bool)]?
         
         if !Scorecard.game.inProgress {
-            players = self.selectedPlayers!.map { (email: $0.email!, name: $0.name!, connected: true ) }
+            players = self.selectedPlayers!.map { (playerUUID: $0.playerUUID!, name: $0.name!, connected: true ) }
         }
         
         return players
@@ -399,7 +399,7 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
     }
     
     internal func gamePreview(moved playerMO: PlayerMO, to slot: Int) {
-        if let currentSlot = self.playerIndexFor(email: playerMO.email) {
+        if let currentSlot = self.playerIndexFor(playerUUID: playerMO.playerUUID) {
             let keepPlayer = self.selectedPlayers[slot]
             self.selectedPlayers[slot] = self.selectedPlayers[currentSlot]
             self.selectedPlayers[currentSlot] = keepPlayer
@@ -431,8 +431,8 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
     
     // MARK: - Utility Routines ======================================================================== -
         
-    private func playerIndexFor(email: String?) -> Int? {
-         return self.selectedPlayers.firstIndex(where: {$0.email == email})
+    private func playerIndexFor(playerUUID: String?) -> Int? {
+         return self.selectedPlayers.firstIndex(where: {$0.playerUUID == playerUUID})
     }
     
     private func setupPlayers() {

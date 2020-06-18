@@ -50,7 +50,8 @@ extension Contract_Whist_Scorecard_UI_Tests {
         }
     }
     
-    func createNewPlayer(name: String, email: String) {
+    func createNewPlayer(name: String, playerUUID: String) {
+        // TODO Need to change this back to email from playerUUID
         // Assumes you are in the player selection screen
         self.tap(app.collectionViews.staticTexts["Add"])
         self.tap(app.sheets.buttons["Create player manually"])
@@ -58,7 +59,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         let nameTextField = app.tables.textFields["Player name - Must not be blank"]
         self.typeText(nameTextField, name)
         let uniqueIdentifierTextField = app.tables.textFields["Unique identifier - Must not be blank"]
-        self.typeText(uniqueIdentifierTextField, email)
+        self.typeText(uniqueIdentifierTextField, playerUUID)
         // Create it
         self.tap(app.navigationBars["New Player"].buttons["Create"])
     }

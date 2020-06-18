@@ -20,8 +20,8 @@ class Recovery {
     public var onlineProximity: CommsConnectionProximity!
     public var onlineMode: CommsConnectionMode!
     public var connectionUUID: String!
-    public var connectionEmail: String!
-    public var connectionRemoteEmail: String!
+    public var connectionPlayerUUID: String!
+    public var connectionRemotePlayerUUID: String!
     public var connectionRemoteDeviceName: String!
     public var reloadInProgress = false
     
@@ -56,8 +56,8 @@ class Recovery {
                         }
                     }
                     UserDefaults.standard.set(delegate.connectionRemoteDeviceName, forKey: "recoveryConnectionRemoteDevice")
-                    UserDefaults.standard.set(delegate.connectionEmail, forKey: "recoveryConnectionEmail")
-                    UserDefaults.standard.set(delegate.connectionRemoteEmail, forKey: "recoveryConnectionRemoteEmail")
+                    UserDefaults.standard.set(delegate.connectionPlayerUUID, forKey: "recoveryConnectionPlayerUUID")
+                    UserDefaults.standard.set(delegate.connectionRemotePlayerUUID, forKey: "recoveryConnectionRemotePlayerUUID")
                 }
             }
         }
@@ -169,11 +169,11 @@ class Recovery {
                     }
                 }
                 self.connectionRemoteDeviceName = UserDefaults.standard.string(forKey: "recoveryConnectionRemoteDevice")
-                self.connectionEmail = UserDefaults.standard.string(forKey: "recoveryConnectionEmail")
-                self.connectionRemoteEmail = UserDefaults.standard.string(forKey: "recoveryConnectionRemoteEmail")
+                self.connectionPlayerUUID = UserDefaults.standard.string(forKey: "recoveryConnectionPlayerUUID")
+                self.connectionRemotePlayerUUID = UserDefaults.standard.string(forKey: "recoveryConnectionRemotePlayerUUID")
             } else {
                 self.connectionUUID = nil
-                self.connectionEmail = nil
+                self.connectionPlayerUUID = nil
                 self.connectionRemoteDeviceName = nil
             }
         } else {
@@ -181,7 +181,7 @@ class Recovery {
             self.onlineType = nil
             self.onlineProximity = nil
             self.connectionUUID = nil
-            self.connectionEmail = nil
+            self.connectionPlayerUUID = nil
             self.connectionRemoteDeviceName = nil
         }
     }

@@ -93,7 +93,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 // Remote device wants a refresh of the current state
                 Scorecard.shared.sendScoringState(from: self.commsPlayerDelegate, to: commsPeer)
             case "requestThumbnail":
-                self.sendPlayerThumbnail(playerEmail: data!["email"] as! String, to: commsPeer)
+                self.sendPlayerThumbnail(playerUUID: data!["playerUUID"] as! String, to: commsPeer)
             case "testConnection":
                 self.commsDelegate?.send("testResponse", nil, to: commsPeer)
                 Utility.getActiveViewController()?.alertMessage("Connection test received from \(commsPeer.playerName!).\nResponse sent", title: "Connection Test")
@@ -218,7 +218,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             for playerNumber in 1...players.count {
                 var player: [String : String] = [:]
                 player["name"] = players[playerNumber - 1].name
-                player["email"] = players[playerNumber - 1].email
+                player["playerUUID"] = players[playerNumber - 1].playerUUID
                 player["connected"] = (players[playerNumber - 1].connected ? "true" : "false")
                 playerList["\(playerNumber)"] = player
             }
@@ -229,7 +229,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 var player: [String : String] = [:]
                 let playerMO = Scorecard.game.player(enteredPlayerNumber: playerNumber).playerMO!
                 player["name"] = playerMO.name!
-                player["email"] = playerMO.email!
+                player["playerUUID"] = playerMO.playerUUID!
                 player["connected"] = "true"
                 playerList["\(playerNumber)"] = player
             }
@@ -680,15 +680,15 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         }
     }
     
-    public func requestPlayerThumbnail(from commsPeer: CommsPeer, playerEmail: String) {
-        self.commsDelegate?.send("requestThumbnail", ["email" : playerEmail], to: commsPeer)
+    public func requestPlayerThumbnail(from commsPeer: CommsPeer, playerUUID: String) {
+        self.commsDelegate?.send("requestThumbnail", ["playerUUID" : playerUUID], to: commsPeer)
     }
     
-    public func sendPlayerThumbnail(playerEmail: String, to commsPeer: CommsPeer) {
-        if let playerMO = self.findPlayerByEmail(playerEmail) {
+    public func sendPlayerThumbnail(playerUUID: String, to commsPeer: CommsPeer) {
+        if let playerMO = self.findPlayerByPlayerUUID(playerUUID) {
             if playerMO.thumbnail != nil {
                 let imageData = playerMO.thumbnail?.base64EncodedString(options: [])
-                self.commsDelegate?.send("thumbnail", [ "email" : playerEmail,
+                self.commsDelegate?.send("thumbnail", [ "playerUUID" : playerUUID,
                                                         "image" : imageData,
                                                         "date"  : Utility.dateString(playerMO.thumbnailDate! as Date,
                                                                                      localized: false)],

@@ -90,6 +90,9 @@ class Scorecard {
         
     // Core data variables
     public var playerList:[PlayerMO] = []
+    public var playerEmails: [String:String] = [:]  // Downloaded on player sync, but not guaranteed to be in place
+                                                    // These should NEVER be saved on local disk, just used to
+                                                    // avoid duplicates
     
     // Network state
     public var isLoggedIn = false
@@ -173,17 +176,17 @@ class Scorecard {
         return playerDetailList
     }
     
-    public func playerEmailList(getPlayerMode: GetPlayerMode = .getAll, cutoffDate: Date! = nil, specificEmail: [String] = []) -> [String] {
-        var playerEmailList: [String] = []
+    public func playerUUIDList(getPlayerMode: GetPlayerMode = .getAll, cutoffDate: Date! = nil, specificPlayerUUIDs: [String] = []) -> [String] {
+        var playerUUIDList: [String] = []
         var include = false
         
         for playerMO in self.playerList {
             
-            if playerMO.email != nil && playerMO.email! != "" {
+            if playerMO.playerUUID != nil && playerMO.playerUUID! != "" {
                 
                 include = true
-                if specificEmail.count != 0 {
-                    if specificEmail.firstIndex(where: {($0 == playerMO.email)}) == nil {
+                if specificPlayerUUIDs.count != 0 {
+                    if specificPlayerUUIDs.firstIndex(where: {($0 == playerMO.playerUUID)}) == nil {
                         include = false
                     }
                 }
@@ -201,12 +204,12 @@ class Scorecard {
                     }
                     
                     if include {
-                        playerEmailList.append(playerMO.email!)
+                        playerUUIDList.append(playerMO.playerUUID!)
                     }
                 }
             }
         }
-        return playerEmailList
+        return playerUUIDList
     }
     
     public func refreshPlayerDetailList(_ playerDetailList: [PlayerDetail]){
@@ -221,13 +224,22 @@ class Scorecard {
         return (index != nil)
     }
     
-    func isDuplicateEmail(_ playerDetail: PlayerDetail) -> Bool {
-        let index = self.playerList.firstIndex(where: {$0.email!.uppercased() == playerDetail.email.uppercased() && $0.objectID != playerDetail.objectID} )
-        return (index != nil)
+    func isDuplicatePlayerUUID(_ playerDetail: PlayerDetail) -> Bool {
+        var found = false
+        found = (self.playerList.first(where: {$0.playerUUID! == playerDetail.playerUUID && $0.objectID != playerDetail.objectID} ) != nil)
+        if !found && playerDetail.tempEmail != nil {
+            // Check temp email not duplicate
+            found = (self.playerList.first(where: {$0.tempEmail ?? "" != "" && $0.tempEmail!.uppercased() == playerDetail.tempEmail.uppercased() && $0.objectID != playerDetail.objectID} ) != nil)
+            if !found && Scorecard.shared.playerEmails.count > 0 {
+                // Or check temp email not in list of emails (not guaranteed to be up-to-date)
+                found = (self.playerEmails.first(where: {$0.value.uppercased() == playerDetail.tempEmail.uppercased()}) != nil)
+            }
+        }
+        return found
     }
     
-    func playerName(_ playerEmail: String) -> String {
-        let index = self.playerList.firstIndex(where: {$0.email!.uppercased() == playerEmail.uppercased()} )
+    func playerName(_ playerUUID: String) -> String {
+        let index = self.playerList.firstIndex(where: {$0.playerUUID!.uppercased() == playerUUID.uppercased()} )
         if index != nil {
             return playerList[index!].name!
         } else {
@@ -279,8 +291,8 @@ class Scorecard {
         
     }
         
-    public func findPlayerByEmail(_ email: String) -> PlayerMO? {
-        let index = self.playerList.firstIndex(where: {($0.email == email)})
+    public func findPlayerByPlayerUUID(_ playerUUID: String) -> PlayerMO? {
+        let index = self.playerList.firstIndex(where: {($0.playerUUID == playerUUID)})
         if index == nil {
             return nil
         } else {
@@ -288,8 +300,8 @@ class Scorecard {
         }
     }
 
-    public static func nameFromEmail(_ email: String) -> String? {
-        let playerList: [PlayerMO] = CoreData.fetch(from: "Player", filter: NSPredicate(format: "email = %@", email), sort: ("name", .ascending))
+    public static func nameFromPlayerUUID(_ playerUUID: String) -> String? {
+        let playerList: [PlayerMO] = CoreData.fetch(from: "Player", filter: NSPredicate(format: "playerUUID = %@", playerUUID), sort: ("name", .ascending))
         if playerList.count > 0 {
             return playerList[0].name
         } else {
@@ -508,8 +520,8 @@ class Scorecard {
     public class func descriptiveUUID(_ type: String) -> String {
         var result: String!
         if RabbitMQConfig.descriptiveIDs {
-            if let email = Scorecard.onlineEmail() {
-                if let name = Scorecard.nameFromEmail(email) {
+            if let playerUUID = Scorecard.onlinePlayerUUID() {
+                if let name = Scorecard.nameFromPlayerUUID(playerUUID) {
                     let dateString = Utility.dateString(Date(), format: "yyyy-MM-dd-hh-mm-ss", localized: false)
                     result = name + "-" + type + "-" + dateString
                 }
@@ -521,9 +533,9 @@ class Scorecard {
         return result
     }
     
-    public static func onlineEmail() -> String? {
-        let thisPlayerEmail = UserDefaults.standard.string(forKey: "thisPlayerEmail")
-        return (thisPlayerEmail == nil || thisPlayerEmail == "" ? nil : thisPlayerEmail)
+    public static func onlinePlayerUUID() -> String? {
+        let thisPlayerUUID = UserDefaults.standard.string(forKey: "thisPlayerUUID")
+        return (thisPlayerUUID == nil || thisPlayerUUID == "" ? nil : thisPlayerUUID)
     }
     
     public func updatePrefersStatusBarHidden(from viewController : UIViewController? = nil) {

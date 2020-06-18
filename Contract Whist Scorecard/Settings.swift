@@ -23,7 +23,7 @@ class Settings : Equatable {
     public var receiveNotifications = false
     public var allowBroadcast = true
     public var alertVibrate = true
-    public var thisPlayerEmail = ""
+    public var thisPlayerUUID = ""
     public var onlineGamesEnabled: Bool = false
     public var faceTimeAddress = ""
     public var prefersStatusBarHidden = true
@@ -33,7 +33,7 @@ class Settings : Equatable {
     
     public var saveStats: Bool = true           // Only used in a game (not saved) - initially set to same as saveHistory but can be overridden
         
-    private func setValue(_ value: Any?, forKey label: String) {
+    public func setValue(_ value: Any?, forKey label: String) {
         switch label {
         case "bonus2":
             self.bonus2 = value as! Bool
@@ -63,8 +63,8 @@ class Settings : Equatable {
             self.prefersStatusBarHidden = value as! Bool
         case "colorTheme":
             self.colorTheme = value as! String
-        case "thisPlayerEmail":
-            self.thisPlayerEmail = value as! String
+        case "thisPlayerUUID":
+            self.thisPlayerUUID = value as! String
         case "termsDate":
             self.termsDate = value as! Date?
         case "termsDevice":
@@ -73,6 +73,15 @@ class Settings : Equatable {
             self.saveStats = value as! Bool
         default:
             fatalError("Error setting settings value")
+        }
+    }
+    
+    public func value(forKey key: String) -> Any? {
+        let mirror = Mirror(reflecting: self)
+        if let child = mirror.children.first(where: { $0.label == key }) {
+            return child.value
+        } else {
+            return nil
         }
     }
     
@@ -160,7 +169,7 @@ class Settings : Equatable {
                 if pass == 1 {
                     idString = label
                 } else {
-                    idString = "\(Scorecard.deviceName)-\(label)"
+                    idString = "\(Scorecard.deviceName)+\(label)"
                 }
                 let recordID = CKRecord.ID(recordName: "Settings-\(idString)")
                 
@@ -221,7 +230,7 @@ class Settings : Equatable {
             }
         }
         // Save dummy entry for current players
-        saveRecord(label: "[players]", type: "[String]", value: Scorecard.shared.playerEmailList())
+        saveRecord(label: "[players]", type: "[String]", value: Scorecard.shared.playerUUIDList())
         
         let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
         let database = cloudContainer.privateCloudDatabase

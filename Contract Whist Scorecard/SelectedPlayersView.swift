@@ -626,10 +626,10 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
     
     // MARK: - Player View delegate handlers ======================================================================= -
     
-    internal func playerViewWasDroppedOn(_ playerView: PlayerView, from source: PlayerViewType, withEmail: String) {
+    internal func playerViewWasDroppedOn(_ playerView: PlayerView, from source: PlayerViewType, withPlayerUUID: String) {
         
         // Nothing to do here - pass on to delegate
-        if let playerMO = Scorecard.shared.playerList.first(where: { $0.email == withEmail }) {
+        if let playerMO = Scorecard.shared.playerList.first(where: { $0.playerUUID == withPlayerUUID }) {
             self.delegate?.selectedPlayersView?(wasDroppedOn: playerView.tag, from: source, playerMO: playerMO)
         }
         
@@ -650,10 +650,10 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
     
     // MARK: - Main drag/drop handling method ====================================================================== -
     
-    internal func selectedViewDropAction(dropLocation: CGPoint, source: PlayerViewType, withEmail: String) {
+    internal func selectedViewDropAction(dropLocation: CGPoint, source: PlayerViewType, withPlayerUUID: String) {
         
-        if let addedPlayerMO = Scorecard.shared.playerList.first(where: { $0.email == withEmail }) {
-            // Found the player from their email
+        if let addedPlayerMO = Scorecard.shared.playerList.first(where: { $0.playerUUID == withPlayerUUID }) {
+            // Found the player from their playerUUID
             
             if source == .selected {
                 // Moving a player in selected view - rotate all players in between
@@ -821,9 +821,9 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
                 if error == nil {
                     Utility.mainThread {
                         if let playerObject = playerObject as! PlayerObject? {
-                            if let playerEmail = playerObject.playerEmail, let source = playerObject.source {
+                            if let playerUUID = playerObject.playerUUID, let source = playerObject.source {
                                 let location = session.location(in: self.contentView)
-                                self.selectedViewDropAction(dropLocation: location, source: source, withEmail: playerEmail)
+                                self.selectedViewDropAction(dropLocation: location, source: source, withPlayerUUID: playerUUID)
                             }
                         }
                     }

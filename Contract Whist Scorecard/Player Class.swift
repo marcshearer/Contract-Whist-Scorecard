@@ -193,7 +193,7 @@ class Player {
                         self.participantMO?.localDateCreated = Date()
                         self.participantMO?.deviceUUID = UIDevice.current.identifierForVendor?.uuidString
                         self.participantMO?.name = self.playerMO?.name
-                        self.participantMO?.email = self.playerMO?.email
+                        self.participantMO?.playerUUID = self.playerMO?.playerUUID
                         self.participantMO?.playerNumber = Int16(self.scorecardPlayerNumber())
                     }
                     self.participantMO!.handsPlayed = Int16(Scorecard.game.rounds)

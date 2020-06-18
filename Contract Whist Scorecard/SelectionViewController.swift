@@ -461,7 +461,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     
     private func showThisPlayer() {
         if let thisPlayer = self.thisPlayer {
-            if let playerMO = Scorecard.shared.findPlayerByEmail(thisPlayer) {
+            if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(thisPlayer) {
                 var size: CGSize
                 let nameHeight: CGFloat = (self.showThisPlayerName ? 30.0 : 0.0)
                 self.lastPlayerMO = playerMO
@@ -550,7 +550,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
         // Setup form
         if self.selectionMode == .single {
             self.showThisPlayer()
-            if let playerMO = self.unselectedList.first(where: {$0!.email == self.thisPlayer}) {
+            if let playerMO = self.unselectedList.first(where: {$0!.playerUUID == self.thisPlayer}) {
                 self.removeUnselected(playerMO!, updateUnselectedCollection: false)
             }
         } else {
@@ -598,11 +598,11 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     
     private func defaultOnlinePlayers() {
         let host = self.selectedPlayersView.playerViews[0].playerMO
-        if host?.email != self.thisPlayer {
+        if host?.playerUUID != self.thisPlayer {
             for slot in 0..<Scorecard.shared.maxPlayers {
                 self.removeSelection(slot, updateUnselectedCollection: false, animate: false)
             }
-            self.addSelection(Scorecard.shared.findPlayerByEmail(self.thisPlayer!)!, toSlot: 0, updateUnselected: true, updateUnselectedCollection: false, animate: false)
+            self.addSelection(Scorecard.shared.findPlayerByPlayerUUID(self.thisPlayer!)!, toSlot: 0, updateUnselected: true, updateUnselectedCollection: false, animate: false)
         }
         // Don't allow change of host player
         self.selectedPlayersView.setEnabled(slot: 0, enabled: false)
@@ -807,7 +807,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
             if let playerMO = playerMO {
                 
                 // Add to available list and unselected list if not there already
-                if self.availableList.firstIndex(where: { $0.email! == newPlayerDetail.email } ) == nil {
+                if self.availableList.firstIndex(where: { $0.playerUUID! == newPlayerDetail.playerUUID } ) == nil {
                     
                     availableList.append(playerMO)
                     
@@ -924,17 +924,17 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
                 if error == nil {
                     Utility.mainThread {
                         if let playerObject = playerObject as! PlayerObject? {
-                            if let playerEmail = playerObject.playerEmail, let source = playerObject.source {
+                            if let playerUUID = playerObject.playerUUID, let source = playerObject.source {
                                 // Dropped on unselected view
                                 
                                 if source == .selected {
                                     // From selected area - remove it
-                                    if let index = self.selectedPlayersView.playerViews.firstIndex(where: { $0.playerMO?.email == playerEmail }) {
+                                    if let index = self.selectedPlayersView.playerViews.firstIndex(where: { $0.playerMO?.playerUUID == playerUUID }) {
                                         self.removeSelection(index)
                                     }
                                 } else if source == .unselected {
                                     // From unselected - add it
-                                    if let playerMO = self.availableList.first(where: { $0.email == playerEmail }) {
+                                    if let playerMO = self.availableList.first(where: { $0.playerUUID == playerUUID }) {
                                         self.addSelection(playerMO)
                                     }
                                 } else if source == .addPlayer {

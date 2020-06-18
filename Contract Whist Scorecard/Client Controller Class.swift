@@ -55,9 +55,9 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     private var checkInviteTimer: Timer!
     private var connectingTimer: Timer!
     
-    init(from parentViewController: ScorecardViewController, playerEmail: String, playerName: String, matchDeviceName: String?, matchProximity: CommsConnectionProximity?, matchGameUUID: String?) {
+    init(from parentViewController: ScorecardViewController, playerUUID: String, playerName: String, matchDeviceName: String?, matchProximity: CommsConnectionProximity?, matchGameUUID: String?) {
                 
-        self.thisPlayer = playerEmail
+        self.thisPlayer = playerUUID
         self.thisPlayerName = playerName
         self.matchDeviceName = matchDeviceName
         self.matchProximity = matchProximity
@@ -351,23 +351,23 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     for (playerNumberData, playerData) in data as! [String : [String : Any]] {
                         let playerNumber = Int(playerNumberData)!
                         let playerName = playerData["name"] as! String
-                        let playerEmail = playerData["email"] as! String
+                        let playerUUID = playerData["playerUUID"] as! String
                         let playerConnected = (playerData["connected"] as? String) ?? "true"
-                        var playerMO = Scorecard.shared.findPlayerByEmail(playerEmail)
+                        var playerMO = Scorecard.shared.findPlayerByPlayerUUID(playerUUID)
                         if playerMO == nil {
                             // Not found - need to create the player locally
                             let playerDetail = PlayerDetail()
                             playerDetail.name = playerName
-                            playerDetail.email = playerEmail
+                            playerDetail.playerUUID = playerUUID
                             playerDetail.dedupName()
                             playerMO = playerDetail.createMO()
-                            Scorecard.shared.requestPlayerThumbnail(from: peer, playerEmail: playerEmail)
+                            Scorecard.shared.requestPlayerThumbnail(from: peer, playerUUID: playerUUID)
                         }
-                        self.playerConnected[playerEmail] = (playerConnected == "true")
+                        self.playerConnected[playerUUID] = (playerConnected == "true")
                         Scorecard.game.player(enteredPlayerNumber: playerNumber).playerMO = playerMO
                         Scorecard.game.player(enteredPlayerNumber: playerNumber).saveMaxScore()
                         if self.purpose == .playing {
-                            if playerEmail == self.thisPlayer {
+                            if playerUUID == self.thisPlayer {
                                 self.thisPlayerNumber = playerNumber
                             }
                         }
@@ -405,10 +405,10 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     }
                     
                 case "thumbnail":
-                    let email = data!["email"] as! String
+                    let playerUUID = data!["playerUUID"] as! String
                     let thumbnail = data!["image"] as! String
                     let thumbnailDate = data!["date"] as! String
-                    if let playerMO = Scorecard.shared.findPlayerByEmail(email) {
+                    if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(playerUUID) {
                         _ = CoreData.update( updateLogic: {
                             playerMO.thumbnail = NSData(base64Encoded: thumbnail, options: []) as Data?
                             playerMO.thumbnailDate = Utility.dateFromString(thumbnailDate) as Date?
@@ -566,7 +566,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         self.controllerStateChange(to: .connecting)
         
         if self.thisPlayer != nil {
-            let playerMO = Scorecard.shared.findPlayerByEmail(self.thisPlayer)
+            let playerMO = Scorecard.shared.findPlayerByPlayerUUID(self.thisPlayer)
             playerName = playerMO?.name
         }
         
@@ -577,7 +577,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             context?["faceTimeAddress"] = faceTimeAddress!
         }
         
-        let success = self.clientService!.connect(to: peer, playerEmail: self.thisPlayer, playerName: playerName, context: context, reconnect: true)
+        let success = self.clientService!.connect(to: peer, playerUUID: self.thisPlayer, playerName: playerName, context: context, reconnect: true)
         if let availableFound = self.availableFor(peer: peer) {
             if success {
                 availableFound.lastConnect = Date()
@@ -791,7 +791,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     // MARK: - Game Preview Delegate handlers ================================================================ -
     
     internal func gamePreview(isConnected playerMO: PlayerMO) -> Bool {
-        return self.playerConnected[playerMO.email!] ?? true
+        return self.playerConnected[playerMO.playerUUID!] ?? true
     }
     
     // MARK: - Show/ refresh other views ======================================================================== -
@@ -833,7 +833,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         // Refresh online game invites
         Utility.mainThread { [unowned self] in
             if Scorecard.shared.onlineEnabled && (self.controllerState == .notConnected || self.controllerState == .reconnecting) {
-                self.onlineClientService?.checkOnlineInvites(email: self.thisPlayer)
+                self.onlineClientService?.checkOnlineInvites(playerUUID: self.thisPlayer)
             }
         }
     }
@@ -852,7 +852,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             self.nearbyClientService?.stateDelegate = self
             self.nearbyClientService?.dataDelegate = self
             self.nearbyClientService?.browserDelegate = self
-            self.nearbyClientService?.start(email: self.thisPlayer, name: self.thisPlayerName, recoveryMode: self.matchProximity != nil, matchDeviceName: self.matchDeviceName, matchGameUUID: self.matchGameUUID)
+            self.nearbyClientService?.start(playerUUID: self.thisPlayer, name: self.thisPlayerName, recoveryMode: self.matchProximity != nil, matchDeviceName: self.matchDeviceName, matchGameUUID: self.matchGameUUID)
         }
         
         // Create online comms service, take delegates and start listening
@@ -861,7 +861,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             self.onlineClientService?.stateDelegate = self
             self.onlineClientService?.dataDelegate = self
             self.onlineClientService?.browserDelegate = self
-            self.onlineClientService?.start(email: self.thisPlayer, name: self.thisPlayerName, recoveryMode: self.matchProximity != nil, matchDeviceName: self.matchDeviceName, matchGameUUID: self.matchGameUUID)
+            self.onlineClientService?.start(playerUUID: self.thisPlayer, name: self.thisPlayerName, recoveryMode: self.matchProximity != nil, matchDeviceName: self.matchDeviceName, matchGameUUID: self.matchGameUUID)
             self.startCheckInviteTimer()
         }
     }

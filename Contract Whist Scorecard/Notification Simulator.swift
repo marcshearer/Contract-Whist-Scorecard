@@ -25,27 +25,27 @@ class NotificationSimulator: CommsBroadcastDelegate {
         if RabbitMQConfig.uriDevMode != "" {
             self.onlineQueueService = CommsHandler.client(proximity: .online, mode: .queue, serviceID: "notification", deviceName: Scorecard.deviceName)
             self.onlineQueueService.broadcastDelegate = self
-            let filterEmail = Scorecard.onlineEmail()
-            self.onlineQueueService.start(queue: "notifications", filterEmail: filterEmail)
+            let filterPlayerUUID = Scorecard.onlinePlayerUUID()
+            self.onlineQueueService.start(queue: "notifications", filterPlayerUUID: filterPlayerUUID)
         }
     }
     
-    public class func sendNotifications(hostEmail: String, hostName: String, inviteEmails: [String]) {
+    public class func sendNotifications(hostPlayerUUID: String, hostName: String, invitePlayerUUIDs: [String]) {
         if Config.pushNotifications_onlineQueue {
             if let simulator = Utility.appDelegate?.notificationSimulator {
-                for email in inviteEmails {
-                    simulator.sendNotification(email: email, category: "onlineGame", key: "%1$@ has invited you to play online. Go to 'Online Game' and select 'Join a Game' to see the invitation", args: [hostName, hostEmail, Scorecard.deviceName, email])
+                for playerUUID in invitePlayerUUIDs {
+                    simulator.sendNotification(playerUUID: playerUUID, category: "onlineGame", key: "%1$@ has invited you to play online. Go to 'Online Game' and select 'Join a Game' to see the invitation", args: [hostName, hostPlayerUUID, Scorecard.deviceName, playerUUID])
                 }
             }
         }
     }
     
-    private func sendNotification(email: String, category: String, key: String, args: [String]) {
+    private func sendNotification(playerUUID: String, category: String, key: String, args: [String]) {
         let data: [String : Any?] = ["category" : category,
                                      "key"      : key,
                                      "args"     : args]
         
-        self.onlineQueueService.send("notification", data, matchEmail: email)
+        self.onlineQueueService.send("notification", data, matchPlayerUUID: playerUUID)
     }
     
     internal func didReceiveBroadcast(descriptor: String, data: Any?, from: String) {

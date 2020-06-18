@@ -67,11 +67,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             "database":                 "",
             "rabbitMQUri":              "",
             "alertVibrate":             true,
-            "thisPlayerEmail":          "",
+            "thisPlayerUUID":          "",
             "faceTimeAddress":          "",
             "onlineGamesEnabled":       false,
             "colorTheme":               "Default",
-            "tempOnlineEmail":          false,
+            "tempOnlinePlayerUUID":          false,
             "trumpSequence":            ["♣︎", "♦︎", "♥︎" ,"♠︎", "NT"],
             "prefersStatusBarHidden":   true,
             "termsDevice":              ""

@@ -99,7 +99,7 @@ public protocol ScorecardAppPlayerDelegate {
     
     // Can be implemented by server controllers to allow them to override the players to be sent to remotes
     
-    func currentPlayers() -> [(email: String, name: String, connected: Bool)]?
+    func currentPlayers() -> [(playerUUID: String, name: String, connected: Bool)]?
     
 }
 
@@ -378,7 +378,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         var selectPlayerViewController: SelectPlayersViewController?
         
         if let parentViewController = self.fromViewController() {
-            selectPlayerViewController = SelectPlayersViewController.show(from: parentViewController, appController: self, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: true, completion: { (selected, playerList, selection) in
+            selectPlayerViewController = SelectPlayersViewController.show(from: parentViewController, appController: self, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: true, completion: { (selected, playerList, selection, thisPlayerUUID) in
                 
                     completion?(["selected" : selected,
                                  "playerList" : playerList,

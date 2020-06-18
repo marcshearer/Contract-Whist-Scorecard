@@ -17,15 +17,15 @@ class MultipeerService: NSObject, CommsServiceDelegate, MCSessionDelegate {
     public let connectionProximity: CommsConnectionProximity = .nearby
     public let connectionType: CommsConnectionType
     public var connectionUUID: String?
-    private var _connectionEmail: String?
+    private var _connectionPlayerUUID: String?
     private var _connectionName: String?
     internal var _connectionRemoteDeviceName: String?
-    internal var _connectionRemoteEmail: String?
+    internal var _connectionRemotePlayerUUID: String?
     internal var started = false
     
-    public var connectionEmail: String? {
+    public var connectionPlayerUUID: String? {
         get {
-            return _connectionEmail
+            return _connectionPlayerUUID
         }
     }
     public var connectionName: String? {
@@ -38,9 +38,9 @@ class MultipeerService: NSObject, CommsServiceDelegate, MCSessionDelegate {
             return _connectionRemoteDeviceName
         }
     }
-    public var connectionRemoteEmail: String? {
+    public var connectionRemotePlayerUUID: String? {
         get {
-            return _connectionRemoteEmail
+            return _connectionRemotePlayerUUID
         }
     }
     public var connections: Int {
@@ -86,14 +86,14 @@ class MultipeerService: NSObject, CommsServiceDelegate, MCSessionDelegate {
         }
     }
     
-    internal func startService(email: String!, name: String!, recoveryMode: Bool) {
-        self._connectionEmail = email
+    internal func startService(playerUUID: String!, name: String!, recoveryMode: Bool) {
+        self._connectionPlayerUUID = playerUUID
         self._connectionName = name
         self.started = true
     }
     
     internal func stopService() {
-        self._connectionEmail = nil
+        self._connectionPlayerUUID = nil
         self._connectionName = nil
         self.started = false
     }
@@ -132,7 +132,7 @@ class MultipeerService: NSObject, CommsServiceDelegate, MCSessionDelegate {
         }
     }
     
-    internal func send(_ descriptor: String, _ dictionary: Dictionary<String, Any?>! = nil, to commsPeer: CommsPeer? = nil, matchEmail: String? = nil) {
+    internal func send(_ descriptor: String, _ dictionary: Dictionary<String, Any?>! = nil, to commsPeer: CommsPeer? = nil, matchPlayerUUID: String? = nil) {
         var toDeviceName: String! = nil
         if let commsPeer = commsPeer {
             toDeviceName = commsPeer.deviceName
@@ -153,7 +153,7 @@ class MultipeerService: NSObject, CommsServiceDelegate, MCSessionDelegate {
                 if toDeviceName == nil || deviceName == toDeviceName {
                     do {
                         if let broadcastPeer = broadcastPeerList[deviceName] {
-                            if matchEmail == nil || (broadcastPeer.playerEmail != nil && broadcastPeer.playerEmail! == matchEmail) {
+                            if matchPlayerUUID == nil || (broadcastPeer.playerUUID != nil && broadcastPeer.playerUUID! == matchPlayerUUID) {
                                 try session.send(data!, toPeers: [broadcastPeer.mcPeer], with: .reliable)
                             }
                         }
@@ -366,14 +366,14 @@ class MultipeerServerService : MultipeerService, CommsHostServiceDelegate, MCNea
     
     // MARK: - Comms Handler Server handlers ========================================================================= -
     
-    internal func start(email: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool, matchGameUUID: String!) {
+    internal func start(playerUUID: String!, queueUUID: String!, name: String!, invite: [String]!, recoveryMode: Bool, matchGameUUID: String!) {
         self.debugMessage("Start Server (\(self.connectionMode) \(self.serviceID))")
         
-        super.startService(email: email, name: name, recoveryMode: recoveryMode)
+        super.startService(playerUUID: playerUUID, name: name, recoveryMode: recoveryMode)
         
         var discoveryInfo: [String : String]! = [:]
         discoveryInfo["purpose"] = self.purpose.rawValue
-        discoveryInfo["playerEmail"] = email
+        discoveryInfo["playerUUID"] = playerUUID
         discoveryInfo["playerName"] = name ?? self.connectionName ?? self.myPeerID.displayName
         discoveryInfo["gameUUID"] = matchGameUUID
         discoveryInfo["invite"] = invite?.joined(separator: ";")
@@ -444,7 +444,7 @@ class MultipeerServerService : MultipeerService, CommsHostServiceDelegate, MCNea
         
         Utility.mainThread {
             var playerName: String?
-            var playerEmail: String?
+            var playerUUID: String?
             var timestamp: String?
             let deviceName = peerID.displayName
             var propertyList: [String : String]! = nil
@@ -454,7 +454,7 @@ class MultipeerServerService : MultipeerService, CommsHostServiceDelegate, MCNea
                 } catch {
                 }
                 playerName = propertyList["player"]
-                playerEmail = propertyList["email"]
+                playerUUID = propertyList["playerUUID"]
                 timestamp = propertyList["timestamp"]
             }
             
@@ -464,7 +464,7 @@ class MultipeerServerService : MultipeerService, CommsHostServiceDelegate, MCNea
             self.endSessions(matchDeviceName: deviceName)
             
             // Create / replace peer data
-            let broadcastPeer = BroadcastPeer(parent: self, mcPeer: peerID, deviceName: deviceName, playerEmail: playerEmail, playerName: playerName, purpose: self.purpose)
+            let broadcastPeer = BroadcastPeer(parent: self, mcPeer: peerID, deviceName: deviceName, playerUUID: playerUUID, playerName: playerName, purpose: self.purpose)
             self.broadcastPeerList[deviceName] = broadcastPeer
             
             // Create session
@@ -509,17 +509,17 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
     
     // Comms Handler Client Service handlers ========================================================================= -
     
-    internal func start(email: String!, name: String!, recoveryMode: Bool, matchDeviceName: String!, matchGameUUID: String!) {
+    internal func start(playerUUID: String!, name: String!, recoveryMode: Bool, matchDeviceName: String!, matchGameUUID: String!) {
         if self.connectionMode != .queue {
             // Don't log start for other since it might be (probably is) the logger starting! While this works on simulator it crashes devices
             self.debugMessage("Start Client (\(self.connectionMode) \(self.serviceID))")
         }
         
         if self.connectionMode != .broadcast {
-            fatalError("start(email: is only valid for broadcast mode in Multi-peer Connectivity")
+            fatalError("start(playerUUID: is only valid for broadcast mode in Multi-peer Connectivity")
         }
         
-        super.startService(email: email, name: name, recoveryMode: recoveryMode)
+        super.startService(playerUUID: playerUUID, name: name, recoveryMode: recoveryMode)
         
         self.matchDeviceName = matchDeviceName
         self.matchGameUUID = matchGameUUID
@@ -530,7 +530,7 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
         self.startBrowsingForPeers()
     }
     
-    internal func start(queue: String, filterEmail: String!) {
+    internal func start(queue: String, filterPlayerUUID: String!) {
         fatalError("start(queue: is not valid in Multi-peer Connectivity")
     }
     
@@ -557,11 +557,11 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
     
     /// Connects to a remote device using multipeer communication
     /// - parameter to: peer to connect to
-    /// - parameter playerEmail: the player email who is connecting
+    /// - parameter playerUUID: the player playerUUID who is connecting
     /// - parameter playerName: the player name who is connecting
     /// - additional context
     
-    internal func connect(to commsPeer: CommsPeer, playerEmail: String?, playerName: String?, context: [String : String]?, reconnect: Bool = true) -> Bool{
+    internal func connect(to commsPeer: CommsPeer, playerUUID: String?, playerName: String?, context: [String : String]?, reconnect: Bool = true) -> Bool{
         if let broadcastPeer = self.broadcastPeerList[commsPeer.deviceName] {
             self.debugMessage("Connect to ", peerID: broadcastPeer.mcPeer)
             
@@ -580,8 +580,8 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
                 if context == nil {
                     context = [:]
                 }
-                if let playerEmail = playerEmail {
-                    context!["email"] = playerEmail
+                if let playerUUID = playerUUID {
+                    context!["playerUUID"] = playerUUID
                 }
                 if let playerName = playerName {
                     context!["player"] = playerName
@@ -603,7 +603,7 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
             self.client?.browser?.invitePeer(broadcastPeer.mcPeer, to: session, withContext: data, timeout: timeout)
             self.debugMessage("Connection - peer \(broadcastPeer.mcPeer) timeout \(timeout)")
             self._connectionRemoteDeviceName = broadcastPeer.deviceName
-            self._connectionRemoteEmail = broadcastPeer.playerEmail
+            self._connectionRemotePlayerUUID = broadcastPeer.playerUUID
             
             return true
             
@@ -628,7 +628,7 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
         self.client?.browser?.stopBrowsingForPeers()
     }
     
-    func checkOnlineInvites(email: String, checkExpiry: Bool = true) {
+    func checkOnlineInvites(playerUUID: String, checkExpiry: Bool = true) {
         // Not used in broadcast mode
         fatalError("Not relevant in broadcast mode")
     }
@@ -652,7 +652,7 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
                 let gameUUID = info?["gameUUID"]
                 let invite = info?["invite"]?.components(separatedBy: ";")
                 let purpose = CommsPurpose(rawValue: info?["purpose"] ?? "") ?? CommsPurpose.playing
-                if invite == nil || invite!.isEmpty || invite?.first(where: {$0 == self.connectionEmail}) != nil {
+                if invite == nil || invite!.isEmpty || invite?.first(where: {$0 == self.connectionPlayerUUID}) != nil {
                     if self.matchGameUUID == nil || self.matchGameUUID! == gameUUID {
                         var broadcastPeer = self.broadcastPeerList[deviceName]
                         if broadcastPeer == nil {
@@ -662,14 +662,14 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
                             broadcastPeer?.mcPeer = peerID
                         }
                         broadcastPeer?.playerName = info?["playerName"]
-                        broadcastPeer?.playerEmail = info?["playerEmail"]
+                        broadcastPeer?.playerUUID = info?["playerUUID"]
                         
                         // Notify delegate
                         self.browserDelegate?.peerFound(peer: broadcastPeer!.commsPeer)
                         
                         if broadcastPeer!.reconnect {
                             // Auto-reconnect set - try to connect
-                            if !self.connect(to: broadcastPeer!.commsPeer, playerEmail: self.connectionEmail, playerName: self.connectionName, reconnect: true) {
+                            if !self.connect(to: broadcastPeer!.commsPeer, playerUUID: self.connectionPlayerUUID, playerName: self.connectionName, reconnect: true) {
                                 // Not good - shouldn't happen - try stopping browsing and restarting - will retry when find peer again
                                 self.debugMessage("Shouldn't happen - connect failed")
                                 self.stopBrowsingForPeers()
@@ -768,7 +768,7 @@ class MultipeerClientService : MultipeerService, CommsClientServiceDelegate, MCN
 public class BroadcastPeer {
     
     public var mcPeer: MCPeerID        // Multi-peer peer
-    public var playerEmail: String?    // Remote player email
+    public var playerUUID: String?    // Remote player playerUUID
     public var playerName: String?     // Remote playername
     public var state: CommsConnectionState
     public var purpose: CommsPurpose
@@ -782,10 +782,10 @@ public class BroadcastPeer {
         }
     }
     
-    init(parent: MultipeerService, mcPeer: MCPeerID, deviceName: String, playerEmail: String? = "", playerName: String? = "", purpose: CommsPurpose) {
+    init(parent: MultipeerService, mcPeer: MCPeerID, deviceName: String, playerUUID: String? = "", playerName: String? = "", purpose: CommsPurpose) {
         self.parent = parent
         self.mcPeer = mcPeer
-        self.playerEmail = playerEmail
+        self.playerUUID = playerUUID
         self.playerName = playerName
         self.state = .notConnected
         self.purpose = purpose
@@ -793,7 +793,7 @@ public class BroadcastPeer {
     
     public var commsPeer: CommsPeer {
         get {
-            return CommsPeer(parent: self.parent as CommsServiceDelegate, deviceName: self.deviceName, playerEmail: self.playerEmail, playerName: self.playerName, state: self.state, reason: self.reason, autoReconnect: self.reconnect, purpose: self.purpose)
+            return CommsPeer(parent: self.parent as CommsServiceDelegate, deviceName: self.deviceName, playerUUID: self.playerUUID, playerName: self.playerName, state: self.state, reason: self.reason, autoReconnect: self.reconnect, purpose: self.purpose)
         }
     }
     

@@ -12,7 +12,7 @@ import MessageUI
 
 class Backup {
 
-    static func sendEmail(from: UIViewController) {
+    static func sendPlayerUUID(from: UIViewController) {
         var bodyText = ""
         
         if MFMailComposeViewController.canSendMail() {
@@ -23,11 +23,11 @@ class Backup {
             
             bodyText = "Players\n\n"
             
-            bodyText = bodyText + "\"Name\", \"Email\", \"Visible\", \"Created\", \"Local created\", \"Date played\", \"External Id\", \"Games played\", \"Games won\", \"Hands played\", \"Hands made\", \"Twos made\", \"Total score\", \"Max score\", \"Max score date\", \"Max made\", \"Max made date\", \"Max twos\", \"Max twos date\"\n"
+            bodyText = bodyText + "\"Name\", \"PlayerUUID\", \"Visible\", \"Created\", \"Local created\", \"Date played\", \"External Id\", \"Games played\", \"Games won\", \"Hands played\", \"Hands made\", \"Twos made\", \"Total score\", \"Max score\", \"Max score date\", \"Max made\", \"Max made date\", \"Max twos\", \"Max twos date\"\n"
             
             for playerMO in Scorecard.shared.playerList {
                 bodyText = bodyText + "\"\(playerMO.name!)\""
-                bodyText = bodyText + ", \"\(playerMO.email!)\""
+                bodyText = bodyText + ", \"\(playerMO.playerUUID!)\""
                 bodyText = bodyText + ",\((playerMO.visibleLocally ? "true" : "false"))"
                 bodyText = bodyText + ", \(Utility.dateString(playerMO.dateCreated! as Date))"
                 bodyText = bodyText + ", \(playerMO.localDateCreated == nil ? "\"\"" : Utility.dateString(playerMO.localDateCreated! as Date))"
@@ -50,7 +50,7 @@ class Backup {
             
             bodyText = bodyText + "\nGames\n\n"
             
-            bodyText = bodyText + "\"Game UUID\", \"Date played\", \"Device UUID\", \"Location\", \"Latitude\", \"Longitude\", \"Device name\", \"Local created\", \"Exclude History\", \"Player no\", \"Name\", \"Email\", \"Played\", \"Won\", \"Score\", \"Hands played\", \"Hands made\", \"Twos made\", \"Local created\", \"Player no\", \"Name\", \"Email\", \"Played\", \"Won\", \"Score\", \"Hands played\", \"Hands made\", \"Twos made\", \"Local created\", \"Player no\", \"Name\", \"Email\", \"Played\", \"Won\", \"Score\", \"Hands played\", \"Hands made\", \"Twos made\", \"Local created\", \"Player no\", \"Name\", \"Email\", \"Played\", \"Won\", \"Score\", \"Hands played\", \"Hands made\", \"Twos made\", \"Local created\"\n"
+            bodyText = bodyText + "\"Game UUID\", \"Date played\", \"Device UUID\", \"Location\", \"Latitude\", \"Longitude\", \"Device name\", \"Local created\", \"Exclude History\", \"Player no\", \"Name\", \"PlayerUUID\", \"Played\", \"Won\", \"Score\", \"Hands played\", \"Hands made\", \"Twos made\", \"Local created\", \"Player no\", \"Name\", \"PlayerUUID\", \"Played\", \"Won\", \"Score\", \"Hands played\", \"Hands made\", \"Twos made\", \"Local created\", \"Player no\", \"Name\", \"PlayerUUID\", \"Played\", \"Won\", \"Score\", \"Hands played\", \"Hands made\", \"Twos made\", \"Local created\", \"Player no\", \"Name\", \"PlayerUUID\", \"Played\", \"Won\", \"Score\", \"Hands played\", \"Hands made\", \"Twos made\", \"Local created\"\n"
             
             let history=History(getParticipants: true, includeBF: true)
             for historyGame in history.games {
@@ -68,7 +68,7 @@ class Backup {
                 for historyParticipant in historyGame.participant {
                     bodyText = bodyText + ", \(historyParticipant.playerNumber)"
                     bodyText = bodyText + ", \"\(historyParticipant.name)\""
-                    bodyText = bodyText + ", \"\(historyParticipant.participantMO.email!)\""
+                    bodyText = bodyText + ", \"\(historyParticipant.participantMO.playerUUID!)\""
                     bodyText = bodyText + ", \(historyParticipant.participantMO.gamesPlayed)"
                     bodyText = bodyText + ", \(historyParticipant.participantMO.gamesWon)"
                     bodyText = bodyText + ", \(historyParticipant.totalScore)"

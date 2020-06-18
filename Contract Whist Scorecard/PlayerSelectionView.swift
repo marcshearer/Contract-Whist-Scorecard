@@ -225,7 +225,7 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
     }
     
     private func showSelectPlayers() {
-        _ = SelectPlayersViewController.show(from: self.parent, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: true, completion: { (selected, playerList, selection) in
+        _ = SelectPlayersViewController.show(from: self.parent, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: true, completion: { (selected, playerList, selection, thisPlayerUUID) in
             if let selected = selected, let playerList = playerList, let selection = selection {
                 if selected > 0 {
                     var createPlayerList: [PlayerDetail] = []
@@ -255,7 +255,7 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
                 if newPlayers.count != 1 || self.updateBeforeSelect {
                     
                     // Add to player list if not there already
-                    if self.playerList.firstIndex(where: { $0.email! == newPlayerDetail.email } ) == nil {
+                    if self.playerList.firstIndex(where: { $0.playerUUID! == newPlayerDetail.playerUUID } ) == nil {
                         
                         var playerIndex: Int! = self.playerList.firstIndex(where: {($0.name! > newPlayerDetail.name)})
                         if playerIndex == nil {

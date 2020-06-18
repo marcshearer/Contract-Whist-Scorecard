@@ -315,13 +315,13 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     }
     
     private func showSettings() {
-        self.thisPlayerBeforeSettings = Scorecard.shared.settings.thisPlayerEmail
+        self.thisPlayerBeforeSettings = Scorecard.shared.settings.thisPlayerUUID
         SettingsViewController.show(from: self, backText: "", backImage: "home", completion: self.showSettingsCompletion)
     }
     
     private func showSettingsCompletion() {
         Scorecard.game.reset()
-        if self.thisPlayerBeforeSettings != Scorecard.shared.settings.thisPlayerEmail {
+        if self.thisPlayerBeforeSettings != Scorecard.shared.settings.thisPlayerUUID {
             self.setupThisPlayer()
             self.showThisPlayer()
         }
@@ -357,7 +357,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             self.thisPlayerThumbnail.name.text = "Cancel"
         })
         
-        let playerList = Scorecard.shared.playerList.filter { $0.email != self.thisPlayer }
+        let playerList = Scorecard.shared.playerList.filter { $0.playerUUID != self.thisPlayer }
         self.playerSelectionView.set(players: playerList, addButton: true, updateBeforeSelect: false, scrollEnabled: true, collectionViewInsets: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10))
         
     }
@@ -375,14 +375,14 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     internal func didSelect(playerMO: PlayerMO) {
         // Save player as default for device
-        let onlineEmail = Scorecard.activeSettings.thisPlayerEmail
-        if playerMO.email == onlineEmail {
+        let onlinePlayerUUID = Scorecard.activeSettings.thisPlayerUUID
+        if playerMO.playerUUID == onlinePlayerUUID {
             // Back to normal user - can remove temporary override
             Notifications.removeTemporaryOnlineGameSubscription()
         } else {
-            Notifications.addTemporaryOnlineGameSubscription(email: playerMO.email!)
+            Notifications.addTemporaryOnlineGameSubscription(playerUUID: playerMO.playerUUID!)
         }
-        self.thisPlayer = playerMO.email!
+        self.thisPlayer = playerMO.playerUUID!
         self.destroyClientController()
         self.createClientController()
         self.hidePlayerSelection()
@@ -457,10 +457,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         actionSheet.present()
     }
     
-    // MARK: - Send email and delegate methods =========================================================== -
+    // MARK: - Send playerUUID and delegate methods =========================================================== -
     
     func backupDevice() {
-        Backup.sendEmail(from: self)
+        Backup.sendPlayerUUID(from: self)
     }
         
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
@@ -659,7 +659,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 var connecting = false
                 var purpose = CommsPurpose.playing
                 if self.availablePeers.count == 0 && recoveryMode {
-                    name = Scorecard.shared.findPlayerByEmail(Scorecard.recovery.connectionRemoteEmail ?? "")?.name ?? "Unknown"
+                    name = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.recovery.connectionRemotePlayerUUID ?? "")?.name ?? "Unknown"
                 } else {
                     let availableFound = self.availablePeers[indexPath.row]
                     name = availableFound.name
@@ -803,7 +803,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             
             self.destroyClientController()
             
-            self.hostGame(mode: mode, playerEmail: self.thisPlayer)
+            self.hostGame(mode: mode, playerUUID: self.thisPlayer)
         }
     }
     
@@ -822,7 +822,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     // MARK: - Action buttons =============================================================== -
     
-    private func hostGame(mode: ConnectionMode? = nil, playerEmail: String? = nil, recoveryMode: Bool = false) -> Void {
+    private func hostGame(mode: ConnectionMode? = nil, playerUUID: String? = nil, recoveryMode: Bool = false) -> Void {
         // Stop any Client controller
         if self.clientController != nil {
             self.clientController.stop()
@@ -835,7 +835,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         }
         
         // Start Host controller
-        hostController.start(mode: mode, playerEmail: playerEmail, recoveryMode: recoveryMode, completion: { (returnHome) in
+        hostController.start(mode: mode, playerUUID: playerUUID, recoveryMode: recoveryMode, completion: { (returnHome) in
             if returnHome {
                 self.cancelRecovery()
             }
@@ -903,7 +903,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.peerReloadData()
         self.peerCollectionView.layoutIfNeeded()
         if self.thisPlayer != nil {
-            self.clientController = ClientController(from: self, playerEmail: self.thisPlayer, playerName: self.thisPlayerName, matchDeviceName: self.matchDeviceName, matchProximity: self.matchProximity, matchGameUUID: matchGameUUID)
+            self.clientController = ClientController(from: self, playerUUID: self.thisPlayer, playerName: self.thisPlayerName, matchDeviceName: self.matchDeviceName, matchProximity: self.matchProximity, matchGameUUID: matchGameUUID)
             self.clientController.delegate = self
         }
     }
@@ -937,8 +937,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         
         if self.recoveryMode && Scorecard.recovery.onlineMode != nil {
             // Recovering - use same player
-            self.thisPlayer = Scorecard.recovery.connectionEmail
-            self.thisPlayerName = Scorecard.shared.findPlayerByEmail(self.thisPlayer)?.name
+            self.thisPlayer = Scorecard.recovery.connectionPlayerUUID
+
+            self.thisPlayerName = Scorecard.shared.findPlayerByPlayerUUID(self.thisPlayer)?.name
             self.matchDeviceName = Scorecard.recovery.connectionRemoteDeviceName
             self.matchProximity = Scorecard.recovery.onlineProximity
             self.matchGameUUID = Scorecard.recovery.gameUUID
@@ -956,9 +957,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             if self.thisPlayer == nil || self.matchDeviceName == nil {
                 // Not got player and device name from recovery - use default
                 var defaultPlayer: String!
-                defaultPlayer = Scorecard.activeSettings.thisPlayerEmail
+                defaultPlayer = Scorecard.activeSettings.thisPlayerUUID
                 if defaultPlayer != nil {
-                    let playerMO = Scorecard.shared.findPlayerByEmail(defaultPlayer)
+                    let playerMO = Scorecard.shared.findPlayerByPlayerUUID(defaultPlayer)
                     if playerMO != nil {
                         self.thisPlayer = defaultPlayer
                         self.thisPlayerName = playerMO!.name
@@ -968,7 +969,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 }
                 if defaultPlayer == nil {
                     if let playerMO = Scorecard.shared.playerList.min(by: {($0.localDateCreated! as Date) < ($1.localDateCreated! as Date)}) {
-                        self.thisPlayer = playerMO.email
+                        self.thisPlayer = playerMO.playerUUID
                         self.thisPlayerName = playerMO.name
                     }
                 }
@@ -977,14 +978,14 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         if self.thisPlayer == nil && Scorecard.game.currentPlayers >= 1 {
             let player = Scorecard.game.player(enteredPlayerNumber: 1)
             if let playerMO = player.playerMO {
-                self.thisPlayer = playerMO.email
+                self.thisPlayer = playerMO.playerUUID
                 self.thisPlayerName = playerMO.name
             }
         }
     }
     
     private func showThisPlayer(alwaysShow: Bool = false) {
-        if let player = self.thisPlayer, let playerMO = Scorecard.shared.findPlayerByEmail(player) {
+        if let player = self.thisPlayer, let playerMO = Scorecard.shared.findPlayerByPlayerUUID(player) {
             if alwaysShow || playerSelectionViewHeightConstraint.constant == 0 {
                 self.thisPlayerThumbnail.set(data: playerMO.thumbnail, name: playerMO.name!, nameHeight: 20.0, diameter: self.thisPlayerThumbnail.frame.width)
             }
@@ -1051,7 +1052,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         // Find any cells containing an image/player which has just been downloaded asynchronously
         Utility.mainThread {
             if let thisPlayer = self.thisPlayer {
-                if let playerMO = Scorecard.shared.findPlayerByEmail(thisPlayer) {
+                if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(thisPlayer) {
                     if playerMO.objectID == objectID {
                         // This is this player - update player
                         self.showThisPlayer()

@@ -45,10 +45,10 @@ class RobotPlayer: NSObject, RobotDelegate {
     private var hand: Hand!
     private let autoPlayTimeUnit = 1.0
     
-   init(email: String, name: String, deviceName: String, hostPeer: CommsPeer, playerNumber: Int) {
+   init(playerUUID: String, name: String, deviceName: String, hostPeer: CommsPeer, playerNumber: Int) {
                 
         // Store properties
-        self.thisPlayer = email
+        self.thisPlayer = playerUUID
         self.thisPlayerName = name
         self.thisPlayerNumber = playerNumber
         self.hostPeer = hostPeer
@@ -60,10 +60,10 @@ class RobotPlayer: NSObject, RobotDelegate {
         super.init()
         
         // Start the service
-        self.loopbackService.start(email: email, name: name)
+        self.loopbackService.start(playerUUID: playerUUID, name: name)
         
         // Connect back to the host
-        _ = self.loopbackService.connect(to: hostPeer, playerEmail: email, playerName: name, reconnect: false)
+        _ = self.loopbackService.connect(to: hostPeer, playerUUID: playerUUID, playerName: name, reconnect: false)
     }
     
     internal func autoBid(completion: (()->())?) {

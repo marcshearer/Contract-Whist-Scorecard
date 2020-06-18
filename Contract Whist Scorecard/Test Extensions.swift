@@ -355,7 +355,7 @@ extension Scorecard {
         self.settings.receiveNotifications = false
         self.settings.allowBroadcast = true
         self.settings.alertVibrate = true
-        self.settings.thisPlayerEmail = "mshearer@waitrose.com"
+        self.settings.thisPlayerUUID = "mshearer@waitrose.com"
         self.settings.onlineGamesEnabled = true
     }
 }

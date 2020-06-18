@@ -36,7 +36,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tap(app.tables.buttons["Sync with Cloud"])
         self.tap(app.alerts["Warning"].buttons["OK"])
         
-        // Enter email address
+        // Enter playerUUID address
         self.typeText(app.tables.textFields["Enter your Unique ID to find players"], "mshearer@waitrose.com")
         
         // Select download
@@ -86,7 +86,7 @@ extension Contract_Whist_Scorecard_UI_Tests {
         self.tap(app.collectionViews.staticTexts["Marc"])
 
         // Create another player
-        self.createNewPlayer(name: "AAA Test", email: "test@test.com")
+        self.createNewPlayer(name: "AAA Test", playerUUID: "test@test.com")
         
         // Continue to game preview
         self.tap(app.navigationBars.buttons["Continue"])

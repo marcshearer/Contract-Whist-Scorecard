@@ -72,7 +72,7 @@ class MultipeerLogger : CommsBrowserDelegate, CommsStateDelegate, CommsDataDeleg
         if connect {
             Utility.getActiveViewController()?.alertDecision(if: new, "A nearby device (\(peer.deviceName)) is logging Contract Whist. Would you like to connect?\n\nNote: this could expose otherwise hidden information to the logging device.", title: "Logging", okButtonText: "Connect", okHandler: {
                 logger!.accepted = true
-                _ = self.service?.connect(to: peer, playerEmail: nil, playerName: nil, reconnect: true)
+                _ = self.service?.connect(to: peer, playerUUID: nil, playerName: nil, reconnect: true)
             }, cancelButtonText: "Ignore")
         }
     }
@@ -129,7 +129,7 @@ class MultipeerLogger : CommsBrowserDelegate, CommsStateDelegate, CommsDataDeleg
         }
     }
     
-    static func sendEmail(from: UIViewController) {
+    static func sendPlayerUUID(from: UIViewController) {
         var bodyText = ""
         
         if MFMailComposeViewController.canSendMail() {

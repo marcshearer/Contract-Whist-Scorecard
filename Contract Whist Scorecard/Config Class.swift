@@ -32,7 +32,7 @@ class Config {
     
     public static let debugNoICloudOnline_QueueUUID = "debugNoICloudOnline"
     public static let debugNoICloudOnline_Users = [ InviteReceived(deviceName: "Marc's iPhone",
-                                                                   email: "mshearer@waitrose.com",
+                                                                   playerUUID: "mshearer@waitrose.com",
                                                                    name: "Marc",
                                                                    inviteUUID: Config.debugNoICloudOnline_QueueUUID)]
     

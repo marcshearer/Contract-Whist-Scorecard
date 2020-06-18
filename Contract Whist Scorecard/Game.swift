@@ -265,7 +265,7 @@ class Game {
                     // Might be recovering - recreate player if necessary
                     self.player![player-1].playerMO = CoreData.create(from: "Player") as? PlayerMO
                     self.player![player-1].playerMO!.name = UserDefaults.standard.string(forKey: "\(prefix)\(player)name")
-                    self.player![player-1].playerMO!.email = UserDefaults.standard.string(forKey: "\(prefix)\(player)email")
+                    self.player![player-1].playerMO!.playerUUID = UserDefaults.standard.string(forKey: "\(prefix)\(player)playerUUID")
                     self.player![player-1].playerNumber = player
                 }
             }
@@ -504,12 +504,12 @@ class Game {
     }
     
     /**
-     Returns the player class for an email address if that player is in the current game
-     - Parameter email: Email address to find
+     Returns the player class for an playerUUID address if that player is in the current game
+     - Parameter playerUUID: PlayerUUID address to find
      - Returns: Player class
     */
-    public func player(email: String) -> Player? {
-        if let index = self.player?.firstIndex(where: {$0.playerMO != nil && $0.playerMO!.email == email}) {
+    public func player(playerUUID: String) -> Player? {
+        if let index = self.player?.firstIndex(where: {$0.playerMO != nil && $0.playerMO!.playerUUID == playerUUID}) {
             return self.player?[index]
         } else {
             return nil
@@ -596,7 +596,7 @@ class Game {
                 let prefix = ((Scorecard.game?.isPlayingComputer ?? false) ? "robot" : "player")
                 UserDefaults.standard.set(playerMO.uri, forKey: "\(prefix)\(playerNumber)")
                 UserDefaults.standard.set(playerMO.name, forKey: "\(prefix)\(playerNumber)name")
-                UserDefaults.standard.set(playerMO.email, forKey: "\(prefix)\(playerNumber)email")
+                UserDefaults.standard.set(playerMO.playerUUID, forKey: "\(prefix)\(playerNumber)PlayerUUID")
             }
         }
     }

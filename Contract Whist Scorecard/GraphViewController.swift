@@ -68,7 +68,7 @@ class GraphViewController: ScorecardViewController, GraphDetailDelegate {
         let phoneSize = ScorecardUI.phoneSize()
         let portraitPhoneSize = ScorecardUI.portraitPhone()
         let showLimit = (portraitPhoneSize ? 12 : (phoneSize ? 25 : 50))
-        let participantList = History.getParticipantRecordsForPlayer(playerEmail: playerDetail.email)
+        let participantList = History.getParticipantRecordsForPlayer(playerUUID: playerDetail.playerUUID)
         
         // Initialise the view
         graphView.reset()

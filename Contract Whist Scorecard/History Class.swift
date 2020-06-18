@@ -33,9 +33,9 @@ class History {
         self.loadGames(getParticipants: getParticipants, unconfirmed: unconfirmed)
     }
     
-    init(winStreakFor playerEmail: String) {
+    init(winStreakFor playerUUID: String) {
         // Load games making up players best win streak
-        let participants = History.getWinStreakParticipants(playerEmail: playerEmail)
+        let participants = History.getWinStreakParticipants(playerUUID: playerUUID)
         if participants.count != 0 {
             let gameUUIDs = participants.map{$0.gameUUID!}
             self.loadGames(getParticipants: true, gameUUIDs: gameUUIDs)
@@ -133,14 +133,14 @@ class History {
         return results
     }
     
-    static public func findOpponentNames(playerEmail: String) -> [String] {
-        // Fetch a list of opponent names (not emails) for a specific player email
+    static public func findOpponentNames(playerUUID: String) -> [String] {
+        // Fetch a list of opponent names (not playerUUIDs) for a specific player playerUUID
         var results: [String] = []
         var gameUUID: [String] = []
         var lastGameUUID: String?
         var lastPlayerName: String?
         
-        let predicate = NSPredicate(format: "email = %@", playerEmail)
+        let predicate = NSPredicate(format: "playerUUID = %@", playerUUID)
         
         // Get game list for this player from core data
         let participantList: [ParticipantMO] = CoreData.fetch(from: "Participant",
@@ -158,7 +158,7 @@ class History {
             }
             
             // Now get a list of all other players who also took part in these games
-            let predicate = NSPredicate(format: "gameUUID IN %@ AND email != %@", gameUUID, playerEmail)
+            let predicate = NSPredicate(format: "gameUUID IN %@ AND playerUUID != %@", gameUUID, playerUUID)
             
             let participantList: [ParticipantMO] = CoreData.fetch(from: "Participant",
                                                                    filter: predicate,
@@ -179,11 +179,11 @@ class History {
         return results
     }
     
-    static public func getHighScores(type: HighScoreType, limit: Int = 3, playerEmailList: [String]) -> [ParticipantMO] {
+    static public func getHighScores(type: HighScoreType, limit: Int = 3, playerUUIDList: [String]) -> [ParticipantMO] {
         // Setup query filters
         var sort: [(key: String, direction: SortDirection)]
         let predicate1 = NSPredicate(format: "gameUUID != 'B/F' AND excludeStats = false")
-        let predicate2 = NSPredicate(format: "email IN %@", argumentArray: [playerEmailList])
+        let predicate2 = NSPredicate(format: "playerUUID IN %@", argumentArray: [playerUUIDList])
         
         // Setup second sort
         switch type {
@@ -204,20 +204,20 @@ class History {
         return results
     }
     
-    static public func getParticipantEmailList() -> [String] {
+    static public func getParticipantPlayerUUIDList() -> [String] {
         var results: [String] = []
         
-        // Get list all participants on this device sorted by email
+        // Get list all participants on this device sorted by playerUUID
         let participantList: [ParticipantMO] = CoreData.fetch(from: "Participant",
-                                                              filter: NSPredicate(format: "email != nil and email != ''"),
-                                                              sort: ("email", .ascending))
+                                                              filter: NSPredicate(format: "playerUUID != nil and playerUUID != ''"),
+                                                              sort: ("playerUUID", .ascending))
         
-        // Reduce to unique list of non-blank emails
-        var lastEmail = ""
+        // Reduce to unique list of non-blank playerUUIDs
+        var lastPlayerUUID = ""
         for participantMO in participantList {
-            if participantMO.email! != lastEmail {
-                results.append(participantMO.email!)
-                lastEmail = participantMO.email!
+            if participantMO.playerUUID! != lastPlayerUUID {
+                results.append(participantMO.playerUUID!)
+                lastPlayerUUID = participantMO.playerUUID!
             }
         }
     
@@ -225,11 +225,11 @@ class History {
         
     }
 
-    static public func getParticipantRecordsForPlayer(playerEmail: String, includeBF: Bool = false, includeExcluded: Bool = true, sortDirection: SortDirection = .ascending) -> [ParticipantMO] {
+    static public func getParticipantRecordsForPlayer(playerUUID: String, includeBF: Bool = false, includeExcluded: Bool = true, sortDirection: SortDirection = .ascending) -> [ParticipantMO] {
         var predicate: [NSPredicate]
         // Get all participants from Core Data for player
         
-        predicate = [NSPredicate(format: "email = %@", playerEmail)]
+        predicate = [NSPredicate(format: "playerUUID = %@", playerUUID)]
         
         if !includeBF {
             predicate.append(NSPredicate(format: "gameUUID <> 'B/F'"))
@@ -246,10 +246,10 @@ class History {
         return results
     }
     
-    public func loadGames(playerEmail: String, sortDirection: SortDirection = .ascending) {
+    public func loadGames(playerUUID: String, sortDirection: SortDirection = .ascending) {
         var lastGameUUID: String?
         
-        let participants = History.getParticipantRecordsForPlayer(playerEmail: playerEmail, sortDirection: sortDirection)
+        let participants = History.getParticipantRecordsForPlayer(playerUUID: playerUUID, sortDirection: sortDirection)
         self.games = []
         for participant in participants {
             let games: [GameMO] = CoreData.fetch(from: "Game",
@@ -264,13 +264,13 @@ class History {
         }
     }
     
-    static public func getWinStreaks(playerEmailList: [String], limit: Int = 3) -> [(streak: Int, participantMO: ParticipantMO?)] {
+    static public func getWinStreaks(playerUUIDList: [String], limit: Int = 3) -> [(streak: Int, participantMO: ParticipantMO?)] {
         let nullDate = Date(timeIntervalSinceReferenceDate: 0)
         var longestStreak: [(streak: Int, participantMO: ParticipantMO?)] = []
         
-        for (index, playerEmail) in playerEmailList.enumerated() {
+        for (index, playerUUID) in playerUUIDList.enumerated() {
             longestStreak.append((0, nil))
-            let streakParticipants = getWinStreakParticipants(playerEmail: playerEmail)
+            let streakParticipants = getWinStreakParticipants(playerUUID: playerUUID)
             if streakParticipants.count > 0 {
                 longestStreak[index].streak = streakParticipants.count
                 longestStreak[index].participantMO = streakParticipants.last!
@@ -283,10 +283,10 @@ class History {
         return Array(longestStreak.prefix(3))
     }
     
-    static private func getWinStreakParticipants(playerEmail: String) -> [ParticipantMO] {
+    static private func getWinStreakParticipants(playerUUID: String) -> [ParticipantMO] {
         var longestStreak: [ParticipantMO] = []
         var currentStreak: [ParticipantMO] = []
-        let participants = History.getParticipantRecordsForPlayer(playerEmail: playerEmail)
+        let participants = History.getParticipantRecordsForPlayer(playerUUID: playerUUID)
         if participants.count > 0 {
             for participantMO in participants {
                 if participantMO.place == 1 {
@@ -302,16 +302,16 @@ class History {
         return longestStreak
     }
     
-    static public func getNewParticpantGames(cutoffDate: Date, specificEmail: [String] = []) -> [String] {
+    static public func getNewParticpantGames(cutoffDate: Date, specificPlayerUUIDs: [String] = []) -> [String] {
         // Fetch list of games where a participant has been downloaded since the cutoff date
         var results: [String] = []
         var predicate1: NSPredicate
         var predicate2: NSPredicate!
         
         // Setup query filter predicate
-        if specificEmail.count != 0 {
+        if specificPlayerUUIDs.count != 0 {
             predicate1 = NSPredicate(format: "syncDate >= %@ OR syncDate = null", cutoffDate as NSDate)
-            predicate2 = NSPredicate(format: "email IN %@", argumentArray: specificEmail)
+            predicate2 = NSPredicate(format: "playerUUID IN %@", argumentArray: specificPlayerUUIDs)
         } else {
             predicate1 = NSPredicate(format: "syncDate >= %@ OR syncDate = null", cutoffDate as NSDate)
             predicate2 = nil
@@ -391,7 +391,7 @@ class History {
                 lastGameUUID = participantMO.gameUUID!
                 playersFound = false
             }
-            if !playersFound && participantMO.email != nil && participantMO.email! != "" && Scorecard.shared.findPlayerByEmail(participantMO.email!) != nil {
+            if !playersFound && participantMO.playerUUID != nil && participantMO.playerUUID! != "" && Scorecard.shared.findPlayerByPlayerUUID(participantMO.playerUUID!) != nil {
                 playersFound = true
             }
         }
@@ -464,7 +464,7 @@ class History {
         participantMO.datePlayed = Utility.objectDate(cloudObject: cloudObject, forKey: "datePlayed")
         participantMO.playerNumber = Int16(Utility.objectInt(cloudObject: cloudObject, forKey: "playerNumber"))
         participantMO.name = Utility.objectString(cloudObject: cloudObject, forKey: "name")
-        participantMO.email = Utility.objectString(cloudObject: cloudObject, forKey: "email")
+        participantMO.playerUUID = Utility.objectString(cloudObject: cloudObject, forKey: "playerUUID")
         participantMO.totalScore = Int16(Utility.objectInt(cloudObject: cloudObject, forKey: "totalScore"))
         participantMO.gamesPlayed = Int16(Utility.objectInt(cloudObject: cloudObject, forKey: "gamesPlayed"))
         participantMO.gamesWon = Int16(Utility.objectInt(cloudObject: cloudObject, forKey: "gamesWon"))
@@ -486,7 +486,7 @@ class History {
         cloudObject.setValue(participantMO.datePlayed, forKey: "datePlayed")
         cloudObject.setValue(participantMO.playerNumber, forKey: "playerNumber")
         cloudObject.setValue(participantMO.name, forKey: "name")
-        cloudObject.setValue(participantMO.email, forKey: "email")
+        cloudObject.setValue(participantMO.playerUUID, forKey: "playerUUID")
         cloudObject.setValue(participantMO.totalScore, forKey: "totalScore")
         cloudObject.setValue(participantMO.gamesPlayed, forKey: "gamesPlayed")
         cloudObject.setValue(participantMO.gamesWon, forKey: "gamesWon")

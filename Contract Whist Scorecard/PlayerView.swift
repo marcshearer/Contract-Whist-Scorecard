@@ -23,7 +23,7 @@ import UIKit
     
     @objc optional func playerViewWasDeleted(_ playerView: PlayerView)
     
-    @objc optional func playerViewWasDroppedOn(_ playerView: PlayerView, from source: PlayerViewType, withEmail: String)
+    @objc optional func playerViewWasDroppedOn(_ playerView: PlayerView, from source: PlayerViewType, withPlayerUUID: String)
     
 }
 
@@ -251,8 +251,8 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
                 if error == nil {
                     Utility.mainThread {
                         if let playerObject = playerObject as! PlayerObject? {
-                            if let playerEmail = playerObject.playerEmail, let source = playerObject.source {
-                                self.delegate?.playerViewWasDroppedOn?(self, from: source, withEmail: playerEmail)
+                            if let playerUUID = playerObject.playerUUID, let source = playerObject.source {
+                                self.delegate?.playerViewWasDroppedOn?(self, from: source, withPlayerUUID: playerUUID)
                             }
                         }
                     }
@@ -264,8 +264,8 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     // MARK: - Drag delegate handlers ==================================================================== -
     
     public func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem] {
-        if let playerEmail = self.playerMO?.email {
-            return [ UIDragItem(itemProvider: NSItemProvider(object: PlayerObject(source: self.type, playerEmail: playerEmail)))]
+        if let playerUUID = self.playerMO?.playerUUID {
+            return [ UIDragItem(itemProvider: NSItemProvider(object: PlayerObject(source: self.type, playerUUID: playerUUID)))]
         } else {
             return []
         }
@@ -357,7 +357,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
 
 @objc final public class PlayerObject: NSObject, NSItemProviderReading, NSItemProviderWriting {
     
-    public var playerEmail: String?
+    public var playerUUID: String?
     public var source: PlayerViewType?
     
     public static var readableTypeIdentifiersForItemProvider: [String] = ["shearer.com/whist/playerObject"]
@@ -369,7 +369,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         let progress = Progress(totalUnitCount: 1)
         
         do {
-            let data = try JSONSerialization.data(withJSONObject: ["playerEmail" : self.playerEmail,
+            let data = try JSONSerialization.data(withJSONObject: ["playerUUID" : self.playerUUID,
                                                                    "source"      : "\(self.source?.rawValue ?? 0)"],
                                                   options: .prettyPrinted)
             progress.completedUnitCount = 1
@@ -384,13 +384,13 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     
     public static func object(withItemProviderData data: Data, typeIdentifier: String) throws -> PlayerObject {
         let propertyList: [String : String] = try JSONSerialization.jsonObject(with: data, options: []) as! [String : String]
-        return PlayerObject(source: PlayerViewType(rawValue: Int(propertyList["source"]!)!) ?? .unknown, playerEmail: propertyList["playerEmail"]!)
+        return PlayerObject(source: PlayerViewType(rawValue: Int(propertyList["source"]!)!) ?? .unknown, playerUUID: propertyList["playerUUID"]!)
     }
     
-    init(source: PlayerViewType, playerEmail: String?) {
+    init(source: PlayerViewType, playerUUID: String?) {
         super.init()
         self.source = source
-        self.playerEmail = playerEmail
+        self.playerUUID = playerUUID
     }
 }
 

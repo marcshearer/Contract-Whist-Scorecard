@@ -313,7 +313,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     private func calculateWinner() {
         struct HighScoreEntry {
             var gameUUID: String
-            var email: String
+            var playerUUID: String
             var totalScore: Int16
         }
 
@@ -322,7 +322,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         var highScoreRanking: [Int] = []
         var newHighScore = false
         var winnerNames = ""
-        var winnerEmail = ""
+        var winnerPlayerUUID = ""
         
         // Clear cross reference array
         xref.removeAll()
@@ -331,9 +331,9 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
             if Scorecard.activeSettings.saveHistory {
                 // Load high scores - get 10 to allow for lots of ties
                 // Note - this assumes this game's participants have been placed in the database already
-                highScoreParticipantMO = History.getHighScores(type: .totalScore, limit: 10, playerEmailList: Scorecard.shared.playerEmailList(getPlayerMode: .getAll))
+                highScoreParticipantMO = History.getHighScores(type: .totalScore, limit: 10, playerUUIDList: Scorecard.shared.playerUUIDList(getPlayerMode: .getAll))
                 for participant in highScoreParticipantMO {
-                    highScoreEntry.append(HighScoreEntry(gameUUID: participant.gameUUID!, email: participant.email!, totalScore: participant.totalScore))
+                    highScoreEntry.append(HighScoreEntry(gameUUID: participant.gameUUID!, playerUUID: participant.playerUUID!, totalScore: participant.totalScore))
                 }
             }
             
@@ -342,7 +342,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
                 for playerNumber in 1...Scorecard.game.currentPlayers {
                     let totalScore = Scorecard.game.scores.totalScore(playerNumber: playerNumber)
                     highScoreEntry.append(HighScoreEntry(gameUUID: (Scorecard.game.gameUUID==nil ? "" : Scorecard.game.gameUUID),
-                                                         email: Scorecard.game.player(enteredPlayerNumber: playerNumber).playerMO!.email!,
+                                                         playerUUID: Scorecard.game.player(enteredPlayerNumber: playerNumber).playerMO!.playerUUID!,
                                                          totalScore: Int16(totalScore)))
                 }
             }
@@ -375,7 +375,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
                     // No need to check if already got a high place
                     if Scorecard.activeSettings.saveHistory && ranking == 0 {
                         // Check if it is a score for this player
-                        if highScoreEntry[loopCount-1].email == Scorecard.game.player(enteredPlayerNumber: playerNumber).playerMO?.email {
+                        if highScoreEntry[loopCount-1].playerUUID == Scorecard.game.player(enteredPlayerNumber: playerNumber).playerMO?.playerUUID {
                             // Check that it is this score that has done it - not an old one
                             if highScoreEntry[loopCount-1].gameUUID == (Scorecard.game.gameUUID==nil ? "" : Scorecard.game.gameUUID) {
                                 ranking = highScoreRanking[loopCount - 1]
@@ -410,7 +410,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
             if place == 1 {
                 winners += 1
                 if winners == 1 {
-                    winnerEmail = Scorecard.game.player(enteredPlayerNumber: xref[playerNumber-1].playerNumber).playerMO!.email!
+                    winnerPlayerUUID = Scorecard.game.player(enteredPlayerNumber: xref[playerNumber-1].playerNumber).playerMO!.playerUUID!
                     winnerNames = Scorecard.game.player(enteredPlayerNumber: xref[playerNumber-1].playerNumber).playerMO!.name!
                 } else {
                     winnerNames = winnerNames + " and " + Scorecard.game.player(enteredPlayerNumber: xref[playerNumber-1].playerNumber).playerMO!.name!
@@ -421,12 +421,12 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         
         if !Scorecard.game.gameCompleteNotificationSent && (gameSummaryMode == .scoring || gameSummaryMode == .hosting) {
             // Save notification message
-            self.saveGameNotification(newHighScore: newHighScore, winnerEmail: winnerEmail, winner: winnerNames, winningScore: Int(xref[0].score))
+            self.saveGameNotification(newHighScore: newHighScore, winnerPlayerUUID: winnerPlayerUUID, winner: winnerNames, winningScore: Int(xref[0].score))
             Scorecard.game.gameCompleteNotificationSent = true
         }
     }
     
-    public func saveGameNotification(newHighScore: Bool, winnerEmail: String, winner: String, winningScore: Int) {
+    public func saveGameNotification(newHighScore: Bool, winnerPlayerUUID: String, winner: String, winningScore: Int) {
         if Scorecard.activeSettings.syncEnabled && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn && !self.excludeHistory && !(Scorecard.game?.isPlayingComputer ?? false) {
             var message = ""
             
@@ -457,7 +457,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
                 message = message + " This was a new high score! Congratulations \(winner)."
             }
             
-            Notifications.updateHighScoreNotificationRecord(winnerEmail: winnerEmail, message: message)
+            Notifications.updateHighScoreNotificationRecord(winnerPlayerUUID: winnerPlayerUUID, message: message)
         }
     }
     
@@ -493,12 +493,12 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         completionMode = returnMode
         completionAdvanceDealer = advanceDealer
         completionResetOverrides = resetOverrides
-        if Scorecard.activeSettings.syncEnabled && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn && !self.excludeHistory && !(Scorecard.game?.isPlayingComputer ?? false) {
+        if Scorecard.activeSettings.syncEnabled && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn && !self.excludeHistory && !(Scorecard.game?.isPlayingComputer ?? false && !Sync.temporaryPlayerUUIDs) {
             view.isUserInteractionEnabled = false
             activityIndicator.startAnimating()
             self.sync.delegate = self
             self.scorecardButton.isHidden = true
-            _ = self.sync.synchronise(waitFinish: true)
+            _ = self.sync.synchronise(waitFinish: true, okToSyncWithTemporaryPlayerUUIDs: true)
         } else {
             syncCompletion(0)
         }

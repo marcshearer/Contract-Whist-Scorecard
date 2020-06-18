@@ -238,7 +238,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
     }
     
     func getPlayerHistory() {
-        self.history.loadGames(playerEmail: self.filterPlayerMO.email!, sortDirection: .descending)
+        self.history.loadGames(playerUUID: self.filterPlayerMO.playerUUID!, sortDirection: .descending)
     }
     
     // MARK: - Drill routines============================================================= -

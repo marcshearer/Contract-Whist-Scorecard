@@ -40,13 +40,13 @@ class Notifications {
     
     // MARK: - High score notifications =================================================================== -
 
-    static func updateHighScoreNotificationRecord(winnerEmail: String, message: String) {
+    static func updateHighScoreNotificationRecord(winnerPlayerUUID: String, message: String) {
         var found = 0
         
         let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
         let publicDatabase = cloudContainer.publicCloudDatabase
         
-        let predicate = NSPredicate(format: "email == %@", winnerEmail)
+        let predicate = NSPredicate(format: "playerUUID == %@", winnerPlayerUUID)
         let query = CKQuery(recordType: "Notifications", predicate: predicate)
         let queryOperation = CKQueryOperation(query: query, qos: .userInteractive)
         queryOperation.queuePriority = .veryHigh
@@ -66,10 +66,10 @@ class Notifications {
         queryOperation.queryCompletionBlock = { (cursor, error) -> Void in
             if error == nil && found == 0 {
                 // Write a new record
-                let recordID = CKRecord.ID(recordName: "Notifications-\(winnerEmail)")
+                let recordID = CKRecord.ID(recordName: "Notifications-\(winnerPlayerUUID)")
                 let record = CKRecord(recordType: "Notifications", recordID: recordID)
                 record.setValue(message , forKey: "message")
-                record.setValue(winnerEmail , forKey: "email")
+                record.setValue(winnerPlayerUUID , forKey: "playerUUID")
                 publicDatabase.save(record, completionHandler: { (record, error)  -> Void in })
             }
         }
@@ -86,8 +86,8 @@ class Notifications {
             if Scorecard.activeSettings.syncEnabled && Scorecard.activeSettings.receiveNotifications {
                 // Now add a notification for each player on this device
                 let database = CKContainer.init(identifier: Config.iCloudIdentifier).publicCloudDatabase
-                for email in Scorecard.shared.playerEmailList() {
-                    let predicate = NSPredicate(format:"email = %@", email)
+                for playerUUID in Scorecard.shared.playerUUIDList() {
+                    let predicate = NSPredicate(format:"playerUUID = %@", playerUUID)
                     let subscription = CKQuerySubscription(recordType: "Notifications", predicate: predicate, options: [.firesOnRecordCreation, .firesOnRecordUpdate])
                     
                     let notification = CKSubscription.NotificationInfo()
@@ -112,18 +112,18 @@ class Notifications {
     
     // MARK: - Online game subscriptions ========================================================== -
     
-    public static func addOnlineGameSubscription(_ inviteEmail: String, category: String = "onlineGame", completion: (()->())? = nil) {
+    public static func addOnlineGameSubscription(_ invitePlayerUUID: String, category: String = "onlineGame", completion: (()->())? = nil) {
         // First delete any existing subscriptions
         Notifications.deleteExistingSubscriptions(category, completion: {
             
             // Now add a notification for the player linked to this device
             let database = CKContainer.init(identifier: Config.iCloudIdentifier).publicCloudDatabase
-            let predicate = NSPredicate(format:"inviteEmail = %@", inviteEmail)
+            let predicate = NSPredicate(format:"invitePlayerUUID = %@", invitePlayerUUID)
             let subscription = CKQuerySubscription(recordType: "Invites", predicate: predicate, options: [.firesOnRecordCreation])
             
             let notification = CKSubscription.NotificationInfo()
             notification.alertLocalizationKey = "%1$@ has invited you to play online. Click this notification to accept, or start the Whist app and go to 'Online Game' and select 'Join a Game' to see the invitation"
-            notification.alertLocalizationArgs = ["hostName", "hostEmail", "hostDeviceName", "inviteEmail"]
+            notification.alertLocalizationArgs = ["hostName", "hostPlayerUUID", "hostDeviceName", "invitePlayerUUID"]
             notification.category = category
             subscription.notificationInfo = notification
             
@@ -137,9 +137,9 @@ class Notifications {
     }
     
     public static func removeTemporaryOnlineGameSubscription(completion: (()->())? = nil) {
-        if UserDefaults.standard.bool(forKey: "tempOnlineEmail") {
+        if UserDefaults.standard.bool(forKey: "tempOnlinePlayerUUID") {
             deleteExistingSubscriptions("onlineGameTemp", completion: {
-                UserDefaults.standard.set(false, forKey: "tempOnlineEmail")
+                UserDefaults.standard.set(false, forKey: "tempOnlinePlayerUUID")
                 if completion != nil {
                     completion!()
                 }
@@ -147,9 +147,9 @@ class Notifications {
         }
     }
     
-    public static func addTemporaryOnlineGameSubscription(email: String, completion: (()->())? = nil) {
-        UserDefaults.standard.set(true, forKey: "tempOnlineEmail")
-        addOnlineGameSubscription(email, category: "onlineGameTemp", completion: completion)
+    public static func addTemporaryOnlineGameSubscription(playerUUID: String, completion: (()->())? = nil) {
+        UserDefaults.standard.set(true, forKey: "tempOnlinePlayerUUID")
+        addOnlineGameSubscription(playerUUID, category: "onlineGameTemp", completion: completion)
     }
     
     public static func processOnlineGameNotification(message: String, args: [String], category: String, confirm: Bool = true) {
@@ -157,7 +157,7 @@ class Notifications {
         let viewController = Utility.getActiveViewController()
         if viewController is ClientViewController {
             let clientViewController = viewController as! ClientViewController
-            // Check that we're looking to play (rather than share) and emails match
+            // Check that we're looking to play (rather than share) and playerUUIDs match
             if clientViewController.thisPlayer == args[3] {
                 // Already in the right place and right player - just send notification
                 NotificationCenter.default.post(name: .onlineInviteReceived, object: self, userInfo: nil)

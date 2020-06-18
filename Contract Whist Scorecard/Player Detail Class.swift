@@ -18,13 +18,14 @@ import CoreData
     // Make sure that if you add any more properties you add them to the methods below - especially ==
     public var name = ""
     public var nameDate: Date!
-    public var email = ""
+    public var playerUUID = ""
     public var emailDate: Date!
     public var visibleLocally = false
     public var dateCreated: Date! = Date()
     public var localDateCreated: Date! = Date()
     public var datePlayed: Date!
     public var externalId: String!
+    public var tempEmail: String!
     public var gamesPlayed: Int64 = 0
     public var gamesWon: Int64 = 0
     public var handsPlayed: Int64 = 0
@@ -47,6 +48,7 @@ import CoreData
     init(visibleLocally: Bool = false) {
         self.visibleLocally = visibleLocally
         self.localDateCreated = Date()
+        self.playerUUID = Scorecard.deviceName + UUID().uuidString // TODO - remove device name
     }
     
     public var indexMO: Int? {
@@ -153,13 +155,14 @@ import CoreData
         // Doesn't set thumbnail or date as they are downloaded separately and update direct
         playerMO.name = self.name
         playerMO.nameDate = self.nameDate
-        playerMO.email = self.email
+        playerMO.playerUUID = self.playerUUID
         playerMO.emailDate = self.emailDate
         playerMO.visibleLocally = self.visibleLocally
         playerMO.dateCreated = self.dateCreated
         playerMO.localDateCreated = self.localDateCreated
         playerMO.datePlayed = self.datePlayed
         playerMO.externalId = self.externalId
+        playerMO.tempEmail = self.tempEmail
         playerMO.gamesPlayed = self.gamesPlayed
         playerMO.gamesWon = self.gamesWon
         playerMO.handsPlayed = self.handsPlayed
@@ -183,13 +186,14 @@ import CoreData
     public func fromManagedObject(playerMO: PlayerMO) {
         self.name = (playerMO.name == nil ? "" : playerMO.name!)
         self.nameDate = playerMO.nameDate as Date?
-        self.email = (playerMO.email == nil ? "" : playerMO.email!)
+        self.playerUUID = (playerMO.playerUUID == nil ? "" : playerMO.playerUUID!)
         self.emailDate = playerMO.emailDate as Date?
         self.visibleLocally = playerMO.visibleLocally
         self.dateCreated = (playerMO.dateCreated == nil ? Date() : playerMO.dateCreated! as Date)
         self.localDateCreated = (playerMO.localDateCreated == nil ? Date() : playerMO.localDateCreated! as Date)
         self.datePlayed = playerMO.datePlayed as Date?
         self.externalId = playerMO.externalId
+        self.tempEmail = playerMO.tempEmail
         self.gamesPlayed = playerMO.gamesPlayed
         self.gamesWon = playerMO.gamesWon
         self.handsPlayed = playerMO.handsPlayed
@@ -213,7 +217,7 @@ import CoreData
         // Doesn't set thumbnail as they are downloaded separately and update direct
         self.name = Utility.objectString(cloudObject: cloudObject, forKey: "name")
         self.nameDate = Utility.objectDate(cloudObject: cloudObject, forKey: "nameDate")
-        self.email = Utility.objectString(cloudObject: cloudObject, forKey: "email")
+        self.playerUUID = Utility.objectString(cloudObject: cloudObject, forKey: "playerUUID")
         self.emailDate = Utility.objectDate(cloudObject: cloudObject, forKey:"emailDate")
         self.dateCreated = Utility.objectDate(cloudObject: cloudObject, forKey:"dateCreated")
         self.datePlayed = Utility.objectDate(cloudObject: cloudObject, forKey:"datePlayed")
@@ -239,7 +243,7 @@ import CoreData
         // Doesn't set thumbnail or date as they are downloaded separately and update direct
         cloudObject.setValue(self.name, forKey: "name")
         cloudObject.setValue(self.nameDate , forKey: "nameDate")
-        cloudObject.setValue(self.email , forKey: "email")
+        cloudObject.setValue(self.playerUUID , forKey: "playerUUID")
         cloudObject.setValue(self.emailDate , forKey: "emailDate")
         cloudObject.setValue(self.dateCreated , forKey: "dateCreated")
         cloudObject.setValue(self.datePlayed , forKey: "datePlayed")

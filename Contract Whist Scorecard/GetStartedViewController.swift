@@ -179,7 +179,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     
     private func enableControls() {
         self.thisPlayerChangeButton.isHidden = (Scorecard.shared.playerList.count <= 1)
-        let homeEnabled = !Scorecard.shared.playerList.isEmpty && Scorecard.shared.settings.thisPlayerEmail != ""
+        let homeEnabled = !Scorecard.shared.playerList.isEmpty && Scorecard.shared.settings.thisPlayerUUID != ""
         let createEnabled = self.playerNameValid() && self.playerIDValid()
         switch self.section {
         case .downloadPlayers:
@@ -201,12 +201,12 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     }
     
     private func playerIDValid(allowBlank: Bool = false) -> Bool {
-        return (allowBlank || self.playerDetail.email != "") && !Scorecard.shared.isDuplicateEmail(self.playerDetail)
+        return (allowBlank || self.playerDetail.playerUUID != "") && !Scorecard.shared.isDuplicatePlayerUUID(self.playerDetail)
 
     }
     
     private func showThisPlayer() {
-        if let playerMO = Scorecard.shared.findPlayerByEmail(Scorecard.shared.settings.thisPlayerEmail) {
+        if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.shared.settings.thisPlayerUUID) {
             self.thisPlayerThumbnailView.set(playerMO: playerMO, nameHeight: 15.0, diameter: self.thisPlayerThumbnailView.frame.width)
             if ScorecardUI.mediumPhoneSize() {
                 self.titleLabel.isHidden = true
@@ -232,8 +232,8 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     func updatePlayer(objectID: NSManagedObjectID) {
         // Find any cells containing an image/player which has just been downloaded asynchronously
         Utility.mainThread {
-            if Scorecard.shared.settings.thisPlayerEmail != "" {
-                if let playerMO = Scorecard.shared.findPlayerByEmail(Scorecard.shared.settings.thisPlayerEmail) {
+            if Scorecard.shared.settings.thisPlayerUUID != "" {
+                if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.shared.settings.thisPlayerUUID) {
                     if playerMO.objectID == objectID {
                         // This is this player - update player (managed object will have been updated in background
                         self.showThisPlayer()
@@ -357,8 +357,8 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
             // Name
             playerDetail.name = textField.text!
         case self.createIDFieldTag:
-            // Email
-            playerDetail.email = textField.text!
+            // PlayerUUID
+            playerDetail.playerUUID = textField.text!
         default:
             break
         }
@@ -415,8 +415,8 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
 
     private func createNewPlayer() {
         if playerDetail.createMO(saveToICloud: false) != nil {
-            if Scorecard.shared.settings.thisPlayerEmail == "" {
-                self.setThisPlayer(email: playerDetail.email)
+            if Scorecard.shared.settings.thisPlayerUUID == "" {
+                self.setThisPlayer(playerUUID: playerDetail.playerUUID)
             } else {
                 Scorecard.shared.settings.save()
             }
@@ -428,7 +428,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     
     private func updatePlayerControls() {
         self.createPlayerNameTextField.text = self.playerDetail.name
-        self.createPlayerIDTextField.text = self.playerDetail.email
+        self.createPlayerIDTextField.text = self.playerDetail.playerUUID
         if let playerMO = self.playerDetail.playerMO {
             self.createPlayerImagePickerPlayerView.set(playerMO: playerMO)
         } else {
@@ -448,7 +448,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
             self.playerSelectionViewTopConstraint.constant = 0
         }
         
-        let playerList = Scorecard.shared.playerList.filter { $0.email != Scorecard.shared.settings.thisPlayerEmail }
+        let playerList = Scorecard.shared.playerList.filter { $0.playerUUID != Scorecard.shared.settings.thisPlayerUUID }
         self.playerSelectionView.set(players: playerList, addButton: false, updateBeforeSelect: false, scrollEnabled: true, collectionViewInsets: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10), contentInset: UIEdgeInsets(top: 22.5, left: 10, bottom: 0, right: 10))
     }
     
@@ -462,12 +462,12 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     
     internal func didSelect(playerMO: PlayerMO) {
         // Save player as default for device
-        self.setThisPlayer(email: playerMO.email!)
+        self.setThisPlayer(playerUUID: playerMO.playerUUID!)
         self.hidePlayerSelection()
     }
     
-    private func setThisPlayer(email: String) {
-        Scorecard.shared.settings.thisPlayerEmail = email
+    private func setThisPlayer(playerUUID: String) {
+        Scorecard.shared.settings.thisPlayerUUID = playerUUID
         Scorecard.shared.settings.save()
         self.showThisPlayer()
         self.enableControls()
@@ -483,14 +483,15 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     private func showSelectPlayers() {
         let noExistingPlayers = Scorecard.shared.playerList.isEmpty
         
-        _ = SelectPlayersViewController.show(from: self, specificEmail: self.downloadIdentifierTextField.text!, descriptionMode: .lastPlayed, allowOtherPlayer: false, allowNewPlayer: false, saveToICloud: false, completion: { (selected, playerList, selection) in
+        _ = SelectPlayersViewController.show(from: self, specificEmail: self.downloadIdentifierTextField.text!, descriptionMode: .lastPlayed, allowOtherPlayer: false, allowNewPlayer: false, saveToICloud: false, completion: { (selected, playerList, selection, thisPlayerUUID) in
             
-            if !(playerList?.isEmpty ?? true) && noExistingPlayers {
-                if let playerMO = playerList?.first(where: { $0.email == self.downloadIdentifierTextField.text!}) {
-                    // Found the player whose email we entered (should always be the case)
-                    self.setThisPlayer(email: playerMO.email)
+            if !(playerList?.isEmpty ?? true) && noExistingPlayers && thisPlayerUUID != nil {
+                // TODO Need to do review this to match UUIDs instead
+                if let playerMO = playerList?.first(where: { $0.playerUUID == thisPlayerUUID}) {
+                    // Found the player whose email we entered (should usually be the case)
+                    self.setThisPlayer(playerUUID: playerMO.playerUUID)
                 } else {
-                    self.setThisPlayer(email: playerList!.first!.email)
+                    self.setThisPlayer(playerUUID: playerList!.first!.playerUUID)
                 }
             }
             self.downloadIdentifierTextField.text = ""

@@ -115,7 +115,7 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
                     Scorecard.shared.settings.save()
                     self.syncGetPlayers = true
                     self.sync.delegate = self
-                    if !self.sync.synchronise(syncMode: .syncGetPlayerDetails, specificEmail: self.syncPlayerList!, waitFinish: true) {
+                    if !self.sync.synchronise(syncMode: .syncGetPlayerDetails, specificPlayerUUIDs: self.syncPlayerList!, waitFinish: true) {
                         self.showGetStarted()
                     }
                 }
@@ -179,7 +179,7 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
         }
     }
     
-    func syncReturnPlayers(_ playerList: [PlayerDetail]!) {
+    func syncReturnPlayers(_ playerList: [PlayerDetail]!, _ thisPlayerUUID: String?) {
        
         Utility.mainThread {
             self.syncGetPlayers = false

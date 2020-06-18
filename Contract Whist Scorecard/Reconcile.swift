@@ -47,7 +47,7 @@ class Reconcile: SyncDelegate {
         // First synchronise
         if Scorecard.shared.settings.syncEnabled && syncFirst {
             self.sync.delegate = self
-            if self.sync.synchronise(waitFinish: true) {
+            if self.sync.synchronise(waitFinish: true, okToSyncWithTemporaryPlayerUUIDs: true) {
                 self.reconcileMessage("Sync in progress")
                 // Note this starts synchronisation - reconciliation is then initiated from the completion handler
             } else {
@@ -81,7 +81,7 @@ class Reconcile: SyncDelegate {
     
     class func rebuildLocalPlayer(playerMO: PlayerMO, resetSyncValues: Bool = false) -> Bool {
         // Load participant records
-        let participantList = History.getParticipantRecordsForPlayer(playerEmail: playerMO.email!, includeBF: true)
+        let participantList = History.getParticipantRecordsForPlayer(playerUUID: playerMO.playerUUID!, includeBF: true)
         
         return CoreData.update(updateLogic: {
             

@@ -178,14 +178,14 @@ class DataAdmin {
         for historyGame in history.games {
             if historyGame.duplicate {
                 if !CoreData.update(updateLogic: {
-                    var lastEmail: String! = nil
-                    historyGame.participant.sort(by: { $0.participantMO!.email! < $1.participantMO!.email! })
+                    var lastPlayerUUID: String! = nil
+                    historyGame.participant.sort(by: { $0.participantMO!.playerUUID! < $1.participantMO!.playerUUID! })
                     for historyParticipant in historyGame.participant {
-                        if lastEmail != nil && lastEmail == historyParticipant.participantMO.email {
+                        if lastPlayerUUID != nil && lastPlayerUUID == historyParticipant.participantMO.playerUUID {
                             CoreData.delete(record: historyParticipant.participantMO)
                             participantsDeleted += 1
                         }
-                        lastEmail = historyParticipant.participantMO.email
+                        lastPlayerUUID = historyParticipant.participantMO.playerUUID
                     }
                     CoreData.delete(record: historyGame.gameMO)
                     gamesDeleted += 1

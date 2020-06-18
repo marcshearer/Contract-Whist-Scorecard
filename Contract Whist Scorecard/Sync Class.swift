@@ -17,9 +17,9 @@ import CloudKit
 @objc public enum SyncStage: Int, CaseIterable {
     case started = -1
     case initialise = 0
-    case downloadGames = 1
-    case uploadGames = 2
-    case downloadPlayers = 3
+    case downloadPlayers = 1
+    case downloadGames = 2
+    case uploadGames = 3
     case uploadPlayers = 4
 }
 
@@ -44,8 +44,8 @@ import CloudKit
     // A method to be called when the sync is de-queued and started
     @objc optional func syncStarted()
     
-    // A method to return a player list (only used for getPlayers mode but couldn't make it optional
-    @objc optional func syncReturnPlayers(_ playerList: [PlayerDetail]!)
+    // A method to return a player list (only used for getPlayers/getPlayerDetails mode but couldn't make it optional)
+    @objc optional func syncReturnPlayers(_ playerList: [PlayerDetail]!, _ thisPlayerUUID: String?)
 }
 
 public enum SyncMode {
@@ -67,6 +67,7 @@ private enum SyncPhase {
     case phaseGetGames
     case phaseUpdateGames
     case phaseSendGamesAndParticipants
+    case phaseReplaceTemporaryPlayerUUIDs
     case phaseGetPlayers
     case phaseGetLinkedPlayers
     case phaseGetPlayerList
@@ -117,9 +118,10 @@ class Sync {
     private var localPlayerMOList: [PlayerMO] = []
     private var playerImageFromCloud: [PlayerMO] = []
     private var playerImageToCloud: [PlayerMO] = []
-    private var specificEmail: [String]!
-    private var specificExternalId: String!
-    
+    private var specificPlayerUUIDs: [String]!
+    private var thisPlayerUUID: String!
+    private var specificEmail: String!
+
     // Game / participant sync state
     private var nextSyncDate: Date!
     private var lastSyncDate: Date!
@@ -136,7 +138,9 @@ class Sync {
         }
     }
     
-    public func synchronise(syncMode: SyncMode = .syncAll, specificEmail: [String] = [], specificExternalId: String! = nil, timeout: Double! = 30.0, waitFinish: Bool) -> Bool {
+    // TODO Engineer something to prevent sync happening while temporary playerUUIDs are in situ unless specially authorised
+    
+    public func synchronise(syncMode: SyncMode = .syncAll, specificPlayerUUIDs: [String] = [], specificEmail: String! = nil, timeout: Double! = 30.0, waitFinish: Bool, okToSyncWithTemporaryPlayerUUIDs: Bool = false) -> Bool {
         // Reset state
         errors = 0
         cloudObjectList = []
@@ -145,8 +149,9 @@ class Sync {
         if !Sync.syncInProgress || waitFinish {
             self.errors = 0
             self.syncMode = syncMode
+            self.specificPlayerUUIDs = specificPlayerUUIDs
             self.specificEmail = specificEmail
-            self.specificExternalId = specificExternalId
+            self.thisPlayerUUID = nil
             self.timeout = timeout
             
             switch syncMode {
@@ -157,6 +162,10 @@ class Sync {
                               .phaseGetVersion,
                               .phaseGetLastSyncDate,
                               .phaseInitialiseStageComplete,
+                              .phaseReplaceTemporaryPlayerUUIDs,
+                              .phaseGetPlayers,
+                              .phaseSendPlayers,
+                              .phaseDownloadPlayersStageComplete,
                               .phaseGetExistingParticipants, .phaseUpdateParticipants,
                               .phaseGetNewParticipants,      .phaseUpdateParticipants,
                               .phaseGetGames,                .phaseUpdateGames,
@@ -165,47 +174,51 @@ class Sync {
                               .phaseSendGamesAndParticipants,
                               .phaseUpdateLastSyncDate,
                               .phaseUploadGamesStageComplete,
-                              .phaseGetPlayers,
-                              .phaseDownloadPlayersStageComplete,
-                              .phaseSendPlayers,
                               .phaseGetSendImages,
                               .phaseUploadPlayersStageComplete]
             case .syncUpdatePlayers:
                 // Synchronise players in list with cloud
                 syncPhases = [.phaseGetVersion,
+                              .phaseReplaceTemporaryPlayerUUIDs,
                               .phaseGetPlayers,
                               .phaseSendPlayers,
                               .phaseGetSendImages]
             case .syncGetPlayers:
-                if self.specificExternalId != nil {
-                    // Got a specifc External Id - load players that match - not currently used
-                    syncPhases = [.phaseGetVersion,
-                                  .phaseGetPlayerList]
-                } else {
-                    // General request to get any players linked to currently loaded players or a specific email - now using links
-                    syncPhases = [.phaseGetVersion,
-                                  .phaseGetLinkedPlayers,
-                                  .phaseGetPlayerList]
-                }
+                // General request to get any players linked to currently loaded players or a specific email - now using links
+                syncPhases = [.phaseGetVersion,
+                              .phaseGetLinkedPlayers,
+                              .phaseGetPlayerList]
             case .syncGetPlayerDetails:
-                // Download the player records for each player in the list of specific emails
+                // Download the player records for each player in the list of specific playerUUIDs
+                // Note that this is only intended for players who are not already on this device
                 syncPhases = [.phaseGetVersion,
                               .phaseGetPlayerList]
             }
             
-            syncPhaseCount = -1
-            if Sync.syncInProgress {
-                self.syncMessage("Waiting for previous operation to finish")
-                self.delegate?.syncQueued?()
-                self.delegate?.syncMessage?("Queued...")
-                observer = setSyncCompletionNotification(name: .syncCompletion)
-            } else {
-                Sync.syncInProgress = true
-                self.syncController()
+            if okToSyncWithTemporaryPlayerUUIDs || !Sync.temporaryPlayerUUIDs || syncPhases.first(where: {$0 == .phaseReplaceTemporaryPlayerUUIDs}) == nil {
+                // Only allow sync which will update temporary player UUIDs from 'safe' places
+                // where we can cope with player UUIDs being changed when we have some temporary ones
+                
+                syncPhaseCount = -1
+                if Sync.syncInProgress {
+                    self.syncMessage("Waiting for previous operation to finish")
+                    self.delegate?.syncQueued?()
+                    self.delegate?.syncMessage?("Queued...")
+                    observer = setSyncCompletionNotification(name: .syncCompletion)
+                } else {
+                    Sync.syncInProgress = true
+                    self.syncController()
+                }
+                success = true
             }
-            success = true
         }
         return success
+    }
+    
+    public static var temporaryPlayerUUIDs: Bool {
+        get {
+            return Scorecard.shared.playerList.filter({$0.tempEmail != nil}).count == 0
+        }
     }
     
     private func syncController() {
@@ -253,6 +266,8 @@ class Sync {
                     nextPhase = self.updateGamesFromCloud()
                 case .phaseSendGamesAndParticipants:
                     nextPhase = self.sendUnconfirmedGamesAndParticipants()
+                case.phaseReplaceTemporaryPlayerUUIDs:
+                    nextPhase = self.replaceTemporaryPlayerUUIDs()
                 case .phaseGetPlayers:
                     nextPhase = self.synchronisePlayersWithCloud()
                 case .phaseSendPlayers:
@@ -264,10 +279,11 @@ class Sync {
                 case .phaseGetLinkedPlayers:
                     nextPhase = self.getLinkedPlayers(specificEmail: self.specificEmail)
                case .phaseGetPlayerList:
-                    nextPhase = self.downloadPlayersFromCloud(specificExternalId: self.specificExternalId,
-                                                              specificEmail: self.specificEmail,
-                                                              downloadAction: self.addPlayerList,
-                                                              completeAction: self.completeGetPlayers)
+                nextPhase = self.downloadPlayersFromCloud(
+                    specificEmails: (self.specificEmail == nil ? nil : [self.specificEmail]),
+                    specificPlayerUUIDs: self.specificPlayerUUIDs,
+                    downloadAction: self.addPlayerList,
+                    completeAction: self.completeGetPlayers)
                 case .phaseStartedStageComplete:
                     self.delegate?.syncStageComplete?(.started)
                 case .phaseInitialiseStageComplete:
@@ -488,20 +504,20 @@ class Sync {
             // First time in - setup the query
             switch getParticipantMode {
             case .getExisting:
-                // Get participants based on players who were on this device before the cutoff date and only look at games since the cutoff since previous games should already be here
-                predicateList = Scorecard.shared.playerEmailList(getPlayerMode: .getExisting, cutoffDate: self.lastSyncDate, specificEmail: self.specificEmail)
-                let predicate1 = NSPredicate(format: "email IN %@", argumentArray: [predicateList])
-                let predicate2 = NSPredicate(format: "syncDate >= %@", self.lastSyncDate as NSDate)
+                // Get participants based on players who were on this device before the cutoff date and only look at games since the cutoff (+24 hours for safety) since previous games should already be here
+                predicateList = Scorecard.shared.playerUUIDList(getPlayerMode: .getExisting, cutoffDate: self.lastSyncDate, specificPlayerUUIDs: self.specificPlayerUUIDs)
+                let predicate1 = NSPredicate(format: "playerUUID IN %@", argumentArray: [predicateList])
+                let predicate2 = NSPredicate(format: "syncDate >= %@", self.lastSyncDate.addingTimeInterval(-(24*60*60)) as NSDate)
                 predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate1, predicate2])
             case .getNew:
                 // Get participants based on players who are new to this device - hence look at all games
-                predicateList = Scorecard.shared.playerEmailList(getPlayerMode: .getNew, cutoffDate: self.lastSyncDate, specificEmail: self.specificEmail)
-                let predicate1 = NSPredicate(format: "email IN %@", argumentArray: [predicateList])
+                predicateList = Scorecard.shared.playerUUIDList(getPlayerMode: .getNew, cutoffDate: self.lastSyncDate, specificPlayerUUIDs: self.specificPlayerUUIDs)
+                let predicate1 = NSPredicate(format: "playerUUID IN %@", argumentArray: [predicateList])
                 predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate1])
             case .getSpecific:
-                // Get particpants based on a list of (probably 1) email address
-                predicateList = self.specificEmail
-                let predicate1 = NSPredicate(format: "email IN %@", argumentArray: [predicateList])
+                // Get particpants based on a list of (probably 1) playerUUID address
+                predicateList = self.specificPlayerUUIDs
+                let predicate1 = NSPredicate(format: "playerUUID IN %@", argumentArray: [predicateList])
                 predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate1])
             case .getGame:
                 // Get participants for a list of games - Can only fetch 50 at a time
@@ -510,7 +526,7 @@ class Sync {
                 } else {
                     let split = 30
                     if gameUUIDList != nil && gameUUIDList!.count > split {
-                        remainder = nil //Array(gameUUIDList!.suffix(from: split))
+                        remainder = Array(gameUUIDList!.suffix(from: split))
                         gameUUIDList = Array(gameUUIDList!.prefix(upTo: split))
                     }
                     predicateList = gameUUIDList!
@@ -625,7 +641,7 @@ class Sync {
     
     private func getGamesFromCloud() -> Bool {
         self.cloudObjectList = []
-        let gameUUIDList = History.getNewParticpantGames(cutoffDate: self.lastSyncDate, specificEmail: self.specificEmail)
+        let gameUUIDList = History.getNewParticpantGames(cutoffDate: self.lastSyncDate, specificPlayerUUIDs: self.specificPlayerUUIDs)
         if gameUUIDList.count == 0 {
             // No new games to process
             return true
@@ -764,7 +780,10 @@ class Sync {
         // Sends any unconfirmed games and participants
         var gamesQueued = 0
         var participantsQueued = 0
-            self.cloudObjectList = []
+        var links: [(fromEmail: String, from: String, to: String)] = []
+        
+        self.cloudObjectList = []
+        
         let history = History(unconfirmed: true)
         if history.games.count != 0 {
             for historyGame in history.games {
@@ -772,7 +791,7 @@ class Sync {
                 if historyGame.gameMO.syncRecordID == nil {
                     // Not confirmed yet - send it
                     let gameMO = historyGame.gameMO!
-                    let recordID = CKRecord.ID(recordName: "Games-\(gameMO.datePlayed!)-\(gameMO.deviceName!)-\(gameMO.gameUUID!)")
+                    let recordID = CKRecord.ID(recordName: "Games-\(gameMO.datePlayed!)+\(gameMO.deviceName!)+\(gameMO.gameUUID!)")
                     let cloudObject = CKRecord(recordType:"Games", recordID: recordID)
                     History.cloudGameFromMo(cloudObject: cloudObject, gameMO: gameMO, syncDate: self.nextSyncDate)
                     self.cloudObjectList.append(cloudObject)
@@ -783,28 +802,40 @@ class Sync {
                         if historyGame.gameMO.syncRecordID == nil {
                             // Not confirmed yet - send it
                             let participantMO = historyParticipant.participantMO!
-                            let recordID = CKRecord.ID(recordName: "Participants-\(participantMO.datePlayed!)-\(participantMO.email!)-\(participantMO.gameUUID!))")
+                            let recordID = CKRecord.ID(recordName: "Participants-\(participantMO.datePlayed!)+\(participantMO.playerUUID!)+\(participantMO.gameUUID!))")
                             let cloudObject = CKRecord(recordType:"Participants", recordID: recordID)
                             History.cloudParticipantFromMO(cloudObject: cloudObject, participantMO: participantMO, syncDate: self.nextSyncDate)
                             self.cloudObjectList.append(cloudObject)
                             participantsQueued += 1
                         }
                     }
-                    // Send any link records (might be duplicates)
+                    // Add any link records (might be duplicates) to list
                     for historyParticipant in historyGame.participant {
                         for linkedParticipant in historyGame.participant {
-                            let from = historyParticipant.participantMO.email!
-                            let to = linkedParticipant.participantMO.email!
-                            if from != to {
-                                let cloudObject = CKRecord(recordType: "Links", recordID:  CKRecord.ID(recordName: "Links-\(from)-\(to)"))
-                                cloudObject.setValue(from, forKey: "fromPlayer")
-                                cloudObject.setValue(to, forKey: "toPlayer")
-                                self.cloudObjectList.append(cloudObject)
+                            let from = historyParticipant.participantMO.playerUUID!
+                            let to = linkedParticipant.participantMO.playerUUID!
+                            if let fromEmail = Scorecard.shared.playerEmails[from] {
+                                // Note this even creates a link for each player with themselves
+                                let link = (fromEmail, from, to)
+                                if links.first(where: { $0 == link}) == nil {
+                                    links.append(link)
+                                }
                             }
                         }
                     }
                 }
             }
+        }
+        
+        // Send link records
+        for link in links {
+            let cloudObject = CKRecord(recordType: "Links", recordID:  CKRecord.ID(recordName: "Links+\(link.fromEmail)+\(link.to)"))
+            
+            cloudObject.setValue(link.fromEmail, forKey: "fromEmail")
+            cloudObject.setValue(link.from, forKey: "fromPlayerUUID")
+            cloudObject.setValue(link.to, forKey: "toPlayerUUID")
+            self.cloudObjectList.append(cloudObject)
+
         }
         
         if self.cloudObjectList.count != 0 {
@@ -835,25 +866,97 @@ class Sync {
     
     // MARK: - Functions to synchronise players with cloud ====================================================== -
     
-    private func getLinkedPlayers(specificEmail: [String]) -> Bool {
-        var results: [String] = specificEmail
+    // Note that this routine updates temporary local playerUUIDs to any new central values.
+    // If it finds a conflict it restarts itself to try to recover
+    
+    private func replaceTemporaryPlayerUUIDs() -> Bool {
+        let tempEmailList = Scorecard.shared.playerList.filter({$0.tempEmail ?? "" != ""})
+        if !tempEmailList.isEmpty {
+            var replaceList: [(email: String, playerUUID: String)] = []
+            
+            // Found some players with a temporary email address - need to check playerUUID and replace if necessary
+             return self.downloadPlayersFromCloud(specificEmails: tempEmailList.map{$0.tempEmail!},
+                                                 desiredKeys: ["email", "playerUUID"],
+                downloadAction: { (record) in
+                    if let email = record.value(forKey: "email") as? String,
+                       let playerUUID = record.value(forKey: "playerUUID") as? String {
+                        replaceList.append((email, playerUUID))
+                    }
+            }, completeAction: {
+                var cloudUpdateList: [CKRecord] = []
+                for playerMO in tempEmailList {
+                    let replace = replaceList.first(where: {$0.email == playerMO.tempEmail})
+                    if replace != nil {
+                        if playerMO.playerUUID == replace!.playerUUID {
+                            // No action needed as central version same as local
+                        } else {
+                            // Have received a different player UUID for this player need to update all local data!
+                            self.replaceTemporaryPlayerUUID(playerMO: playerMO, with: replace!.playerUUID)
+                        }
+                    } else {
+                        // Can keep local player UUID but need to update cloud and check for conflicts
+                        var record: CKRecord
+                        (record, _) = self.createCloudPlayer(playerMO: playerMO)
+                        cloudUpdateList.append(record)
+                    }
+                }
+                if !cloudUpdateList.isEmpty {
+                    Sync.update(records: cloudUpdateList) { (error) in
+                        repeat {
+                            if error == nil {
+                                // All OK
+                            } else {
+                                if let error = error as? CKError {
+                                    if error.code == .serverRecordChanged{
+                                        // Conflict with change on centre - restart the process
+                                        _ = self.replaceTemporaryPlayerUUIDs()
+                                        Utility.debugMessage("sync", "Restarting player UUID replacement")
+                                        break
+                                    }
+                                }
+                                self.syncMessage("Error update local players")
+                                self.errors += 1
+                            }
+                            self.syncController()
+                        } while false
+                    }
+                } else {
+                    self.syncController()
+                }
+            })
+        } else {
+            // Just move on to next phase
+            return true
+        }
+    }
+    
+    private func getLinkedPlayers(specificEmail: String?) -> Bool {
+        var results: [String] = specificPlayerUUIDs
+        var thisPlayerUUID: String?
         
         return downloadLinksFromCloudQuery(specificEmail: specificEmail,
                                                  downloadAction: { (record) in
-                                                    if let toPlayer = record.value(forKey: "toPlayer") as? String {
-                                                        if results.first(where: {$0 == toPlayer}) == nil {
-                                                            results.append(toPlayer)
+                                                    if let toPlayerUUID = record.value(forKey: "toPlayerUUID") as? String,
+                                                       let fromPlayerUUID = record.value(forKey: "fromPlayerUUID") as? String {
+                                                        let thisPlayer = (fromPlayerUUID == toPlayerUUID)
+                                                        if results.first(where: {$0 == toPlayerUUID}) == nil {
+                                                            results.append(toPlayerUUID)
+                                                            if thisPlayer {
+                                                                thisPlayerUUID = toPlayerUUID
+                                                            }
                                                         }
                                                     }
                                                  },
                                                  completeAction: {
-                                                    self.specificEmail = results
+                                                    self.specificEmail = nil
+                                                    self.specificPlayerUUIDs = results
+                                                    self.thisPlayerUUID = thisPlayerUUID
                                                     self.syncController()
                                                  })
         
     }
     
-    private func downloadLinksFromCloudQuery(specificEmail: [String],
+    private func downloadLinksFromCloudQuery(specificEmail: String?,
                                              cursor: CKQueryOperation.Cursor! = nil,
                                              downloadAction: @escaping (CKRecord) -> (),
                                              completeAction: @escaping () -> ()) -> Bool {
@@ -866,23 +969,23 @@ class Sync {
         let publicDatabase = cloudContainer.publicCloudDatabase
         if cursor == nil {
             // First time in - set up the query
-            var emailList: [String]
-            if self.specificEmail.count != 0 {
-                emailList = self.specificEmail
-            } else  {
-                emailList = Scorecard.shared.playerEmailList()
+            var playerUUIDList: [String]
+            if specificEmail != nil {
+                predicate = NSPredicate(format: "fromEmail = %@", specificEmail!)
+            } else {
+                playerUUIDList = Scorecard.shared.playerUUIDList()
+                if playerUUIDList.count == 0 {
+                    return true
+                }
+                predicate = NSPredicate(format: "fromPlayerUUID IN %@", argumentArray: [playerUUIDList])
             }
-            if emailList.count == 0 {
-                return true
-            }
-            predicate = NSPredicate(format: "fromPlayer IN %@", argumentArray: [emailList])
             let query = CKQuery(recordType: "Links", predicate: predicate)
             queryOperation = CKQueryOperation(query: query, qos: .userInteractive)
         } else {
             // Continue previous query
             queryOperation = CKQueryOperation(cursor: cursor, qos: .userInteractive)
         }
-        queryOperation.desiredKeys = ["toPlayer"]
+        queryOperation.desiredKeys = ["fromPlayerUUID", "toPlayerUUID"]
         queryOperation.queuePriority = .veryHigh
         queryOperation.recordFetchedBlock = { (record) -> Void in
             let cloudObject: CKRecord = record
@@ -922,16 +1025,17 @@ class Sync {
         return false
     }
 
-    private func synchronisePlayersWithCloud(specificEmail: [String] = []) -> Bool {
-        return downloadPlayersFromCloud(specificExternalId:nil,
-                                        specificEmail: specificEmail,
+    private func synchronisePlayersWithCloud(specificPlayerUUIDs: [String] = []) -> Bool {
+        return downloadPlayersFromCloud(specificEmails: nil,
+                                        specificPlayerUUIDs: specificPlayerUUIDs,
                                         downloadAction: self.mergePlayerCloudObject,
                                         completeAction: self.completeSynchronisePlayersWithCloud)
     }
     
     
-    private func downloadPlayersFromCloud(specificExternalId: String! = nil,
-                                  specificEmail: [String],
+    private func downloadPlayersFromCloud(specificEmails: [String]? = nil,
+                                  specificPlayerUUIDs: [String]? = nil,
+                                  desiredKeys: [String]? = nil,
                                   downloadAction: @escaping (CKRecord) -> (),
                                   completeAction: @escaping () -> ()) -> Bool {
         
@@ -944,14 +1048,16 @@ class Sync {
         playerImageFromCloud = []
         playerImageToCloud = []
         
-        return downloadPlayersFromCloudQuery(specificExternalId:specificExternalId,
-                                             specificEmail: specificEmail,
+        return downloadPlayersFromCloudQuery(specificEmails: specificEmails,
+                                             specificPlayerUUIDs: specificPlayerUUIDs,
+                                             desiredKeys: desiredKeys,
                                              downloadAction: downloadAction,
                                              completeAction: completeAction)
     }
     
-    private func downloadPlayersFromCloudQuery(specificExternalId: String! = nil,
-                                       specificEmail: [String],
+    private func downloadPlayersFromCloudQuery(specificEmails: [String]? = nil,
+                                       specificPlayerUUIDs: [String]? = nil,
+                                       desiredKeys: [String]? = nil,
                                        cursor: CKQueryOperation.Cursor! = nil,
                                        downloadAction: @escaping (CKRecord) -> (),
                                        completeAction: @escaping () -> ()) -> Bool {
@@ -964,21 +1070,21 @@ class Sync {
         let publicDatabase = cloudContainer.publicCloudDatabase
         if cursor == nil {
             // First time in - set up the query
-            if specificExternalId != nil {
-                predicate = NSPredicate(format: "externalId = %@", self.specificExternalId)
+            if specificEmails != nil {
+                predicate = NSPredicate(format: "email IN %@", argumentArray: [specificEmails!])
             } else {
-                var emailList: [String]
-                if self.specificEmail.count != 0 {
-                    emailList = self.specificEmail
+                var playerUUIDList: [String]
+                if specificPlayerUUIDs?.count ?? 0 != 0 {
+                    playerUUIDList = specificPlayerUUIDs!
                 } else if self.syncMode == .syncGetPlayers {
-                    emailList = History.getParticipantEmailList()
+                    playerUUIDList = History.getParticipantPlayerUUIDList()
                 } else {
-                    emailList = Scorecard.shared.playerEmailList()
+                    playerUUIDList = Scorecard.shared.playerUUIDList()
                 }
-                if emailList.count == 0 {
+                if playerUUIDList.count == 0 {
                     return true
                 }
-                predicate = NSPredicate(format: "email IN %@", argumentArray: [emailList])
+                predicate = NSPredicate(format: "playerUUID IN %@", argumentArray: [playerUUIDList])
             }
             let query = CKQuery(recordType: "Players", predicate: predicate)
             let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
@@ -988,16 +1094,13 @@ class Sync {
             // Continue previous query
             queryOperation = CKQueryOperation(cursor: cursor, qos: .userInteractive)
         }
-        if specificExternalId != nil {
-            queryOperation.desiredKeys = ["name", "email", "externalId"]
-        } else {
-            queryOperation.desiredKeys = ["name", "email", "dateCreated", "datePlayed", "nameDate",
-                                          "emailDate", "thumbnailDate","gamesPlayed", "gamesWon",
-                                          "totalScore", "handsPlayed", "handsMade", "twosMade",
-                                          "maxScore", "maxMade", "maxTwos",
-                                          "maxScoreDate", "maxMadeDate", "maxTwosDate",
-                                          "externalId", "visibleLocally"]
-        }
+        queryOperation.desiredKeys = desiredKeys ??  ["name", "playerUUID", "dateCreated", "datePlayed", "nameDate",
+                                                      "emailDate", "thumbnailDate","gamesPlayed", "gamesWon",
+                                                      "totalScore", "handsPlayed", "handsMade", "twosMade",
+                                                      "maxScore", "maxMade", "maxTwos",
+                                                      "maxScoreDate", "maxMadeDate", "maxTwosDate",
+                                                      "email", "visibleLocally"]
+    
         queryOperation.queuePriority = .veryHigh
         queryOperation.recordFetchedBlock = { (record) -> Void in
             let cloudObject: CKRecord = record
@@ -1022,8 +1125,9 @@ class Sync {
             
             if cursor != nil {
                 // More to come - recurse
-                _ = self.downloadPlayersFromCloudQuery(specificExternalId: specificExternalId,
-                                                       specificEmail: specificEmail,
+                _ = self.downloadPlayersFromCloudQuery(specificEmails: specificEmails,
+                                                       specificPlayerUUIDs: specificPlayerUUIDs,
+                                                       desiredKeys: desiredKeys,
                                                        cursor: cursor,
                                                        downloadAction: downloadAction,
                                                        completeAction: completeAction)
@@ -1060,12 +1164,22 @@ class Sync {
         
         cloudRecord.fromCloudObject(cloudObject: cloudObject)
         self.downloadedPlayerRecordList.append(cloudRecord)
+        if let email = cloudObject.value(forKey: "email") as? String {
+            Scorecard.shared.playerEmails[cloudRecord.playerUUID] = email
+        }
         
-        // Try to match by email address
-        if let localMO = Scorecard.shared.playerList.first(where: { $0.email?.lowercased() == cloudRecord.email.lowercased() }) {
+        // Try to match by playerUUID address
+        if let localMO = Scorecard.shared.playerList.first(where: { $0.playerUUID?.lowercased() == cloudRecord.playerUUID.lowercased() }) {
             // Merge the records
             localRecord.fromManagedObject(playerMO: localMO)
+            
             localRecord.syncRecordID = cloudObject.recordID.recordName
+            
+            // Clear temporary email if player UUIDs are in sync
+            if localRecord.playerUUID == cloudRecord.playerUUID {
+                localRecord.tempEmail = nil
+                changed = true
+            }
             
             // Update thumbnail to latest version
             // Need to queue updates for later
@@ -1116,20 +1230,20 @@ class Sync {
             if localRecord.maxMade < cloudRecord.maxMade {
                 localRecord.maxMade = cloudRecord.maxMade
                 localRecord.maxMadeDate = cloudRecord.maxMadeDate
-                  changed = true
+                changed = true
             } else if cloudRecord.maxMade < localRecord.maxMade {
                 cloudRecord.maxMade = localRecord.maxMade
                 cloudRecord.maxMadeDate = localRecord.maxMadeDate
-                  changed = true
+                changed = true
             }
             if localRecord.maxTwos < cloudRecord.maxTwos {
                 localRecord.maxTwos = cloudRecord.maxTwos
                 localRecord.maxTwosDate = cloudRecord.maxTwosDate
-                  changed = true
+                changed = true
             } else if cloudRecord.maxTwos < localRecord.maxTwos {
                 cloudRecord.maxTwos = localRecord.maxTwos
                 cloudRecord.maxTwosDate = localRecord.maxTwosDate
-                  changed = true
+                changed = true
             }
             
             // Update date created / last played
@@ -1157,11 +1271,11 @@ class Sync {
             
             if changed {
                 // Something has changed - re-sync
-            
+                
                 // Set sync dates
                 cloudRecord.syncDate = Date()
                 localRecord.syncDate = cloudRecord.syncDate
- 
+                
                 // Update the cloud record and queue for update
                 cloudRecord.toCloudObject(cloudObject: cloudObject)
                 self.cloudObjectList.append(cloudObject)
@@ -1196,18 +1310,16 @@ class Sync {
             self.syncReturnPlayers(nil)
         } else {
             for playerDetail in self.downloadedPlayerRecordList {
-                if self.specificExternalId == nil {
-                    // Make sure we don't have a duplicate name (if not just checking External Ids)
-                    playerDetail.dedupName()
-                }
+                // Make sure we don't have a duplicate name (if not just checking External Ids)
+                playerDetail.dedupName()
             }
-            self.syncReturnPlayers(self.downloadedPlayerRecordList)
+            self.syncReturnPlayers(self.downloadedPlayerRecordList, self.thisPlayerUUID)
         }
         self.syncController()
     }
     
     private func sendPlayersToCloud() -> Bool {
-        // Add any records which are local (with email) but not in cloud
+        // Add any records which are local (with playerUUID) but not in cloud
         self.queueMissingPlayers()
         
         // Upload any changed / new records to cloud
@@ -1221,10 +1333,10 @@ class Sync {
     
     private func queueMissingPlayers() {
         // Now add in records that are not in cloud yet
-        if self.specificEmail.count != 0 {
-            // Search for specific email
-            for email in specificEmail {
-                let found = Scorecard.shared.playerList.firstIndex(where: { $0.email!.lowercased() as String == email.lowercased() })
+        if self.specificPlayerUUIDs.count != 0 {
+            // Search for specific playerUUID
+            for playerUUID in specificPlayerUUIDs {
+                let found = Scorecard.shared.playerList.firstIndex(where: { $0.playerUUID!.lowercased() as String == playerUUID.lowercased() })
                 if found != nil {
                     self.queueMissingPlayer(playerMO: Scorecard.shared.playerList[found!])
                 }
@@ -1238,19 +1350,19 @@ class Sync {
     }
     
     private func queueMissingPlayer(playerMO: PlayerMO) {
-        let matchEmail = playerMO.email
-        if matchEmail != nil && matchEmail != "" {
-            // Check this email isn't already in cloud list (otherwise duplicates would multiply forever)
-            let found = self.downloadedPlayerRecordList.firstIndex(where: { $0.email.lowercased() as String == matchEmail!.lowercased() })
+        let matchPlayerUUID = playerMO.playerUUID
+        if matchPlayerUUID != nil && matchPlayerUUID != "" {
+            // Check this playerUUID isn't already in cloud list (otherwise duplicates would multiply forever)
+            let found = self.downloadedPlayerRecordList.firstIndex(where: { $0.playerUUID.lowercased() as String == matchPlayerUUID!.lowercased() })
             
             if found == nil {
+                if playerMO.tempEmail ?? "" == "" {
+                    fatalError("Found a local player who is not on central database but we don't have a unique ID/email for them")
+                }
                 // Record is not in the cloud - send it
-                let cloudObject = CKRecord(recordType:"Players", recordID: CKRecord.ID(recordName: "Players-\(playerMO.name!)-\(playerMO.email!)"))
-                let cloudRecord = PlayerDetail()
-                cloudRecord.fromManagedObject(playerMO: playerMO)
-                cloudRecord.syncDate = Date()
-                cloudRecord.syncRecordID = nil
-                cloudRecord.toCloudObject(cloudObject: cloudObject)
+                var cloudObject: CKRecord
+                var cloudRecord: PlayerDetail
+                (cloudObject, cloudRecord) = createCloudPlayer(playerMO: playerMO)
                 self.cloudObjectList.append(cloudObject)
                 
                 // Queue local copy for update
@@ -1264,6 +1376,17 @@ class Sync {
                 }
             }
         }
+    }
+    
+    private func createCloudPlayer(playerMO: PlayerMO) -> (CKRecord, PlayerDetail) {
+        let cloudObject = CKRecord(recordType:"Players", recordID: CKRecord.ID(recordName: "Players-\(playerMO.tempEmail!)"))
+        let cloudRecord = PlayerDetail()
+        cloudRecord.fromManagedObject(playerMO: playerMO)
+        cloudRecord.syncDate = Date()
+        cloudRecord.syncRecordID = nil
+        cloudRecord.toCloudObject(cloudObject: cloudObject)
+        cloudObject.setValue(cloudRecord.tempEmail, forKey: "email")
+        return (cloudObject, cloudRecord)
     }
     
     private func updatePlayersToCloud() -> Bool {
@@ -1296,9 +1419,9 @@ class Sync {
             } else {
                 // Mark the record as synced OK
                 for playerNumber in 1...self.localPlayerRecordList.count {
-                    let cloudEmail = savedRecord.object(forKey: "email") as! String
-                    let localEmail = self.localPlayerRecordList[playerNumber-1].email
-                    if localEmail == cloudEmail {
+                    let cloudPlayerUUID = savedRecord.object(forKey: "playerUUID") as! String
+                    let localPlayerUUID = self.localPlayerRecordList[playerNumber-1].playerUUID
+                    if localPlayerUUID == cloudPlayerUUID {
                         self.localPlayerRecordList[playerNumber-1].syncedOk = true
                         // Retrieve record ID
                         self.localPlayerRecordList[playerNumber-1].syncRecordID = savedRecord.recordID.recordName
@@ -1374,7 +1497,7 @@ class Sync {
                 imageRecordID.append(CKRecord.ID(recordName: playerImageFromCloud[playerNumber-1].syncRecordID!))
             }
             let fetchOperation = CKFetchRecordsOperation(recordIDs: imageRecordID)
-            fetchOperation.desiredKeys = ["email", "thumbnail", "thumbnailDate"]
+            fetchOperation.desiredKeys = ["playerUUID", "thumbnail", "thumbnailDate"]
             
             fetchOperation.perRecordCompletionBlock = { (cloudObject: CKRecord?, syncRecordID: CKRecord.ID?, error: Error?) -> Void in
                 if error == nil && cloudObject != nil {
@@ -1385,8 +1508,8 @@ class Sync {
                 
                 var playerObjectId: [NSManagedObjectID] = []
                 for cloudObject in self.cloudObjectList {
-                    if let email = Utility.objectString(cloudObject: cloudObject, forKey: "email") {
-                        if let playerMO = Scorecard.shared.findPlayerByEmail(email){
+                    if let playerUUID = Utility.objectString(cloudObject: cloudObject, forKey: "playerUUID") {
+                        if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(playerUUID){
                             if CoreData.update(updateLogic: {
                                 var thumbnail: Data?
                                 thumbnail = Utility.objectImage(cloudObject: cloudObject, forKey: "thumbnail") as Data?
@@ -1452,78 +1575,6 @@ class Sync {
         }
     }
     
-    public func updateExternalIds(playerIdList: [String : String], completion: @escaping (Bool, String)->()) {
-        // Routine to update external Ids linked to players in the cloud immediately (without waiting for sync)
-        // Not currently in use - could use for skype login for example
-        
-        var queryOperation: CKQueryOperation
-        var predicate: NSPredicate!
-        var emailList: [String] = []
-        var downloadList: [CKRecord] = []
-        
-        // Build player list
-        for (player, _) in playerIdList {
-            emailList.append(player)
-        }
-        // Fetch player records from cloud
-        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
-        let publicDatabase = cloudContainer.publicCloudDatabase
-        predicate = NSPredicate(format: "email IN %@", argumentArray: [emailList])
-        let query = CKQuery(recordType: "Players", predicate: predicate)
-        queryOperation = CKQueryOperation(query: query, qos: .userInteractive)
-        queryOperation.desiredKeys = ["name", "email", "externalId"]
-        queryOperation.queuePriority = .veryHigh
-        queryOperation.recordFetchedBlock = { (record) -> Void in
-            downloadList.append(record)
-        }
-        
-        queryOperation.queryCompletionBlock = { (cursor, error) -> Void in
-            if error != nil || cursor != nil {
-                var message = "Unable to fetch players from cloud!"
-                if Scorecard.adminMode {
-                    message = message + " " + error.debugDescription
-                }
-                completion(false, message)
-                return
-            }
-            
-            // Update the External Ids
-            for record in downloadList {
-                if let playerEmail = Utility.objectString(cloudObject: record, forKey: "email") {
-                    var value = playerIdList[playerEmail]
-                    if value == "" {
-                        value = nil
-                    }
-                    record.setValue(value, forKey: "externalId")
-                }
-            }
-            
-            // Now send back the records with External Id updated
-            let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
-            let publicDatabase = cloudContainer.publicCloudDatabase
-            
-            let uploadOperation = CKModifyRecordsOperation(recordsToSave: downloadList, recordIDsToDelete: nil)
-            
-            uploadOperation.isAtomic = true
-            uploadOperation.database = publicDatabase
-            
-            // Assign a completion handler
-            uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecord.ID]?, error: Error?) -> Void in
-                if error != nil {
-                    completion(false, "Error updating records. Sync failed")
-                    return
-                }
-                completion(true, "Completed successfully")
-            }
-            
-            // Add the operation to an operation queue to execute it
-            OperationQueue().addOperation(uploadOperation)
-        }
-        
-        // Execute the download query
-        publicDatabase.add(queryOperation)
-    }
-    
     // MARK: - Utility Routines ======================================================================== -
 
     private func syncMessage(_ message: String) {
@@ -1534,10 +1585,8 @@ class Sync {
     }
     
     private func syncAlert(_ message: String) {
-        if self.delegate != nil {
-            self.errors = -1
-            self.delegate?.syncAlert?(message, completion: self.syncCompletion)
-        }
+        self.errors = -1
+        self.delegate?.syncAlert?(message, completion: self.syncCompletion)
     }
     
     private func syncCompletion() {
@@ -1573,11 +1622,11 @@ class Sync {
         NotificationCenter.default.post(name: .syncCompletion, object: self, userInfo: nil)
     }
     
-    private func syncReturnPlayers(_ playerList: [PlayerDetail]!) {
+    private func syncReturnPlayers(_ playerList: [PlayerDetail]?, _ thisPlayer: String? = nil) {
         // All done
         Sync.syncInProgress = false
         // Call the delegate handler if there is one
-        delegate?.syncReturnPlayers?(playerList)
+        delegate?.syncReturnPlayers?(playerList, thisPlayer)
         self.syncController()
     }
     
@@ -1644,7 +1693,7 @@ class Sync {
         }
     }
     
-    // MARK: - Generic read/write=================================================================== -
+    // MARK: - Generic read/write =================================================================== -
     
     public class func update(records: [CKRecord]? = nil, recordIDsToDelete: [CKRecord.ID]? = nil, database: CKDatabase? = nil, recordsRemainder: [CKRecord]? = nil, recordIDsToDeleteRemainder: [CKRecord.ID]? = nil, completion: ((Error?)->())? = nil) {
         // Copes with limit being exceeed which splits the load in two and tries again
@@ -1795,7 +1844,104 @@ class Sync {
         // Execute the query
         database.add(queryOperation)
     }
+    
+    // MARK: - Replace Player UUID routines ======================================================== -
+    
+    private func replaceTemporaryPlayerUUID(playerMO: PlayerMO, with playerUUID: String) {
+        
+        // Note this is horrible since we might add other data which would also need to be replace.
+        // Worse still would be if we were to do this while holding vital Player UUIDs in memory
+        // However it should happen very rarely and is the price of allowing the creating
+        // of new players whilst offline. Have also changed it so that you have to call sync in a
+        // special way for it to happen when there are temporary emails around.
+        
+        // Replace in core data tables
+        self.replaceTablePlayerUUID(recordType: "Participant", key: "playerUUID", from: playerMO.playerUUID!, to: playerUUID)
+        self.replaceSettingsPlayerUUID(keys: ["onlinePlayerEmail"], from: playerMO.playerUUID!, to: playerUUID)
+        Scorecard.shared.settings.save()
+        
+        // Replace in settings
+        self.replaceUserDefaultsPlayerUUID(keys: ["tempOnlinePlayerUUID", "recoveryConnectionPlayerUUID", "recoveryConnectionRemotePlayerUUID"], from: playerMO.playerUUID!, to: playerUUID)
+        
+        // Replace in User Defaults
+        for playerNumber in 1...Scorecard.shared.maxPlayers {
+            self.replaceUserDefaultsPlayerUUID(keys: ["robot\(playerNumber)PlayerUUID", "player\(playerNumber)PlayerUUID"], from: playerMO.playerUUID!, to: playerUUID)
+        }
+        
+        // Now check if this player was already on this device - unlikely but possible
+        if let existing = Scorecard.shared.findPlayerByPlayerUUID(playerUUID) {
+            // Need to merge the two player records and delete new one
+            _ = CoreData.update {
+                existing.gamesPlayed += playerMO.gamesPlayed - playerMO.syncGamesPlayed
+                existing.gamesWon += playerMO.gamesWon - playerMO.syncGamesWon
+                existing.totalScore += playerMO.totalScore - playerMO.syncTotalScore
+                existing.handsPlayed += playerMO.handsPlayed - playerMO.syncHandsPlayed
+                existing.handsMade += playerMO.handsMade - playerMO.syncHandsMade
+                existing.twosMade += playerMO.twosMade - playerMO.syncTwosMade
+                if playerMO.maxScore > existing.maxScore {
+                    existing.maxScore = playerMO.maxScore
+                    existing.maxScoreDate = playerMO.maxScoreDate
+                }
+                if playerMO.maxMade > existing.maxMade {
+                    existing.maxMade = playerMO.maxMade
+                    existing.maxMadeDate = playerMO.maxMadeDate
+                }
+                if playerMO.maxTwos > existing.maxTwos {
+                    existing.maxTwos = playerMO.maxTwos
+                    existing.maxTwosDate = playerMO.maxTwosDate
+                }
+                if playerMO.datePlayed != nil && existing.datePlayed != nil && playerMO.datePlayed! > existing.datePlayed! {
+                    existing.datePlayed = playerMO.datePlayed
+                }
+                // Now delete the new player
+                let playerDetail = PlayerDetail()
+                playerDetail.fromManagedObject(playerMO: playerMO)
+                playerDetail.deleteMO()
+            }
+        } else {
+            // Replace player UUID in player itself
+            _ = CoreData.update {
+                playerMO.playerUUID = playerUUID
+            }
+        }
+    }
+    
+    private func replaceTablePlayerUUID(recordType: String, key: String, from: String, to: String) {
+        let records = CoreData.fetch(from: recordType, filter: NSPredicate(format: "\(key) = %@", from))
+        _ = CoreData.update {
+            for record in records {
+                record.setValue(to, forKey: key)
+            }
+        }
+    }
+    
+    private func replaceSettingsPlayerUUID(keys: [String], from: String, to: String) {
+        var changed = false
+        for key in keys {
+            if let currentValue = Scorecard.shared.settings.value(forKey: key) as? String {
+                if currentValue == from {
+                    Scorecard.shared.settings.setValue(to, forKey: key)
+                    changed = true
+                }
+            }
+        }
+        if changed {
+            Scorecard.shared.settings.save()
+        }
+    }
+    
+    private func replaceUserDefaultsPlayerUUID(keys: [String], from: String, to : String) {
+        for key in keys {
+            if let currentValue = UserDefaults.standard.string(forKey: key) {
+                if currentValue == from {
+                    UserDefaults.standard.set(to, forKey: key)
+                }
+            }
+        }
+    }
 }
+
+
 
 // MARK: - Utility Classes ========================================================================= -
 

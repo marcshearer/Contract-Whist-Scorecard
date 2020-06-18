@@ -63,7 +63,7 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
         
         // Invoke the sync
         self.sync.delegate = self
-        _ = self.sync.synchronise(waitFinish: true)
+        _ = self.sync.synchronise(waitFinish: true, okToSyncWithTemporaryPlayerUUIDs: true)
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

@@ -1090,7 +1090,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         self.thisPlayerChangeButton.roundCorners(cornerRadius: self.thisPlayerChangeButton.frame.height / 2.0)
         self.thisPlayerChangeButtonContainer.addShadow(shadowSize: CGSize(width: 4,height: 4))
          
-        self.setOnlineEmail(playerEmail: Scorecard.shared.settings.thisPlayerEmail)
+        self.setOnlinePlayerUUID(playerUUID: Scorecard.shared.settings.thisPlayerUUID)
          
         self.thisPlayerChangeButton.addTarget(self, action: #selector(SettingsViewController.thisPlayerChangePressed(_:)), for: .touchUpInside)
 
@@ -1113,7 +1113,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             self.disableAll()
         }
         
-        let playerList = Scorecard.shared.playerList.filter { $0.email != Scorecard.shared.settings.thisPlayerEmail }
+        let playerList = Scorecard.shared.playerList.filter { $0.playerUUID != Scorecard.shared.settings.thisPlayerUUID }
         self.playerSelectionView.set(players: playerList, addButton: true, updateBeforeSelect: false, scrollEnabled: true, collectionViewInsets: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10))
      }
     
@@ -1129,7 +1129,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         
     internal func didSelect(playerMO: PlayerMO) {
         // Save player as default for device
-        self.setOnlineEmail(playerEmail: playerMO.email)
+        self.setOnlinePlayerUUID(playerUUID: playerMO.playerUUID)
         self.hidePlayerSelection()
     }
     
@@ -1472,11 +1472,11 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     // MARK: - Online game methods ========================================================== -
     
-    private func setOnlineEmail(playerEmail: String!) {
+    private func setOnlinePlayerUUID(playerUUID: String!) {
         // Save the setting and update screen
-        if let playerEmail = playerEmail {
-            Scorecard.shared.settings.thisPlayerEmail = playerEmail
-            if let thisPlayerMO = Scorecard.shared.findPlayerByEmail(playerEmail) {
+        if let playerUUID = playerUUID {
+            Scorecard.shared.settings.thisPlayerUUID = playerUUID
+            if let thisPlayerMO = Scorecard.shared.findPlayerByPlayerUUID(playerUUID) {
                 self.thisPlayerThumbnailView.set(playerMO: thisPlayerMO, nameHeight: 20.0, diameter: self.thisPlayerThumbnailView.frame.width)
             }
         } else {
@@ -1486,7 +1486,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
 
     private func updateOnlineGameSubscriptions() {
         if self.onlineEnabled {
-            Notifications.addOnlineGameSubscription(Scorecard.shared.settings.thisPlayerEmail, completion: nil)
+            Notifications.addOnlineGameSubscription(Scorecard.shared.settings.thisPlayerUUID, completion: nil)
         } else {
             Notifications.deleteExistingSubscriptions( "onlineGame", completion: nil)
         }

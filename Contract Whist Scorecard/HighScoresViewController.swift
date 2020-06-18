@@ -223,7 +223,7 @@ class HighScoresViewController: ScorecardViewController, UITableViewDataSource, 
                 break
             }
             // Find the matching player
-            playerMO = Scorecard.shared.findPlayerByEmail(participantMO.email!)
+            playerMO = Scorecard.shared.findPlayerByPlayerUUID(participantMO.playerUUID!)
             if playerMO != nil {
                 thumbnail = playerMO.thumbnail
                 name = playerMO.name!
@@ -256,7 +256,7 @@ class HighScoresViewController: ScorecardViewController, UITableViewDataSource, 
             let highScoreType = tableView.tag % 1000000
             if highScoreType == 2 {
                 // Win streak - special case
-                _ = HistoryViewer(from: self, winStreakPlayer: longestWinStreak[indexPath.row].participantMO?.email)
+                _ = HistoryViewer(from: self, winStreakPlayer: longestWinStreak[indexPath.row].participantMO?.playerUUID)
             } else {
                 switch highScoreType {
                 case 0:
@@ -283,11 +283,11 @@ class HighScoresViewController: ScorecardViewController, UITableViewDataSource, 
     // MARK: - Form Presentation / Handling Routines =================================================== -
     
     func setupScores() {
-        let playerEmailList = Scorecard.shared.playerEmailList(getPlayerMode: .getAll)
-        totalScoreParticipants = History.getHighScores(type: .totalScore, playerEmailList: playerEmailList)
-        handsMadeParticipants = History.getHighScores(type: .handsMade, playerEmailList: playerEmailList)
-        twosMadeParticipants = History.getHighScores(type: .twosMade, playerEmailList: playerEmailList)
-        longestWinStreak = History.getWinStreaks(playerEmailList: playerEmailList)
+        let playerUUIDList = Scorecard.shared.playerUUIDList(getPlayerMode: .getAll)
+        totalScoreParticipants = History.getHighScores(type: .totalScore, playerUUIDList: playerUUIDList)
+        handsMadeParticipants = History.getHighScores(type: .handsMade, playerUUIDList: playerUUIDList)
+        twosMadeParticipants = History.getHighScores(type: .twosMade, playerUUIDList: playerUUIDList)
+        longestWinStreak = History.getWinStreaks(playerUUIDList: playerUUIDList)
     }
     
     func positionPopup() {

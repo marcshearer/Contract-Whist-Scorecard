@@ -11,11 +11,12 @@ release/5.1                         master plus feature/network-abstraction
 List of outstanding things to do
 
 // Tasks for upgrade
-Run option to build links
-Conversion of settings - onlinePlayerEmail -> thisPlayerEmail and onlineGamesEnabled
-Conversion of cloud databaes - rename email to player UUID in Players and Participants
-Run build of playerUUIDs and then substitute email with playerUUID in Players and Participants
+Run Convert email to UUID
+Run Create readable record IDs
+Run Create links
 
+// Still to write
+Conversion of settings - onlinePlayerUUID -> thisPlayerUUID and onlineGamesEnabled
 
 Changes since last version
 --------------------------

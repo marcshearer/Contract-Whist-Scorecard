@@ -292,14 +292,14 @@ class PlayersViewController: ScorecardViewController, ScrollViewDataSource, Scro
         
         if Scorecard.activeSettings.syncEnabled && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
             
-            let players = players ?? Scorecard.shared.playerEmailList()
+            let players = players ?? Scorecard.shared.playerUUIDList()
             
             // Synchronise players
             if players.count > 0 {
                 if self.sync == nil {
                     self.sync = Sync()
                 }
-                _ = self.sync.synchronise(syncMode: .syncUpdatePlayers, specificEmail: players, waitFinish: true)
+                _ = self.sync.synchronise(syncMode: .syncUpdatePlayers, specificPlayerUUIDs: players, waitFinish: true, okToSyncWithTemporaryPlayerUUIDs: true)
             }
         }
     }
@@ -343,7 +343,7 @@ class PlayersViewController: ScorecardViewController, ScrollViewDataSource, Scro
     // MARK: - Utility routines ============================================================================== -
     
     private func showSelectPlayers() {
-        _ = SelectPlayersViewController.show(from: self, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: true, completion: { (selected, playerList, selection) in
+        _ = SelectPlayersViewController.show(from: self, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: true, completion: { (selected, playerList, selection, thisPlayerUUID) in
             if selected != nil {
                 self.refreshView()
             }

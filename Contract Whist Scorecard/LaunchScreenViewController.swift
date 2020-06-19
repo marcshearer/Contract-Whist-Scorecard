@@ -18,6 +18,7 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     private weak var callingViewController: ScorecardViewController!
     private var syncPlayerList: [String]?
     private var newDevice = false
+    private var termsUser: String?
     
     // Reconcile
     internal var reconcile: Reconcile!
@@ -37,15 +38,25 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func acceptPressed(_ sender: UIButton) {
-        Scorecard.shared.settings.termsDate = Date()
-        Scorecard.shared.settings.termsDevice = Scorecard.deviceName
-        Scorecard.shared.settings.save()
-        self.enableControls()
-        self.linkToNext()
+        if let termsUser = self.termsUser {
+            Scorecard.settings.termsDate = Date()
+            Scorecard.settings.termsUser = termsUser
+            Scorecard.settings.termsDevice = Scorecard.deviceName
+            Scorecard.settings.save()
+            self.enableControls()
+            self.continueStartup()
+        } else {
+            fatalError("Shouldn't have got to this point if user not available")
+        }
     }
     
     @IBAction func declinePressed(_ sender: UIButton) {
-        exit(0)
+        self.message.text = "You cannot access the app without accepting the terms of use"
+        self.termsUser = nil
+        self.enableControls()
+        Utility.executeAfter(delay: 10.0) {
+            exit(0)
+        }
     }
     
     // MARK: - View Overrides ========================================================================== -
@@ -57,8 +68,13 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
         
         self.termsText.text = "Whist allows you to score or play Contract Whist.\n\nA record of the scores of your games and the players' names will be kept and synchronised with a central database.\n\nThis data will not be used for any marketing purposes.\nHowever it will be accessible to other users of the app who know your Unique ID.\n\nBy accepting these terms and conditions you agree to any data you enter being shared in this way."
 
-        self.enableControls(showTerms: false)
+        self.enableControls()
         
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
         checkICloud()
         
         // Note flow continues in checkICloud
@@ -67,31 +83,50 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     private func checkICloud() {
         
         self.message.text = "Loading..."
-        
-        Utility.executeAfter(delay: 1.0) {
-            Scorecard.shared.getVersion(completion: {
-                // Don't call this until any upgrade has taken place
-                self.getCloudVersion()
-            })
-        }
+        Scorecard.shared.getVersion(completion: {
+            // Don't call this until any upgrade has taken place
+            self.getCloudVersion()
+        })
+
         // Note flow continues in continueStartup
     }
     
     private func continueStartup() {
-
-        // self.showGetStarted() // TODO remove
-        // return                // TODO remove
         
-        if !Scorecard.shared.settings.syncEnabled {
+        if Scorecard.settings.termsDate == nil {
+            // Need to get terms approval - but only possible with network
+            if !Scorecard.shared.isNetworkAvailable || !Scorecard.shared.isLoggedIn {
+                self.failNoNetwork()
+            } else {
+                Sync.getUser { (userID) in
+                    if userID == nil && Scorecard.settings.termsDate == nil {
+                        self.failNoNetwork()
+                    } else {
+                        // Wait for acceptance - will return after button click
+                        self.termsUser = userID
+                        self.enableControls()
+                    }
+                }
+            }
+        } else {
+            Utility.executeAfter(delay: 1.0) {
+                self.continueStartupContinued()
+            }
+        }
+    }
+            
+   private func continueStartupContinued() {
+
+        if !Scorecard.settings.syncEnabled {
             // New device - try to load from iCloud
             self.newDevice = true
             self.message.text = "Loading..."
-            Scorecard.shared.settings.loadFromICloud() { (players) in
+            Scorecard.settings.loadFromICloud() { (players) in
                 Utility.mainThread {
                     if players != nil && !players!.isEmpty {
                         self.syncPlayerList = players
                     }
-                    if Scorecard.shared.settings.termsDate == nil {
+                    if Scorecard.settings.termsDate == nil {
                         // Need to wait for terms acceptance
                         self.enableControls()
                     } else {
@@ -99,7 +134,7 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
                     }
                 }
             }
-        } else if Scorecard.shared.settings.termsDate == nil {
+        } else if Scorecard.settings.termsDate == nil {
             // Need to wait for terms acceptance
             self.enableControls()
         } else {
@@ -112,7 +147,7 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
             // New device check notifications and link to get started
             if self.syncPlayerList != nil {
                 self.checkReceiveNotifications() {
-                    Scorecard.shared.settings.save()
+                    Scorecard.settings.save()
                     self.syncGetPlayers = true
                     self.sync.delegate = self
                     if !self.sync.synchronise(syncMode: .syncGetPlayerDetails, specificPlayerUUIDs: self.syncPlayerList!, waitFinish: true) {
@@ -136,6 +171,11 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
             self.callingViewController.dismissWithScreenshot(viewController: self, completion: self.completion)
         }
     }
+
+    private func failNoNetwork() {
+        self.message.text = "You must be online\nand logged in to iCloud\n to start up the app"
+        Utility.executeAfter(delay: 10.0, completion: { exit(0) })
+    }
     
     private func setupControls() {
         self.view.backgroundColor = Palette.banner
@@ -153,8 +193,9 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
         self.termsAccept.toCircle()
     }
     
-    private func enableControls(showTerms: Bool = true) {
-        let termsAccepted = Scorecard.shared.settings.termsDate != nil
+    private func enableControls() {
+        let showTerms = self.termsUser != nil
+        let termsAccepted = Scorecard.settings.termsDate != nil
         self.whistImage.isHidden = !termsAccepted && showTerms
         self.message.isHidden = !termsAccepted && showTerms
         self.termsTitle.isHidden = termsAccepted || !showTerms
@@ -166,9 +207,9 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     // MARK: - iCloud fetch and sync delegates ======================================================== -
     
     private func getCloudVersion(async: Bool = false) {
+        self.syncGetVersion = true
         if Scorecard.shared.isNetworkAvailable {
             self.sync.delegate = self
-            self.syncGetVersion = true
             if self.sync.synchronise(syncMode: .syncGetVersion, timeout: nil, waitFinish: async) {
                 // Running or queued (if async)
             } else {
@@ -201,7 +242,6 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
                 
                 Utility.debugMessage("launch", "Version returned")
                 
-                self.message.text = "Upgrading to\nCurrent Version..."
                 if !Scorecard.shared.upgradeToVersion(from: self) {
                     self.alertMessage("Error upgrading to current version", okHandler: {
                         exit(0)
@@ -278,7 +318,7 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
                 if !requested {
                     self.alertMessage("You have previously refused permission for this app to send you notifications. \nThis will mean that you will not receive game invitation or completion notifications.\nTo change this, please authorise notifications in the Whist section of the main Settings App")
                 }
-                Scorecard.shared.settings.receiveNotifications = false
+                Scorecard.settings.receiveNotifications = false
                 completion()
             },
             accepted: {

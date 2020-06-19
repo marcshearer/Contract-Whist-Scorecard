@@ -60,6 +60,7 @@ private enum SyncPhase {
     case phaseGetVersion
     case phaseGetLastSyncDate
     case phaseUpdateLastSyncDate
+    case phaseSendUserTerms
     case phaseGetExistingParticipants
     case phaseGetNewParticipants
     case phaseGetGameParticipants
@@ -104,6 +105,7 @@ class Sync {
     private var syncMode = SyncMode.syncAll
     private var syncPhases: [SyncPhase]!
     private var syncPhaseCount = -1
+    private var alertInProgress = false
     private var timer: Timer!
     private var timeout: Double!
     
@@ -127,6 +129,8 @@ class Sync {
     private var lastSyncDate: Date!
     private var newGameList: [GameMO]!
     private var gameUUIDList: [String]!
+    
+    private let recordIdDateFormat = "yyyy-MM-dd-HH-mm-ss"
 
     
     // MARK: - Public class methods -
@@ -161,6 +165,7 @@ class Sync {
                 syncPhases = [.phaseStartedStageComplete,
                               .phaseGetVersion,
                               .phaseGetLastSyncDate,
+                              .phaseSendUserTerms,
                               .phaseInitialiseStageComplete,
                               .phaseReplaceTemporaryPlayerUUIDs,
                               .phaseGetPlayers,
@@ -244,7 +249,7 @@ class Sync {
                 if self.timeout != nil {
                     self.startTimer(self.timeout)
                 }
-                
+   
                 switch self.syncPhases[self.syncPhaseCount] {
                 case .phaseGetVersion:
                     nextPhase = self.getCloudVersion()
@@ -252,6 +257,8 @@ class Sync {
                     nextPhase = self.getLastSyncDate()
                 case .phaseUpdateLastSyncDate:
                     nextPhase = self.updateLastSyncDate()
+                case .phaseSendUserTerms:
+                    nextPhase = self.sendUserTerms()
                 case .phaseGetExistingParticipants:
                     nextPhase = self.getParticipantsFromCloud(.getExisting)
                 case .phaseGetNewParticipants:
@@ -464,6 +471,34 @@ class Sync {
         }
         
         return true
+    }
+    
+    // MARK: - Function to send terms acceptance details - ignore any failures as will send again
+    
+    private func sendUserTerms() -> Bool {
+        var cloudObject: CKRecord?
+        if Scorecard.settings.termsDate != nil {
+            let predicate = NSPredicate(format: "userID = %@ and dateAccepted = %@", Scorecard.settings.termsUser, Scorecard.settings.termsDate! as NSDate)
+            Sync.read(recordType: "Terms", predicate: predicate,
+                downloadAction: { (record) in
+                    cloudObject = record
+                },
+                completeAction: { (error) in
+                    // Ignore errors
+                    if cloudObject == nil {
+                        let recordName = "Terms-\(Scorecard.settings.termsUser)+\(Utility.dateString(Scorecard.settings.termsDate, format: self.recordIdDateFormat, localized: false))"
+                        cloudObject = CKRecord(recordType: "Terms", recordID: CKRecord.ID(recordName: recordName))
+                        cloudObject!.setValue(Scorecard.settings.termsDate, forKey: "dateAccepted")
+                        cloudObject!.setValue(Scorecard.settings.termsUser, forKey: "userId")
+                        cloudObject!.setValue(Scorecard.settings.termsDevice, forKey: "deviceName")
+                    }
+                    Sync.update(records: [cloudObject!], completion: { (error) in
+                        // Ignore errors
+                        self.syncController()
+                    })
+                })
+        }
+        return false
     }
     
     // MARK: - Functions to update local participant history from cloud ================================================ -
@@ -791,7 +826,7 @@ class Sync {
                 if historyGame.gameMO.syncRecordID == nil {
                     // Not confirmed yet - send it
                     let gameMO = historyGame.gameMO!
-                    let recordID = CKRecord.ID(recordName: "Games-\(gameMO.datePlayed!)+\(gameMO.deviceName!)+\(gameMO.gameUUID!)")
+                    let recordID = CKRecord.ID(recordName: "Games-\(Utility.dateString(gameMO.datePlayed!, format: self.recordIdDateFormat, localized: false))+\(gameMO.deviceName!)+\(gameMO.gameUUID!)")
                     let cloudObject = CKRecord(recordType:"Games", recordID: recordID)
                     History.cloudGameFromMo(cloudObject: cloudObject, gameMO: gameMO, syncDate: self.nextSyncDate)
                     self.cloudObjectList.append(cloudObject)
@@ -802,7 +837,7 @@ class Sync {
                         if historyGame.gameMO.syncRecordID == nil {
                             // Not confirmed yet - send it
                             let participantMO = historyParticipant.participantMO!
-                            let recordID = CKRecord.ID(recordName: "Participants-\(participantMO.datePlayed!)+\(participantMO.playerUUID!)+\(participantMO.gameUUID!))")
+                            let recordID = CKRecord.ID(recordName: "Participants-\(Utility.dateString(participantMO.datePlayed!, format: self.recordIdDateFormat, localized: false))+\(participantMO.playerUUID!)+\(participantMO.gameUUID!))")
                             let cloudObject = CKRecord(recordType:"Participants", recordID: recordID)
                             History.cloudParticipantFromMO(cloudObject: cloudObject, participantMO: participantMO, syncDate: self.nextSyncDate)
                             self.cloudObjectList.append(cloudObject)
@@ -1064,7 +1099,7 @@ class Sync {
         
         var queryOperation: CKQueryOperation
         var predicate: NSPredicate!
-        
+                
         // Fetch player records from cloud
         let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
         let publicDatabase = cloudContainer.publicCloudDatabase
@@ -1139,7 +1174,6 @@ class Sync {
         // Execute the query
         publicDatabase.add(queryOperation)
         return false
-        
     }
     
     private func mergePlayerCloudObject(_ cloudObject: CKRecord) {
@@ -1344,7 +1378,9 @@ class Sync {
         } else {
             // Try entire list
             for playerMO in Scorecard.shared.playerList {
-                self.queueMissingPlayer(playerMO: playerMO)
+                if playerMO.tempEmail ?? "" != "" {
+                    self.queueMissingPlayer(playerMO: playerMO)
+                }
             }
         }
     }
@@ -1585,25 +1621,32 @@ class Sync {
     }
     
     private func syncAlert(_ message: String) {
+        self.alertInProgress = true
         self.errors = -1
-        self.delegate?.syncAlert?(message, completion: self.syncCompletion)
+        self.delegate?.syncAlert?(message) {
+            self.alertInProgress = false
+            self.syncCompletion()
+        }
     }
     
     private func syncCompletion() {
-        let delegate = self.delegate
-        // All done
-        if Sync.syncInProgress {
-            // Call the synchronous completion if it is implemented
-            if delegate?.syncCompletionWait != nil {
-                delegate?.syncCompletionWait!(self.errors, completion: self.syncFinalCompletion)
+        // If alert in progress just wait for that to complete and call this
+        if !alertInProgress {
+            let delegate = self.delegate
+            // All done
+            if Sync.syncInProgress {
+                // Call the synchronous completion if it is implemented
+                if delegate?.syncCompletionWait != nil {
+                    delegate?.syncCompletionWait!(self.errors, completion: self.syncFinalCompletion)
+                } else {
+                    // Call the normal delegate completion handler if there was one
+                    delegate?.syncCompletion?(self.errors)
+                    self.syncFinalCompletion()
+                }
             } else {
-                // Call the normal delegate completion handler if there was one
-                delegate?.syncCompletion?(self.errors)
+                // Do final completion anyway
                 self.syncFinalCompletion()
             }
-        } else {
-            // Do final completion anyway
-            self.syncFinalCompletion()
         }
     }
     
@@ -1826,9 +1869,7 @@ class Sync {
         queryOperation.queryCompletionBlock = { (cursor, error) -> Void in
             if error != nil {
                 completeAction(error)
-            }
-            
-            if cursor != nil {
+            } else if cursor != nil {
                 // More to come - recurse
                 _ = self.read(recordType: recordType,
                               predicate: predicate,
@@ -1858,7 +1899,7 @@ class Sync {
         // Replace in core data tables
         self.replaceTablePlayerUUID(recordType: "Participant", key: "playerUUID", from: playerMO.playerUUID!, to: playerUUID)
         self.replaceSettingsPlayerUUID(keys: ["onlinePlayerEmail"], from: playerMO.playerUUID!, to: playerUUID)
-        Scorecard.shared.settings.save()
+        Scorecard.settings.save()
         
         // Replace in settings
         self.replaceUserDefaultsPlayerUUID(keys: ["tempOnlinePlayerUUID", "recoveryConnectionPlayerUUID", "recoveryConnectionRemotePlayerUUID"], from: playerMO.playerUUID!, to: playerUUID)
@@ -1918,15 +1959,15 @@ class Sync {
     private func replaceSettingsPlayerUUID(keys: [String], from: String, to: String) {
         var changed = false
         for key in keys {
-            if let currentValue = Scorecard.shared.settings.value(forKey: key) as? String {
+            if let currentValue = Scorecard.settings.value(forKey: key) as? String {
                 if currentValue == from {
-                    Scorecard.shared.settings.setValue(to, forKey: key)
+                    Scorecard.settings.setValue(to, forKey: key)
                     changed = true
                 }
             }
         }
         if changed {
-            Scorecard.shared.settings.save()
+            Scorecard.settings.save()
         }
     }
     
@@ -1939,6 +1980,19 @@ class Sync {
             }
         }
     }
+    
+    public static func getUser(completion: @escaping (String?)->()) {
+        let container = CKContainer.init(identifier: Config.iCloudIdentifier)
+        container.fetchUserRecordID() {
+            (recordID, error) in
+            if error != nil || recordID == nil {
+                completion(nil)
+            } else {
+                completion(recordID?.recordName)
+            }
+        }
+    }
+    
 }
 
 

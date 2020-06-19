@@ -119,8 +119,8 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func finishPressed(_ sender: UIButton) {
-        Scorecard.shared.settings.save()
-        Scorecard.shared.settings.saveToICloud()
+        Scorecard.settings.save()
+        Scorecard.settings.saveToICloud()
         self.dismiss()
     }
     
@@ -146,8 +146,8 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             }
         }
         
-        self.onlineEnabled = Scorecard.shared.settings.syncEnabled && Scorecard.shared.settings.onlineGamesEnabled
-        self.facetimeEnabled = Scorecard.shared.settings.syncEnabled && Scorecard.shared.settings.onlineGamesEnabled && Scorecard.shared.settings.faceTimeAddress != ""
+        self.onlineEnabled = Scorecard.settings.syncEnabled && Scorecard.settings.onlineGamesEnabled
+        self.facetimeEnabled = Scorecard.settings.syncEnabled && Scorecard.settings.onlineGamesEnabled && Scorecard.settings.faceTimeAddress != ""
         
         // Set observer for entering foreground
         NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
@@ -156,7 +156,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         
         self.checkReceiveNotifications()
         
-        if Scorecard.shared.settings.saveLocation {
+        if Scorecard.settings.saveLocation {
             self.checkUseLocation(message: "You have blocked access to the current location for this app. Therefore the save location setting has been reset. To change this please allow location access 'While Using the App' in the Whist section of the main Settings App", prompt: false)
         }
     }
@@ -304,8 +304,8 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                 header = SettingsHeaderFooterView(cell)
                 cell.label.text = "Enable online games"
                 cell.toggleSwitch.addTarget(self, action: #selector(SettingsViewController.onlineGamesChanged(_:)), for: .valueChanged)
-                cell.toggleSwitch.isOn = Scorecard.shared.settings.onlineGamesEnabled
-                cell.setEnabled(enabled: Scorecard.shared.settings.syncEnabled)
+                cell.toggleSwitch.isOn = Scorecard.settings.onlineGamesEnabled
+                cell.setEnabled(enabled: Scorecard.settings.syncEnabled)
                 cell.separator.isHidden = true
                 
             case .theme:
@@ -326,7 +326,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                 cell.label.text = "Show Status Bar"
                 cell.toggleSwitch.isHidden = false
                 cell.toggleSwitch.addTarget(self, action: #selector(SettingsViewController.displayStatusChanged(_:)), for: .valueChanged)
-                cell.toggleSwitch.isOn = !Scorecard.shared.settings.prefersStatusBarHidden
+                cell.toggleSwitch.isOn = !Scorecard.settings.prefersStatusBarHidden
                 
             case .inGame:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "Header Switch") as! SettingsTableCell
@@ -385,7 +385,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         cell.label.text = "Vibrate when turn to play"
                         cell.labelLeadingConstraint.constant = 20
                         cell.toggleSwitch.addTarget(self, action: #selector(SettingsViewController.vibrateAlertChanged(_:)), for: .valueChanged)
-                        cell.toggleSwitch.isOn = Scorecard.shared.settings.alertVibrate
+                        cell.toggleSwitch.isOn = Scorecard.settings.alertVibrate
                         self.enableAlerts(cell: cell)
                         
                     case .facetimeCalls:
@@ -398,7 +398,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         cell.labelLeadingConstraint.constant = 20
                         cell.toggleSwitch.addTarget(self, action: #selector(SettingsViewController.facetimeCallsClicked(_:)), for: .valueChanged)
                         cell.toggleSwitch.isOn = self.facetimeEnabled
-                        cell.setEnabled(enabled: Scorecard.shared.settings.syncEnabled && Scorecard.shared.settings.onlineGamesEnabled)
+                        cell.setEnabled(enabled: Scorecard.settings.syncEnabled && Scorecard.settings.onlineGamesEnabled)
                         
                     case .facetimeAddress:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Text Field") as? SettingsTableCell
@@ -409,7 +409,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         cell.textField.addTarget(self, action: #selector(SettingsViewController.facetimeAddressEndEdit(_:)), for: UIControl.Event.editingDidEnd)
                         cell.textField.addTarget(self, action: #selector(SettingsViewController.facetimeAddressBeginEdit(_:)), for: UIControl.Event.editingDidBegin)
                         cell.textField.attributedPlaceholder = NSAttributedString(string: "Enter Facetime address", attributes:[NSAttributedString.Key.foregroundColor: Palette.inputControlPlaceholder])
-                        cell.textField.text = Scorecard.shared.settings.faceTimeAddress
+                        cell.textField.text = Scorecard.settings.faceTimeAddress
                         cell.setEnabled(enabled: self.facetimeEnabled)
                         
                     case .shareScorecard:
@@ -421,7 +421,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         cell.label.text = "Share scorecard"
                         cell.labelLeadingConstraint.constant = 20.0
                         cell.toggleSwitch.addTarget(self, action: #selector(SettingsViewController.shareScorecardChanged(_:)), for: .valueChanged)
-                        cell.toggleSwitch.isOn = Scorecard.shared.settings.allowBroadcast
+                        cell.toggleSwitch.isOn = Scorecard.settings.allowBroadcast
                         
                     case .receiveNotifications:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Switch") as? SettingsTableCell
@@ -432,8 +432,8 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         cell.label.text = "Receive game notifications"
                         cell.labelLeadingConstraint.constant = 20.0
                         cell.toggleSwitch.addTarget(self, action: #selector(SettingsViewController.receiveNotificationsChanged(_:)), for: .valueChanged)
-                        cell.toggleSwitch.isOn = Scorecard.shared.settings.receiveNotifications
-                        cell.setEnabled(enabled: Scorecard.shared.settings.syncEnabled)
+                        cell.toggleSwitch.isOn = Scorecard.settings.receiveNotifications
+                        cell.setEnabled(enabled: Scorecard.settings.syncEnabled)
                     case .saveGameLocation:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Switch") as? SettingsTableCell
                         // Setup default colors (previously done in StoryBoard)
@@ -443,7 +443,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         cell.label.text = "Save game location"
                         cell.labelLeadingConstraint.constant = 20.0
                         cell.toggleSwitch.addTarget(self, action: #selector(SettingsViewController.saveGameLocationChanged(_:)), for: .valueChanged)
-                        cell.toggleSwitch.isOn = Scorecard.shared.settings.saveLocation
+                        cell.toggleSwitch.isOn = Scorecard.settings.saveLocation
                     }
                 }
                                 
@@ -477,8 +477,8 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         cell.slider.tag = index
                         cell.sliderLabel.text = (index == 0 ? "Start:" : "End:")
                         cell.slider.addTarget(self, action: #selector(SettingsViewController.cardsSliderChanged(_:)), for: .valueChanged)
-                        cell.sliderValue.text = "\(Scorecard.shared.settings.cards[index])"
-                        cell.slider.value = Float(Scorecard.shared.settings.cards[index])
+                        cell.sliderValue.text = "\(Scorecard.settings.cards[index])"
+                        cell.slider.value = Float(Scorecard.settings.cards[index])
                         
                     case .cardsInHandBounce:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Segmented") as? SettingsTableCell
@@ -487,7 +487,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         
                         self.cardsChanged(bounceSegmentedControl: cell.segmentedControl)
                         cell.segmentedControl.addTarget(self, action: #selector(SettingsViewController.cardsInHandBounceChanged(_:)), for: .valueChanged)
-                        cell.segmentedControl.selectedSegmentIndex = (Scorecard.shared.settings.bounceNumberCards ? 1 : 0)
+                        cell.segmentedControl.selectedSegmentIndex = (Scorecard.settings.bounceNumberCards ? 1 : 0)
                         
                     case .bonus2Subheading:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Sub Heading") as? SettingsTableCell
@@ -504,7 +504,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         cell.segmentedControl.setTitle("No bonus", forSegmentAt: 0)
                         cell.segmentedControl.setTitle("10 Point Bonus", forSegmentAt: 1)
                         cell.segmentedControl.addTarget(self, action: #selector(SettingsViewController.bonus2Changed(_:)), for: .valueChanged)
-                        cell.segmentedControl.selectedSegmentIndex = (Scorecard.shared.settings.bonus2 ? 1 : 0)
+                        cell.segmentedControl.selectedSegmentIndex = (Scorecard.settings.bonus2 ? 1 : 0)
                         
                     case .includeNoTrump:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Switch") as? SettingsTableCell
@@ -515,7 +515,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         cell.label.text = "Include No Trump (NT)"
                         cell.labelLeadingConstraint.constant = 20.0
                         cell.toggleSwitch.addTarget(self, action: #selector(SettingsViewController.includeNoTrumpChanged(_:)), for: .valueChanged)
-                        let index = Scorecard.shared.settings.trumpSequence.firstIndex(where: {$0 == "NT"})
+                        let index = Scorecard.settings.trumpSequence.firstIndex(where: {$0 == "NT"})
                         cell.toggleSwitch.isOn = (index != nil)
                         
                     case .trumpSequenceEdit:
@@ -756,7 +756,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     @objc internal func shareScorecardChanged(_ shareScorecardSwitch: UISwitch) {
-        Scorecard.shared.settings.allowBroadcast = shareScorecardSwitch.isOn
+        Scorecard.settings.allowBroadcast = shareScorecardSwitch.isOn
     }
     
     @objc internal func thisPlayerChangePressed(_ button: UIButton) {
@@ -765,7 +765,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         } else {
             self.hidePlayerSelection()
         }
-        Scorecard.shared.settings.save()
+        Scorecard.settings.save()
     }
     
     
@@ -775,12 +775,12 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             self.authoriseNotifications(message: "You have previously refused permission for this app to send you notifications. \nThis will mean that you will not receive game invitation notifications.\nTo change this, please authorise notifications in the Whist section of the main Settings App",
                 successAction: {
                     self.enableOnline()
-                    Scorecard.shared.settings.save()
+                    Scorecard.settings.save()
             },
                 failureAction: {
                     self.enableOnline()
                     self.clearReceiveNotifications()
-                    Scorecard.shared.settings.save()
+                    Scorecard.settings.save()
             })
         } else {
             self.clearOnline()
@@ -788,7 +788,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     @objc internal func vibrateAlertChanged(_ vibrateAlertSwitch: UISwitch) {
-        Scorecard.shared.settings.alertVibrate = vibrateAlertSwitch.isOn
+        Scorecard.settings.alertVibrate = vibrateAlertSwitch.isOn
     }
 
     @objc internal func facetimeCallsClicked(_ facetimeCallsSwitch: UISwitch) {
@@ -800,7 +800,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             self.setOptionEnabled(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.facetimeAddress.rawValue, enabled: true)
         } else {
             // Disabled blank out address
-            Scorecard.shared.settings.faceTimeAddress = ""
+            Scorecard.settings.faceTimeAddress = ""
             self.setOptionValue(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.facetimeCalls.rawValue, value: false)
             self.setOptionEnabled(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.facetimeAddress.rawValue, enabled: false)
         }
@@ -813,7 +813,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     @objc internal func facetimeAddressChanged(_ facetimeAddressTextField: UITextField) {
         
-        Scorecard.shared.settings.faceTimeAddress = facetimeAddressTextField.text ?? ""
+        Scorecard.settings.faceTimeAddress = facetimeAddressTextField.text ?? ""
     }
     
     @objc internal func facetimeAddressBeginEdit(_ facetimeAddressTextField: UITextField) {
@@ -825,7 +825,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         self.facetimeAddressChanged(facetimeAddressTextField)
         
         // If blank then unset facetime calls switch and disable address
-        if Scorecard.shared.settings.faceTimeAddress == "" {
+        if Scorecard.settings.faceTimeAddress == "" {
             self.facetimeEnabled = false
             self.setOptionValue(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.facetimeCalls.rawValue, value: false)
             self.setOptionEnabled(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.facetimeAddress.rawValue, enabled: false)
@@ -837,7 +837,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
      
     @objc internal func receiveNotificationsChanged(_ receiveNotificationsSwitch: UISwitch) {
         if receiveNotificationsSwitch.isOn {
-            Scorecard.shared.settings.receiveNotifications = true
+            Scorecard.settings.receiveNotifications = true
             authoriseNotifications(message: "You have previously refused permission for this app to send you notifications. \nThis will mean that you will not receive game completion notifications.\nTo change this, please authorise notifications in the Whist section of the main Settings App",
                 successAction: {
                     Notifications.updateHighScoreSubscriptions()
@@ -848,38 +848,38 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         } else {
             self.clearReceiveNotifications()
         }
-        Scorecard.shared.settings.save()
+        Scorecard.settings.save()
     }
     
     @objc internal func cardsSliderChanged(_ cardsSlider: UISlider) {
         let index = cardsSlider.tag
         let option = (index == 0 ? InGameOptions.cardsInHandStart : InGameOptions.cardsInHandEnd)
-        Scorecard.shared.settings.cards[index] = Int(cardsSlider.value)
-        self.setOptionValue(section: Sections.inGame.rawValue, option: option.rawValue, value: Scorecard.shared.settings.cards[index])
+        Scorecard.settings.cards[index] = Int(cardsSlider.value)
+        self.setOptionValue(section: Sections.inGame.rawValue, option: option.rawValue, value: Scorecard.settings.cards[index])
         self.cardsChanged()
     }
     
     @objc func cardsInHandBounceChanged(_ cardsInHandBounceSegmentedControl: UISegmentedControl) {
         
-        Scorecard.shared.settings.bounceNumberCards = (cardsInHandBounceSegmentedControl.selectedSegmentIndex == 1)
+        Scorecard.settings.bounceNumberCards = (cardsInHandBounceSegmentedControl.selectedSegmentIndex == 1)
         self.cardsChanged()
     }
 
     @objc internal func bonus2Changed(_ bonus2SegmentedControl: UISegmentedControl) {
         
-        Scorecard.shared.settings.bonus2 = (bonus2SegmentedControl.selectedSegmentIndex == 1)
+        Scorecard.settings.bonus2 = (bonus2SegmentedControl.selectedSegmentIndex == 1)
     }
     
     @objc func includeNoTrumpChanged(_ includeNoTrumpSwitch: UISwitch) {
         if includeNoTrumpSwitch.isOn {
             // Add NT
-            if Scorecard.shared.settings.trumpSequence.firstIndex(where: {$0 == "NT"}) == nil {
-                Scorecard.shared.settings.trumpSequence.append("NT")
+            if Scorecard.settings.trumpSequence.firstIndex(where: {$0 == "NT"}) == nil {
+                Scorecard.settings.trumpSequence.append("NT")
             }
         } else {
             // Remove NT
-            if let index = Scorecard.shared.settings.trumpSequence.firstIndex(where: {$0 == "NT"}) {
-                Scorecard.shared.settings.trumpSequence.remove(at: index)
+            if let index = Scorecard.settings.trumpSequence.firstIndex(where: {$0 == "NT"}) {
+                Scorecard.settings.trumpSequence.remove(at: index)
             }
         }
         self.refreshTrumpSequence()
@@ -926,7 +926,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
 
     @objc internal func displayStatusChanged(_ displayStatusSwitch: UISwitch) {
-        Scorecard.shared.settings.prefersStatusBarHidden = !displayStatusSwitch.isOn
+        Scorecard.settings.prefersStatusBarHidden = !displayStatusSwitch.isOn
 
         // Update status bar
         Scorecard.shared.updatePrefersStatusBarHidden(from: self)
@@ -938,7 +938,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         numberOfItemsInSection section: Int) -> Int {
         switch SettingsCollectionViews(rawValue: collectionView.tag) {
         case .trumpSuit:
-            return Scorecard.shared.settings.trumpSequence.count
+            return Scorecard.settings.trumpSequence.count
         case .colorTheme:
             return self.themeNames.count
         default:
@@ -975,7 +975,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             // Setup default colors (previously done in StoryBoard)
             self.defaultCellColors(cell: cell)
             
-            cell.trumpSuitLabel.attributedText = Suit(fromString: Scorecard.shared.settings.trumpSequence[indexPath.row]).toAttributedString(font: UIFont.systemFont(ofSize: 36.0), noTrumpScale: 0.8)
+            cell.trumpSuitLabel.attributedText = Suit(fromString: Scorecard.settings.trumpSequence[indexPath.row]).toAttributedString(font: UIFont.systemFont(ofSize: 36.0), noTrumpScale: 0.8)
             if self.trumpSequenceEdit {
                 self.startCellWiggle(cell: cell)
             }
@@ -1013,9 +1013,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         switch SettingsCollectionViews(rawValue: collectionView.tag) {
         case .trumpSuit:
             // Swap the data and restart wiggling
-            let selectedSuit = Scorecard.shared.settings.trumpSequence[sourceIndexPath.row]
-            Scorecard.shared.settings.trumpSequence.remove(at: sourceIndexPath.row)
-            Scorecard.shared.settings.trumpSequence.insert(selectedSuit, at: destinationIndexPath.row)
+            let selectedSuit = Scorecard.settings.trumpSequence[sourceIndexPath.row]
+            Scorecard.settings.trumpSequence.remove(at: sourceIndexPath.row)
+            Scorecard.settings.trumpSequence.insert(selectedSuit, at: destinationIndexPath.row)
             
         default:
             break
@@ -1090,7 +1090,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         self.thisPlayerChangeButton.roundCorners(cornerRadius: self.thisPlayerChangeButton.frame.height / 2.0)
         self.thisPlayerChangeButtonContainer.addShadow(shadowSize: CGSize(width: 4,height: 4))
          
-        self.setOnlinePlayerUUID(playerUUID: Scorecard.shared.settings.thisPlayerUUID)
+        self.setOnlinePlayerUUID(playerUUID: Scorecard.settings.thisPlayerUUID)
          
         self.thisPlayerChangeButton.addTarget(self, action: #selector(SettingsViewController.thisPlayerChangePressed(_:)), for: .touchUpInside)
 
@@ -1113,7 +1113,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             self.disableAll()
         }
         
-        let playerList = Scorecard.shared.playerList.filter { $0.playerUUID != Scorecard.shared.settings.thisPlayerUUID }
+        let playerList = Scorecard.shared.playerList.filter { $0.playerUUID != Scorecard.settings.thisPlayerUUID }
         self.playerSelectionView.set(players: playerList, addButton: true, updateBeforeSelect: false, scrollEnabled: true, collectionViewInsets: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10))
      }
     
@@ -1147,7 +1147,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             self.setOptionEnabled(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.vibrateAlert.rawValue, enabled: self.onlineEnabled)
         }
         if switchOn {
-            Scorecard.shared.settings.alertVibrate = true
+            Scorecard.settings.alertVibrate = true
             if let cell = cell {
                 self.setOptionValue(cell: cell, value: true)
             } else {
@@ -1158,7 +1158,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     private func cardsChanged(bounceSegmentedControl: UISegmentedControl? = nil) {
         if let bounceSegmentedControl = bounceSegmentedControl ?? self.getCardsInHandBounceSegmentedControl() {
-            let cards = Scorecard.shared.settings.cards
+            let cards = Scorecard.settings.cards
             let direction = (cards[1] < cards[0] ? "down" : "up")
             var cardString = (cards[1] == 1 ? "card" : "cards")
             bounceSegmentedControl.setTitle("Go \(direction) to \(cards[1]) \(cardString)", forSegmentAt: 0)
@@ -1187,7 +1187,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     private func startWiggle() {
         if let collection = self.getTrumpSuitCollectionView() {
-            let numberSuits = Scorecard.shared.settings.trumpSequence.count
+            let numberSuits = Scorecard.settings.trumpSequence.count
             for item in 0..<numberSuits {
                 if let cell = collection.cellForItem(at: IndexPath(item: item, section: 0)) {
                     self.startCellWiggle(cell: cell)
@@ -1208,7 +1208,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     public func stopWiggle() {
         if let collection = self.getTrumpSuitCollectionView() {
-            let numberSuits = Scorecard.shared.settings.trumpSequence.count
+            let numberSuits = Scorecard.settings.trumpSequence.count
             for item in 0..<numberSuits {
                 if let cell = collection.cellForItem(at: IndexPath(item: item, section: 0)) {
                     cell.layer.removeAllAnimations()
@@ -1276,7 +1276,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     private func setSaveGameLocation(value: Bool) {
-        Scorecard.shared.settings.saveLocation = value
+        Scorecard.settings.saveLocation = value
         self.setOptionValue(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.saveGameLocation.rawValue, value: value)
     }
 
@@ -1290,7 +1290,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         
         // Move current value to middle
         self.themesCount = self.themeNames.count
-        let currentTheme = self.themeNames.firstIndex(where: {$0 == Scorecard.shared.settings.colorTheme}) ?? 0
+        let currentTheme = self.themeNames.firstIndex(where: {$0 == Scorecard.settings.colorTheme}) ?? 0
         let middleTheme = Int(self.themesCount / 2)
         let shift = middleTheme - currentTheme
         self.themeNames.rotate(by: shift)
@@ -1307,7 +1307,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     private func selectColorTheme(item: Int) {
-        Scorecard.shared.settings.colorTheme = self.themeNames[item]
+        Scorecard.settings.colorTheme = self.themeNames[item]
         Themes.selectTheme(name: self.themeNames[item])
         self.defaultViewColors()
         self.view.setNeedsDisplay()
@@ -1415,7 +1415,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     private func clearReceiveNotifications() {
         self.setOptionValue(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.receiveNotifications.rawValue, value: false)
-        Scorecard.shared.settings.receiveNotifications = false
+        Scorecard.settings.receiveNotifications = false
         // Delete subscriptions
         Notifications.updateHighScoreSubscriptions()
     }
@@ -1423,12 +1423,12 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     func clearAlerts() {
         // Reset Alert Vibrate
         self.setOptionValue(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.vibrateAlert.rawValue, value: false)
-        Scorecard.shared.settings.alertVibrate = false
+        Scorecard.settings.alertVibrate = false
     }
     
     func enableOnline() {
         self.onlineEnabled = true
-        Scorecard.shared.settings.onlineGamesEnabled = true
+        Scorecard.settings.onlineGamesEnabled = true
         // Enable online player details
         self.setSectionEnabled(section: Sections.onlineGames.rawValue, enabled: true)
         // Enable Facetime calls switch
@@ -1439,10 +1439,10 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     func clearOnline() {
         self.onlineEnabled = false
-        Scorecard.shared.settings.onlineGamesEnabled = false
+        Scorecard.settings.onlineGamesEnabled = false
         // Delete Facetime address
         self.facetimeEnabled = false
-        Scorecard.shared.settings.faceTimeAddress = ""
+        Scorecard.settings.faceTimeAddress = ""
         self.setOptionValue(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.facetimeCalls.rawValue, value: false)
         self.setOptionEnabled(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.facetimeCalls.rawValue, enabled: false)
         self.setOptionValue(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.facetimeAddress.rawValue, value: "")
@@ -1455,17 +1455,17 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     func clearSharing() {
-        if Scorecard.shared.settings.allowBroadcast {
+        if Scorecard.settings.allowBroadcast {
             self.setOptionValue(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.shareScorecard.rawValue, value: false)
-            Scorecard.shared.settings.allowBroadcast = false
+            Scorecard.settings.allowBroadcast = false
             Scorecard.shared.stopSharing()
         }
     }
     
     func setSharing() {
-        if !Scorecard.shared.settings.allowBroadcast {
+        if !Scorecard.settings.allowBroadcast {
             self.setOptionValue(section: Sections.onlineGames.rawValue, option: OnlineGameOptions.shareScorecard.rawValue, value: true)
-            Scorecard.shared.settings.allowBroadcast = true
+            Scorecard.settings.allowBroadcast = true
             Scorecard.shared.resetSharing()
         }
     }
@@ -1475,7 +1475,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     private func setOnlinePlayerUUID(playerUUID: String!) {
         // Save the setting and update screen
         if let playerUUID = playerUUID {
-            Scorecard.shared.settings.thisPlayerUUID = playerUUID
+            Scorecard.settings.thisPlayerUUID = playerUUID
             if let thisPlayerMO = Scorecard.shared.findPlayerByPlayerUUID(playerUUID) {
                 self.thisPlayerThumbnailView.set(playerMO: thisPlayerMO, nameHeight: 20.0, diameter: self.thisPlayerThumbnailView.frame.width)
             }
@@ -1486,7 +1486,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
 
     private func updateOnlineGameSubscriptions() {
         if self.onlineEnabled {
-            Notifications.addOnlineGameSubscription(Scorecard.shared.settings.thisPlayerUUID, completion: nil)
+            Notifications.addOnlineGameSubscription(Scorecard.settings.thisPlayerUUID, completion: nil)
         } else {
             Notifications.deleteExistingSubscriptions( "onlineGame", completion: nil)
         }

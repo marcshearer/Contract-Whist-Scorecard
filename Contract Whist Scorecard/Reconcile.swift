@@ -45,7 +45,7 @@ class Reconcile: SyncDelegate {
         self.playerMOList = playerMOList
         
         // First synchronise
-        if Scorecard.shared.settings.syncEnabled && syncFirst {
+        if Scorecard.settings.syncEnabled && syncFirst {
             self.sync.delegate = self
             if self.sync.synchronise(waitFinish: true, okToSyncWithTemporaryPlayerUUIDs: true) {
                 self.reconcileMessage("Sync in progress")

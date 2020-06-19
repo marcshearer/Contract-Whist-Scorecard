@@ -43,7 +43,7 @@ class Scorecard {
     public static var version = Version()
     
     /** Settings */
-    public var settings = Settings()
+    public static var settings = Settings()
     
     /** Maximum number of players currently supported - currently 4
      - Note try to use this variable throughout since only real limitation should be UI
@@ -123,7 +123,7 @@ class Scorecard {
      */
     public static var activeSettings: Settings {
         get {
-            return Scorecard.game?.settings ?? Scorecard.shared.settings
+            return Scorecard.game?.settings ?? Scorecard.settings
         }
     }
         
@@ -135,7 +135,7 @@ class Scorecard {
         self.database = UserDefaults.standard.string(forKey: "database")!
         
         // Load settings & version etc
-        self.settings.load()
+        Scorecard.settings.load()
         Scorecard.version.load()
         RabbitMQConfig.load()
         
@@ -370,7 +370,7 @@ class Scorecard {
             }
         } else if label != nil || button != nil {
             Utility.mainThread {
-                if !self.settings.syncEnabled {
+                if !Scorecard.settings.syncEnabled {
                     buttonHidden = true
                     labelText = ""
                     labelHidden = true
@@ -411,7 +411,7 @@ class Scorecard {
         get {
             return ((Utility.isDevelopment || (self.isNetworkAvailable && self.isLoggedIn)) &&
                     RabbitMQConfig.rabbitMQUri != "" &&
-                    self.settings.onlineGamesEnabled)
+                    Scorecard.settings.onlineGamesEnabled)
         }
     }
     
@@ -419,9 +419,9 @@ class Scorecard {
         
         func internalHandler(_ enabled: Bool) {
             // Update sync group
-            self.settings.syncEnabled = enabled
+            Scorecard.settings.syncEnabled = enabled
             // Save it
-            UserDefaults.standard.set(self.settings.syncEnabled , forKey: "syncEnabled")
+            UserDefaults.standard.set(Scorecard.settings.syncEnabled , forKey: "syncEnabled")
             // Call source handler to update controls etc
             handler(enabled)
         }
@@ -540,9 +540,9 @@ class Scorecard {
     
     public func updatePrefersStatusBarHidden(from viewController : UIViewController? = nil) {
         
-        if AppDelegate.applicationPrefersStatusBarHidden != self.settings.prefersStatusBarHidden {
+        if AppDelegate.applicationPrefersStatusBarHidden != Scorecard.settings.prefersStatusBarHidden {
             
-            AppDelegate.applicationPrefersStatusBarHidden = self.settings.prefersStatusBarHidden
+            AppDelegate.applicationPrefersStatusBarHidden = Scorecard.settings.prefersStatusBarHidden
             viewController?.setNeedsStatusBarAppearanceUpdate()
             
         }

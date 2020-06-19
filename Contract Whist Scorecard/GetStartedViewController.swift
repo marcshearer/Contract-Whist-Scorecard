@@ -161,25 +161,25 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     // MARK: - Form handling ===================================================================== -
     
     private func initialise() {
-        self.setOnlineGamesEnabled(Scorecard.shared.settings.onlineGamesEnabled)
-        self.setSaveLocation(Scorecard.shared.settings.saveLocation)
+        self.setOnlineGamesEnabled(Scorecard.settings.onlineGamesEnabled)
+        self.setSaveLocation(Scorecard.settings.saveLocation)
     }
     
     private func setOnlineGamesEnabled(_ enabled: Bool) {
-        Scorecard.shared.settings.onlineGamesEnabled = enabled
-        Scorecard.shared.settings.save()
+        Scorecard.settings.onlineGamesEnabled = enabled
+        Scorecard.settings.save()
         self.settingsOnLineGamesEnabledSwitch.forEach{(control) in control.isOn = enabled}
     }
 
     private func setSaveLocation(_ enabled: Bool) {
-        Scorecard.shared.settings.saveLocation = enabled
-        Scorecard.shared.settings.save()
+        Scorecard.settings.saveLocation = enabled
+        Scorecard.settings.save()
         self.settingsSaveLocationSwitch.forEach{(control) in control.isOn = enabled}
     }
     
     private func enableControls() {
         self.thisPlayerChangeButton.isHidden = (Scorecard.shared.playerList.count <= 1)
-        let homeEnabled = !Scorecard.shared.playerList.isEmpty && Scorecard.shared.settings.thisPlayerUUID != ""
+        let homeEnabled = !Scorecard.shared.playerList.isEmpty && Scorecard.settings.thisPlayerUUID != ""
         let createEnabled = self.playerNameValid() && self.playerIDValid()
         switch self.section {
         case .downloadPlayers:
@@ -206,7 +206,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     }
     
     private func showThisPlayer() {
-        if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.shared.settings.thisPlayerUUID) {
+        if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.settings.thisPlayerUUID) {
             self.thisPlayerThumbnailView.set(playerMO: playerMO, nameHeight: 15.0, diameter: self.thisPlayerThumbnailView.frame.width)
             if ScorecardUI.mediumPhoneSize() {
                 self.titleLabel.isHidden = true
@@ -232,8 +232,8 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     func updatePlayer(objectID: NSManagedObjectID) {
         // Find any cells containing an image/player which has just been downloaded asynchronously
         Utility.mainThread {
-            if Scorecard.shared.settings.thisPlayerUUID != "" {
-                if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.shared.settings.thisPlayerUUID) {
+            if Scorecard.settings.thisPlayerUUID != "" {
+                if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.settings.thisPlayerUUID) {
                     if playerMO.objectID == objectID {
                         // This is this player - update player (managed object will have been updated in background
                         self.showThisPlayer()
@@ -415,10 +415,10 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
 
     private func createNewPlayer() {
         if playerDetail.createMO(saveToICloud: false) != nil {
-            if Scorecard.shared.settings.thisPlayerUUID == "" {
+            if Scorecard.settings.thisPlayerUUID == "" {
                 self.setThisPlayer(playerUUID: playerDetail.playerUUID)
             } else {
-                Scorecard.shared.settings.save()
+                Scorecard.settings.save()
             }
             self.playerDetail = PlayerDetail()
             self.updatePlayerControls()
@@ -448,7 +448,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
             self.playerSelectionViewTopConstraint.constant = 0
         }
         
-        let playerList = Scorecard.shared.playerList.filter { $0.playerUUID != Scorecard.shared.settings.thisPlayerUUID }
+        let playerList = Scorecard.shared.playerList.filter { $0.playerUUID != Scorecard.settings.thisPlayerUUID }
         self.playerSelectionView.set(players: playerList, addButton: false, updateBeforeSelect: false, scrollEnabled: true, collectionViewInsets: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10), contentInset: UIEdgeInsets(top: 22.5, left: 10, bottom: 0, right: 10))
     }
     
@@ -467,8 +467,8 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     }
     
     private func setThisPlayer(playerUUID: String) {
-        Scorecard.shared.settings.thisPlayerUUID = playerUUID
-        Scorecard.shared.settings.save()
+        Scorecard.settings.thisPlayerUUID = playerUUID
+        Scorecard.settings.save()
         self.showThisPlayer()
         self.enableControls()
     }
@@ -662,9 +662,9 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     
     private func dismiss() {
         self.imageObserver = nil
-        Scorecard.shared.settings.syncEnabled = true
-        Scorecard.shared.settings.save()
-        Scorecard.shared.settings.saveToICloud()
+        Scorecard.settings.syncEnabled = true
+        Scorecard.settings.save()
+        Scorecard.settings.saveToICloud()
         self.dismiss(animated: true, completion: self.completion)
     }
     

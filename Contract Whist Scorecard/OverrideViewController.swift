@@ -61,7 +61,7 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
 
         ScorecardUI.roundCorners(view)
         
-        self.existingOverride = (Scorecard.game.settings != Scorecard.shared.settings)
+        self.existingOverride = (Scorecard.game.settings != Scorecard.settings)
         
         if !self.existingOverride {
             // Default to exclude stats
@@ -69,7 +69,7 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
             Scorecard.game.settings.saveStats = false
         }
         
-        self.skipOptions = (Scorecard.shared.settings.saveHistory ? 0 : 2)
+        self.skipOptions = (Scorecard.settings.saveHistory ? 0 : 2)
         
         self.revertButton.setTitleColor(Palette.gameBannerText, for: .normal)
         self.confirmButton.setTitleColor(Palette.gameBannerText, for: .normal)
@@ -96,7 +96,7 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     // MARK: - TableView Overrides ===================================================================== -
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if Scorecard.shared.settings.saveHistory {
+        if Scorecard.settings.saveHistory {
             return Options.allCases.count
         } else {
             return Options.allCases.count - self.skipOptions
@@ -225,7 +225,7 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     func saveChanged() {
         if Scorecard.game.settings.saveHistory {
             // Switched history back on - location should follow it
-            Scorecard.game.settings.saveLocation = Scorecard.shared.settings.saveLocation
+            Scorecard.game.settings.saveLocation = Scorecard.settings.saveLocation
         } else {
             // Switched history off - location and stats can't be saved
             Scorecard.game.settings.saveLocation = false
@@ -236,7 +236,7 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     }
     
     func enableButtons() {
-        let changed = (Scorecard.shared.settings != Scorecard.game.settings)
+        let changed = (Scorecard.settings != Scorecard.game.settings)
         self.confirmButton.isHidden = !changed
         self.revertButton.setTitle((changed && self.existingOverride ? "Revert" : "Cancel"), for: .normal)
     }

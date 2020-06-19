@@ -20,7 +20,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     // MARK: - Comms mode helpers ======================================================== -
     
     public func setupSharing(playerDelegate: ScorecardAppPlayerDelegate? = nil) {
-        if self.settings.allowBroadcast {
+        if Scorecard.settings.allowBroadcast {
             self.sharingService = CommsHandler.server(proximity: .nearby, mode: .broadcast, serviceID: self.serviceID(), deviceName: Scorecard.deviceName, purpose: .sharing)
             self.resetSharing(playerDelegate: playerDelegate)
         }
@@ -38,7 +38,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         sharingService?.stop() {
             self.setCommsDelegate(nil)
             
-            if self.settings.allowBroadcast {
+            if Scorecard.settings.allowBroadcast {
                 // Restore server delegate
                 self.setCommsDelegate(self.sharingService, purpose: .sharing, playerDelegate: playerDelegate)
                 self.sharingService?.dataDelegate = self
@@ -108,7 +108,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     // MARK: - Alert handlers ================================================================= -
     
     public func alertUser(vibrate: Bool = true, remindAfter: TimeInterval? = nil, remindVibrate: Bool? = nil, reminder: Bool = false) {
-        if vibrate && self.settings.alertVibrate {
+        if vibrate && Scorecard.settings.alertVibrate {
             Utility.getActiveViewController()?.alertVibrate()
         }
         self.alertDelegate?.alertUser(reminder: reminder)
@@ -330,7 +330,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     public func sendHostState(from playerDelegate: ScorecardAppPlayerDelegate?, to commsPeer: CommsPeer! = nil) {
         var state: [String : Any] = [:]
         
-        state["settings"] = self.settingsData()
+        state["settings"] = Scorecard.shared.settingsData()
         let (descriptor, data) = self.playersData(from: playerDelegate)
         state[descriptor] = data
         state["dealer"] = self.dealerData()
@@ -348,7 +348,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
     public func sendScoringState(from playerDelegate: ScorecardAppPlayerDelegate?, to commsPeer: CommsPeer! = nil) {
         var state: [String : Any] = [:]
         
-        state["settings"] = self.settingsData()
+        state["settings"] = Scorecard.shared.settingsData()
         if playerDelegate != nil || Scorecard.game.inProgress {
             let (descriptor, data) = self.playersData(from: playerDelegate)
             state[descriptor] = data

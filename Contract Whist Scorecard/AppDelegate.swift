@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Cache main context for core data
         CoreData.context = self.persistentContainer.viewContext
 
-        Themes.selectTheme(name: Scorecard.shared.settings.colorTheme)
+        Themes.selectTheme(name: Scorecard.settings.colorTheme)
 
         UINavigationBar.appearance().barTintColor = Palette.emphasis
         UINavigationBar.appearance().tintColor = UIColor.white
@@ -74,7 +74,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             "tempOnlinePlayerUUID":          false,
             "trumpSequence":            ["♣︎", "♦︎", "♥︎" ,"♠︎", "NT"],
             "prefersStatusBarHidden":   true,
-            "termsDevice":              ""
+            "termsDevice":              "",
+            "termsUser":                ""
         ])
     }
     

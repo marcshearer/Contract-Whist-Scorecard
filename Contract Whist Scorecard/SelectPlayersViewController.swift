@@ -585,7 +585,7 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
             }
         }
         if self.saveToICloud {
-            Scorecard.shared.settings.saveToICloud()
+            Scorecard.settings.saveToICloud()
         }
         
         if imageList.count > 0 {

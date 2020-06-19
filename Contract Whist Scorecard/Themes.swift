@@ -93,7 +93,7 @@ class Themes {
                             .thumbnailDiscText           : (#colorLiteral(red: 0.942510128, green: 0.9367026687, blue: 0.9288505912, alpha: 1), nil) ,
                             .thumbnailPlaceholder        : (#colorLiteral(red: 0.8633580804, green: 0.9319525361, blue: 0.917548418, alpha: 1), nil) ,
                             .thumbnailPlaceholderText    : (#colorLiteral(red: 0.4940722585, green: 0.4941466451, blue: 0.4940558672, alpha: 1), nil) ,
-                            .text                        : (#colorLiteral(red: 0.4989748001, green: 0.494086206, blue: 0.4981276989, alpha: 1), nil) ,
+                            .text                        : (#colorLiteral(red: 0.1960784314, green: 0.1960784314, blue: 0.1960784314, alpha: 1), nil) ,
                             .textEmphasised              : (#colorLiteral(red: 0.9009206891, green: 0.745765388, blue: 0.3741720319, alpha: 1), nil) ,
                             .textError                   : (#colorLiteral(red: 0.9210745692, green: 0.1963090301, blue: 0.1316265166, alpha: 1), nil) ,
                             .textMessage                 : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ]),
@@ -107,6 +107,8 @@ class Themes {
                             .bannerEmbossed             : (#colorLiteral(red: 0, green: 0.3960784314, blue: 0.9215686275, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
                             .bannerShadow               : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
                             .gameBannerShadow           : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .sectionHeading             : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
+                            .sectionHeadingText         : (#colorLiteral(red: 0.994867146, green: 1, blue: 0.9999337792, alpha: 1), nil) ,
                             .background                 : (#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1))  ,
                             .roomInterior               : (#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), #colorLiteral(red: 0.1694289744, green: 0.1694289744, blue: 0.1694289744, alpha: 1))  ,
                             .hand                       : (#colorLiteral(red: 0.2931554019, green: 0.6582073569, blue: 0.6451457739, alpha: 1), #colorLiteral(red: 0.1694289744, green: 0.1694289744, blue: 0.1694289744, alpha: 1))  ,
@@ -119,7 +121,9 @@ class Themes {
                             .bannerEmbossed             : (#colorLiteral(red: 0.5529411765, green: 0.1450980392, blue: 0.1254901961, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
                             .bannerShadow               : (#colorLiteral(red: 0.6901960784, green: 0.2431372549, blue: 0.2235294118, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
                             .gameBannerShadow           : (#colorLiteral(red: 0.6901960784, green: 0.2431372549, blue: 0.2235294118, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
-                            .gameBanner                 : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ]),
+                            .gameBanner                 : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .sectionHeading             : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), nil) ,
+                            .sectionHeadingText         : (#colorLiteral(red: 0.994867146, green: 1, blue: 0.9999337792, alpha: 1), nil) ]),
 
         "Blue"              : Theme(description: "Blue", color: [
                             .textEmphasised             : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
@@ -128,15 +132,19 @@ class Themes {
                             .bannerEmbossed             : (#colorLiteral(red: 0, green: 0.3960784314, blue: 0.9215686275, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
                             .bannerShadow               : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
                             .gameBannerShadow           : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
-                            .gameBanner                 : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ]),
+                            .gameBanner                 : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .sectionHeading             : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
+                            .sectionHeadingText         : (#colorLiteral(red: 0.994867146, green: 1, blue: 0.9999337792, alpha: 1), nil) ]),
         
         "Green"             : Theme(description: "Green", color: [
                             .textEmphasised             : (#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), nil) ,
                             .emphasis                   : (#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), nil) ,
                             .banner                     : (#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
                             .gameBannerShadow           : (#colorLiteral(red: 0.431372549, green: 0.6901960784, blue: 0.6823529412, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
-                            .gameBanner                 : (#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ])]
-    
+                            .gameBanner                 : (#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .sectionHeading             : (#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), nil) ,
+                            .sectionHeadingText         : (#colorLiteral(red: 0.994867146, green: 1, blue: 0.9999337792, alpha: 1), nil) ])]
+
     
     static var currentTheme: Theme!
     static var defaultName = "Default"

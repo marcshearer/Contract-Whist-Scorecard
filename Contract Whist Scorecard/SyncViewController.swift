@@ -118,14 +118,22 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
         }
     }
     
+    private func stopActivityIndicators() {
+        for stage in SyncStage.allCases {
+            if let completeCell = self.syncStageTableView.cellForRow(at: IndexPath(row: stage.rawValue, section: 0)) as? SyncStageTableCell {
+                 completeCell.activityIndicator.stopAnimating()
+            }
+        }
+    }
+    
     internal func syncAlert(_ message: String, completion: @escaping ()->()) {
         Utility.mainThread {
             self.stopAnimations(false)
+            self.stopActivityIndicators()
         }
-        self.alertMessage(message, title: "Contract Whist Scorecard", okHandler: {
+        self.alertMessage(message, title: "Whist Sync", okHandler: {
             completion()
         })
-        sleep(10)
     }
     
     internal func syncCompletion(_ errors: Int) {

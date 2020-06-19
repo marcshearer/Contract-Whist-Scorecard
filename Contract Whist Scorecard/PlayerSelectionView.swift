@@ -212,7 +212,7 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
     // MARK: - Create players ============================================================ -
     
     func addNewPlayer() {
-        if Scorecard.shared.settings.syncEnabled && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
+        if Scorecard.settings.syncEnabled && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
             self.showSelectPlayers()
         } else {
             PlayerDetailViewController.show(from: self.parent, playerDetail: PlayerDetail(visibleLocally: true), mode: .create, sourceView: self,

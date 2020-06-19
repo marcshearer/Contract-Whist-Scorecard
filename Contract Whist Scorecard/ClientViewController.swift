@@ -188,6 +188,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         // Restart client
         self.restart(createController: false)
 
+        // Start network check timer
+        self.startNetworkTimer()
+        
         // Set not connected
         self.appStateChange(to: .notConnected)
         
@@ -300,7 +303,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 self.showSettingsCompletion()
             }
             self.clientController?.set(noHideDismissImageView: false)
-            if !Scorecard.shared.settings.syncEnabled {
+            if !Scorecard.settings.syncEnabled {
                 self.showGetStarted()
             }
         }
@@ -315,13 +318,13 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     }
     
     private func showSettings() {
-        self.thisPlayerBeforeSettings = Scorecard.shared.settings.thisPlayerUUID
+        self.thisPlayerBeforeSettings = Scorecard.settings.thisPlayerUUID
         SettingsViewController.show(from: self, backText: "", backImage: "home", completion: self.showSettingsCompletion)
     }
     
     private func showSettingsCompletion() {
         Scorecard.game.reset()
-        if self.thisPlayerBeforeSettings != Scorecard.shared.settings.thisPlayerUUID {
+        if self.thisPlayerBeforeSettings != Scorecard.settings.thisPlayerUUID {
             self.setupThisPlayer()
             self.showThisPlayer()
         }
@@ -483,13 +486,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.peerReloadData()
 
         // Check network / iCloud
-        Scorecard.shared.checkNetworkConnection() {
-            if (self.isNetworkAvailable != Scorecard.shared.isNetworkAvailable || self.isLoggedIn != Scorecard.shared.isLoggedIn) {
-                self.peerReloadData()
-            }
-            self.isNetworkAvailable = Scorecard.shared.isNetworkAvailable
-            self.isLoggedIn = Scorecard.shared.isLoggedIn
-        }
+        self.checkNetwork()
 
         if createController {
             // Create controller after short delay
@@ -501,7 +498,15 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     @objc private func checkNetwork(_ sender: Any? = nil) {
         // Check network
-        self.restart()
+        Scorecard.shared.checkNetworkConnection() {
+            if (self.isNetworkAvailable != Scorecard.shared.isNetworkAvailable || self.isLoggedIn != Scorecard.shared.isLoggedIn) {
+                self.isNetworkAvailable = Scorecard.shared.isNetworkAvailable
+                self.isLoggedIn = Scorecard.shared.isLoggedIn
+                self.setupHostingOptions()
+                self.hostCollectionView.reloadData()
+                self.peerReloadData()
+            }
+        }
     }
     
     // MARK: - Call reconcile and reconcile delegate methods =========================================================== -
@@ -918,6 +923,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         
         // Setup hosting options
         self.hostingOptions = 0
+        self.nearbyItem = -1
+        self.onlineItem = -1
+        self.scoringItem = -1
+        self.robotItem = -1
         
         if Scorecard.activeSettings.onlineGamesEnabled {
             self.nearbyItem = self.hostingOptions
@@ -1004,14 +1013,12 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private func startNetworkTimer(interval: TimeInterval = 10) {
         self.stopNetworkTimer(report: false)
         Utility.debugMessage("client", "Starting network timer")
-        if !firstTime && (!Scorecard.shared.isNetworkAvailable || !Scorecard.shared.isLoggedIn) {
-            self.networkTimer = Timer.scheduledTimer(
-                timeInterval: TimeInterval(5),
-                target: self,
-                selector: #selector(ClientViewController.checkNetwork(_:)),
-                userInfo: nil,
-                repeats: true)
-        }
+        self.networkTimer = Timer.scheduledTimer(
+            timeInterval: TimeInterval(20.0),
+            target: self,
+            selector: #selector(ClientViewController.checkNetwork(_:)),
+            userInfo: nil,
+            repeats: true)
     }
     
     private func stopNetworkTimer(report: Bool = true) {

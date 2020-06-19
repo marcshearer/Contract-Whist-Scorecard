@@ -29,10 +29,20 @@ class Settings : Equatable {
     public var prefersStatusBarHidden = true
     public var colorTheme = Themes.defaultName
     public var termsDate: Date!
+    public var termsUser = ""
     public var termsDevice = ""
-    
-    public var saveStats: Bool = true           // Only used in a game (not saved) - initially set to same as saveHistory but can be overridden
         
+    public var saveStats: Bool = true           // Only used in a game (not saved) - initially set to same as saveHistory but can be overridden
+    
+    private func saved(_ label: String) -> Bool {
+        switch label {
+        case "saveStats":
+            return false
+        default:
+            return true
+        }
+    }
+    
     public func setValue(_ value: Any?, forKey label: String) {
         switch label {
         case "bonus2":
@@ -69,6 +79,8 @@ class Settings : Equatable {
             self.termsDate = value as! Date?
         case "termsDevice":
             self.termsDevice = value as! String
+        case "termsUser":
+            self.termsUser = value as! String
         case "saveStats":
             self.saveStats = value as! Bool
         default:
@@ -135,7 +147,7 @@ class Settings : Equatable {
         let mirror = Mirror(reflecting: self)
         for child in mirror.children {
             if let label = child.label {
-                if label != "saveStats" {
+                if self.saved(label) {
                     self.setValue(UserDefaults.standard.object(forKey: label), forKey: label)
                 }
             } else {
@@ -150,7 +162,7 @@ class Settings : Equatable {
         for child in mirror.children {
             if let label = child.label {
                 let value = child.value as? NSObject
-                if label != "saveStats" {
+                if self.saved(label) {
                     UserDefaults.standard.set(value, forKey: label)
                 }
             } else {
@@ -160,69 +172,51 @@ class Settings : Equatable {
     }
     
     public func saveToICloud() {
-        var cloudObjectList: [CKRecord] = []
+        var downloadList: [(label: String, deviceName: String, type: String, value: String, record: CKRecord)] = []
+        
+        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let database = cloudContainer.privateCloudDatabase
+        
+        let predicate = NSPredicate(format: "deviceName IN %@", argumentArray: [["", Scorecard.deviceName]])
+
+        Sync.read(recordType: "Settings", predicate: predicate, database: database, downloadAction: { (record) in
+                if let label = record.value(forKey: "name") as? String,
+                   let deviceName = record.value(forKey: "deviceName") as? String,
+                   let type = record.value(forKey: "type") as? String,
+                    let value = record.value(forKey: "value") as? String {
+                    downloadList.append((label,deviceName,type,value,record))
+                }
+            },
+            completeAction: { (error) in
+                self.saveToICloudUpdate(downloadList: downloadList, database: database)
+            })
+    }
+    
+    public func saveToICloudUpdate(downloadList: [(label: String, deviceName: String, type: String, value: String, record: CKRecord)], database: CKDatabase) {
+        var updateList: [(label: String, deviceName: String, record: CKRecord)] = []
+        var unchangedList: [(label: String, deviceName: String)] = []
         var recordIDsToDelete: [CKRecord.ID] = []
         
-        func saveRecord(label: String, type: String, value: Any?) {
+        func saveRecord(label: String, type: String, value: NSObject?) {
             for pass in 1...2 {
-                var idString: String
-                if pass == 1 {
-                    idString = label
+                let deviceName = (pass == 1 ? Scorecard.deviceName : "")
+                let existing = downloadList.first(where: {$0.label == label && $0.deviceName == deviceName})
+                let value = self.saveToICloudValue(type: type, value: value)
+                if existing != nil && type == existing!.type && value == existing!.value {
+                    unchangedList.append((label,deviceName))
                 } else {
-                    idString = "\(Scorecard.deviceName)+\(label)"
+                    let cloudObject = self.saveToICloudRecord(existing: existing?.record, label: label, type: type, value: value, deviceName: deviceName)
+                    updateList.append((label, deviceName, cloudObject))
                 }
-                let recordID = CKRecord.ID(recordName: "Settings-\(idString)")
-                
-                var data: String
-                switch type {
-                case "[String]":
-                    data = (value as! [String]).joined(separator: ";")
-                case "[Int]":
-                    data = (value as! [Int]).map{"\($0)"}.joined(separator: ";")
-                case "Date":
-                    data = Utility.dateString(value as! Date, format: "yyyy-MM-dd HH:mm:ss Z", localized: false)
-                default:
-                    data = "\(value ?? "")"
-                }
-                
-                let cloudObject = CKRecord(recordType: "Settings", recordID: recordID)
-                if pass == 1 {
-                    cloudObject.setValue("", forKey: "deviceName")
-                } else {
-                    cloudObject.setValue(Scorecard.deviceName, forKey: "deviceName")
-                }
-                cloudObject.setValue(label, forKey: "name")
-                cloudObject.setValue(type, forKey: "type")
-                cloudObject.setValue(data, forKey: "value")
-                cloudObjectList.append(cloudObject)
-                recordIDsToDelete.append(recordID)
             }
         }
         
         let mirror = Mirror(reflecting: self)
         for child in mirror.children {
             if let label = child.label {
-                let value = child.value as? NSObject
-                if label != "saveStats" {
-                    var type: String
-                    if let _ = value as? [String] {
-                        type = "[String]"
-                    } else if let _ = value as? [NSNumber] {
-                        type = "[Int]"
-                    } else {
-                        if let _ = value as? Bool {
-                            type = "Bool"
-                        } else if let _ = value as? Int {
-                            type = "Int"
-                        } else if let _ = value as? Date {
-                            type = "Date"
-                        } else if value == nil {
-                            // Only type that allows nil is date
-                            type = "Date"
-                        } else {
-                            type = "String"
-                        }
-                    }
+                if self.saved(label) {
+                    let value = child.value as? NSObject
+                    let type = saveToICloudType(value: value)
                     saveRecord(label: label, type: type, value: value)
                 }
             } else {
@@ -230,17 +224,85 @@ class Settings : Equatable {
             }
         }
         // Save dummy entry for current players
-        saveRecord(label: "[players]", type: "[String]", value: Scorecard.shared.playerUUIDList())
+        saveRecord(label: "[players]", type: "[String]", value: Scorecard.shared.playerUUIDList() as NSObject)
         
-        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
-        let database = cloudContainer.privateCloudDatabase
-        Sync.update(recordIDsToDelete: recordIDsToDelete, database: database) { (error) in
-            Sync.update(records: cloudObjectList, database: database) { (error) in
-                Utility.debugMessage("Settings","Settings to iCloud complete (\(error?.localizedDescription ?? "Success"))")
+        for entry in downloadList {
+            if !updateList.contains(where: {$0.label == entry.label && $0.deviceName == entry.deviceName}) &&
+                !unchangedList.contains(where: {$0.label == entry.label && $0.deviceName == entry.deviceName}) {
+                // This isn't in the update list or the unchanged list - need to delete it
+                recordIDsToDelete.append(entry.record.recordID)
             }
+        }
+        
+        let records = updateList.map{$0.record}
+        Sync.update(records: records, recordIDsToDelete: recordIDsToDelete, database: database) { (error) in
+            Utility.debugMessage("Settings","Settings to iCloud complete (\(error?.localizedDescription ?? "Success"))")
         }
     }
     
+    private func saveToICloudRecord(existing: CKRecord?, label: String, type: String, value: String, deviceName: String?) -> CKRecord {
+        var cloudObject: CKRecord
+        
+        if let existing = existing {
+            cloudObject = existing
+        } else {
+            var idString: String
+            if deviceName == nil {
+                idString = label
+            } else {
+                idString = "\(Scorecard.deviceName)+\(label)"
+            }
+            let recordID = CKRecord.ID(recordName: "Settings-\(idString)")
+            
+            cloudObject = CKRecord(recordType: "Settings", recordID: recordID)
+            cloudObject.setValue(label, forKey: "name")
+            cloudObject.setValue(deviceName ?? "", forKey: "deviceName")
+        }
+        
+        cloudObject.setValue(type, forKey: "type")
+        cloudObject.setValue(value, forKey: "value")
+       
+        return cloudObject
+    }
+    
+    private func saveToICloudValue(type: String, value: NSObject?) -> String {
+        var data: String
+        switch type {
+        case "[String]":
+            data = (value as! [String]).joined(separator: ";")
+        case "[Int]":
+            data = (value as! [Int]).map{"\($0)"}.joined(separator: ";")
+        case "Date":
+            data = Utility.dateString(value as! Date, format: "yyyy-MM-dd HH:mm:ss Z", localized: false)
+        default:
+            data = (value == nil ? "" : "\(value!)")
+        }
+        return data
+    }
+    
+    private func saveToICloudType(value: NSObject?) -> String {
+        var type: String
+        if let _ = value as? [String] {
+            type = "[String]"
+        } else if let _ = value as? [NSNumber] {
+            type = "[Int]"
+        } else {
+            if let _ = value as? Bool {
+                type = "Bool"
+            } else if let _ = value as? Int {
+                type = "Int"
+            } else if let _ = value as? Date {
+                type = "Date"
+            } else if value == nil {
+                // Only type that allows nil is date
+                type = "Date"
+            } else {
+                type = "String"
+            }
+        }
+        return type
+    }
+      
     public func loadFromICloud(completion: (([String]?)->())? = nil) {
         // Note there should be 2 values for each column, the default and the device-specific
         // By sorting by device name we should get the default first and then overwrite it

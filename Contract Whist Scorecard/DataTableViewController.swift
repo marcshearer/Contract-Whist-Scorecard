@@ -741,13 +741,17 @@ extension DataTableViewController {
     private func defaultCellColors(cell: DataTableCollectionCell) {
         switch cell.reuseIdentifier {
         case "Data Table Body Button Cell":
+            cell.backgroundColor = Palette.background
             cell.bodyButton.setTitleColor(Palette.text, for: .normal)
         case "Data Table Body Normal Cell":
             cell.textLabel.textColor = Palette.text
+            cell.backgroundColor = Palette.background
         case "Data Table Body Thumbnail Cell":
             cell.bodyThumbnailDisc.textColor = Palette.text
+            cell.backgroundColor = Palette.background
         case "Data Table Header Cell":
-            cell.textLabel.textColor = Palette.text
+            cell.textLabel.textColor = Palette.bannerText
+            cell.backgroundColor = UIColor.clear
         default:
             break
         }

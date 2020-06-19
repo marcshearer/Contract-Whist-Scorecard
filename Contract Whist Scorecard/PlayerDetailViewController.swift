@@ -50,7 +50,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
     
     // Main state properties
     private var reconcile: Reconcile!
-    private let settings = Scorecard.game.settings ?? Scorecard.shared.settings
+    private let settings = Scorecard.game.settings ?? Scorecard.settings
     private let sync = Sync()
     
     private var sections = 0

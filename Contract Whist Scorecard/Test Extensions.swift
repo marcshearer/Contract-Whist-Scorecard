@@ -345,18 +345,18 @@ extension Scorecard {
     
     func testResetSettings() {
         // Reset all settings to default values - called on entry to app in test mode
-        self.settings.bonus2 = true
-        self.settings.cards = [13, 1]
-        self.settings.bounceNumberCards = false
-        self.settings.trumpSequence = ["♣︎", "♦︎", "♥︎", "♠︎", "NT"]
-        self.settings.syncEnabled = true
-        self.settings.saveHistory = true
-        self.settings.saveLocation = true
-        self.settings.receiveNotifications = false
-        self.settings.allowBroadcast = true
-        self.settings.alertVibrate = true
-        self.settings.thisPlayerUUID = "mshearer@waitrose.com"
-        self.settings.onlineGamesEnabled = true
+        Scorecard.settings.bonus2 = true
+        Scorecard.settings.cards = [13, 1]
+        Scorecard.settings.bounceNumberCards = false
+        Scorecard.settings.trumpSequence = ["♣︎", "♦︎", "♥︎", "♠︎", "NT"]
+        Scorecard.settings.syncEnabled = true
+        Scorecard.settings.saveHistory = true
+        Scorecard.settings.saveLocation = true
+        Scorecard.settings.receiveNotifications = false
+        Scorecard.settings.allowBroadcast = true
+        Scorecard.settings.alertVibrate = true
+        Scorecard.settings.thisPlayerUUID = "mshearer@waitrose.com"
+        Scorecard.settings.onlineGamesEnabled = true
     }
 }
 

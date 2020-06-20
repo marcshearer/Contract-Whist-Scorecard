@@ -64,6 +64,11 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     override func viewDidLoad() {
         super.viewDidLoad()
         
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
         self.setupControls()
         
         self.termsText.text = "Whist allows you to score or play Contract Whist.\n\nA record of the scores of your games and the players' names will be kept and synchronised with a central database.\n\nThis data will not be used for any marketing purposes.\nHowever it will be accessible to other users of the app who know your Unique ID.\n\nBy accepting these terms and conditions you agree to any data you enter being shared in this way."

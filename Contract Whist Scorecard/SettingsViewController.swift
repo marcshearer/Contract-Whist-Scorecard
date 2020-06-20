@@ -991,6 +991,10 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             cell.nameLabel.textColor = theme.color(.gameBanner, .current)
             cell.sample.setColors(theme: theme)
             cell.sample.isHidden = false
+            
+            if indexPath.row == (Int(themesDisplayed) + 1) / 2 {
+                collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
+            }
         
             return cell
             

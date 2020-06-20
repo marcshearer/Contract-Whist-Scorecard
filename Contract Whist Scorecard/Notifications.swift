@@ -86,21 +86,20 @@ class Notifications {
             if Scorecard.activeSettings.syncEnabled && Scorecard.activeSettings.receiveNotifications {
                 // Now add a notification for each player on this device
                 let database = CKContainer.init(identifier: Config.iCloudIdentifier).publicCloudDatabase
-                for playerUUID in Scorecard.shared.playerUUIDList() {
-                    let predicate = NSPredicate(format:"playerUUID = %@", playerUUID)
-                    let subscription = CKQuerySubscription(recordType: "Notifications", predicate: predicate, options: [.firesOnRecordCreation, .firesOnRecordUpdate])
-                    
-                    let notification = CKSubscription.NotificationInfo()
-                    notification.alertLocalizationKey = "%1$@"
-                    notification.alertLocalizationArgs = ["message"]
-                    notification.category = "highScore"
-                    subscription.notificationInfo = notification
-                    
-                    database.save(subscription) { (result, error) in
-                        if let completion = completion {
-                            completion()
-                        }
+                let predicate = NSPredicate(format:"playerUUID IN %@", argumentArray: [Scorecard.shared.playerUUIDList()])
+                let subscription = CKQuerySubscription(recordType: "Notifications", predicate: predicate, options: [.firesOnRecordCreation, .firesOnRecordUpdate])
+                
+                let notification = CKSubscription.NotificationInfo()
+                notification.alertLocalizationKey = "%1$@"
+                notification.alertLocalizationArgs = ["message"]
+                notification.category = "highScore"
+                subscription.notificationInfo = notification
+                
+                database.save(subscription) { (result, error) in
+                    if let error = error as? CKError {
+                        Utility.debugMessage("Notifications", error.localizedDescription)
                     }
+                    completion?()
                 }
             } else {
                 if let completion = completion {

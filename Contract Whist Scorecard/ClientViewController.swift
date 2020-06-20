@@ -378,13 +378,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     internal func didSelect(playerMO: PlayerMO) {
         // Save player as default for device
-        let onlinePlayerUUID = Scorecard.activeSettings.thisPlayerUUID
-        if playerMO.playerUUID == onlinePlayerUUID {
-            // Back to normal user - can remove temporary override
-            Notifications.removeTemporaryOnlineGameSubscription()
-        } else {
-            Notifications.addTemporaryOnlineGameSubscription(playerUUID: playerMO.playerUUID!)
-        }
+        Scorecard.settings.thisPlayerUUID = playerMO.playerUUID!
         self.thisPlayer = playerMO.playerUUID!
         self.destroyClientController()
         self.createClientController()

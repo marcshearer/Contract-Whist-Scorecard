@@ -785,8 +785,9 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
             // Update core data with any changes
             self.playerDetail.deleteMO()
 
-            // Remove this player from list of subscriptions
-            Notifications.updateHighScoreSubscriptions()
+            // Save to iCloud
+            Scorecard.settings.saveToICloud()
+
 
             // Delete any detached games
             History.deleteDetachedGames()

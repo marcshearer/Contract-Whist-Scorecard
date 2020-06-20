@@ -170,7 +170,7 @@ class Settings : Equatable {
             }
         }
     }
-    
+        
     public func saveToICloud() {
         var downloadList: [(label: String, deviceName: String, type: String, value: String, record: CKRecord)] = []
         
@@ -196,8 +196,10 @@ class Settings : Equatable {
         var updateList: [(label: String, deviceName: String, record: CKRecord)] = []
         var unchangedList: [(label: String, deviceName: String)] = []
         var recordIDsToDelete: [CKRecord.ID] = []
+        var playersChanged = false
         
-        func saveRecord(label: String, type: String, value: NSObject?) {
+        func saveRecord(label: String, type: String, value: NSObject?) -> Bool {
+            var changed = false
             for pass in 1...2 {
                 let deviceName = (pass == 1 ? Scorecard.deviceName : "")
                 let existing = downloadList.first(where: {$0.label == label && $0.deviceName == deviceName})
@@ -207,8 +209,10 @@ class Settings : Equatable {
                 } else {
                     let cloudObject = self.saveToICloudRecord(existing: existing?.record, label: label, type: type, value: value, deviceName: deviceName)
                     updateList.append((label, deviceName, cloudObject))
+                    changed = true
                 }
             }
+            return changed
         }
         
         let mirror = Mirror(reflecting: self)
@@ -217,14 +221,14 @@ class Settings : Equatable {
                 if self.saved(label) {
                     let value = child.value as? NSObject
                     let type = saveToICloudType(value: value)
-                    saveRecord(label: label, type: type, value: value)
+                    _ = saveRecord(label: label, type: type, value: value)
                 }
             } else {
                 fatalError("Error saving settings to cloud")
             }
         }
         // Save dummy entry for current players
-        saveRecord(label: "[players]", type: "[String]", value: Scorecard.shared.playerUUIDList() as NSObject)
+        playersChanged = saveRecord(label: "[players]", type: "[String]", value: Scorecard.shared.playerUUIDList().sorted() as NSObject)
         
         for entry in downloadList {
             if !updateList.contains(where: {$0.label == entry.label && $0.deviceName == entry.deviceName}) &&
@@ -237,6 +241,9 @@ class Settings : Equatable {
         let records = updateList.map{$0.record}
         Sync.update(records: records, recordIDsToDelete: recordIDsToDelete, database: database) { (error) in
             Utility.debugMessage("Settings","Settings to iCloud complete (\(error?.localizedDescription ?? "Success"))")
+            if playersChanged {
+                Notifications.updateHighScoreSubscriptions()
+            }
         }
     }
     
@@ -250,7 +257,7 @@ class Settings : Equatable {
             if deviceName == nil {
                 idString = label
             } else {
-                idString = "\(Scorecard.deviceName)+\(label)"
+                idString = "\(deviceName!)+\(label)"
             }
             let recordID = CKRecord.ID(recordName: "Settings-\(idString)")
             

@@ -584,17 +584,16 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
                 }
             }
         }
-        if self.saveToICloud {
-            Scorecard.settings.saveToICloud()
-        }
         
         if imageList.count > 0 {
             self.getImages(imageList)
         }
-
-        // Add these players to list of subscriptions
-        Notifications.updateHighScoreSubscriptions()
         
+        if self.saveToICloud {
+            // Save to iCloud
+            Scorecard.settings.saveToICloud()
+
+        }
     }
     
     func addNewPlayer(playerDetail: PlayerDetail) {

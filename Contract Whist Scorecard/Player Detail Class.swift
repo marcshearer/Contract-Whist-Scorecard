@@ -102,8 +102,10 @@ import CoreData
             } else {
                 // Remove the managed object
                 Scorecard.shared.playerList.remove(at: index!)
-                // Save settings with list of players to cloud
+                
+                // Save to iCloud
                 Scorecard.settings.saveToICloud()
+
             }
         }
     }
@@ -135,8 +137,9 @@ import CoreData
             }
         }
         if playerMO != nil && saveToICloud {
-            // Save settings with list of players
+            // Save to iCloud
             Scorecard.settings.saveToICloud()
+
         }
         return playerMO
     }

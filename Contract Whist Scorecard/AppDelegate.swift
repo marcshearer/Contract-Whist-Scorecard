@@ -112,7 +112,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let message = String(format: notification.alertLocalizationKey!, arguments: args!)
         let viewController = Utility.getActiveViewController()
         let category = notification.category
-        if category == "onlineGame" || category == "onlineGameTemp" {
+        if category == "onlineGame" {
             Notifications.processOnlineGameNotification(message: message, args: args!, category: category!, confirm: confirm)
         } else {
             viewController?.alertMessage(message , title: "Notification")

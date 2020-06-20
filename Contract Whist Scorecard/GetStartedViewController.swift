@@ -664,7 +664,10 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
         self.imageObserver = nil
         Scorecard.settings.syncEnabled = true
         Scorecard.settings.save()
+        
+        // Save to iCloud
         Scorecard.settings.saveToICloud()
+        
         self.dismiss(animated: true, completion: self.completion)
     }
     

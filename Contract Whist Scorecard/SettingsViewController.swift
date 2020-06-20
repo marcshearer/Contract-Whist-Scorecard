@@ -120,7 +120,11 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     @IBAction func finishPressed(_ sender: UIButton) {
         Scorecard.settings.save()
+        
+        // Save to iCloud
         Scorecard.settings.saveToICloud()
+
+
         self.dismiss()
     }
     
@@ -1489,11 +1493,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
 
     private func updateOnlineGameSubscriptions() {
-        if self.onlineEnabled {
-            Notifications.addOnlineGameSubscription(Scorecard.settings.thisPlayerUUID, completion: nil)
-        } else {
-            Notifications.deleteExistingSubscriptions( "onlineGame", completion: nil)
-        }
+        Notifications.addOnlineGameSubscription(Scorecard.settings.thisPlayerUUID, completion: nil)
     }
     
     // MARK: - Function to present and dismiss this view ==============================================================

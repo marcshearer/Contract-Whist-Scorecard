@@ -90,6 +90,7 @@ class Scorecard {
         
     // Core data variables
     public var playerList:[PlayerMO] = []
+    
     public var playerEmails: [String:String] = [:]  // Downloaded on player sync, but not guaranteed to be in place
                                                     // These should NEVER be saved on local disk, just used to
                                                     // avoid duplicates
@@ -149,9 +150,6 @@ class Scorecard {
                 
         // Set icloud user flag
         self.setICloudUserIsMe()
-        
-        // Remove any temporary online game notification subscription
-        Notifications.removeTemporaryOnlineGameSubscription()
         
         // Set up Watch Manager
         self.watchManager = WatchManager()

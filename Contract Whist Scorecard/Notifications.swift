@@ -115,41 +115,25 @@ class Notifications {
     public static func addOnlineGameSubscription(_ invitePlayerUUID: String, category: String = "onlineGame", completion: (()->())? = nil) {
         // First delete any existing subscriptions
         Notifications.deleteExistingSubscriptions(category, completion: {
-            
-            // Now add a notification for the player linked to this device
-            let database = CKContainer.init(identifier: Config.iCloudIdentifier).publicCloudDatabase
-            let predicate = NSPredicate(format:"invitePlayerUUID = %@", invitePlayerUUID)
-            let subscription = CKQuerySubscription(recordType: "Invites", predicate: predicate, options: [.firesOnRecordCreation])
-            
-            let notification = CKSubscription.NotificationInfo()
-            notification.alertLocalizationKey = "%1$@ has invited you to play online. Click this notification to accept, or start the Whist app and go to 'Online Game' and select 'Join a Game' to see the invitation"
-            notification.alertLocalizationArgs = ["hostName", "hostPlayerUUID", "hostDeviceName", "invitePlayerUUID"]
-            notification.category = category
-            subscription.notificationInfo = notification
-            
-            database.save(subscription) { result, error in
-                if let completion = completion {
-                    completion()
+            if Scorecard.settings.onlineGamesEnabled {
+                // Now add a notification for the player linked to this device
+                let database = CKContainer.init(identifier: Config.iCloudIdentifier).publicCloudDatabase
+                let predicate = NSPredicate(format:"invitePlayerUUID = %@", invitePlayerUUID)
+                let subscription = CKQuerySubscription(recordType: "Invites", predicate: predicate, options: [.firesOnRecordCreation])
+                
+                let notification = CKSubscription.NotificationInfo()
+                notification.alertLocalizationKey = "%1$@ has invited you to play online. Click this notification to accept, or start the Whist app and go to 'Online Game' and select 'Join a Game' to see the invitation"
+                notification.alertLocalizationArgs = ["hostName", "hostPlayerUUID", "hostDeviceName", "invitePlayerUUID"]
+                notification.category = category
+                subscription.notificationInfo = notification
+                
+                database.save(subscription) { result, error in
+                    if let completion = completion {
+                        completion()
+                    }
                 }
             }
-
         })
-    }
-    
-    public static func removeTemporaryOnlineGameSubscription(completion: (()->())? = nil) {
-        if UserDefaults.standard.bool(forKey: "tempOnlinePlayerUUID") {
-            deleteExistingSubscriptions("onlineGameTemp", completion: {
-                UserDefaults.standard.set(false, forKey: "tempOnlinePlayerUUID")
-                if completion != nil {
-                    completion!()
-                }
-            })
-        }
-    }
-    
-    public static func addTemporaryOnlineGameSubscription(playerUUID: String, completion: (()->())? = nil) {
-        UserDefaults.standard.set(true, forKey: "tempOnlinePlayerUUID")
-        addOnlineGameSubscription(playerUUID, category: "onlineGameTemp", completion: completion)
     }
     
     public static func processOnlineGameNotification(message: String, args: [String], category: String, confirm: Bool = true) {

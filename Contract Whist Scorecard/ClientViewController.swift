@@ -338,6 +338,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         PlayersViewController.show(from: self, completion: {self.restart()})
     }
     
+    private func showDashboard() {
+        DashboardViewController.show(from: self)
+    }
+    
     private func showWalkthrough() {
         WalkthroughPageViewController.show(from: self)
     }
@@ -396,6 +400,12 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private func setupMenuActions() {
         
         self.menuActions = []
+        
+        self.addAction(title: "History", isHidden: {Scorecard.shared.playerList.count == 0}, action: { () in
+            self.historyViewer = HistoryViewer(from: self) {
+                self.historyViewer = nil
+            }
+        })
         
         self.addAction(title: "Statistics", isHidden: {Scorecard.shared.playerList.count == 0}, action: { () in
             self.statisticsViewer = StatisticsViewer(from: self) {
@@ -783,9 +793,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         case playersItem:
             self.showPlayers()
         case resultsItem:
-            self.historyViewer = HistoryViewer(from: self) {
-                self.historyViewer = nil
-            }
+            self.showDashboard()
         case settingsItem:
             self.showSettings()
         default:

@@ -110,7 +110,6 @@ class CustomCollectionViewLayout: UICollectionViewFlowLayout {
             
             attributes.alpha = alpha
             attributes.transform3D = CATransform3DScale(CATransform3DIdentity, scale, scale, 1)
-            
         }
         
         return attributes

@@ -84,7 +84,7 @@ class ImageButton: UIView {
     public func set(image: UIImage?) {
         var image = image
         if self.templateImages {
-            let templateImage = image?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
+            let templateImage = image?.asTemplate()
             image = templateImage ?? image
         }
         self.image = image
@@ -139,7 +139,7 @@ class ImageButton: UIView {
     public func set(backgroundImage: UIImage?) {
         var backgroundImage = backgroundImage
         if self.templateImages {
-            let templateImage = backgroundImage?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
+            let templateImage = backgroundImage?.asTemplate()
             backgroundImage = templateImage ?? backgroundImage
         }
         self.backgroundImage = backgroundImage

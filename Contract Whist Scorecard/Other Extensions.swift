@@ -109,6 +109,10 @@ extension UIImage {
 
         self.init(data: image.pngData()!)!
     }
+    
+    func asTemplate() -> UIImage {
+        return self.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
+    }
 }
 
 extension Array {

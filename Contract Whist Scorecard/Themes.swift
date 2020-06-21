@@ -18,6 +18,7 @@ class Themes {
                             .bannerShadow                : (#colorLiteral(red: 0.9176470588, green: 0.7647058824, blue: 0.3882352941, alpha: 1), nil) ,
                             .bannerEmbossed              : (#colorLiteral(red: 0.8196078431, green: 0.6666666667, blue: 0.2941176471, alpha: 1), nil) ,
                             .bannerText                  : (#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil) ,
+                            .bannerTextContrast          : (#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), nil) ,
                             .bidButtonText               : (#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil) ,
                             .bidButton                   : (#colorLiteral(red: 0.7164452672, green: 0.7218510509, blue: 0.7215295434, alpha: 1), nil) ,
                             .bold                        : (#colorLiteral(red: 0, green: 0.1469757259, blue: 0.6975850463, alpha: 1), nil) ,
@@ -218,6 +219,7 @@ enum ThemeColor: String {
     case banner = "Banner"
     case bannerShadow = "Banner Shadow"
     case bannerText = "Banner Text"
+    case bannerTextContrast = "Banner Text Contrast"
     case bannerEmbossed = "Banner Embossed"
     case bidButton = "Bid Button"
     case bidButtonText = "Bid Button Text"

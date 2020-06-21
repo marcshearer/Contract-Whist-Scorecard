@@ -82,6 +82,8 @@
 		B247A72B248359F500591BBA /* TitleBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = B247A72A248359F500591BBA /* TitleBar.xib */; };
 		B247A72D24835A7C00591BBA /* Title Bar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B247A72C24835A7C00591BBA /* Title Bar.swift */; };
 		B247A72F2483657600591BBA /* Shadow View.swift in Sources */ = {isa = PBXBuildFile; fileRef = B247A72E2483657600591BBA /* Shadow View.swift */; };
+		B248F2F5249F54AF000275DD /* DashboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B248F2F4249F54AF000275DD /* DashboardViewController.swift */; };
+		B248F2F8249F54EA000275DD /* DashboardViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B248F2F7249F54EA000275DD /* DashboardViewController.storyboard */; };
 		B24AABE01EC07274000D34B0 /* Backup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABDF1EC07274000D34B0 /* Backup.swift */; };
 		B24AABE21EC0BC08000D34B0 /* Upgrade.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABE11EC0BC08000D34B0 /* Upgrade.swift */; };
 		B24AABE41EC4DC5F000D34B0 /* Core Data Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24AABE31EC4DC5F000D34B0 /* Core Data Class.swift */; };
@@ -299,6 +301,8 @@
 		B247A72A248359F500591BBA /* TitleBar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TitleBar.xib; sourceTree = "<group>"; };
 		B247A72C24835A7C00591BBA /* Title Bar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Title Bar.swift"; sourceTree = "<group>"; };
 		B247A72E2483657600591BBA /* Shadow View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Shadow View.swift"; sourceTree = "<group>"; };
+		B248F2F4249F54AF000275DD /* DashboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewController.swift; sourceTree = "<group>"; };
+		B248F2F7249F54EA000275DD /* DashboardViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = DashboardViewController.storyboard; sourceTree = "<group>"; };
 		B24AABDF1EC07274000D34B0 /* Backup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Backup.swift; sourceTree = "<group>"; };
 		B24AABE11EC0BC08000D34B0 /* Upgrade.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Upgrade.swift; sourceTree = "<group>"; };
 		B24AABE31EC4DC5F000D34B0 /* Core Data Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Core Data Class.swift"; sourceTree = "<group>"; };
@@ -819,6 +823,15 @@
 			name = "Title Bar";
 			sourceTree = "<group>";
 		};
+		B248F2F6249F54CE000275DD /* Dashboards */ = {
+			isa = PBXGroup;
+			children = (
+				B248F2F7249F54EA000275DD /* DashboardViewController.storyboard */,
+				B248F2F4249F54AF000275DD /* DashboardViewController.swift */,
+			);
+			name = Dashboards;
+			sourceTree = "<group>";
+		};
 		B2594E8922524FBA004398FB /* Scripts */ = {
 			isa = PBXGroup;
 			children = (
@@ -845,6 +858,7 @@
 		B288FAB51FB801E200633FD7 /* Other Main Views */ = {
 			isa = PBXGroup;
 			children = (
+				B248F2F6249F54CE000275DD /* Dashboards */,
 				B221EEED210B1B2000F7FBA0 /* Players */,
 				B221EEEC210B1B1700F7FBA0 /* Statistics & History */,
 				B221EEEB210B1B0F00F7FBA0 /* Player Detail */,
@@ -1322,6 +1336,7 @@
 				B22789001FB83AA7009BABCA /* GetStartedViewController.storyboard in Resources */,
 				B2BE8690234C6BF000766CF2 /* PlayerSelectionView.xib in Resources */,
 				B227893F1FB893C9009BABCA /* SettingsViewController.storyboard in Resources */,
+				B248F2F8249F54EA000275DD /* DashboardViewController.storyboard in Resources */,
 				B22789421FB894AE009BABCA /* PlayerDetailViewController.storyboard in Resources */,
 				B227893C1FB8932A009BABCA /* SyncViewController.storyboard in Resources */,
 				B22789391FB8924C009BABCA /* HighScoresViewController.storyboard in Resources */,
@@ -1484,6 +1499,7 @@
 				B2693CCD22C88B6900596D85 /* History Viewer.swift in Sources */,
 				B2DD5D7E1ED323F400725B55 /* GraphViewController.swift in Sources */,
 				B2361A3A22D5B9DD007D88BB /* ConfirmPlayedViewController.swift in Sources */,
+				B248F2F5249F54AF000275DD /* DashboardViewController.swift in Sources */,
 				B2B755091E5B363200B1313B /* History Class.swift in Sources */,
 				B2BC51C71F7B5E8C0065F07D /* String Extensions.swift in Sources */,
 				CC4CC1161DEAF0F9007FB24F /* GamePreviewViewController.swift in Sources */,

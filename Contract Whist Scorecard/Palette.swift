@@ -22,6 +22,8 @@ class Palette {
                         { (traitCollection) in return Themes.color(.bannerShadow, traitCollection)})
     static var bannerText = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.bannerText, traitCollection)})
+    static var bannerTextContrast = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.bannerTextContrast, traitCollection)})
     static var bidButton = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.bidButton, traitCollection)})
     static var bidButtonText = UIColor(dynamicProvider:

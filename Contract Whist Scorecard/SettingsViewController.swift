@@ -996,7 +996,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             cell.sample.setColors(theme: theme)
             cell.sample.isHidden = false
             
-            if indexPath.row == (Int(themesDisplayed) + 1) / 2 {
+            if indexPath.row == Int(self.themesCount / 2) {
                 collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
             }
         

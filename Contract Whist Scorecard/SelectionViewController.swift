@@ -1041,9 +1041,9 @@ extension SelectionViewController {
         self.continueButton.setTitleColor(Palette.continueButtonText, for: .normal)
         self.continueButton.fillColor = Palette.continueButton
         self.continueButton.strokeColor = Palette.continueButton
-        self.continueButtonFooterPaddingView.backgroundColor = Palette.tableTop
-        self.continueButtonFooterView.footerColor = Palette.tableTop
-        self.continueButtonFooterView.borderColor = Palette.gameBannerText
+        self.continueButtonFooterPaddingView.backgroundColor = Palette.background
+        self.continueButtonFooterView.footerColor = Palette.background
+        self.continueButtonFooterView.borderColor = Palette.background
         self.navigationBar.bannerColor = Palette.gameBanner
         self.view.backgroundColor = Palette.background
     }

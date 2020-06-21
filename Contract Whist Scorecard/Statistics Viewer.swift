@@ -103,10 +103,10 @@ class StatisticsViewer : NSObject, DataTableViewerDelegate {
                 result = String(format: format, numericResult!)
             case "handsMade%":
                 numericResult = Double(record.handsMade) / Double(record.handsPlayed) * 100.0
-                result = "\(Int(numericResult!.rounded())) %"
+                result = "\(String(format: format, numericResult!)) %"
             case "twosMade%":
                 numericResult = Double(record.twosMade) / Double(record.handsPlayed) * 100.0
-                result = "\(Int(numericResult!.rounded())) %"
+                result = "\(String(format: format, numericResult!)) %"
             default:
                 result = ""
             }

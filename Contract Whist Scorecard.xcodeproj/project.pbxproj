@@ -65,6 +65,12 @@
 		B227893F1FB893C9009BABCA /* SettingsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B227893D1FB893C9009BABCA /* SettingsViewController.storyboard */; };
 		B22789421FB894AE009BABCA /* PlayerDetailViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789401FB894AE009BABCA /* PlayerDetailViewController.storyboard */; };
 		B22789451FB8951A009BABCA /* GraphViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789431FB8951A009BABCA /* GraphViewController.storyboard */; };
+		B228E3BC24A10274006D91CE /* PersonalDashboardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B228E3BB24A10274006D91CE /* PersonalDashboardView.xib */; };
+		B228E3BE24A10284006D91CE /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B228E3BD24A10284006D91CE /* DashboardView.swift */; };
+		B228E3C024A10ECC006D91CE /* ShieldsDashboardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B228E3BF24A10ECC006D91CE /* ShieldsDashboardView.xib */; };
+		B228E3C224A10F36006D91CE /* EveryoneDashboardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B228E3C124A10F36006D91CE /* EveryoneDashboardView.xib */; };
+		B22E38DA24A05F8900D61BBA /* CountTileView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B22E38D924A05F8900D61BBA /* CountTileView.xib */; };
+		B22E38DC24A05FA100D61BBA /* CountTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22E38DB24A05FA100D61BBA /* CountTileView.swift */; };
 		B235D2BE1F82288A0019384B /* Notification Simulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235D2BD1F82288A0019384B /* Notification Simulator.swift */; };
 		B2361A3722D5B965007D88BB /* ConfirmPlayedViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2361A3622D5B965007D88BB /* ConfirmPlayedViewController.storyboard */; };
 		B2361A3A22D5B9DD007D88BB /* ConfirmPlayedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2361A3922D5B9DD007D88BB /* ConfirmPlayedViewController.swift */; };
@@ -284,6 +290,12 @@
 		B227893E1FB893C9009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SettingsViewController.storyboard; sourceTree = "<group>"; };
 		B22789411FB894AE009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/PlayerDetailViewController.storyboard; sourceTree = "<group>"; };
 		B22789441FB8951A009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/GraphViewController.storyboard; sourceTree = "<group>"; };
+		B228E3BB24A10274006D91CE /* PersonalDashboardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PersonalDashboardView.xib; sourceTree = "<group>"; };
+		B228E3BD24A10284006D91CE /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		B228E3BF24A10ECC006D91CE /* ShieldsDashboardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShieldsDashboardView.xib; sourceTree = "<group>"; };
+		B228E3C124A10F36006D91CE /* EveryoneDashboardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EveryoneDashboardView.xib; sourceTree = "<group>"; };
+		B22E38D924A05F8900D61BBA /* CountTileView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CountTileView.xib; sourceTree = "<group>"; };
+		B22E38DB24A05FA100D61BBA /* CountTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountTileView.swift; sourceTree = "<group>"; };
 		B235D2BD1F82288A0019384B /* Notification Simulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification Simulator.swift"; sourceTree = "<group>"; };
 		B2361A3622D5B965007D88BB /* ConfirmPlayedViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ConfirmPlayedViewController.storyboard; sourceTree = "<group>"; };
 		B2361A3922D5B9DD007D88BB /* ConfirmPlayedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmPlayedViewController.swift; sourceTree = "<group>"; };
@@ -745,6 +757,26 @@
 			name = Graph;
 			sourceTree = "<group>";
 		};
+		B228E3BA24A10243006D91CE /* Dashboard Views */ = {
+			isa = PBXGroup;
+			children = (
+				B228E3BF24A10ECC006D91CE /* ShieldsDashboardView.xib */,
+				B228E3BB24A10274006D91CE /* PersonalDashboardView.xib */,
+				B228E3C124A10F36006D91CE /* EveryoneDashboardView.xib */,
+				B228E3BD24A10284006D91CE /* DashboardView.swift */,
+			);
+			name = "Dashboard Views";
+			sourceTree = "<group>";
+		};
+		B22E38D824A05F5400D61BBA /* Tile Views */ = {
+			isa = PBXGroup;
+			children = (
+				B22E38D924A05F8900D61BBA /* CountTileView.xib */,
+				B22E38DB24A05FA100D61BBA /* CountTileView.swift */,
+			);
+			name = "Tile Views";
+			sourceTree = "<group>";
+		};
 		B2361A3822D5B975007D88BB /* Confirm Played */ = {
 			isa = PBXGroup;
 			children = (
@@ -826,6 +858,8 @@
 		B248F2F6249F54CE000275DD /* Dashboards */ = {
 			isa = PBXGroup;
 			children = (
+				B228E3BA24A10243006D91CE /* Dashboard Views */,
+				B22E38D824A05F5400D61BBA /* Tile Views */,
 				B248F2F7249F54EA000275DD /* DashboardViewController.storyboard */,
 				B248F2F4249F54AF000275DD /* DashboardViewController.swift */,
 			);
@@ -1312,7 +1346,10 @@
 				B20B1262245EFC2B001DD632 /* Contract Whist Comms Protocols.docx in Resources */,
 				B243386022E57BBC002EBD40 /* ImageButton.xib in Resources */,
 				B22789451FB8951A009BABCA /* GraphViewController.storyboard in Resources */,
+				B228E3C224A10F36006D91CE /* EveryoneDashboardView.xib in Resources */,
 				B2594E862251FEB2004398FB /* MyDevices.sh in Resources */,
+				B228E3C024A10ECC006D91CE /* ShieldsDashboardView.xib in Resources */,
+				B228E3BC24A10274006D91CE /* PersonalDashboardView.xib in Resources */,
 				B22789021FB83AA7009BABCA /* SelectionViewController.storyboard in Resources */,
 				B22789331FB88FA5009BABCA /* DataTableViewController.storyboard in Resources */,
 				B2372E262489351800A6872D /* SampleTheme.xib in Resources */,
@@ -1321,6 +1358,7 @@
 				B227892D1FB88BDD009BABCA /* HistoryDetailViewController.storyboard in Resources */,
 				B243385522D89B72002EBD40 /* ThumbnailView.xib in Resources */,
 				B22789151FB8490F009BABCA /* EntryViewController.storyboard in Resources */,
+				B22E38DA24A05F8900D61BBA /* CountTileView.xib in Resources */,
 				B2C19E932370541E009485E0 /* Assets.xcassets in Resources */,
 				B221EED5210B0DFE00F7FBA0 /* HandViewController.storyboard in Resources */,
 				B227892A1FB885AC009BABCA /* ConfirmCountViewController.storyboard in Resources */,
@@ -1510,6 +1548,7 @@
 				B243385322D89B4E002EBD40 /* ThumbnailView.swift in Sources */,
 				B2FA298E1EA9E215002A5D03 /* Alert.swift in Sources */,
 				B2D2D2DC1ED9975A00CA7B3A /* ClientViewController.swift in Sources */,
+				B228E3BE24A10284006D91CE /* DashboardView.swift in Sources */,
 				B243385B22E0A6D8002EBD40 /* SelectedPlayersView.swift in Sources */,
 				B2D70EDF24628BA9009E6D6F /* Scores.swift in Sources */,
 				B235D2BE1F82288A0019384B /* Notification Simulator.swift in Sources */,
@@ -1518,6 +1557,7 @@
 				B20DA0401E139C450040221D /* HighScoresViewController.swift in Sources */,
 				B2D2AAB01E1FF8A600E211A9 /* SyncViewController.swift in Sources */,
 				B2B7550B1E5DEA6A00B1313B /* Reconcile.swift in Sources */,
+				B22E38DC24A05FA100D61BBA /* CountTileView.swift in Sources */,
 				B2B1801F21195FBC008D3BAA /* Robot Player Class.swift in Sources */,
 				49410E501DF1A712000BDA6D /* Scorecard Class.swift in Sources */,
 				B2B7550D1E619A3F00B1313B /* DataAdmin.swift in Sources */,

@@ -21,7 +21,8 @@ class CoreData {
     // Core data context - set up in initialise
     static var context: NSManagedObjectContext!
 
-    class func fetch<MO: NSManagedObject>(from entityName: String, filter: NSPredicate! = nil, filter2: NSPredicate! = nil, limit: Int = 0,
+    class func fetch<MO: NSManagedObject>(from entityName: String,
+                                          filter: NSPredicate! = nil, filter2: NSPredicate! = nil, limit: Int = 0,
                                           sort: [(key: String, direction: SortDirection)]) -> [MO] {
         var filterArray: [NSPredicate]? = nil
         if filter != nil {

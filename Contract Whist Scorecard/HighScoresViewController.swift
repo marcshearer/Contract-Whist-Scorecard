@@ -12,6 +12,7 @@ enum HighScoreType {
     case totalScore
     case handsMade
     case twosMade
+    case winStreak
 }
 
 class HighScoresViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate {

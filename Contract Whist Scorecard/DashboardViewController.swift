@@ -8,8 +8,36 @@
 
 import UIKit
 
-class DashboardViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CustomCollectionViewLayoutDelegate {
+@objc public enum DashboardDetailView: Int {
+    case history = 1
+    case stats = 2
+    case highScores = 3
+}
 
+@objc public enum DashboardValue: Int {
+    case gamesInPeriod = 1
+}
+
+public class HighScores: NSObject {
+    var scores: [HighScoreType: (playerName: String, score: Int)] = [:]
+}
+
+@objc protocol DashboardActionDelegate : class {
+    
+    func action(view: DashboardDetailView)
+    
+    func getValue(value: DashboardValue, personal: Bool) -> Int
+    
+    func getHistory(count: Int, personal: Bool) -> [HistoryGame]
+    
+    func getHighScores(personal: Bool) -> HighScores
+    
+    func getStats(playerUUID: String) -> PlayerMO
+    
+}
+
+class DashboardViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CustomCollectionViewLayoutDelegate, DashboardActionDelegate {
+    
     private enum DashboardCollectionViews: Int {
         case carousel = 1
         case scroll = 2
@@ -21,6 +49,8 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     private let everyonePage = 2
     private var currentPage = -1
     
+    private var dashboardViews: [Int:UIView] = [:]
+    
     private var firstTime = true
     
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
@@ -30,6 +60,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     @IBOutlet private weak var carouselCollectionViewFlowLayout: CustomCollectionViewLayout!
     @IBOutlet private weak var scrollCollectionView: UICollectionView!
     @IBOutlet private weak var finishButton: ClearButton!
+    @IBOutlet private weak var dashboardContainerView: UIView!
     
     @IBAction func finishButtonPressed(_ sender: UIButton) {
         self.dismiss()
@@ -47,6 +78,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         self.carouselCollectionView.decelerationRate = UIScrollView.DecelerationRate.fast
         
         self.currentPage = self.personalPage
+        self.addDashboardViews()
     }
 
     override func viewWillLayoutSubviews() {
@@ -59,7 +91,9 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         self.carouselCollectionView.contentOffset = CGPoint(x: self.carouselCollectionView.bounds.width / 4.0, y: 0.0)
-        self.changed(carouselCollectionView, itemAtCenter: self.personalPage, forceScroll: true)
+        if firstTime {
+            self.changed(carouselCollectionView, itemAtCenter: self.personalPage, forceScroll: true)
+        }
         self.carouselCollectionView.reloadData()
         self.firstTime = false
     }
@@ -70,6 +104,28 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     }
     
 
+    // MARK: - Dashboard Action Delegate =============================================================== -
+    
+    func action(view: DashboardDetailView) {
+        
+    }
+    
+    func getValue(value: DashboardValue, personal: Bool) -> Int {
+        return 16
+    }
+    
+    func getHistory(count: Int, personal: Bool) -> [HistoryGame] {
+        return []
+    }
+    
+    func getHighScores(personal: Bool) -> HighScores {
+        return HighScores()
+    }
+    
+    func getStats(playerUUID: String) -> PlayerMO {
+        return Scorecard.shared.findPlayerByPlayerUUID(Scorecard.settings.thisPlayerUUID)!
+    }
+    
     // MARK: - CollectionView Overrides ================================================================ -
     
     internal func collectionView(_ collectionView: UICollectionView,
@@ -155,36 +211,73 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     internal func changed(_ collectionView: UICollectionView, itemAtCenter: Int, forceScroll: Bool) {
         Utility.mainThread {
             if self.currentPage != itemAtCenter || forceScroll == true {
-                UIView.animate(withDuration: self.firstTime ? 0.0 : 0.5) {
-                    // Unhighlight the cell leaving the center
-                    if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: self.currentPage, section: 0)) as? DashboardCarouselCell {
-                        if self.currentPage != itemAtCenter {
-                            cell.containerView.backgroundColor = Palette.bannerText
-                            cell.titleLabel.alpha = 0.0
-                        }
-                    }
-                    
-                    // Select cell
-                    self.currentPage = itemAtCenter
-                 
-                    if forceScroll {
-                        collectionView.scrollToItem(at: IndexPath(item: itemAtCenter, section: 0), at: .centeredHorizontally, animated: !self.firstTime)
-                    }
-                    
-                    // Highlight new cell at center
-                    if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: self.currentPage, section: 0)) as? DashboardCarouselCell {
-                        cell.containerView.backgroundColor = Palette.bannerShadow
-                        cell.titleLabel.alpha = 1.0
-                    }
-                    self.scrollCollectionView.reloadData()
+                for page in 0..<self.pages {
+                    self.dashboardViews[page]!.isHidden = false
                 }
+                Utility.animate(duration: self.firstTime ? 0.0 : 0.5,
+                    completion: {
+                        for page in 0..<self.pages {
+                            self.dashboardViews[page]!.isHidden = (page != self.currentPage)
+                        }
+                    },
+                    animations: {
+                        // Unhighlight the cell leaving the center
+                        if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: self.currentPage, section: 0)) as? DashboardCarouselCell {
+                            if self.currentPage != itemAtCenter {
+                                cell.containerView.backgroundColor = Palette.bannerText
+                                cell.titleLabel.alpha = 0.0
+                            }
+                        }
+                        
+                        // Select cell
+                        self.currentPage = itemAtCenter
+                     
+                        if forceScroll {
+                            collectionView.scrollToItem(at: IndexPath(item: itemAtCenter, section: 0), at: .centeredHorizontally, animated: !self.firstTime)
+                        }
+                        
+                        // Highlight new cell at center
+                        if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: self.currentPage, section: 0)) as? DashboardCarouselCell {
+                            cell.containerView.backgroundColor = Palette.bannerShadow
+                            cell.titleLabel.alpha = 1.0
+                        }
+                        self.scrollCollectionView.reloadData()
+                        for page in 0..<self.pages {
+                            self.dashboardViews[page]!.alpha = (page == self.currentPage ? 1.0 : 0.0)
+                        }
+                    })
             }
         }
-        
     }
     
     private func selectPage(_ page: Int) {
-        
+        for pageNo in 0..<self.pages {
+            self.dashboardViews[pageNo]!.alpha = (pageNo == page ? 1.0 : 0.0)
+        }
+    }
+    
+    // MARK: - Add dashboard views ================================================================== -
+    
+    private func addDashboardViews() {
+        for page in 0..<pages {
+            var nibName = ""
+            switch page {
+            case shieldsPage:
+                nibName = "ShieldsDashboardView"
+            case personalPage:
+                nibName = "PersonalDashboardView"
+            case everyonePage:
+                nibName = "EveryoneDashboardView"
+            default:
+                break
+            }
+            let view = DashboardView(withNibName: nibName, frame: self.dashboardContainerView.frame)
+            view.alpha = 0.0
+            view.delegate = self
+            self.dashboardViews[page] = view
+            self.dashboardContainerView.addSubview(view)
+            Constraint.anchor(view: self.dashboardContainerView, control: view, attributes: .leading, .trailing, .top, .bottom)
+        }
     }
     
     // MARK: - Function to present and dismiss this view ==============================================================
@@ -214,6 +307,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
 extension DashboardViewController {
     
     private func defaultViewColors() {
+        self.view.backgroundColor = Palette.background
         self.bannerPaddingView.backgroundColor = Palette.banner
         self.bannerView.backgroundColor = Palette.banner
         self.titleLabel.textColor = Palette.bannerText
@@ -228,7 +322,6 @@ extension DashboardViewController {
         cell.indicator.tintColor = Palette.banner
     }
 
-
 }
 
 class DashboardCarouselCell: UICollectionViewCell {
@@ -239,4 +332,29 @@ class DashboardCarouselCell: UICollectionViewCell {
 
 class DashboardScrollCell: UICollectionViewCell {
    @IBOutlet fileprivate weak var indicator: UIImageView!
+}
+
+class Dashboard {
+    
+    public class func color(detailView: DashboardDetailView) -> UIColor {
+        switch detailView {
+        case .history:
+            return Palette.history
+        case .stats:
+            return Palette.stats
+        case .highScores:
+            return Palette.highScores
+        }
+    }
+    
+    public class func image(detailView: DashboardDetailView) -> UIImage {
+        switch detailView {
+        case .history:
+            return UIImage(systemName: "calendar.circle.fill")!
+        case .stats:
+            return UIImage(systemName: "waveform.circle.fill")!
+        case .highScores:
+            return UIImage(systemName: "star.circle.fill")!
+        }
+    }
 }

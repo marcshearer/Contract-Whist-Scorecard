@@ -96,9 +96,13 @@ class Themes {
                             .thumbnailPlaceholderText    : (#colorLiteral(red: 0.4940722585, green: 0.4941466451, blue: 0.4940558672, alpha: 1), nil) ,
                             .text                        : (#colorLiteral(red: 0.1960784314, green: 0.1960784314, blue: 0.1960784314, alpha: 1), nil) ,
                             .textEmphasised              : (#colorLiteral(red: 0.9009206891, green: 0.745765388, blue: 0.3741720319, alpha: 1), nil) ,
+                            .textTitle                   : (#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), nil) ,
                             .textError                   : (#colorLiteral(red: 0.9210745692, green: 0.1963090301, blue: 0.1316265166, alpha: 1), nil) ,
-                            .textMessage                 : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ]),
-            
+                            .textMessage                 : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
+                            .history                     : (#colorLiteral(red: 0.4516967535, green: 0.7031331658, blue: 0.4579167962, alpha: 1), nil) ,
+                            .stats                       : (#colorLiteral(red: 0.9738044143, green: 0.7667216659, blue: 0.003810848575, alpha: 1), nil) ,
+                            .highScores                  : (#colorLiteral(red: 0.1997601986, green: 0.4349380136, blue: 0.5107212663, alpha: 1), nil) ]),
+
             
         "Alternate"         : Theme(description: "Alternate", color: [
                             .textEmphasised             : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), nil) ,
@@ -275,6 +279,7 @@ enum ThemeColor: String {
     case grid = "Grid"
     case text = "Text"
     case textEmphasised = "Text Emphasised"
+    case textTitle = "Text Title"
     case textError = "Text Error"
     case textMessage = "Text Message"
     case shapeStrokeText = "Shape Stroke Text"
@@ -300,4 +305,7 @@ enum ThemeColor: String {
     case contractUnderLight = "Contract Under Light"
     case contractEqual = "Contract Equal"
     case segmentedControls = "Segmented Controls"
+    case history = "History"
+    case stats = "Stats"
+    case highScores = "High Scores"
 }

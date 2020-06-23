@@ -189,16 +189,24 @@
                                     <constraint firstItem="skN-et-kCR" firstAttribute="top" secondItem="gyh-A2-DhL" secondAttribute="bottom" constant="5" id="lLh-ET-XZJ"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hiY-hK-Vax" userLabel="Personal Dashboard">
+                                <rect key="frame" x="0.0" y="268" width="414" height="628"/>
+                                <color key="backgroundColor" name="Clear"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstAttribute="bottom" secondItem="hiY-hK-Vax" secondAttribute="bottom" id="1KP-tb-Eog"/>
                             <constraint firstItem="c6O-8s-uBR" firstAttribute="top" secondItem="j7b-uj-sfG" secondAttribute="bottom" id="2yi-UA-EJo"/>
                             <constraint firstItem="TXF-Mu-K4x" firstAttribute="top" secondItem="j7b-uj-sfG" secondAttribute="bottom" id="4xI-go-u0I"/>
                             <constraint firstItem="TXF-Mu-K4x" firstAttribute="trailing" secondItem="c6O-8s-uBR" secondAttribute="trailing" id="8lO-Jc-ddV"/>
                             <constraint firstItem="TXF-Mu-K4x" firstAttribute="height" secondItem="qLc-Of-9eu" secondAttribute="height" multiplier="9.5:38" id="CKf-Oj-LQS"/>
                             <constraint firstItem="j7b-uj-sfG" firstAttribute="leading" secondItem="qLc-Of-9eu" secondAttribute="leading" id="CSk-3V-jbr"/>
+                            <constraint firstAttribute="trailing" secondItem="hiY-hK-Vax" secondAttribute="trailing" id="MfL-Nq-dEF"/>
                             <constraint firstItem="TXF-Mu-K4x" firstAttribute="leading" secondItem="c6O-8s-uBR" secondAttribute="leading" id="den-uq-awq"/>
                             <constraint firstItem="j7b-uj-sfG" firstAttribute="top" secondItem="qLc-Of-9eu" secondAttribute="top" id="ges-ht-6nb"/>
+                            <constraint firstItem="hiY-hK-Vax" firstAttribute="leading" secondItem="qLc-Of-9eu" secondAttribute="leading" id="kaa-WQ-k17"/>
+                            <constraint firstItem="hiY-hK-Vax" firstAttribute="top" secondItem="TXF-Mu-K4x" secondAttribute="bottom" id="tcA-ll-UJn"/>
                             <constraint firstAttribute="trailing" secondItem="j7b-uj-sfG" secondAttribute="trailing" id="vMO-NB-fMX"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="c6O-8s-uBR"/>
@@ -208,6 +216,7 @@
                         <outlet property="bannerView" destination="FU9-b6-V3N" id="ykN-DN-PcQ"/>
                         <outlet property="carouselCollectionView" destination="gyh-A2-DhL" id="POh-Xv-bHe"/>
                         <outlet property="carouselCollectionViewFlowLayout" destination="Rmq-nY-NHs" id="oHt-bJ-Qjm"/>
+                        <outlet property="dashboardContainerView" destination="hiY-hK-Vax" id="ryL-kx-1Cw"/>
                         <outlet property="finishButton" destination="EQI-4j-GAC" id="KXT-cV-4DA"/>
                         <outlet property="scrollCollectionView" destination="skN-et-kCR" id="CZd-QO-Y7H"/>
                         <outlet property="titleLabel" destination="xgp-fm-d9m" id="Us6-84-j03"/>

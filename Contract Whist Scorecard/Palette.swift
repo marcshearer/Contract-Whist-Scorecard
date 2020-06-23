@@ -128,6 +128,8 @@ class Palette {
                         { (traitCollection) in return Themes.color(.grid, traitCollection)})
     static var text = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.text, traitCollection)})
+    static var textTitle = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.textTitle, traitCollection)})
     static var textEmphasised = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.textEmphasised, traitCollection)})
     static var textError = UIColor(dynamicProvider:
@@ -180,6 +182,12 @@ class Palette {
                         { (traitCollection) in return Themes.color(.contractEqual, traitCollection)})
     static var segmentedControls = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.segmentedControls, traitCollection)})
+    static var history = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.history, traitCollection)})
+    static var stats = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.stats, traitCollection)})
+    static var highScores = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.highScores, traitCollection)})
     
     class func colorDetail(color: UIColor) -> (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
         var red: CGFloat = 0

@@ -142,12 +142,18 @@ class Utility {
         return output
     }
     
-    class func dateString(_ date: Date, format: String = "dd/MM/yyyy", localized: Bool = true) -> String {
+    class func dateString(_ date: Date, format: String = "dd/MM/yyyy", style: DateFormatter.Style? = nil, doesRelativeDateFormatting: Bool = false,  localized: Bool = true) -> String {
         let formatter = DateFormatter()
-        if localized {
-            formatter.setLocalizedDateFormatFromTemplate(format)
+        formatter.doesRelativeDateFormatting = doesRelativeDateFormatting
+        if let style = style {
+            formatter.dateStyle = style
+            formatter.timeStyle = .none
         } else {
-            formatter.dateFormat = format
+            if localized {
+                formatter.setLocalizedDateFormatFromTemplate(format)
+            } else {
+                formatter.dateFormat = format
+            }
         }
         return formatter.string(from: date)
     }

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DataTableTileView" customModule="Whist_2" customModuleProvider="target">
+            <connections>
+                <outlet property="contentView" destination="iN0-l3-epB" id="D2e-AZ-VEJ"/>
+                <outlet property="dataTableView" destination="vYe-rM-Zn0" id="YnH-2I-ePZ"/>
+                <outlet property="tableViewTopConstraint" destination="w5T-zJ-sBO" id="rJT-SE-zdN"/>
+                <outlet property="tileView" destination="7vJ-4A-K0a" id="ttW-EI-SnU"/>
+                <outlet property="titleLabel" destination="gqZ-O1-DtO" id="cdW-vd-hKf"/>
+                <outlet property="typeButton" destination="ib2-4R-VY6" id="bBx-NI-JpL"/>
+                <outlet property="typeButtonTrailingConstraint" destination="OXW-so-fOw" id="sPZ-mv-1E6"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" userLabel="Content View">
+            <rect key="frame" x="0.0" y="0.0" width="160" height="160"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7vJ-4A-K0a" userLabel="Tile View">
+                    <rect key="frame" x="0.0" y="0.0" width="160" height="160"/>
+                    <subviews>
+                        <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="right" contentVerticalAlignment="top" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ib2-4R-VY6" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
+                            <rect key="frame" x="122" y="16" width="30" height="30"/>
+                            <color key="backgroundColor" name="Clear"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="30" id="CDZ-UZ-z5w"/>
+                                <constraint firstAttribute="height" constant="30" id="Gon-UM-9NG"/>
+                            </constraints>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="gqZ-O1-DtO" userLabel="Title">
+                            <rect key="frame" x="16" y="16" width="102" height="26.5"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="26.5" id="yG3-YG-9oz"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="vYe-rM-Zn0">
+                            <rect key="frame" x="4" y="46" width="152" height="114"/>
+                            <color key="backgroundColor" name="Clear"/>
+                            <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            <connections>
+                                <outlet property="dataSource" destination="-1" id="8cx-Kf-KId"/>
+                                <outlet property="delegate" destination="-1" id="98F-No-GKT"/>
+                            </connections>
+                        </tableView>
+                    </subviews>
+                    <color key="backgroundColor" name="Clear"/>
+                    <constraints>
+                        <constraint firstItem="gqZ-O1-DtO" firstAttribute="top" secondItem="7vJ-4A-K0a" secondAttribute="top" constant="16" id="51a-S8-Gva"/>
+                        <constraint firstItem="ib2-4R-VY6" firstAttribute="top" secondItem="7vJ-4A-K0a" secondAttribute="top" constant="16" id="BrT-iP-cuJ"/>
+                        <constraint firstAttribute="trailing" secondItem="ib2-4R-VY6" secondAttribute="trailing" constant="8" id="OXW-so-fOw"/>
+                        <constraint firstAttribute="trailing" secondItem="vYe-rM-Zn0" secondAttribute="trailing" constant="4" id="frm-cB-I0c"/>
+                        <constraint firstItem="gqZ-O1-DtO" firstAttribute="leading" secondItem="7vJ-4A-K0a" secondAttribute="leading" constant="16" id="tBz-E4-YSm"/>
+                        <constraint firstItem="ib2-4R-VY6" firstAttribute="leading" secondItem="gqZ-O1-DtO" secondAttribute="trailing" constant="4" id="u5z-HV-b9v"/>
+                        <constraint firstItem="vYe-rM-Zn0" firstAttribute="top" secondItem="ib2-4R-VY6" secondAttribute="bottom" id="w5T-zJ-sBO"/>
+                        <constraint firstItem="vYe-rM-Zn0" firstAttribute="leading" secondItem="7vJ-4A-K0a" secondAttribute="leading" constant="4" id="xgN-2p-jf4"/>
+                        <constraint firstAttribute="bottom" secondItem="vYe-rM-Zn0" secondAttribute="bottom" id="zev-Jq-u4q"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" name="Clear"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="7vJ-4A-K0a" secondAttribute="bottom" id="DtJ-dC-19z"/>
+                <constraint firstItem="7vJ-4A-K0a" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="EUR-FW-7Nj"/>
+                <constraint firstAttribute="trailing" secondItem="7vJ-4A-K0a" secondAttribute="trailing" id="KYO-x9-qYw"/>
+                <constraint firstItem="7vJ-4A-K0a" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="li7-WP-wpH"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="131.8840579710145" y="102.45535714285714"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

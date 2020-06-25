@@ -18,6 +18,7 @@ class GraphView: UIView {
         var values: [CGFloat]
         var weight: CGFloat
         var color: UIColor
+        var pointFillColor: UIColor?
         var gradient: Bool
         var pointSize: CGFloat
         var tag: Int
@@ -79,8 +80,8 @@ class GraphView: UIView {
         
     }
 
-    public func addDataset(values: [CGFloat], weight: CGFloat = 3.0, color: UIColor = UIColor.white, gradient: Bool = false, pointSize: CGFloat = 0.0, tag: Int = 0, xAxisLabels: [String]! = nil, drillRef: [Any]! = nil) {
-        self.datasets.append(Dataset(values: values, weight: weight, color: color, gradient: gradient, pointSize: pointSize, tag: tag, xAxisLabels: xAxisLabels, drillRef: drillRef))
+    public func addDataset(values: [CGFloat], weight: CGFloat = 3.0, color: UIColor = UIColor.white, pointFillColor: UIColor? = nil, gradient: Bool = false, pointSize: CGFloat = 0.0, tag: Int = 0, xAxisLabels: [String]! = nil, drillRef: [Any]! = nil) {
+        self.datasets.append(Dataset(values: values, weight: weight, color: color, pointFillColor: pointFillColor, gradient: gradient, pointSize: pointSize, tag: tag, xAxisLabels: xAxisLabels, drillRef: drillRef))
         if xAxisLabels != nil {
             for label in xAxisLabels {
                 bottomMaxLen = max(label.count, bottomMaxLen)
@@ -123,7 +124,7 @@ class GraphView: UIView {
         let width:CGFloat = self.frame.width
         var leftMargin: CGFloat = 4.0 + (8.0 * CGFloat(leftMaxLen))
         let rightMargin: CGFloat = 20.0 + (8.0 * CGFloat(rightMaxLen))
-        let topBorder:CGFloat = (attributedTitle == nil ? 50 : 70)
+        let topBorder:CGFloat = (attributedTitle == nil ? 5 : 70)
         let bottomBorder:CGFloat = max(8.0, 4.0 + (8.0 * CGFloat(bottomMaxLen)))
         let graphHeight = height - topBorder - bottomBorder
         var maxValue: CGFloat!
@@ -256,7 +257,8 @@ class GraphView: UIView {
                             CGRect(origin: point,
                                    size: CGSize(width: dataset.pointSize, height: dataset.pointSize)))
                         circle.lineWidth = dataset.weight
-                        self.backgroundColor?.setFill()
+                        let pointFillColor = dataset.pointFillColor ?? self.backgroundColor
+                        pointFillColor?.setFill()
                         circle.fill()
                         dataset.color.setFill()
                         circle.stroke()

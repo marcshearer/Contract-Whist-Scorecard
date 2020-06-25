@@ -275,4 +275,39 @@ import CoreData
         return result
     }
     
+    internal func derivedField(field: String, record: DataTableViewerDataSource, sortValue: Bool) -> String {
+        var numericResult: Double?
+        var result: String
+        let format = (ScorecardUI.landscapePhone() ? "%.1f" : "%.0f")
+        
+        let record = record as! PlayerDetail
+        if record.gamesPlayed == 0 {
+            numericResult = 0.0
+            result = ""
+        } else {
+            switch field  {
+            case "gamesWon%":
+                numericResult = Double(record.gamesWon) / Double(record.gamesPlayed) * 100.0
+                result = "\(String(format: format, numericResult!)) %"
+            case "averageScore":
+                numericResult = Double(record.totalScore) / Double(record.gamesPlayed)
+                result = String(format: format, numericResult!)
+            case "handsMade%":
+                numericResult = Double(record.handsMade) / Double(record.handsPlayed) * 100.0
+                result = "\(String(format: format, numericResult!)) %"
+            case "twosMade%":
+                numericResult = Double(record.twosMade) / Double(record.handsPlayed) * 100.0
+                result = "\(String(format: format, numericResult!)) %"
+            default:
+                result = ""
+            }
+        }
+        
+        if numericResult != nil && sortValue {
+            let valueString = String(format: "%.4f", Double(numericResult!) + 1e14)
+            result = String(repeating: " ", count: 20 - valueString.count) + valueString
+        }
+        
+        return result
+    }
 }

@@ -9,7 +9,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CountTileView" customModule="Whist_2" customModuleProvider="target">
             <connections>
-                <outlet property="captionLabel" destination="6lk-aN-v1a" id="ho6-Ca-UX9"/>
+                <outlet property="captionLabel" destination="6lk-aN-v1a" id="hWo-Yn-FBc"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="Qmj-gb-P2K"/>
                 <outlet property="countLabel" destination="nYf-Fx-d9x" id="7q8-8p-XAo"/>
                 <outlet property="tileView" destination="1kY-yG-xbp" id="s9K-S1-ODE"/>
@@ -25,49 +25,51 @@
                 <view userInteractionEnabled="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1kY-yG-xbp" userLabel="Tile View">
                     <rect key="frame" x="0.0" y="0.0" width="160" height="160"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="top" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ks1-vg-NcQ" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                            <rect key="frame" x="114" y="16" width="30" height="30"/>
+                        <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="right" contentVerticalAlignment="top" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ks1-vg-NcQ" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
+                            <rect key="frame" x="122" y="16" width="30" height="30"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="30" id="8lv-mp-b5p"/>
                                 <constraint firstAttribute="width" constant="30" id="tSW-wh-GnE"/>
                             </constraints>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="h93-9c-UXz" userLabel="Title">
-                            <rect key="frame" x="16" y="16" width="79.5" height="26.5"/>
-                            <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
+                            <rect key="frame" x="16" y="16" width="102" height="24"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Games this week" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="6lk-aN-v1a" userLabel="Caption">
-                            <rect key="frame" x="84" y="103" width="60" height="41"/>
+                            <rect key="frame" x="92" y="103" width="52" height="41"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <textField opaque="NO" contentMode="bottom" verticalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="bottom" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="nYf-Fx-d9x" userLabel="Count">
-                            <rect key="frame" x="4" y="46.5" width="80" height="113.5"/>
+                        <textField opaque="NO" contentMode="bottom" verticalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="bottom" textAlignment="center" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="nYf-Fx-d9x" userLabel="Count">
+                            <rect key="frame" x="16" y="44" width="76" height="100"/>
                             <color key="backgroundColor" name="Clear"/>
-                            <fontDescription key="fontDescription" name="Avenir-BlackOblique" family="Avenir" pointSize="100"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-BoldItalic" family="Helvetica Neue" pointSize="70"/>
                             <textInputTraits key="textInputTraits"/>
                         </textField>
                     </subviews>
                     <color key="backgroundColor" name="Clear"/>
                     <constraints>
-                        <constraint firstAttribute="bottom" secondItem="nYf-Fx-d9x" secondAttribute="bottom" id="DWh-ee-41n"/>
-                        <constraint firstItem="nYf-Fx-d9x" firstAttribute="leading" secondItem="1kY-yG-xbp" secondAttribute="leading" constant="4" id="GnG-fp-IpG"/>
+                        <constraint firstAttribute="bottom" secondItem="nYf-Fx-d9x" secondAttribute="bottom" constant="16" id="DWh-ee-41n"/>
+                        <constraint firstItem="nYf-Fx-d9x" firstAttribute="leading" secondItem="1kY-yG-xbp" secondAttribute="leading" constant="16" id="GnG-fp-IpG"/>
                         <constraint firstItem="h93-9c-UXz" firstAttribute="top" secondItem="1kY-yG-xbp" secondAttribute="top" constant="16" id="LK1-q0-i8q"/>
                         <constraint firstAttribute="bottom" secondItem="6lk-aN-v1a" secondAttribute="bottom" constant="16" id="PdC-4U-bvV"/>
                         <constraint firstItem="6lk-aN-v1a" firstAttribute="leading" secondItem="nYf-Fx-d9x" secondAttribute="trailing" id="SDu-V3-uKp"/>
+                        <constraint firstItem="ks1-vg-NcQ" firstAttribute="leading" secondItem="h93-9c-UXz" secondAttribute="trailing" constant="4" id="TZH-wy-0Wf"/>
                         <constraint firstItem="ks1-vg-NcQ" firstAttribute="top" secondItem="1kY-yG-xbp" secondAttribute="top" constant="16" id="Urd-HR-VVr"/>
                         <constraint firstItem="h93-9c-UXz" firstAttribute="leading" secondItem="1kY-yG-xbp" secondAttribute="leading" constant="16" id="ZgE-fe-9Rg"/>
-                        <constraint firstAttribute="trailing" secondItem="ks1-vg-NcQ" secondAttribute="trailing" constant="16" id="gSe-5f-hNF"/>
+                        <constraint firstAttribute="trailing" secondItem="ks1-vg-NcQ" secondAttribute="trailing" constant="8" id="gSe-5f-hNF"/>
                         <constraint firstAttribute="trailing" secondItem="6lk-aN-v1a" secondAttribute="trailing" constant="16" id="iRF-U6-10P"/>
-                        <constraint firstItem="nYf-Fx-d9x" firstAttribute="width" secondItem="1kY-yG-xbp" secondAttribute="width" multiplier="1:2" id="txA-53-qeE"/>
+                        <constraint firstItem="nYf-Fx-d9x" firstAttribute="width" secondItem="1kY-yG-xbp" secondAttribute="width" multiplier="1:2" constant="-4" id="txA-53-qeE"/>
                         <constraint firstItem="nYf-Fx-d9x" firstAttribute="top" secondItem="h93-9c-UXz" secondAttribute="bottom" constant="4" id="yrQ-KM-Yj3"/>
                     </constraints>
                 </view>
             </subviews>
             <color key="backgroundColor" name="Clear"/>
+            <gestureRecognizers/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="1kY-yG-xbp" secondAttribute="trailing" id="0JQ-dw-iL0"/>
                 <constraint firstAttribute="bottom" secondItem="1kY-yG-xbp" secondAttribute="bottom" id="FnP-wA-qm7"/>

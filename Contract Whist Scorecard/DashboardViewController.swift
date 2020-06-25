@@ -8,32 +8,16 @@
 
 import UIKit
 
-@objc public enum DashboardDetailView: Int {
+@objc public enum DashboardDetailType: Int {
     case history = 1
-    case stats = 2
+    case statistics = 2
     case highScores = 3
-}
-
-@objc public enum DashboardValue: Int {
-    case gamesInPeriod = 1
-}
-
-public class HighScores: NSObject {
-    var scores: [HighScoreType: (playerName: String, score: Int)] = [:]
 }
 
 @objc protocol DashboardActionDelegate : class {
     
-    func action(view: DashboardDetailView)
-    
-    func getValue(value: DashboardValue, personal: Bool) -> Int
-    
-    func getHistory(count: Int, personal: Bool) -> [HistoryGame]
-    
-    func getHighScores(personal: Bool) -> HighScores
-    
-    func getStats(playerUUID: String) -> PlayerMO
-    
+    func action(view: DashboardDetailType)
+
 }
 
 class DashboardViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CustomCollectionViewLayoutDelegate, DashboardActionDelegate {
@@ -51,6 +35,9 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     private var dashboardViews: [Int:UIView] = [:]
     
+    private var historyViewer: HistoryViewer!
+    private var statisticsViewer: StatisticsViewer!
+    
     private var firstTime = true
     
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
@@ -66,7 +53,23 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         self.dismiss()
     }
     
-
+    @IBAction func swipeGestureRecognizer(_ recognizer: UISwipeGestureRecognizer) {
+        if recognizer.state == .ended {
+            switch recognizer.direction {
+            case .left:
+                if self.currentPage < pages - 1 {
+                    self.changed(self.carouselCollectionView, itemAtCenter: self.currentPage + 1, forceScroll: true)
+                }
+            case .right:
+                if self.currentPage > 0 {
+                    self.changed(self.carouselCollectionView, itemAtCenter: self.currentPage - 1, forceScroll: true)
+                }
+            default:
+                self.finishButtonPressed(self.finishButton)
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.defaultViewColors()
@@ -90,12 +93,12 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.carouselCollectionView.contentOffset = CGPoint(x: self.carouselCollectionView.bounds.width / 4.0, y: 0.0)
         if firstTime {
+            self.carouselCollectionView.contentOffset = CGPoint(x: self.carouselCollectionView.bounds.width / 4.0, y: 0.0)
             self.changed(carouselCollectionView, itemAtCenter: self.personalPage, forceScroll: true)
+            self.carouselCollectionView.reloadData()
+            self.firstTime = false
         }
-        self.carouselCollectionView.reloadData()
-        self.firstTime = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -106,24 +109,19 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
 
     // MARK: - Dashboard Action Delegate =============================================================== -
     
-    func action(view: DashboardDetailView) {
-        
-    }
-    
-    func getValue(value: DashboardValue, personal: Bool) -> Int {
-        return 16
-    }
-    
-    func getHistory(count: Int, personal: Bool) -> [HistoryGame] {
-        return []
-    }
-    
-    func getHighScores(personal: Bool) -> HighScores {
-        return HighScores()
-    }
-    
-    func getStats(playerUUID: String) -> PlayerMO {
-        return Scorecard.shared.findPlayerByPlayerUUID(Scorecard.settings.thisPlayerUUID)!
+    func action(view: DashboardDetailType) {
+        switch view {
+        case .history:
+            self.historyViewer = HistoryViewer(from: self) {
+                self.historyViewer = nil
+            }
+        case .statistics:
+            self.statisticsViewer = StatisticsViewer(from: self) {
+                self.statisticsViewer = nil
+            }
+        case .highScores:
+            self.showHighScores()
+        }
     }
     
     // MARK: - CollectionView Overrides ================================================================ -
@@ -280,7 +278,13 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         }
     }
     
-    // MARK: - Function to present and dismiss this view ==============================================================
+    // MARK: - Functions to present other views ========================================================== -
+    
+    private func showHighScores() {
+        _ = HighScoresViewController.show(from: self, backText: "", backImage: "back")
+    }
+    
+    // MARK: - Function to present and dismiss this view ================================================= -
     
     class public func show(from viewController: ScorecardViewController) {
         
@@ -336,22 +340,22 @@ class DashboardScrollCell: UICollectionViewCell {
 
 class Dashboard {
     
-    public class func color(detailView: DashboardDetailView) -> UIColor {
+    public class func color(detailView: DashboardDetailType) -> UIColor {
         switch detailView {
         case .history:
             return Palette.history
-        case .stats:
+        case .statistics:
             return Palette.stats
         case .highScores:
             return Palette.highScores
         }
     }
     
-    public class func image(detailView: DashboardDetailView) -> UIImage {
+    public class func image(detailView: DashboardDetailType) -> UIImage {
         switch detailView {
         case .history:
             return UIImage(systemName: "calendar.circle.fill")!
-        case .stats:
+        case .statistics:
             return UIImage(systemName: "waveform.circle.fill")!
         case .highScores:
             return UIImage(systemName: "star.circle.fill")!

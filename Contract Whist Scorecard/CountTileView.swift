@@ -10,15 +10,26 @@ import UIKit
 
 class CountTileView: UIView {
     
-    private var actionView: DashboardDetailView = .history
-    private var value: DashboardValue = .gamesInPeriod
+    private enum Period: Int, CaseIterable {
+        case day = 0
+        case week = 1
+        case month = 2
+        case year = 3
+    }
     
-    @IBInspectable private var action: Int {
+    @objc public enum CountValue: Int {
+        case gamesInPeriod = 1
+    }
+    
+    private var detailType: DashboardDetailType = .history
+    private var value: CountValue = .gamesInPeriod
+    
+    @IBInspectable private var detail: Int {
         get {
-            return self.actionView.rawValue
+            return self.detailType.rawValue
         }
-        set(actionView) {
-            self.actionView = DashboardDetailView(rawValue: actionView) ?? .history
+        set(detail) {
+            self.detailType = DashboardDetailType(rawValue: detail) ?? .history
         }
     }
     @IBInspectable private var countValue: Int {
@@ -26,14 +37,14 @@ class CountTileView: UIView {
             return self.value.rawValue
         }
         set(value) {
-            self.value = DashboardValue(rawValue: value) ?? .gamesInPeriod
+            self.value = CountValue(rawValue: value) ?? .gamesInPeriod
         }
     }
     @IBInspectable private var personal: Bool = true
     @IBInspectable private var title: String = ""
     @IBInspectable private var caption: String = ""
        
-    @IBOutlet private weak var delegate: DashboardActionDelegate?
+    @IBOutlet private weak var dashboardDelegate: DashboardActionDelegate?
     
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet private weak var tileView: UIView!
@@ -62,53 +73,62 @@ class CountTileView: UIView {
         // Setup tap gesture
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(CountTileView.tapSelector(_:)))
         self.contentView.addGestureRecognizer(tapGesture)
-        
-        self.layoutSubviews()
-        self.setNeedsLayout()
     }
     
     @objc private func tapSelector(_ sender: UIView) {
-        self.delegate?.action(view: actionView)
+        self.dashboardDelegate?.action(view: detailType)
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        self.tileView.backgroundColor = Palette.buttonFace
+        self.titleLabel.textColor = Palette.textTitle
+        self.countLabel.textColor = Dashboard.color(detailView: detailType)
+        self.typeButton.tintColor = Dashboard.color(detailView: detailType)
+        self.typeButton.setImage(Dashboard.image(detailView: detailType), for: .normal)
+        self.captionLabel.textColor = Palette.text
+        
+        self.titleLabel.text = self.title
+        self.getValue()
     }
     
     override internal func layoutSubviews() {
         super.layoutSubviews()
         
         self.tileView.layoutIfNeeded()
-        
-        let count = self.delegate?.getValue(value: self.value, personal: self.personal) ?? 0
-        
-        self.titleLabel.text = self.title
-        self.countLabel.text = "\(count)"
-        self.captionLabel.text = caption
-         
-        self.tileView.backgroundColor = Palette.buttonFace
-        self.titleLabel.textColor = Palette.textTitle
-        self.countLabel.textColor = Dashboard.color(detailView: actionView)
-        self.typeButton.tintColor = Dashboard.color(detailView: actionView)
-        self.typeButton.setImage(Dashboard.image(detailView: actionView), for: .normal)
-        self.captionLabel.textColor = Palette.text
-
+                
         self.contentView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
         self.tileView.roundCorners(cornerRadius: 8.0)
     }
-}
-
-class VerticalAlignedLabel: UILabel {
-
-    override func drawText(in rect: CGRect) {
-        var newRect = rect
-        switch contentMode {
-        case .top:
-            newRect.size.height = sizeThatFits(rect.size).height
-        case .bottom:
-            let height = sizeThatFits(rect.size).height
-            newRect.origin.y += rect.size.height - height
-            newRect.size.height = height
-        default:
-            ()
+    
+    private func getValue() {
+        switch self.value {
+        case .gamesInPeriod:
+            var startOf: [Period:Date] = [:]
+            var count: [Period:Int] = [:]
+            startOf[.day] = Calendar.current.startOfDay(for: Date())
+            startOf[.week] = Calendar.current.date(bySetting: .weekday, value: 1, of: startOf[.day]!)!.addingTimeInterval(-6*24*60*60)
+            startOf[.month] = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: startOf[.day]!))
+            startOf[.year] = Calendar.current.date(from: Calendar.current.dateComponents([.year], from: startOf[.day]!))
+            let history = History(playerUUID: Scorecard.settings.thisPlayerUUID, since: startOf[.year]!)
+            for (index, historyGame) in history.games.enumerated() {
+                for period in Period.allCases {
+                    if historyGame.datePlayed >= startOf[period]! {
+                        count[period] = index + 1
+                    }
+                }
+            }
+            var showPeriod = Period.year
+            var showValue = 0
+            for period in Period.allCases {
+                if ((count[period] ?? 0) >= 1) && showValue <= (count[.day] ?? 0) {
+                    showPeriod = period
+                    showValue = count[period] ?? 0
+                }
+            }
+            self.countLabel.text = "\(showValue)"
+            self.captionLabel.text = "\(showValue == 1 ? "Game" : "Games") \((showPeriod == .day ? "today" : "this \(showPeriod)"))"
         }
-
-        super.drawText(in: newRect)
     }
 }

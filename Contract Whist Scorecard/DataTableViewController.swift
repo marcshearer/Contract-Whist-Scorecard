@@ -10,7 +10,11 @@ import UIKit
 import CoreData
 
 @objc public protocol DataTableViewerDataSource {
+
     func value(forKey: String) -> Any?
+    
+    @objc optional func derivedField(field: String, record: DataTableViewerDataSource, sortValue: Bool) -> String
+
 }
 
 @objc public protocol DataTableViewerDelegate : class {
@@ -32,9 +36,7 @@ import CoreData
     @objc optional func setupCustomButton(barButtonItem: UIBarButtonItem)
     
     @objc optional func didSelect(record: DataTableViewerDataSource, field: String)
-    
-    @objc optional func derivedField(field: String, record: DataTableViewerDataSource, sortValue: Bool) -> String
-    
+        
     @objc optional func refreshData(recordList: [DataTableViewerDataSource]) -> [DataTableViewerDataSource]
     
     @objc optional func isEnabled(button: String, record: DataTableViewerDataSource) -> Bool
@@ -148,7 +150,11 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        checkFieldDisplay(to: self.view.safeAreaLayoutGuide.layoutFrame.size)
+        if let availableFields = self.delegate?.availableFields {
+            self.displayedFields = DataTableFormatter.checkFieldDisplay(availableFields, to: self.view.safeAreaLayoutGuide.layoutFrame.size, paddingWidth: paddingWidth, hideField: self.delegate?.hideField)
+        } else {
+            self.displayedFields = []
+        }
         headerView.reloadData()
         bodyView.reloadData()
         firstTime = true
@@ -225,54 +231,7 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
 
         return cell
     }
-    
-    // MARK: - Form Presentation / Handling Routines =================================================== -
-    
-    func checkFieldDisplay(to size: CGSize) {
-        // Check how many fields we can display
-        var skipping = false
-        let availableWidth = size.width - paddingWidth // Allow for padding each end and detail button
-        var widthRemaining = availableWidth
-        displayedFields.removeAll()
-        
-        if let columns = self.delegate?.availableFields {
-            for column in columns {
-                if !(self.delegate?.hideField?(field: column.field) ?? false) {
-                    
-                    // Include if space and not already skipping
-                    if !skipping {
-                        if column.width <= widthRemaining {
-                            widthRemaining -= column.width
-                            displayedFields.append(DataTableField(column.field,
-                                                                       column.title,
-                                                                       sequence: column.sequence,
-                                                                       width: column.width,
-                                                                       type: column.type,
-                                                                       align: column.align,
-                                                                       pad: column.pad,
-                                                                       combineHeading: column.combineHeading))
-                        } else {
-                            skipping = true
-                        }
-                    }
-                }
-            }
-        }
-        // Sort selected columns by sequence
-        displayedFields.sort(by: { $0.sequence < $1.sequence })
-        
-        // Find and expand pad column
-        if widthRemaining > 0 {
-            if let index = displayedFields.firstIndex(where: { $0.pad }) {
-                displayedFields[index].width += min(120, widthRemaining)
-                widthRemaining = max(0, widthRemaining - 120)
-            }
-        }
-        
-        // Use up remainder on extra blank last column
-        displayedFields.append(DataTableField("",  "", width: paddingWidth + widthRemaining, type: .string))
-    }
-    
+
     // MARK: - Show other views =========================================================== -
     
     private func showSync() {
@@ -412,7 +371,7 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
             default:
                 cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Data Table Body Normal Cell", for: indexPath) as! DataTableCollectionCell
                 Palette.normalStyle(cell.textLabel)
-                cell.textLabel.text = self.getValue(record: record, column: column)
+                cell.textLabel.text = DataTableFormatter.getValue(record: record, column: column)
                 cell.textLabel.textAlignment = displayedFields[indexPath.row].align
             }
             cell.resetArrows()
@@ -511,8 +470,8 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
             var result: Bool
             
             let column = displayedFields[column]
-            let value1 = self.getValue(record: sort1, column: column, sortValue: true)
-            let value2 = self.getValue(record: sort2, column: column, sortValue: true)
+            let value1 = DataTableFormatter.getValue(record: sort1, column: column, sortValue: true)
+            let value2 = DataTableFormatter.getValue(record: sort2, column: column, sortValue: true)
 
             result = value1 > value2
             
@@ -542,62 +501,6 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
             let sortCell = headerCollectionView.cellForItem(at: IndexPath(item: lastSortColumn, section: 0)) as! DataTableCollectionCell
             sortCell.headerDownArrowShape.isHidden = true
             sortCell.headerUpArrowShape.isHidden = true
-        }
-    }
-    
-    // MARK: - Utility routines to get values ===================================================== -
-    
-    private func getValue(record: DataTableViewerDataSource, column: DataTableField, sortValue: Bool = false) -> String {
-        let derived = (column.field.left(1) == "=")
-        if derived {
-            return self.delegate?.derivedField?(field: column.field.right(column.field.length - 1), record: record, sortValue: sortValue) ?? ""
-        } else {
-            if let object = record.value(forKey: column.field) {
-                switch column.type {
-                case .string:
-                    return object as! String
-                case .date:
-                    if sortValue {
-                        let valueString = "\(Int((object as! Date).timeIntervalSinceReferenceDate))"
-                        return String(repeating: " ", count: 20 - valueString.count) + valueString
-                    } else {
-                        return Utility.dateString(object as! Date, format: "dd MMM yy",localized: false)
-                    }
-                case .dateTime:
-                    if sortValue {
-                        let valueString = "\(Int((object as! Date).timeIntervalSinceReferenceDate))"
-                        return String(repeating: " ", count: 20 - valueString.count) + valueString
-                    } else {
-                        return Utility.dateString(object as! Date, format: "dd/MM/yy HH:mm")
-                    }
-                case .time:
-                    if sortValue {
-                         let valueString = "\(Int((object as! Date).timeIntervalSinceReferenceDate))"
-                        return String(repeating: " ", count: 20 - valueString.count) + valueString
-                    } else {
-                        return Utility.dateString(object as! Date, format: "HH:mm")
-                    }
-                case .int, .double:
-                    if sortValue {
-                        let valueString = String(format: "%.4f", (object as! Double) + 1e14)
-                        return String(repeating: " ", count: 20 - valueString.count) + valueString
-                    } else {
-                        if column.type == .int {
-                            return "\(object as! Int)"
-                        } else {
-                            var number = object as! Double
-                            number.round()
-                            return "\(Int(number))"
-                        }
-                    }
-                case .bool:
-                    return (object as! Bool == true ? "X" : "")
-                default:
-                    return ""
-                }
-            } else {
-                return ""
-            }
         }
     }
 }
@@ -757,4 +660,108 @@ extension DataTableViewController {
         }
     }
 
+}
+
+class DataTableFormatter {
+    
+    public static func checkFieldDisplay(_ availableFields: [DataTableField], to size: CGSize, paddingWidth: CGFloat = 6.0, hideField: ((String) -> Bool)? = nil) -> [DataTableField] {
+        // Check how many fields we can display
+        var displayedFields: [DataTableField] = []
+        var skipping = false
+        let availableWidth = size.width - paddingWidth // Allow for padding each end and detail button
+        var widthRemaining = availableWidth
+        
+        let columns = availableFields
+        for column in columns {
+            if !(hideField?(column.field) ?? false) {
+                
+                // Include if space and not already skipping
+                if !skipping {
+                    if column.width <= widthRemaining {
+                        widthRemaining -= column.width
+                        displayedFields.append(DataTableField(column.field,
+                                                              column.title,
+                                                              sequence: column.sequence,
+                                                              width: column.width,
+                                                              type: column.type,
+                                                              align: column.align,
+                                                              pad: column.pad,
+                                                              combineHeading: column.combineHeading))
+                    } else {
+                        skipping = true
+                    }
+                }
+            }
+        }
+        
+        // Sort selected columns by sequence
+        displayedFields.sort(by: { $0.sequence < $1.sequence })
+        
+        // Find and expand pad column
+        if widthRemaining > 0 {
+            if let index = displayedFields.firstIndex(where: { $0.pad }) {
+                displayedFields[index].width += min(120, widthRemaining)
+                widthRemaining = max(0, widthRemaining - 120)
+            }
+        }
+        
+        // Use up remainder on extra blank last column
+        displayedFields.append(DataTableField("",  "", width: paddingWidth + widthRemaining, type: .string))
+        
+        return displayedFields
+    }
+ 
+    public static func getValue(record: DataTableViewerDataSource, column: DataTableField, sortValue: Bool = false) -> String {
+        let derived = (column.field.left(1) == "=")
+        if derived {
+            return record.derivedField?(field: column.field.right(column.field.length - 1), record: record, sortValue: sortValue) ?? ""
+        } else {
+            if let object = record.value(forKey: column.field) {
+                switch column.type {
+                case .string:
+                    return object as! String
+                case .date:
+                    if sortValue {
+                        let valueString = "\(Int((object as! Date).timeIntervalSinceReferenceDate))"
+                        return String(repeating: " ", count: 20 - valueString.count) + valueString
+                    } else {
+                        return Utility.dateString(object as! Date, format: "dd MMM yy",localized: false)
+                    }
+                case .dateTime:
+                    if sortValue {
+                        let valueString = "\(Int((object as! Date).timeIntervalSinceReferenceDate))"
+                        return String(repeating: " ", count: 20 - valueString.count) + valueString
+                    } else {
+                        return Utility.dateString(object as! Date, format: "dd/MM/yy HH:mm")
+                    }
+                case .time:
+                    if sortValue {
+                         let valueString = "\(Int((object as! Date).timeIntervalSinceReferenceDate))"
+                        return String(repeating: " ", count: 20 - valueString.count) + valueString
+                    } else {
+                        return Utility.dateString(object as! Date, format: "HH:mm")
+                    }
+                case .int, .double:
+                    if sortValue {
+                        let valueString = String(format: "%.4f", (object as! Double) + 1e14)
+                        return String(repeating: " ", count: 20 - valueString.count) + valueString
+                    } else {
+                        if column.type == .int {
+                            return "\(object as! Int)"
+                        } else {
+                            var number = object as! Double
+                            number.round()
+                            return "\(Int(number))"
+                        }
+                    }
+                case .bool:
+                    return (object as! Bool == true ? "X" : "")
+                default:
+                    return ""
+                }
+            } else {
+                return ""
+            }
+        }
+    }
 }

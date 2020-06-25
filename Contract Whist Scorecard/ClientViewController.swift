@@ -383,6 +383,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     internal func didSelect(playerMO: PlayerMO) {
         // Save player as default for device
         Scorecard.settings.thisPlayerUUID = playerMO.playerUUID!
+        Scorecard.settings.save()
+        Scorecard.settings.saveToICloud()
         Notifications.addOnlineGameSubscription(Scorecard.settings.thisPlayerUUID, completion: nil)
         self.thisPlayer = playerMO.playerUUID!
         self.destroyClientController()

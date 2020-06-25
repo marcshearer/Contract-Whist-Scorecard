@@ -18,9 +18,17 @@ class History {
     
     var games: [HistoryGame] = []
     
-    init(getParticipants: Bool = false, includeBF: Bool = false) {
+    init(getParticipants: Bool = false, includeBF: Bool = false, limit: Int? = nil) {
         // Load all games
         self.loadGames(getParticipants: getParticipants, includeBF: includeBF)
+    }
+    
+    init(playerUUID: String!, limit: Int = 0, since: Date? = nil) {
+        if let playerUUID = playerUUID  {
+            self.loadParticipantGames(playerUUID: playerUUID, limit: limit, since: since)
+        } else {
+            self.loadGames(getParticipants: true, limit: limit)
+        }
     }
     
     init(gameUUID: String!, getParticipants: Bool = true) {
@@ -42,7 +50,19 @@ class History {
         }
     }
     
-    public func loadGames(getParticipants: Bool = false, unconfirmed: Bool = false, gameUUIDs: [String]! = nil, includeBF: Bool = false) {
+    public func loadParticipantGames(playerUUID: String, limit: Int = 0, since: Date? = nil) {
+        var predicate: NSPredicate
+        if since == nil {
+            predicate = NSPredicate(format: "playerUUID = %@", playerUUID)
+        } else {
+            predicate = NSPredicate(format: "playerUUID = %@ and datePlayed >= %@", playerUUID, since! as NSDate)
+        }
+        let participantList: [ParticipantMO] = CoreData.fetch(from: "Participant", filter: predicate, limit: limit, sort: ("datePlayed", .descending))
+        let gameUUIDs = participantList.map{$0.gameUUID!}
+        self.loadGames(getParticipants: true, gameUUIDs: gameUUIDs)
+    }
+    
+    public func loadGames(getParticipants: Bool = false, unconfirmed: Bool = false, gameUUIDs: [String]! = nil,  includeBF: Bool = false, limit: Int = 0) {
         // Fetch list of games from data store
         var predicate: NSPredicate!
         var lastGameUUID: String!
@@ -63,6 +83,7 @@ class History {
         
         let gameList: [GameMO] = CoreData.fetch(from: "Game",
                                               filter: predicate,
+                                              limit: limit,
                                               sort: ("datePlayed", .descending))
         
         self.games = []
@@ -227,7 +248,7 @@ class History {
         
     }
 
-    static public func getParticipantRecordsForPlayer(playerUUID: String, includeBF: Bool = false, includeExcluded: Bool = true, sortDirection: SortDirection = .ascending) -> [ParticipantMO] {
+    static public func getParticipantRecordsForPlayer(playerUUID: String, includeBF: Bool = false, includeExcluded: Bool = true, sortDirection: SortDirection = .ascending, limit: Int = 0) -> [ParticipantMO] {
         var predicate: [NSPredicate]
         // Get all participants from Core Data for player
         
@@ -243,6 +264,7 @@ class History {
         
         let results: [ParticipantMO] = CoreData.fetch(from: "Participant",
                                                       filter: predicate,
+                                                      limit: limit,
                                                       sort: [("datePlayed", sortDirection)])
         
         return results
@@ -530,6 +552,70 @@ public class HistoryGame: NSObject, DataTableViewerDataSource {
         if let index = mirror.children.firstIndex(where: {$0.label == forKey}) {
             result = mirror.children[index].value
         }
+        return result
+    }
+    
+    public func derivedField(field: String, record: DataTableViewerDataSource, sortValue: Bool) -> String {
+        var numericResult: Int?
+        var result = ""
+        
+        let historyGame = record as! HistoryGame
+        
+        if historyGame.participant == nil {
+            historyGame.participant = History.loadParticipants(gameUUID: historyGame.gameUUID)
+        }
+        
+        switch field  {
+        case "location":
+            if let location = historyGame.gameLocation.description {
+                result = location
+            } else {
+                result = ""
+            }
+            
+        case "shortDate":
+            result = Utility.dateString(historyGame.datePlayed, style: .short, doesRelativeDateFormatting: true)
+            if result.contains("/") {
+                result = Utility.dateString(historyGame.datePlayed, format: "dd MMM", localized: false)
+            }
+        
+        case "player1", "player2", "player3", "player4":
+            let player = Int(String(field.suffix(1)))!
+            if player <= historyGame.participant?.count ?? 0 {
+                if let participant = historyGame.participant?[player-1] {
+                    result = participant.name
+                } else {
+                    result = ""
+                }
+            } else {
+                result = ""
+            }
+
+        case "score1", "score2", "score3", "score4":
+            let player = Int(String(field.suffix(1)))!
+            if player <= historyGame.participant?.count ?? 0 {
+                if let participant = historyGame.participant?[player-1] {
+                    numericResult = Int(participant.totalScore)
+                } else {
+                    result = ""
+                }
+            } else {
+                result = ""
+            }
+
+        default:
+            result = ""
+        }
+        
+        if numericResult != nil {
+            if sortValue {
+                let valueString = String(format: "%.4f", Double(numericResult!) + 1e14)
+                result = String(repeating: " ", count: 20 - valueString.count) + valueString
+            } else {
+                result = "\(numericResult!)"
+            }
+        }
+        
         return result
     }
 }

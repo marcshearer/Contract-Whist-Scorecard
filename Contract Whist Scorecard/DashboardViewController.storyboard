@@ -190,13 +190,18 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hiY-hK-Vax" userLabel="Personal Dashboard">
-                                <rect key="frame" x="0.0" y="268" width="414" height="628"/>
+                                <rect key="frame" x="0.0" y="268" width="414" height="594"/>
                                 <color key="backgroundColor" name="Clear"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="g5a-Aq-ic4" appends="YES" id="VK2-qz-X8D"/>
+                                    <outletCollection property="gestureRecognizers" destination="oiv-3l-RvH" appends="YES" id="Ysa-hW-fSY"/>
+                                </connections>
                             </view>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="hiY-hK-Vax" secondAttribute="bottom" id="1KP-tb-Eog"/>
+                            <constraint firstItem="c6O-8s-uBR" firstAttribute="bottom" secondItem="hiY-hK-Vax" secondAttribute="bottom" id="1KP-tb-Eog"/>
                             <constraint firstItem="c6O-8s-uBR" firstAttribute="top" secondItem="j7b-uj-sfG" secondAttribute="bottom" id="2yi-UA-EJo"/>
                             <constraint firstItem="TXF-Mu-K4x" firstAttribute="top" secondItem="j7b-uj-sfG" secondAttribute="bottom" id="4xI-go-u0I"/>
                             <constraint firstItem="TXF-Mu-K4x" firstAttribute="trailing" secondItem="c6O-8s-uBR" secondAttribute="trailing" id="8lO-Jc-ddV"/>
@@ -210,6 +215,9 @@
                             <constraint firstAttribute="trailing" secondItem="j7b-uj-sfG" secondAttribute="trailing" id="vMO-NB-fMX"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="c6O-8s-uBR"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="oJ4-uw-KST" appends="YES" id="P9y-Cj-dYg"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="bannerPaddingView" destination="j7b-uj-sfG" id="JHf-JL-wIN"/>
@@ -223,6 +231,21 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="A3H-hQ-kiu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="right" id="g5a-Aq-ic4">
+                    <connections>
+                        <action selector="swipeGestureRecognizer:" destination="D0r-VL-UQ4" id="RQM-O6-drH"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="left" id="oiv-3l-RvH">
+                    <connections>
+                        <action selector="swipeGestureRecognizer:" destination="D0r-VL-UQ4" id="CpP-EG-Yuu"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="down" id="oJ4-uw-KST">
+                    <connections>
+                        <action selector="swipeGestureRecognizer:" destination="D0r-VL-UQ4" id="D0m-Fo-Kwv"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="134.78260869565219" y="179.46428571428569"/>
         </scene>

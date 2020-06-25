@@ -24,11 +24,11 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
     public let headerRowHeight: CGFloat = 54.0
     public let headerTopSpacingHeight: CGFloat = 10.0
     public let bodyRowHeight: CGFloat = 40.0
-    public var backImage: String = "home"
+    public var backImage: String = "back"
    
     private var history: History!
     private var winStreakPlayer: String?
-    private var sourceViewController: UIViewController
+    private var sourceViewController: UIViewController!
     private var dataTableViewController: DataTableViewController!
     private var callerCompletion: (()->())?
     private var customView: UIView!
@@ -49,7 +49,6 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
     // Local class variables
     let availableFields: [DataTableField] = [
         DataTableField("",              "",          sequence: 0,   width: 16,  type: .string),
-        DataTableField("=count",        "Count",     sequence: 1,   width: 60,  type: .int),
         DataTableField("=location",     "Location",  sequence: 2,   width: 100, type: .string,      align: NSTextAlignment.left, pad: true),
         DataTableField("info",          "",          sequence: 14,  width: 40,  type: .button),
         DataTableField("cross red",     "",          sequence: 13,  width: 40,  type: .button),
@@ -129,7 +128,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
         var result = false
         
         switch field {
-        case "=count", "cross red":
+        case "cross red":
             result = !Scorecard.adminMode
         case "=location":
             result = !Scorecard.activeSettings.saveLocation
@@ -139,78 +138,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
         
         return result
     }
-    
-    internal func derivedField(field: String, record: DataTableViewerDataSource, sortValue: Bool) -> String {
-        var numericResult: Int?
-        var result = ""
         
-        let historyGame = record as! HistoryGame
-        
-        self.loadParticipants(historyGame)
-        
-        switch field  {
-        case "count":
-            if let index = self.history.games.firstIndex(where: { $0.gameUUID == historyGame.gameUUID }) {
-                numericResult = index + 1
-            } else {
-                result = ""
-            }
-            
-        case "location":
-            if let location = historyGame.gameLocation.description {
-                result = location
-            } else {
-                result = ""
-            }
-            
-        case "player1", "player2", "player3", "player4":
-            let player = Int(String(field.suffix(1)))!
-            if player <= historyGame.participant?.count ?? 0 {
-                if let participant = historyGame.participant?[player-1] {
-                    result = participant.name
-                } else {
-                    result = ""
-                }
-            } else {
-                result = ""
-            }
-
-        case "score1", "score2", "score3", "score4":
-            let player = Int(String(field.suffix(1)))!
-            if player <= historyGame.participant?.count ?? 0 {
-                if let participant = historyGame.participant?[player-1] {
-                    numericResult = Int(participant.totalScore)
-                } else {
-                    result = ""
-                }
-            } else {
-                result = ""
-            }
-
-        default:
-            result = ""
-        }
-        
-        if numericResult != nil {
-            if sortValue {
-                let valueString = String(format: "%.4f", Double(numericResult!) + 1e14)
-                result = String(repeating: " ", count: 20 - valueString.count) + valueString
-            } else {
-                result = "\(numericResult!)"
-            }
-        }
-        
-        return result
-    }
-    
-    private func loadParticipants(_ historyGame: HistoryGame) {
-        if historyGame.participant == nil {
-            if let index = self.history.games.firstIndex(where: { $0.gameUUID == historyGame.gameUUID } ) {
-                history.getParticipants(index: index)
-            }
-        }
-    }
-    
     internal func refreshData(recordList: [DataTableViewerDataSource]) -> [DataTableViewerDataSource] {
         self.getHistory()
         return history.games

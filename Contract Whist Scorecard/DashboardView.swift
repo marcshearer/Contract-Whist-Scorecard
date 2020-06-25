@@ -35,23 +35,7 @@ class DashboardView : UIView, DashboardActionDelegate {
     
     // MARK: - Dashboard Action Delegate - pass-through ========================================== -
     
-    func action(view: DashboardDetailView) {
+    func action(view: DashboardDetailType) {
         self.delegate?.action(view: view)
-    }
-    
-    func getValue(value: DashboardValue, personal: Bool) -> Int {
-        return self.delegate?.getValue(value: value, personal: personal) ?? 0
-    }
-    
-    func getHistory(count: Int, personal: Bool) -> [HistoryGame] {
-        return self.delegate?.getHistory(count: count, personal: personal) ?? []
-    }
-    
-    func getHighScores(personal: Bool) -> HighScores {
-        return self.delegate?.getHighScores(personal: personal) ?? HighScores()
-    }
-    
-    func getStats(playerUUID: String) -> PlayerMO {
-        return self.delegate?.getStats(playerUUID: playerUUID) ?? PlayerMO()
     }
 }

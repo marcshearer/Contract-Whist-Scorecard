@@ -20,8 +20,7 @@ class Version {
     public var latestVersion = "0.0"
     public var latestBuild = 0
     
-    
-    func load() {
+    public func load() {
         // Get previous version and build
         self.lastVersion = UserDefaults.standard.string(forKey: "version")!
         self.lastBuild = UserDefaults.standard.integer(forKey: "build")

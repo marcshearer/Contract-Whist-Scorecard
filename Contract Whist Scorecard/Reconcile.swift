@@ -41,11 +41,11 @@ class Reconcile: SyncDelegate {
     
     // MARK: - Public class methods ==================================================================== -
     
-    public func reconcilePlayers(playerMOList: [PlayerMO], syncFirst: Bool = true) {
+    public func reconcilePlayers(playerMOList: [PlayerMO]) {
         self.playerMOList = playerMOList
         
         // First synchronise
-        if Scorecard.settings.syncEnabled && syncFirst {
+        if Scorecard.settings.syncEnabled {
             self.sync.delegate = self
             if self.sync.synchronise(waitFinish: true, okToSyncWithTemporaryPlayerUUIDs: true) {
                 self.reconcileMessage("Sync in progress")
@@ -54,19 +54,19 @@ class Reconcile: SyncDelegate {
                 self.reconcileMessage("Unable to synchronise with iCloud", finish: true)
             }
         } else {
-            reconcileRebuildPlayers(resetSyncValues: !syncFirst)
+            reconcileRebuildPlayers()
         }
     }
     
     // MARK: - Functions to reconcile a player with participant records  ====================================== -
     
-    private func reconcileRebuildPlayers(resetSyncValues: Bool = false) {
+    private func reconcileRebuildPlayers() {
         var errors = false
         self.reconcileMessage((self.playerMOList.count == 1 ? "Rebuilding \(playerMOList[0].name!)" : "Rebuilding players"))
         
         for playerMO in playerMOList {
             
-            if !Reconcile.rebuildLocalPlayer(playerMO: playerMO, resetSyncValues: resetSyncValues) {
+            if !Reconcile.rebuildLocalPlayer(playerMO: playerMO) {
                 errors = true
             }
         }
@@ -79,7 +79,7 @@ class Reconcile: SyncDelegate {
         self.reconcileCompletion(errors)
     }
     
-    class func rebuildLocalPlayer(playerMO: PlayerMO, resetSyncValues: Bool = false) -> Bool {
+    class func rebuildLocalPlayer(playerMO: PlayerMO) -> Bool {
         // Load participant records
         let participantList = History.getParticipantRecordsForPlayer(playerUUID: playerMO.playerUUID!, includeBF: true)
         
@@ -127,15 +127,15 @@ class Reconcile: SyncDelegate {
                     }
                 }
                 
-                if resetSyncValues {
-                    // Avoid sending any differences back up
-                    playerMO.syncGamesPlayed = playerMO.gamesPlayed
-                    playerMO.syncGamesWon = playerMO.gamesWon
-                    playerMO.syncHandsPlayed = playerMO.handsPlayed
-                    playerMO.syncHandsMade = playerMO.handsMade
-                    playerMO.syncTwosMade = playerMO.twosMade
-                    playerMO.syncTotalScore = playerMO.totalScore
-                }
+                // Avoid sending any differences back up
+                playerMO.syncGamesPlayed = playerMO.gamesPlayed
+                playerMO.syncGamesWon = playerMO.gamesWon
+                playerMO.syncHandsPlayed = playerMO.handsPlayed
+                playerMO.syncHandsMade = playerMO.handsMade
+                playerMO.syncTwosMade = playerMO.twosMade
+                playerMO.syncTotalScore = playerMO.totalScore
+                
+                // Clear 'dirty' flag
                 playerMO.syncInProgress = false
             }
         })

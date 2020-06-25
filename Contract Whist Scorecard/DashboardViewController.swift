@@ -96,8 +96,8 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         if firstTime {
             self.carouselCollectionView.contentOffset = CGPoint(x: self.carouselCollectionView.bounds.width / 4.0, y: 0.0)
             self.changed(carouselCollectionView, itemAtCenter: self.personalPage, forceScroll: true)
-            self.carouselCollectionView.reloadData()
-            self.firstTime = false
+        self.carouselCollectionView.reloadData()
+        self.firstTime = false
         }
     }
     

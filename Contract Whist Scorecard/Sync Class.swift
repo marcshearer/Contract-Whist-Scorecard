@@ -285,12 +285,12 @@ class Sync {
                     nextPhase = true
                 case .phaseGetLinkedPlayers:
                     nextPhase = self.getLinkedPlayers(specificEmail: self.specificEmail)
-               case .phaseGetPlayerList:
-                nextPhase = self.downloadPlayersFromCloud(
-                    specificEmails: (self.specificEmail == nil ? nil : [self.specificEmail]),
-                    specificPlayerUUIDs: self.specificPlayerUUIDs,
-                    downloadAction: self.addPlayerList,
-                    completeAction: self.completeGetPlayers)
+                case .phaseGetPlayerList:
+                    nextPhase = self.downloadPlayersFromCloud(
+                        specificEmails: (self.specificEmail == nil ? nil : [self.specificEmail]),
+                        specificPlayerUUIDs: self.specificPlayerUUIDs,
+                        downloadAction: self.addPlayerList,
+                        completeAction: self.completeGetPlayers)
                 case .phaseStartedStageComplete:
                     self.delegate?.syncStageComplete?(.started)
                 case .phaseInitialiseStageComplete:

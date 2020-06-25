@@ -45,7 +45,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <textField opaque="NO" contentMode="bottom" verticalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="bottom" textAlignment="center" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="nYf-Fx-d9x" userLabel="Count">
-                            <rect key="frame" x="16" y="44" width="76" height="100"/>
+                            <rect key="frame" x="16" y="44" width="76" height="108"/>
                             <color key="backgroundColor" name="Clear"/>
                             <fontDescription key="fontDescription" name="HelveticaNeue-BoldItalic" family="Helvetica Neue" pointSize="70"/>
                             <textInputTraits key="textInputTraits"/>
@@ -53,7 +53,7 @@
                     </subviews>
                     <color key="backgroundColor" name="Clear"/>
                     <constraints>
-                        <constraint firstAttribute="bottom" secondItem="nYf-Fx-d9x" secondAttribute="bottom" constant="16" id="DWh-ee-41n"/>
+                        <constraint firstAttribute="bottom" secondItem="nYf-Fx-d9x" secondAttribute="bottom" constant="8" id="DWh-ee-41n"/>
                         <constraint firstItem="nYf-Fx-d9x" firstAttribute="leading" secondItem="1kY-yG-xbp" secondAttribute="leading" constant="16" id="GnG-fp-IpG"/>
                         <constraint firstItem="h93-9c-UXz" firstAttribute="top" secondItem="1kY-yG-xbp" secondAttribute="top" constant="16" id="LK1-q0-i8q"/>
                         <constraint firstAttribute="bottom" secondItem="6lk-aN-v1a" secondAttribute="bottom" constant="16" id="PdC-4U-bvV"/>

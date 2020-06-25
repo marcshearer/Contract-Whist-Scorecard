@@ -111,7 +111,7 @@ class CountTileView: UIView {
             startOf[.week] = Calendar.current.date(bySetting: .weekday, value: 1, of: startOf[.day]!)!.addingTimeInterval(-6*24*60*60)
             startOf[.month] = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month], from: startOf[.day]!))
             startOf[.year] = Calendar.current.date(from: Calendar.current.dateComponents([.year], from: startOf[.day]!))
-            let history = History(playerUUID: Scorecard.settings.thisPlayerUUID, since: startOf[.year]!)
+            let history = History(playerUUID: (personal ? Scorecard.settings.thisPlayerUUID : nil), since: startOf[.year]!)
             for (index, historyGame) in history.games.enumerated() {
                 for period in Period.allCases {
                     if historyGame.datePlayed >= startOf[period]! {

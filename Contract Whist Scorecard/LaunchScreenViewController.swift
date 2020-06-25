@@ -88,10 +88,13 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     private func checkICloud() {
         
         self.message.text = "Loading..."
-        Scorecard.shared.getVersion(completion: {
+        if self.newDevice {
+            Scorecard.shared.saveVersion()
+        }
+        Scorecard.shared.getVersion() {
             // Don't call this until any upgrade has taken place
             self.getCloudVersion()
-        })
+        }
 
         // Note flow continues in continueStartup
     }
@@ -247,12 +250,6 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
                 
                 Utility.debugMessage("launch", "Version returned")
                 
-                if !Scorecard.shared.upgradeToVersion(from: self) {
-                    self.alertMessage("Error upgrading to current version", okHandler: {
-                        exit(0)
-                    })
-                }
-                
                 if Scorecard.shared.playerList.count != 0 && !Scorecard.version.blockSync && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
                     // Rebuild any players who have a sync in progress flag set
                     self.reconcilePlayers()
@@ -288,9 +285,9 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
         if playerMOList.count != 0 {
             // Set reconcile running
             self.message.text = "Rebuilding\nPlayer Data..."
-            reconcile = Reconcile()
-            reconcile.delegate = self
-            reconcile.reconcilePlayers(playerMOList: playerMOList)
+            self.reconcile = Reconcile()
+            self.reconcile.delegate = self
+            self.reconcile.reconcilePlayers(playerMOList: playerMOList)
         } else {
             self.continueStartup()
         }

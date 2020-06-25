@@ -251,16 +251,20 @@ class Scorecard {
         Scorecard.version.version = dictionary["CFBundleShortVersionString"] as! String? ?? "0.0"
         Scorecard.version.build = Int(dictionary["CFBundleVersion"] as! String) ?? 0
         
+        if (Double(Scorecard.version.lastVersion) ?? 0) == 0 {
+            // New install - set to current version
+            self.saveVersion()
+            completion?()
+        } else {
         // Check if upgrade necessary
-        if Scorecard.version.version != Scorecard.version.lastVersion {
-            if !upgradeToVersion(from: Utility.getActiveViewController()!, completion: completion) {
-                Utility.getActiveViewController()?.alertMessage("Error upgrading to latest version")
-                exit(0)
+            if Scorecard.version.version != Scorecard.version.lastVersion {
+                if !upgradeToVersion(from: Utility.getActiveViewController()!, completion: completion) {
+                    Utility.getActiveViewController()?.alertMessage("Error upgrading to latest version")
+                    exit(0)
+                }
             } else {
                 completion?()
             }
-        } else {
-            completion?()
         }
     }
     
@@ -268,17 +272,14 @@ class Scorecard {
         
         func successfulCompletion() {
             // Store version in defaults and update last version
-            UserDefaults.standard.set(Scorecard.version.version, forKey: "version")
-            UserDefaults.standard.set(Scorecard.version.build, forKey: "build")
-            Scorecard.version.lastVersion = Scorecard.version.version
-            Scorecard.version.lastBuild = Scorecard.version.build
+            self.saveVersion()
             
             // Execute any other completion
             completion?()
         }
         
         if Utility.compareVersions(version1: Scorecard.version.lastVersion, version2: "4.1") == .lessThan  {
-            if !Upgrade.upgradeTo41(from: from, completion:  successfulCompletion) {
+            if !Upgrade.shared.upgradeTo41(from: from, completion:  successfulCompletion) {
                 return false
             }
         } else {
@@ -287,6 +288,13 @@ class Scorecard {
         
         return true
         
+    }
+    
+    public func saveVersion() {
+        UserDefaults.standard.set(Scorecard.version.version, forKey: "version")
+        UserDefaults.standard.set(Scorecard.version.build, forKey: "build")
+        Scorecard.version.lastVersion = Scorecard.version.version
+        Scorecard.version.lastBuild = Scorecard.version.build
     }
         
     public func findPlayerByPlayerUUID(_ playerUUID: String) -> PlayerMO? {

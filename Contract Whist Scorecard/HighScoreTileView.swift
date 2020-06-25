@@ -154,7 +154,7 @@ class HighScoreTileView: UIView, UITableViewDataSource, UITableViewDelegate, UIC
         cell.valueImageView.isHidden = (indexPath.row != self.totalScoreRow)
         cell.collectionView.isHidden = (indexPath.row != self.winStreakRow)
         cell.valueLabelBottomConstraint.constant = 0
-        let score = self.scores[indexPath.row]!
+        let score = self.scores[indexPath.row] ?? (0, nil)
         let name = score.name
         
         switch indexPath.row {
@@ -197,7 +197,7 @@ class HighScoreTileView: UIView, UITableViewDataSource, UITableViewDelegate, UIC
     // MARK: - Collection view delegates ================================================================ -
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.scores[winStreakRow]!.value
+        return self.scores[winStreakRow]?.value ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

@@ -14,7 +14,7 @@ class ShadowView : UIView {
 
 extension UIView {
         
-    public func addShadow(shadowSize: CGSize, shadowColor: UIColor? = nil, shadowOpacity: CGFloat = 0.2, shadowRadius: CGFloat? = nil) {
+    public func addShadow(shadowSize: CGSize = CGSize(width: 4.0, height: 4.0), shadowColor: UIColor? = nil, shadowOpacity: CGFloat = 0.2, shadowRadius: CGFloat? = nil) {
         
         let shadowColor = shadowColor ?? UIColor.black
         let shadowRadius = shadowRadius ?? min(shadowSize.width, shadowSize.height)

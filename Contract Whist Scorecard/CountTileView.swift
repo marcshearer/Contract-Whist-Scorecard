@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CountTileView: UIView {
+class CountTileView: UIView, DashboardTileDelegate {
     
     private enum Period: Int, CaseIterable {
         case day = 0
@@ -97,9 +97,20 @@ class CountTileView: UIView {
         super.layoutSubviews()
         
         self.tileView.layoutIfNeeded()
+        
+        if ScorecardUI.smallPhoneSize() {
+            self.countLabel.font = UIFont(name: "Helvetica Neue Bold Italic", size: 64)
+        } else {
+            self.countLabel.font = UIFont(name: "Helvetica Neue Bold Italic", size: 80)
+        }
                 
         self.contentView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
         self.tileView.roundCorners(cornerRadius: 8.0)
+    }
+    
+    internal func reloadData() {
+        self.getValue()
+        self.layoutSubviews()
     }
     
     private func getValue() {

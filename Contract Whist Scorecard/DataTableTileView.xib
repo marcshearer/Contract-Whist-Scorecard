@@ -10,7 +10,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DataTableTileView" customModule="Whist_2" customModuleProvider="target">
             <connections>
                 <outlet property="contentView" destination="iN0-l3-epB" id="D2e-AZ-VEJ"/>
-                <outlet property="dataTableView" destination="vYe-rM-Zn0" id="YnH-2I-ePZ"/>
+                <outlet property="tableView" destination="vYe-rM-Zn0" id="YnH-2I-ePZ"/>
                 <outlet property="tableViewTopConstraint" destination="w5T-zJ-sBO" id="rJT-SE-zdN"/>
                 <outlet property="tileView" destination="7vJ-4A-K0a" id="ttW-EI-SnU"/>
                 <outlet property="titleLabel" destination="gqZ-O1-DtO" id="cdW-vd-hKf"/>

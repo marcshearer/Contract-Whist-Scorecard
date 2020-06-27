@@ -33,7 +33,7 @@ import CoreData
     @objc optional var backText: String { get }
     @objc optional var customButton: Bool { get }
     
-    @objc optional func setupCustomButton(barButtonItem: UIBarButtonItem)
+    @objc optional func setup(customButton: UIButton)
     
     @objc optional func didSelect(record: DataTableViewerDataSource, field: String)
         
@@ -74,12 +74,16 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var headerView: UITableView!
     @IBOutlet private weak var bodyView: UITableView!
-    @IBOutlet private weak var navigationBar: NavigationBar!
     @IBOutlet private weak var leftPaddingView: UIView!
     @IBOutlet private weak var rightPaddingView: UIView!
-    @IBOutlet private weak var syncButton: RoundedButton!
+    @IBOutlet private weak var titleBarView: UIView!
+    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var syncButton: ShadowButton!
+    @IBOutlet private weak var smallSyncButton: ClearButton!
     @IBOutlet private weak var finishButton: UIButton!
-    @IBOutlet private weak var navigationHeaderItem: UINavigationItem!
+    @IBOutlet private weak var customButton: UIButton!
+    @IBOutlet private weak var customButtonLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var customButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var headerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var leftPaddingHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var rightPaddingHeightConstraint: NSLayoutConstraint!
@@ -93,7 +97,7 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
     }
     
     @IBAction func syncPressed(_ sender: UIButton) {
-        self.showSync()
+        self.showSync(sender)
     }
     
     @IBAction func rightSwipe(recognizer:UISwipeGestureRecognizer) {
@@ -112,9 +116,21 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
         
         // Check for network / iCloud login
         if self.delegate?.allowSync ?? true {
-            Scorecard.shared.checkNetworkConnection(button: syncButton, label: nil)
+            Scorecard.shared.checkNetworkConnection{
+                let enabled = (Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn)
+                if ScorecardUI.smallPhoneSize() {
+                    self.syncButton.isHidden = true
+                    self.smallSyncButton.isHidden = false
+                    self.smallSyncButton.isEnabled = enabled
+                } else {
+                    self.smallSyncButton.isHidden = true
+                    self.syncButton.isHidden = false
+                    self.syncButton.isEnabled = enabled
+                }
+            }
         } else {
-            syncButton.isHidden = true
+            self.syncButton.isHidden = true
+            self.smallSyncButton.isHidden = true
         }
         
         // Format finish button
@@ -126,17 +142,19 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
         self.lastSortDescending = self.delegate?.initialSortDescending ?? false
         
         // Set title
-        self.navigationHeaderItem.title = self.delegate?.viewTitle ?? ""
+        self.titleLabel.text = self.delegate?.viewTitle ?? ""
         
         // Set header / padding heights
         self.headerHeightConstraint.constant = self.delegate?.headerRowHeight ?? 44.0
         
         if firstTime {
-            if self.delegate?.setupCustomButton != nil {
-                let customButtonItem = UIBarButtonItem()
-                customButtonItem.width = 22.0
-                self.navigationHeaderItem.rightBarButtonItems?.insert(customButtonItem, at: 0)
-                self.delegate?.setupCustomButton?(barButtonItem: customButtonItem)
+            if self.delegate?.setup != nil {
+                self.customButton.isHidden = false
+                self.customButtonLeadingConstraint.constant = 8
+                self.customButtonWidthConstraint.constant = 22
+                self.delegate?.setup?(customButton: customButton)
+            } else {
+                self.customButton.isHidden = true
             }
         }
         
@@ -234,7 +252,7 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
 
     // MARK: - Show other views =========================================================== -
     
-    private func showSync() {
+    @objc public func showSync(_ sender: Any?) {
         SyncViewController.show(from: self, completion: {
             // Refresh screen
             if let recordList = self.delegate?.refreshData?(recordList: self.recordList) {
@@ -626,9 +644,13 @@ extension DataTableViewController {
         self.customHeaderView.backgroundColor = Palette.banner
         self.finishButton.setTitleColor(Palette.bannerText, for: .normal)
         self.leftPaddingView.backgroundColor = Palette.sectionHeading
-        self.navigationBar.textColor = Palette.bannerText
+        self.titleBarView.backgroundColor = Palette.banner
+        self.titleLabel.textColor = Palette.bannerText
         self.rightPaddingView.backgroundColor = Palette.sectionHeading
+        self.syncButton.setBackgroundColor(Palette.bannerShadow)
         self.syncButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.smallSyncButton.tintColor = Palette.bannerText
+        self.customButton.tintColor = Palette.bannerText
         self.view.backgroundColor = Palette.background
     }
 

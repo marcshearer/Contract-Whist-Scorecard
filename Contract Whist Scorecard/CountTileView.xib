@@ -45,9 +45,9 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <textField opaque="NO" contentMode="bottom" verticalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="bottom" textAlignment="center" adjustsFontForContentSizeCategory="YES" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="nYf-Fx-d9x" userLabel="Count">
-                            <rect key="frame" x="16" y="44" width="76" height="108"/>
+                            <rect key="frame" x="16" y="40" width="76" height="112"/>
                             <color key="backgroundColor" name="Clear"/>
-                            <fontDescription key="fontDescription" name="HelveticaNeue-BoldItalic" family="Helvetica Neue" pointSize="70"/>
+                            <fontDescription key="fontDescription" name="HelveticaNeue-BoldItalic" family="Helvetica Neue" pointSize="64"/>
                             <textInputTraits key="textInputTraits"/>
                         </textField>
                     </subviews>
@@ -64,7 +64,7 @@
                         <constraint firstAttribute="trailing" secondItem="ks1-vg-NcQ" secondAttribute="trailing" constant="8" id="gSe-5f-hNF"/>
                         <constraint firstAttribute="trailing" secondItem="6lk-aN-v1a" secondAttribute="trailing" constant="16" id="iRF-U6-10P"/>
                         <constraint firstItem="nYf-Fx-d9x" firstAttribute="width" secondItem="1kY-yG-xbp" secondAttribute="width" multiplier="1:2" constant="-4" id="txA-53-qeE"/>
-                        <constraint firstItem="nYf-Fx-d9x" firstAttribute="top" secondItem="h93-9c-UXz" secondAttribute="bottom" constant="4" id="yrQ-KM-Yj3"/>
+                        <constraint firstItem="nYf-Fx-d9x" firstAttribute="top" secondItem="h93-9c-UXz" secondAttribute="bottom" id="yrQ-KM-Yj3"/>
                     </constraints>
                 </view>
             </subviews>

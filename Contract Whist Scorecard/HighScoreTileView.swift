@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HighScoreTileView: UIView, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
         
     private var detailType: DashboardDetailType = .highScores
     private var rows = 0
@@ -107,6 +107,11 @@ class HighScoreTileView: UIView, UITableViewDataSource, UITableViewDelegate, UIC
         self.tileView.roundCorners(cornerRadius: 8.0)
     }
     
+    internal func reloadData() {
+        self.getValues()
+        self.tableView.reloadData()
+    }
+
     private func setupRows() {
         self.rows = 0
         if self.totalScore {

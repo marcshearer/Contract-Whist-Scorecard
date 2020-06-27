@@ -159,6 +159,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                     if matching == code.count {
                         // Code correct - set admin mode
                         Scorecard.adminMode = !Scorecard.adminMode
+                        self.adminMenuButton.isHidden = false
                         self.restart()
                         matching = 0
                     }
@@ -403,27 +404,11 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         
         self.menuActions = []
         
-        self.addAction(title: "History", isHidden: {Scorecard.shared.playerList.count == 0}, action: { () in
-            self.historyViewer = HistoryViewer(from: self) {
-                self.historyViewer = nil
-            }
+        self.addAction(title: "Leave admin mode", isHidden: {!Scorecard.adminMode}, action: { () in
+            Scorecard.adminMode = false
+            self.adminMenuButton.isHidden = true
         })
-        
-        self.addAction(title: "Statistics", isHidden: {Scorecard.shared.playerList.count == 0}, action: { () in
-            self.statisticsViewer = StatisticsViewer(from: self) {
-                self.statisticsViewer = nil
-            }
-        })
-        
-        self.addAction(title: "High Scores", isHidden: {!Scorecard.activeSettings.saveHistory || Scorecard.shared.playerList.count == 0}, action: { () in
-            self.showHighScores()
-        })
-        
-        self.addAction(title: "Cancel recovery", isHidden: {!Scorecard.recovery.recoveryAvailable}, action: { () in
-            self.cancelRecovery()
-            self.restart()
-        })
-        
+
         self.addAction(title: "Delete iCloud Database", isHidden: {!Scorecard.adminMode}, action: { () in
             DataAdmin.deleteCloudDatabase(from: self)
         })

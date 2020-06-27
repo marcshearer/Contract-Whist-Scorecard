@@ -88,9 +88,6 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     private func checkICloud() {
         
         self.message.text = "Loading..."
-        if self.newDevice {
-            Scorecard.shared.saveVersion()
-        }
         Scorecard.shared.getVersion() {
             // Don't call this until any upgrade has taken place
             self.getCloudVersion()
@@ -112,7 +109,7 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
                     } else {
                         // Wait for acceptance - will return after button click
                         self.termsUser = userID
-                        self.enableControls()
+                        self.continueStartupContinued()
                     }
                 }
             }

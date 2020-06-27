@@ -172,4 +172,8 @@ public class ThumbnailView: UIView {
     public func set(font: UIFont) {
         self.name.font = font
     }
+    
+    public func setShadow(shadowSize: CGSize = CGSize(width: 4.0, height: 4.0), shadowColor: UIColor? = nil, shadowOpacity: CGFloat = 0.2, shadowRadius: CGFloat? = nil) {
+        self.contentView.addShadow(shadowSize: shadowSize, shadowColor: shadowColor, shadowOpacity: shadowOpacity, shadowRadius: shadowRadius)
+    }
 }

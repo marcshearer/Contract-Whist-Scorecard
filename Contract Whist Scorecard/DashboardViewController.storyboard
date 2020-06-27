@@ -32,7 +32,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="44" id="IAY-bG-agc"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="28"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -47,14 +47,47 @@
                                                     <action selector="finishButtonPressed:" destination="D0r-VL-UQ4" eventType="touchUpInside" id="Pgu-jE-dtQ"/>
                                                 </connections>
                                             </button>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Afg-4Q-6Fs" userLabel="Sync Button Container View">
+                                                <rect key="frame" x="336" y="8" width="70" height="30"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qgt-9P-1ZL" userLabel="Small Sync Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="0.0" width="70" height="30"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                        <state key="normal" image="cloud"/>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="right" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t2q-eO-UsT" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="0.0" width="70" height="30"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                        <state key="normal" title="Sync"/>
+                                                        <connections>
+                                                            <action selector="syncButtonPressed:" destination="D0r-VL-UQ4" eventType="touchUpInside" id="gyQ-FA-DBx"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <color key="backgroundColor" name="Clear"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="bottom" secondItem="t2q-eO-UsT" secondAttribute="bottom" id="0Io-RR-VTR"/>
+                                                    <constraint firstItem="t2q-eO-UsT" firstAttribute="top" secondItem="Afg-4Q-6Fs" secondAttribute="top" id="69Q-Oj-LQe"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Qgt-9P-1ZL" secondAttribute="trailing" id="Ch3-dJ-mH8"/>
+                                                    <constraint firstItem="Qgt-9P-1ZL" firstAttribute="top" secondItem="Afg-4Q-6Fs" secondAttribute="top" id="bY6-6r-oKv"/>
+                                                    <constraint firstAttribute="width" constant="70" id="fdd-rh-Ziz"/>
+                                                    <constraint firstAttribute="trailing" secondItem="t2q-eO-UsT" secondAttribute="trailing" id="gk5-3W-xj8"/>
+                                                    <constraint firstItem="t2q-eO-UsT" firstAttribute="leading" secondItem="Afg-4Q-6Fs" secondAttribute="leading" id="lVW-tN-dee"/>
+                                                    <constraint firstItem="Qgt-9P-1ZL" firstAttribute="leading" secondItem="Afg-4Q-6Fs" secondAttribute="leading" id="rsB-85-snH"/>
+                                                    <constraint firstAttribute="bottom" secondItem="Qgt-9P-1ZL" secondAttribute="bottom" id="ucb-Sw-Zd0"/>
+                                                    <constraint firstAttribute="height" constant="30" id="ztn-JY-i97"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <constraints>
                                             <constraint firstItem="xgp-fm-d9m" firstAttribute="top" secondItem="FU9-b6-V3N" secondAttribute="top" id="8Mg-j8-Ue2"/>
+                                            <constraint firstAttribute="trailing" secondItem="Afg-4Q-6Fs" secondAttribute="trailing" constant="8" id="Odd-cS-3Gk"/>
                                             <constraint firstItem="EQI-4j-GAC" firstAttribute="top" secondItem="FU9-b6-V3N" secondAttribute="top" constant="12" id="Rhf-ad-kyM"/>
                                             <constraint firstItem="EQI-4j-GAC" firstAttribute="leading" secondItem="FU9-b6-V3N" secondAttribute="leading" constant="12" id="dMw-Y4-6Dn"/>
                                             <constraint firstItem="xgp-fm-d9m" firstAttribute="leading" secondItem="FU9-b6-V3N" secondAttribute="leading" id="hKx-PC-eel"/>
                                             <constraint firstAttribute="trailing" secondItem="xgp-fm-d9m" secondAttribute="trailing" id="kHY-Dx-mUD"/>
+                                            <constraint firstItem="Afg-4Q-6Fs" firstAttribute="top" secondItem="FU9-b6-V3N" secondAttribute="top" constant="8" id="xTt-kQ-hba"/>
                                         </constraints>
                                     </view>
                                     <collectionView multipleTouchEnabled="YES" tag="1" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gyh-A2-DhL">
@@ -94,7 +127,7 @@
                                                                 </imageView>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="klk-Up-d86">
                                                                     <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
-                                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
+                                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="26"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
                                                                 </label>
@@ -227,6 +260,8 @@
                         <outlet property="dashboardContainerView" destination="hiY-hK-Vax" id="ryL-kx-1Cw"/>
                         <outlet property="finishButton" destination="EQI-4j-GAC" id="KXT-cV-4DA"/>
                         <outlet property="scrollCollectionView" destination="skN-et-kCR" id="CZd-QO-Y7H"/>
+                        <outlet property="smallSyncButton" destination="Qgt-9P-1ZL" id="ZUR-2d-JrL"/>
+                        <outlet property="syncButton" destination="t2q-eO-UsT" id="sLD-qM-feh"/>
                         <outlet property="titleLabel" destination="xgp-fm-d9m" id="Us6-84-j03"/>
                     </connections>
                 </viewController>
@@ -251,6 +286,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="cloud" width="33" height="22"/>
         <image name="home" width="22" height="23"/>
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>

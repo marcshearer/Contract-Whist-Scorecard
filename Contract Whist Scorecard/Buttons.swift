@@ -21,12 +21,16 @@ class RoundedButton: UIButton {
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
-        self.toRounded()
         self.titleLabel?.adjustsFontSizeToFitWidth = true
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.toRounded()
     }
     
     func isEnabled(_ enabled: Bool) {
@@ -53,12 +57,76 @@ class RoundedButton: UIButton {
     
     func toUnrounded() {
         self.layer.cornerRadius = 0
-        self.layer.masksToBounds = true
+        self.layer.masksToBounds = false
     }
     
     func setTitle(_ title: String) {
         // Set title
         super.setTitle(title, for: .normal)
+    }
+}
+
+class ShadowButton: UIButton {
+    
+    @IBInspectable var shadowSize = CGSize(width: 4.0, height: 4.0)
+    @IBInspectable var cornerRadius: CGFloat = 5.0
+    
+    private var initialising = false
+    
+    override var backgroundColor: UIColor? {
+        didSet {
+            if !initialising {
+                fatalError("Don't set the background color directly. Use the helper routine")
+            }
+        }
+    }
+       
+    required init(coder aDecoder: NSCoder) {
+        self.initialising = true
+        super.init(coder: aDecoder)!
+        self.addShadow()
+        self.inheritProperties()
+        self.initialising = false
+    }
+    
+    override init(frame: CGRect) {
+        self.initialising = true
+        super.init(frame: frame)
+        self.addShadow()
+        self.inheritProperties()
+        self.initialising = false
+    }
+    
+    init(frame: CGRect, cornerRadius: CGFloat) {
+        self.cornerRadius = cornerRadius
+        self.initialising = true
+        super.init(frame: frame)
+        self.addShadow()
+        self.inheritProperties()
+        self.initialising = false
+    }
+    
+    private func inheritProperties() {
+        self.titleLabel?.backgroundColor = self.backgroundColor
+        self.backgroundColor = UIColor.clear
+    }
+            
+    public func setBackgroundColor(_ backgroundColor: UIColor) {
+        self.titleLabel?.backgroundColor = backgroundColor
+    }
+    
+    private func addShadow() {
+        self.titleLabel?.textAlignment = .center
+        self.titleLabel?.adjustsFontSizeToFitWidth = true
+        self.titleLabel?.frame = CGRect(origin: CGPoint(), size: self.frame.size)
+        Constraint.anchor(view: self, control: titleLabel!)
+        self.titleLabel?.roundCorners(cornerRadius: self.cornerRadius)
+        self.addShadow(shadowSize: self.shadowSize)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.addShadow(shadowSize: shadowSize)
     }
 }
 

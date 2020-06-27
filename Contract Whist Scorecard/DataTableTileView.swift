@@ -16,7 +16,7 @@ import UIKit
     @objc optional func adjustWidth(_ availableWidth: CGFloat)
 }
 
-class DataTableTileView: UIView, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     private var detailType: DashboardDetailType = .history
     private var displayedFields: [DataTableField] = []
@@ -49,7 +49,7 @@ class DataTableTileView: UIView, UITableViewDataSource, UITableViewDelegate, UIC
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var typeButton: ClearButton!
     @IBOutlet private weak var typeButtonTrailingConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var dataTableView: UITableView!
+    @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var tableViewTopConstraint: NSLayoutConstraint!
     
     
@@ -73,7 +73,7 @@ class DataTableTileView: UIView, UITableViewDataSource, UITableViewDelegate, UIC
         
         // Register table view cell
         let nib = UINib(nibName: "DataTableTileTableViewCell", bundle: nil)
-        dataTableView.register(nib, forCellReuseIdentifier: "Table Cell")
+        tableView.register(nib, forCellReuseIdentifier: "Table Cell")
         
         // Load collection view cell
         self.collectionViewNib = UINib(nibName: "DataTableTileCollectionViewCell", bundle: nil)
@@ -101,7 +101,7 @@ class DataTableTileView: UIView, UITableViewDataSource, UITableViewDelegate, UIC
             break
         }
         
-        self.records = self.dataSource?.getData?(personal: self.personal, count: self.maxRows)
+        self.getData()
      }
     
     @objc private func tapSelector(_ sender: UIView) {
@@ -123,28 +123,38 @@ class DataTableTileView: UIView, UITableViewDataSource, UITableViewDelegate, UIC
         self.contentView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
         self.tileView.roundCorners(cornerRadius: 8.0)
         
-        if self.dataTableView.frame.width > 0 {
-            self.dataTableView.layoutIfNeeded()
+        if self.tableView.frame.width > 0 {
+            self.tableView.layoutIfNeeded()
             self.calculateRows()
             if self.headings {
                 self.tableViewTopConstraint.constant = -self.rowHeight
             }
             
-            self.dataSource?.adjustWidth?(self.dataTableView.frame.width)
+            self.dataSource?.adjustWidth?(self.tableView.frame.width)
                         if let availableFields = self.dataSource?.availableFields {
-                self.displayedFields = DataTableFormatter.checkFieldDisplay(availableFields, to: self.dataTableView.frame.size, paddingWidth: 1.0)
+                self.displayedFields = DataTableFormatter.checkFieldDisplay(availableFields, to: self.tableView.frame.size, paddingWidth: 1.0)
             } else {
                 self.displayedFields = []
             }
             
             self.moveTypeButton()
             
-            self.dataTableView.reloadData()
+            self.tableView.reloadData()
         }
     }
     
+    internal func reloadData() {
+        self.getData()
+        self.calculateRows()
+        self.tableView.reloadData()
+    }
+    
+    private func getData() {
+        self.records = self.dataSource?.getData?(personal: self.personal, count: self.maxRows)
+    }
+    
     private func calculateRows() {
-        let totalHeight = self.dataTableView.frame.height
+        let totalHeight = self.tableView.frame.height
         self.minRowHeight = max(self.minRowHeight, ScorecardUI.screenHeight / 24)
         self.rows = Int(totalHeight / self.minRowHeight)
         var fitRows = self.rows
@@ -259,9 +269,7 @@ class DataTableTileHistoryDataSource : DataTableTileViewDataSource {
     }
     
     internal func getData(personal: Bool, count: Int) -> [DataTableViewerDataSource] {
-        if personal {
-            self.history = History(playerUUID: (personal ? Scorecard.settings.thisPlayerUUID : nil), limit: count)
-        }
+        self.history = History(playerUUID: (personal ? Scorecard.settings.thisPlayerUUID : nil), limit: count)
         return self.history.games
     }
     

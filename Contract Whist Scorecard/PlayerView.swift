@@ -41,7 +41,6 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     public var tag: Int
     public var type: PlayerViewType
     public var thumbnailView: ThumbnailView!
-    private var deleteView: UIView!
     private var deleteOnTap = false
     public var inUse = false
     public var playerMO: PlayerMO?
@@ -195,20 +194,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     public func startDeleteWiggle() {
         if let view = self.thumbnailView {
             if self.inUse {
-                let animation  = CAKeyframeAnimation(keyPath:"transform")
-                animation.values  = [NSValue(caTransform3D: CATransform3DMakeRotation(0.05, 0.0, 0.0, 1.0)),
-                                     NSValue(caTransform3D: CATransform3DMakeRotation(-0.05 , 0, 0, 1))]
-                animation.autoreverses = true
-                animation.duration  = 0.1
-                animation.repeatCount = Float.infinity
-                view.layer.add(animation, forKey: "transform")
-                self.deleteView = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 20.0, height: 20.0))
-                let deleteImageView = UIImageView(frame: CGRect(x: 5.0, y: 5.0, width: 10.0, height: 10.0))
-                deleteImageView.image = UIImage(named: "cross red")
-                deleteView.backgroundColor = Palette.background
-                deleteView.addSubview(deleteImageView)
-                ScorecardUI.veryRoundCorners(deleteView, radius: 10.0)
-                view.addSubview(deleteView)
+                view.startWiggle()
                 self.deleteOnTap = true
             }
         }
@@ -216,8 +202,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     
     public func stopDeleteWiggle() {
         if let view = self.thumbnailView {
-            view.layer.removeAllAnimations()
-            self.deleteView?.removeFromSuperview()
+            view.stopWiggle()
             self.deleteOnTap = false
         }
     }
@@ -333,7 +318,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     }
     
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        print("here")
+        picker.dismiss(animated: true, completion: nil)
     }
         
     func rotateImage(image: UIImage) -> UIImage {

@@ -19,11 +19,11 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P6c-mS-fXT" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
                             </view>
-                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6k9-mI-xNc" userLabel="Left Padding View">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6k9-mI-xNc" userLabel="Left Padding View">
                                 <rect key="frame" x="0.0" y="44" width="0.0" height="34"/>
                                 <color key="backgroundColor" name="Section Heading"/>
                             </view>
-                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VqW-sd-yiV" userLabel="Right Padding View">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VqW-sd-yiV" userLabel="Right Padding View">
                                 <rect key="frame" x="375" y="44" width="0.0" height="34"/>
                                 <color key="backgroundColor" name="Section Heading"/>
                             </view>
@@ -450,16 +450,18 @@
                             <constraint firstAttribute="trailing" secondItem="zs1-6Q-Kuk" secondAttribute="trailing" id="B16-Gk-bwo"/>
                             <constraint firstItem="c4X-Fy-1nA" firstAttribute="leading" secondItem="5eb-gD-VJV" secondAttribute="leading" id="Lgz-6u-V2j"/>
                             <constraint firstItem="P6c-mS-fXT" firstAttribute="trailing" secondItem="5eb-gD-VJV" secondAttribute="trailing" id="NMj-z3-Fkn"/>
-                            <constraint firstItem="55F-UG-Ned" firstAttribute="leading" secondItem="X5U-rg-RZw" secondAttribute="leading" id="NYN-Gm-kRP"/>
+                            <constraint firstItem="55F-UG-Ned" firstAttribute="leading" secondItem="5eb-gD-VJV" secondAttribute="leading" id="NYN-Gm-kRP"/>
                             <constraint firstItem="X5U-rg-RZw" firstAttribute="leading" secondItem="6k9-mI-xNc" secondAttribute="trailing" id="Pqw-ka-NPC"/>
                             <constraint firstItem="VqW-sd-yiV" firstAttribute="leading" secondItem="X5U-rg-RZw" secondAttribute="trailing" id="XZI-Qn-pOd"/>
+                            <constraint firstItem="VqW-sd-yiV" firstAttribute="top" secondItem="0Rn-Vn-KHT" secondAttribute="bottom" id="buk-2y-xhg"/>
                             <constraint firstItem="zs1-6Q-Kuk" firstAttribute="top" secondItem="55F-UG-Ned" secondAttribute="bottom" priority="750" constant="-10" id="dXd-W9-svZ"/>
                             <constraint firstItem="6k9-mI-xNc" firstAttribute="leading" secondItem="5eb-gD-VJV" secondAttribute="leading" id="eVM-yp-gNs"/>
+                            <constraint firstItem="6k9-mI-xNc" firstAttribute="top" secondItem="0Rn-Vn-KHT" secondAttribute="bottom" id="eeE-0v-Q17"/>
                             <constraint firstItem="VqW-sd-yiV" firstAttribute="bottom" secondItem="55F-UG-Ned" secondAttribute="bottom" constant="-10" id="hhA-Zb-bqo"/>
                             <constraint firstItem="0Rn-Vn-KHT" firstAttribute="leading" secondItem="5eb-gD-VJV" secondAttribute="leading" id="mms-8D-LB4"/>
                             <constraint firstItem="c4X-Fy-1nA" firstAttribute="top" secondItem="X5U-rg-RZw" secondAttribute="top" id="ndD-1d-DVn"/>
                             <constraint firstItem="55F-UG-Ned" firstAttribute="top" secondItem="0Rn-Vn-KHT" secondAttribute="bottom" id="nfN-eh-7eA"/>
-                            <constraint firstItem="X5U-rg-RZw" firstAttribute="trailing" secondItem="55F-UG-Ned" secondAttribute="trailing" id="oFX-8X-2oA"/>
+                            <constraint firstAttribute="trailing" secondItem="55F-UG-Ned" secondAttribute="trailing" id="oFX-8X-2oA"/>
                             <constraint firstAttribute="trailing" secondItem="VqW-sd-yiV" secondAttribute="trailing" id="sHl-q4-4g7"/>
                             <constraint firstItem="P6c-mS-fXT" firstAttribute="leading" secondItem="5eb-gD-VJV" secondAttribute="leading" id="u1X-IP-DTs"/>
                             <constraint firstItem="zs1-6Q-Kuk" firstAttribute="leading" secondItem="5eb-gD-VJV" secondAttribute="leading" id="uAB-D1-Lfy"/>

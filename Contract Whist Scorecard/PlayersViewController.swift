@@ -9,13 +9,7 @@
 import UIKit
 import CoreData
 
-enum ShapeType {
-    case arrowRight
-    case hexagon
-    case arrowLeft
-}
-
-class PlayersViewController: ScorecardViewController, ScrollViewDataSource, ScrollViewDelegate {
+class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     // MARK: - Class Properties ======================================================================== -
     
@@ -23,52 +17,50 @@ class PlayersViewController: ScorecardViewController, ScrollViewDataSource, Scro
     private var completion: (()->())?
     private var backText = ""
     private var backImage = "home"
-
+    
     // Other properties
-    private var layoutComplete = false
-    private var refresh = true
-
-    // Local class variables
-    private var playerList: [PlayerDetail]!
-    private var selectedPlayer = 0
-    private var playerDetail: PlayerDetail!
     private var playerObserver: NSObjectProtocol?
     private var imageObserver: NSObjectProtocol?
-    private var scrollView: ScrollView!
-    private var lastSize: CGSize!
-    private var threeAcross = true
+    
+    private var removing: Bool = false
+    
+    // UI properties
+    private let minAcross: CGFloat = 3.0
+    private let minDown: CGFloat = 2.0
+    private let spacing: CGFloat = 16.0
+    private let thumbnailInset: CGFloat = 16.0
+    private let aspectRatio: CGFloat = 4.0/3.0
+    private var cellWidth: CGFloat = 0.0
+
     private var sync: Sync!
     
     // MARK: - IB Outlets ============================================================================== -
-    @IBOutlet private weak var playersScrollView: UIScrollView!
-    @IBOutlet private weak var finishButton: RoundedButton!
-    @IBOutlet private weak var navigationBar: NavigationBar!
-    @IBOutlet private weak var leftPadView: UIView!
-    @IBOutlet private weak var rightPadView: UIView!
-    @IBOutlet private weak var leftPadWidthConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var leftPadHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var leftPadTextLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var leftPadTextTrailingConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var rightPadTextLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var rightPadTextTrailingConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var rightPadWidthConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var rightPadHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var newPlayerButton: ClearButton!
-    @IBOutlet private var instructionsLabel: [UILabel]!
+    @IBOutlet private weak var finishButton: ClearButton!
+    @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
+    @IBOutlet private weak var topSection: UIView!
+    @IBOutlet private weak var titleBar: UIView!
+    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var addPlayerButton: ShadowButton!
+    @IBOutlet private weak var removePlayerButton: ShadowButton!
+    @IBOutlet private weak var removePlayerCancelButton: ShadowButton!
+    @IBOutlet private weak var collectionView: UICollectionView!
     
     // MARK: - IB Actions ============================================================================== -
     
-    @IBAction func newPlayerPressed(_ sender: UIButton) {
-        if Scorecard.activeSettings.syncEnabled {
-            self.showSelectPlayers()
-        } else {
-            PlayerDetailViewController.show(from: self, playerDetail: PlayerDetail(visibleLocally: true), mode: .create, sourceView: view, completion: { (playerDetail, deletePlayer) in
-                    if playerDetail != nil {
-                        let _ = playerDetail!.createMO()
-                        self.refreshView()
-                    }
-            })
-        }
+    @IBAction func addPlayerPressed(_ sender: UIButton) {
+        self.showSelectPlayers()
+    }
+    
+    @IBAction func removePlayerPressed(_ sender: UIButton) {
+        self.removing = true
+        self.startWiggle()
+        self.enableButtons()
+    }
+
+    @IBAction func removePlayerCancelPressed(_ sender: UIButton) {
+        self.removing = false
+        self.stopWiggle()
+        self.enableButtons()
     }
 
     @IBAction func finishPressed(sender: UIButton) {
@@ -77,7 +69,7 @@ class PlayersViewController: ScorecardViewController, ScrollViewDataSource, Scro
         self.dismiss()
     }
     
-    @IBAction func rightSwipe(recognizer:UISwipeGestureRecognizer) {
+    @IBAction func downSwipe(recognizer:UISwipeGestureRecognizer) {
         if recognizer.state == .ended {
             self.finishPressed(sender: finishButton)
         }
@@ -94,26 +86,14 @@ class PlayersViewController: ScorecardViewController, ScrollViewDataSource, Scro
         playerObserver = setPlayerDownloadNotification(name: .playerDownloaded)
         imageObserver = setPlayerDownloadNotification(name: .playerImageDownloaded)
         
-        // Setup scroll view
-        self.scrollView = ScrollView(self.playersScrollView)
-        self.scrollView.dataSource = self
-        self.scrollView.delegate = self
+        self.collectionView.contentInset = UIEdgeInsets(top: self.spacing, left: self.spacing, bottom: self.spacing, right: self.spacing)
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        // Get player list
-        self.playerList = Scorecard.shared.playerDetailList()
-        
         // Update from cloud
         self.updatePlayersFromCloud()
-        
-        if self.refresh {
-            // Only set when enter from menu - not just re-appearing
-            self.view.setNeedsLayout()
-            self.refresh = false
-        }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -125,165 +105,100 @@ class PlayersViewController: ScorecardViewController, ScrollViewDataSource, Scro
         super.viewDidLayoutSubviews()
         Scorecard.shared.reCenterPopup(self)
         
-        if self.view.safeAreaLayoutGuide.layoutFrame.size != self.lastSize {
+        self.setupSize()
         
-            // Set up mode
-            self.threeAcross = ScorecardUI.screenWidth >= 350.0
-            
-            // Setup width / height
-            let cellFrame = self.cellFrame(1)
-            
-            // Mask top border
-            let fillerWidth = cellFrame.width + 7.0
-            let fillerHeight = (cellFrame.height / 2.0) + 4.0
-            let shapeWidth = fillerWidth + view.safeAreaInsets.left
-            let arrowWidth = ((fillerWidth + 9.0) / 4.0)
-            if !self.threeAcross {
-                self.leftPadWidthConstraint.constant = fillerWidth + view.safeAreaInsets.left + 20.0
-                self.leftPadHeightConstraint.constant = fillerHeight
-                Polygon.angledBannerContinuationMask(view: leftPadView, frame: CGRect(x: 0, y: 0, width: shapeWidth, height: fillerHeight), type: .arrowRight, arrowWidth: arrowWidth)
-                self.leftPadTextLeadingConstraint.constant = view.safeAreaInsets.left + 18.0
-                self.leftPadTextTrailingConstraint.constant = 50.0
-                self.leftPadView.isHidden = false
-                self.rightPadView.isHidden = true
-            } else {
-                self.rightPadWidthConstraint.constant = (fillerWidth * 2.0) - arrowWidth + view.safeAreaInsets.right + 20.0
-                self.rightPadHeightConstraint.constant = fillerHeight
-                Polygon.angledBannerContinuationMask(view: rightPadView, frame: CGRect(x: 20.0, y: 0, width: fillerWidth, height: fillerHeight), type: .hexagon, arrowWidth: arrowWidth)
-                self.rightPadTextLeadingConstraint.constant = 15.0
-                self.rightPadTextTrailingConstraint.constant = fillerWidth - arrowWidth + view.safeAreaInsets.right - 5.0
-                self.leftPadView.isHidden = true
-                self.rightPadView.isHidden = false
-            }
-            
-            self.lastSize = self.view.safeAreaLayoutGuide.layoutFrame.size
-        }
-        self.scrollView.reloadData()
+        self.collectionView.setNeedsLayout()
+        self.collectionView.layoutIfNeeded()
         
-        self.layoutComplete = true
         self.formatButtons()
+        self.enableButtons()
     }
     
-    // MARK: - ScrollView Overrides ================================================================ -
-
-    func scrollView(_ scrollView: ScrollView, numberOfItemsIn section: Int) -> Int {
-        let players = self.playerList?.count ?? 0
-        return players
-    }
-
+    // MARK: - CollectionView Overrides ================================================================ -
     
-    func scrollView(_ scrollView: ScrollView,
-                        frameForItemAt indexPath: IndexPath) -> CGRect {
+    private func setupSize() {
+        let availableWidth = self.collectionView.frame.width - spacing
+        let availableHeight = self.collectionView.frame.height - spacing
+        var cellSpacedWidth = min(140, availableWidth / minAcross)
+        let cellSpacedHeight = min(210, availableHeight / minDown)
+        cellSpacedWidth = min(cellSpacedWidth, cellSpacedHeight / aspectRatio)
+        self.cellWidth = cellSpacedWidth - spacing
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return Scorecard.shared.playerList.count
+    }
+    
+   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: self.cellWidth, height: self.cellWidth * self.aspectRatio)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        return cellFrame(indexPath.item)
-    }
-    
-    func scrollView(_ scrollView: ScrollView, cellForItemAt indexPath: IndexPath) -> ScrollViewCell {
-        let item = indexPath.item
-        let type = cellType(item)
-        let cellFrame = self.cellFrame(item)
-        let cell = PlayerCell(width: cellFrame.width, height: cellFrame.height, type: type)
-
-        let (shapeLayer, path) = self.arrowMask(frame: cell.playerThumbnail.frame, type: type)
-        if self.playerList[item].thumbnail != nil {
-            cell.playerTile.isHidden = true
-            cell.playerThumbnail.isHidden = false
-            cell.playerThumbnail.image = UIImage(data: self.playerList[item].thumbnail!)
-            cell.playerThumbnail.contentMode = .scaleAspectFill
-            cell.playerThumbnail.clipsToBounds = true
-            cell.playerThumbnail.alpha = 1.0
-            cell.playerThumbnail.superview!.bringSubviewToFront(cell.playerThumbnail)
-            let gradient = CAGradientLayer()
-            gradient.frame = cell.frame
-            gradient.colors = [UIColor.clear.cgColor, UIColor.clear.cgColor, UIColor(white: 0.0, alpha: 0.1).cgColor ,UIColor(white: 0.0, alpha: 0.3).cgColor]
-            gradient.locations = [0.0, 0.8, 0.9, 1.0]
-            cell.playerThumbnail.layer.insertSublayer(gradient, at: 0)
-            cell.playerThumbnailName.text = self.playerList[item].name
-            cell.playerThumbnail.layer.mask = shapeLayer
-        } else {
-            cell.playerThumbnail.isHidden = true
-            cell.playerTile.isHidden = false
-            cell.playerTile.superview!.bringSubviewToFront(cell.playerTile)
-            cell.playerTile.layer.mask = shapeLayer
-            cell.playerTileName.text = self.playerList[item].name
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Player Cell", for: indexPath) as! PlayerCell
+        self.defaultCellColors(cell: cell)
+        
+        cell.thumbnail.set(playerMO: Scorecard.shared.playerList[indexPath.item], nameHeight: 20, diameter: self.cellWidth - (thumbnailInset * 2))
+        cell.set(thumbnailInset: self.thumbnailInset)
+        if self.removing {
+            cell.thumbnail.startWiggle()
         }
-        cell.path = path
-
+        cell.addShadow()
+        
         return cell
+        
     }
     
-    func scrollView(_ scrollView: ScrollView, didSelectCell cell: ScrollViewCell, tapPosition: CGPoint) {
-        let cell = cell as! PlayerCell
-        let relativeTapPosition = CGPoint(x: tapPosition.x - cell.frame.minX, y: tapPosition.y - cell.frame.minY)
-        if let path = cell.path {
-            if path.contains(relativeTapPosition) {
-                PlayerDetailViewController.show(from: self, playerDetail: self.playerList[cell.indexPath.item], mode: .amend, sourceView: self.popoverPresentationController?.sourceView ?? self.view, completion: { (playerDetail, deletePlayer) in
-                                                    if playerDetail != nil {
-                                                        if deletePlayer {
-                                                            // Refresh all
-                                                            self.scrollView.reloadItems(after: cell.indexPath!)
-                                                        } else {
-                                                            // Refresh updated player
-                                                            playerDetail!.fromManagedObject(playerMO: playerDetail!.playerMO!)
-                                                            self.scrollView.reloadItems(at: [cell.indexPath!])
-                                                        }
-                                                    } else {
-                                                        // Restore player
-                                                        let playerDetail = self.playerList[cell.indexPath.item]
-                                                        playerDetail.fromManagedObject(playerMO: playerDetail.playerMO!)
-                                                    }
-                })
-            }
-        }
-    }
-    
-    private func cellType(_ item: Int) -> ShapeType {
-        var type: ShapeType
-        if self.threeAcross {
-            switch item % 3 {
-            case 0:
-                type = .arrowRight
-            case 1:
-                type = .arrowLeft
-            default:
-                type = .hexagon
-            }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if self.removing {
+            self.removePlayer(at: indexPath)
         } else {
-            type = (item % 2 == 0 ? .arrowLeft : .arrowRight)
+            self.amendPlayer(at: indexPath)
         }
-        return type
     }
     
-    private func cellFrame(_ item: Int) -> CGRect {
-        var cellX: CGFloat
-        var cellWidth: CGFloat
-        var cellY: CGFloat
-        var cellHeight: CGFloat
-        
-        let viewWidth = self.view.safeAreaLayoutGuide.layoutFrame.width
-        
-        if self.threeAcross {
-            cellWidth = ((8.0 / 20.0) * viewWidth) - 5.0
-            cellHeight = ((21.0 / 80.0) * viewWidth)
-            switch item % 3 {
-            case 0:
-                cellX = 0.0
-                cellY = ((cellHeight + 10.0) * CGFloat(item / 3)) + 10.0
-            case 1:
-                cellX = viewWidth - cellWidth
-                cellY = ((cellHeight + 10.0) * CGFloat(item / 3)) + 10.0
-            default:
-                cellX = (6.0 / 20.0) * viewWidth + 2.5
-                cellY = ((cellHeight + 10.0) * (CGFloat(item / 3) + 0.5)) + 10.0
+    func amendPlayer(at indexPath: IndexPath) {
+        let playerMO = Scorecard.shared.playerList[indexPath.item]
+        let playerDetail = PlayerDetail()
+        playerDetail.fromManagedObject(playerMO: playerMO)
+        PlayerDetailViewController.show(from: self, playerDetail: playerDetail, mode: .amend, sourceView: self.view)
+        { (playerDetail, deletePlayer) in
+            if playerDetail != nil {
+                if deletePlayer {
+                    // Remove it
+                    self.collectionView.deleteItems(at: [indexPath])
+                } else {
+                    // Refresh updated player
+                    self.collectionView.reloadItems(at: [indexPath])
+                }
             }
-        } else {
-            cellWidth = ((4.0 / 7.0) * viewWidth) - 5.0
-            cellHeight = ((3.0 / 7.0) * viewWidth) - 10.0
-            cellX = (item % 2 == 0 ? viewWidth - cellWidth : 0.0)
-            cellY = (((cellHeight / 2.0) + 5.0) * CGFloat(item)) + 10.0
         }
-        
-        return CGRect(x: cellX, y: cellY, width: cellWidth, height: cellHeight)
+    }
+    
+    func removePlayer(at indexPath: IndexPath) {
+        let playerMO = Scorecard.shared.playerList[indexPath.item]
+        self.alertDecision("This will remove the player \n'\(playerMO.name!)'\nfrom this device.\n\nIf you have synchronised with iCloud the player will still be available to download in future.\n Otherwise this will remove their details permanently.\n\n Are you sure you want to do this?", title: "Warning", okButtonText: "Remove", okHandler: {
+            self.collectionView.performBatchUpdates({
+                // Remove from core data, the player list and the collection view etc
+                
+                // Remove from email cache
+                Scorecard.shared.playerEmails[playerMO.playerUUID!] = nil
+                
+                if CoreData.update(updateLogic: {
+                    CoreData.delete(record: playerMO)
+                }) {
+                    if let cell = self.collectionView.cellForItem(at: indexPath) as? PlayerCell {
+                        cell.thumbnail?.stopWiggle()
+                    }
+                                    
+                    Scorecard.shared.playerList.remove(at: indexPath.item)
+                    self.collectionView.deleteItems(at: [indexPath])
+                    
+                    // Save to iCloud
+                    Scorecard.settings.saveToICloud()
+                }
+            })
+        })
     }
     
     // MARK: Sync handlers =============================================================== -
@@ -318,14 +233,18 @@ class PlayersViewController: ScorecardViewController, ScrollViewDataSource, Scro
     func updatePlayer(objectID: NSManagedObjectID) {
         // Find any cells containing an image/player which has just been downloaded asynchronously
         Utility.mainThread {
-            let index = self.playerList.firstIndex(where: {($0.objectID == objectID)})
+            let index = Scorecard.shared.playerList.firstIndex(where: {($0.objectID == objectID)})
             if index != nil {   
-                // Found it - update from managed object and reload the cell
-                self.playerList[index!].fromManagedObject(playerMO: self.playerList[index!].playerMO)
-                self.scrollView.reloadItems(at: [IndexPath(row: index!, section: 0)])
+                // Found it - reload the cell
+                self.collectionView.reloadItems(at: [IndexPath(row: index!, section: 0)])
+            } else {
+                // New player - shouldn't happen but refresh view just in case
+                self.collectionView.reloadData()
             }
         }
     }
+    
+    // MARK: - UI setup routines ======================================================================== -
 
     func formatButtons() {
         
@@ -333,23 +252,44 @@ class PlayersViewController: ScorecardViewController, ScrollViewDataSource, Scro
         finishButton.setTitle(self.backText)
     }
     
-    func refreshView() {
-        // Reset everything
-        self.playerList = Scorecard.shared.playerDetailList()
-        self.scrollView.reloadData()
-        formatButtons()
+    func enableButtons() {
+        self.addPlayerButton.isHidden = removing
+        self.removePlayerButton.isHidden = removing
+        self.removePlayerCancelButton.isHidden = !removing
     }
-    
+        
     // MARK: - Utility routines ============================================================================== -
     
     private func showSelectPlayers() {
         _ = SelectPlayersViewController.show(from: self, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: true, completion: { (selected, playerList, selection, thisPlayerUUID) in
             if selected != nil {
-                self.refreshView()
+                self.collectionView.reloadData()
             }
         })
     }
     
+    private func forEachCell(_ action: (String, PlayerCell)->()) {
+        for (item, playerMO) in Scorecard.shared.playerList.enumerated() {
+            if let cell = self.collectionView.cellForItem(at: IndexPath(item: item, section: 0)) as? PlayerCell {
+                action(playerMO.playerUUID!, cell)
+            }
+        }
+    }
+    
+    private func startWiggle() {
+        self.forEachCell { (playerUUID, cell) in
+            if playerUUID != Scorecard.settings.thisPlayerUUID {
+                cell.thumbnail?.startWiggle()
+            }
+        }
+    }
+
+    private func stopWiggle() {
+        self.forEachCell { (_, cell) in
+            cell.thumbnail?.stopWiggle()
+        }
+    }
+
     // MARK: - Function to present and dismiss this view ==============================================================
     
     class public func show(from viewController: ScorecardViewController, backText: String = "", backImage: String = "home", completion: (()->())?){
@@ -363,7 +303,6 @@ class PlayersViewController: ScorecardViewController, ScrollViewDataSource, Scro
         playersViewController.backText = backText
         playersViewController.backImage = backImage
         playersViewController.completion = completion
-        playersViewController.refresh = true
         
         viewController.present(playersViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
     }
@@ -383,137 +322,48 @@ class PlayersViewController: ScorecardViewController, ScrollViewDataSource, Scro
         NotificationCenter.default.removeObserver(playerObserver!)
         NotificationCenter.default.removeObserver(imageObserver!)
     }
-    
-    // MARK: - Arrow masks ============================================================================== -
-
-    private func arrowMask(frame: CGRect, type: ShapeType) -> (CAShapeLayer, UIBezierPath) {
-        
-        let width = frame.width
-        let height = frame.height
-        let minX: CGFloat = 0.0
-        let minY: CGFloat = 0.0
-        let arrowWidth = width / 4.0
-        
-        var points: [PolygonPoint] = []
-        switch type {
-        case .arrowRight:
-            points.append(PolygonPoint(x: minX, y: minY, pointType: .quadRounded))
-            points.append(PolygonPoint(x: minX + width - arrowWidth, y: minY, pointType: .quadRounded))
-            points.append(PolygonPoint(x: minX + width, y: minY + (height / 2.0), pointType: .quadRounded))
-            points.append(PolygonPoint(x: minX + width - arrowWidth, y: minY + height, pointType: .quadRounded))
-            points.append(PolygonPoint(x: minX, y: minY + height, pointType: .quadRounded))
-            points.append(PolygonPoint(x: arrowWidth, y: minY + (height / 2.0), pointType: .quadRounded))
-        case .arrowLeft:
-            points.append(PolygonPoint(x: minX + width, y: minY, pointType: .quadRounded))
-            points.append(PolygonPoint(x: minX + arrowWidth, y: minY, pointType: .quadRounded))
-            points.append(PolygonPoint(x: minX, y: minY + (height / 2.0), pointType: .quadRounded))
-            points.append(PolygonPoint(x: minX + arrowWidth, y: minY + height, pointType: .quadRounded))
-            points.append(PolygonPoint(x: minX + width, y: minY + height, pointType: .quadRounded))
-            points.append(PolygonPoint(x: minX + width - arrowWidth, y: minY + (height / 2.0), pointType: .quadRounded))
-        case .hexagon:
-            points.append(PolygonPoint(x: minX, y: minY + (height / 2.0), pointType: .quadRounded))
-            points.append(PolygonPoint(x: minX + arrowWidth, y: minY, pointType: .quadRounded))
-            points.append(PolygonPoint(x: minX + width - arrowWidth, y: minY, pointType: .quadRounded))
-            points.append(PolygonPoint(x: minX + width, y: minY + (height / 2.0), pointType: .quadRounded))
-            points.append(PolygonPoint(x: minX + width - arrowWidth, y: minY + height, pointType: .quadRounded))
-            points.append(PolygonPoint(x: minX + arrowWidth, y: minY + height, pointType: .quadRounded))
-        }
-        
-        let path = Polygon.roundedBezierPath(definedBy: points, radius: 10.0)
-        let shapeLayer = Polygon.shapeLayer(from: path)
-        
-        return (shapeLayer, path)
-    }
 }
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
 
-class PlayerCell: ScrollViewCell {
-    public var playerThumbnail: UIImageView!
-    public var playerThumbnailName: UILabel!
-    public var playerTile: UILabel!
-    public var playerTileName: UILabel!
-    public var path: UIBezierPath!
+class PlayerCell: UICollectionViewCell {
+    private var thumbnailInset: CGFloat!
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+    @IBOutlet fileprivate weak var thumbnail: ThumbnailView!
+    @IBOutlet fileprivate weak var tile: UIView!
+    @IBOutlet fileprivate var thumbnailInsets: [NSLayoutConstraint]!
+
+    public func set(thumbnailInset: CGFloat) {
+        self.thumbnailInset = thumbnailInset
     }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-    }
-    
-    convenience init(width: CGFloat, height: CGFloat, type: ShapeType) {
-        var textX: CGFloat
-        var textWidth: CGFloat
-        
-        let frame = CGRect(x: 0, y: 0, width: width, height: height)
-        self.init(frame: frame)
-        
-        self.playerThumbnail = UIImageView(frame: frame)
-        self.addSubview(self.playerThumbnail)
-        
-        switch type {
-        case .arrowLeft:
-            textX = width * 0.25
-            textWidth = width * 0.63
-        case .arrowRight:
-            textX = width * 0.10
-            textWidth = width * 0.63
-        case .hexagon:
-            textX = width * 0.10
-            textWidth = width * 0.80
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.thumbnailInsets.forEach { (inset) in
+            inset.constant = self.thumbnailInset
         }
-        let thumbnailNameFrame = CGRect(x: textX, y: height - 25.0, width: textWidth, height: 25.0)
-        self.playerThumbnailName = UILabel(frame: thumbnailNameFrame)
-        self.playerThumbnail.addSubview(self.playerThumbnailName)
-        self.playerThumbnailName.backgroundColor = UIColor.clear
-        self.playerThumbnailName.textColor = UIColor.white
-        self.playerThumbnailName.textAlignment = .center
-        self.playerThumbnailName.font = UIFont.systemFont(ofSize: 18.0)
-        self.playerThumbnailName.adjustsFontSizeToFitWidth = true
-        
-        self.playerTile = UILabel(frame: frame)
-        self.playerTile.backgroundColor = Palette.thumbnailDisc
-        self.playerTile.textColor = Palette.thumbnailDiscText
-        self.addSubview(self.playerTile)
-        
-        switch type {
-        case .arrowLeft:
-            textX = width * 0.10
-            textWidth = width * 0.63
-        case .arrowRight:
-            textX = width * 0.25
-            textWidth = width * 0.63
-        case .hexagon:
-            textX = width * 0.10
-            textWidth = width * 0.80
-        }
-        let tileNameFrame = CGRect(x: textX, y: 0.0, width: textWidth, height: height)
-        self.playerTileName = UILabel(frame: tileNameFrame)
-        self.playerTile.addSubview(self.playerTileName)
-        self.playerTileName.backgroundColor = UIColor.clear
-        self.playerTileName.textColor = Palette.text
-        self.playerTileName.textAlignment = .center
-        self.playerTileName.font = UIFont.systemFont(ofSize: 24.0)
-        self.playerTileName.adjustsFontSizeToFitWidth = true
+        self.tile.layoutIfNeeded()
+        self.tile.roundCorners(cornerRadius: 8.0)
     }
 }
 
 extension PlayersViewController {
 
-    /** _Note that this code was generated as part of the move to themed colors_ */
-
     private func defaultViewColors() {
-
-        self.finishButton.setTitleColor(Palette.bannerText, for: .normal)
-        self.instructionsLabel.forEach { $0.textColor = Palette.bannerText }    // Warning outlet collection - check all members want this
-        self.instructionsLabel.forEach { $0.textColor = Palette.bannerText }    // Warning outlet collection - check all members want this
-        self.leftPadView.backgroundColor = Palette.banner
-        self.navigationBar.textColor = Palette.bannerText
-        self.newPlayerButton.setTitleColor(Palette.bannerText, for: .normal)
-        self.rightPadView.backgroundColor = Palette.banner
         self.view.backgroundColor = Palette.background
+        self.bannerPaddingView.backgroundColor = Palette.banner
+        self.topSection.backgroundColor = Palette.banner
+        self.titleLabel.textColor = Palette.bannerText
+        self.addPlayerButton.setBackgroundColor(Palette.bannerShadow)
+        self.addPlayerButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.removePlayerButton.setBackgroundColor(Palette.bannerShadow)
+        self.removePlayerButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.removePlayerCancelButton.setBackgroundColor(Palette.bannerShadow)
+        self.removePlayerCancelButton.setTitleColor(Palette.bannerText, for: .normal)
     }
-
+    
+    private func defaultCellColors(cell: PlayerCell) {
+        cell.tile.backgroundColor = Palette.buttonFace
+        cell.thumbnail.set(textColor: Palette.buttonFaceText)
+    }
 }

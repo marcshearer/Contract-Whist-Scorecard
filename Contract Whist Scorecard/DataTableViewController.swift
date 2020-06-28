@@ -85,8 +85,6 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
     @IBOutlet private weak var customButtonLeadingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var customButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var headerHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var leftPaddingHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var rightPaddingHeightConstraint: NSLayoutConstraint!
     @IBOutlet public weak var customHeaderView: UIView!
     @IBOutlet public weak var customHeaderViewHeightConstraint: NSLayoutConstraint!
     
@@ -304,14 +302,14 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
         
         let totalHeight: CGFloat = collectionView.bounds.size.height
         let column = displayedFields[indexPath.row]
-        var width = column.width
+        var width = column.adjustedWidth
         
         // Combine any headings as requested
         if collectionView.tag >= 1000000 {
             if let index = displayedFields.firstIndex(where: { $0.combineHeading == column.title }) {
                 if abs(index - indexPath.row) == 1 {
                     // Is adjacent - combine
-                    width += displayedFields[index].width
+                    width += displayedFields[index].adjustedWidth
                 }
             }
             if column.combineHeading != "" {
@@ -618,6 +616,7 @@ public enum DataTableVariableType {
     var title: String
     var sequence: Int
     var width: CGFloat
+    var adjustedWidth: CGFloat
     var align: NSTextAlignment
     var type: DataTableVariableType
     var pad: Bool
@@ -628,6 +627,7 @@ public enum DataTableVariableType {
         self.title = title
         self.sequence = sequence
         self.width = width
+        self.adjustedWidth = width
         self.align = align
         self.type = type
         self.pad = pad
@@ -643,10 +643,10 @@ extension DataTableViewController {
 
         self.customHeaderView.backgroundColor = Palette.banner
         self.finishButton.setTitleColor(Palette.bannerText, for: .normal)
-        self.leftPaddingView.backgroundColor = Palette.sectionHeading
+        self.leftPaddingView.backgroundColor = Palette.banner
         self.titleBarView.backgroundColor = Palette.banner
         self.titleLabel.textColor = Palette.bannerText
-        self.rightPaddingView.backgroundColor = Palette.sectionHeading
+        self.rightPaddingView.backgroundColor = Palette.banner
         self.syncButton.setBackgroundColor(Palette.bannerShadow)
         self.syncButton.setTitleColor(Palette.bannerText, for: .normal)
         self.smallSyncButton.tintColor = Palette.bannerText
@@ -699,12 +699,12 @@ class DataTableFormatter {
                 
                 // Include if space and not already skipping
                 if !skipping {
-                    if column.width <= widthRemaining {
-                        widthRemaining -= column.width
+                    if column.adjustedWidth <= widthRemaining {
+                        widthRemaining -= column.adjustedWidth
                         displayedFields.append(DataTableField(column.field,
                                                               column.title,
                                                               sequence: column.sequence,
-                                                              width: column.width,
+                                                              width: column.adjustedWidth,
                                                               type: column.type,
                                                               align: column.align,
                                                               pad: column.pad,
@@ -722,7 +722,7 @@ class DataTableFormatter {
         // Find and expand pad column
         if widthRemaining > 0 {
             if let index = displayedFields.firstIndex(where: { $0.pad }) {
-                displayedFields[index].width += min(120, widthRemaining)
+                displayedFields[index].adjustedWidth += min(120, widthRemaining)
                 widthRemaining = max(0, widthRemaining - 120)
             }
         }

@@ -27,7 +27,7 @@ class History {
         if let playerUUID = playerUUID  {
             self.loadParticipantGames(playerUUID: playerUUID, limit: limit, since: since)
         } else {
-            self.loadGames(getParticipants: true, limit: limit)
+            self.loadGames(getParticipants: false, limit: limit)
         }
     }
     
@@ -59,7 +59,7 @@ class History {
         }
         let participantList: [ParticipantMO] = CoreData.fetch(from: "Participant", filter: predicate, limit: limit, sort: ("datePlayed", .descending))
         let gameUUIDs = participantList.map{$0.gameUUID!}
-        self.loadGames(getParticipants: true, gameUUIDs: gameUUIDs)
+        self.loadGames(getParticipants: false, gameUUIDs: gameUUIDs)
     }
     
     public func loadGames(getParticipants: Bool = false, unconfirmed: Bool = false, gameUUIDs: [String]! = nil,  includeBF: Bool = false, limit: Int = 0) {

@@ -131,7 +131,7 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
             }
             
             self.dataSource?.adjustWidth?(self.tableView.frame.width)
-                        if let availableFields = self.dataSource?.availableFields {
+            if let availableFields = self.dataSource?.availableFields {
                 self.displayedFields = DataTableFormatter.checkFieldDisplay(availableFields, to: self.tableView.frame.size, paddingWidth: 1.0)
             } else {
                 self.displayedFields = []
@@ -144,6 +144,8 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
     }
     
     internal func reloadData() {
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
         self.getData()
         self.calculateRows()
         self.tableView.reloadData()
@@ -204,7 +206,7 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: self.displayedFields[indexPath.item].width, height: self.rowHeight)
+        return CGSize(width: self.displayedFields[indexPath.item].adjustedWidth, height: self.rowHeight)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -263,7 +265,7 @@ class DataTableTileHistoryDataSource : DataTableTileViewDataSource {
     internal func adjustWidth(_ availableWidth: CGFloat) {
         if availableWidth < 150 {
             for field in self.availableFields {
-                field.width *= availableWidth / 150
+                field.adjustedWidth = field.width * availableWidth / 150
             }
         }
     }
@@ -287,7 +289,7 @@ class DataTableTilePersonalStatsDataSource : DataTableTileViewDataSource {
     internal func adjustWidth(_ availableWidth: CGFloat) {
         if availableWidth < 150 {
             for field in self.availableFields {
-                field.width *= availableWidth / 150
+                field.adjustedWidth = field.width * availableWidth / 150
             }
         }
     }
@@ -333,19 +335,19 @@ class DataTableTileStatsDataSource : DataTableTileViewDataSource {
     let availableFields: [DataTableField] = [
         DataTableField("",             "",                 sequence: 1,     width: 7,     type: .string),
         DataTableField("",             "",                 sequence: 9,     width: 7,     type: .string),
-        DataTableField("name",         "",                 sequence: 2,     width: 90,    type: .string,    align: .left,   pad: true),
-        DataTableField("=gamesWon%",   "Games Won",      sequence: 5,     width: 60.0,  type: .double),
+        DataTableField("name",         "",                 sequence: 2,     width: 140,    type: .string,    align: .left,   pad: true),
+        DataTableField("=gamesWon%",   "Games Won",        sequence: 5,     width: 60.0,  type: .double),
         DataTableField("=averageScore","Av. Score",        sequence: 6,     width: 60.0,  type: .double),
-        DataTableField("=handsMade%",  "Hands Made",     sequence: 7,     width: 60.0,  type: .double),
-        DataTableField("=twosMade%",   "Twos Made",      sequence: 8,     width: 60.0,  type: .double),
+        DataTableField("=handsMade%",  "Hands Made",       sequence: 7,     width: 60.0,  type: .double),
+        DataTableField("=twosMade%",   "Twos Made",        sequence: 8,     width: 60.0,  type: .double),
         DataTableField("gamesPlayed",  "Games Played",     sequence: 3,     width: 60.0,  type: .int),
         DataTableField("gamesWon",     "Games Won",        sequence: 4,     width: 60.0,  type: .int)
     ]
     
     internal func adjustWidth(_ availableWidth: CGFloat) {
-        if availableWidth < 160 {
+        if availableWidth < 225 {
             for field in self.availableFields {
-                field.width *= availableWidth / 160
+                field.adjustedWidth = field.width * availableWidth / 225
             }
         }
     }

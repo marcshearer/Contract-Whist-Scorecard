@@ -99,7 +99,6 @@ class CoreData {
         } else {
             fatalError("Unexpected error")
         }
-    
         return results
     }
     

@@ -12,6 +12,7 @@ public class ThumbnailView: UIView {
 
     private var haloWidth: CGFloat = 0.0
     private var allowHaloWidth: CGFloat = 0.0 // Used to avoid disc changing size if halo changes
+    private var deleteView: UIView!
     
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet public weak var discImage: UIImageView!
@@ -103,6 +104,8 @@ public class ThumbnailView: UIView {
         if let alpha = alpha {
             self.alpha = alpha
         }
+        
+        self.stopWiggle()
     }
     
     public func set(playerMO: PlayerMO, nameHeight: CGFloat? = nil, diameter: CGFloat = 0.0) {
@@ -175,5 +178,30 @@ public class ThumbnailView: UIView {
     
     public func setShadow(shadowSize: CGSize = CGSize(width: 4.0, height: 4.0), shadowColor: UIColor? = nil, shadowOpacity: CGFloat = 0.2, shadowRadius: CGFloat? = nil) {
         self.contentView.addShadow(shadowSize: shadowSize, shadowColor: shadowColor, shadowOpacity: shadowOpacity, shadowRadius: shadowRadius)
+    }
+    
+    public func startWiggle(addDeleteButton: Bool = true) {
+        let animation  = CAKeyframeAnimation(keyPath:"transform")
+        animation.values  = [NSValue(caTransform3D: CATransform3DMakeRotation(0.05, 0.0, 0.0, 1.0)),
+                             NSValue(caTransform3D: CATransform3DMakeRotation(-0.05 , 0, 0, 1))]
+        animation.autoreverses = true
+        animation.duration  = 0.1
+        animation.repeatCount = Float.infinity
+        self.layer.add(animation, forKey: "transform")
+        if addDeleteButton {
+            self.deleteView = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 20.0, height: 20.0))
+            let deleteImageView = UIImageView(frame: CGRect(x: 5.0, y: 5.0, width: 10.0, height: 10.0))
+            deleteImageView.image = UIImage(named: "cross red")
+            deleteView.backgroundColor = Palette.background
+            deleteView.addSubview(deleteImageView)
+            ScorecardUI.veryRoundCorners(deleteView, radius: 10.0)
+            self.addSubview(deleteView)
+        }
+    }
+    
+    public func stopWiggle() {
+        self.layer.removeAllAnimations()
+        self.deleteView?.removeFromSuperview()
+        self.deleteView = nil
     }
 }

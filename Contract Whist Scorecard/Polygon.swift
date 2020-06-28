@@ -135,6 +135,12 @@ class Polygon {
         return bezierPath
     }
     
+    enum ShapeType {
+        case arrowRight
+        case hexagon
+        case arrowLeft
+    }
+
     static public func angledBannerContinuationMask(view: UIView, frame: CGRect, type: ShapeType, arrowWidth: CGFloat) {
         
         let width = frame.width

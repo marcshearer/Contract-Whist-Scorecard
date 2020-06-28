@@ -28,6 +28,9 @@
 		B20A66FC1E23921E00E75190 /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20A66FB1E23921E00E75190 /* Buttons.swift */; };
 		B20A66FE1E24002400E75190 /* GameSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20A66FD1E24002300E75190 /* GameSummaryViewController.swift */; };
 		B20B1262245EFC2B001DD632 /* Contract Whist Comms Protocols.docx in Resources */ = {isa = PBXBuildFile; fileRef = B20B1261245EFC2B001DD632 /* Contract Whist Comms Protocols.docx */; };
+		B20CF54424A7BD3B00F27A9C /* PersonalDashboardLandscapeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B20CF54324A7BD3B00F27A9C /* PersonalDashboardLandscapeView.xib */; };
+		B20CF54724A7D74500F27A9C /* ShieldsDashboardLandscapeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B20CF54524A7D74500F27A9C /* ShieldsDashboardLandscapeView.xib */; };
+		B20CF54824A7D74500F27A9C /* EveryoneDashboardLandscapeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B20CF54624A7D74500F27A9C /* EveryoneDashboardLandscapeView.xib */; };
 		B20DA0401E139C450040221D /* HighScoresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DA03F1E139C450040221D /* HighScoresViewController.swift */; };
 		B20DA0441E142D1E0040221D /* SelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DA0431E142D1E0040221D /* SelectionViewController.swift */; };
 		B20DA0521E1FED040040221D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B20DA0511E1FED040040221D /* CloudKit.framework */; };
@@ -59,16 +62,15 @@
 		B227892A1FB885AC009BABCA /* ConfirmCountViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789281FB885AC009BABCA /* ConfirmCountViewController.storyboard */; };
 		B227892D1FB88BDD009BABCA /* HistoryDetailViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B227892B1FB88BDD009BABCA /* HistoryDetailViewController.storyboard */; };
 		B22789331FB88FA5009BABCA /* DataTableViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789311FB88FA5009BABCA /* DataTableViewController.storyboard */; };
-		B22789361FB8911F009BABCA /* PlayersViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789341FB8911F009BABCA /* PlayersViewController.storyboard */; };
 		B22789391FB8924C009BABCA /* HighScoresViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789371FB8924C009BABCA /* HighScoresViewController.storyboard */; };
 		B227893C1FB8932A009BABCA /* SyncViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B227893A1FB8932A009BABCA /* SyncViewController.storyboard */; };
 		B227893F1FB893C9009BABCA /* SettingsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B227893D1FB893C9009BABCA /* SettingsViewController.storyboard */; };
 		B22789421FB894AE009BABCA /* PlayerDetailViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789401FB894AE009BABCA /* PlayerDetailViewController.storyboard */; };
 		B22789451FB8951A009BABCA /* GraphViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789431FB8951A009BABCA /* GraphViewController.storyboard */; };
-		B228E3BC24A10274006D91CE /* PersonalDashboardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B228E3BB24A10274006D91CE /* PersonalDashboardView.xib */; };
+		B228E3BC24A10274006D91CE /* PersonalDashboardPortraitView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B228E3BB24A10274006D91CE /* PersonalDashboardPortraitView.xib */; };
 		B228E3BE24A10284006D91CE /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B228E3BD24A10284006D91CE /* DashboardView.swift */; };
-		B228E3C024A10ECC006D91CE /* ShieldsDashboardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B228E3BF24A10ECC006D91CE /* ShieldsDashboardView.xib */; };
-		B228E3C224A10F36006D91CE /* EveryoneDashboardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B228E3C124A10F36006D91CE /* EveryoneDashboardView.xib */; };
+		B228E3C024A10ECC006D91CE /* ShieldsDashboardPortraitView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B228E3BF24A10ECC006D91CE /* ShieldsDashboardPortraitView.xib */; };
+		B228E3C224A10F36006D91CE /* EveryoneDashboardPortraitView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B228E3C124A10F36006D91CE /* EveryoneDashboardPortraitView.xib */; };
 		B22E38DA24A05F8900D61BBA /* CountTileView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B22E38D924A05F8900D61BBA /* CountTileView.xib */; };
 		B22E38DC24A05FA100D61BBA /* CountTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22E38DB24A05FA100D61BBA /* CountTileView.swift */; };
 		B235D2BE1F82288A0019384B /* Notification Simulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B235D2BD1F82288A0019384B /* Notification Simulator.swift */; };
@@ -136,6 +138,7 @@
 		B2B1802121195FFA008D3BAA /* Contract Whist Scorecard.pages in Resources */ = {isa = PBXBuildFile; fileRef = B2B1802021195FFA008D3BAA /* Contract Whist Scorecard.pages */; };
 		B2B180252119611C008D3BAA /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B180242119611C008D3BAA /* ReviewViewController.swift */; };
 		B2B1802821196166008D3BAA /* Contract_Whist_Scorecard.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B2B1802621196166008D3BAA /* Contract_Whist_Scorecard.xcdatamodeld */; };
+		B2B2CE7324A733C00081CBFD /* PlayersViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2B2CE7224A733C00081CBFD /* PlayersViewController.storyboard */; };
 		B2B3EACD1FC0A8A0005E7989 /* Settings Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B3EACC1FC0A8A0005E7989 /* Settings Tests.swift */; };
 		B2B755051E58A2D900B1313B /* HistoryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B755041E58A2D900B1313B /* HistoryDetailViewController.swift */; };
 		B2B755091E5B363200B1313B /* History Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B755081E5B363200B1313B /* History Class.swift */; };
@@ -260,6 +263,9 @@
 		B20A66FB1E23921E00E75190 /* Buttons.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		B20A66FD1E24002300E75190 /* GameSummaryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameSummaryViewController.swift; sourceTree = "<group>"; };
 		B20B1261245EFC2B001DD632 /* Contract Whist Comms Protocols.docx */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Contract Whist Comms Protocols.docx"; sourceTree = "<group>"; };
+		B20CF54324A7BD3B00F27A9C /* PersonalDashboardLandscapeView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PersonalDashboardLandscapeView.xib; sourceTree = "<group>"; };
+		B20CF54524A7D74500F27A9C /* ShieldsDashboardLandscapeView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShieldsDashboardLandscapeView.xib; sourceTree = "<group>"; };
+		B20CF54624A7D74500F27A9C /* EveryoneDashboardLandscapeView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EveryoneDashboardLandscapeView.xib; sourceTree = "<group>"; };
 		B20DA03F1E139C450040221D /* HighScoresViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HighScoresViewController.swift; sourceTree = "<group>"; };
 		B20DA0431E142D1E0040221D /* SelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SelectionViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		B20DA04F1E1FEC5F0040221D /* Contract Whist Scorecard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Contract Whist Scorecard.entitlements"; sourceTree = "<group>"; };
@@ -294,16 +300,15 @@
 		B22789291FB885AC009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ConfirmCountViewController.storyboard; sourceTree = "<group>"; };
 		B227892C1FB88BDD009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/HistoryDetailViewController.storyboard; sourceTree = "<group>"; };
 		B22789321FB88FA5009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/DataTableViewController.storyboard; sourceTree = "<group>"; };
-		B22789351FB8911F009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/PlayersViewController.storyboard; sourceTree = "<group>"; };
 		B22789381FB8924C009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/HighScoresViewController.storyboard; sourceTree = "<group>"; };
 		B227893B1FB8932A009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SyncViewController.storyboard; sourceTree = "<group>"; };
 		B227893E1FB893C9009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SettingsViewController.storyboard; sourceTree = "<group>"; };
 		B22789411FB894AE009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/PlayerDetailViewController.storyboard; sourceTree = "<group>"; };
 		B22789441FB8951A009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/GraphViewController.storyboard; sourceTree = "<group>"; };
-		B228E3BB24A10274006D91CE /* PersonalDashboardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PersonalDashboardView.xib; sourceTree = "<group>"; };
+		B228E3BB24A10274006D91CE /* PersonalDashboardPortraitView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PersonalDashboardPortraitView.xib; sourceTree = "<group>"; };
 		B228E3BD24A10284006D91CE /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
-		B228E3BF24A10ECC006D91CE /* ShieldsDashboardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShieldsDashboardView.xib; sourceTree = "<group>"; };
-		B228E3C124A10F36006D91CE /* EveryoneDashboardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EveryoneDashboardView.xib; sourceTree = "<group>"; };
+		B228E3BF24A10ECC006D91CE /* ShieldsDashboardPortraitView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShieldsDashboardPortraitView.xib; sourceTree = "<group>"; };
+		B228E3C124A10F36006D91CE /* EveryoneDashboardPortraitView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EveryoneDashboardPortraitView.xib; sourceTree = "<group>"; };
 		B22E38D924A05F8900D61BBA /* CountTileView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CountTileView.xib; sourceTree = "<group>"; };
 		B22E38DB24A05FA100D61BBA /* CountTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountTileView.swift; sourceTree = "<group>"; };
 		B235D2BD1F82288A0019384B /* Notification Simulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification Simulator.swift"; sourceTree = "<group>"; };
@@ -371,6 +376,7 @@
 		B2B1802021195FFA008D3BAA /* Contract Whist Scorecard.pages */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Contract Whist Scorecard.pages"; sourceTree = "<group>"; };
 		B2B180242119611C008D3BAA /* ReviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		B2B1802721196166008D3BAA /* Contract_Whist_Scorecard.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Contract_Whist_Scorecard.xcdatamodel; sourceTree = "<group>"; };
+		B2B2CE7224A733C00081CBFD /* PlayersViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PlayersViewController.storyboard; sourceTree = "<group>"; };
 		B2B3EACC1FC0A8A0005E7989 /* Settings Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Settings Tests.swift"; sourceTree = "<group>"; };
 		B2B755041E58A2D900B1313B /* HistoryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDetailViewController.swift; sourceTree = "<group>"; };
 		B2B755081E5B363200B1313B /* History Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History Class.swift"; sourceTree = "<group>"; };
@@ -697,7 +703,7 @@
 		B221EEED210B1B2000F7FBA0 /* Players */ = {
 			isa = PBXGroup;
 			children = (
-				B22789341FB8911F009BABCA /* PlayersViewController.storyboard */,
+				B2B2CE7224A733C00081CBFD /* PlayersViewController.storyboard */,
 				49075FFB1E0E578E008E06FA /* PlayersViewController.swift */,
 			);
 			name = Players;
@@ -780,9 +786,12 @@
 		B228E3BA24A10243006D91CE /* Dashboard Views */ = {
 			isa = PBXGroup;
 			children = (
-				B228E3BF24A10ECC006D91CE /* ShieldsDashboardView.xib */,
-				B228E3BB24A10274006D91CE /* PersonalDashboardView.xib */,
-				B228E3C124A10F36006D91CE /* EveryoneDashboardView.xib */,
+				B228E3C124A10F36006D91CE /* EveryoneDashboardPortraitView.xib */,
+				B20CF54624A7D74500F27A9C /* EveryoneDashboardLandscapeView.xib */,
+				B228E3BF24A10ECC006D91CE /* ShieldsDashboardPortraitView.xib */,
+				B20CF54524A7D74500F27A9C /* ShieldsDashboardLandscapeView.xib */,
+				B228E3BB24A10274006D91CE /* PersonalDashboardPortraitView.xib */,
+				B20CF54324A7BD3B00F27A9C /* PersonalDashboardLandscapeView.xib */,
 				B228E3BD24A10284006D91CE /* DashboardView.swift */,
 			);
 			name = "Dashboard Views";
@@ -1404,14 +1413,13 @@
 				B22789081FB83AC4009BABCA /* WalkthroughPageViewController.storyboard in Resources */,
 				CCEA53E31DF3D19F0045292C /* Notes.txt in Resources */,
 				B22789241FB882F7009BABCA /* ClientViewController.storyboard in Resources */,
-				B22789361FB8911F009BABCA /* PlayersViewController.storyboard in Resources */,
 				B20B1262245EFC2B001DD632 /* Contract Whist Comms Protocols.docx in Resources */,
 				B243386022E57BBC002EBD40 /* ImageButton.xib in Resources */,
 				B22789451FB8951A009BABCA /* GraphViewController.storyboard in Resources */,
-				B228E3C224A10F36006D91CE /* EveryoneDashboardView.xib in Resources */,
+				B228E3C224A10F36006D91CE /* EveryoneDashboardPortraitView.xib in Resources */,
 				B2594E862251FEB2004398FB /* MyDevices.sh in Resources */,
-				B228E3C024A10ECC006D91CE /* ShieldsDashboardView.xib in Resources */,
-				B228E3BC24A10274006D91CE /* PersonalDashboardView.xib in Resources */,
+				B228E3C024A10ECC006D91CE /* ShieldsDashboardPortraitView.xib in Resources */,
+				B228E3BC24A10274006D91CE /* PersonalDashboardPortraitView.xib in Resources */,
 				B2A9096324A1BBDB00B35B69 /* DataTableTileView.xib in Resources */,
 				B22789021FB83AA7009BABCA /* SelectionViewController.storyboard in Resources */,
 				B22789331FB88FA5009BABCA /* DataTableViewController.storyboard in Resources */,
@@ -1426,6 +1434,7 @@
 				B2A9096924A1C3A000B35B69 /* DataTableTileCollectionViewCell.xib in Resources */,
 				B2C19E932370541E009485E0 /* Assets.xcassets in Resources */,
 				B221EED5210B0DFE00F7FBA0 /* HandViewController.storyboard in Resources */,
+				B20CF54824A7D74500F27A9C /* EveryoneDashboardLandscapeView.xib in Resources */,
 				B227892A1FB885AC009BABCA /* ConfirmCountViewController.storyboard in Resources */,
 				CC4CC1061DEADC32007FB24F /* LaunchScreenViewController.storyboard in Resources */,
 				B28DDAA424A3274E0029FE36 /* HighScoreTileCollectionViewCell.xib in Resources */,
@@ -1436,6 +1445,7 @@
 				B25FC7CB22D0733C00D2E651 /* ReviewViewController.storyboard in Resources */,
 				B25FC7CA22D0733C00D2E651 /* OverrideViewController.storyboard in Resources */,
 				B227891E1FB84F66009BABCA /* LocationViewController.storyboard in Resources */,
+				B2B2CE7324A733C00081CBFD /* PlayersViewController.storyboard in Resources */,
 				B247A72B248359F500591BBA /* TitleBar.xib in Resources */,
 				B243385922E0A6C3002EBD40 /* SelectedPlayersView.xib in Resources */,
 				B22789001FB83AA7009BABCA /* GetStartedViewController.storyboard in Resources */,
@@ -1444,10 +1454,12 @@
 				B248F2F8249F54EA000275DD /* DashboardViewController.storyboard in Resources */,
 				B22789421FB894AE009BABCA /* PlayerDetailViewController.storyboard in Resources */,
 				B28DDA9E24A325500029FE36 /* HighScoreTileView.xib in Resources */,
+				B20CF54424A7BD3B00F27A9C /* PersonalDashboardLandscapeView.xib in Resources */,
 				B227893C1FB8932A009BABCA /* SyncViewController.storyboard in Resources */,
 				B22789391FB8924C009BABCA /* HighScoresViewController.storyboard in Resources */,
 				B2430CC722EABD1D00C4FC77 /* SlideOutButtonView.xib in Resources */,
 				B22789181FB84A75009BABCA /* RoundSummaryViewController.storyboard in Resources */,
+				B20CF54724A7D74500F27A9C /* ShieldsDashboardLandscapeView.xib in Resources */,
 				CC4CC0FE1DEADC32007FB24F /* Main.storyboard in Resources */,
 				B2A9096724A1C15700B35B69 /* DataTableTileTableViewCell.xib in Resources */,
 				B22789121FB844CD009BABCA /* ScorepadViewController.storyboard in Resources */,
@@ -1801,14 +1813,6 @@
 				B22789321FB88FA5009BABCA /* Base */,
 			);
 			name = DataTableViewController.storyboard;
-			sourceTree = "<group>";
-		};
-		B22789341FB8911F009BABCA /* PlayersViewController.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B22789351FB8911F009BABCA /* Base */,
-			);
-			name = PlayersViewController.storyboard;
 			sourceTree = "<group>";
 		};
 		B22789371FB8924C009BABCA /* HighScoresViewController.storyboard */ = {

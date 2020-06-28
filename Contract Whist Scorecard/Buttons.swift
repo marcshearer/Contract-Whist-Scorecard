@@ -84,16 +84,12 @@ class ShadowButton: UIButton {
     required init(coder aDecoder: NSCoder) {
         self.initialising = true
         super.init(coder: aDecoder)!
-        self.addShadow()
-        self.inheritProperties()
         self.initialising = false
     }
     
     override init(frame: CGRect) {
         self.initialising = true
         super.init(frame: frame)
-        self.addShadow()
-        self.inheritProperties()
         self.initialising = false
     }
     
@@ -101,9 +97,15 @@ class ShadowButton: UIButton {
         self.cornerRadius = cornerRadius
         self.initialising = true
         super.init(frame: frame)
-        self.addShadow()
+        self.initialising = false
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.initialising = true
         self.inheritProperties()
         self.initialising = false
+        self.layoutSubviews()
     }
     
     private func inheritProperties() {
@@ -126,7 +128,7 @@ class ShadowButton: UIButton {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.addShadow(shadowSize: shadowSize)
+        self.addShadow()
     }
 }
 

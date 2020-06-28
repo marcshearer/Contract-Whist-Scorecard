@@ -14,6 +14,11 @@ import UIKit
     case highScores = 3
 }
 
+public enum Orientation: String, CaseIterable {
+    case portrait = "Portrait"
+    case landscape = "Landscape"
+}
+
 @objc protocol DashboardActionDelegate : class {
     
     func action(view: DashboardDetailType)
@@ -38,12 +43,14 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     private let everyonePage = 2
     private var currentPage = -1
     
-    private var dashboardViews: [Int:UIView] = [:]
+    private var dashboardViews: [Int:[Orientation:(name: String, view: DashboardView?)]] = [:]
+    private var currentOrientation: Orientation!
     
     private var historyViewer: HistoryViewer!
     private var statisticsViewer: StatisticsViewer!
     
     private var firstTime = true
+    private var rotated = false
     
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
     @IBOutlet private weak var bannerView: UIView!
@@ -88,27 +95,42 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         // Configure flow and set initial value
         self.carouselCollectionViewFlowLayout.delegate = self
         
-        self.carouselCollectionView.contentInset = UIEdgeInsets(top: 0.0, left: 93.75, bottom: 0.0, right: 93.75)
         self.carouselCollectionView.decelerationRate = UIScrollView.DecelerationRate.fast
         
         self.currentPage = self.personalPage
         self.addDashboardViews()
     }
 
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        self.rotated = true
+        self.view.setNeedsLayout()
+    }
+    
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+        self.currentOrientation = ScorecardUI.landscapePhone() ? .landscape : .portrait
         self.carouselCollectionView.layoutIfNeeded()
+        let width: CGFloat = self.carouselCollectionView.frame.width / 4
+        self.carouselCollectionView.contentInset = UIEdgeInsets(top: 0.0, left: width, bottom: 0.0, right: width)
         self.carouselCollectionView.reloadData()
         self.carouselCollectionView.layoutIfNeeded()
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if firstTime {
+        if self.firstTime || self.rotated {
+            self.carouselCollectionView.layoutIfNeeded()
             self.carouselCollectionView.contentOffset = CGPoint(x: self.carouselCollectionView.bounds.width / 4.0, y: 0.0)
-            self.changed(carouselCollectionView, itemAtCenter: self.personalPage, forceScroll: true)
-        self.carouselCollectionView.reloadData()
-        self.firstTime = false
+            let selectedPage = (firstTime ? self.personalPage : self.currentPage)
+            self.changed(carouselCollectionView, itemAtCenter: selectedPage, forceScroll: true)
+            self.carouselCollectionView.reloadData()
+            if self.rotated {
+                self.hideOrientationViews(not: self.currentOrientation)
+                self.reloadData()
+            }
+            self.firstTime = false
+            self.rotated = false
         }
     }
     
@@ -119,8 +141,14 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     private func reloadData() {
         Utility.mainThread {
-            for (_, dashboardView) in self.dashboardViews {
-                self.reloadData(for: dashboardView)
+            for (_, orientationViews) in self.dashboardViews {
+                for (orientation, dashboardView) in orientationViews {
+                    if orientation == self.currentOrientation {
+                        if let view = dashboardView.view {
+                            self.reloadData(for: view)
+                        }
+                    }
+                }
             }
         }
     }
@@ -240,14 +268,15 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         
     internal func changed(_ collectionView: UICollectionView, itemAtCenter: Int, forceScroll: Bool) {
         Utility.mainThread {
-            if self.currentPage != itemAtCenter || forceScroll == true {
-                for page in 0..<self.pages {
-                    self.dashboardViews[page]!.isHidden = false
-                }
+            let changed = self.currentPage != itemAtCenter
+            if changed || forceScroll == true {
+                let oldView = self.getView(page: self.currentPage)
+                let newView = self.getView(page: itemAtCenter)
+                newView.isHidden = false
                 Utility.animate(duration: self.firstTime ? 0.0 : 0.5,
                     completion: {
-                        for page in 0..<self.pages {
-                            self.dashboardViews[page]!.isHidden = (page != self.currentPage)
+                        if changed {
+                            oldView.isHidden = true
                         }
                     },
                     animations: {
@@ -274,42 +303,66 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                             cell.titleLabel.alpha = 1.0
                         }
                         self.scrollCollectionView.reloadData()
-                        for page in 0..<self.pages {
-                            self.dashboardViews[page]!.alpha = (page == self.currentPage ? 1.0 : 0.0)
+                        if changed {
+                            oldView.alpha = 0.0
                         }
+                        newView.alpha = 1.0
                     })
+                        
             }
         }
     }
-    
-    private func selectPage(_ page: Int) {
-        for pageNo in 0..<self.pages {
-            self.dashboardViews[pageNo]!.alpha = (pageNo == page ? 1.0 : 0.0)
-        }
-    }
-    
+
     // MARK: - Add dashboard views ================================================================== -
     
     private func addDashboardViews() {
+        
         for page in 0..<pages {
-            var nibName = ""
-            switch page {
-            case shieldsPage:
-                nibName = "ShieldsDashboardView"
-            case personalPage:
-                nibName = "PersonalDashboardView"
-            case everyonePage:
-                nibName = "EveryoneDashboardView"
-            default:
-                break
+            self.dashboardViews[page] = [:]
+            for orientation in Orientation.allCases {
+                var nibName = ""
+                switch page {
+                case shieldsPage:
+                    nibName = "ShieldsDashboard\(orientation.rawValue)View"
+                case personalPage:
+                    nibName = "PersonalDashboard\(orientation.rawValue)View"
+                case everyonePage:
+                    nibName = "EveryoneDashboard\(orientation.rawValue)View"
+                default:
+                    break
+                }
+                self.dashboardViews[page]![orientation] = (nibName, nil)
             }
-            let view = DashboardView(withNibName: nibName, frame: self.dashboardContainerView.frame)
+        }
+    }
+    
+    private func hideOrientationViews(not notOrientation: Orientation) {
+        for (_, orientationViews) in self.dashboardViews {
+            for (orientation, viewInfo) in orientationViews {
+                if orientation != notOrientation {
+                    if let view = viewInfo.view {
+                        view.alpha = 0.0
+                        view.isHidden = true
+                    }
+                }
+            }
+        }
+    }
+    
+    private func getView(page: Int) -> DashboardView {
+        var view: DashboardView
+        let viewInfo = self.dashboardViews[page]![self.currentOrientation]!
+        if viewInfo.view == nil {
+            view = DashboardView(withNibName: viewInfo.name, frame: self.dashboardContainerView.frame)
             view.alpha = 0.0
             view.delegate = self
-            self.dashboardViews[page] = view
+            self.dashboardViews[page]![self.currentOrientation]!.view = view
             self.dashboardContainerView.addSubview(view)
             Constraint.anchor(view: self.dashboardContainerView, control: view, attributes: .leading, .trailing, .top, .bottom)
+        } else {
+            view = viewInfo.view!
         }
+        return view
     }
     
     // MARK: - Functions to present other views ========================================================== -

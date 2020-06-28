@@ -153,6 +153,37 @@ import CoreData
         }
     }
     
+    public func copy() -> PlayerDetail {
+        let result = PlayerDetail()
+        result.name = self.name
+        result.nameDate = self.nameDate
+        result.playerUUID = self.playerUUID
+        result.emailDate = self.emailDate
+        result.visibleLocally = self.visibleLocally
+        result.dateCreated = self.dateCreated
+        result.localDateCreated = self.localDateCreated
+        result.datePlayed = self.datePlayed
+        result.externalId = self.externalId
+        result.tempEmail = self.tempEmail
+        result.gamesPlayed = self.gamesPlayed
+        result.gamesWon = self.gamesWon
+        result.handsPlayed = self.handsPlayed
+        result.handsMade = self.handsMade
+        result.twosMade = self.twosMade
+        result.totalScore = self.totalScore
+        result.maxScore = self.maxScore
+        result.maxScoreDate = self.maxScoreDate
+        result.maxMade = self.maxMade
+        result.maxMadeDate = self.maxMadeDate
+        result.maxTwos = self.maxTwos
+        result.maxTwosDate = self.maxTwosDate
+        result.syncDate = self.syncDate
+        result.syncRecordID = self.syncRecordID
+        result.thumbnail = self.thumbnail
+        result.thumbnailDate = self.thumbnailDate
+        
+        return result
+    }
     
     public func toManagedObject(playerMO: PlayerMO, updateThumbnail: Bool = true) {
         // Doesn't set thumbnail or date as they are downloaded separately and update direct

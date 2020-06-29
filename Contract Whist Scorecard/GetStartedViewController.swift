@@ -136,12 +136,13 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
-        
-        if self.firstTime {
+
+        if self.firstTime || self.rotated {
             self.setupSizes()
             self.setupControls()
-            self.change(section: .downloadPlayers)
+            if self.firstTime {
+                self.change(section: .downloadPlayers)
+            }
             self.roundCorners()
         }
         
@@ -149,6 +150,8 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
             // Resize player selection
             self.showPlayerSelection()
         }
+        
+        self.getStartedLabel.isHidden = (ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone())
         
         self.rotated = false
     }
@@ -598,6 +601,10 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     }
     
     private func roundCorners() {
+        self.downloadPlayersView.layoutIfNeeded()
+        self.createPlayerView.layoutIfNeeded()
+        self.createPlayerSettingsView.layoutIfNeeded()
+        self.playerSelectionView.layoutIfNeeded()
         self.downloadPlayersView.roundCorners(cornerRadius: 8.0, topRounded: false, bottomRounded: true)
         self.createPlayerView.roundCorners(cornerRadius: 8.0, topRounded: false, bottomRounded: true)
         self.createPlayerSettingsView.roundCorners(cornerRadius: 8.0, topRounded: true, bottomRounded: true)

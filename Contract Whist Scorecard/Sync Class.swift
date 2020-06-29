@@ -191,19 +191,24 @@ class Sync {
             case .syncGetPlayers:
                 // General request to get any players linked to currently loaded players or a specific email - now using links
                 syncPhases = [.phaseGetVersion,
+                              .phaseReplaceTemporaryPlayerUUIDs,
                               .phaseGetLinkedPlayers,
                               .phaseGetPlayerList]
             case .syncGetPlayerDetails:
                 // Download the player records for each player in the list of specific playerUUIDs
                 // Note that this is only intended for players who are not already on this device
                 syncPhases = [.phaseGetVersion,
+                              .phaseReplaceTemporaryPlayerUUIDs,
                               .phaseGetPlayerList]
             }
             
-            if okToSyncWithTemporaryPlayerUUIDs || !Sync.temporaryPlayerUUIDs || syncPhases.first(where: {$0 == .phaseReplaceTemporaryPlayerUUIDs}) == nil {
+            if !okToSyncWithTemporaryPlayerUUIDs && Sync.temporaryPlayerUUIDs && syncPhases.first(where: {$0 == .phaseReplaceTemporaryPlayerUUIDs}) != nil {
                 // Only allow sync which will update temporary player UUIDs from 'safe' places
                 // where we can cope with player UUIDs being changed when we have some temporary ones
-                
+                if Utility.isDevelopment {
+                    fatalError("Sync will be skipped")
+                }
+            } else {
                 syncPhaseCount = -1
                 if Sync.syncInProgress {
                     self.syncMessage("Waiting for previous operation to finish")

@@ -22,6 +22,8 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
     private var playerObserver: NSObjectProtocol?
     private var imageObserver: NSObjectProtocol?
     
+    private var playerDetailList: [PlayerDetail]!
+    
     private var removing: Bool = false
     
     // UI properties
@@ -86,14 +88,18 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
         playerObserver = setPlayerDownloadNotification(name: .playerDownloaded)
         imageObserver = setPlayerDownloadNotification(name: .playerImageDownloaded)
         
+        // Set up player list
+        self.playerDetailList = Scorecard.shared.playerDetailList()
+        
         self.collectionView.contentInset = UIEdgeInsets(top: self.spacing, left: self.spacing, bottom: self.spacing, right: self.spacing)
+        
+        // Update from cloud
+        self.updatePlayersFromCloud()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        // Update from cloud
-        self.updatePlayersFromCloud()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -126,7 +132,7 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return Scorecard.shared.playerList.count
+        return self.playerDetailList.count
     }
     
    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -138,7 +144,7 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Player Cell", for: indexPath) as! PlayerCell
         self.defaultCellColors(cell: cell)
         
-        cell.thumbnail.set(playerMO: Scorecard.shared.playerList[indexPath.item], nameHeight: 20, diameter: self.cellWidth - (thumbnailInset * 2))
+        cell.thumbnail.set(playerMO: self.playerDetailList[indexPath.item].playerMO, nameHeight: 20, diameter: self.cellWidth - (thumbnailInset * 2))
         cell.set(thumbnailInset: self.thumbnailInset)
         if self.removing {
             cell.thumbnail.startWiggle()
@@ -158,15 +164,16 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
     }
     
     func amendPlayer(at indexPath: IndexPath) {
-        let playerMO = Scorecard.shared.playerList[indexPath.item]
-        let playerDetail = PlayerDetail()
-        playerDetail.fromManagedObject(playerMO: playerMO)
+        let playerDetail = self.playerDetailList[indexPath.row]
         PlayerDetailViewController.show(from: self, playerDetail: playerDetail, mode: .amend, sourceView: self.view)
         { (playerDetail, deletePlayer) in
             if playerDetail != nil {
                 if deletePlayer {
                     // Remove it
-                    self.collectionView.deleteItems(at: [indexPath])
+                    self.collectionView.performBatchUpdates({
+                        self.playerDetailList.remove(at: indexPath.item)
+                        self.collectionView.deleteItems(at: [indexPath])
+                    })
                 } else {
                     // Refresh updated player
                     self.collectionView.reloadItems(at: [indexPath])
@@ -176,29 +183,37 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
     }
     
     func removePlayer(at indexPath: IndexPath) {
-        let playerMO = Scorecard.shared.playerList[indexPath.item]
-        self.alertDecision("This will remove the player \n'\(playerMO.name!)'\nfrom this device.\n\nIf you have synchronised with iCloud the player will still be available to download in future.\n Otherwise this will remove their details permanently.\n\n Are you sure you want to do this?", title: "Warning", okButtonText: "Remove", okHandler: {
-            self.collectionView.performBatchUpdates({
-                // Remove from core data, the player list and the collection view etc
-                
-                // Remove from email cache
-                Scorecard.shared.playerEmails[playerMO.playerUUID!] = nil
-                
-                if CoreData.update(updateLogic: {
-                    CoreData.delete(record: playerMO)
-                }) {
+        if let playerMO = self.playerDetailList[indexPath.item].playerMO {
+            self.alertDecision("This will remove the player \n'\(playerMO.name!)'\nfrom this device.\n\nIf you have synchronised with iCloud the player will still be available to download in future.\n Otherwise this will remove their details permanently.\n\n Are you sure you want to do this?", title: "Warning", okButtonText: "Remove", okHandler: {
+                self.collectionView.performBatchUpdates({
+                    // Remove from core data, the player list and the collection view etc
+                    
+                    // Remove from email cache
+                    Scorecard.shared.playerEmails[playerMO.playerUUID!] = nil
+                    
+                    // Remove from player list
+                    if let index = Scorecard.shared.playerList.firstIndex(where: {$0.playerUUID == playerMO.playerUUID}) {
+                        Scorecard.shared.playerList.remove(at: index)
+                    }
+                    
+                    // Remove from collection view and player detail list
+                    self.collectionView.deleteItems(at: [indexPath])
+                    self.playerDetailList.remove(at: indexPath.item)
+                                    
+                    // Stop wiggling
                     if let cell = self.collectionView.cellForItem(at: indexPath) as? PlayerCell {
                         cell.thumbnail?.stopWiggle()
                     }
-                                    
-                    Scorecard.shared.playerList.remove(at: indexPath.item)
-                    self.collectionView.deleteItems(at: [indexPath])
                     
-                    // Save to iCloud
-                    Scorecard.settings.saveToICloud()
-                }
+                    if CoreData.update(updateLogic: {
+                        CoreData.delete(record: playerMO)
+                    }) {
+                        // Save to iCloud
+                        Scorecard.settings.saveToICloud()
+                    }
+                })
             })
-        })
+        }
     }
     
     // MARK: Sync handlers =============================================================== -
@@ -233,7 +248,7 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
     func updatePlayer(objectID: NSManagedObjectID) {
         // Find any cells containing an image/player which has just been downloaded asynchronously
         Utility.mainThread {
-            let index = Scorecard.shared.playerList.firstIndex(where: {($0.objectID == objectID)})
+            let index = self.playerDetailList.firstIndex(where: {($0.objectID == objectID)})
             if index != nil {   
                 // Found it - reload the cell
                 self.collectionView.reloadItems(at: [IndexPath(row: index!, section: 0)])
@@ -263,15 +278,16 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
     private func showSelectPlayers() {
         _ = SelectPlayersViewController.show(from: self, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: true, completion: { (selected, playerList, selection, thisPlayerUUID) in
             if selected != nil {
+                self.playerDetailList = Scorecard.shared.playerDetailList()
                 self.collectionView.reloadData()
             }
         })
     }
     
     private func forEachCell(_ action: (String, PlayerCell)->()) {
-        for (item, playerMO) in Scorecard.shared.playerList.enumerated() {
+        for (item, playerDetail) in self.playerDetailList.enumerated() {
             if let cell = self.collectionView.cellForItem(at: IndexPath(item: item, section: 0)) as? PlayerCell {
-                action(playerMO.playerUUID!, cell)
+                action(playerDetail.playerUUID, cell)
             }
         }
     }

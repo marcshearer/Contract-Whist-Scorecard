@@ -54,11 +54,12 @@
                                         <constraints>
                                             <constraint firstItem="c4U-wl-OyD" firstAttribute="top" secondItem="PDh-wl-4sL" secondAttribute="top" id="2JS-Sc-Slu"/>
                                             <constraint firstAttribute="height" constant="44" id="4bY-IQ-pfx"/>
-                                            <constraint firstItem="qNV-ic-DSF" firstAttribute="leading" secondItem="PDh-wl-4sL" secondAttribute="leading" constant="12" id="5Dd-0a-oeh"/>
+                                            <constraint firstItem="qNV-ic-DSF" firstAttribute="leading" secondItem="9L6-QS-Wnw" secondAttribute="leading" constant="12" id="5Dd-0a-oeh"/>
                                             <constraint firstItem="c4U-wl-OyD" firstAttribute="leading" secondItem="PDh-wl-4sL" secondAttribute="leading" id="6ZV-Te-7Kt"/>
                                             <constraint firstItem="qNV-ic-DSF" firstAttribute="centerY" secondItem="c4U-wl-OyD" secondAttribute="centerY" id="eZN-PN-ijN"/>
                                             <constraint firstAttribute="trailing" secondItem="c4U-wl-OyD" secondAttribute="trailing" id="nnV-Oe-XlX"/>
                                         </constraints>
+                                        <viewLayoutGuide key="safeArea" id="9L6-QS-Wnw"/>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UqW-zK-oba" userLabel="Button Container">
                                         <rect key="frame" x="0.0" y="44" width="414" height="97.5"/>
@@ -227,6 +228,7 @@
                             <constraint firstItem="4L5-Yq-y5K" firstAttribute="leading" secondItem="elD-t0-vy2" secondAttribute="leading" id="ErU-0W-I4F"/>
                             <constraint firstAttribute="bottom" secondItem="4L5-Yq-y5K" secondAttribute="bottom" id="GM6-21-gib"/>
                             <constraint firstItem="4L5-Yq-y5K" firstAttribute="top" secondItem="aNJ-zj-39E" secondAttribute="bottom" id="Mti-s5-8Qa"/>
+                            <constraint firstItem="aNJ-zj-39E" firstAttribute="height" secondItem="Dgm-Gz-P9f" secondAttribute="height" multiplier="10:38" id="Nfg-DN-RZp"/>
                             <constraint firstItem="Akq-MH-10N" firstAttribute="top" secondItem="Dgm-Gz-P9f" secondAttribute="top" id="Os6-nN-YKe"/>
                             <constraint firstItem="Akq-MH-10N" firstAttribute="trailing" secondItem="Dgm-Gz-P9f" secondAttribute="trailing" id="WNh-rL-e5C"/>
                             <constraint firstItem="aNJ-zj-39E" firstAttribute="height" secondItem="Dgm-Gz-P9f" secondAttribute="height" multiplier="6:38" id="b5b-aS-PyS"/>
@@ -235,6 +237,22 @@
                             <constraint firstItem="aNJ-zj-39E" firstAttribute="top" secondItem="Akq-MH-10N" secondAttribute="bottom" id="jw7-sI-64h"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="elD-t0-vy2"/>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="Nfg-DN-RZp"/>
+                                <exclude reference="b5b-aS-PyS"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=compact">
+                            <mask key="constraints">
+                                <include reference="Nfg-DN-RZp"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=regular">
+                            <mask key="constraints">
+                                <include reference="b5b-aS-PyS"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="addPlayerButton" destination="d4C-tb-O65" id="IBf-Um-TJC"/>

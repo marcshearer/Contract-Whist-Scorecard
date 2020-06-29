@@ -10,6 +10,8 @@ import UIKit
 
 class RoundedButton: UIButton {
     
+    private var cornerRadius: CGFloat = 5.0
+    
     var normalTextColor = Palette.darkHighlightText
     var normalBackgroundColor = Palette.darkHighlight
     var normalTextAlpha: CGFloat = 1.0
@@ -46,17 +48,20 @@ class RoundedButton: UIButton {
     }
     
     func toCircle() {
-        self.layer.cornerRadius = self.layer.bounds.height / 2
+        self.cornerRadius = self.layer.bounds.height / 2
+        self.layer.cornerRadius = self.cornerRadius
         self.layer.masksToBounds = true
     }
     
-    func toRounded(cornerRadius: CGFloat = 5.0) {
-        self.layer.cornerRadius = cornerRadius
+    func toRounded(cornerRadius: CGFloat? = nil) {
+        self.cornerRadius = cornerRadius ?? self.cornerRadius
+        self.layer.cornerRadius = self.cornerRadius
         self.layer.masksToBounds = true
     }
     
     func toUnrounded() {
-        self.layer.cornerRadius = 0
+        self.cornerRadius = 0.0
+        self.layer.cornerRadius = 0.0
         self.layer.masksToBounds = false
     }
     

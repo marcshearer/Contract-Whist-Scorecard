@@ -375,7 +375,9 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
             self.sync?.delegate = self
             
             // Get related players from cloud
-            _ = self.sync?.synchronise(syncMode: .syncGetPlayers, specificEmail: self.specificEmail, waitFinish: true)
+            if !(self.sync?.synchronise(syncMode: .syncGetPlayers, specificEmail: self.specificEmail, waitFinish: true, okToSyncWithTemporaryPlayerUUIDs: true) ?? false) {
+                self.syncCompletion(-1)
+            }
         }
         
         sync = Sync()

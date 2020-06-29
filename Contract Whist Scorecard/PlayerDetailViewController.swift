@@ -338,7 +338,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
                 cell.inputField.tag = self.emailFieldTag
                 cell.inputField.isSecureTextEntry = (self.mode != .create && self.mode != .download && self.mode != .downloaded)
                 cell.inputField.attributedPlaceholder = NSAttributedString(string: "Unique identifier - must not be blank", attributes:[NSAttributedString.Key.font: UIFont.systemFont(ofSize: 15.0, weight: .thin)])
-                cell.inputField.isEnabled = false
+                cell.inputField.isEnabled = true
                 self.addTargets(cell.inputField)
                 self.emailCell = cell
                 if mode == .download {

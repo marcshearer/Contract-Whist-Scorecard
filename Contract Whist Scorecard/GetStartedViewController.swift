@@ -358,7 +358,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
             playerDetail.name = textField.text!
         case self.createIDFieldTag:
             // PlayerUUID
-            playerDetail.playerUUID = textField.text!
+            playerDetail.tempEmail = textField.text!
         default:
             break
         }
@@ -372,6 +372,8 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
         } else if textField.tag == downloadFieldTag {
             self.showSelectPlayers()
         } else {
+            // Update field - to get any shortcut expansion
+            self.textFieldDidChange(textField)
             // Try to move to next text field - resign if none found
             if textField.tag == self.createNameFieldTag {
                 self.createPlayerIDTextField.becomeFirstResponder()
@@ -428,7 +430,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     
     private func updatePlayerControls() {
         self.createPlayerNameTextField.text = self.playerDetail.name
-        self.createPlayerIDTextField.text = self.playerDetail.playerUUID
+        self.createPlayerIDTextField.text = self.playerDetail.tempEmail
         if let playerMO = self.playerDetail.playerMO {
             self.createPlayerImagePickerPlayerView.set(playerMO: playerMO)
         } else {

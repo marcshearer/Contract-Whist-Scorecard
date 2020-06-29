@@ -66,7 +66,6 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     @IBOutlet private weak var bannerContinuation: BannerContinuation!
     @IBOutlet private weak var syncMessage: UILabel!
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
-    @IBOutlet private weak var scrollView: UIScrollView!
     @IBOutlet private weak var winnerCollectionView: UICollectionView!
     @IBOutlet private weak var winnerCollectionViewWidth: NSLayoutConstraint!
     @IBOutlet private weak var otherCollectionView: UICollectionView!

@@ -39,6 +39,9 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     
     // MARK: - IB Outlets ============================================================================== -
     
+    @IBOutlet private weak var contentView: UIView!
+    @IBOutlet private weak var contentViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var scrollView: UIScrollView!
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
     @IBOutlet private weak var topSection: UIView!
     @IBOutlet private weak var bottomSection: UIView!
@@ -138,6 +141,10 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
         super.viewDidLayoutSubviews()
 
         if self.firstTime || self.rotated {
+            self.contentViewHeightConstraint.constant =
+                (ScorecardUI.landscapePhone() ? ScorecardUI.screenWidth
+                    : self.view.frame.height - self.view.safeAreaInsets.top)
+            self.contentView.layoutIfNeeded()
             self.setupSizes()
             self.setupControls()
             if self.firstTime {
@@ -150,9 +157,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
             // Resize player selection
             self.showPlayerSelection()
         }
-        
-        self.getStartedLabel.isHidden = (ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone())
-        
+                
         self.rotated = false
     }
     
@@ -218,7 +223,8 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
             self.thisPlayerThumbnailView.isHidden = false
         } else {
             self.titleLabel.isHidden = false
-            self.titleLabel.isHidden = false
+            self.getStartedLabel.isHidden = ScorecardUI.smallPhoneSize()
+
             self.thisPlayerThumbnailView.isHidden = true
         }
     }

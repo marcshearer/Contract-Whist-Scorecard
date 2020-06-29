@@ -11,15 +11,15 @@
         <!--Select Players-->
         <scene sceneID="mtf-Vh-4qJ">
             <objects>
-                <viewController storyboardIdentifier="SelectPlayersViewController" title="Select Players" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FdF-BR-2d1" customClass="SelectPlayersViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SelectPlayersViewController" title="Select Players" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FdF-BR-2d1" customClass="SelectPlayersViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8Be-gQ-047" userLabel="Select Players View">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="veY-xK-eSr" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="veY-xK-eSr" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
                             </view>
-                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M8e-Hu-tx9" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M8e-Hu-tx9" customClass="NavigationBar" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="dJz-jT-aH4"/>
@@ -27,7 +27,7 @@
                                 <items>
                                     <navigationItem title="Add" largeTitleDisplayMode="always" id="m6r-TL-1uc">
                                         <barButtonItem key="leftBarButtonItem" id="oFN-gk-zJZ">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="c4B-zY-SXT" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="c4B-zY-SXT" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
                                                 <rect key="frame" x="16" y="0.0" width="100" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" image="home"/>
@@ -37,7 +37,7 @@
                                             </button>
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" id="FuI-M5-ypT">
-                                            <button key="customView" hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="aOg-wh-Kl7" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <button key="customView" hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="aOg-wh-Kl7" customClass="RightClearButton" customModule="Whist_2" customModuleProvider="target">
                                                 <rect key="frame" x="262" y="0.0" width="97" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Add" image="forward">
@@ -59,7 +59,7 @@
                                 <rect key="frame" x="0.0" y="94" width="375" height="573"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Action Cell" rowHeight="70" id="Uhm-2P-vCR" customClass="SelectPlayersCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Action Cell" rowHeight="70" id="Uhm-2P-vCR" customClass="SelectPlayersCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Uhm-2P-vCR" id="9h3-xX-aoU">
@@ -68,7 +68,7 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="Clear"/>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Player Cell" rowHeight="70" id="tsN-dZ-Zmr" customClass="SelectPlayersCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Player Cell" rowHeight="70" id="tsN-dZ-Zmr" customClass="SelectPlayersCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="98" width="375" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="tsN-dZ-Zmr" id="lKd-uw-dvN">

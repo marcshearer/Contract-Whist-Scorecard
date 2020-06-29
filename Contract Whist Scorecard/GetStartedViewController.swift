@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerViewImagePickerDelegate, PlayerSelectionViewDelegate {
+class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerSelectionViewDelegate, CreatePlayerViewDelegate {    
 
     private enum Section: CGFloat {
         case downloadPlayers = 0
@@ -20,8 +20,6 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     private var location = Location()
     private var completion: (()->())?
     private var section: Section = .downloadPlayers
-    private var playerDetail = PlayerDetail()
-    private var createPlayerImagePickerPlayerView: PlayerView!
     private var rotated = false
     private var firstTime = true
     private var imageObserver: NSObjectProtocol?
@@ -29,13 +27,12 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     private let separatorHeight: CGFloat = 20.0
     private var containerHeight: CGFloat = 0.0
     private var playerSelectionViewHeight: CGFloat = 0.0
+    private var overlap: CGFloat = 0.0
 
     private let downloadPlayers = 1
     private let createPlayer = 2
 
-    private var createNameFieldTag = 1
-    private var createIDFieldTag = 2
-    private var downloadFieldTag = 3
+    private var downloadFieldTag = 1
     
     // MARK: - IB Outlets ============================================================================== -
     
@@ -56,6 +53,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     @IBOutlet private weak var playerSelectionView: PlayerSelectionView!
     @IBOutlet private weak var playerSelectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var playerSelectionViewTopConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var playerSelectionViewBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var inputClippingContainerView: UIView!
     @IBOutlet private weak var inputClippingContainerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var downloadPlayersTitleBar: TitleBar!
@@ -67,7 +65,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     @IBOutlet private weak var createPlayerClippingContainerView: UIView!
     @IBOutlet private weak var createPlayerClippingContainerTopConstraint: NSLayoutConstraint!
     @IBOutlet private weak var createPlayerClippingContainerHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var createPlayerView: UIView!
+    @IBOutlet private weak var createPlayerView: CreatePlayerView!
     @IBOutlet private weak var createPlayerContainerView: UIView!
     @IBOutlet private weak var createPlayerContainerTopConstraint: NSLayoutConstraint!
     @IBOutlet private weak var createPlayerContainerHeightConstraint: NSLayoutConstraint!
@@ -77,14 +75,8 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     @IBOutlet private weak var createPlayerSettingsContainerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var downloadIdentifierTextField: UITextField!
     @IBOutlet private weak var downloadButton: RoundedButton!
-    @IBOutlet private weak var createPlayerNameTextField: UITextField!
-    @IBOutlet private weak var createPlayerNameErrorLabel: UILabel!
-    @IBOutlet private weak var createPlayerIDErrorLabel: UILabel!
-    @IBOutlet private weak var createPlayerIDTextField: UITextField!
-    @IBOutlet private weak var createPlayerImageContainerView: UIView!
     @IBOutlet private weak var createPlayerSettingsTitleLabel: UILabel!
     @IBOutlet private weak var smallFormatHomeButton: ClearButton!
-    @IBOutlet private weak var smallFormatCreatePlayerButton: RoundedButton!
     @IBOutlet private var actionButton: [RoundedButton]!
     @IBOutlet private var formLabel: [UILabel]!
     @IBOutlet private var settingsOnLineGamesEnabledSwitch: [UISwitch]!
@@ -98,10 +90,6 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     
     @IBAction func homeButtonPressed(_ sender: UIButton) {
         self.dismiss()
-    }
-
-    @IBAction func createPlayerButtonPressed(_ sender: UIButton) {
-        self.createNewPlayer()
     }
 
     @IBAction func thisPlayerChangeButtonPressed(_ sender: UIButton) {
@@ -122,7 +110,6 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
         super.viewDidLoad()
         
         self.initialise()
-        self.setupImagePickerPlayerView() // needs to be before colors are set
         self.setupDefaultColors()
         self.showThisPlayer()
         
@@ -171,6 +158,9 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     private func initialise() {
         self.setOnlineGamesEnabled(Scorecard.settings.onlineGamesEnabled)
         self.setSaveLocation(Scorecard.settings.saveLocation)
+        
+        self.playerSelectionView.set(parent: self)
+        self.playerSelectionView.delegate = self
     }
     
     private func setOnlineGamesEnabled(_ enabled: Bool) {
@@ -188,29 +178,17 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     private func enableControls() {
         self.thisPlayerChangeButton.isHidden = (Scorecard.shared.playerList.count <= 1)
         let homeEnabled = !Scorecard.shared.playerList.isEmpty && Scorecard.settings.thisPlayerUUID != ""
-        let createEnabled = self.playerNameValid() && self.playerIDValid()
         switch self.section {
         case .downloadPlayers:
             self.downloadButton.isEnabled(self.downloadIdentifierTextField.text != "")
             self.actionButton.forEach{(button) in button.isEnabled(homeEnabled)}
         case .createPlayer:
-            self.actionButton.forEach{(button) in button.isEnabled(createEnabled)}
-            self.smallFormatCreatePlayerButton.isEnabled(createEnabled)
-            self.createPlayerNameErrorLabel.isHidden = self.playerNameValid(allowBlank: true)
-            self.createPlayerIDErrorLabel.isHidden = self.playerIDValid(allowBlank: true)
+            // Handled in CreatePlayerView
+            break
         case .createPlayerSettings:
             self.actionButton.forEach{(button) in button.isEnabled(homeEnabled)}
         }
         self.smallFormatHomeButton.isEnabled(homeEnabled)
-    }
-    
-    private func playerNameValid(allowBlank: Bool = false) -> Bool {
-        (allowBlank || self.playerDetail.name != "") && !Scorecard.shared.isDuplicateName(self.playerDetail)
-    }
-    
-    private func playerIDValid(allowBlank: Bool = false) -> Bool {
-        return (allowBlank || self.playerDetail.playerUUID != "") && !Scorecard.shared.isDuplicatePlayerUUID(self.playerDetail)
-
     }
     
     private func showThisPlayer() {
@@ -280,6 +258,8 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
                 case .downloadPlayers:
                     // Push the create player input view down so that it is hidden (as the clipping window is slightly too big to allow for shadow)
                     self.createPlayerClippingContainerTopConstraint.constant = 20
+                case .createPlayer:
+                    self.createPlayerView.didBecomeActive()
                 default:
                     // Remove the shadow from the now hidden view as you get a line otherwise
                     self.downloadPlayersContainerView.removeShadow()
@@ -304,6 +284,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
                 if section != .createPlayer {
                     // Remove the shadow from the now hidden view as you get a line otherwise
                     self.createPlayerContainerView.removeShadow()
+                    self.createPlayerView.didBecomeActive()
                 }
             }, animations: {
                 // Slide up/down to the right view
@@ -361,106 +342,59 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     }
     
     @objc func textFieldDidChange(_ textField: UITextField) {
-        switch textField.tag {
-        case self.createNameFieldTag:
-            // Name
-            playerDetail.name = textField.text!
-        case self.createIDFieldTag:
-            // PlayerUUID
-            playerDetail.tempEmail = textField.text!
-        default:
-            break
-        }
         self.enableControls()
     }
     
     @objc func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField.text == "" {
-            // Don't allow blank name
+            // Don't allow blank field
             return false
         } else if textField.tag == downloadFieldTag {
             self.showSelectPlayers()
-        } else {
-            // Update field - to get any shortcut expansion
-            self.textFieldDidChange(textField)
-            // Try to move to next text field - resign if none found
-            if textField.tag == self.createNameFieldTag {
-                self.createPlayerIDTextField.becomeFirstResponder()
-            } else {
-                textField.resignFirstResponder()
-            }
         }
         return true
     }
+    
+    // MARK: - Create Player Delegate ============================================================= -
+    
+    internal func playerCreated(playerDetail: PlayerDetail) {
+        if Scorecard.settings.thisPlayerUUID == "" {
+            self.setThisPlayer(playerUUID: playerDetail.playerUUID)
+        }
+        self.change(section: .createPlayerSettings)
+    }
+
+
 
     // MARK: - Button delegate ==================================================================== -
     
     internal func buttonPressed(_ button: UIView) {
         switch button.tag {
         case downloadPlayers:
-            self.alertDecision(if: (self.playerDetail.name != "" || self.playerDetail.name != "" || self.playerDetail.thumbnail != nil), "You have not created this player yet.\nIf you continue you may lose the details you have entered.\nUse the 'Create New Player' button to create this player.\n\nAre you sure you want to leave this option?", title: "Warning", okButtonText: "Confirm", okHandler: {self.change(section: .downloadPlayers)}, cancelButtonText: "Cancel")
-            self.downloadIdentifierTextField.becomeFirstResponder()
+            self.createPlayerView.willBecomeInactive {
+                self.change(section: .downloadPlayers)
+                self.downloadIdentifierTextField.becomeFirstResponder()
+            }
         
         case createPlayer:
             self.change(section: .createPlayer)
-            self.createPlayerNameTextField.becomeFirstResponder()
             
         default:
             break
         }
     }
     
-    // MARK: - Image picker delegates ================================================================= -
-    
-    internal func playerViewImageChanged(to thumbnail: Data?) {
-        playerDetail.thumbnail = thumbnail
-        if thumbnail != nil {
-            playerDetail.thumbnailDate = Date()
-        } else {
-            playerDetail.thumbnailDate = nil
-        }
-        self.enableControls()
-    }
-    
-    // MARK: - Create player ========================================================================== -
-
-    private func createNewPlayer() {
-        if playerDetail.createMO(saveToICloud: false) != nil {
-            if Scorecard.settings.thisPlayerUUID == "" {
-                self.setThisPlayer(playerUUID: playerDetail.playerUUID)
-            } else {
-                Scorecard.settings.save()
-            }
-            self.playerDetail = PlayerDetail()
-            self.updatePlayerControls()
-            self.change(section: .createPlayerSettings)
-        }
-    }
-    
-    private func updatePlayerControls() {
-        self.createPlayerNameTextField.text = self.playerDetail.name
-        self.createPlayerIDTextField.text = self.playerDetail.tempEmail
-        if let playerMO = self.playerDetail.playerMO {
-            self.createPlayerImagePickerPlayerView.set(playerMO: playerMO)
-        } else {
-            self.createPlayerImagePickerPlayerView.set(data: nil)
-        }
-    }
-    
     // MARK: - Player Selection View Delegate Handlers ======================================================= -
     
     private func showPlayerSelection() {
-        if self.playerSelectionViewTopConstraint.constant != 0 {
-            self.playerSelectionView.set(parent: self)
-            self.playerSelectionView.delegate = self
-        }
         self.thisPlayerChangeButton.setTitle("Cancel")
         Utility.animate(view: self.view, duration: 0.5) {
             self.playerSelectionViewTopConstraint.constant = 0
+            self.playerSelectionViewBottomConstraint.constant = 0
         }
         
         let playerList = Scorecard.shared.playerList.filter { $0.playerUUID != Scorecard.settings.thisPlayerUUID }
-        self.playerSelectionView.set(players: playerList, addButton: false, updateBeforeSelect: false, scrollEnabled: true, collectionViewInsets: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10), contentInset: UIEdgeInsets(top: 22.5, left: 10, bottom: 0, right: 10))
+        self.playerSelectionView.set(players: playerList, addButton: false, updateBeforeSelect: false, scrollEnabled: true, collectionViewInsets: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10), contentInset: UIEdgeInsets(top: 10, left: 10, bottom: 0, right: 10))
     }
     
     private func hidePlayerSelection() {
@@ -468,6 +402,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
         Utility.animate(view: self.view, duration: 0.5, completion: {
         }, animations: {
             self.playerSelectionViewTopConstraint.constant = -self.playerSelectionViewHeight
+            self.playerSelectionViewBottomConstraint.constant = self.overlap
         })
     }
     
@@ -488,7 +423,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
         // Additional players added - resize the view
         self.showPlayerSelection()
     }
-    
+
     // MARK: - Show select players view ================================================================= -
     
     private func showSelectPlayers() {
@@ -512,13 +447,9 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
     
     // MARK: - View defaults ============================================================================ -
     
-    private func setupImagePickerPlayerView() {
-        self.createPlayerImagePickerPlayerView = PlayerView(type: .imagePicker, parentViewController: self, parentView: self.createPlayerImageContainerView, width: self.createPlayerImageContainerView.frame.width, height: self.createPlayerImageContainerView.frame.height)
-        self.createPlayerImagePickerPlayerView.imagePickerDelegate = self
-        self.createPlayerImagePickerPlayerView.set(data: nil)
-    }
-    
     private func setupDefaultColors() {
+        self.view.backgroundColor = Palette.background
+        
         self.bannerPaddingView.bannerColor = Palette.banner
         self.topSection.backgroundColor = Palette.banner
         self.titleLabel.textColor = Palette.bannerEmbossed
@@ -551,14 +482,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
         self.downloadButton.disabledTextColor = Palette.disabledText
         
         self.createPlayerSettingsTitleLabel.textColor = Palette.text
-        self.createPlayerNameTextField.attributedPlaceholder = NSAttributedString(string: "Enter name", attributes:[NSAttributedString.Key.foregroundColor: Palette.inputControlPlaceholder])
-        self.createPlayerIDTextField.attributedPlaceholder = NSAttributedString(string: "Enter identifier", attributes:[NSAttributedString.Key.foregroundColor: Palette.inputControlPlaceholder])
-        self.createPlayerIDErrorLabel.textColor = Palette.textError
-        self.createPlayerNameErrorLabel.textColor = Palette.textError
-        
-        self.createPlayerImagePickerPlayerView.set(backgroundColor: Palette.thumbnailDisc)
-        self.createPlayerImagePickerPlayerView.set(textColor: Palette.thumbnailDiscText)
-        
+                
         self.settingsOnLineGamesEnabledSwitch.forEach{(control) in control.tintColor = Palette.emphasis}
         self.settingsOnLineGamesEnabledSwitch.forEach{(control) in control.onTintColor = Palette.emphasis}
         self.settingsSaveLocationSwitch.forEach{(control) in control.tintColor = Palette.emphasis}
@@ -570,13 +494,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
         self.actionButton.forEach{(button) in button.disabledBackgroundColor = Palette.disabled}
         self.actionButton.forEach{(button) in button.normalTextColor =  Palette.bannerText}
         self.actionButton.forEach{(button) in button.disabledTextColor =  Palette.disabledText}
-        
-        self.smallFormatCreatePlayerButton.normalBackgroundColor = Palette.banner
-        self.smallFormatCreatePlayerButton.disabledBackgroundColor = Palette.disabled
-        self.smallFormatCreatePlayerButton.normalTextColor =  Palette.bannerText
-        self.smallFormatCreatePlayerButton.disabledTextColor =  Palette.disabledText
-        self.smallFormatCreatePlayerButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
-        
+                
     }
     
     private func setupSizes() {
@@ -598,11 +516,11 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
             
             
             // Setup the player selection view
-            self.playerSelectionViewHeight = self.view.frame.height - self.bottomSection.frame.minY + self.view.safeAreaInsets.bottom
+            self.playerSelectionViewHeight = self.view.frame.height - self.bottomSection.frame.minY + self.view.safeAreaInsets.bottom - overlap
             self.playerSelectionView.set(size: CGSize(width: UIScreen.main.bounds.width, height: self.playerSelectionViewHeight))
             self.playerSelectionViewTopConstraint.constant = -self.playerSelectionViewHeight
             self.playerSelectionViewHeightConstraint.constant = self.playerSelectionViewHeight
-
+            self.overlap = self.playerSelectionViewBottomConstraint.constant
         }
     }
     
@@ -623,7 +541,6 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
             self.actionButton.forEach{(button) in button.isHidden = true}
         } else {
             self.smallFormatHomeButton.isHidden = true
-            self.smallFormatCreatePlayerButton.isHidden = true
         }
         
         self.infoButtonContainer.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
@@ -642,8 +559,6 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
         self.downloadButton.toRounded(cornerRadius: 8.0)
         
         self.addTargets(self.downloadIdentifierTextField)
-        self.addTargets(self.createPlayerNameTextField)
-        self.addTargets(self.createPlayerIDTextField)
         
         self.settingsOnLineGamesEnabledSwitch.forEach{(control) in control.addTarget(self, action: #selector(GetStartedViewController.onlineGamesChanged(_:)), for: .valueChanged) }
         
@@ -654,7 +569,6 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerV
         self.settingsSaveLocationSwitch.forEach{(control) in self.resizeSwitch(control, factor: 0.75)}
         
         self.actionButton.forEach{(button) in button.toRounded(cornerRadius: button.frame.height/2.0)}
-        self.smallFormatCreatePlayerButton.toRounded(cornerRadius: self.smallFormatCreatePlayerButton.frame.height/2.0)
     }
     
     public func resizeSwitch(_ control: UISwitch, factor: CGFloat) {

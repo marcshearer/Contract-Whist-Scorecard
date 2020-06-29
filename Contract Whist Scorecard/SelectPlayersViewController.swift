@@ -323,18 +323,7 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
                 // Display selected player
                 playerDetail = self.combinedPlayerList[selectedPlayer.section]![selectedPlayer.item]
             }
-            
-            PlayerDetailViewController.show(from: self, playerDetail: playerDetail, mode: selectedMode, sourceView: self.view,
-                                            completion: { (playerDetail, deletePlayer) in
-                                                                switch selectedMode {
-                                                                case .create, .download:
-                                                                    if let newPlayerDetail = playerDetail {
-                                                                        self.addNewPlayer(playerDetail: newPlayerDetail)
-                                                                    }
-                                                                default:
-                                                                    break
-                                                                }
-                                            })
+            self.showPlayerDetail(playerDetail: playerDetail, selectedMode: selectedMode)
             
             return nil
         default:
@@ -652,6 +641,23 @@ class SelectPlayersViewController: ScorecardViewController, UITableViewDelegate,
         }
         formatButtons()
     }
+    
+    // MARK: - Functions to show other views========================================== -
+    
+    func showPlayerDetail(playerDetail: PlayerDetail, selectedMode: DetailMode) {
+        PlayerDetailViewController.show(from: self, playerDetail: playerDetail, mode: selectedMode, sourceView: self.view,
+            completion: { (playerDetail, deletePlayer) in
+                switch selectedMode {
+                case .create, .download:
+                    if let newPlayerDetail = playerDetail {
+                        self.addNewPlayer(playerDetail: newPlayerDetail)
+                    }
+                default:
+                    break
+                }
+        })
+    }
+
     
     // MARK: - Function to show and dismiss this view  ============================================================================== -
     

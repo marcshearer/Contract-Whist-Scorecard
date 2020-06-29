@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="landscape" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16097"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DashboardView" customModule="Whist_2" customModuleProvider="target">
+            <connections>
+                <outlet property="contentView" destination="iN0-l3-epB" id="nYZ-EA-jWy"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="iN0-l3-epB" userLabel="Content View">
+            <rect key="frame" x="0.0" y="0.0" width="700" height="414"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pl0-f3-t82" customClass="CountTileView" customModule="Whist_2" customModuleProvider="target">
+                    <rect key="frame" x="16" y="8" width="159" height="398"/>
+                    <color key="backgroundColor" name="Clear"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="countValue">
+                            <integer key="value" value="1"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="YES"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="title" value="Activity"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="caption" value="Games this week"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="detail">
+                            <integer key="value" value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outlet property="dashboardDelegate" destination="-1" id="H6h-d6-o0k"/>
+                    </connections>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vcm-lb-pqY" customClass="DataTableTileView" customModule="Whist_2" customModuleProvider="target">
+                    <rect key="frame" x="191" y="8" width="159" height="398"/>
+                    <color key="backgroundColor" name="Clear"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="YES"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="title" value="History"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="headings" value="NO"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="maxRows">
+                            <integer key="value" value="5"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="number" keyPath="detail">
+                            <integer key="value" value="1"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outlet property="dashboardDelegate" destination="-1" id="K4e-EG-LuW"/>
+                    </connections>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aE4-O4-rLp" customClass="DataTableTileView" customModule="Whist_2" customModuleProvider="target">
+                    <rect key="frame" x="366" y="8" width="159" height="398"/>
+                    <color key="backgroundColor" name="Clear"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="YES"/>
+                        <userDefinedRuntimeAttribute type="string" keyPath="title" value="Statistics"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="detail">
+                            <integer key="value" value="2"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="headings" value="NO"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="maxRows">
+                            <integer key="value" value="4"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outlet property="dashboardDelegate" destination="-1" id="nFJ-zl-qkx"/>
+                    </connections>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qK4-5E-vDg" customClass="HighScoreTileView" customModule="Whist_2" customModuleProvider="target">
+                    <rect key="frame" x="541" y="8" width="151" height="398"/>
+                    <color key="backgroundColor" name="Clear"/>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="number" keyPath="detail">
+                            <integer key="value" value="3"/>
+                        </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="string" keyPath="title" value="Records"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="YES"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="totalScore" value="YES"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="handsMade" value="NO"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="winStreak" value="YES"/>
+                    </userDefinedRuntimeAttributes>
+                    <connections>
+                        <outlet property="dashboardDelegate" destination="-1" id="XGO-PT-6cd"/>
+                    </connections>
+                </view>
+            </subviews>
+            <color key="backgroundColor" name="Clear"/>
+            <constraints>
+                <constraint firstItem="aE4-O4-rLp" firstAttribute="width" secondItem="pl0-f3-t82" secondAttribute="width" id="0qH-TD-y0l"/>
+                <constraint firstItem="Vcm-lb-pqY" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="6hb-a1-lIz"/>
+                <constraint firstAttribute="bottom" secondItem="aE4-O4-rLp" secondAttribute="bottom" constant="8" id="9Ru-HF-2Sm"/>
+                <constraint firstItem="aE4-O4-rLp" firstAttribute="leading" secondItem="Vcm-lb-pqY" secondAttribute="trailing" constant="16" id="Bhz-EK-WUB"/>
+                <constraint firstItem="Vcm-lb-pqY" firstAttribute="width" secondItem="pl0-f3-t82" secondAttribute="width" id="Dn7-AN-iMk"/>
+                <constraint firstItem="qK4-5E-vDg" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="GQy-am-WfJ"/>
+                <constraint firstItem="pl0-f3-t82" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="1:4" constant="-16" id="I2b-Bx-hDL"/>
+                <constraint firstItem="Vcm-lb-pqY" firstAttribute="leading" secondItem="pl0-f3-t82" secondAttribute="trailing" constant="16" id="Nbk-g2-Z4u"/>
+                <constraint firstAttribute="bottom" secondItem="Vcm-lb-pqY" secondAttribute="bottom" constant="8" id="YfV-27-5cM"/>
+                <constraint firstItem="pl0-f3-t82" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="Zg8-OF-elj"/>
+                <constraint firstItem="qK4-5E-vDg" firstAttribute="leading" secondItem="aE4-O4-rLp" secondAttribute="trailing" constant="16" id="cJO-TC-V53"/>
+                <constraint firstAttribute="bottom" secondItem="pl0-f3-t82" secondAttribute="bottom" constant="8" id="gI3-Oc-fQO"/>
+                <constraint firstItem="pl0-f3-t82" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="iiW-Ud-3iV"/>
+                <constraint firstAttribute="bottom" secondItem="qK4-5E-vDg" secondAttribute="bottom" constant="8" id="ioF-xB-5DM"/>
+                <constraint firstItem="aE4-O4-rLp" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="yyc-Hr-Wq6"/>
+                <constraint firstAttribute="trailing" secondItem="qK4-5E-vDg" secondAttribute="trailing" constant="8" id="zy1-S6-n44"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="131.25" y="101.44927536231884"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

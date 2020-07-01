@@ -76,64 +76,135 @@ class ShadowButton: UIButton {
     @IBInspectable var shadowSize = CGSize(width: 4.0, height: 4.0)
     @IBInspectable var cornerRadius: CGFloat = 5.0
     
-    private var initialising = false
+    private var internalUpdate = false
+    private var customBackgroundColor: UIColor?
+    private var titleInnerLabel: UILabel?
+    private var titleOuterLabel: UILabel?
     
     override var backgroundColor: UIColor? {
         didSet {
-            if !initialising {
+            if !internalUpdate {
                 fatalError("Don't set the background color directly. Use the helper routine")
+            }
+        }
+    }
+    
+    override var isEnabled: Bool {
+        didSet {
+            if self.isEnabled {
+                self.titleOuterLabel?.backgroundColor = customBackgroundColor ?? self.backgroundColor
+            } else {
+                self.titleOuterLabel?.backgroundColor = (customBackgroundColor ?? self.backgroundColor)?.withAlphaComponent(0.5)
             }
         }
     }
        
     required init(coder aDecoder: NSCoder) {
-        self.initialising = true
+        self.internalUpdate = true
         super.init(coder: aDecoder)!
-        self.initialising = false
+        self.internalUpdate = false
     }
     
     override init(frame: CGRect) {
-        self.initialising = true
+        self.internalUpdate = true
         super.init(frame: frame)
-        self.initialising = false
+        self.internalUpdate = false
     }
     
     init(frame: CGRect, cornerRadius: CGFloat) {
         self.cornerRadius = cornerRadius
-        self.initialising = true
+        self.internalUpdate = true
         super.init(frame: frame)
-        self.initialising = false
+        self.internalUpdate = false
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.initialising = true
+        self.internalUpdate = true
         self.inheritProperties()
-        self.initialising = false
+        self.internalUpdate = false
         self.layoutSubviews()
     }
     
     private func inheritProperties() {
-        self.titleLabel?.backgroundColor = self.backgroundColor
+        // Replace existing title label (which hugs text) with a full size label for the background
+        // and an inset label to contain the text
+        
+        let title = self.currentTitle
+        self.titleOuterLabel = UILabel(frame: self.frame)
+        self.titleOuterLabel?.backgroundColor = self.backgroundColor
+        self.addSubview(self.titleOuterLabel!)
+        Constraint.anchor(view: self, control: self.titleOuterLabel!)
+        
+        self.titleInnerLabel = UILabel(frame: self.titleOuterLabel!.frame.inset(by: UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)))
+        self.titleInnerLabel?.backgroundColor = UIColor.clear
+        self.titleInnerLabel?.textColor = self.titleOuterLabel?.textColor
+        self.titleInnerLabel?.text = title
+        self.titleInnerLabel?.textAlignment = .center
+        self.titleInnerLabel?.font = self.titleOuterLabel!.font
+        self.titleInnerLabel?.adjustsFontSizeToFitWidth = true
+        
+        self.titleOuterLabel?.addSubview(self.titleInnerLabel!)
+        Constraint.anchor(view: self.titleOuterLabel!, control: self.titleInnerLabel!, constant: 5)
+
         self.backgroundColor = UIColor.clear
+        self.titleLabel?.removeFromSuperview()
     }
             
     public func setBackgroundColor(_ backgroundColor: UIColor) {
-        self.titleLabel?.backgroundColor = backgroundColor
+        self.customBackgroundColor = backgroundColor
+        self.titleOuterLabel?.backgroundColor = backgroundColor
+    }
+    
+    public override func setTitleColor(_ titleColor: UIColor?, for: UIControl.State) {
+        self.titleInnerLabel?.textColor = titleColor
+    }
+    
+    public override func setTitle(_ title: String?, for state: UIControl.State) {
+        UIView.performWithoutAnimation {
+            self.titleInnerLabel?.text = title
+            self.titleOuterLabel?.alpha = 1
+        }
+    }
+    
+    func toCircle() {
+        if let layer = self.titleOuterLabel?.layer {
+            self.cornerRadius = layer.bounds.height / 2
+            layer.cornerRadius = self.cornerRadius
+            layer.masksToBounds = true
+        }
+    }
+    
+    func toRounded(cornerRadius: CGFloat? = nil) {
+        if let layer = self.titleOuterLabel?.layer {
+            self.cornerRadius = cornerRadius ?? self.cornerRadius
+            layer.cornerRadius = self.cornerRadius
+            self.layer.masksToBounds = true
+        }
+    }
+    
+    func toUnrounded() {
+        if let layer = self.titleOuterLabel?.layer {
+            self.cornerRadius = 0.0
+            layer.cornerRadius = 0.0
+            layer.masksToBounds = false
+        }
     }
     
     private func addShadow() {
-        self.titleLabel?.textAlignment = .center
-        self.titleLabel?.adjustsFontSizeToFitWidth = true
-        self.titleLabel?.frame = CGRect(origin: CGPoint(), size: self.frame.size)
-        Constraint.anchor(view: self, control: titleLabel!)
-        self.titleLabel?.roundCorners(cornerRadius: self.cornerRadius)
+        self.titleOuterLabel?.textAlignment = .center
+        self.titleOuterLabel?.adjustsFontSizeToFitWidth = true
+        self.titleOuterLabel?.frame = CGRect(origin: CGPoint(), size: self.frame.size)
+        Constraint.anchor(view: self, control: titleOuterLabel!)
+        self.titleOuterLabel?.roundCorners(cornerRadius: self.cornerRadius)
         self.addShadow(shadowSize: self.shadowSize)
     }
     
     override func layoutSubviews() {
-        super.layoutSubviews()
-        self.addShadow()
+        Utility.mainThread {
+            super.layoutSubviews()
+            self.addShadow()
+        }
     }
 }
 

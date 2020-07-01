@@ -11,12 +11,12 @@
         <!--Override Settings-->
         <scene sceneID="HQ4-f5-N0f">
             <objects>
-                <viewController storyboardIdentifier="OverrideViewController" title="Override Settings" useStoryboardIdentifierAsRestorationIdentifier="YES" id="oF9-Yc-WbQ" customClass="OverrideViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="OverrideViewController" title="Override Settings" useStoryboardIdentifierAsRestorationIdentifier="YES" id="oF9-Yc-WbQ" customClass="OverrideViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hOp-TY-evR">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F6E-8M-LIy" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F6E-8M-LIy" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="0.0"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
@@ -24,7 +24,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BMC-qc-qAk" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BMC-qc-qAk" customClass="NavigationBar" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" name="Game Banner Text"/>
@@ -43,7 +43,7 @@
                                             </button>
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" id="R3K-Sy-Bna">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="5eL-j1-NvT" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="5eL-j1-NvT" customClass="RightClearButton" customModule="Whist_2" customModuleProvider="target">
                                                 <rect key="frame" x="195" y="0.0" width="109" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="18"/>
@@ -81,7 +81,7 @@
                                     <constraint firstItem="HiB-TH-SwI" firstAttribute="top" secondItem="HoR-O2-RaM" secondAttribute="top" constant="16" id="iX6-eD-xy6"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R7X-Kw-3i1" customClass="BannerContinuation" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R7X-Kw-3i1" customClass="BannerContinuation" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="164" width="320" height="60"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
@@ -101,14 +101,14 @@
                                 <color key="backgroundColor" name="Clear"/>
                                 <color key="separatorColor" name="Clear"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Save" rowHeight="70" id="CAz-VF-S03" customClass="OverrideTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Save" rowHeight="70" id="CAz-VF-S03" customClass="OverrideTableCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="320" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CAz-VF-S03" id="Fwz-xt-iyC">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="zcV-YA-Wrj" userLabel="Exclude Selection" customClass="SegmentedControl" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="zcV-YA-Wrj" userLabel="Exclude Selection" customClass="SegmentedControl" customModule="Whist_2" customModuleProvider="target">
                                                     <rect key="frame" x="35" y="34.5" width="250" height="32"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="250" id="dcU-bX-JC9"/>
@@ -139,7 +139,7 @@
                                             <outlet property="saveSelection" destination="zcV-YA-Wrj" id="w6J-N4-VzU"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Sub Heading" rowHeight="44" id="bKB-gB-NhW" customClass="OverrideTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Sub Heading" rowHeight="44" id="bKB-gB-NhW" customClass="OverrideTableCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="98" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bKB-gB-NhW" id="Yae-On-XCH">
@@ -164,7 +164,7 @@
                                             <outlet property="subHeadingLabel" destination="pEP-dX-cgh" id="YOM-4f-naR"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cards" rowHeight="76" id="gBa-sa-EJM" customClass="OverrideTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cards" rowHeight="76" id="gBa-sa-EJM" customClass="OverrideTableCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="142" width="320" height="76"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="gBa-sa-EJM" id="pNU-Yp-XU9">
@@ -181,7 +181,7 @@
                                                     <color key="textColor" name="Text"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xXT-Vf-HJQ">
+                                                <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xXT-Vf-HJQ">
                                                     <rect key="frame" x="91.5" y="29" width="50" height="18.5"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <constraints>
@@ -218,14 +218,14 @@
                                             <outlet property="cardsValue" destination="xXT-Vf-HJQ" id="U5m-KN-RLx"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Bounce" id="uWi-PW-sya" customClass="OverrideTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Bounce" id="uWi-PW-sya" customClass="OverrideTableCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="218" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="uWi-PW-sya" id="7mY-Fq-CKr">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ker-Dk-WHk" customClass="SegmentedControl" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ker-Dk-WHk" customClass="SegmentedControl" customModule="Whist_2" customModuleProvider="target">
                                                     <rect key="frame" x="29.5" y="6.5" width="261" height="32"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <segments>
@@ -251,7 +251,7 @@
                                     <outlet property="delegate" destination="oF9-Yc-WbQ" id="KiB-FD-dlA"/>
                                 </connections>
                             </tableView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wiu-MJ-nOh" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wiu-MJ-nOh" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="568" width="320" height="0.0"/>
                                 <color key="backgroundColor" name="Background"/>
                                 <userDefinedRuntimeAttributes>

@@ -4,13 +4,13 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CreatePlayerView" customModule="Whist_2" customModuleProvider="target">
             <connections>
                 <outlet property="contentView" destination="iN0-l3-epB" id="dW1-ZV-eql"/>
+                <outlet property="createPlayerButton" destination="iUy-Pb-3Vy" id="4om-Ab-iga"/>
                 <outlet property="createPlayerIDErrorLabel" destination="zxG-Ev-cRQ" id="mHd-F0-7Xa"/>
                 <outlet property="createPlayerIDTextField" destination="6fl-Y8-bXz" id="H6J-ti-DC6"/>
                 <outlet property="createPlayerImageContainerView" destination="4f7-EG-TTF" id="hgr-pA-29U"/>
@@ -19,14 +19,21 @@
                 <outlet property="smallFormatCreatePlayerButton" destination="ywu-HJ-YWs" id="5HI-Tl-LxD"/>
                 <outletCollection property="actionButton" destination="iUy-Pb-3Vy" collectionClass="NSMutableArray" id="Zt5-p7-JvM"/>
                 <outletCollection property="actionButton" destination="ywu-HJ-YWs" collectionClass="NSMutableArray" id="Vge-6R-Yen"/>
+                <outletCollection property="duplicateLabel" destination="cw0-LT-KSb" collectionClass="NSMutableArray" id="fOr-dT-2Yf"/>
+                <outletCollection property="duplicateLabel" destination="zxG-Ev-cRQ" collectionClass="NSMutableArray" id="tIJ-e6-025"/>
+                <outletCollection property="inputField" destination="wPW-PC-gxV" collectionClass="NSMutableArray" id="vAx-zj-NWJ"/>
+                <outletCollection property="inputField" destination="6fl-Y8-bXz" collectionClass="NSMutableArray" id="09H-Tk-Mmm"/>
+                <outletCollection property="titleLabel" destination="5CH-F5-L5g" collectionClass="NSMutableArray" id="uTz-LS-CcE"/>
+                <outletCollection property="titleLabel" destination="1JK-yI-rAC" collectionClass="NSMutableArray" id="Wl7-V9-khz"/>
+                <outletCollection property="titleLabel" destination="9u3-wu-EBQ" collectionClass="NSMutableArray" id="Dbj-AC-vSe"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="iN0-l3-epB" userLabel="Content View">
+        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="iN0-l3-epB" userLabel="Content View">
             <rect key="frame" x="0.0" y="0.0" width="375" height="370"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LAo-9j-rI7" userLabel="Create Player View">
+                <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LAo-9j-rI7" userLabel="Create Player View">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="370"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="* required" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5CH-F5-L5g">
@@ -56,7 +63,7 @@
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wPW-PC-gxV" userLabel="Player Name Text Field">
+                        <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wPW-PC-gxV" userLabel="Player Name Text Field" customClass="TextField" customModule="Whist_2" customModuleProvider="target">
                             <rect key="frame" x="30" y="54" width="315" height="34"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="34" id="Br1-mN-0II"/>
@@ -82,7 +89,7 @@
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <textField opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6fl-Y8-bXz" userLabel="Unique ID Text Field">
+                        <textField opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter identifier" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6fl-Y8-bXz" userLabel="Unique ID Text Field" customClass="TextField" customModule="Whist_2" customModuleProvider="target">
                             <rect key="frame" x="30" y="127" width="315" height="34"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="34" id="53f-Wl-Rw3"/>
@@ -98,24 +105,34 @@
                                 <constraint firstAttribute="width" constant="50" id="f6I-UH-sEa"/>
                             </constraints>
                         </view>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iUy-Pb-3Vy" userLabel="Create Player Button" customClass="RoundedButton" customModule="Whist_2" customModuleProvider="target">
-                            <rect key="frame" x="30" y="300" width="315" height="50"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iUy-Pb-3Vy" userLabel="Create Player Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                            <rect key="frame" x="30" y="253" width="315" height="50"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="NXa-eS-u5J"/>
                             </constraints>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                             <state key="normal" title="Create New Player"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="8"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="createPlayerButtonPressed:" destination="-1" eventType="touchUpInside" id="X1y-1o-2ga"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ywu-HJ-YWs" userLabel="Small Format Create Player Button" customClass="RoundedButton" customModule="Whist_2" customModuleProvider="target">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ywu-HJ-YWs" userLabel="Small Format Create Player Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                             <rect key="frame" x="96" y="173" width="249" height="50"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="Mh1-kU-DYz"/>
                             </constraints>
-                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                             <state key="normal" title="Create New Player"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="8"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="createPlayerButtonPressed:" destination="-1" eventType="touchUpInside" id="DLn-dy-Yva"/>
                             </connections>
@@ -141,7 +158,7 @@
                         <constraint firstItem="zxG-Ev-cRQ" firstAttribute="top" secondItem="9u3-wu-EBQ" secondAttribute="top" id="YoE-c2-1Ga"/>
                         <constraint firstAttribute="trailing" secondItem="zxG-Ev-cRQ" secondAttribute="trailing" constant="30" id="cKe-fh-LY6"/>
                         <constraint firstItem="wPW-PC-gxV" firstAttribute="top" secondItem="1JK-yI-rAC" secondAttribute="bottom" constant="2" id="dQo-rQ-1U9"/>
-                        <constraint firstAttribute="bottom" secondItem="iUy-Pb-3Vy" secondAttribute="bottom" constant="20" id="eea-E4-m2K"/>
+                        <constraint firstItem="iUy-Pb-3Vy" firstAttribute="top" secondItem="4f7-EG-TTF" secondAttribute="bottom" constant="30" id="ese-3I-bdP"/>
                         <constraint firstItem="4f7-EG-TTF" firstAttribute="top" secondItem="6fl-Y8-bXz" secondAttribute="bottom" constant="12" id="i1M-DT-A3u"/>
                         <constraint firstAttribute="trailing" secondItem="1JK-yI-rAC" secondAttribute="trailing" constant="80" id="jtT-6X-hag"/>
                         <constraint firstItem="1JK-yI-rAC" firstAttribute="top" secondItem="5CH-F5-L5g" secondAttribute="bottom" constant="2" id="k7U-J6-myj"/>
@@ -153,7 +170,6 @@
                         <constraint firstItem="9u3-wu-EBQ" firstAttribute="leading" secondItem="LAo-9j-rI7" secondAttribute="leading" constant="30" id="yWH-aH-69B"/>
                         <constraint firstAttribute="trailing" secondItem="ywu-HJ-YWs" secondAttribute="trailing" constant="30" id="z8T-wb-IZm"/>
                     </constraints>
-                    <viewLayoutGuide key="safeArea" id="Po8-U6-kWU"/>
                 </view>
             </subviews>
             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -164,7 +180,6 @@
                 <constraint firstAttribute="trailing" secondItem="LAo-9j-rI7" secondAttribute="trailing" id="sMh-DN-QKO"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <point key="canvasLocation" x="132" y="106"/>
         </view>
     </objects>

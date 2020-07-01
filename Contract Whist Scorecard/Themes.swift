@@ -101,46 +101,53 @@ class Themes {
                             .textMessage                 : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
                             .history                     : (#colorLiteral(red: 0.4516967535, green: 0.7031331658, blue: 0.4579167962, alpha: 1), nil) ,
                             .stats                       : (#colorLiteral(red: 0.9738044143, green: 0.7667216659, blue: 0.003810848575, alpha: 1), nil) ,
-                            .highScores                  : (#colorLiteral(red: 0.1997601986, green: 0.4349380136, blue: 0.5107212663, alpha: 1), nil) ]),
+                            .highScores                  : (#colorLiteral(red: 0.1997601986, green: 0.4349380136, blue: 0.5107212663, alpha: 1), nil) ,
+                            .otherButton                 : (#colorLiteral(red: 0.7018982768, green: 0.7020009756, blue: 0.7018757463, alpha: 1), nil) ,
+                            .otherButtonText             : (#colorLiteral(red: 0.994867146, green: 1, blue: 0.9999337792, alpha: 1), nil) ,
+                            .confirmButton               : (#colorLiteral(red: 0.3292011023, green: 0.4971863031, blue: 0.2595342696, alpha: 1), nil) ,
+                            .confirmButtonText           : (#colorLiteral(red: 0.994867146, green: 1, blue: 0.9999337792, alpha: 1), nil) ]),
 
             
         "Alternate"         : Theme(description: "Alternate", color: [
-                            .textEmphasised             : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), nil) ,
-                            .gameBanner                 : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
-                            .emphasis                   : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
-                            .banner                     : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
-                            .bannerEmbossed             : (#colorLiteral(red: 0, green: 0.3960784314, blue: 0.9215686275, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
-                            .bannerShadow               : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
-                            .gameBannerShadow           : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
-                            .sectionHeading             : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
-                            .sectionHeadingText         : (#colorLiteral(red: 0.994867146, green: 1, blue: 0.9999337792, alpha: 1), nil) ,
-                            .background                 : (#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1))  ,
-                            .roomInterior               : (#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), #colorLiteral(red: 0.1694289744, green: 0.1694289744, blue: 0.1694289744, alpha: 1))  ,
-                            .hand                       : (#colorLiteral(red: 0.2931554019, green: 0.6582073569, blue: 0.6451457739, alpha: 1), #colorLiteral(red: 0.1694289744, green: 0.1694289744, blue: 0.1694289744, alpha: 1))  ,
-                            .tableTop                   : (#colorLiteral(red: 0.5406154394, green: 0.8017265201, blue: 0.5650425553, alpha: 1), #colorLiteral(red: 0.2255345461, green: 0.4820669776, blue: 0.2524022623, alpha: 1))  ]),
+                            .textEmphasised              : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), nil) ,
+                            .gameBanner                  : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .emphasis                    : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
+                            .banner                      : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .bannerEmbossed              : (#colorLiteral(red: 0, green: 0.3960784314, blue: 0.9215686275, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .bannerShadow                : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .gameBannerShadow            : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .sectionHeading              : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
+                            .sectionHeadingText          : (#colorLiteral(red: 0.994867146, green: 1, blue: 0.9999337792, alpha: 1), nil) ,
+                            .background                  : (#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1))  ,
+                            .roomInterior                : (#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), #colorLiteral(red: 0.1694289744, green: 0.1694289744, blue: 0.1694289744, alpha: 1))  ,
+                            .hand                        : (#colorLiteral(red: 0.2931554019, green: 0.6582073569, blue: 0.6451457739, alpha: 1), #colorLiteral(red: 0.1694289744, green: 0.1694289744, blue: 0.1694289744, alpha: 1))  ,
+                            .tableTop                    : (#colorLiteral(red: 0.5406154394, green: 0.8017265201, blue: 0.5650425553, alpha: 1), #colorLiteral(red: 0.2255345461, green: 0.4820669776, blue: 0.2524022623, alpha: 1))  ]),
         
         "Red"               : Theme(description: "Red", color: [
-                            .textEmphasised             : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), nil) ,
-                            .emphasis                   : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), nil) ,
-                            .banner                     : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
-                            .bannerEmbossed             : (#colorLiteral(red: 0.5529411765, green: 0.1450980392, blue: 0.1254901961, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
-                            .bannerShadow               : (#colorLiteral(red: 0.6901960784, green: 0.2431372549, blue: 0.2235294118, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
-                            .gameBannerShadow           : (#colorLiteral(red: 0.6901960784, green: 0.2431372549, blue: 0.2235294118, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
-                            .gameBanner                 : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
-                            .sectionHeading             : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), nil) ,
-                            .sectionHeadingText         : (#colorLiteral(red: 0.994867146, green: 1, blue: 0.9999337792, alpha: 1), nil) ]),
+                            .textEmphasised              : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), nil) ,
+                            .emphasis                    : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), nil) ,
+                            .banner                      : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .bannerEmbossed              : (#colorLiteral(red: 0.5529411765, green: 0.1450980392, blue: 0.1254901961, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .bannerShadow                : (#colorLiteral(red: 0.6901960784, green: 0.2431372549, blue: 0.2235294118, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .gameBannerShadow            : (#colorLiteral(red: 0.6901960784, green: 0.2431372549, blue: 0.2235294118, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .gameBanner                  : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .inputControl                : (#colorLiteral(red: 0.948936522, green: 0.9490727782, blue: 0.9489069581, alpha: 1), nil) ,
+                            .inputControlText            : (#colorLiteral(red: 0.101947777, green: 0.1019691005, blue: 0.1019431874, alpha: 1), nil) ,
+                            .inputControlPlaceholder     : (#colorLiteral(red: 0.325458765, green: 0.325510323, blue: 0.3254473805, alpha: 1), nil) ,
+                            .sectionHeading              : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), nil) ,
+                            .sectionHeadingText          : (#colorLiteral(red: 0.994867146, green: 1, blue: 0.9999337792, alpha: 1), nil) ]),
 
         "Blue"              : Theme(description: "Blue", color: [
-                            .textEmphasised             : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
-                            .emphasis                   : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
-                            .banner                     : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
-                            .bannerEmbossed             : (#colorLiteral(red: 0, green: 0.3960784314, blue: 0.9215686275, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
-                            .bannerShadow               : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
-                            .gameBannerShadow           : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
-                            .gameBanner                 : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
-                            .sectionHeading             : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
-                            .sectionHeadingText         : (#colorLiteral(red: 0.994867146, green: 1, blue: 0.9999337792, alpha: 1), nil) ]),
-        
+                            .textEmphasised              : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
+                            .emphasis                    : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
+                            .banner                      : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .bannerEmbossed              : (#colorLiteral(red: 0, green: 0.3960784314, blue: 0.9215686275, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .bannerShadow                : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .gameBannerShadow            : (#colorLiteral(red: 0.03921568627, green: 0.5529411765, blue: 1, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .gameBanner                  : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .sectionHeading              : (#colorLiteral(red: 0, green: 0.4733380675, blue: 0.9991257787, alpha: 1), nil) ,
+                            .sectionHeadingText          : (#colorLiteral(red: 0.994867146, green: 1, blue: 0.9999337792, alpha: 1), nil) ]),
+         
         "Green"             : Theme(description: "Green", color: [
                             .textEmphasised             : (#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), nil) ,
                             .emphasis                   : (#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), nil) ,
@@ -308,4 +315,8 @@ enum ThemeColor: String {
     case history = "History"
     case stats = "Stats"
     case highScores = "High Scores"
+    case confirmButton = "Confirm Button"
+    case confirmButtonText = "Confirm Button Text"
+    case otherButton = "Other Button"
+    case otherButtonText = "Other Button Text"
 }

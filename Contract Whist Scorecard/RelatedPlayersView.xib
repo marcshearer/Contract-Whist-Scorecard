@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="RelatedPlayersView" customModule="Whist_2" customModuleProvider="target">
+            <connections>
+                <outlet property="buttonContainerView" destination="BNa-Bz-D8H" id="i91-S3-bEV"/>
+                <outlet property="cancelButton" destination="2f3-n4-GO2" id="tnu-jV-mYb"/>
+                <outlet property="cancelButtonLeadingConstraint" destination="z76-Wb-dvQ" id="wfR-bi-qEg"/>
+                <outlet property="cancelButtonWidthConstraint" destination="Nr6-dB-CfR" id="MHb-oR-sFU"/>
+                <outlet property="changeAllButton" destination="7LM-Gf-qmS" id="EWm-Ii-X0y"/>
+                <outlet property="confirmButton" destination="gxi-RA-hRC" id="oOJ-gh-vyV"/>
+                <outlet property="contentView" destination="iN0-l3-epB" id="bak-o0-eeF"/>
+                <outlet property="tableView" destination="NWA-om-6m8" id="f2z-0T-Qc4"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="iN0-l3-epB" userLabel="Content View">
+            <rect key="frame" x="0.0" y="0.0" width="400" height="268"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" style="plain" separatorStyle="none" allowsMultipleSelection="YES" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="NWA-om-6m8">
+                    <rect key="frame" x="0.0" y="0.0" width="400" height="226"/>
+                    <color key="backgroundColor" name="Clear"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="r0o-Z4-rvd"/>
+                        <outlet property="delegate" destination="-1" id="Wcj-WU-LUG"/>
+                    </connections>
+                </tableView>
+                <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BNa-Bz-D8H" userLabel="Button Container">
+                    <rect key="frame" x="6.5" y="226" width="387" height="42"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2f3-n4-GO2" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                            <rect key="frame" x="20" y="8" width="100" height="34"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="100" id="Nr6-dB-CfR"/>
+                            </constraints>
+                            <state key="normal" title="Cancel"/>
+                            <connections>
+                                <action selector="cancelButtonPressed:" destination="-1" eventType="touchUpInside" id="NxY-7f-qcp"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7LM-Gf-qmS" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                            <rect key="frame" x="130" y="8" width="113.5" height="34"/>
+                            <state key="normal" title="Select All"/>
+                            <connections>
+                                <action selector="changeAllButtonPressed:" destination="-1" eventType="touchUpInside" id="4SH-ZA-cqD"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gxi-RA-hRC" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                            <rect key="frame" x="253.5" y="8" width="113.5" height="34"/>
+                            <state key="normal" title="Confirm"/>
+                            <connections>
+                                <action selector="confirmButtonPressed:" destination="-1" eventType="touchUpInside" id="ndy-GM-6zr"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" name="Clear"/>
+                    <constraints>
+                        <constraint firstItem="gxi-RA-hRC" firstAttribute="top" secondItem="BNa-Bz-D8H" secondAttribute="top" constant="8" id="14f-QJ-ppr"/>
+                        <constraint firstItem="gxi-RA-hRC" firstAttribute="leading" secondItem="7LM-Gf-qmS" secondAttribute="trailing" constant="10" id="CaY-Iu-ZXT"/>
+                        <constraint firstAttribute="bottom" secondItem="7LM-Gf-qmS" secondAttribute="bottom" id="Iuv-8e-Rp7"/>
+                        <constraint firstAttribute="bottom" secondItem="gxi-RA-hRC" secondAttribute="bottom" id="Ocr-cl-9Vl"/>
+                        <constraint firstItem="2f3-n4-GO2" firstAttribute="top" secondItem="BNa-Bz-D8H" secondAttribute="top" constant="8" id="Wls-lb-DSB"/>
+                        <constraint firstItem="gxi-RA-hRC" firstAttribute="width" secondItem="7LM-Gf-qmS" secondAttribute="width" id="aF3-Bq-iuJ"/>
+                        <constraint firstItem="7LM-Gf-qmS" firstAttribute="leading" secondItem="2f3-n4-GO2" secondAttribute="trailing" constant="10" id="gBS-Rf-OuU"/>
+                        <constraint firstAttribute="bottom" secondItem="2f3-n4-GO2" secondAttribute="bottom" id="oAb-dC-VyC"/>
+                        <constraint firstAttribute="trailing" secondItem="gxi-RA-hRC" secondAttribute="trailing" constant="20" id="qR8-9C-IIU"/>
+                        <constraint firstAttribute="height" constant="42" id="s5t-4N-SI0"/>
+                        <constraint firstItem="7LM-Gf-qmS" firstAttribute="top" secondItem="BNa-Bz-D8H" secondAttribute="top" constant="8" id="vUb-lQ-AAX"/>
+                        <constraint firstItem="2f3-n4-GO2" firstAttribute="leading" secondItem="BNa-Bz-D8H" secondAttribute="leading" constant="20" id="z76-Wb-dvQ"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" name="Clear"/>
+            <constraints>
+                <constraint firstItem="BNa-Bz-D8H" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="2Nn-yB-f29"/>
+                <constraint firstItem="BNa-Bz-D8H" firstAttribute="top" secondItem="NWA-om-6m8" secondAttribute="bottom" id="3Ey-Qf-myR"/>
+                <constraint firstAttribute="bottom" secondItem="BNa-Bz-D8H" secondAttribute="bottom" id="6dT-zm-C14"/>
+                <constraint firstAttribute="trailing" secondItem="NWA-om-6m8" secondAttribute="trailing" id="Dq8-Cl-yfy"/>
+                <constraint firstItem="gxi-RA-hRC" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" multiplier="1:3" constant="-20" id="bgS-Qn-1LO"/>
+                <constraint firstItem="NWA-om-6m8" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="nbL-PV-NbF"/>
+                <constraint firstItem="NWA-om-6m8" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="ySY-zL-fpc"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="131.8840579710145" y="-32.142857142857139"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="Clear">
+            <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

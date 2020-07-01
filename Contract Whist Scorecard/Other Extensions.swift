@@ -135,3 +135,47 @@ extension Array {
        self = leftPart + rightPart
     }
 }
+
+class TextField : UITextField {
+    
+    // Sets up default colors and moves placeholder to attributed placeholder
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        self.setupTextField()
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.setupTextField()
+    }
+    
+    override var placeholder: String? {
+        didSet {
+            self.setupPlaceholder()
+        }
+    }
+    
+    private func setupTextField() {
+        self.setupPlaceholder()
+        self.backgroundColor = Palette.inputControl
+        self.textColor = Palette.inputControlText
+    }
+    
+    private func setupPlaceholder() {
+        if let placeholder = self.placeholder {
+            self.attributedPlaceholder = NSAttributedString(string: placeholder, attributes:[NSAttributedString.Key.foregroundColor: Palette.inputControlPlaceholder])
+        }
+    }
+}
+
+class HiddenTextField : UITextField {
+    
+    // Only shows background when enabled
+    
+    override var isEnabled: Bool {
+        didSet {
+            self.backgroundColor = (self.isEnabled ? Palette.inputControl : Palette.background)
+        }
+    }
+}

@@ -10,12 +10,14 @@ import UIKit
 
 @objc protocol CreatePlayerViewDelegate : class {
     
-    func playerCreated(playerDetail: PlayerDetail)
+    func didCreatePlayer(playerDetail: PlayerDetail)
 
 }
 
 class CreatePlayerView : UIView, UITextFieldDelegate, PlayerViewImagePickerDelegate {
 
+    public var requiredHeight: CGFloat!
+    
     private var createNameFieldTag = 1
     private var createIDFieldTag = 2
     
@@ -24,15 +26,19 @@ class CreatePlayerView : UIView, UITextFieldDelegate, PlayerViewImagePickerDeleg
     private var createPlayerImagePickerPlayerView: PlayerView!
 
     @IBOutlet private weak var contentView: UIView!
-    @IBOutlet private weak var parent: UIViewController!
+    @IBOutlet private weak var parent: ScorecardViewController!
     @IBOutlet public weak var delegate: CreatePlayerViewDelegate?
     @IBOutlet private weak var createPlayerNameTextField: UITextField!
     @IBOutlet private weak var createPlayerNameErrorLabel: UILabel!
     @IBOutlet private weak var createPlayerIDErrorLabel: UILabel!
     @IBOutlet private weak var createPlayerIDTextField: UITextField!
     @IBOutlet private weak var createPlayerImageContainerView: UIView!
-    @IBOutlet private weak var smallFormatCreatePlayerButton: RoundedButton!
-    @IBOutlet private var actionButton: [RoundedButton]!
+    @IBOutlet private weak var createPlayerButton: ShadowButton!
+    @IBOutlet private weak var smallFormatCreatePlayerButton: ShadowButton!
+    @IBOutlet private var actionButton: [ShadowButton]!
+    @IBOutlet private var inputField: [UITextField]!
+    @IBOutlet private var titleLabel: [UILabel]!
+    @IBOutlet private var duplicateLabel: [UILabel]!
     
     @IBAction func createPlayerButtonPressed(_ sender: UIButton) {
         self.createNewPlayer()
@@ -50,12 +56,14 @@ class CreatePlayerView : UIView, UITextFieldDelegate, PlayerViewImagePickerDeleg
     
     internal override func awakeFromNib() {
         self.setupImagePickerPlayerView()
+        self.setupDefaultColors()
         self.updatePlayerControls()
         self.enableControls()
     }
     
     override internal func layoutSubviews() {
         super.layoutSubviews()
+        self.requiredHeight = (ScorecardUI.smallPhoneSize() ? self.smallFormatCreatePlayerButton.frame.maxY : self.createPlayerButton.frame.maxY) + 20.0
     }
 
     private func loadCreatePlayerView() {
@@ -85,7 +93,7 @@ class CreatePlayerView : UIView, UITextFieldDelegate, PlayerViewImagePickerDeleg
     }
     
     private func playerIDValid(allowBlank: Bool = false) -> Bool {
-        return (allowBlank || self.playerDetail.tempEmail != "") && !Scorecard.shared.isDuplicatePlayerUUID(self.playerDetail)
+        return (allowBlank || (self.playerDetail.tempEmail ?? "") != "") && !Scorecard.shared.isDuplicatePlayerUUID(self.playerDetail)
 
     }
     
@@ -103,20 +111,18 @@ class CreatePlayerView : UIView, UITextFieldDelegate, PlayerViewImagePickerDeleg
 
     private func setupControls() {
         if ScorecardUI.smallPhoneSize() {
-            self.actionButton.forEach{(button) in button.isHidden = true}
+            self.createPlayerButton.isHidden = true
         } else {
             self.smallFormatCreatePlayerButton.isHidden = true
         }
         self.addTargets(self.createPlayerNameTextField)
         self.addTargets(self.createPlayerIDTextField)
-        
-        self.smallFormatCreatePlayerButton.toRounded(cornerRadius: self.smallFormatCreatePlayerButton.frame.height/2.0)
     }
 
     private func enableControls() {
         let createEnabled = self.playerNameValid() && self.playerIDValid()
-        self.actionButton.forEach{(button) in button.isEnabled(createEnabled)}
-        self.smallFormatCreatePlayerButton.isEnabled(createEnabled)
+        self.actionButton.forEach{(button) in button.isEnabled = createEnabled}
+        self.smallFormatCreatePlayerButton.isEnabled = createEnabled
         self.createPlayerNameErrorLabel.isHidden = self.playerNameValid(allowBlank: true)
         self.createPlayerIDErrorLabel.isHidden = self.playerIDValid(allowBlank: true)
     }
@@ -131,9 +137,12 @@ class CreatePlayerView : UIView, UITextFieldDelegate, PlayerViewImagePickerDeleg
 
     private func createNewPlayer() {
         if playerDetail.createMO(saveToICloud: false) != nil {
-            self.delegate?.playerCreated(playerDetail: self.playerDetail)
+            self.delegate?.didCreatePlayer(playerDetail: self.playerDetail)
             Scorecard.settings.save()
             self.playerDetail = PlayerDetail()
+            self.playerDetail.dateCreated = Date()
+            self.playerDetail.visibleLocally = true
+            self.playerDetail.localDateCreated = Date()
             self.updatePlayerControls()
         }
     }
@@ -191,19 +200,15 @@ class CreatePlayerView : UIView, UITextFieldDelegate, PlayerViewImagePickerDeleg
     // MARK: - View defaults ============================================================================ -
     
     private func setupDefaultColors() {
-        self.createPlayerNameTextField.attributedPlaceholder = NSAttributedString(string: "Enter name", attributes:[NSAttributedString.Key.foregroundColor: Palette.inputControlPlaceholder])
-        self.createPlayerIDTextField.attributedPlaceholder = NSAttributedString(string: "Enter identifier", attributes:[NSAttributedString.Key.foregroundColor: Palette.inputControlPlaceholder])
-        self.createPlayerIDErrorLabel.textColor = Palette.textError
-        self.createPlayerNameErrorLabel.textColor = Palette.textError
+        
+        self.duplicateLabel.forEach{$0.textColor = Palette.textError}
+        self.titleLabel.forEach{$0.textColor = Palette.buttonFaceText}
         
         self.createPlayerImagePickerPlayerView.set(backgroundColor: Palette.thumbnailDisc)
         self.createPlayerImagePickerPlayerView.set(textColor: Palette.thumbnailDiscText)
 
-        self.smallFormatCreatePlayerButton.normalBackgroundColor = Palette.banner
-        self.smallFormatCreatePlayerButton.disabledBackgroundColor = Palette.disabled
-        self.smallFormatCreatePlayerButton.normalTextColor =  Palette.bannerText
-        self.smallFormatCreatePlayerButton.disabledTextColor =  Palette.disabledText
-        self.smallFormatCreatePlayerButton.titleLabel?.font = UIFont.systemFont(ofSize: 14)
+        self.actionButton.forEach{$0.setBackgroundColor(Palette.banner)}
+        self.actionButton.forEach{$0.setTitleColor(Palette.bannerText, for: .normal)}
 
     }
 }

@@ -378,11 +378,8 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         var selectPlayerViewController: SelectPlayersViewController?
         
         if let parentViewController = self.fromViewController() {
-            selectPlayerViewController = SelectPlayersViewController.show(from: parentViewController, appController: self, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: true, completion: { (selected, playerList, selection, thisPlayerUUID) in
-                
-                    completion?(["selected" : selected,
-                                 "playerList" : playerList,
-                                 "selection" : selection])
+            selectPlayerViewController = SelectPlayersViewController.show(from: parentViewController, appController: self, completion: { (playerList) in
+                    completion?(["playerList" : playerList])
                 })
         }
         return selectPlayerViewController
@@ -596,8 +593,10 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
         
         super.present(viewControllerToPresent, animated: flag) { [unowned self, completion] in
             // Clean up any screenshot that was used to tidy up the dismiss animation of the previous view presented on this view controller
-            self.view.sendSubviewToBack(self.dismissImageView)
-            self.dismissImageView.image = nil
+            if self.dismissImageView != nil {
+                self.view.sendSubviewToBack(self.dismissImageView)
+                self.dismissImageView.image = nil
+            }
             self.dismissView = .none
             completion?()
         }

@@ -202,7 +202,7 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
         let index = indexPath.row - self.offset
         if index < 0 {
             // Add button
-            self.addNewPlayer()
+            self.showSelectPlayers()
         } else {
             // Player selected
             self.delegate?.didSelect(playerMO: playerList[index])
@@ -211,46 +211,20 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
     
     // MARK: - Create players ============================================================ -
     
-    func addNewPlayer() {
-        if Scorecard.settings.syncEnabled && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
-            self.showSelectPlayers()
-        } else {
-            PlayerDetailViewController.show(from: self.parent, playerDetail: PlayerDetail(visibleLocally: true), mode: .create, sourceView: self,
-                                            completion: { (playerDetail, deletePlayer) in
-                                                if playerDetail != nil {
-                                                    self.createPlayers(newPlayers: [playerDetail!], createMO: true)
-                                                }
-            })
-        }
-    }
-    
     private func showSelectPlayers() {
-        _ = SelectPlayersViewController.show(from: self.parent, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: true, completion: { (selected, playerList, selection, thisPlayerUUID) in
-            if let selected = selected, let playerList = playerList, let selection = selection {
-                if selected > 0 {
-                    var createPlayerList: [PlayerDetail] = []
-                    for playerNumber in 1...playerList.count {
-                        if selection[playerNumber-1] {
-                            createPlayerList.append(playerList[playerNumber-1])
-                        }
-                    }
-                    self.createPlayers(newPlayers: createPlayerList, createMO: false)
+        _ = SelectPlayersViewController.show(from: self.parent, completion: { (playerList) in
+            if let playerList = playerList {
+                if playerList.count > 0 {
+                    self.createPlayers(newPlayers: playerList)
                 }
             }
         })
     }
     
-    private func createPlayers(newPlayers: [PlayerDetail], createMO: Bool) {
+    private func createPlayers(newPlayers: [PlayerDetail]) {
         
         for newPlayerDetail in newPlayers {
-            var playerMO: PlayerMO?
-            if createMO {
-                // Need to create Managed Object
-                _ = newPlayerDetail.createMO()
-            } else {
-                playerMO = newPlayerDetail.playerMO
-            }
-            if let playerMO = playerMO {
+            if let playerMO = newPlayerDetail.playerMO {
                 
                 if newPlayers.count != 1 || self.updateBeforeSelect {
                     

@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerSelectionViewDelegate, CreatePlayerViewDelegate {    
+class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerSelectionViewDelegate, CreatePlayerViewDelegate, RelatedPlayersDelegate {
 
     private enum Section: CGFloat {
         case downloadPlayers = 0
@@ -29,16 +29,15 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     private var playerSelectionViewHeight: CGFloat = 0.0
     private var overlap: CGFloat = 0.0
 
-    private let downloadPlayers = 1
-    private let createPlayer = 2
-
+    // Title bar and text field tags
+    private let downloadPlayersTag = 1
+    private let createPlayerTag = 2
     private var downloadFieldTag = 1
     
     // MARK: - IB Outlets ============================================================================== -
     
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet private weak var contentViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var scrollView: UIScrollView!
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
     @IBOutlet private weak var topSection: UIView!
     @IBOutlet private weak var bottomSection: UIView!
@@ -74,10 +73,10 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     @IBOutlet private weak var createPlayerSettingsContainerTopConstraint: NSLayoutConstraint!
     @IBOutlet private weak var createPlayerSettingsContainerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var downloadIdentifierTextField: UITextField!
-    @IBOutlet private weak var downloadButton: RoundedButton!
+    @IBOutlet private weak var downloadButton: ShadowButton!
     @IBOutlet private weak var createPlayerSettingsTitleLabel: UILabel!
     @IBOutlet private weak var smallFormatHomeButton: ClearButton!
-    @IBOutlet private var actionButton: [RoundedButton]!
+    @IBOutlet private var actionButton: [ShadowButton]!
     @IBOutlet private var formLabel: [UILabel]!
     @IBOutlet private var settingsOnLineGamesEnabledSwitch: [UISwitch]!
     @IBOutlet private var settingsSaveLocationSwitch: [UISwitch]!
@@ -85,7 +84,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     // MARK: - IB Actions ============================================================================== -
         
     @IBAction func dowloadButtonPressed(_ sender: UIButton) {
-        self.showSelectPlayers()
+        self.showRelatedPlayers()
     }
     
     @IBAction func homeButtonPressed(_ sender: UIButton) {
@@ -180,13 +179,13 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
         let homeEnabled = !Scorecard.shared.playerList.isEmpty && Scorecard.settings.thisPlayerUUID != ""
         switch self.section {
         case .downloadPlayers:
-            self.downloadButton.isEnabled(self.downloadIdentifierTextField.text != "")
-            self.actionButton.forEach{(button) in button.isEnabled(homeEnabled)}
+            self.downloadButton.isEnabled = (self.downloadIdentifierTextField.text != "")
+            self.actionButton.forEach{(button) in button.isEnabled = homeEnabled}
         case .createPlayer:
             // Handled in CreatePlayerView
             break
         case .createPlayerSettings:
-            self.actionButton.forEach{(button) in button.isEnabled(homeEnabled)}
+            self.actionButton.forEach{(button) in button.isEnabled = homeEnabled}
         }
         self.smallFormatHomeButton.isEnabled(homeEnabled)
     }
@@ -350,14 +349,14 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
             // Don't allow blank field
             return false
         } else if textField.tag == downloadFieldTag {
-            self.showSelectPlayers()
+            self.showRelatedPlayers()
         }
         return true
     }
     
     // MARK: - Create Player Delegate ============================================================= -
     
-    internal func playerCreated(playerDetail: PlayerDetail) {
+    internal func didCreatePlayer(playerDetail: PlayerDetail) {
         if Scorecard.settings.thisPlayerUUID == "" {
             self.setThisPlayer(playerUUID: playerDetail.playerUUID)
         }
@@ -370,13 +369,13 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     
     internal func buttonPressed(_ button: UIView) {
         switch button.tag {
-        case downloadPlayers:
+        case downloadPlayersTag:
             self.createPlayerView.willBecomeInactive {
                 self.change(section: .downloadPlayers)
                 self.downloadIdentifierTextField.becomeFirstResponder()
             }
         
-        case createPlayer:
+        case createPlayerTag:
             self.change(section: .createPlayer)
             
         default:
@@ -424,25 +423,24 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
         self.showPlayerSelection()
     }
 
-    // MARK: - Show select players view ================================================================= -
+    // MARK: - Show select players view and delegate view ================================================ -
     
-    private func showSelectPlayers() {
-        let noExistingPlayers = Scorecard.shared.playerList.isEmpty
-        
-        _ = SelectPlayersViewController.show(from: self, specificEmail: self.downloadIdentifierTextField.text!, descriptionMode: .lastPlayed, allowOtherPlayer: false, allowNewPlayer: false, saveToICloud: false, completion: { (selected, playerList, selection, thisPlayerUUID) in
+    private func showRelatedPlayers() {
+        _ = RelatedPlayersViewController.show(from: self, email: self.downloadIdentifierTextField.text!, descriptionMode: .lastPlayed)
+    }
+    
+    internal func didDownloadPlayers(playerDetailList: [PlayerDetail], emailPlayerUUID: String?) {
+         if Scorecard.settings.thisPlayerUUID == "" && emailPlayerUUID != nil {
             
-            if !(playerList?.isEmpty ?? true) && noExistingPlayers && thisPlayerUUID != nil {
-                // TODO Need to do review this to match UUIDs instead
-                if let playerMO = playerList?.first(where: { $0.playerUUID == thisPlayerUUID}) {
-                    // Found the player whose email we entered (should usually be the case)
-                    self.setThisPlayer(playerUUID: playerMO.playerUUID)
-                } else {
-                    self.setThisPlayer(playerUUID: playerList!.first!.playerUUID)
-                }
+            if let playerDetail = playerDetailList.first(where: { $0.playerUUID == emailPlayerUUID}) {
+                // Found the player whose email we entered (should usually be the case)
+                self.setThisPlayer(playerUUID: playerDetail.playerUUID)
+            } else {
+                self.setThisPlayer(playerUUID: playerDetailList.first!.playerUUID)
             }
-            self.downloadIdentifierTextField.text = ""
-            self.enableControls()
-        })
+        }
+        self.downloadIdentifierTextField.text = ""
+        self.enableControls()
     }
     
     // MARK: - View defaults ============================================================================ -
@@ -475,11 +473,8 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
         self.createPlayerView.backgroundColor = Palette.buttonFace
         self.createPlayerSettingsView.backgroundColor = Palette.buttonFace
         
-        self.downloadIdentifierTextField.attributedPlaceholder = NSAttributedString(string: "Enter identifier", attributes:[NSAttributedString.Key.foregroundColor: Palette.inputControlPlaceholder])
-        self.downloadButton.normalBackgroundColor = Palette.banner
-        self.downloadButton.disabledTextColor = Palette.disabled
-        self.downloadButton.normalTextColor = Palette.bannerText
-        self.downloadButton.disabledTextColor = Palette.disabledText
+        self.downloadButton.setBackgroundColor(Palette.banner)
+        self.downloadButton.setTitleColor(Palette.bannerText, for: .normal)
         
         self.createPlayerSettingsTitleLabel.textColor = Palette.text
                 
@@ -490,10 +485,8 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
         
         self.formLabel.forEach{(label) in label.textColor = Palette.text}
         
-        self.actionButton.forEach{(button) in button.normalBackgroundColor = Palette.banner}
-        self.actionButton.forEach{(button) in button.disabledBackgroundColor = Palette.disabled}
-        self.actionButton.forEach{(button) in button.normalTextColor =  Palette.bannerText}
-        self.actionButton.forEach{(button) in button.disabledTextColor =  Palette.disabledText}
+        self.actionButton.forEach{(button) in button.setBackgroundColor(Palette.banner)}
+        self.actionButton.forEach{(button) in button.setTitleColor(Palette.bannerText, for: .normal)}
                 
     }
     
@@ -556,8 +549,6 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
 
         self.createPlayerSettingsContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
         
-        self.downloadButton.toRounded(cornerRadius: 8.0)
-        
         self.addTargets(self.downloadIdentifierTextField)
         
         self.settingsOnLineGamesEnabledSwitch.forEach{(control) in control.addTarget(self, action: #selector(GetStartedViewController.onlineGamesChanged(_:)), for: .valueChanged) }
@@ -568,7 +559,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
 
         self.settingsSaveLocationSwitch.forEach{(control) in self.resizeSwitch(control, factor: 0.75)}
         
-        self.actionButton.forEach{(button) in button.toRounded(cornerRadius: button.frame.height/2.0)}
+        self.actionButton.forEach{(button) in button.toCircle()}
     }
     
     public func resizeSwitch(_ control: UISwitch, factor: CGFloat) {

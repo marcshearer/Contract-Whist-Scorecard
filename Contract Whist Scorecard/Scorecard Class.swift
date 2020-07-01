@@ -236,6 +236,11 @@ class Scorecard {
         return found
     }
     
+    func playerUUID(email: String)->String? {
+        // Try to find a player UUID from an email - note xref not guaranteed up-to-date
+        return self.playerEmails.first(where: {$0.value.uppercased() == email.uppercased()})?.key
+    }
+    
     func playerName(_ playerUUID: String) -> String {
         let index = self.playerList.firstIndex(where: {$0.playerUUID!.uppercased() == playerUUID.uppercased()} )
         if index != nil {

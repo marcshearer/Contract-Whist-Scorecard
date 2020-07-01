@@ -68,10 +68,7 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="207" height="97.5"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d4C-tb-O65" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                                        <rect key="frame" x="58.5" y="30.5" width="143.5" height="36"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="36" id="Fec-PT-yYm"/>
-                                                        </constraints>
+                                                        <rect key="frame" x="58.5" y="28.5" width="143.5" height="40.5"/>
                                                         <state key="normal" title="Add"/>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -93,10 +90,7 @@
                                                 <rect key="frame" x="207" y="0.0" width="207" height="97.5"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fBH-uz-ILO" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                                        <rect key="frame" x="5" y="30.5" width="143.5" height="36"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="36" id="2h5-UQ-Nht"/>
-                                                        </constraints>
+                                                        <rect key="frame" x="5" y="28.5" width="143.5" height="40.5"/>
                                                         <state key="normal" title="Remove"/>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
@@ -144,6 +138,7 @@
                                             <constraint firstItem="CGJ-vK-D1D" firstAttribute="centerY" secondItem="UqW-zK-oba" secondAttribute="centerY" id="fAE-44-aSz"/>
                                             <constraint firstItem="CGJ-vK-D1D" firstAttribute="width" secondItem="UqW-zK-oba" secondAttribute="width" multiplier="130:375" id="odI-Jp-prI"/>
                                             <constraint firstItem="HHK-uO-Q6W" firstAttribute="top" secondItem="UqW-zK-oba" secondAttribute="top" id="tNT-NK-CXA"/>
+                                            <constraint firstItem="fBH-uz-ILO" firstAttribute="height" secondItem="d4C-tb-O65" secondAttribute="height" id="wrj-DF-vbr"/>
                                             <constraint firstAttribute="bottom" secondItem="u5k-hk-9dd" secondAttribute="bottom" id="yWe-Y6-c7Y"/>
                                         </constraints>
                                     </view>
@@ -151,6 +146,7 @@
                                 <constraints>
                                     <constraint firstItem="PDh-wl-4sL" firstAttribute="leading" secondItem="aNJ-zj-39E" secondAttribute="leading" id="0J5-AX-IEs"/>
                                     <constraint firstItem="PDh-wl-4sL" firstAttribute="top" secondItem="aNJ-zj-39E" secondAttribute="top" id="DXZ-SG-V9T"/>
+                                    <constraint firstItem="d4C-tb-O65" firstAttribute="height" secondItem="aNJ-zj-39E" secondAttribute="height" multiplier="0.2" constant="12" id="Ie4-vw-Dbh"/>
                                     <constraint firstItem="PDh-wl-4sL" firstAttribute="leading" secondItem="sBT-Uz-Stg" secondAttribute="leading" id="K3Y-qd-QMY"/>
                                     <constraint firstItem="sBT-Uz-Stg" firstAttribute="trailing" secondItem="UqW-zK-oba" secondAttribute="trailing" id="Mwb-Jk-zEL"/>
                                     <constraint firstAttribute="trailing" secondItem="PDh-wl-4sL" secondAttribute="trailing" id="eI0-s1-KFQ"/>

@@ -33,19 +33,27 @@ class Palette {
     static var boldText = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.boldText, traitCollection)})
     static var buttonFace = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.buttonFace, traitCollection)})
+    { (traitCollection) in return Themes.color(.buttonFace, traitCollection)})
     static var buttonFaceText = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.buttonFaceText, traitCollection)})
+    { (traitCollection) in return Themes.color(.buttonFaceText, traitCollection)})
+    static var confirmButton = UIColor(dynamicProvider:
+    { (traitCollection) in return Themes.color(.confirmButton, traitCollection)})
+    static var confirmButtonText = UIColor(dynamicProvider:
+    { (traitCollection) in return Themes.color(.confirmButtonText, traitCollection)})
+    static var otherButton = UIColor(dynamicProvider:
+        { (traitCollection) in return Themes.color(.otherButton, traitCollection)})
+    static var otherButtonText = UIColor(dynamicProvider:
+    { (traitCollection) in return Themes.color(.otherButtonText, traitCollection)})
     static var continueButton = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.continueButton, traitCollection)})
+        { (traitCollection) in return Themes.color(.continueButton, traitCollection)})
     static var continueButtonText = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.continueButtonText, traitCollection)})
+    { (traitCollection) in return Themes.color(.continueButtonText, traitCollection)})
     static var darkHighlight = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.darkHighlight, traitCollection)})
+    { (traitCollection) in return Themes.color(.darkHighlight, traitCollection)})
     static var darkHighlightText = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.darkHighlightText, traitCollection)})
+    { (traitCollection) in return Themes.color(.darkHighlightText, traitCollection)})
     static var darkHighlightTextContrast = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.darkHighlightTextContrast, traitCollection)})
+    { (traitCollection) in return Themes.color(.darkHighlightTextContrast, traitCollection)})
     static var disabledText = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.disabledText, traitCollection)})
     static var disabled = UIColor(dynamicProvider:

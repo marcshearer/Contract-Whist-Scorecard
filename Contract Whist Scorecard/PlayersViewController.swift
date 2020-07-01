@@ -183,36 +183,41 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
     }
     
     func removePlayer(at indexPath: IndexPath) {
+            
         if let playerMO = self.playerDetailList[indexPath.item].playerMO {
-            self.alertDecision("This will remove the player \n'\(playerMO.name!)'\nfrom this device.\n\nIf you have synchronised with iCloud the player will still be available to download in future.\n Otherwise this will remove their details permanently.\n\n Are you sure you want to do this?", title: "Warning", okButtonText: "Remove", okHandler: {
-                self.collectionView.performBatchUpdates({
-                    // Remove from core data, the player list and the collection view etc
-                    
-                    // Remove from email cache
-                    Scorecard.shared.playerEmails[playerMO.playerUUID!] = nil
-                    
-                    // Remove from player list
-                    if let index = Scorecard.shared.playerList.firstIndex(where: {$0.playerUUID == playerMO.playerUUID}) {
-                        Scorecard.shared.playerList.remove(at: index)
-                    }
-                    
-                    // Remove from collection view and player detail list
-                    self.collectionView.deleteItems(at: [indexPath])
-                    self.playerDetailList.remove(at: indexPath.item)
-                                    
-                    // Stop wiggling
-                    if let cell = self.collectionView.cellForItem(at: indexPath) as? PlayerCell {
-                        cell.thumbnail?.stopWiggle()
-                    }
-                    
-                    if CoreData.update(updateLogic: {
-                        CoreData.delete(record: playerMO)
-                    }) {
-                        // Save to iCloud
-                        Scorecard.settings.saveToICloud()
-                    }
+            if playerMO.playerUUID == Scorecard.settings.thisPlayerUUID {
+                self.alertMessage("This player is set up as yourself and therefore cannot be removed.\n\nIf you want to remove this player, select another player as yourself in Settings first.")
+            } else {
+                self.alertDecision("This will remove the player \n'\(playerMO.name!)'\nfrom this device.\n\nIf you have synchronised with iCloud the player will still be available to download in future.\n Otherwise this will remove their details permanently.\n\n Are you sure you want to do this?", title: "Warning", okButtonText: "Remove", okHandler: {
+                    self.collectionView.performBatchUpdates({
+                        // Remove from core data, the player list and the collection view etc
+                        
+                        // Remove from email cache
+                        Scorecard.shared.playerEmails[playerMO.playerUUID!] = nil
+                        
+                        // Remove from player list
+                        if let index = Scorecard.shared.playerList.firstIndex(where: {$0.playerUUID == playerMO.playerUUID}) {
+                            Scorecard.shared.playerList.remove(at: index)
+                        }
+                        
+                        // Remove from collection view and player detail list
+                        self.collectionView.deleteItems(at: [indexPath])
+                        self.playerDetailList.remove(at: indexPath.item)
+                        
+                        // Stop wiggling
+                        if let cell = self.collectionView.cellForItem(at: indexPath) as? PlayerCell {
+                            cell.thumbnail?.stopWiggle()
+                        }
+                        
+                        if CoreData.update(updateLogic: {
+                            CoreData.delete(record: playerMO)
+                        }) {
+                            // Save to iCloud
+                            Scorecard.settings.saveToICloud()
+                        }
+                    })
                 })
-            })
+            }
         }
     }
     
@@ -248,10 +253,11 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
     func updatePlayer(objectID: NSManagedObjectID) {
         // Find any cells containing an image/player which has just been downloaded asynchronously
         Utility.mainThread {
-            let index = self.playerDetailList.firstIndex(where: {($0.objectID == objectID)})
-            if index != nil {   
+            // Update the player from the managed object
+            if let index = self.playerDetailList.firstIndex(where: {($0.objectID == objectID)}) {
                 // Found it - reload the cell
-                self.collectionView.reloadItems(at: [IndexPath(row: index!, section: 0)])
+                self.playerDetailList[index].restoreMO()
+                self.collectionView.reloadItems(at: [IndexPath(row: index, section: 0)])
             } else {
                 // New player - shouldn't happen but refresh view just in case
                 self.collectionView.reloadData()
@@ -276,8 +282,8 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
     // MARK: - Utility routines ============================================================================== -
     
     private func showSelectPlayers() {
-        _ = SelectPlayersViewController.show(from: self, descriptionMode: .opponents, allowOtherPlayer: true, allowNewPlayer: true, completion: { (selected, playerList, selection, thisPlayerUUID) in
-            if selected != nil {
+        _ = SelectPlayersViewController.show(from: self, completion: { (playerList) in
+            if playerList != nil {
                 self.playerDetailList = Scorecard.shared.playerDetailList()
                 self.collectionView.reloadData()
             }
@@ -294,9 +300,7 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
     
     private func startWiggle() {
         self.forEachCell { (playerUUID, cell) in
-            if playerUUID != Scorecard.settings.thisPlayerUUID {
-                cell.thumbnail?.startWiggle()
-            }
+            cell.thumbnail?.startWiggle()
         }
     }
 

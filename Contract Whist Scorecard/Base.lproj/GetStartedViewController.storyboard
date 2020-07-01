@@ -179,7 +179,7 @@
                                                                                 <nil key="textColor"/>
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
-                                                                            <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter identifier" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kTp-wT-5j4">
+                                                                            <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter identifier" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kTp-wT-5j4" customClass="TextField" customModule="Whist_2" customModuleProvider="target">
                                                                                 <rect key="frame" x="30" y="43" width="275" height="34"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="34" id="XP0-4c-H5a"/>
@@ -190,12 +190,17 @@
                                                                                     <outlet property="delegate" destination="1IM-Ht-gqg" id="xzE-9p-qxS"/>
                                                                                 </connections>
                                                                             </textField>
-                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r7j-ct-C03" userLabel="Download Players From Cloud" customClass="RoundedButton" customModule="Whist_2" customModuleProvider="target">
-                                                                                <rect key="frame" x="55" y="93" width="225" height="40"/>
+                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r7j-ct-C03" userLabel="Download Players From Cloud" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                                                                <rect key="frame" x="50.5" y="93" width="234.5" height="40"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="40" id="W3C-er-vJR"/>
                                                                                 </constraints>
                                                                                 <state key="normal" title="Download Players from Cloud"/>
+                                                                                <userDefinedRuntimeAttributes>
+                                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                                        <real key="value" value="8"/>
+                                                                                    </userDefinedRuntimeAttribute>
+                                                                                </userDefinedRuntimeAttributes>
                                                                                 <connections>
                                                                                     <action selector="dowloadButtonPressed:" destination="1IM-Ht-gqg" eventType="touchUpInside" id="N91-W5-m87"/>
                                                                                 </connections>
@@ -234,13 +239,18 @@
                                                                                 <color key="tintColor" name="Emphasis"/>
                                                                                 <color key="onTintColor" name="Emphasis"/>
                                                                             </switch>
-                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hWL-vp-NMG" userLabel="Home Button" customClass="RoundedButton" customModule="Whist_2" customModuleProvider="target">
+                                                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hWL-vp-NMG" userLabel="Home Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                                                                 <rect key="frame" x="30" y="110" width="275" height="50"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="50" id="tFi-FF-5XO"/>
                                                                                 </constraints>
                                                                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                                                 <state key="normal" title="Home"/>
+                                                                                <userDefinedRuntimeAttributes>
+                                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                                        <real key="value" value="8"/>
+                                                                                    </userDefinedRuntimeAttribute>
+                                                                                </userDefinedRuntimeAttributes>
                                                                                 <connections>
                                                                                     <action selector="homeButtonPressed:" destination="1IM-Ht-gqg" eventType="touchUpInside" id="w3P-LN-CZx"/>
                                                                                 </connections>
@@ -248,13 +258,14 @@
                                                                         </subviews>
                                                                         <color key="backgroundColor" name="Clear"/>
                                                                         <constraints>
+                                                                            <constraint firstItem="r7j-ct-C03" firstAttribute="centerX" secondItem="Yxj-bF-zcW" secondAttribute="centerX" id="1nM-fT-mD9"/>
                                                                             <constraint firstItem="rsJ-aG-lPX" firstAttribute="leading" secondItem="DZR-yv-rGe" secondAttribute="trailing" constant="8" id="6EZ-Dq-002"/>
                                                                             <constraint firstItem="hWL-vp-NMG" firstAttribute="leading" secondItem="Yxj-bF-zcW" secondAttribute="leading" constant="30" id="6rq-Cb-oVg"/>
                                                                             <constraint firstAttribute="trailing" secondItem="kTp-wT-5j4" secondAttribute="trailing" constant="30" id="9js-dO-fw6"/>
                                                                             <constraint firstItem="b40-Dt-fzz" firstAttribute="leading" secondItem="QKE-Wj-jHa" secondAttribute="trailing" constant="8" id="Aaf-Po-bGf"/>
+                                                                            <constraint firstItem="r7j-ct-C03" firstAttribute="width" secondItem="Yxj-bF-zcW" secondAttribute="width" multiplier="0.7" id="GPn-is-KDL"/>
                                                                             <constraint firstItem="DZR-yv-rGe" firstAttribute="leading" secondItem="Yxj-bF-zcW" secondAttribute="leading" constant="30" id="J7p-Sj-3cd"/>
                                                                             <constraint firstItem="rsJ-aG-lPX" firstAttribute="width" secondItem="rsJ-aG-lPX" secondAttribute="height" multiplier="49:31" id="LJ8-6g-YlP"/>
-                                                                            <constraint firstAttribute="trailing" secondItem="r7j-ct-C03" secondAttribute="trailing" constant="55" id="RE1-fG-0c9"/>
                                                                             <constraint firstItem="kTp-wT-5j4" firstAttribute="leading" secondItem="Yxj-bF-zcW" secondAttribute="leading" constant="30" id="U41-I1-isM"/>
                                                                             <constraint firstItem="QKE-Wj-jHa" firstAttribute="leading" secondItem="Yxj-bF-zcW" secondAttribute="leading" constant="30" id="VnM-kN-BC5"/>
                                                                             <constraint firstItem="DZR-yv-rGe" firstAttribute="top" secondItem="r7j-ct-C03" secondAttribute="bottom" constant="16" id="X6i-pR-rVr"/>
@@ -270,7 +281,6 @@
                                                                             <constraint firstAttribute="trailing" secondItem="hWL-vp-NMG" secondAttribute="trailing" constant="30" id="q9V-IZ-gpO"/>
                                                                             <constraint firstItem="QKE-Wj-jHa" firstAttribute="top" secondItem="DZR-yv-rGe" secondAttribute="bottom" constant="10" id="sA6-Hp-eop"/>
                                                                             <constraint firstAttribute="bottom" secondItem="hWL-vp-NMG" secondAttribute="bottom" constant="20" id="tl9-Jt-1bK"/>
-                                                                            <constraint firstItem="r7j-ct-C03" firstAttribute="leading" secondItem="Yxj-bF-zcW" secondAttribute="leading" constant="55" id="xXN-LI-jvQ"/>
                                                                             <constraint firstItem="rsJ-aG-lPX" firstAttribute="top" secondItem="r7j-ct-C03" secondAttribute="bottom" constant="20" id="yXy-Az-0fu"/>
                                                                         </constraints>
                                                                     </view>
@@ -359,7 +369,7 @@
                                                                                         <color key="tintColor" name="Emphasis"/>
                                                                                         <color key="onTintColor" name="Emphasis"/>
                                                                                     </switch>
-                                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NRM-Ik-bSI" userLabel="Home Button" customClass="RoundedButton" customModule="Whist_2" customModuleProvider="target">
+                                                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NRM-Ik-bSI" userLabel="Home Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                                                                         <rect key="frame" x="30" y="70" width="275" height="50"/>
                                                                                         <constraints>
                                                                                             <constraint firstAttribute="height" constant="50" id="glc-nS-wpp"/>
@@ -429,10 +439,10 @@
                                                                         <size key="value" width="4" height="4"/>
                                                                     </userDefinedRuntimeAttribute>
                                                                     <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
-                                                                        <real key="value" value="0.10000000000000001"/>
+                                                                        <real key="value" value="0.20000000000000001"/>
                                                                     </userDefinedRuntimeAttribute>
                                                                     <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
-                                                                        <integer key="value" value="2"/>
+                                                                        <real key="value" value="4"/>
                                                                     </userDefinedRuntimeAttribute>
                                                                 </userDefinedRuntimeAttributes>
                                                                 <connections>
@@ -470,10 +480,10 @@
                                                                 <size key="value" width="4" height="4"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
-                                                                <real key="value" value="0.10000000000000001"/>
+                                                                <real key="value" value="0.20000000000000001"/>
                                                             </userDefinedRuntimeAttribute>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
-                                                                <integer key="value" value="2"/>
+                                                                <real key="value" value="4"/>
                                                             </userDefinedRuntimeAttribute>
                                                         </userDefinedRuntimeAttributes>
                                                         <connections>

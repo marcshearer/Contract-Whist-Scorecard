@@ -412,7 +412,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         cell.textField.addTarget(self, action: #selector(SettingsViewController.facetimeAddressChanged(_:)), for: UIControl.Event.editingChanged)
                         cell.textField.addTarget(self, action: #selector(SettingsViewController.facetimeAddressEndEdit(_:)), for: UIControl.Event.editingDidEnd)
                         cell.textField.addTarget(self, action: #selector(SettingsViewController.facetimeAddressBeginEdit(_:)), for: UIControl.Event.editingDidBegin)
-                        cell.textField.attributedPlaceholder = NSAttributedString(string: "Enter Facetime address", attributes:[NSAttributedString.Key.foregroundColor: Palette.inputControlPlaceholder])
+                        cell.textField.placeholder = "Enter FaceTime address"
                         cell.textField.text = Scorecard.settings.faceTimeAddress
                         cell.setEnabled(enabled: self.facetimeEnabled)
                         
@@ -1706,9 +1706,6 @@ extension SettingsViewController {
             cell.label.textColor = Palette.text
             cell.toggleSwitch.tintColor = Palette.emphasis
             cell.toggleSwitch.onTintColor = Palette.emphasis
-        case "Text Field":
-            cell.textField.backgroundColor = Palette.background
-            cell.textField.textColor = Palette.text
         default:
             break
         }

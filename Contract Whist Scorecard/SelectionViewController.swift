@@ -792,19 +792,12 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     
     // MARK: - Create players on return from Add Player ================================================================ -
     
-    private func createPlayers(newPlayers: [PlayerDetail], createMO: Bool) {
+    private func createPlayers(newPlayers: [PlayerDetail]) {
         let addToSelected = (self.selectionMode == .single ? (newPlayers.count == 1) :
                                                     (selectedList.count + newPlayers.count <= Scorecard.shared.maxPlayers))
         
         for newPlayerDetail in newPlayers {
-            var playerMO: PlayerMO?
-            if createMO {
-                // Need to create Managed Object
-                _ = newPlayerDetail.createMO()
-            } else {
-                playerMO = newPlayerDetail.playerMO
-            }
-            if let playerMO = playerMO {
+            if let playerMO = newPlayerDetail.playerMO {
                 
                 // Add to available list and unselected list if not there already
                 if self.availableList.firstIndex(where: { $0.playerUUID! == newPlayerDetail.playerUUID } ) == nil {
@@ -838,32 +831,14 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     // MARK: - Show other views ============================================================================================ -
     
     func addNewPlayer() {
-        if Scorecard.activeSettings.syncEnabled && Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn {
-            self.showSelectPlayers()
-        } else {
-            PlayerDetailViewController.show(from: self, playerDetail: PlayerDetail(visibleLocally: true), mode: .create, sourceView: view,
-                                            completion: { (playerDetail, deletePlayer) in
-                                                if playerDetail != nil {
-                                                    self.createPlayers(newPlayers: [playerDetail!], createMO: true)
-                                                }
-            })
-        }
+        self.showSelectPlayers()
     }
     
     private func showSelectPlayers() {
         self.controllerDelegate?.didInvoke(.selectPlayers) { (context) in
-            if let selected = context?["selected"] as? Int,
-               let playerList = context?["playerList"] as? [PlayerDetail],
-               let selection = context?["selection"] as? [Bool] {
-               
-                if selected > 0 {
-                    var createPlayerList: [PlayerDetail] = []
-                    for playerNumber in 1...playerList.count {
-                        if selection[playerNumber-1] {
-                            createPlayerList.append(playerList[playerNumber-1])
-                        }
-                    }
-                    self.createPlayers(newPlayers: createPlayerList, createMO: false)
+            if let playerList = context?["playerList"] as? [PlayerDetail] {
+                if playerList.count > 0 {
+                    self.createPlayers(newPlayers: playerList)
                 }
             }
         }

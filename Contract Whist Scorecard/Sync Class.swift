@@ -1215,7 +1215,7 @@ class Sync {
             localRecord.syncRecordID = cloudObject.recordID.recordName
             
             // Clear temporary email if player UUIDs are in sync
-            if localRecord.playerUUID == cloudRecord.playerUUID {
+            if localRecord.playerUUID == cloudRecord.playerUUID && localRecord.tempEmail != nil {
                 localRecord.tempEmail = nil
                 changed = true
             }

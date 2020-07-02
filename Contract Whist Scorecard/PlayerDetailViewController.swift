@@ -124,7 +124,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
         self.setupSections()
         self.setupHeaderFields()
                
-        self.tableView.contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
+        self.tableView.contentInset = UIEdgeInsets(top: (ScorecardUI.landscapePhone() ? 0 : 10.0), left: 0.0, bottom: 0.0, right: 0.0)
         self.tableView.contentInsetAdjustmentBehavior = .never
         
         self.imageObserver = setPlayerDownloadNotification(name: .playerImageDownloaded)

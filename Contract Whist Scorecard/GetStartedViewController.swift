@@ -245,50 +245,45 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
             // Moving to / from download slide top clipping section
             switch section {
             case .downloadPlayers:
-                // Add in shadow (which might have been removed in previous animation)
-                self.downloadPlayersContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
+                // Sort out rounding of title bar corners
+                self.downloadPlayersTitleBar.set(topRounded: true, bottomRounded: false)
             default:
-                // Add in shadow (which might have been removed in previous animation)
-                self.createPlayerContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
                 // Pull the create player input view back up to touch the title bar
-                self.createPlayerClippingContainerTopConstraint.constant = 0
+                self.createPlayerClippingContainerTopConstraint.constant = -self.titleOverlap
             }
             Utility.animate(duration: 0.5,completion: {
                 switch section {
                 case .downloadPlayers:
                     // Push the create player input view down so that it is hidden (as the clipping window is slightly too big to allow for shadow)
-                    self.createPlayerClippingContainerTopConstraint.constant = 20
+                    self.createPlayerClippingContainerTopConstraint.constant = self.separatorHeight
                 case .createPlayer:
+                    // Activate the create players window (set first responder)
                     self.createPlayerView.didBecomeActive()
                 default:
-                    // Remove the shadow from the now hidden view as you get a line otherwise
-                    self.downloadPlayersContainerView.removeShadow()
+                    break
                 }
+                // Change the rounding of the create player title bar
+                self.createPlayerTitleBar.set(topRounded: true, bottomRounded: section != .createPlayer)
+                // Sort out rounding of title bar corners
+                self.downloadPlayersTitleBar.set(topRounded: true, bottomRounded: section != .downloadPlayers)
                 // Slide (invisibly) back to the create player view if necessary (from create player settings)
                 self.createPlayerContainerTopConstraint.constant = 0
             }, animations: {
                 // Slide up/down to the right view
                 self.downloadPlayersContainerTopConstraint.constant = -(min(1,section.rawValue) * self.containerHeight)
-                // Sort out rounding of title bar corners
-                self.downloadPlayersTitleBar.set(topRounded: true, bottomRounded: section != .downloadPlayers)
-                self.createPlayerTitleBar.set(topRounded: true, bottomRounded: section != .createPlayer)
             })
             
         } else {
             // Moving from create to/from settings - slide bottom clipping section
-            if section == .createPlayer {
-                // Add in shadow (which might have been removed in previous animation)
-                self.createPlayerContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
-            }
             Utility.animate(view: self.inputClippingContainerView, duration: 0.5, completion: {
                 if section != .createPlayer {
-                    // Remove the shadow from the now hidden view as you get a line otherwise
-                    self.createPlayerContainerView.removeShadow()
+                    // Active the create player view (set first responder)
                     self.createPlayerView.didBecomeActive()
                 }
             }, animations: {
                 // Slide up/down to the right view
                 self.createPlayerContainerTopConstraint.constant = -(min(1,section.rawValue - 1) * (self.containerHeight))
+                self.createPlayerSettingsContainerTopConstraint.constant = (section == .createPlayerSettings ? -self.titleOverlap : self.separatorHeight)
                 // Sort out rounding of title bar corners
                 self.createPlayerTitleBar.set(topRounded: true, bottomRounded: section != .createPlayer)
             })
@@ -536,20 +531,20 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
         } else {
             self.smallFormatHomeButton.isHidden = true
         }
-        
+       
         self.infoButtonContainer.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
         self.infoButton.toCircle()
 
         self.thisPlayerChangeContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
         self.thisPlayerChangeButton.roundCorners(cornerRadius: self.thisPlayerChangeButton.frame.height / 2.0)
+       
+        self.bottomSection.addShadow()
         
         self.downloadPlayersTitleBar.set(font: UIFont.systemFont(ofSize: 17, weight: .bold))
             
         self.createPlayerTitleBar.set(font: UIFont.systemFont(ofSize: 17, weight: .bold))
         self.createPlayerTitleBar.set(topRounded: true, bottomRounded: true)
 
-        self.createPlayerSettingsContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
-        
         self.addTargets(self.downloadIdentifierTextField)
         
         self.settingsOnLineGamesEnabledSwitch.forEach{(control) in control.addTarget(self, action: #selector(GetStartedViewController.onlineGamesChanged(_:)), for: .valueChanged) }

@@ -14,7 +14,7 @@ extension UIViewController {
     public enum AlertSound: Int {
         case shake = 1109
         case descent = 1024
-        case photeShutter = 1108
+        case photoShutter = 1108
         case alarm = 1304
         case lock = 1305
     }

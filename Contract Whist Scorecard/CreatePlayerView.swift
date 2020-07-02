@@ -144,6 +144,9 @@ class CreatePlayerView : UIView, UITextFieldDelegate, PlayerViewImagePickerDeleg
             self.playerDetail.visibleLocally = true
             self.playerDetail.localDateCreated = Date()
             self.updatePlayerControls()
+            self.enableControls()
+            self.createPlayerNameTextField.resignFirstResponder()
+            self.createPlayerIDTextField.resignFirstResponder()
         }
     }
 

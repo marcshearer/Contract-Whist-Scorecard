@@ -141,7 +141,7 @@ class ShadowButton: UIButton {
         self.titleInnerLabel?.textColor = self.titleOuterLabel?.textColor
         self.titleInnerLabel?.text = title
         self.titleInnerLabel?.textAlignment = .center
-        self.titleInnerLabel?.font = self.titleOuterLabel!.font
+        self.titleInnerLabel?.font = self.titleLabel!.font
         self.titleInnerLabel?.adjustsFontSizeToFitWidth = true
         
         self.titleOuterLabel?.addSubview(self.titleInnerLabel!)

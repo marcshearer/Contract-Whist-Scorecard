@@ -19,12 +19,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oEM-x6-cmp" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="0.0"/>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w68-7y-hH1">
-                                <rect key="frame" x="0.0" y="400" width="320" height="0.0"/>
-                                <color key="backgroundColor" name="Background"/>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EjK-X6-73n" userLabel="TItle Bar">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="31.5"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="41"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Yo-7G-yK7">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -58,12 +54,12 @@
                                 </constraints>
                                 <viewLayoutGuide key="safeArea" id="gK9-hU-jIb"/>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" canCancelContentTouches="NO" bouncesZoom="NO" keyboardDismissMode="interactive" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="100" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="3Pf-sG-Che">
-                                <rect key="frame" x="0.0" y="61.5" width="320" height="338.5"/>
-                                <color key="backgroundColor" name="Clear"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" canCancelContentTouches="NO" bouncesZoom="NO" keyboardDismissMode="interactive" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="100" sectionHeaderHeight="1" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="3Pf-sG-Che">
+                                <rect key="frame" x="0.0" y="71" width="320" height="329"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" tag="1" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Input Field" id="VqQ-AO-cnP" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="320" height="100"/>
+                                    <tableViewCell tag="1" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Input Field" id="VqQ-AO-cnP" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="55.5" width="320" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="VqQ-AO-cnP" id="bJZ-dV-GOe">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
@@ -93,8 +89,8 @@
                                             <outlet property="inputField" destination="MO2-8I-9gY" id="nHd-4r-Ts1"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Thumbnail" id="4bB-lk-KJB" userLabel="Thumbnail" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="128" width="320" height="100"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Thumbnail" id="4bB-lk-KJB" userLabel="Thumbnail" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="155.5" width="320" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4bB-lk-KJB" id="fte-rK-Q7r">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
@@ -130,27 +126,28 @@
                                             <outlet property="thumbnailMessageLabel" destination="aQB-fz-x1d" id="V00-N8-ebM"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" tag="1" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Action Button" id="oVk-Gg-hN9" userLabel="Action Button" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="228" width="320" height="100"/>
+                                    <tableViewCell tag="1" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Action Button" id="oVk-Gg-hN9" userLabel="Action Button" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="255.5" width="320" height="100"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oVk-Gg-hN9" id="OT3-Xq-84X">
+                                        <tableViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" tableViewCell="oVk-Gg-hN9" id="OT3-Xq-84X">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B6U-sI-8vL" userLabel="Separator">
-                                                    <rect key="frame" x="5" y="88" width="310" height="0.5"/>
+                                                    <rect key="frame" x="5" y="49.5" width="310" height="1"/>
                                                     <color key="backgroundColor" name="Disabled"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="0.5" id="rub-ok-qxN"/>
+                                                        <constraint firstAttribute="height" constant="1" id="rub-ok-qxN"/>
                                                     </constraints>
                                                 </view>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gys-Wx-NCn" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                                    <rect key="frame" x="100" y="76" width="120" height="24"/>
+                                                    <rect key="frame" x="100" y="38" width="120" height="24"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="AnR-DA-DgE"/>
                                                         <constraint firstAttribute="width" constant="120" id="pAT-fA-kcK"/>
                                                     </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <state key="normal">
                                                         <color key="titleColor" name="Text"/>
                                                     </state>
@@ -167,7 +164,7 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </button>
                                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1BY-OX-iTL" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                                    <rect key="frame" x="35" y="76" width="120" height="24"/>
+                                                    <rect key="frame" x="35" y="38" width="120" height="24"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="0Ee-0J-S4n"/>
@@ -189,7 +186,7 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </button>
                                                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="myt-ua-1yr" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                                    <rect key="frame" x="165" y="76" width="120" height="24"/>
+                                                    <rect key="frame" x="165" y="38" width="120" height="24"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="TjW-wR-0pk"/>
@@ -217,7 +214,7 @@
                                                 <constraint firstAttribute="trailing" secondItem="B6U-sI-8vL" secondAttribute="trailing" constant="5" id="BGF-hZ-J3D"/>
                                                 <constraint firstItem="myt-ua-1yr" firstAttribute="centerY" secondItem="1BY-OX-iTL" secondAttribute="centerY" id="FC1-pg-vdz"/>
                                                 <constraint firstItem="Gys-Wx-NCn" firstAttribute="centerY" secondItem="1BY-OX-iTL" secondAttribute="centerY" id="QFm-TT-oxy"/>
-                                                <constraint firstAttribute="bottom" secondItem="Gys-Wx-NCn" secondAttribute="bottom" id="dCQ-MQ-gBD"/>
+                                                <constraint firstItem="Gys-Wx-NCn" firstAttribute="centerY" secondItem="OT3-Xq-84X" secondAttribute="centerY" id="p0S-QT-OLs"/>
                                                 <constraint firstItem="myt-ua-1yr" firstAttribute="centerX" secondItem="OT3-Xq-84X" secondAttribute="centerX" constant="65" id="qxX-Ma-mpR"/>
                                                 <constraint firstItem="Gys-Wx-NCn" firstAttribute="centerY" secondItem="B6U-sI-8vL" secondAttribute="centerY" id="u4g-7b-7PC"/>
                                                 <constraint firstItem="1BY-OX-iTL" firstAttribute="centerX" secondItem="OT3-Xq-84X" secondAttribute="centerX" constant="-65" id="yn4-nz-GQO"/>
@@ -234,8 +231,8 @@
                                             <outletCollection property="buttons" destination="myt-ua-1yr" collectionClass="NSMutableArray" id="Pet-sG-Yt7"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Header" rowHeight="20" id="Iqn-31-i02" userLabel="Header" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="328" width="320" height="20"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Header" rowHeight="20" id="Iqn-31-i02" userLabel="Header" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="355.5" width="320" height="20"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Iqn-31-i02" id="DSq-Vy-Kpv">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
@@ -275,8 +272,8 @@
                                             <outlet property="headerLabel" destination="WkP-Tx-qpp" id="Izf-Xb-M5t"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Single" rowHeight="20" id="936-LU-FpL" userLabel="Single value" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="348" width="320" height="20"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Single" rowHeight="20" id="936-LU-FpL" userLabel="Single value" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="375.5" width="320" height="20"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="936-LU-FpL" id="PAc-Yg-lUQ">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
@@ -303,8 +300,8 @@
                                             <outlet property="singleLabel" destination="vLC-wd-Vcw" id="qVb-Ku-fIl"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Record" rowHeight="20" id="3pR-kx-rqq" userLabel="Record" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="368" width="320" height="20"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Record" rowHeight="20" id="3pR-kx-rqq" userLabel="Record" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="395.5" width="320" height="20"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3pR-kx-rqq" id="KDO-Ps-uVE">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
@@ -350,8 +347,8 @@
                                             <outlet property="recordValueLabel" destination="bPx-gv-q3o" id="fIo-Dc-otH"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Stat" rowHeight="20" id="x7B-uJ-jOF" userLabel="Stats" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="388" width="320" height="20"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Stat" rowHeight="20" id="x7B-uJ-jOF" userLabel="Stats" customClass="PlayerDetailCell" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="415.5" width="320" height="20"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="x7B-uJ-jOF" id="xaK-J7-p01">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
@@ -420,19 +417,15 @@
                             <constraint firstAttribute="trailing" secondItem="EjK-X6-73n" secondAttribute="trailing" id="9Lf-nR-oCF"/>
                             <constraint firstItem="3Pf-sG-Che" firstAttribute="top" secondItem="EjK-X6-73n" secondAttribute="bottom" constant="30" id="AF9-QL-nFx"/>
                             <constraint firstItem="EjK-X6-73n" firstAttribute="top" secondItem="o3W-OF-Z0q" secondAttribute="top" id="BXX-8x-uts"/>
-                            <constraint firstAttribute="bottom" secondItem="w68-7y-hH1" secondAttribute="bottom" id="Htp-4e-PRh"/>
                             <constraint firstItem="o3W-OF-Z0q" firstAttribute="top" secondItem="oEM-x6-cmp" secondAttribute="bottom" id="Ihu-aU-clz"/>
-                            <constraint firstItem="3Pf-sG-Che" firstAttribute="bottom" secondItem="o3W-OF-Z0q" secondAttribute="bottom" id="KCV-FW-m3J"/>
-                            <constraint firstItem="EjK-X6-73n" firstAttribute="height" secondItem="rYz-bu-WB3" secondAttribute="height" multiplier="3:38" id="N8y-7A-eW9"/>
+                            <constraint firstItem="3Pf-sG-Che" firstAttribute="bottom" secondItem="rYz-bu-WB3" secondAttribute="bottom" id="KCV-FW-m3J"/>
+                            <constraint firstItem="EjK-X6-73n" firstAttribute="height" secondItem="rYz-bu-WB3" secondAttribute="height" multiplier="2:38" constant="20" id="N8y-7A-eW9"/>
                             <constraint firstItem="3Pf-sG-Che" firstAttribute="trailing" secondItem="rYz-bu-WB3" secondAttribute="trailing" id="Nfe-di-RzQ"/>
                             <constraint firstAttribute="trailing" secondItem="oEM-x6-cmp" secondAttribute="trailing" id="NkH-0z-lB0"/>
                             <constraint firstItem="oEM-x6-cmp" firstAttribute="leading" secondItem="rYz-bu-WB3" secondAttribute="leading" id="QRZ-oN-kHQ"/>
                             <constraint firstItem="EjK-X6-73n" firstAttribute="leading" secondItem="rYz-bu-WB3" secondAttribute="leading" id="Vzf-XB-KIm"/>
-                            <constraint firstItem="w68-7y-hH1" firstAttribute="leading" secondItem="o3W-OF-Z0q" secondAttribute="leading" id="cVe-3N-9sr"/>
-                            <constraint firstItem="w68-7y-hH1" firstAttribute="top" secondItem="o3W-OF-Z0q" secondAttribute="bottom" id="mbk-Pd-mel"/>
                             <constraint firstItem="3Pf-sG-Che" firstAttribute="leading" secondItem="rYz-bu-WB3" secondAttribute="leading" id="nKv-9x-RaD"/>
                             <constraint firstItem="oEM-x6-cmp" firstAttribute="top" secondItem="rYz-bu-WB3" secondAttribute="top" id="uoA-ZN-1fQ"/>
-                            <constraint firstItem="o3W-OF-Z0q" firstAttribute="trailing" secondItem="w68-7y-hH1" secondAttribute="trailing" id="zLt-fO-a7k"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="o3W-OF-Z0q"/>
                         <connections>
@@ -444,7 +437,6 @@
                     <size key="freeformSize" width="320" height="400"/>
                     <connections>
                         <outlet property="finishButton" destination="2WO-9f-fdL" id="pmd-7x-0ge"/>
-                        <outlet property="footerPaddingView" destination="w68-7y-hH1" id="Xmj-iS-LZI"/>
                         <outlet property="tableView" destination="3Pf-sG-Che" id="wgU-9V-DwZ"/>
                         <outlet property="titleLabel" destination="5Yo-7G-yK7" id="hGx-94-XRg"/>
                         <outlet property="titleView" destination="EjK-X6-73n" id="TmN-HX-yrT"/>

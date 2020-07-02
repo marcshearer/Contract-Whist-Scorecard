@@ -35,11 +35,11 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
     private var playerSelectionViewHeight: CGFloat = 0.0
 
     // Other properties
-    private var cloudAlertController: UIAlertController!
     private var rotated = false
     private var firstTime = true
     private var downloadFieldTag = 1
     private var downloadList: [PlayerDetail] = []
+    private let bubbleView = BubbleView()
 
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var contentView: UIView!
@@ -140,6 +140,8 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
         case .createPlayer:
             // Move create players up to fill gap between title bar and panel
             self.createPlayerContainerTopConstraint.constant = -self.titleOverlap
+            // Change rounding of download title bar
+            self.downloadPlayersTitleBar.set(topRounded: true, bottomRounded: true)
         }
         Utility.animate(duration: 0.5,completion: {
             switch section {
@@ -147,14 +149,12 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
                 // Move create players down to have a gap between the title bar and panel
                 self.createPlayerContainerTopConstraint.constant = self.separatorHeight
             case .createPlayer:
-                // Active the create players window (set first responder)
+                // Activate the create players window (set first responder)
                 self.createPlayerView.didBecomeActive()
             }
             // Change rounding of create player title bar
             self.createPlayerTitleBar.set(topRounded: true, bottomRounded: section != .createPlayer)
         }, animations: {
-            // Change rounding of download title bar
-            self.downloadPlayersTitleBar.set(topRounded: true, bottomRounded: section != .downloadPlayers)
             // Slide up/down to the right view
             self.inputClippingContainerTopConstraint.constant = (section == .downloadPlayers ? -self.titleOverlap : 0)
             self.downloadPlayersContainerTopConstraint.constant = -(min(1,CGFloat(section.rawValue)) * self.containerHeight)
@@ -188,6 +188,7 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
     // MARK: - Create Player Delegate ============================================================= -
     
     internal func didCreatePlayer(playerDetail: PlayerDetail) {
+        self.bubbleView.show(from: self.view, message: "\(playerDetail.name)\ncreated")
         self.playerCreated(playerDetail: playerDetail, reloadRelatedPlayers: true)
     }
     
@@ -208,7 +209,7 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
         sync = Sync()
         self.sync?.delegate = self
         
-        self.cloudAlertController = self.alertWait("Downloading player from iCloud")
+        self.lockDuringDownload()
         
         // Get related players from cloud
         if !(self.sync?.synchronise(syncMode: .syncGetPlayerDetails, specificEmail: email, waitFinish: true, okToSyncWithTemporaryPlayerUUIDs: true) ?? false) {
@@ -227,24 +228,28 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
     internal func syncAlert(_ message: String, completion: @escaping ()->()) {
         self.alertMessage(message) {
             completion()
+            self.unlockAfterDownload()
         }
     }
     
     internal func syncCompletion(_ errors: Int) {
         Utility.mainThread {
-            self.cloudAlertController.dismiss(animated: true, completion: nil)
+            self.unlockAfterDownload()
         }
     }
     
     internal func syncReturnPlayers(_ returnedList: [PlayerDetail]!, _ thisPlayerUUID: String?) {
         Utility.mainThread {
-            self.cloudAlertController.dismiss(animated: true) {
-                if returnedList == nil {
-                    self.alertMessage("Player not found")
-                } else {
-                    for playerDetail in returnedList {
-                        // Note should only be one
+            if returnedList?.count ?? 0 == 0 {
+                self.alertMessage("Player not found", okHandler: self.unlockAfterDownload)
+            } else {
+                for playerDetail in returnedList {
+                    // Note should only be one
+                    if Scorecard.shared.isDuplicatePlayerUUID(playerDetail) {
+                        self.alertMessage("A player with this Unique ID already exists on this device", okHandler: self.unlockAfterDownload)
+                    } else {
                         self.addNewPlayer(playerDetail: playerDetail)
+                        self.bubbleView.show(from: self.view, message: "\(playerDetail.name)\ndownloaded", completion: self.unlockAfterDownload)
                     }
                 }
             }
@@ -262,6 +267,16 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
         }
     }
     
+    private func lockDuringDownload() {
+        self.downloadIdentifierTextField.text = ""
+        self.downloadIdentifierTextField.placeholder = "Downloading ..."
+        self.bottomSection.isUserInteractionEnabled = false
+    }
+    
+    private func unlockAfterDownload() {
+        self.downloadIdentifierTextField.placeholder = "Enter identifier"
+        self.bottomSection.isUserInteractionEnabled = true
+    }
     // MARK: - Button delegate ==================================================================== -
     
     internal func buttonPressed(_ button: UIView) {
@@ -331,7 +346,7 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
             // Setup heights for the input containers and clipping views
             let titleBarHeight: CGFloat = self.downloadPlayersTitleBar.frame.height
             
-            let clippingHeight = self.bottomSection.frame.height - titleBarHeight - (self.view.safeAreaInsets.bottom == 0.0 ? 5.0 : 0.0) - self.separatorHeight
+            let clippingHeight = self.bottomSection.frame.height - titleBarHeight - (self.view.safeAreaInsets.bottom == 0.0 ? 5.0 : 0.0) - self.separatorHeight + self.titleOverlap
             
             self.containerHeight = clippingHeight - titleBarHeight - self.separatorHeight - 10.0 // to allow for shadow
             self.downloadPlayersContainerHeightConstraint.constant = self.containerHeight
@@ -393,4 +408,69 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
         // Abandon any sync in progress
         self.sync?.stop()
     }
+}
+
+class BubbleView: UIView {
+    
+    private var shadowView: UIView?
+    private var label: UILabel?
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        self.isHidden = true
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame:frame)
+        self.isHidden = true
+    }
+    
+    func show(from view: UIView, message: String, size: CGFloat = 150, completion: (()->())? = nil) {
+        self.frame = CGRect(x: 0, y: 0, width: size, height: size)
+        self.alpha = 1
+        if self.label == nil {
+            self.shadowView = UIView(frame: CGRect(origin: CGPoint(), size: self.frame.size))
+            self.toCircle(self.shadowView)
+            self.shadowView?.backgroundColor = Palette.banner
+            self.addSubview(self.shadowView!)
+            self.label = UILabel(frame: CGRect(x: 5, y: 5, width: size - 10, height: size - 10))
+            self.label?.backgroundColor = UIColor.clear
+            self.label?.textColor = Palette.bannerText
+            self.label?.numberOfLines = 0
+            self.label?.adjustsFontSizeToFitWidth = true
+            self.label?.textAlignment = .center
+            self.shadowView?.addSubview(self.label!)
+            self.addShadow(shadowOpacity: 0.5)
+        }
+        self.label?.text = message
+        self.removeFromSuperview()
+        view.addSubview(self)
+        view.bringSubviewToFront(self)
+        self.isHidden = false
+        self.transform = CGAffineTransform(scaleX: 0, y: 0)
+        Utility.animate(duration: 0.25,
+            completion: {
+                Utility.animate(duration: 0.2, afterDelay: 2.0,
+                    completion: {
+                        self.transform = CGAffineTransform(scaleX: 1, y: 1)
+                        completion?()
+                    },
+                    animations: {
+                        Utility.getActiveViewController()?.alertSound(sound: .lock)
+                        self.frame = CGRect(x: view.frame.maxX, y: view.frame.maxY / 8, width: size, height: size)
+                        self.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+                        self.alpha = 0
+                    })
+            },
+            animations: {
+                self.transform = CGAffineTransform(scaleX: 1, y: 1)
+                self.frame = CGRect(x: view.frame.midX - (size / 2), y: max(50, view.frame.midY - size), width: size, height: size)
+            })
+    }
+    
+    func toCircle(_ view: UIView?) {
+        view?.layer.cornerRadius = self.layer.bounds.height / 2
+        view?.layer.masksToBounds = true
+    }
+    
 }

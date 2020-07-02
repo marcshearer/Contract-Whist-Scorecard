@@ -161,6 +161,31 @@
                                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pC7-CE-6dr" userLabel="Bottom Section">
                                                 <rect key="frame" x="0.0" y="149.5" width="375" height="517.5"/>
                                                 <subviews>
+                                                    <view tag="1" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F7d-oP-X1Z" userLabel="Download Players Title Bar" customClass="TitleBar" customModule="Whist_2" customModuleProvider="target">
+                                                        <rect key="frame" x="20" y="34.5" width="335" height="90"/>
+                                                        <color key="backgroundColor" name="Clear"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="90" id="ixR-ZL-WBN"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="title" value="Download Players"/>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                <real key="value" value="8"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="size" keyPath="shadowSize">
+                                                                <size key="value" width="0.0" height="0.0"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
+                                                                <real key="value" value="0.20000000000000001"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                                                <integer key="value" value="2"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <outlet property="delegate" destination="1IM-Ht-gqg" id="XGZ-2d-z0r"/>
+                                                        </connections>
+                                                    </view>
                                                     <view clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zUI-T7-Tua" userLabel="Input Clipping Container View">
                                                         <rect key="frame" x="0.0" y="125" width="375" height="400"/>
                                                         <subviews>
@@ -168,7 +193,7 @@
                                                                 <rect key="frame" x="20" y="0.0" width="335" height="180"/>
                                                                 <subviews>
                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yxj-bF-zcW" userLabel="Download Players View">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="335" height="180"/>
+                                                                        <rect key="frame" x="0.0" y="-25" width="335" height="205"/>
                                                                         <subviews>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Unique ID - E.g. email" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="saw-B8-yT0">
                                                                                 <rect key="frame" x="30" y="20" width="275" height="21"/>
@@ -240,7 +265,7 @@
                                                                                 <color key="onTintColor" name="Emphasis"/>
                                                                             </switch>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hWL-vp-NMG" userLabel="Home Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                                                                <rect key="frame" x="30" y="110" width="275" height="50"/>
+                                                                                <rect key="frame" x="30" y="135" width="275" height="50"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="50" id="tFi-FF-5XO"/>
                                                                                 </constraints>
@@ -289,10 +314,35 @@
                                                                 <constraints>
                                                                     <constraint firstItem="Yxj-bF-zcW" firstAttribute="leading" secondItem="f7X-tF-vWj" secondAttribute="leading" id="Ayc-7m-VL0"/>
                                                                     <constraint firstAttribute="height" constant="180" id="OW8-dn-kGr"/>
-                                                                    <constraint firstItem="Yxj-bF-zcW" firstAttribute="top" secondItem="f7X-tF-vWj" secondAttribute="top" id="lkh-Kf-Oqb"/>
+                                                                    <constraint firstItem="Yxj-bF-zcW" firstAttribute="top" secondItem="f7X-tF-vWj" secondAttribute="top" constant="-25" id="lkh-Kf-Oqb"/>
                                                                     <constraint firstAttribute="bottom" secondItem="Yxj-bF-zcW" secondAttribute="bottom" id="sJV-Ia-xHx"/>
                                                                     <constraint firstAttribute="trailing" secondItem="Yxj-bF-zcW" secondAttribute="trailing" id="uFD-Mh-S47"/>
                                                                 </constraints>
+                                                            </view>
+                                                            <view tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GKG-0U-Qdr" userLabel="Create Player Title Bar" customClass="TitleBar" customModule="Whist_2" customModuleProvider="target">
+                                                                <rect key="frame" x="20" y="200" width="335" height="90"/>
+                                                                <color key="backgroundColor" name="Clear"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="90" id="cJc-Jv-hap"/>
+                                                                </constraints>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="string" keyPath="title" value="Create New Player"/>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                        <real key="value" value="8"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="size" keyPath="shadowSize">
+                                                                        <size key="value" width="0.0" height="0.0"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
+                                                                        <real key="value" value="0.20000000000000001"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                                                        <real key="value" value="2"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                                <connections>
+                                                                    <outlet property="delegate" destination="1IM-Ht-gqg" id="p1p-Wi-NqG"/>
+                                                                </connections>
                                                             </view>
                                                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8J8-Vm-nCo" userLabel="Create Player Clipping Container View">
                                                                 <rect key="frame" x="0.0" y="310" width="375" height="370"/>
@@ -424,31 +474,6 @@
                                                                 </constraints>
                                                                 <viewLayoutGuide key="safeArea" id="qnq-Ha-dWp"/>
                                                             </view>
-                                                            <view tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GKG-0U-Qdr" userLabel="Create Player Title Bar" customClass="TitleBar" customModule="Whist_2" customModuleProvider="target">
-                                                                <rect key="frame" x="20" y="200" width="335" height="90"/>
-                                                                <color key="backgroundColor" name="Clear"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="90" id="cJc-Jv-hap"/>
-                                                                </constraints>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="string" keyPath="title" value="Create New Player"/>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                        <real key="value" value="8"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="size" keyPath="shadowSize">
-                                                                        <size key="value" width="4" height="4"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
-                                                                        <real key="value" value="0.20000000000000001"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
-                                                                        <real key="value" value="2"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                                <connections>
-                                                                    <outlet property="delegate" destination="1IM-Ht-gqg" id="p1p-Wi-NqG"/>
-                                                                </connections>
-                                                            </view>
                                                         </subviews>
                                                         <color key="backgroundColor" name="Clear"/>
                                                         <constraints>
@@ -464,31 +489,6 @@
                                                             <constraint firstItem="8J8-Vm-nCo" firstAttribute="top" secondItem="GKG-0U-Qdr" secondAttribute="bottom" constant="20" id="wUm-Jf-VE4"/>
                                                         </constraints>
                                                         <viewLayoutGuide key="safeArea" id="ZES-Ck-4an"/>
-                                                    </view>
-                                                    <view tag="1" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F7d-oP-X1Z" userLabel="Download Players Title Bar" customClass="TitleBar" customModule="Whist_2" customModuleProvider="target">
-                                                        <rect key="frame" x="20" y="35" width="335" height="90"/>
-                                                        <color key="backgroundColor" name="Clear"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="90" id="ixR-ZL-WBN"/>
-                                                        </constraints>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="string" keyPath="title" value="Download Players"/>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                <real key="value" value="8"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="size" keyPath="shadowSize">
-                                                                <size key="value" width="4" height="4"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
-                                                                <real key="value" value="0.20000000000000001"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
-                                                                <integer key="value" value="2"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                        <connections>
-                                                            <outlet property="delegate" destination="1IM-Ht-gqg" id="XGZ-2d-z0r"/>
-                                                        </connections>
                                                     </view>
                                                 </subviews>
                                                 <color key="backgroundColor" name="Clear"/>

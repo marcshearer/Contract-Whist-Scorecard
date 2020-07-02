@@ -124,7 +124,8 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
         self.setupSections()
         self.setupHeaderFields()
                
-        self.tableView.contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 20.0, right: 0.0)
+        self.tableView.contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
+        self.tableView.contentInsetAdjustmentBehavior = .never
         
         self.imageObserver = setPlayerDownloadNotification(name: .playerImageDownloaded)
         
@@ -223,13 +224,19 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
         return header
     }
     
+    internal func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let view = UIView()
+        view.backgroundColor = Palette.background
+        return view
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         var height: CGFloat
         let landscape = ScorecardUI.landscapePhone()
         
         switch indexPath.section {
         case editSection, deleteSection:
-            height = (landscape ? 30.0 : 40.0)
+            height = (landscape ? 40.0 : 50.0)
         case thumbnailSection:
             height = 60.0
         case statsSection:
@@ -798,12 +805,11 @@ extension PlayerDetailViewController {
 
     private func defaultViewColors() {
 
-        self.footerPaddingView.backgroundColor = Palette.background
+        self.view.backgroundColor = Palette.background
         self.finishButton.setTitleColor(Palette.bannerText, for: .normal)
-        self.footerPaddingView.backgroundColor = Palette.background
         self.titleView.backgroundColor = Palette.banner
         self.titleLabel.textColor = Palette.bannerText
-        self.view.backgroundColor = Palette.background
+        self.tableView.backgroundColor = Palette.background
     }
 
     private func defaultCellColors(cell: PlayerDetailCell) {
@@ -816,7 +822,7 @@ extension PlayerDetailViewController {
             cell.cancelButton.setBackgroundColor(Palette.buttonFace)
             cell.confirmButton.setTitleColor(Palette.errorText, for: .normal)
             cell.confirmButton.setBackgroundColor(Palette.error)
-            cell.separator.backgroundColor = Palette.disabled
+            cell.separator.backgroundColor = Palette.separator
         case "Header":
             cell.headerLabel.textColor = Palette.textEmphasised
             cell.duplicateLabel.textColor = Palette.textError

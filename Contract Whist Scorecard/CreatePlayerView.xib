@@ -37,7 +37,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="370"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="* required" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5CH-F5-L5g">
-                            <rect key="frame" x="8" y="8" width="359" height="21"/>
+                            <rect key="frame" x="8" y="0.0" width="359" height="21"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="21" id="rcG-Sq-p9B"/>
                             </constraints>
@@ -46,7 +46,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="* Player Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="1JK-yI-rAC">
-                            <rect key="frame" x="30" y="31" width="265" height="21"/>
+                            <rect key="frame" x="30" y="23" width="265" height="21"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="21" id="TON-nV-Wii"/>
                             </constraints>
@@ -55,7 +55,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Duplicate" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="cw0-LT-KSb" userLabel="Player Name Duplicate">
-                            <rect key="frame" x="295" y="31" width="50" height="21"/>
+                            <rect key="frame" x="295" y="23" width="50" height="21"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="21" id="fQb-ET-pxg"/>
                             </constraints>
@@ -64,7 +64,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wPW-PC-gxV" userLabel="Player Name Text Field" customClass="TextField" customModule="Whist_2" customModuleProvider="target">
-                            <rect key="frame" x="30" y="54" width="315" height="34"/>
+                            <rect key="frame" x="30" y="46" width="315" height="34"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="34" id="Br1-mN-0II"/>
                             </constraints>
@@ -72,7 +72,7 @@
                             <textInputTraits key="textInputTraits"/>
                         </textField>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="* Unique ID - E.g. email" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="9u3-wu-EBQ">
-                            <rect key="frame" x="30" y="104" width="265" height="21"/>
+                            <rect key="frame" x="30" y="96" width="265" height="21"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="21" id="an0-kH-xsz"/>
                             </constraints>
@@ -81,7 +81,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Duplicate" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="zxG-Ev-cRQ" userLabel="Unique ID Duplicate">
-                            <rect key="frame" x="295" y="104" width="50" height="21"/>
+                            <rect key="frame" x="295" y="96" width="50" height="21"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="21" id="59o-pn-V1h"/>
                             </constraints>
@@ -90,7 +90,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <textField opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter identifier" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6fl-Y8-bXz" userLabel="Unique ID Text Field" customClass="TextField" customModule="Whist_2" customModuleProvider="target">
-                            <rect key="frame" x="30" y="127" width="315" height="34"/>
+                            <rect key="frame" x="30" y="119" width="315" height="34"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="34" id="53f-Wl-Rw3"/>
                             </constraints>
@@ -98,7 +98,7 @@
                             <textInputTraits key="textInputTraits"/>
                         </textField>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4f7-EG-TTF" userLabel="Image Picker View">
-                            <rect key="frame" x="30" y="173" width="50" height="50"/>
+                            <rect key="frame" x="30" y="165" width="50" height="50"/>
                             <color key="backgroundColor" name="Clear"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="QKx-Vn-9En"/>
@@ -106,7 +106,7 @@
                             </constraints>
                         </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iUy-Pb-3Vy" userLabel="Create Player Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                            <rect key="frame" x="30" y="253" width="315" height="50"/>
+                            <rect key="frame" x="30" y="245" width="315" height="50"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="NXa-eS-u5J"/>
                             </constraints>
@@ -122,7 +122,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ywu-HJ-YWs" userLabel="Small Format Create Player Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                            <rect key="frame" x="96" y="173" width="249" height="50"/>
+                            <rect key="frame" x="96" y="165" width="249" height="50"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="Mh1-kU-DYz"/>
                             </constraints>
@@ -165,7 +165,7 @@
                         <constraint firstItem="wPW-PC-gxV" firstAttribute="leading" secondItem="LAo-9j-rI7" secondAttribute="leading" constant="30" id="l5J-5j-SvP"/>
                         <constraint firstItem="cw0-LT-KSb" firstAttribute="leading" secondItem="1JK-yI-rAC" secondAttribute="trailing" id="oIn-1G-UBm"/>
                         <constraint firstItem="5CH-F5-L5g" firstAttribute="leading" secondItem="LAo-9j-rI7" secondAttribute="leading" constant="8" id="qnB-V1-py7"/>
-                        <constraint firstItem="5CH-F5-L5g" firstAttribute="top" secondItem="LAo-9j-rI7" secondAttribute="top" constant="8" id="rhD-vz-bK9"/>
+                        <constraint firstItem="5CH-F5-L5g" firstAttribute="top" secondItem="LAo-9j-rI7" secondAttribute="top" id="rhD-vz-bK9"/>
                         <constraint firstItem="cw0-LT-KSb" firstAttribute="top" secondItem="1JK-yI-rAC" secondAttribute="top" id="u9E-1J-wuK"/>
                         <constraint firstItem="9u3-wu-EBQ" firstAttribute="leading" secondItem="LAo-9j-rI7" secondAttribute="leading" constant="30" id="yWH-aH-69B"/>
                         <constraint firstAttribute="trailing" secondItem="ywu-HJ-YWs" secondAttribute="trailing" constant="30" id="z8T-wb-IZm"/>

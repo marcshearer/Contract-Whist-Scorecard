@@ -30,6 +30,7 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
     // Properties to manage sliding views
     private var section: Section = .downloadPlayers
     private let separatorHeight: CGFloat = 20.0
+    private let titleOverlap: CGFloat = 25.0
     private var containerHeight: CGFloat = 0.0
     private var playerSelectionViewHeight: CGFloat = 0.0
 
@@ -48,6 +49,7 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
     @IBOutlet private weak var bottomSection: UIView!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var inputClippingContainerView: UIView!
+    @IBOutlet private weak var inputClippingContainerTopConstraint: NSLayoutConstraint!
     @IBOutlet private weak var inputClippingContainerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var downloadPlayersTitleBar: TitleBar!
     @IBOutlet private weak var createPlayerTitleBar: TitleBar!
@@ -130,30 +132,32 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
     
     private func change(section: Section) {
         self.section = section
-        
-        if section == .downloadPlayers {
-            // Add in shadow on download (which might have been removed in previous animation)
-            self.downloadPlayersContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
+
+        switch section {
+        case .downloadPlayers:
+            // Change rounding of download title bar
             self.downloadPlayersTitleBar.set(topRounded: true, bottomRounded: false)
-        } else {
-            // Add in shadow on create (which might have been removed in previous animation)
-            self.createPlayerContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
+        case .createPlayer:
+            // Move create players up to fill gap between title bar and panel
+            self.createPlayerContainerTopConstraint.constant = -self.titleOverlap
         }
         Utility.animate(duration: 0.5,completion: {
             switch section {
+            case .downloadPlayers:
+                // Move create players down to have a gap between the title bar and panel
+                self.createPlayerContainerTopConstraint.constant = self.separatorHeight
             case .createPlayer:
-                self.downloadPlayersTitleBar.set(topRounded: true, bottomRounded: true)
+                // Active the create players window (set first responder)
                 self.createPlayerView.didBecomeActive()
-                self.downloadPlayersContainerView.removeShadow()
-            default:
-                break
             }
+            // Change rounding of create player title bar
             self.createPlayerTitleBar.set(topRounded: true, bottomRounded: section != .createPlayer)
-            }, animations: {
+        }, animations: {
+            // Change rounding of download title bar
+            self.downloadPlayersTitleBar.set(topRounded: true, bottomRounded: section != .downloadPlayers)
             // Slide up/down to the right view
+            self.inputClippingContainerTopConstraint.constant = (section == .downloadPlayers ? -self.titleOverlap : 0)
             self.downloadPlayersContainerTopConstraint.constant = -(min(1,CGFloat(section.rawValue)) * self.containerHeight)
-            // Slide Create player view up to meet title bar
-            self.createPlayerContainerTopConstraint.constant = (section == .createPlayer ? 0 : self.separatorHeight)
         })
     }
     
@@ -309,7 +313,6 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
         self.createPlayerTitleBar.set(textColor: Palette.buttonFaceText)
         
         self.downloadPlayersView.backgroundColor = Palette.buttonFace
-        self.createPlayerView.backgroundColor = Palette.buttonFace
                 
         self.downloadDownloadButton.setBackgroundColor(Palette.confirmButton)
         self.downloadDownloadButton.setTitleColor(Palette.confirmButtonText, for: .normal)
@@ -346,6 +349,8 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
     
     private func setupControls() {
        
+        self.bottomSection.addShadow()
+
         self.downloadPlayersTitleBar.set(font: UIFont.systemFont(ofSize: 17, weight: .bold))
             
         self.createPlayerTitleBar.set(font: UIFont.systemFont(ofSize: 17, weight: .bold))

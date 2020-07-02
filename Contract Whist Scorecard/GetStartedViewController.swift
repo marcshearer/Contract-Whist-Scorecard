@@ -25,6 +25,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     private var imageObserver: NSObjectProtocol?
     
     private let separatorHeight: CGFloat = 20.0
+    private let titleOverlap: CGFloat = 25.0
     private var containerHeight: CGFloat = 0.0
     private var playerSelectionViewHeight: CGFloat = 0.0
     private var overlap: CGFloat = 0.0

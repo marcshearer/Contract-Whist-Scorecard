@@ -79,8 +79,33 @@
                                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gn8-wt-d0L" userLabel="Bottom Section">
                                                 <rect key="frame" x="0.0" y="35" width="414" height="632"/>
                                                 <subviews>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ejQ-cw-pgS" userLabel="Download Players Title Bar" customClass="TitleBar" customModule="Whist_2" customModuleProvider="target">
+                                                        <rect key="frame" x="20" y="20" width="374" height="90"/>
+                                                        <color key="backgroundColor" name="Clear"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="90" id="FJz-Gu-z6D"/>
+                                                        </constraints>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="string" keyPath="title" value="Download Players"/>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                <real key="value" value="8"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="size" keyPath="shadowSize">
+                                                                <size key="value" width="0.0" height="0.0"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
+                                                                <real key="value" value="0.20000000000000001"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                                                <integer key="value" value="2"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <outlet property="delegate" destination="FdF-BR-2d1" id="NQb-rh-Vea"/>
+                                                        </connections>
+                                                    </view>
                                                     <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kpY-xq-luu" userLabel="Input Clipping Container View">
-                                                        <rect key="frame" x="0.0" y="110" width="414" height="590"/>
+                                                        <rect key="frame" x="0.0" y="85" width="414" height="590"/>
                                                         <subviews>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D6b-P4-tOh" userLabel="Download Players Container View">
                                                                 <rect key="frame" x="20" y="0.0" width="374" height="300"/>
@@ -89,7 +114,7 @@
                                                                         <rect key="frame" x="0.0" y="0.0" width="374" height="300"/>
                                                                         <subviews>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="using Unique ID" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1aO-IP-taI">
-                                                                                <rect key="frame" x="30" y="20" width="314" height="21"/>
+                                                                                <rect key="frame" x="30" y="0.0" width="314" height="21"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="21" id="hfN-95-nBm"/>
                                                                                 </constraints>
@@ -98,7 +123,7 @@
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
                                                                             <textField opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter identifier" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="h2T-Xr-Sk7" customClass="TextField" customModule="Whist_2" customModuleProvider="target">
-                                                                                <rect key="frame" x="30" y="46" width="222" height="34"/>
+                                                                                <rect key="frame" x="30" y="26" width="222" height="34"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="34" id="FTi-r4-DT6"/>
                                                                                 </constraints>
@@ -106,7 +131,7 @@
                                                                                 <textInputTraits key="textInputTraits"/>
                                                                             </textField>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="le8-8z-48n" userLabel="Download Players From Cloud" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                                                                <rect key="frame" x="264" y="43" width="80" height="40"/>
+                                                                                <rect key="frame" x="264" y="23" width="80" height="40"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="40" id="8KU-ML-psG"/>
                                                                                     <constraint firstAttribute="width" constant="80" id="Mvm-yJ-uws"/>
@@ -118,7 +143,7 @@
                                                                                 </connections>
                                                                             </button>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6AV-8E-YdY" userLabel="Separator">
-                                                                                <rect key="frame" x="20" y="87" width="334" height="16"/>
+                                                                                <rect key="frame" x="20" y="67" width="334" height="16"/>
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tBK-On-lKv" userLabel="Separator Line">
                                                                                         <rect key="frame" x="0.0" y="8" width="334" height="0.5"/>
@@ -150,7 +175,7 @@
                                                                                 </constraints>
                                                                             </view>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="FDz-w3-g1q">
-                                                                                <rect key="frame" x="20" y="107" width="334" height="31.5"/>
+                                                                                <rect key="frame" x="20" y="87" width="334" height="31.5"/>
                                                                                 <string key="text">who have already played
 players on this device</string>
                                                                                 <fontDescription key="fontDescription" type="italicSystem" pointSize="13"/>
@@ -158,7 +183,7 @@ players on this device</string>
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7wS-YP-qSg" customClass="RelatedPlayersView" customModule="Whist_2" customModuleProvider="target">
-                                                                                <rect key="frame" x="20" y="142.5" width="334" height="149.5"/>
+                                                                                <rect key="frame" x="20" y="122.5" width="334" height="169.5"/>
                                                                                 <color key="backgroundColor" name="Clear"/>
                                                                                 <userDefinedRuntimeAttributes>
                                                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="showCancel" value="NO"/>
@@ -176,7 +201,7 @@ players on this device</string>
                                                                             <constraint firstItem="1aO-IP-taI" firstAttribute="leading" secondItem="hxv-qR-621" secondAttribute="leading" constant="30" id="47M-qk-6zZ"/>
                                                                             <constraint firstItem="h2T-Xr-Sk7" firstAttribute="leading" secondItem="hxv-qR-621" secondAttribute="leading" constant="30" id="85b-4H-JfY"/>
                                                                             <constraint firstItem="FDz-w3-g1q" firstAttribute="leading" secondItem="hxv-qR-621" secondAttribute="leading" constant="20" id="ArG-5n-sry"/>
-                                                                            <constraint firstItem="1aO-IP-taI" firstAttribute="top" secondItem="hxv-qR-621" secondAttribute="top" constant="20" id="C6f-xX-0WT"/>
+                                                                            <constraint firstItem="1aO-IP-taI" firstAttribute="top" secondItem="hxv-qR-621" secondAttribute="top" id="C6f-xX-0WT"/>
                                                                             <constraint firstItem="7wS-YP-qSg" firstAttribute="top" secondItem="FDz-w3-g1q" secondAttribute="bottom" constant="4" id="DWA-HI-Swe"/>
                                                                             <constraint firstAttribute="trailing" secondItem="FDz-w3-g1q" secondAttribute="trailing" constant="20" id="EYD-3E-Fqp"/>
                                                                             <constraint firstAttribute="trailing" secondItem="6AV-8E-YdY" secondAttribute="trailing" constant="20" id="KVg-bc-YIv"/>
@@ -201,6 +226,31 @@ players on this device</string>
                                                                     <constraint firstItem="hxv-qR-621" firstAttribute="top" secondItem="D6b-P4-tOh" secondAttribute="top" id="oBg-NL-bcc"/>
                                                                 </constraints>
                                                             </view>
+                                                            <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qH5-CD-lIa" userLabel="Create Player Title Bar" customClass="TitleBar" customModule="Whist_2" customModuleProvider="target">
+                                                                <rect key="frame" x="20" y="320" width="374" height="90"/>
+                                                                <color key="backgroundColor" name="Clear"/>
+                                                                <constraints>
+                                                                    <constraint firstAttribute="height" constant="90" id="ceM-oX-lu8"/>
+                                                                </constraints>
+                                                                <userDefinedRuntimeAttributes>
+                                                                    <userDefinedRuntimeAttribute type="string" keyPath="title" value="Create New Player"/>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                                        <real key="value" value="8"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="size" keyPath="shadowSize">
+                                                                        <size key="value" width="0.0" height="0.0"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
+                                                                        <real key="value" value="0.20000000000000001"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                                                        <integer key="value" value="2"/>
+                                                                    </userDefinedRuntimeAttribute>
+                                                                </userDefinedRuntimeAttributes>
+                                                                <connections>
+                                                                    <outlet property="delegate" destination="FdF-BR-2d1" id="xyk-PK-Pz9"/>
+                                                                </connections>
+                                                            </view>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1BG-a0-xEE" userLabel="Create Player Container View">
                                                                 <rect key="frame" x="20" y="430" width="374" height="180"/>
                                                                 <subviews>
@@ -215,37 +265,12 @@ players on this device</string>
                                                                 </subviews>
                                                                 <color key="backgroundColor" name="Clear"/>
                                                                 <constraints>
-                                                                    <constraint firstAttribute="trailing" secondItem="3A7-MH-gLr" secondAttribute="trailing" id="5W9-Jc-ZxU"/>
-                                                                    <constraint firstItem="3A7-MH-gLr" firstAttribute="top" secondItem="1BG-a0-xEE" secondAttribute="top" id="Avn-Ws-Zq7"/>
-                                                                    <constraint firstItem="3A7-MH-gLr" firstAttribute="leading" secondItem="1BG-a0-xEE" secondAttribute="leading" id="DuA-bM-SB9"/>
+                                                                    <constraint firstAttribute="bottom" secondItem="3A7-MH-gLr" secondAttribute="bottom" id="4mJ-x4-Uug"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="3A7-MH-gLr" secondAttribute="trailing" id="Hqn-OU-vcd"/>
                                                                     <constraint firstAttribute="height" constant="180" id="KzY-fl-J7d"/>
-                                                                    <constraint firstAttribute="bottom" secondItem="3A7-MH-gLr" secondAttribute="bottom" id="T9I-YK-xrc"/>
+                                                                    <constraint firstItem="3A7-MH-gLr" firstAttribute="top" secondItem="1BG-a0-xEE" secondAttribute="top" id="ZOe-jd-I7U"/>
+                                                                    <constraint firstItem="3A7-MH-gLr" firstAttribute="leading" secondItem="1BG-a0-xEE" secondAttribute="leading" id="bWf-BT-lFM"/>
                                                                 </constraints>
-                                                            </view>
-                                                            <view tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qH5-CD-lIa" userLabel="Create Player Title Bar" customClass="TitleBar" customModule="Whist_2" customModuleProvider="target">
-                                                                <rect key="frame" x="20" y="320" width="374" height="90"/>
-                                                                <color key="backgroundColor" name="Clear"/>
-                                                                <constraints>
-                                                                    <constraint firstAttribute="height" constant="90" id="ceM-oX-lu8"/>
-                                                                </constraints>
-                                                                <userDefinedRuntimeAttributes>
-                                                                    <userDefinedRuntimeAttribute type="string" keyPath="title" value="Create New Player"/>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                        <real key="value" value="8"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="size" keyPath="shadowSize">
-                                                                        <size key="value" width="4" height="4"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
-                                                                        <real key="value" value="0.20000000000000001"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                    <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
-                                                                        <integer key="value" value="4"/>
-                                                                    </userDefinedRuntimeAttribute>
-                                                                </userDefinedRuntimeAttributes>
-                                                                <connections>
-                                                                    <outlet property="delegate" destination="FdF-BR-2d1" id="xyk-PK-Pz9"/>
-                                                                </connections>
                                                             </view>
                                                         </subviews>
                                                         <color key="backgroundColor" name="Clear"/>
@@ -263,31 +288,6 @@ players on this device</string>
                                                         </constraints>
                                                         <viewLayoutGuide key="safeArea" id="zrb-e1-YLK"/>
                                                     </view>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ejQ-cw-pgS" userLabel="Download Players Title Bar" customClass="TitleBar" customModule="Whist_2" customModuleProvider="target">
-                                                        <rect key="frame" x="20" y="20" width="374" height="90"/>
-                                                        <color key="backgroundColor" name="Clear"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="90" id="FJz-Gu-z6D"/>
-                                                        </constraints>
-                                                        <userDefinedRuntimeAttributes>
-                                                            <userDefinedRuntimeAttribute type="string" keyPath="title" value="Download Players"/>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                                <real key="value" value="8"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="size" keyPath="shadowSize">
-                                                                <size key="value" width="4" height="4"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
-                                                                <real key="value" value="0.20000000000000001"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
-                                                                <integer key="value" value="4"/>
-                                                            </userDefinedRuntimeAttribute>
-                                                        </userDefinedRuntimeAttributes>
-                                                        <connections>
-                                                            <outlet property="delegate" destination="FdF-BR-2d1" id="NQb-rh-Vea"/>
-                                                        </connections>
-                                                    </view>
                                                 </subviews>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
@@ -295,7 +295,7 @@ players on this device</string>
                                                     <constraint firstItem="ejQ-cw-pgS" firstAttribute="top" secondItem="gn8-wt-d0L" secondAttribute="top" constant="20" id="Gk2-aL-DYA"/>
                                                     <constraint firstItem="ejQ-cw-pgS" firstAttribute="leading" secondItem="HQL-3a-rkF" secondAttribute="leading" constant="20" id="Nc4-l3-nEO"/>
                                                     <constraint firstItem="HQL-3a-rkF" firstAttribute="trailing" secondItem="ejQ-cw-pgS" secondAttribute="trailing" constant="20" id="ZfF-lu-9tC"/>
-                                                    <constraint firstItem="kpY-xq-luu" firstAttribute="top" secondItem="ejQ-cw-pgS" secondAttribute="bottom" id="drS-oR-v9D"/>
+                                                    <constraint firstItem="kpY-xq-luu" firstAttribute="top" secondItem="ejQ-cw-pgS" secondAttribute="bottom" constant="-25" id="drS-oR-v9D"/>
                                                     <constraint firstAttribute="trailing" secondItem="kpY-xq-luu" secondAttribute="trailing" id="pBO-8S-51b"/>
                                                 </constraints>
                                                 <viewLayoutGuide key="safeArea" id="HQL-3a-rkF"/>
@@ -369,6 +369,7 @@ players on this device</string>
                         <outlet property="downloadSeparatorLabel" destination="Lbu-4g-YMu" id="k8e-dq-kNj"/>
                         <outlet property="downloadSeparatorView" destination="tBK-On-lKv" id="z5m-sc-aU0"/>
                         <outlet property="inputClippingContainerHeightConstraint" destination="SDU-rN-jJg" id="RRW-vs-2Nq"/>
+                        <outlet property="inputClippingContainerTopConstraint" destination="drS-oR-v9D" id="24F-Uy-2t0"/>
                         <outlet property="inputClippingContainerView" destination="kpY-xq-luu" id="TLg-yq-lw9"/>
                         <outlet property="titleLabel" destination="h9a-ZT-LM3" id="xAj-cC-aZN"/>
                         <outlet property="topSection" destination="J9G-1n-fps" id="cx3-YM-34x"/>

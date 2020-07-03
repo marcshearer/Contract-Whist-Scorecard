@@ -369,7 +369,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
         self.navigationBarHeightConstraint?.constant = ScorecardUI.navigationBarHeight
         
         // Setup sizes of thumbnail and a row in the collection
-        let thumbnailSize = SelectionViewController.thumbnailSize(labelHeight: self.labelHeight)
+        let thumbnailSize = SelectionViewController.thumbnailSize(from: self, labelHeight: self.labelHeight)
         self.thumbnailWidth = thumbnailSize.width
         self.thumbnailHeight = thumbnailSize.height
         self.rowHeight = self.thumbnailHeight + self.interRowSpacing
@@ -468,7 +468,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
                 if let thisPlayerFrame = self.thisPlayerFrame {
                     size = thisPlayerFrame.size
                 } else {
-                    size = SelectionViewController.thumbnailSize(labelHeight: nameHeight)
+                    size = SelectionViewController.thumbnailSize(from: self, labelHeight: nameHeight)
                 }
                 self.thisPlayerViewContainerWidthConstraint.constant = size.width + 10.0
                 
@@ -494,9 +494,9 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     
     /// Function used in other views to get the same thumbnail size
     
-    class public func thumbnailSize(labelHeight: CGFloat, marginWidth: CGFloat = 10.0, spacing: CGFloat = 10.0, maxHeight: CGFloat = 80.0) -> CGSize {
+    class public func thumbnailSize(from viewController: ScorecardViewController, labelHeight: CGFloat, marginWidth: CGFloat = 10.0, spacing: CGFloat = 10.0, maxHeight: CGFloat = 80.0) -> CGSize {
         var result: CGSize
-        if let viewController = Utility.getActiveViewController(ignoreAlertController: true), let view = viewController.view {
+        if let view = viewController.view {
             let viewSize = view.bounds
             let totalWidth = viewSize.width
             let totalHeight = viewSize.height

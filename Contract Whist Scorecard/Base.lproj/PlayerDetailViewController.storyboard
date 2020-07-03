@@ -134,7 +134,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B6U-sI-8vL" userLabel="Separator">
-                                                    <rect key="frame" x="5" y="49.5" width="310" height="1"/>
+                                                    <rect key="frame" x="20" y="49.5" width="280" height="1"/>
                                                     <color key="backgroundColor" name="Disabled"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="rub-ok-qxN"/>
@@ -177,8 +177,8 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="Gys-Wx-NCn" firstAttribute="centerX" secondItem="OT3-Xq-84X" secondAttribute="centerX" id="06d-fQ-7KL"/>
-                                                <constraint firstItem="B6U-sI-8vL" firstAttribute="leading" secondItem="OT3-Xq-84X" secondAttribute="leading" constant="5" id="4xn-bg-VWZ"/>
-                                                <constraint firstAttribute="trailing" secondItem="B6U-sI-8vL" secondAttribute="trailing" constant="5" id="BGF-hZ-J3D"/>
+                                                <constraint firstItem="B6U-sI-8vL" firstAttribute="leading" secondItem="OT3-Xq-84X" secondAttribute="leading" constant="20" id="4xn-bg-VWZ"/>
+                                                <constraint firstAttribute="trailing" secondItem="B6U-sI-8vL" secondAttribute="trailing" constant="20" id="BGF-hZ-J3D"/>
                                                 <constraint firstItem="myt-ua-1yr" firstAttribute="centerY" secondItem="1BY-OX-iTL" secondAttribute="centerY" id="FC1-pg-vdz"/>
                                                 <constraint firstItem="Gys-Wx-NCn" firstAttribute="centerY" secondItem="1BY-OX-iTL" secondAttribute="centerY" id="QFm-TT-oxy"/>
                                                 <constraint firstItem="Gys-Wx-NCn" firstAttribute="centerY" secondItem="OT3-Xq-84X" secondAttribute="centerY" id="p0S-QT-OLs"/>

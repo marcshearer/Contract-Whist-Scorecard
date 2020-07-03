@@ -46,6 +46,9 @@ import CloudKit
     
     // A method to return a player list (only used for getPlayers/getPlayerDetails mode but couldn't make it optional)
     @objc optional func syncReturnPlayers(_ playerList: [PlayerDetail]!, _ thisPlayerUUID: String?)
+    
+    // A debug property to identify the calling process
+    @objc optional var syncDelegateDescription: String { get }
 }
 
 public enum SyncMode {
@@ -108,6 +111,7 @@ class Sync {
     private var alertInProgress = false
     private var timer: Timer!
     private var timeout: Double!
+    private let uuid = UUID().uuidString
     
     // Variables to hold updates
     public static var syncInProgress = false
@@ -149,7 +153,7 @@ class Sync {
         errors = 0
         cloudObjectList = []
         var success = false
-        
+
         if !Sync.syncInProgress || waitFinish {
             self.errors = 0
             self.syncMode = syncMode
@@ -209,9 +213,9 @@ class Sync {
                     fatalError("Sync will be skipped")
                 }
             } else {
-                syncPhaseCount = -1
+                self.syncPhaseCount = -1
                 if Sync.syncInProgress {
-                    self.syncMessage("Waiting for previous operation to finish")
+                    self.syncMessage("Waiting for previous operation to finish (\(self.uuid.right(4)))")
                     self.delegate?.syncQueued?()
                     self.delegate?.syncMessage?("Queued...")
                     observer = setSyncCompletionNotification(name: .syncCompletion)
@@ -1354,7 +1358,6 @@ class Sync {
             }
             self.syncReturnPlayers(self.downloadedPlayerRecordList, self.thisPlayerUUID)
         }
-        self.syncController()
     }
     
     private func sendPlayersToCloud() -> Bool {
@@ -1672,7 +1675,7 @@ class Sync {
     
     private func syncReturnPlayers(_ playerList: [PlayerDetail]?, _ thisPlayer: String? = nil) {
         // All done
-        Sync.syncInProgress = false
+        // Sync.syncInProgress = false
         // Call the delegate handler if there is one
         delegate?.syncReturnPlayers?(playerList, thisPlayer)
         self.syncController()
@@ -1699,6 +1702,7 @@ class Sync {
                 }
                 self.delegate?.syncStarted?()
                 self.delegate?.syncMessage?("Started...")
+                Utility.debugMessage("sync", "Starting queued task from \(self.delegate?.syncDelegateDescription ?? "Unknown") (\(self.uuid.right(4)))")
                 self.syncController()
             }
         }

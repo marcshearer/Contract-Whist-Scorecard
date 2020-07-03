@@ -24,9 +24,10 @@ class RelatedPlayersView : UIView, UITableViewDelegate, UITableViewDataSource, S
     
     @IBInspectable private var showCancel: Bool = true
     
-    private var sync: Sync!
+    private var sync = Sync()
     private var syncStarted = false
     private var syncFinished = false
+    internal let syncDelegateDescription = "RelatedPlayers"
 
     private var email: String?
     private var playerDetailList: [(playerDetail: PlayerDetail, selected: Bool)] = []
@@ -58,7 +59,7 @@ class RelatedPlayersView : UIView, UITableViewDelegate, UITableViewDataSource, S
     
     @IBAction func cancelButtonPressed(_ sender: UIButton) {
         // Abandon any sync in progress
-        self.sync?.stop()
+        self.sync.stop()
         
         self.delegate?.didCancel?()
     }
@@ -71,7 +72,7 @@ class RelatedPlayersView : UIView, UITableViewDelegate, UITableViewDataSource, S
     @IBAction private func confirmButtonPressed(_ sender: UIButton) {
         
         // Abandon any sync in progress
-        self.sync?.stop()
+        self.sync.stop()
         
         if selected > 0 {
             // Action selection
@@ -156,11 +157,10 @@ class RelatedPlayersView : UIView, UITableViewDelegate, UITableViewDataSource, S
     
     private func selectCloudPlayers() {
 
-        sync = Sync()
-        self.sync?.delegate = self
+        self.sync.delegate = self
         
         // Get related players from cloud
-        if !(self.sync?.synchronise(syncMode: .syncGetPlayers, specificEmail: self.email, waitFinish: true, okToSyncWithTemporaryPlayerUUIDs: true) ?? false) {
+        if !(self.sync.synchronise(syncMode: .syncGetPlayers, specificEmail: self.email, waitFinish: true, okToSyncWithTemporaryPlayerUUIDs: true)) {
             self.syncCompletion(-1)
         }
     }

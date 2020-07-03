@@ -143,6 +143,10 @@
                                         <real key="value" value="0.0"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <outlet property="delegate" destination="btt-Xo-OBG" id="RNe-Bb-KyL"/>
+                                    <outlet property="parent" destination="btt-Xo-OBG" id="tDO-2O-NER"/>
+                                </connections>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="140" sectionHeaderHeight="18" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="KFM-qF-ry7">
                                 <rect key="frame" x="0.0" y="384.5" width="375" height="282.5"/>

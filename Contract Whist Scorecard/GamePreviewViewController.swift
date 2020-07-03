@@ -294,7 +294,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         
         navigationBarHeightConstraint.constant = ScorecardUI.navigationBarHeight
         
-        let thumbnailSize = SelectionViewController.thumbnailSize(labelHeight: self.labelHeight)
+        let thumbnailSize = SelectionViewController.thumbnailSize(from: self, labelHeight: self.labelHeight)
         self.thumbnailWidth = thumbnailSize.width
         self.thumbnailHeight = self.thumbnailWidth + 25.0
         self.cutCardHeight = self.thumbnailWidth

@@ -158,9 +158,6 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     private func initialise() {
         self.setOnlineGamesEnabled(Scorecard.settings.onlineGamesEnabled)
         self.setSaveLocation(Scorecard.settings.saveLocation)
-        
-        self.playerSelectionView.set(parent: self)
-        self.playerSelectionView.delegate = self
     }
     
     private func setOnlineGamesEnabled(_ enabled: Bool) {

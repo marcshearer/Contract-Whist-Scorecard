@@ -78,6 +78,7 @@
 		B2361A3A22D5B9DD007D88BB /* ConfirmPlayedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2361A3922D5B9DD007D88BB /* ConfirmPlayedViewController.swift */; };
 		B2372E262489351800A6872D /* SampleTheme.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2372E252489351800A6872D /* SampleTheme.xib */; };
 		B2372E282489353E00A6872D /* SampleTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2372E272489353E00A6872D /* SampleTheme.swift */; };
+		B23D9C6F24AE5132002C721B /* BubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23D9C6E24AE5132002C721B /* BubbleView.swift */; };
 		B2430CC722EABD1D00C4FC77 /* SlideOutButtonView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2430CC622EABD1D00C4FC77 /* SlideOutButtonView.xib */; };
 		B2430CC922EABD3100C4FC77 /* SlideOutButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2430CC822EABD3100C4FC77 /* SlideOutButtonView.swift */; };
 		B243385322D89B4E002EBD40 /* ThumbnailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B243385222D89B4E002EBD40 /* ThumbnailView.swift */; };
@@ -323,6 +324,7 @@
 		B2361A3922D5B9DD007D88BB /* ConfirmPlayedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmPlayedViewController.swift; sourceTree = "<group>"; };
 		B2372E252489351800A6872D /* SampleTheme.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SampleTheme.xib; sourceTree = "<group>"; };
 		B2372E272489353E00A6872D /* SampleTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleTheme.swift; sourceTree = "<group>"; };
+		B23D9C6E24AE5132002C721B /* BubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleView.swift; sourceTree = "<group>"; };
 		B2430CC622EABD1D00C4FC77 /* SlideOutButtonView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SlideOutButtonView.xib; sourceTree = "<group>"; };
 		B2430CC822EABD3100C4FC77 /* SlideOutButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideOutButtonView.swift; sourceTree = "<group>"; };
 		B243385222D89B4E002EBD40 /* ThumbnailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailView.swift; sourceTree = "<group>"; };
@@ -1003,6 +1005,7 @@
 				B2DD5D7B1ED1A87600725B55 /* Graph View Class.swift */,
 				B24AABE31EC4DC5F000D34B0 /* Core Data Class.swift */,
 				B29AD705224F88060087160B /* Whisper Class.swift */,
+				B23D9C6E24AE5132002C721B /* BubbleView.swift */,
 				B202551E22B13A560074310A /* Constraint.swift */,
 				B202552022BCCE220074310A /* ScrollView.swift */,
 				B2E9C75E22C1344C00B58BE5 /* Polygon.swift */,
@@ -1699,6 +1702,7 @@
 				B2B7550D1E619A3F00B1313B /* DataAdmin.swift in Sources */,
 				B2A3D9A1248E2804008556B8 /* Location.swift in Sources */,
 				B29FFF31223BA302002C01FE /* Banners.swift in Sources */,
+				B23D9C6F24AE5132002C721B /* BubbleView.swift in Sources */,
 				B2EA98E31E285F19000B7E54 /* WalkthroughViewController.swift in Sources */,
 				B2C054781FB8B55700846F6E /* ConfirmCountViewController.swift in Sources */,
 				B2519457230C4284006240DE /* Custom Transitions.swift in Sources */,

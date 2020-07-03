@@ -19,10 +19,9 @@ import CoreData
 
 class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    public weak var delegate: PlayerSelectionViewDelegate!
+    @IBOutlet public weak var delegate: PlayerSelectionViewDelegate!
+    @IBOutlet private weak var parent: ScorecardViewController!
     
-    
-    private var parent: ScorecardViewController!
     private var playerList: [PlayerMO]!
     private var thumbnailWidth: CGFloat = 0.0
     private var thumbnailHeight: CGFloat = 0.0
@@ -63,13 +62,11 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.frame = frame
-        self.setSize()
         self.loadPlayerSelectionView()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.setSize()
         self.loadPlayerSelectionView()
     }
     
@@ -79,13 +76,14 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
         self.interRowSpacing = interRowSpacing
     }
     
+    internal override func awakeFromNib() {
+        super.awakeFromNib()
+        self.setSize()
+    }
+    
     override func layoutIfNeeded() {
         super.layoutIfNeeded()
         self.collectionView.layoutIfNeeded()
-    }
-    
-    public func set(parent: ScorecardViewController) {
-        self.parent = parent
     }
     
     public func set(players: [PlayerMO], addButton: Bool = false, updateBeforeSelect: Bool = false, scrollEnabled: Bool = false, collectionViewInsets: UIEdgeInsets? = nil, contentInset: UIEdgeInsets? = nil) {
@@ -145,7 +143,7 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
         if self.lastSize != viewSize {
             // Setup sizes of thumbnail and a row in the collection
             if viewSize.height > 0 {
-                let thumbnailSize = SelectionViewController.thumbnailSize(labelHeight: self.labelHeight, marginWidth: self.collectionInset, spacing: collectionSpacing)
+                let thumbnailSize = SelectionViewController.thumbnailSize(from: self.parent, labelHeight: self.labelHeight, marginWidth: self.collectionInset, spacing: collectionSpacing)
                 self.thumbnailWidth = thumbnailSize.width
                 self.thumbnailHeight = thumbnailSize.height
                 self.rowHeight = self.thumbnailHeight + self.interRowSpacing

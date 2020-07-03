@@ -35,7 +35,8 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
     private var cellWidth: CGFloat = 0.0
 
     private var sync: Sync!
-    
+    internal let syncDelegateDescription = "PlayerDetail"
+
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var finishButton: ClearButton!
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!

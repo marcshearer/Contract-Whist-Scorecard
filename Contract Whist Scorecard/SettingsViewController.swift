@@ -1104,8 +1104,6 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
 
         self.thisPlayerChangeButton.setTitle("Change")
         
-        self.playerSelectionView.set(parent: self)
-        self.playerSelectionView.delegate = self
         self.playerSelectionViewHeightConstraint.constant = 0.0
         self.thisPlayerHeight = self.thisPlayerContainerView.frame.height
     }

@@ -36,6 +36,10 @@
                                                 <constraints>
                                                     <constraint firstAttribute="height" id="mJq-Fz-dLT"/>
                                                 </constraints>
+                                                <connections>
+                                                    <outlet property="delegate" destination="1IM-Ht-gqg" id="6aj-9D-dHG"/>
+                                                    <outlet property="parent" destination="1IM-Ht-gqg" id="8dk-7i-0JF"/>
+                                                </connections>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="66g-bK-cfb" userLabel="Top Section">
                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="184.5"/>

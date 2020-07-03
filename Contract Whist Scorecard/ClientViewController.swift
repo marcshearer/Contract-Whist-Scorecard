@@ -100,6 +100,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var lowerMiddleHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bottomSection: UIView!
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
+    @IBOutlet private weak var leftPaddingView: InsetPaddingView!
     @IBOutlet private weak var bannerView: UIView!
     @IBOutlet private weak var bannerContinuation: BannerContinuation!
     @IBOutlet private weak var bannerOverlap: UIView!
@@ -122,8 +123,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var resultsButton: ImageButton!
     @IBOutlet private weak var settingsButton: ImageButton!
     @IBOutlet private weak var bottomSectionBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var bottomSectionTrailingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var playerSelectionView: PlayerSelectionView!
     @IBOutlet private weak var playerSelectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var playerSelectionViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var tapGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet private weak var flowLayout: CustomCollectionViewLayout!
     @IBOutlet private weak var dismissScreenshotImageView: UIImageView!
@@ -131,7 +134,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     // MARK: - IB Actions ============================================================================== -
         
     @IBAction private func tapGesture(recognizer: UITapGestureRecognizer) {
-        if self.playerSelectionViewHeightConstraint.constant != 0 {
+        if self.playerSelectionViewHeightConstraint.constant != 0 || self.playerSelectionViewWidthConstraint.constant != 0 {
             self.hidePlayerSelection()
         } else {
             self.showPlayerSelection()
@@ -274,7 +277,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         
         self.showThisPlayer()
         
-        if self.rotated && self.playerSelectionViewHeightConstraint.constant != 0 {
+        if self.rotated && (self.playerSelectionViewHeightConstraint.constant != 0 ||
+            self.playerSelectionViewWidthConstraint.constant != 0) {
             // Resize player selection
             self.showPlayerSelection()
         }
@@ -350,18 +354,21 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     // MARK: - Player Selection View Delegate Handlers ======================================================= -
     
     private func showPlayerSelection() {
-        if self.playerSelectionViewHeightConstraint.constant == 0 {
-            self.playerSelectionView.set(parent: self)
-            self.playerSelectionView.delegate = self
-        }
         
         Utility.animate(view: self.view, duration: 0.5, completion: {
             self.hostTitleBar.isHidden = true
         }, animations: {
-            let selectionHeight = self.view.frame.height - self.playerSelectionView.frame.minY + self.view.safeAreaInsets.bottom
-            self.playerSelectionView.set(size: CGSize(width: UIScreen.main.bounds.width, height: selectionHeight))
-            self.playerSelectionViewHeightConstraint.constant = selectionHeight
-            self.bottomSectionBottomConstraint.constant = self.bottomSectionBottomConstraint.constant - selectionHeight
+            if ScorecardUI.landscapePhone() {
+                let selectionWidth = self.view.frame.width - self.playerSelectionView.frame.minX + self.view.safeAreaInsets.right
+                self.playerSelectionView.set(size: CGSize(width: selectionWidth, height: UIScreen.main.bounds.width))
+                self.playerSelectionViewWidthConstraint.constant = selectionWidth
+                self.bottomSectionTrailingConstraint.constant = self.bottomSectionTrailingConstraint.constant - selectionWidth
+            } else {
+                let selectionHeight = self.view.frame.height - self.playerSelectionView.frame.minY + self.view.safeAreaInsets.bottom
+                self.playerSelectionView.set(size: CGSize(width: UIScreen.main.bounds.width, height: selectionHeight))
+                self.playerSelectionViewHeightConstraint.constant = selectionHeight
+                self.bottomSectionBottomConstraint.constant = self.bottomSectionBottomConstraint.constant - selectionHeight
+            }
             self.thisPlayerThumbnail.name.text = "Cancel"
         })
         
@@ -375,8 +382,13 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.hostTitleBar.isHidden = false
         
         Utility.animate(view: self.view, duration: 0.5) {
-            self.playerSelectionViewHeightConstraint.constant = 0.0
-            self.bottomSectionBottomConstraint.constant = 0.0
+            if ScorecardUI.landscapePhone() {
+                self.playerSelectionViewWidthConstraint.constant = 0.0
+            } else {
+                self.playerSelectionViewHeightConstraint.constant = 0.0
+            }
+            self.bottomSectionBottomConstraint?.constant = (self.view.safeAreaInsets.bottom == 0.0 ? 10.0 : 0.0)
+            self.bottomSectionTrailingConstraint?.constant = (self.view.safeAreaInsets.right == 0.0 ? 10.0 : 0.0)
         }
         self.peerReloadData()
     }
@@ -1200,6 +1212,7 @@ extension ClientViewController {
         self.view.backgroundColor = Palette.background
         self.topSection.backgroundColor = Palette.banner
         self.bannerPaddingView.bannerColor = Palette.banner
+        self.leftPaddingView.bannerColor = Palette.banner
         self.hostTitleBar.set(faceColor: Palette.buttonFace)
         self.hostTitleBar.set(textColor: Palette.buttonFaceText)
         self.adminMenuButton.tintColor = Palette.bannerEmbossed
@@ -1234,11 +1247,12 @@ extension ClientViewController {
         self.peerCollectionContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0), shadowOpacity: 0.1, shadowRadius: 2.0)
         self.peerScrollCollectionView.isHidden = (self.availablePeers.count <= 1)
         if self.firstTime {
-            self.bottomSectionBottomConstraint.constant = (self.view.safeAreaInsets.bottom == 0.0 ? 10.0 : 0.0)
+            self.bottomSectionBottomConstraint?.constant = (self.view.safeAreaInsets.bottom == 0.0 ? 10.0 : 0.0)
+            self.bottomSectionTrailingConstraint?.constant = (self.view.safeAreaInsets.right == 0.0 ? 10.0 : 0.0)
         }
-        self.playersButton.setProportions(top: 30, image: 0, imageBottom: 0, title: 15, titleBottom: 0, message: 0, bottom: 30)
-        self.resultsButton.setProportions(top: 30, image: 0, imageBottom: 0, title: 15, titleBottom: 0, message: 0, bottom: 30)
-        self.settingsButton.setProportions(top: 30, image: 0, imageBottom: 0, title: 15, titleBottom: 0, message: 0, bottom: 30)
+        self.playersButton.setProportions(top: 30, image: 0, imageBottom: 0, title: 30, titleBottom: 0, message: 0, bottom: 30)
+        self.resultsButton.setProportions(top: 30, image: 0, imageBottom: 0, title: 30, titleBottom: 0, message: 0, bottom: 30)
+        self.settingsButton.setProportions(top: 30, image: 0, imageBottom: 0, title: 30, titleBottom: 0, message: 0, bottom: 30)
     }
 
     private func defaultCellColors(cell: HostCollectionViewCell) {

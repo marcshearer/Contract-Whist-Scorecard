@@ -97,74 +97,80 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     }
     
     private func continueStartup() {
-        
-        if Scorecard.settings.termsDate == nil {
-            // Need to get terms approval - but only possible with network
-            if !Scorecard.shared.isNetworkAvailable || !Scorecard.shared.isLoggedIn {
-                self.failNoNetwork()
-            } else {
-                Sync.getUser { (userID) in
-                    if userID == nil && Scorecard.settings.termsDate == nil {
-                        self.failNoNetwork()
-                    } else {
-                        // Wait for acceptance - will return after button click
-                        self.termsUser = userID
-                        self.continueStartupContinued()
+        Utility.mainThread {
+            if Scorecard.settings.termsDate == nil {
+                // Need to get terms approval - but only possible with network
+                if !Scorecard.shared.isNetworkAvailable || !Scorecard.shared.isLoggedIn {
+                    self.failNoNetwork()
+                } else {
+                    Sync.getUser { (userID) in
+                        if userID == nil && Scorecard.settings.termsDate == nil {
+                            self.failNoNetwork()
+                        } else {
+                            // Wait for acceptance - will return after button click
+                            self.termsUser = userID
+                            self.continueStartupContinued()
+                        }
                     }
                 }
-            }
-        } else {
-            Utility.executeAfter(delay: 1.0) {
-                self.continueStartupContinued()
+            } else {
+                Utility.executeAfter(delay: 1.0) {
+                    self.continueStartupContinued()
+                }
             }
         }
     }
             
-   private func continueStartupContinued() {
-
-        if !Scorecard.settings.syncEnabled {
-            // New device - try to load from iCloud
-            self.newDevice = true
-            self.message.text = "Loading..."
-            Scorecard.settings.loadFromICloud() { (players) in
-                Utility.mainThread {
-                    if players != nil && !players!.isEmpty {
-                        self.syncPlayerList = players
-                    }
-                    if Scorecard.settings.termsDate == nil {
-                        // Need to wait for terms acceptance
-                        self.enableControls()
-                    } else {
-                        self.linkToNext()
+    private func continueStartupContinued() {
+        Utility.mainThread {
+            if !Scorecard.settings.syncEnabled {
+                // New device - try to load from iCloud
+                self.newDevice = true
+                self.message.text = "Loading..."
+                Scorecard.settings.loadFromICloud() { (players) in
+                    Utility.mainThread {
+                        if players != nil && !players!.isEmpty {
+                            self.syncPlayerList = players
+                        }
+                        if Scorecard.settings.termsDate == nil {
+                            // Need to wait for terms acceptance
+                            self.enableControls()
+                        } else {
+                            self.linkToNext()
+                        }
                     }
                 }
+            } else if Scorecard.settings.termsDate == nil {
+                // Need to wait for terms acceptance
+                self.enableControls()
+            } else {
+                self.linkToNext()
             }
-        } else if Scorecard.settings.termsDate == nil {
-            // Need to wait for terms acceptance
-            self.enableControls()
-        } else {
-            self.linkToNext()
         }
     }
     
     private func linkToNext() {
-        if self.newDevice {
-            // New device check notifications and link to get started
-            if self.syncPlayerList != nil {
-                self.checkReceiveNotifications() {
-                    Scorecard.settings.save()
-                    self.syncGetPlayers = true
-                    self.sync.delegate = self
-                    if !self.sync.synchronise(syncMode: .syncGetPlayerDetails, specificPlayerUUIDs: self.syncPlayerList!, waitFinish: true) {
-                        self.showGetStarted()
+        Utility.mainThread {
+            if self.newDevice {
+                // New device check notifications and link to get started
+                if self.syncPlayerList != nil {
+                    self.checkReceiveNotifications() {
+                        Utility.mainThread {
+                            Scorecard.settings.save()
+                            self.syncGetPlayers = true
+                            self.sync.delegate = self
+                            if !self.sync.synchronise(syncMode: .syncGetPlayerDetails, specificPlayerUUIDs: self.syncPlayerList!, waitFinish: true) {
+                                self.showGetStarted()
+                            }
+                        }
                     }
+                } else {
+                    // New device / iCloud user
+                    self.showGetStarted()
                 }
             } else {
-                // New device / iCloud user
-                self.showGetStarted()
+                self.dismiss()
             }
-        } else {
-            self.dismiss()
         }
     }
     

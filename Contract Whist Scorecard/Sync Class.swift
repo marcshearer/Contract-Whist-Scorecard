@@ -76,6 +76,7 @@ private enum SyncPhase {
     case phaseGetLinkedPlayers
     case phaseGetPlayerList
     case phaseSendPlayers
+    case phaseRebuildWinStreaks
     case phaseGetSendImages
     case phaseStartedStageComplete
     case phaseInitialiseStageComplete
@@ -127,6 +128,7 @@ class Sync {
     private var specificPlayerUUIDs: [String]!
     private var thisPlayerUUID: String!
     private var specificEmail: String!
+    private var participantPlayerUUIDList: [String] = []
 
     // Game / participant sync state
     private var nextSyncDate: Date!
@@ -152,6 +154,7 @@ class Sync {
         // Reset state
         errors = 0
         cloudObjectList = []
+        participantPlayerUUIDList = []
         var success = false
 
         if !Sync.syncInProgress || waitFinish {
@@ -184,6 +187,7 @@ class Sync {
                               .phaseUpdateLastSyncDate,
                               .phaseUploadGamesStageComplete,
                               .phaseGetSendImages,
+                              .phaseRebuildWinStreaks,
                               .phaseUploadPlayersStageComplete]
             case .syncUpdatePlayers:
                 // Synchronise players in list with cloud
@@ -231,7 +235,7 @@ class Sync {
     
     public static var temporaryPlayerUUIDs: Bool {
         get {
-            return Scorecard.shared.playerList.filter({$0.tempEmail != nil}).count == 0
+            return Scorecard.shared.playerList.filter({$0.tempEmail != nil}).count > 0
         }
     }
     
@@ -300,6 +304,8 @@ class Sync {
                         specificPlayerUUIDs: self.specificPlayerUUIDs,
                         downloadAction: self.addPlayerList,
                         completeAction: self.completeGetPlayers)
+                case .phaseRebuildWinStreaks:
+                    nextPhase = self.rebuildWinStreaks()
                 case .phaseStartedStageComplete:
                     self.delegate?.syncStageComplete?(.started)
                 case .phaseInitialiseStageComplete:
@@ -667,7 +673,9 @@ class Sync {
                     // Copy in data values from cloud
                     History.cloudParticipantToMO(cloudObject: cloudObject, participantMO: participantMO)
                     created += 1
-                    
+                    if self.participantPlayerUUIDList.first(where: {$0 == participantMO.playerUUID}) == nil {
+                        self.participantPlayerUUIDList.append(participantMO.playerUUID!)
+                    }
                 })
             }
         }
@@ -1140,9 +1148,9 @@ class Sync {
         }
         queryOperation.desiredKeys = desiredKeys ??  ["name", "playerUUID", "dateCreated", "datePlayed", "nameDate",
                                                       "emailDate", "thumbnailDate","gamesPlayed", "gamesWon",
-                                                      "totalScore", "handsPlayed", "handsMade", "twosMade",
-                                                      "maxScore", "maxMade", "maxTwos",
-                                                      "maxScoreDate", "maxMadeDate", "maxTwosDate",
+                                                      "totalScore", "handsPlayed", "handsMade", "winStreak", "twosMade",
+                                                      "maxScore", "maxMade", "maxWinStreak", "maxTwos",
+                                                      "maxScoreDate", "maxMadeDate", "maxWinStreakDate", "maxTwosDate",
                                                       "email", "visibleLocally"]
     
         queryOperation.queuePriority = .veryHigh
@@ -1279,6 +1287,15 @@ class Sync {
                 cloudRecord.maxMadeDate = localRecord.maxMadeDate
                 changed = true
             }
+            if localRecord.maxWinStreak < cloudRecord.maxWinStreak {
+                localRecord.maxWinStreak = cloudRecord.maxWinStreak
+                localRecord.maxWinStreakDate = cloudRecord.maxWinStreakDate
+                changed = true
+            } else if cloudRecord.maxWinStreak < localRecord.maxWinStreak {
+                cloudRecord.maxWinStreak = localRecord.maxWinStreak
+                cloudRecord.maxWinStreakDate = localRecord.maxWinStreakDate
+                changed = true
+            }
             if localRecord.maxTwos < cloudRecord.maxTwos {
                 localRecord.maxTwos = cloudRecord.maxTwos
                 localRecord.maxTwosDate = cloudRecord.maxTwosDate
@@ -1289,7 +1306,7 @@ class Sync {
                 changed = true
             }
             
-            // Update date created / last played
+            // Update date created / last played / win streak
             if cloudRecord.dateCreated == nil || localRecord.dateCreated < cloudRecord.dateCreated {
                 cloudRecord.dateCreated = localRecord.dateCreated
                 changed = true
@@ -1300,9 +1317,11 @@ class Sync {
             
             if cloudRecord.datePlayed == nil || (localRecord.datePlayed != nil && localRecord.datePlayed > cloudRecord.datePlayed) {
                 cloudRecord.datePlayed = localRecord.datePlayed
+                cloudRecord.winStreak = localRecord.winStreak
                 changed = true
             } else if localRecord.datePlayed == nil || (cloudRecord.datePlayed != nil && cloudRecord.datePlayed > localRecord.datePlayed) {
                 localRecord.datePlayed = cloudRecord.datePlayed
+                localRecord.winStreak = cloudRecord.winStreak
                 changed = true
             }
             
@@ -1527,6 +1546,22 @@ class Sync {
         // Add the operation to an operation queue to execute it
         OperationQueue().addOperation(uploadOperation)
         return false
+    }
+    
+    private func rebuildWinStreaks() -> Bool {
+        if self.participantPlayerUUIDList.count > 0 {
+            let streaks = History.getWinStreaks(playerUUIDList: self.participantPlayerUUIDList, includeZeroes: true)
+            _ = CoreData.update {
+                for streak in streaks {
+                    if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(streak.playerUUID) {
+                        playerMO.winStreak = Int64(streak.currentStreak)
+                        playerMO.maxWinStreak = Int64(streak.longestStreak)
+                        playerMO.maxWinStreakDate = streak.participantMO?.datePlayed
+                    }
+                }
+            }
+        }
+        return true
     }
     
     public func fetchPlayerImagesFromCloud(_ playerImageFromCloud: [PlayerMO]) {
@@ -1922,6 +1957,10 @@ class Sync {
         if let existing = Scorecard.shared.findPlayerByPlayerUUID(playerUUID) {
             // Need to merge the two player records and delete new one
             _ = CoreData.update {
+                if existing.datePlayed == nil || (playerMO.datePlayed != nil && existing.datePlayed! < playerMO.datePlayed!) {
+                    existing.datePlayed = playerMO.datePlayed
+                    existing.winStreak = playerMO.winStreak
+                }
                 existing.gamesPlayed += playerMO.gamesPlayed - playerMO.syncGamesPlayed
                 existing.gamesWon += playerMO.gamesWon - playerMO.syncGamesWon
                 existing.totalScore += playerMO.totalScore - playerMO.syncTotalScore
@@ -1935,6 +1974,10 @@ class Sync {
                 if playerMO.maxMade > existing.maxMade {
                     existing.maxMade = playerMO.maxMade
                     existing.maxMadeDate = playerMO.maxMadeDate
+                }
+                if playerMO.maxWinStreak > existing.maxWinStreak {
+                    existing.maxWinStreak = playerMO.maxWinStreak
+                    existing.maxWinStreakDate = playerMO.maxWinStreakDate
                 }
                 if playerMO.maxTwos > existing.maxTwos {
                     existing.maxTwos = playerMO.maxTwos

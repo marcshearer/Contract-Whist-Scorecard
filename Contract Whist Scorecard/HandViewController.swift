@@ -428,8 +428,8 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     */
     func stateController(updateState: Bool = true, currentTrickCards: Int = Scorecard.game.handState.trickCards.count) {
         // Check whether bidding finished
-        let bidsMade = Scorecard.game.scores.bidsMade(round: round)
-        let newBidMode = (bidsMade < Scorecard.game.currentPlayers)
+        let handsMade = Scorecard.game.scores.handsMade(round: round)
+        let newBidMode = (handsMade < Scorecard.game.currentPlayers)
         if self.bidMode != newBidMode {
             if newBidMode == false && !firstBidRefresh {
                 // About to exit bid mode - delay 1 second
@@ -455,19 +455,19 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         if bidMode {
         // Bidding
             cardsEnable(false)
-            if Scorecard.game.roundPlayerNumber(enteredPlayerNumber: self.enteredPlayerNumber, round: self.round) == bidsMade + 1 {
+            if Scorecard.game.roundPlayerNumber(enteredPlayerNumber: self.enteredPlayerNumber, round: self.round) == handsMade + 1 {
                 // Your bid
-                bidsEnable(true, blockRemaining: bidsMade == Scorecard.game.currentPlayers - 1)
+                bidsEnable(true, blockRemaining: handsMade == Scorecard.game.currentPlayers - 1)
                 self.instructionLabel.text = "You to bid"
                 self.setInstructionsHighlight(to: true)
                 Scorecard.shared.alertUser(remindAfter: 10.0)
                 self.autoBid()
             } else {
                 bidsEnable(false)
-                self.instructionLabel.text = "\(Scorecard.game.player(entryPlayerNumber: bidsMade + 1).playerMO!.name!) to bid"
+                self.instructionLabel.text = "\(Scorecard.game.player(entryPlayerNumber: handsMade + 1).playerMO!.name!) to bid"
                 self.setInstructionsHighlight(to: false)
                 // Get computer player to bid
-                self.controllerDelegate?.robotAction(playerNumber: Scorecard.game.player(entryPlayerNumber: bidsMade + 1).playerNumber, action: .bid)
+                self.controllerDelegate?.robotAction(playerNumber: Scorecard.game.player(entryPlayerNumber: handsMade + 1).playerNumber, action: .bid)
             }
             setupOverUnder()
             lastHandButton.isHidden = true

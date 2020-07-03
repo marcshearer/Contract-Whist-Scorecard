@@ -41,6 +41,9 @@ class Player {
     
     /** The total score as last saved by the save method - to allow incremental updates */
     private var savedTotalScore: Int64 = 0
+    
+    /** The win streak before updates - to allow incremental updates */
+    private var previousWinStreak: Int64! = nil
 
     /**
      The player's high score before the current game
@@ -157,6 +160,12 @@ class Player {
                 
                 self.playerMO!.totalScore += (Int64(myScore) - self.savedTotalScore)
                 self.savedTotalScore = Int64(myScore)
+                
+                // Update current win streak
+                if self.previousWinStreak == nil {
+                    self.previousWinStreak = self.playerMO!.winStreak
+                }
+                self.playerMO!.winStreak = (place == 1 ? self.previousWinStreak + 1 : 0)
             
                 // Update hands made and twos made
                 self.playerMO!.handsMade += (roundsMade - self.savedHandsMade)
@@ -172,6 +181,10 @@ class Player {
                 if Int64(roundsMade) > self.playerMO!.maxMade {
                     self.playerMO!.maxMade = roundsMade
                     self.playerMO!.maxMadeDate = Date()
+                }
+                if self.playerMO!.winStreak > self.playerMO!.maxWinStreak {
+                    self.playerMO!.maxWinStreak = self.playerMO!.winStreak
+                    self.playerMO!.maxWinStreakDate = Date()
                 }
                 if Int64(twosMade) > self.playerMO!.maxTwos {
                     self.playerMO!.maxTwos = twosMade

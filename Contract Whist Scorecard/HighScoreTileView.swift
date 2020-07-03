@@ -229,8 +229,7 @@ class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
                     self.scores[self.handsMadeRow] = (Int(playerMO.maxMade), nil)
                 }
                 if self.winStreak {
-                    let streaks = History.getWinStreaks(playerUUIDList: [playerMO.playerUUID!])
-                    self.scores[self.winStreakRow] = (streaks.first?.streak ?? 0, nil)
+                    self.scores[self.winStreakRow] = (Int(playerMO.maxWinStreak), nil)
                 }
                 if self.twosMade {
                     self.scores[self.totalScoreRow] = (Int(playerMO.twosMade), nil)
@@ -238,23 +237,27 @@ class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
 
             }
         } else {
-            let playerUUIDList = Scorecard.shared.playerUUIDList()
             if self.totalScore {
-                let participants = History.getHighScores(type: .totalScore, limit: 1, playerUUIDList: playerUUIDList)
-                self.scores[self.totalScoreRow] = (Int(participants.first?.totalScore ?? 0), participants.first?.name ?? "Unknown")
+                self.scores[self.totalScoreRow] = self.getHighScore(type: .totalScore)
             }
             if self.handsMade {
-                let participants = History.getHighScores(type: .handsMade, limit: 1, playerUUIDList: playerUUIDList)
-                self.scores[self.handsMadeRow] = (Int(participants.first?.handsMade ?? 0), participants.first?.name ?? "Unknown")
+                self.scores[self.handsMadeRow] = self.getHighScore(type: .handsMade)
             }
             if self.winStreak {
-                let longestWinStreak = History.getWinStreaks(playerUUIDList: playerUUIDList, limit: 1)
-                self.scores[self.winStreakRow] = (Int(longestWinStreak.first?.streak ?? 0), longestWinStreak.first?.participantMO?.name ?? "Unknown")
+                self.scores[self.winStreakRow] = self.getHighScore(type: .winStreak)
             }
             if self.twosMade {
-                let participants = History.getHighScores(type: .twosMade, limit: 1, playerUUIDList: playerUUIDList)
-                self.scores[self.twosMadeRow] = (Int(participants.first?.twosMade ?? 0), participants.first?.name ?? "Unknown")
+                self.scores[self.twosMadeRow] = self.getHighScore(type: .twosMade)
             }
+        }
+    }
+    
+    private func getHighScore(type: HighScoreType) -> (value: Int, name: String) {
+        let list = Scorecard.shared.playerList.map{(value: $0.value(forKey: type.rawValue) as! Int, $0.name!)}
+        if list.count == 0 {
+            return (0, "")
+        } else {
+            return list.sorted(by: {$0.value > $1.value}).first!
         }
     }
 }

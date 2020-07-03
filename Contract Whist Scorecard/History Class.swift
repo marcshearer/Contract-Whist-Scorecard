@@ -42,10 +42,10 @@ class History {
     }
     
     init(winStreakFor playerUUID: String) {
-        // Load games making up players best win streak
+        // Load games making up player's best win streak
         let participants = History.getWinStreakParticipants(playerUUID: playerUUID)
-        if participants.count != 0 {
-            let gameUUIDs = participants.map{$0.gameUUID!}
+        if participants.longestStreak.count != 0 {
+            let gameUUIDs = participants.longestStreak.map{$0.gameUUID!}
             self.loadGames(getParticipants: true, gameUUIDs: gameUUIDs)
         }
     }
@@ -288,26 +288,33 @@ class History {
         }
     }
     
-    static public func getWinStreaks(playerUUIDList: [String], limit: Int = 3) -> [(streak: Int, participantMO: ParticipantMO?)] {
+    static public func getWinStreaks(playerUUIDList: [String], limit: Int? = nil, includeZeroes: Bool = false) -> [(playerUUID: String, longestStreak: Int, currentStreak: Int, participantMO: ParticipantMO?)] {
         let nullDate = Date(timeIntervalSinceReferenceDate: 0)
-        var longestStreak: [(streak: Int, participantMO: ParticipantMO?)] = []
+        var streak: [(playerUUID: String, longestStreak: Int, currentStreak: Int, participantMO: ParticipantMO?)] = []
         
         for (index, playerUUID) in playerUUIDList.enumerated() {
-            longestStreak.append((0, nil))
-            let streakParticipants = getWinStreakParticipants(playerUUID: playerUUID)
+            streak.append((playerUUID, 0, 0, nil))
+            let (streakParticipants, currentStreak) = getWinStreakParticipants(playerUUID: playerUUID)
             if streakParticipants.count > 0 {
-                longestStreak[index].streak = streakParticipants.count
-                longestStreak[index].participantMO = streakParticipants.last!
+                streak[index].longestStreak = streakParticipants.count
+                streak[index].participantMO = streakParticipants.last!
+                streak[index].currentStreak = currentStreak
             }
         }
         
-        longestStreak.removeAll(where: { $0.streak == 0})
-        longestStreak.sort(by: { $0.streak > $1.streak || ($0.streak == $1.streak && $0.participantMO!.datePlayed ?? nullDate > $1.participantMO!.datePlayed ?? nullDate) })
+        if !includeZeroes {
+            streak.removeAll(where: { $0.longestStreak == 0})
+        }
+        streak.sort(by: { $0.longestStreak > $1.longestStreak || ($0.longestStreak == $1.longestStreak && $0.participantMO?.datePlayed ?? nullDate > $1.participantMO?.datePlayed ?? nullDate) })
         
-        return Array(longestStreak.prefix(3))
+        if limit != nil {
+            return Array(streak.prefix(limit!))
+        } else {
+            return streak
+        }
     }
     
-    static private func getWinStreakParticipants(playerUUID: String) -> [ParticipantMO] {
+    static private func getWinStreakParticipants(playerUUID: String) -> (longestStreak: [ParticipantMO], currentStreakLength: Int) {
         var longestStreak: [ParticipantMO] = []
         var currentStreak: [ParticipantMO] = []
         let participants = History.getParticipantRecordsForPlayer(playerUUID: playerUUID)
@@ -323,7 +330,7 @@ class History {
                 }
             }
         }
-        return longestStreak
+        return (longestStreak: longestStreak, currentStreakLength: currentStreak.count)
     }
     
     static public func getNewParticpantGames(cutoffDate: Date, specificPlayerUUIDs: [String] = []) -> [String] {

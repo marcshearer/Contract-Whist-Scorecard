@@ -282,6 +282,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             // Resize player selection
             self.showPlayerSelection()
         }
+
+        if rotated {
+            self.hostCollectionView.reloadData()
+        }
         
         if self.firstTime || self.rotated {
             self.rotated = false

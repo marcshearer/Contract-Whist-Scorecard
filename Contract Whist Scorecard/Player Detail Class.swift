@@ -32,12 +32,15 @@ import CoreData
     public var handsMade: Int64 = 0
     public var twosMade: Int64 = 0
     public var totalScore: Int64 = 0
+    public var winStreak: Int64 = 0
     public var thumbnail: Data?
     public var thumbnailDate: Date!
     public var maxScore: Int64 = 0
     public var maxScoreDate: Date!
     public var maxMade: Int64 = 0
     public var maxMadeDate: Date!
+    public var maxWinStreak: Int64 = 0
+    public var maxWinStreakDate: Date!
     public var maxTwos: Int64 = 0
     public var maxTwosDate: Date!
     public var syncDate: Date!
@@ -171,10 +174,13 @@ import CoreData
         result.handsMade = self.handsMade
         result.twosMade = self.twosMade
         result.totalScore = self.totalScore
+        result.winStreak = self.winStreak
         result.maxScore = self.maxScore
         result.maxScoreDate = self.maxScoreDate
         result.maxMade = self.maxMade
         result.maxMadeDate = self.maxMadeDate
+        result.maxWinStreak = self.maxWinStreak
+        result.maxWinStreakDate = self.maxWinStreakDate
         result.maxTwos = self.maxTwos
         result.maxTwosDate = self.maxTwosDate
         result.syncDate = self.syncDate
@@ -203,10 +209,13 @@ import CoreData
         playerMO.handsMade = self.handsMade
         playerMO.twosMade = self.twosMade
         playerMO.totalScore = self.totalScore
+        playerMO.winStreak = self.winStreak
         playerMO.maxScore = self.maxScore
         playerMO.maxScoreDate = self.maxScoreDate
         playerMO.maxMade = self.maxMade
         playerMO.maxMadeDate = self.maxMadeDate
+        playerMO.maxWinStreak = self.maxWinStreak
+        playerMO.maxWinStreakDate = self.maxWinStreakDate
         playerMO.maxTwos = self.maxTwos
         playerMO.maxTwosDate = self.maxTwosDate
         playerMO.syncDate = self.syncDate
@@ -234,12 +243,15 @@ import CoreData
         self.handsMade = playerMO.handsMade
         self.twosMade = playerMO.twosMade
         self.totalScore = playerMO.totalScore
+        self.winStreak = playerMO.winStreak
         self.thumbnail = playerMO.thumbnail
         self.thumbnailDate = playerMO.thumbnailDate as Date?
         self.maxScore = playerMO.maxScore
         self.maxScoreDate = playerMO.maxScoreDate as Date?
         self.maxMade = playerMO.maxMade
         self.maxMadeDate = playerMO.maxMadeDate as Date?
+        self.maxWinStreak = playerMO.maxWinStreak
+        self.maxWinStreakDate = playerMO.maxWinStreakDate as Date?
         self.maxTwos = playerMO.maxTwos
         self.maxTwosDate = playerMO.maxTwosDate as Date?
         self.syncDate = playerMO.syncDate as Date?
@@ -262,11 +274,14 @@ import CoreData
         self.handsMade = Utility.objectInt(cloudObject: cloudObject, forKey:"handsMade")
         self.twosMade = Utility.objectInt(cloudObject: cloudObject, forKey:"twosMade")
         self.totalScore = Utility.objectInt(cloudObject: cloudObject, forKey:"totalScore")
+        self.winStreak = Utility.objectInt(cloudObject: cloudObject, forKey:"winStreak")
         self.thumbnailDate = Utility.objectDate(cloudObject: cloudObject, forKey:"thumbnailDate")
         self.maxScore = Utility.objectInt(cloudObject: cloudObject, forKey:"maxScore")
         self.maxScoreDate = Utility.objectDate(cloudObject: cloudObject, forKey:"maxScoreDate")
         self.maxMade = Utility.objectInt(cloudObject: cloudObject, forKey:"maxMade")
         self.maxMadeDate = Utility.objectDate(cloudObject: cloudObject, forKey:"maxMadeDate")
+        self.maxWinStreak = Utility.objectInt(cloudObject: cloudObject, forKey:"maxWinStreak")
+        self.maxWinStreakDate = Utility.objectDate(cloudObject: cloudObject, forKey:"maxWinStreakDate")
         self.maxTwos = Utility.objectInt(cloudObject: cloudObject, forKey:"maxTwos")
         self.maxTwosDate = Utility.objectDate(cloudObject: cloudObject, forKey:"maxTwosDate")
         self.syncDate = Utility.objectDate(cloudObject: cloudObject, forKey: "syncDate")
@@ -288,10 +303,13 @@ import CoreData
         cloudObject.setValue(self.handsMade , forKey: "handsMade")
         cloudObject.setValue(self.twosMade , forKey: "twosMade")
         cloudObject.setValue(self.totalScore , forKey: "totalScore")
+        cloudObject.setValue(self.winStreak , forKey: "winStreak")
         cloudObject.setValue(self.maxScore , forKey: "maxScore")
         cloudObject.setValue(self.maxScoreDate , forKey: "maxScoreDate")
         cloudObject.setValue(self.maxMade , forKey: "maxMade")
         cloudObject.setValue(self.maxMadeDate , forKey: "maxMadeDate")
+        cloudObject.setValue(self.maxWinStreak , forKey: "maxWinStreak")
+        cloudObject.setValue(self.maxWinStreakDate , forKey: "maxWinStreakDate")
         cloudObject.setValue(self.maxTwos , forKey: "maxTwos")
         cloudObject.setValue(self.maxTwosDate , forKey: "maxTwosDate")
         cloudObject.setValue(self.syncDate, forKey: "syncDate")

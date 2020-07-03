@@ -203,7 +203,9 @@ class ShadowButton: UIButton {
     override func layoutSubviews() {
         Utility.mainThread {
             super.layoutSubviews()
-            self.addShadow()
+            if self.titleOuterLabel != nil {
+                self.addShadow()
+            }
         }
     }
 }

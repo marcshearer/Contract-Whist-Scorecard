@@ -152,28 +152,28 @@
                                     <mask key="constraints">
                                         <exclude reference="MZt-h6-3zi"/>
                                         <exclude reference="zCm-db-ZhY"/>
+                                        <exclude reference="Bzi-e3-1sg"/>
+                                        <exclude reference="bsM-gr-gao"/>
                                         <exclude reference="BEr-bH-pnR"/>
                                         <exclude reference="Rh6-LH-D6A"/>
                                         <exclude reference="tsE-Rx-6Mv"/>
                                         <exclude reference="wWC-mc-pYp"/>
-                                        <exclude reference="Bzi-e3-1sg"/>
-                                        <exclude reference="bsM-gr-gao"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=compact">
                                     <mask key="constraints">
                                         <include reference="MZt-h6-3zi"/>
+                                        <include reference="Bzi-e3-1sg"/>
                                         <include reference="BEr-bH-pnR"/>
                                         <include reference="Rh6-LH-D6A"/>
-                                        <include reference="Bzi-e3-1sg"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=regular">
                                     <mask key="constraints">
                                         <include reference="zCm-db-ZhY"/>
+                                        <include reference="bsM-gr-gao"/>
                                         <include reference="tsE-Rx-6Mv"/>
                                         <include reference="wWC-mc-pYp"/>
-                                        <include reference="bsM-gr-gao"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -639,12 +639,12 @@
                                         <exclude reference="RI3-hK-HtT"/>
                                         <exclude reference="g4D-Uz-YDS"/>
                                         <exclude reference="gzu-6R-j7F"/>
-                                        <exclude reference="n6F-5k-V5m"/>
                                         <exclude reference="nMK-HP-oZq"/>
                                         <exclude reference="npL-IB-VXw"/>
                                         <exclude reference="6DQ-hq-0QC"/>
                                         <exclude reference="8Bc-mh-7s0"/>
                                         <exclude reference="Thl-Yp-1YA"/>
+                                        <exclude reference="n6F-5k-V5m"/>
                                         <exclude reference="q8S-oB-ewV"/>
                                         <exclude reference="rbp-sT-OcB"/>
                                         <exclude reference="vbX-qN-GAd"/>
@@ -661,9 +661,9 @@
                                         <include reference="7iJ-cm-gDo"/>
                                         <include reference="RI3-hK-HtT"/>
                                         <include reference="gzu-6R-j7F"/>
-                                        <include reference="n6F-5k-V5m"/>
                                         <include reference="nMK-HP-oZq"/>
                                         <include reference="8Bc-mh-7s0"/>
+                                        <include reference="n6F-5k-V5m"/>
                                         <include reference="q8S-oB-ewV"/>
                                         <include reference="rbp-sT-OcB"/>
                                         <include reference="6v9-uo-FDd"/>

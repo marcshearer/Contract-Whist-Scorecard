@@ -42,7 +42,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
     
     private enum RecordsOptions: Int, CaseIterable {
         case totalScore = 0
-        case bidsMade = 1
+        case handsMade = 1
         case winStreak = 2
         case twosMade = 3
     }
@@ -358,7 +358,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
                     cell!.recordDateLabel.text=""
                 }
                 
-            case .bidsMade:
+            case .handsMade:
                 cell.recordDescLabel.text = "Bids made"
                 cell!.recordValueLabel.text = "\(playerDetail.maxMade)"
                 if playerDetail.maxMadeDate != nil {
@@ -371,22 +371,13 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
                 
             case .winStreak:
                 cell.recordDescLabel.text = "Win streak"
-                if let playerMO = playerDetail.playerMO, let playerUUID = playerMO.playerUUID {
-                    let streaks = History.getWinStreaks(playerUUIDList: [playerUUID])
-                    if streaks.first?.streak ?? 0 == 0 {
-                        cell?.recordValueLabel.text = "0"
-                        cell?.recordDateLabel.text = ""
-                    } else {
-                        cell!.recordValueLabel.text = "\(streaks.first!.streak)"
-                        if let participantMO = streaks.first?.participantMO {
-                            let formatter = DateFormatter()
-                            formatter.dateFormat = "dd MMM yyyy"
-                            cell!.recordDateLabel.text = formatter.string(from: participantMO.datePlayed!)
-                        }
-                    }
+                cell!.recordValueLabel.text = "\(playerDetail.maxWinStreak)"
+                if playerDetail.maxWinStreakDate != nil {
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "dd MMM yyyy"
+                    cell!.recordDateLabel.text = formatter.string(from: playerDetail.maxWinStreakDate)
                 } else {
-                    cell?.recordValueLabel.text = "0"
-                    cell?.recordDateLabel.text = ""
+                    cell!.recordDateLabel.text=""
                 }
                 
             case .twosMade:
@@ -495,7 +486,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
                 switch record {
                 case .totalScore:
                     highScoreType = .totalScore
-                case .bidsMade:
+                case .handsMade:
                     highScoreType = .handsMade
                 case .twosMade:
                     highScoreType = .twosMade

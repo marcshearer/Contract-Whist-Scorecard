@@ -64,6 +64,8 @@
         <attribute name="maxScoreDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="maxTwos" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="maxTwosDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="maxWinStreak" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="maxWinStreakDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="nameDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="playerUUID" optional="YES" attributeType="String"/>
@@ -82,6 +84,7 @@
         <attribute name="totalScore" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="twosMade" attributeType="Integer 64" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="visibleLocally" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="winStreak" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <fetchIndex name="byNameIndex">
             <fetchIndexElement property="name" type="Binary" order="ascending"/>
         </fetchIndex>
@@ -89,6 +92,6 @@
     <elements>
         <element name="Game" positionX="0" positionY="0" width="128" height="225"/>
         <element name="Participant" positionX="0" positionY="0" width="128" height="300"/>
-        <element name="Player" positionX="0" positionY="0" width="128" height="538"/>
+        <element name="Player" positionX="0" positionY="0" width="128" height="583"/>
     </elements>
 </model>

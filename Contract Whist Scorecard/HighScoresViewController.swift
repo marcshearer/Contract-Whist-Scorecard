@@ -8,11 +8,11 @@
 
 import UIKit
 
-enum HighScoreType {
-    case totalScore
-    case handsMade
-    case twosMade
-    case winStreak
+enum HighScoreType: String {
+    case totalScore = "maxScore"
+    case handsMade = "maxMade"
+    case twosMade = "maxTwos"
+    case winStreak = "maxWinStreak"
 }
 
 class HighScoresViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate, UIPopoverPresentationControllerDelegate {
@@ -27,7 +27,7 @@ class HighScoresViewController: ScorecardViewController, UITableViewDataSource, 
     private var totalScoreParticipants: [ParticipantMO]!
     private var handsMadeParticipants: [ParticipantMO]!
     private var twosMadeParticipants: [ParticipantMO]!
-    private var longestWinStreak: [(streak: Int, participantMO: ParticipantMO?)]!
+    private var longestWinStreak: [(playerUUID: String, longestStreak: Int, currentStreak: Int, participantMO: ParticipantMO?)]!
     private var sections: Int = 0
     private var sectionHeight: CGFloat = 0.0
     private let sectionHeaderHeight: CGFloat = 18.0
@@ -213,7 +213,7 @@ class HighScoresViewController: ScorecardViewController, UITableViewDataSource, 
                 // Longest win streak
                 let winStreak = longestWinStreak[indexPath.row]
                 participantMO = winStreak.participantMO
-                value = Int16(winStreak.streak)
+                value = Int16(winStreak.longestStreak)
                 
             case 3:
                 // Twos made
@@ -257,7 +257,7 @@ class HighScoresViewController: ScorecardViewController, UITableViewDataSource, 
             let highScoreType = tableView.tag % 1000000
             if highScoreType == 2 {
                 // Win streak - special case
-                _ = HistoryViewer(from: self, winStreakPlayer: longestWinStreak[indexPath.row].participantMO?.playerUUID)
+                _ = HistoryViewer(from: self, winStreakPlayer: longestWinStreak[indexPath.row].playerUUID)
             } else {
                 switch highScoreType {
                 case 0:
@@ -288,7 +288,7 @@ class HighScoresViewController: ScorecardViewController, UITableViewDataSource, 
         totalScoreParticipants = History.getHighScores(type: .totalScore, playerUUIDList: playerUUIDList)
         handsMadeParticipants = History.getHighScores(type: .handsMade, playerUUIDList: playerUUIDList)
         twosMadeParticipants = History.getHighScores(type: .twosMade, playerUUIDList: playerUUIDList)
-        longestWinStreak = History.getWinStreaks(playerUUIDList: playerUUIDList)
+        longestWinStreak = History.getWinStreaks(playerUUIDList: playerUUIDList, limit: 3)
     }
     
     func positionPopup() {

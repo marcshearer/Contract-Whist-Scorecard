@@ -92,6 +92,7 @@ class Reconcile: SyncDelegate {
             playerMO.handsMade = 0
             playerMO.twosMade = 0
             playerMO.totalScore = 0
+            playerMO.winStreak = 0
             playerMO.maxScore = 0
             playerMO.maxMade = 0
             playerMO.maxTwos = 0
@@ -106,6 +107,7 @@ class Reconcile: SyncDelegate {
                     playerMO.handsMade += Int64(participantMO.handsMade)
                     playerMO.twosMade += Int64(participantMO.twosMade)
                     playerMO.totalScore += Int64(participantMO.totalScore)
+                    playerMO.winStreak = (participantMO.place == 1 ? playerMO.winStreak + 1 : 0)
                     
                     // Update max scores
                     if Int64(participantMO.totalScore) > playerMO.maxScore && participantMO.gamesPlayed == 1 {
@@ -115,6 +117,10 @@ class Reconcile: SyncDelegate {
                     if Int64(participantMO.handsMade) > playerMO.maxMade && participantMO.gamesPlayed == 1 {
                         playerMO.maxMade = Int64(participantMO.handsMade)
                         playerMO.maxMadeDate = participantMO.datePlayed
+                    }
+                    if playerMO.winStreak > playerMO.maxWinStreak && participantMO.gamesPlayed == 1 {
+                        playerMO.maxWinStreak = playerMO.winStreak
+                        playerMO.maxWinStreakDate = participantMO.datePlayed
                     }
                     if Int64(participantMO.twosMade) > playerMO.maxTwos && participantMO.gamesPlayed == 1 {
                         playerMO.maxTwos = Int64(participantMO.twosMade)

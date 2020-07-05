@@ -40,8 +40,9 @@ class RelatedPlayersViewController : ScorecardViewController, RelatedPlayersDele
     // MARK: - Related Players View delegates =========================================================== -
     
     func didDownloadPlayers(playerDetailList: [PlayerDetail], emailPlayerUUID: String?) {
-        delegate?.didDownloadPlayers(playerDetailList: playerDetailList, emailPlayerUUID: emailPlayerUUID)
-        self.dismiss(animated: true)
+        self.dismiss(animated: true, completion: {
+            self.delegate?.didDownloadPlayers(playerDetailList: playerDetailList, emailPlayerUUID: emailPlayerUUID)
+        })
     }
     
     func didCancel() {

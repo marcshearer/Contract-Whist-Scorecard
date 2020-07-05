@@ -183,6 +183,10 @@ class RelatedPlayersView : UIView, UITableViewDelegate, UITableViewDataSource, S
     }
     
     internal func syncCompletion(_ errors: Int) {
+        self.syncFinished = true
+        self.tableView.reloadData()
+        self.enableButtons()
+
     }
     
     internal func syncReturnPlayers(_ returnedList: [PlayerDetail]!, _ thisPlayerUUID: String?) {

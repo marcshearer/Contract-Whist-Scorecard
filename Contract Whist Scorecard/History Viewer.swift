@@ -68,6 +68,8 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
     ]
     
     init(from viewController: UIViewController, winStreakPlayer: String? = nil, completion: (()->())? = nil) {
+        super.init()
+        
         self.sourceViewController = viewController
         self.winStreakPlayer = winStreakPlayer
         
@@ -78,15 +80,19 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             self.backImage = "back"
         }
         
-        super.init()
         self.getHistory()
         self.callerCompletion = completion
         
         // Call the data table viewer
         self.dataTableViewController = DataTableViewController.show(from: viewController, delegate: self, recordList: history.games)
-        self.customView = self.dataTableViewController.customHeaderView
-        self.customHeightConstraint = self.dataTableViewController.customHeaderViewHeightConstraint
-        self.filterStateChange()
+        
+        // Setup the custom (filter) view
+        if self.winStreakPlayer == nil {
+            self.customView = self.dataTableViewController.customHeaderView
+            self.customHeightConstraint = self.dataTableViewController.customHeaderViewHeightConstraint
+            self.customView.layoutIfNeeded()
+            self.filterStateChange()
+        }
     }
     
     internal func layoutSubviews() {

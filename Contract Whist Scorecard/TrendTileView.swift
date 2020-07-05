@@ -25,7 +25,8 @@ class TrendTileView: UIView, DashboardTileDelegate {
     @IBInspectable private var title: String = ""
        
     @IBOutlet private weak var dashboardDelegate: DashboardActionDelegate?
-    
+    @IBOutlet private weak var parentDashboardView: DashboardView?
+
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet private weak var tileView: UIView!
     

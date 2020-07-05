@@ -33,6 +33,7 @@
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="H6h-d6-o0k"/>
+                        <outlet property="parentDashboardView" destination="-1" id="UuD-Dr-FZw"/>
                     </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vcm-lb-pqY" customClass="DataTableTileView" customModule="Whist_2" customModuleProvider="target">
@@ -51,6 +52,7 @@
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="K4e-EG-LuW"/>
+                        <outlet property="parentDashboardView" destination="-1" id="aqf-Ua-mBp"/>
                     </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aE4-O4-rLp" customClass="DataTableTileView" customModule="Whist_2" customModuleProvider="target">
@@ -69,6 +71,7 @@
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="nFJ-zl-qkx"/>
+                        <outlet property="parentDashboardView" destination="-1" id="9Rg-s4-G0t"/>
                     </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qK4-5E-vDg" customClass="TrendTileView" customModule="Whist_2" customModuleProvider="target">
@@ -82,6 +85,7 @@
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="XGO-PT-6cd"/>
+                        <outlet property="parentDashboardView" destination="-1" id="yNP-Im-jyJ"/>
                     </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kHZ-oJ-m2Q" customClass="HighScoreTileView" customModule="Whist_2" customModuleProvider="target">
@@ -100,6 +104,7 @@
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="QQO-gK-RoD"/>
+                        <outlet property="parentDashboardView" destination="-1" id="3kP-pv-qKs"/>
                     </connections>
                 </view>
             </subviews>

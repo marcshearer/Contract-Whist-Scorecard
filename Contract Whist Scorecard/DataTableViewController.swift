@@ -235,7 +235,7 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
         case 1:
             // Header table view
             cell = tableView.dequeueReusableCell(withIdentifier: "Data Table Header Cell", for: indexPath) as! DataTableCell
-            cell.setCollectionViewDataSourceDelegate(self, forRow: 1000000+indexPath.row)
+            cell.setCollectionViewDataSourceDelegate(self, forRow: 1000000 + indexPath.row)
             self.headerCollectionView = cell.dataTableCollection
         default:
             // Body table view
@@ -293,7 +293,7 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
     
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        return displayedFields.count
+        return self.displayedFields.count
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -609,6 +609,7 @@ public enum DataTableVariableType {
     case bool
     case button
     case thumbnail
+    case collection
 }
 
 @objc public class DataTableField: NSObject {

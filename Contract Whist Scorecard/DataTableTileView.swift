@@ -10,23 +10,24 @@ import UIKit
 
 @objc public protocol DataTableTileViewDataSource : class {
     var availableFields: [DataTableField] { get }
+    var minColumns: Int { get }
     
     @objc optional func getData(personal: Bool, count: Int) -> [DataTableViewerDataSource]
     
-    @objc optional func adjustWidth(_ availableWidth: CGFloat)
 }
 
 class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     private var detailType: DashboardDetailType = .history
+    private var highScoreType: HighScoreType = .totalScore
     private var displayedFields: [DataTableField] = []
     private var records: [DataTableViewerDataSource]!
     private var dataSource: DataTableTileViewDataSource!
     private var collectionViewNib: UINib!
+    private var contentCollectionViewNib: UINib!
     private var rows: Int = 0
     private var rowHeight: CGFloat = 0.0
     private var minRowHeight: CGFloat = 30.0
-    private let maxRowHeight: CGFloat = 50.0
     
     @IBInspectable private var detail: Int {
         get {
@@ -36,13 +37,27 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
             self.detailType = DashboardDetailType(rawValue: detail) ?? .history
         }
     }
+    @IBInspectable private var highScore: Int {
+        get {
+            return self.highScoreType.rawValue
+        }
+        set(highScore) {
+            self.highScoreType = HighScoreType(rawValue: highScore) ?? .totalScore
+        }
+    }
     @IBInspectable private var personal: Bool = true
     @IBInspectable private var title: String = ""
     @IBInspectable private var headings: Bool = false
     @IBInspectable private var maxRows: Int = 0
+    @IBInspectable private var separator: Bool = true
+    @IBInspectable private var fontSize: CGFloat = 15.0
+    @IBInspectable private var showTypeButton: Bool = true
+    @IBInspectable private var maxRowHeight: CGFloat = 50.0
+    @IBInspectable private var detailDrill: Bool = false
 
     @IBOutlet private weak var dashboardDelegate: DashboardActionDelegate?
-
+    @IBOutlet private weak var parentDashboardView: DashboardView?
+    
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet private weak var tileView: UIView!
 
@@ -78,15 +93,19 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
         // Load collection view cell
         self.collectionViewNib = UINib(nibName: "DataTableTileCollectionViewCell", bundle: nil)
         
-        // Setup tap gesture
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(DataTableTileView.tapSelector(_:)))
-        self.contentView.addGestureRecognizer(tapGesture)
-        
+        // Load collection view cell
+        self.contentCollectionViewNib = UINib(nibName: "DataTableTileContentCollectionViewCell", bundle: nil)
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
-             
+        
+        if !detailDrill {
+            // Setup tap gesture
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(DataTableTileView.tapSelector(_:)))
+            self.contentView.addGestureRecognizer(tapGesture)
+        }
+        
         // Setup data source
         switch detailType {
         case .history:
@@ -97,6 +116,8 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
             } else {
                 self.dataSource = DataTableTileStatsDataSource()
             }
+        case .highScores:
+            self.dataSource = DataTableTileHighScoreDataSource(type: self.highScoreType, parentDashboardView: self.parentDashboardView)
         default:
             break
         }
@@ -130,15 +151,38 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
                 self.tableViewTopConstraint.constant = -self.rowHeight
             }
             
-            self.dataSource?.adjustWidth?(self.tableView.frame.width)
-            if let availableFields = self.dataSource?.availableFields {
+            if let availableFields = self.dataSource?.availableFields,
+               let minColumns = self.dataSource?.minColumns {
+                
+                // Make sure that the minimum number of columns will fit
+                var minWidth: CGFloat = 0.0
+                for index in 0..<minColumns {
+                    minWidth += availableFields[index].width
+                }
+                for index in 0..<availableFields.count {
+                    if self.tableView.frame.width < minWidth {
+                        availableFields[index].adjustedWidth = availableFields[index].width * self.tableView.frame.width / minWidth
+                    } else {
+                        availableFields[index].adjustedWidth = availableFields[index].width
+                    }
+                }
+                
+                // Fill in the columns
                 self.displayedFields = DataTableFormatter.checkFieldDisplay(availableFields, to: self.tableView.frame.size, paddingWidth: 1.0)
             } else {
                 self.displayedFields = []
             }
             
-            self.moveTypeButton()
+            if !self.showTypeButton {
+                self.typeButton.isHidden = true
+            } else {
+                self.moveTypeButton()
+            }
             
+            if !self.separator {
+                self.tableView.separatorStyle = .none
+            }
+                        
             self.tableView.reloadData()
         }
     }
@@ -195,36 +239,116 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Table Cell", for: indexPath) as! DataTableTileTableViewCell
-        cell.setCollectionViewDataSourceDelegate(self, nib: self.collectionViewNib, forRow: 1000000+indexPath.row)
+        cell.setCollectionViewDataSourceDelegate(self, nib: self.collectionViewNib, forRow: indexPath.row)
+        
+        cell.selectedBackgroundView = UIView()
+        cell.selectedBackgroundView?.backgroundColor = UIColor.clear
+        
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        if self.detailDrill {
+            let data = self.records[indexPath.row - (self.headings ? 1 : 0)]
+            switch self.detailType {
+            case .history:
+                if let gameUUID = data.value(forKey: "gameUUID") as? String {
+                    self.showHistoryDetail(gameUUID: gameUUID)
+                }
+            case .statistics:
+                if let playerUUID = data.value(forKey: "playerUUID") as? String {
+                    self.showPlayerDetail(playerUUID: playerUUID)
+                }
+            case .highScores:
+                if let participantMO = data.value(forKey: "participantMO") as? ParticipantMO, let playerUUID = data.value(forKey: "playerUUID") as? String {
+                    self.parentDashboardView?.drillHighScore(from: self.parentDashboardView!.parentViewController!, sourceView: self, type: self.highScoreType, occurrence: indexPath.row - (self.headings ? 1 : 0), detailParticipantMO: participantMO, playerUUID: playerUUID)
+                }
+            }
+        }
+        return nil
     }
     
     // MARK: - Collection view delegates ================================================================ -
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.displayedFields.count
+        if collectionView.tag < 1000000 {
+            return self.displayedFields.count
+        } else {
+            return collectionView.tag - 1000000
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: self.displayedFields[indexPath.item].adjustedWidth, height: self.rowHeight)
+        if collectionView.tag < 1000000 {
+            return CGSize(width: self.displayedFields[indexPath.item].adjustedWidth, height: self.rowHeight)
+        } else {
+            let value = collectionView.tag - 1000000
+            let cellsPerRow = max(5, (value + 1) / 2)
+            let size: CGFloat = collectionView.frame.width / CGFloat(cellsPerRow)
+            return CGSize(width: size, height: size)
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Collection Cell", for: indexPath) as! DataTableTileCollectionViewCell
-        let row = collectionView.tag - 1000000
-        let headingRows = (self.headings ? 1 : 0)
-        if row == 0 && self.headings {
-            cell.textLabel.text = self.displayedFields[indexPath.item].title
-            cell.textLabel.numberOfLines = 0
-        } else {
-            let record = records[row - headingRows]
+        if collectionView.tag < 1000000 {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Collection Cell", for: indexPath) as! DataTableTileCollectionViewCell
+            let headingRows = (self.headings ? 1 : 0)
+            let row = collectionView.tag
             let column = displayedFields[indexPath.item]
             Palette.normalStyle(cell.textLabel)
-            cell.textLabel.text = DataTableFormatter.getValue(record: record, column: column)
-            cell.textLabel.numberOfLines = 1
+            if row == 0 && self.headings {
+                cell.textLabel.text = column.title
+                cell.textLabel.numberOfLines = 0
+                cell.textLabel.font = UIFont.systemFont(ofSize: self.fontSize, weight: .semibold)
+                cell.textLabel.textAlignment = .center
+            } else {
+                let record = records[row - headingRows]
+                cell.textLabel.text = ""
+                cell.thumbnailView.set(data: nil)
+                switch displayedFields[indexPath.row].type {
+                case .thumbnail:
+                    var data: Data?
+                    if let content = record.value(forKey: column.field) {
+                        if !(content is NSNull) {
+                            data = content as? Data
+                        }
+                    }
+                    cell.thumbnailView.set(data: data, diameter: cell.frame.width - 4)
+                case .collection:
+                    cell.setCollectionViewDataSourceDelegate(self, nib: self.contentCollectionViewNib, forValue: record.value(forKey: column.field) as! Int)
+                default:
+                    cell.textLabel.text = DataTableFormatter.getValue(record: record, column: column)
+                    cell.textLabel.font = UIFont.systemFont(ofSize: self.fontSize)
+                }
+                cell.textLabel.numberOfLines = 1
+                cell.textLabel.textAlignment = column.align
+            }
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Content Collection Cell", for: indexPath) as! DataTableTileContentCollectionViewCell
+            cell.imageView.image = UIImage(named: "high score 1")?.asTemplate()
+            cell.imageView.tintColor = Palette.highScores
+            
+            return cell
         }
-        cell.textLabel.textAlignment = displayedFields[indexPath.row].align
-        return cell
+    }
+    
+    // MARK: - Routines to load other views ============================================================ -
+    
+    private func showHistoryDetail(gameUUID: String) {
+        let history = History(gameUUID: gameUUID, getParticipants: true)
+        if !history.games.isEmpty {
+            HistoryDetailViewController.show(from: self.parentDashboardView!.parentViewController!, gameDetail: history.games.first!, sourceView: self, completion: { (historyGame) in
+            })
+        }
+    }
+    
+    private func showPlayerDetail(playerUUID: String) {
+        if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(playerUUID) {
+            let playerDetail = PlayerDetail()
+            playerDetail.fromManagedObject(playerMO: playerMO)
+            PlayerDetailViewController.show(from: self.parentDashboardView!.parentViewController!, playerDetail: playerDetail, mode: .display, sourceView: self)
+        }
     }
 }
 
@@ -247,121 +371,26 @@ class DataTableTileTableViewCell: UITableViewCell {
 
 class DataTableTileCollectionViewCell: UICollectionViewCell {
     @IBOutlet fileprivate weak var textLabel: UILabel!
-}
-
-class DataTableTileHistoryDataSource : DataTableTileViewDataSource {
+    @IBOutlet fileprivate weak var thumbnailView: ThumbnailView!
+    @IBOutlet fileprivate weak var collectionView: UICollectionView!
+    @IBOutlet fileprivate weak var collectionViewHeightConstraint: NSLayoutConstraint!
     
-    private var history = History()
-    
-    let availableFields: [DataTableField] = [
-        DataTableField("        ",      "",          sequence: 1,   width: 7,   type: .string),
-        DataTableField("        ",      "",          sequence: 7,   width: 2,   type: .string),
-        DataTableField("=shortDate",    "Date",      sequence: 3,   width: 50,  type: .date,        align: .left, pad: true),
-        DataTableField("=player1",      "Winner",    sequence: 5,   width: 80,  type: .string),
-        DataTableField("=score1",       "Score",     sequence: 6,   width: 50,  type: .int),
-        DataTableField("=location",     "Location",  sequence: 2,   width: 100, type: .string,      align: .left),
-    ]
-    
-    internal func adjustWidth(_ availableWidth: CGFloat) {
-        if availableWidth < 150 {
-            for field in self.availableFields {
-                field.adjustedWidth = field.width * availableWidth / 150
-            }
-        }
-    }
-    
-    internal func getData(personal: Bool, count: Int) -> [DataTableViewerDataSource] {
-        self.history = History(playerUUID: (personal ? Scorecard.settings.thisPlayerUUID : nil), limit: count)
-        return self.history.games
-    }
-    
-}
-
-class DataTableTilePersonalStatsDataSource : DataTableTileViewDataSource {
-
-    let availableFields: [DataTableField] = [
-        DataTableField("",              "",          sequence: 1,   width: 7,   type: .string),
-        DataTableField("",              "",          sequence: 4,   width: 7,   type: .string),
-        DataTableField("name",          "Stat",      sequence: 2,   width: 100, type: .string,        align: .left),
-        DataTableField("value",         "Value",     sequence: 3,   width: 30,  type: .string)
-    ]
-    
-    internal func adjustWidth(_ availableWidth: CGFloat) {
-        if availableWidth < 150 {
-            for field in self.availableFields {
-                field.adjustedWidth = field.width * availableWidth / 150
-            }
-        }
-    }
-    
-    internal func getData(personal: Bool, count: Int) -> [DataTableViewerDataSource] {
-        var result: [DataTableViewerDataSource] = []
+    func setCollectionViewDataSourceDelegate
+        <D: UICollectionViewDataSource & UICollectionViewDelegate>
+        (_ dataSourceDelegate: D, nib: UINib, forValue value: Int) {
         
-        if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.settings.thisPlayerUUID) {
-            result.append(DataTablePersonalStats(name: "Games won", value: "\(Utility.roundPercent(playerMO.gamesWon,playerMO.gamesPlayed)) %"))
-            result.append(DataTablePersonalStats(name: "Av. score", value: "\(Utility.roundQuotient(playerMO.totalScore, playerMO.gamesPlayed))"))
-            result.append(DataTablePersonalStats(name: "Bids made", value: "\(Utility.roundPercent(playerMO.handsMade, playerMO.handsPlayed)) %"))
-            result.append(DataTablePersonalStats(name: "Twos made", value: "\(Utility.roundPercent(playerMO.twosMade, playerMO.handsPlayed)) %"))
-        }
-        
-        return result
+        collectionView.delegate = dataSourceDelegate
+        collectionView.dataSource = dataSourceDelegate
+        collectionView.register(nib, forCellWithReuseIdentifier: "Content Collection Cell")
+        let cellsPerRow = max(5, (value + 1) / 2)
+        let size: CGFloat = self.frame.width / CGFloat(cellsPerRow)
+        collectionViewHeightConstraint.constant = (value > cellsPerRow ? (size * 2) + 4 : size)
+        collectionView.tag = 1000000 + value
+        collectionView.reloadData()
     }
 }
 
-class DataTablePersonalStats : DataTableViewerDataSource {
-    
-    let name: String
-    let value: String
-    
-    init(name: String, value: String) {
-        self.name = name
-        self.value = value
-    }
-    
-    func value(forKey key: String) -> Any? {
-        switch key {
-        case "name":
-            return self.name
-        case "value":
-            return self.value
-        default:
-            return nil
-        }
-    }
-}
-
-class DataTableTileStatsDataSource : DataTableTileViewDataSource {
-
-    let availableFields: [DataTableField] = [
-        DataTableField("",             "",                 sequence: 1,     width: 7,     type: .string),
-        DataTableField("",             "",                 sequence: 9,     width: 7,     type: .string),
-        DataTableField("name",         "",                 sequence: 2,     width: 140,    type: .string,    align: .left,   pad: true),
-        DataTableField("=gamesWon%",   "Games Won",        sequence: 5,     width: 60.0,  type: .double),
-        DataTableField("=averageScore","Av. Score",        sequence: 6,     width: 60.0,  type: .double),
-        DataTableField("=handsMade%",  "Hands Made",       sequence: 7,     width: 60.0,  type: .double),
-        DataTableField("=twosMade%",   "Twos Made",        sequence: 8,     width: 60.0,  type: .double),
-        DataTableField("gamesPlayed",  "Games Played",     sequence: 3,     width: 60.0,  type: .int),
-        DataTableField("gamesWon",     "Games Won",        sequence: 4,     width: 60.0,  type: .int)
-    ]
-    
-    internal func adjustWidth(_ availableWidth: CGFloat) {
-        if availableWidth < 225 {
-            for field in self.availableFields {
-                field.adjustedWidth = field.width * availableWidth / 225
-            }
-        }
-    }
-    
-    internal func getData(personal: Bool, count: Int) -> [DataTableViewerDataSource] {
-        Scorecard.shared.playerDetailList().sorted(by: {self.gamesWon($0) > self.gamesWon($1)})
-    }
-    
-    private func gamesWon(_ playerDetail: PlayerDetail) -> Double {
-        if playerDetail.gamesPlayed == 0 {
-            return 0
-        } else {
-            return Double(playerDetail.gamesWon) / Double(playerDetail.gamesPlayed)
-        }
-    }
+class DataTableTileContentCollectionViewCell: UICollectionViewCell {
+    @IBOutlet fileprivate weak var imageView: UIImageView!
 }
 

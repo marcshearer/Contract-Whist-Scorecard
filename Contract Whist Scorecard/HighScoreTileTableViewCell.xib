@@ -27,22 +27,28 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ia7-4D-Rc9">
-                        <rect key="frame" x="69.5" y="23" width="61" height="61"/>
+                        <rect key="frame" x="75" y="21" width="50" height="50"/>
                         <constraints>
+                            <constraint firstAttribute="height" constant="50" id="hEh-Kh-QcL"/>
                             <constraint firstAttribute="width" secondItem="Ia7-4D-Rc9" secondAttribute="height" multiplier="1:1" id="qQS-bo-xfp"/>
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3WW-kE-bAX">
-                        <rect key="frame" x="69.5" y="23" width="61" height="61"/>
+                        <rect key="frame" x="75" y="21" width="50" height="50"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="3WW-kE-bAX" secondAttribute="height" multiplier="1:1" id="96h-TU-Aam"/>
+                            <constraint firstAttribute="height" constant="50" id="qHc-zM-Xg2"/>
+                        </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="Bkf-5P-UtK">
-                        <rect key="frame" x="0.0" y="23" width="200" height="73"/>
+                        <rect key="frame" x="0.0" y="21" width="200" height="50"/>
                         <color key="backgroundColor" name="Clear"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="200" id="3jL-gr-G2x"/>
+                            <constraint firstAttribute="height" constant="50" id="eAq-s3-dt9"/>
                         </constraints>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="izE-2C-m3R">
                             <size key="itemSize" width="128" height="128"/>
@@ -51,31 +57,43 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                     </collectionView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="JMj-dD-Ieg">
+                        <rect key="frame" x="0.0" y="71" width="200" height="21"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="21" id="hJw-wP-opA"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="Bkf-5P-UtK" firstAttribute="centerX" secondItem="VOa-Pl-KwN" secondAttribute="centerX" id="6Xn-ci-6EV"/>
-                    <constraint firstItem="Ia7-4D-Rc9" firstAttribute="top" secondItem="k3V-hG-ixR" secondAttribute="bottom" constant="2" id="BnF-td-OSa"/>
-                    <constraint firstItem="Ia7-4D-Rc9" firstAttribute="bottom" secondItem="3WW-kE-bAX" secondAttribute="bottom" id="Bq3-f7-lvn"/>
+                    <constraint firstItem="Ia7-4D-Rc9" firstAttribute="top" secondItem="k3V-hG-ixR" secondAttribute="bottom" id="BnF-td-OSa"/>
                     <constraint firstItem="3WW-kE-bAX" firstAttribute="centerX" secondItem="Ia7-4D-Rc9" secondAttribute="centerX" id="BuB-di-N2E"/>
                     <constraint firstItem="k3V-hG-ixR" firstAttribute="top" secondItem="VOa-Pl-KwN" secondAttribute="top" id="HSE-ok-1wE"/>
-                    <constraint firstAttribute="bottom" secondItem="Ia7-4D-Rc9" secondAttribute="bottom" constant="16" id="IE7-nV-Kz7"/>
-                    <constraint firstItem="Bkf-5P-UtK" firstAttribute="top" secondItem="k3V-hG-ixR" secondAttribute="bottom" constant="2" id="TPk-1h-g78"/>
+                    <constraint firstItem="JMj-dD-Ieg" firstAttribute="top" secondItem="Ia7-4D-Rc9" secondAttribute="bottom" id="I7u-Um-17S"/>
+                    <constraint firstItem="Bkf-5P-UtK" firstAttribute="top" secondItem="k3V-hG-ixR" secondAttribute="bottom" id="TPk-1h-g78"/>
+                    <constraint firstAttribute="trailing" secondItem="JMj-dD-Ieg" secondAttribute="trailing" id="Yf9-5c-EGP"/>
                     <constraint firstItem="k3V-hG-ixR" firstAttribute="leading" secondItem="VOa-Pl-KwN" secondAttribute="leading" constant="2" id="ZjW-Z6-YGH"/>
                     <constraint firstItem="3WW-kE-bAX" firstAttribute="top" secondItem="Ia7-4D-Rc9" secondAttribute="top" id="dbo-Vt-tM4"/>
-                    <constraint firstItem="3WW-kE-bAX" firstAttribute="width" secondItem="Ia7-4D-Rc9" secondAttribute="width" id="g44-pp-Lfc"/>
-                    <constraint firstAttribute="bottom" secondItem="Bkf-5P-UtK" secondAttribute="bottom" constant="4" id="mVr-Dk-I1R"/>
                     <constraint firstItem="Ia7-4D-Rc9" firstAttribute="centerX" secondItem="VOa-Pl-KwN" secondAttribute="centerX" id="pMD-jQ-BPe"/>
                     <constraint firstAttribute="trailing" secondItem="k3V-hG-ixR" secondAttribute="trailing" constant="2" id="vke-hF-8YS"/>
+                    <constraint firstItem="JMj-dD-Ieg" firstAttribute="leading" secondItem="VOa-Pl-KwN" secondAttribute="leading" id="yca-SL-qHa"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="captionAboveLabel" destination="k3V-hG-ixR" id="v4p-0P-Sbg"/>
+                <outlet property="captionAboveLabelHeightConstraint" destination="hSW-Zo-qIu" id="B2p-8L-Pf4"/>
+                <outlet property="captionBelowLabel" destination="JMj-dD-Ieg" id="qni-6m-URQ"/>
+                <outlet property="captionBelowLabelHeightConstraint" destination="hJw-wP-opA" id="e8h-9k-XPL"/>
                 <outlet property="collectionView" destination="Bkf-5P-UtK" id="TtB-PU-j0u"/>
+                <outlet property="collectionViewHeightConstraint" destination="eAq-s3-dt9" id="dzp-4G-Ped"/>
                 <outlet property="collectionViewWidthConstraint" destination="3jL-gr-G2x" id="k7U-mX-XL2"/>
-                <outlet property="titleLabel" destination="k3V-hG-ixR" id="v4p-0P-Sbg"/>
                 <outlet property="valueImageView" destination="Ia7-4D-Rc9" id="rLy-PB-osX"/>
-                <outlet property="valueImageViewBottomConstraint" destination="IE7-nV-Kz7" id="ef9-JH-aFT"/>
+                <outlet property="valueImageViewHeightConstraint" destination="hEh-Kh-QcL" id="VeT-od-San"/>
                 <outlet property="valueLabel" destination="3WW-kE-bAX" id="Edg-M5-Gy6"/>
-                <outlet property="valueLabelBottomConstraint" destination="Bq3-f7-lvn" id="lGx-NH-83F"/>
+                <outlet property="valueLabelHeightConstraint" destination="qHc-zM-Xg2" id="tDd-vd-bbF"/>
             </connections>
             <point key="canvasLocation" x="134.78260869565219" y="36.160714285714285"/>
         </tableViewCell>

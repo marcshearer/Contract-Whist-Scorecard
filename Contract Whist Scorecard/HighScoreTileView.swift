@@ -10,16 +10,28 @@ import UIKit
 
 class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, UITableViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
         
+    struct RowInfo {
+        var type: HighScoreType
+        var occurrence: Int
+        var height: CGFloat = 0.0
+        var score: Int?
+        var name: String?
+        var playerUUID: String?
+        var participantMO: ParticipantMO?
+    }
+    
     private var detailType: DashboardDetailType = .highScores
-    private var rows = 0
-    private var totalScoreRow = -1
-    private var handsMadeRow = -1
-    private var winStreakRow = -1
-    private var twosMadeRow = -1
-    private var heightFactors: [CGFloat] = []
     private var collectionViewNib: UINib!
-    private var winnerImageWidth: CGFloat = 30
-    private var scores: [Int : (value: Int, name: String?)] = [:]
+    private var titleHeight: CGFloat = 26.5
+    private var captionHeight: CGFloat = 0.0
+    private var spacing: CGFloat = 0.0
+    private var totalScoreImageHeight: CGFloat = 60.0
+    private var madeDialHeight: CGFloat = 50.0
+    private var winnerImageAspectRatio: CGFloat = 100/77
+    private var winnerMinValue: Int = 7
+    private var winnerImageInsets: CGFloat = 32.0
+    private var rowInfo: [RowInfo] = []
+    private var captionAbove: Bool = false
     
     @IBInspectable private var detail: Int {
         get {
@@ -34,16 +46,22 @@ class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
     @IBInspectable private var handsMade: Bool = true
     @IBInspectable private var winStreak: Bool = true
     @IBInspectable private var twosMade: Bool = false
-
+    @IBInspectable private var count: Int = 1
     @IBInspectable private var title: String = ""
-       
+    @IBInspectable private var titleRows: Int = 1
+    @IBInspectable private var showTypeButton: Bool = true
+    @IBInspectable private var detailDrill: Bool = false
+
     @IBOutlet private weak var dashboardDelegate: DashboardActionDelegate?
-    
+    @IBOutlet private weak var parentDashboardView: DashboardView?
+
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet private weak var tileView: UIView!
     
     @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var titleLabelHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var typeButton: ClearButton!
+    @IBOutlet private weak var typeButtonWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var tableView: UITableView!
 
     override init(frame: CGRect) {
@@ -68,11 +86,6 @@ class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
         
         // Load collection view cell
         self.collectionViewNib = UINib(nibName: "HighScoreTileCollectionViewCell", bundle: nil)
-        
-        // Setup tap gesture
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(HighScoreTileView.tapSelector(_:)))
-        self.contentView.addGestureRecognizer(tapGesture)
-        
      }
     
     @objc private func tapSelector(_ sender: UIView) {
@@ -82,22 +95,38 @@ class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
     override func awakeFromNib() {
         super.awakeFromNib()
 
+        // Setup tap gesture
+        if !detailDrill {
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(HighScoreTileView.tapSelector(_:)))
+            self.contentView.addGestureRecognizer(tapGesture)
+        }
+        
         // Setup table view rows
         self.setupRows()
  
         // Setup scores
         self.getValues()
         
-        self.tileView.backgroundColor = Palette.buttonFace
-        self.titleLabel.textColor = Palette.textTitle
-        self.typeButton.tintColor = Dashboard.color(detailView: detailType)
-        self.typeButton.setImage(Dashboard.image(detailView: detailType), for: .normal)
+        // Setup default colors
+        self.defaultViewColors()
         
+        // Set title
         self.titleLabel.text = self.title
     }
     
     override internal func layoutSubviews() {
         super.layoutSubviews()
+        
+        // Adjust heights
+        self.tableView.layoutIfNeeded()
+        self.adjustHeights()
+        
+        if !self.showTypeButton {
+            self.typeButtonWidthConstraint.constant = 0
+            self.typeButton.isHidden = true
+        }
+        self.titleLabelHeightConstraint.constant = (CGFloat(self.titleRows) * self.titleHeight)
+        self.titleLabel.numberOfLines = self.titleRows
         
         self.tileView.layoutIfNeeded()
         
@@ -107,107 +136,113 @@ class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
         self.tileView.roundCorners(cornerRadius: 8.0)
     }
     
+    // MARK: - Tile Delegate ================================================================= -
+    
     internal func reloadData() {
         self.getValues()
         self.tableView.reloadData()
-    }
-
-    private func setupRows() {
-        self.rows = 0
-        if self.totalScore {
-            self.totalScoreRow = rows
-            self.rows += 1
-            self.heightFactors.append(2.5)
-        }
-        if self.handsMade {
-            self.handsMadeRow = rows
-            self.rows += 1
-            self.heightFactors.append(2)
-        }
-        if self.winStreak {
-            self.winStreakRow = rows
-            self.rows += 1
-            self.heightFactors.append(1.4)
-        }
-        if self.twosMade && Scorecard.settings.bonus2 {
-            self.twosMadeRow = rows
-            self.rows += 1
-            self.heightFactors.append(2)
-        }
-        let totalFactors = self.heightFactors.reduce(0,+)
-        for index in 0..<heightFactors.count {
-            self.heightFactors[index] /= totalFactors
-        }
     }
     
     // MARK: - Table view delegates ========================================================== -
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.rows
+        return self.rowInfo.count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return tableView.frame.height * heightFactors[indexPath.row]
+        return rowInfo[indexPath.row].height
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Table Cell", for: indexPath) as! HighScoreTileTableViewCell
-
-        cell.titleLabel.textColor = Palette.textTitle
-        cell.valueLabel.textColor = Palette.highScores
-        cell.valueLabel.isHidden = (indexPath.row == self.winStreakRow)
-        cell.valueImageView.isHidden = (indexPath.row != self.totalScoreRow)
-        cell.collectionView.isHidden = (indexPath.row != self.winStreakRow)
-        cell.valueLabelBottomConstraint.constant = 0
-        let score = self.scores[indexPath.row] ?? (0, nil)
-        let name = score.name
         
-        switch indexPath.row {
-        case totalScoreRow:
-            cell.titleLabel.text = "High Score \(name == nil ? "" : " - \(name!)")"
+        let row = rowInfo[indexPath.row]
+        cell.captionAboveLabel.textColor = Palette.textTitle
+        cell.valueLabel.textColor = Palette.highScores
+        cell.valueLabel.isHidden = (row.type == .winStreak)
+        cell.valueImageView.isHidden = (row.type == .winStreak)
+        cell.collectionView.isHidden = (row.type != .winStreak)
+        
+        
+        var imageHeight = cell.frame.height - self.captionHeight - self.spacing
+        var scale: CGFloat = 1.0
+        switch row.type {
+        case .totalScore:
+            imageHeight = min(60, imageHeight)
+            scale = 0.72
+        case .handsMade, .twosMade:
+            imageHeight = imageHeight * 0.9
+        case .winStreak:
+            break
+        }
+        cell.valueImageViewHeightConstraint.constant = imageHeight
+        cell.valueLabelHeightConstraint.constant = imageHeight * scale
+        cell.layoutIfNeeded()
+        
+        let score = row.score ?? 0
+        let name = row.name
+        var title = ""
+        
+        switch row.type {
+        case .totalScore:
+            title = "High Score"
             cell.valueImageView.image = UIImage(systemName: "rosette")?.asTemplate()
             cell.valueImageView.tintColor = Palette.highScores
-            cell.valueLabel.text = "\(score.value)"
-            cell.valueLabelBottomConstraint.constant = cell.valueImageView.frame.height * 0.28
-            cell.valueImageViewBottomConstraint.constant = max(0, min(16, cell.frame.height - 75), min(32, cell.frame.height - 86))
-            
-        case handsMadeRow:
-            cell.titleLabel.text = "Bids Made \(name == nil ? "" : " - \(name!)")"
-            cell.valueLabel.text = "\(score.value)"
-            let dial = Dial(view: cell.valueLabel)
-            dial.draw(dialColor: Palette.highScores.withAlphaComponent(0.5), valueColor: Palette.highScores, fraction: CGFloat(score.value) / CGFloat(Scorecard.game.rounds))
-            cell.valueImageViewBottomConstraint.constant = max(0, min(16, cell.frame.height - 60), min(32, cell.frame.height - 69))
+            cell.valueLabel.text = "\(score)"
 
-        case winStreakRow:
-            cell.titleLabel.text = "Win Streak \(name == nil ? "" : " - \(name!)")"
+        case .handsMade, .twosMade:
+            title = (row.type == .handsMade ? "Bids Made" : "Twos Made")
+            cell.valueLabel.text = "\(score)"
+            let dial = Dial(view: cell.valueImageView)
+            dial.draw(dialColor: Palette.highScores.withAlphaComponent(0.5), valueColor: Palette.highScores, radius: imageHeight * 0.5, fraction: CGFloat(score) / CGFloat(Scorecard.game.rounds))
+    
+        case .winStreak:
+            title = "Win Streak"
             cell.setCollectionViewDataSourceDelegate(self, nib: self.collectionViewNib, forRow: indexPath.row)
-            if score.value > 0 {
-                let imageWidth = min(winnerImageWidth, (tableView.frame.width - 32) / CGFloat(score.value))
-                cell.collectionViewWidthConstraint.constant = min(tableView.frame.width - 32.0, CGFloat(score.value) * imageWidth)
+            if score > 0 {
+                let imageSize = self.winnerImageSize(availableWidth: cell.frame.width, count: score)
+                cell.collectionViewWidthConstraint.constant = imageSize.width * CGFloat(score)
+                cell.collectionViewHeightConstraint.constant = imageSize.height
             } else {
                 cell.collectionViewWidthConstraint.constant = 0
             }
-            
-        case twosMadeRow:
-            cell.titleLabel.text = "Twos Made \(name == nil ? "" : " - \(name!)")"
-            cell.valueLabel.text = "\(score.value)"
-            let dial = Dial(view: cell.valueLabel)
-            dial.draw(dialColor: Palette.highScores.withAlphaComponent(0.5), valueColor: Palette.highScores, fraction: CGFloat(score.value) / CGFloat(Scorecard.game.rounds))
-        default:
-            break
         }
+        
+        if self.captionAbove {
+            cell.captionAboveLabel.text = "\(title) \(name == nil ? "" : " - \(name!)")"
+        } else {
+            cell.captionBelowLabel.text = (personal ? title : name)
+        }
+        cell.captionAboveLabelHeightConstraint.constant = (self.captionAbove ? self.captionHeight : 0)
+        cell.captionBelowLabelHeightConstraint.constant = (self.captionAbove ? 0 : self.captionHeight)
+        
+        cell.selectedBackgroundView = UIView()
+        cell.selectedBackgroundView?.backgroundColor = UIColor.clear
+        
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        
+        if detailDrill {
+            let row = self.rowInfo[indexPath.row]
+            self.parentDashboardView?.drillHighScore(from: self.parentDashboardView!.parentViewController!, sourceView: self, type: row.type, occurrence: row.occurrence, detailParticipantMO: row.participantMO, playerUUID: row.playerUUID!)
+        }
+        
+        return nil
     }
     
     // MARK: - Collection view delegates ================================================================ -
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.scores[winStreakRow]?.value ?? 0
+        let row = collectionView.tag
+        return self.rowInfo[row].score ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let value = scores[winStreakRow]!.value
-        return CGSize(width: collectionView.frame.width / CGFloat(value), height: collectionView.frame.height)
+        let row = collectionView.tag
+        let score = rowInfo[row].score ?? 0
+        return CGSize(width: collectionView.frame.width / CGFloat(score), height: collectionView.frame.height)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -220,57 +255,146 @@ class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
     // MARK: - Data sources =============================================================== -
     
     private func getValues() {
+        var scores: [HighScoreType : [(name: String, score: Int, playerUUID: String, participantMO: ParticipantMO?)]] = [:]
+        var playerMO: PlayerMO?
+        
         if personal {
-            if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.settings.thisPlayerUUID) {
-                if self.totalScore {
-                    self.scores[self.totalScoreRow] = (Int(playerMO.maxScore), nil)
-                }
-                if self.handsMade {
-                    self.scores[self.handsMadeRow] = (Int(playerMO.maxMade), nil)
-                }
-                if self.winStreak {
-                    self.scores[self.winStreakRow] = (Int(playerMO.maxWinStreak), nil)
-                }
-                if self.twosMade {
-                    self.scores[self.totalScoreRow] = (Int(playerMO.twosMade), nil)
-                }
-
-            }
+            playerMO = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.settings.thisPlayerUUID)
         } else {
+            // Accumulate high scores in advance
             if self.totalScore {
-                self.scores[self.totalScoreRow] = self.getHighScore(type: .totalScore)
+                scores[.totalScore] = self.parentDashboardView?.getHighScores(type: .totalScore, count: count)
             }
             if self.handsMade {
-                self.scores[self.handsMadeRow] = self.getHighScore(type: .handsMade)
+                scores[.handsMade] = self.parentDashboardView?.getHighScores(type: .handsMade, count: count)
             }
             if self.winStreak {
-                self.scores[self.winStreakRow] = self.getHighScore(type: .winStreak)
+                scores[.winStreak] = self.parentDashboardView?.getHighScores(type: .winStreak, count: count)
             }
             if self.twosMade {
-                self.scores[self.twosMadeRow] = self.getHighScore(type: .twosMade)
+                scores[.twosMade] = self.parentDashboardView?.getHighScores(type: .twosMade, count: count)
+            }
+        }
+        
+        for (index, row) in self.rowInfo.enumerated() {
+            if personal {
+                if let playerMO = playerMO {
+                    switch row.type {
+                    case .totalScore:
+                        self.rowInfo[index].score = Int(playerMO.maxScore)
+                    case .handsMade:
+                        self.rowInfo[index].score = Int(playerMO.maxMade)
+                    case .winStreak:
+                        self.rowInfo[index].score = Int(playerMO.maxWinStreak)
+                    case .twosMade:
+                        self.rowInfo[index].score = Int(playerMO.maxTwos)
+                    }
+                    self.rowInfo[index].playerUUID = playerMO.playerUUID
+                }
+            } else {
+                if let highScores = scores[row.type] {
+                    if row.occurrence < highScores.count {
+                        let highScore = highScores[row.occurrence]
+                        self.rowInfo[index].score = highScore.score
+                        self.rowInfo[index].name = highScore.name
+                        self.rowInfo[index].participantMO = highScore.participantMO
+                        self.rowInfo[index].playerUUID = highScore.participantMO?.playerUUID
+                    }
+                }
             }
         }
     }
     
-    private func getHighScore(type: HighScoreType) -> (value: Int, name: String) {
-        let list = Scorecard.shared.playerList.map{(value: $0.value(forKey: type.rawValue) as! Int, $0.name!)}
-        if list.count == 0 {
-            return (0, "")
-        } else {
-            return list.sorted(by: {$0.value > $1.value}).first!
+    // MARK: - Setup form  ============================================================================= -
+    
+    private func setupRows() {
+        var types = 0
+        
+        if self.totalScore {
+            types += 1
+            for occurrence in 0..<self.count {
+                self.rowInfo.append(RowInfo(type: .totalScore, occurrence: occurrence))
+            }
         }
+        if self.handsMade {
+            types += 1
+            for occurrence in 0..<self.count {
+                self.rowInfo.append(RowInfo(type: .handsMade, occurrence: occurrence))
+            }
+        }
+        if self.winStreak {
+            types += 1
+            for occurrence in 0..<self.count {
+                self.rowInfo.append(RowInfo(type: .winStreak, occurrence: occurrence))
+            }
+        }
+        if self.twosMade && Scorecard.settings.bonus2 {
+           types += 1
+           for occurrence in 0..<self.count {
+                self.rowInfo.append(RowInfo(type: .twosMade, occurrence: occurrence))
+            }
+        }
+        self.captionAbove = (types > 1)
+    }
+    
+    private func adjustHeights() {
+        // Allocate idealised heights
+        self.captionHeight = 21.0
+        self.spacing = 20.0
+        
+        for (index, row) in self.rowInfo.enumerated() {
+            switch row.type {
+            case .totalScore:
+                self.rowInfo[index].height = self.totalScoreImageHeight
+            case .handsMade, .twosMade:
+                self.rowInfo[index].height = madeDialHeight
+            case .winStreak:
+                let imageSize = winnerImageSize(availableWidth: self.tableView.frame.width, count: row.score ?? 0)
+                self.rowInfo[index].height = imageSize.height
+            }
+        }
+            
+        // Adjust heights to available height and add in spacing and caption heights
+        // Only have half spacing in bottom row
+        let availableHeight = self.tableView.frame.height
+        let totalHeights = self.rowInfo.reduce(0,{$0 + $1.height + self.captionHeight + self.spacing})
+        let factor = availableHeight / totalHeights
+        for index in 0..<self.rowInfo.count {
+            self.rowInfo[index].height = (self.rowInfo[index].height + self.captionHeight + self.spacing) * factor
+        }
+        self.captionHeight *= factor
+        self.spacing *= factor
+    }
+    
+    private func winnerImageSize(availableWidth: CGFloat, count: Int) -> CGSize {
+        let imageWidth = (availableWidth - self.winnerImageInsets) / CGFloat(max(self.winnerMinValue, count))
+        let imageHeight = imageWidth * winnerImageAspectRatio
+        return CGSize(width: imageWidth, height: imageHeight)
+    }
+    
+    // MARK: - Utility Routines ======================================================================== -
+    
+    private func defaultViewColors() {
+        self.tileView.backgroundColor = Palette.buttonFace
+        self.titleLabel.textColor = Palette.textTitle
+        self.typeButton.tintColor = Dashboard.color(detailView: detailType)
+        self.typeButton.setImage(Dashboard.image(detailView: detailType), for: .normal)
     }
 }
 
 class HighScoreTileTableViewCell: UITableViewCell {
-    @IBOutlet fileprivate weak var titleLabel: UILabel!
+    @IBOutlet fileprivate weak var captionAboveLabel: UILabel!
+    @IBOutlet fileprivate weak var captionAboveLabelHeightConstraint: NSLayoutConstraint!
     @IBOutlet fileprivate weak var valueImageView: UIImageView!
-    @IBOutlet fileprivate weak var valueImageViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet fileprivate weak var valueImageViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet fileprivate weak var valueLabel: UILabel!
     @IBOutlet fileprivate weak var collectionView: UICollectionView!
     @IBOutlet fileprivate weak var collectionViewWidthConstraint: NSLayoutConstraint!
-    @IBOutlet fileprivate weak var valueLabelBottomConstraint: NSLayoutConstraint!
-
+    @IBOutlet fileprivate weak var collectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet fileprivate weak var valueLabelHeightConstraint: NSLayoutConstraint!
+    @IBOutlet fileprivate weak var captionBelowLabel: UILabel!
+    @IBOutlet fileprivate weak var captionBelowLabelHeightConstraint: NSLayoutConstraint!
+    
     func setCollectionViewDataSourceDelegate
          <D: UICollectionViewDataSource & UICollectionViewDelegate>
         (_ dataSourceDelegate: D, nib: UINib, forRow row: Int) {
@@ -294,21 +418,23 @@ class Dial {
         self.view = view
     }
     
-    public func draw(dialColor: UIColor, valueColor: UIColor, fraction: CGFloat) {
-        self.view.layer.sublayers?.forEach {
-            if let layer = $0 as? CAShapeLayer {
-                layer.removeFromSuperlayer()
+    public func draw(dialColor: UIColor, valueColor: UIColor, radius: CGFloat, fraction: CGFloat) {
+        if radius > 0 {
+            self.view.layer.sublayers?.forEach {
+                if let layer = $0 as? CAShapeLayer {
+                    layer.removeFromSuperlayer()
+                }
             }
+            self.view.layoutIfNeeded()
+            self.drawArc(color: dialColor, fraction: 1.0, radius: radius - 3.0, lineWidth: 2.0)
+            self.drawArc(color: valueColor, fraction: fraction, radius: radius - 3.0, lineWidth: 4.0)
         }
-        let radius = (min(self.view.frame.width, self.view.frame.height) / 2.0) * 0.9
-        self.drawArc(color: dialColor, fraction: 1.0, radius: radius, lineWidth: 2.0)
-        self.drawArc(color: valueColor, fraction: fraction, radius: radius, lineWidth: 4.0)
     }
     
     private func drawArc(color: UIColor, fraction: CGFloat, radius: CGFloat, lineWidth: CGFloat = 1.0) {
         
         let path = UIBezierPath()
-        path.addArc(withCenter: CGPoint(x: self.view.frame.width / 2, y: self.view.frame.height / 2),
+        path.addArc(withCenter: CGPoint(x: self.view.frame.width / 2, y: radius + 3.0),
                     radius: radius, startAngle: .pi/2, endAngle: (.pi * (0.5 + (2 * fraction))), clockwise: true)
         
         let shapeLayer = CAShapeLayer()

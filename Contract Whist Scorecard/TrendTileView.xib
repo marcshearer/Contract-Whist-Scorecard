@@ -34,7 +34,7 @@
                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="26.5" id="2Wt-7Z-Fdn"/>
                                 <constraint firstAttribute="height" constant="26.5" id="KKR-hZ-Pas"/>
                             </constraints>
-                            <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>

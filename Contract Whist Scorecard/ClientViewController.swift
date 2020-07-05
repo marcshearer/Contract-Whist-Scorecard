@@ -348,7 +348,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     }
     
     private func showDashboard() {
-        DashboardViewController.show(from: self)
+        DashboardViewController.show(from: self,
+            dashboardNames: [(title: "Shields",  fileName: "ShieldsDashboard",  imageName: "shield.fill"),
+                             (title: "Personal", fileName: "PersonalDashboard", imageName: "person.fill"),
+                             (title: "Everyone", fileName: "EveryoneDashboard", imageName: "person.3.fill")])
     }
     
     private func showWalkthrough() {

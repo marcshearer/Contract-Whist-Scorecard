@@ -80,6 +80,7 @@ class ShadowButton: UIButton {
     private var customBackgroundColor: UIColor?
     private var titleInnerLabel: UILabel?
     private var titleOuterLabel: UILabel?
+    private var hasInherited = false
     
     override var backgroundColor: UIColor? {
         didSet {
@@ -109,6 +110,7 @@ class ShadowButton: UIButton {
         self.internalUpdate = true
         super.init(frame: frame)
         self.internalUpdate = false
+        self.awakeFromNib()
     }
     
     init(frame: CGRect, cornerRadius: CGFloat) {
@@ -116,7 +118,8 @@ class ShadowButton: UIButton {
         self.internalUpdate = true
         super.init(frame: frame)
         self.internalUpdate = false
-    }
+        self.awakeFromNib()
+}
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -141,7 +144,7 @@ class ShadowButton: UIButton {
         self.titleInnerLabel?.textColor = self.titleOuterLabel?.textColor
         self.titleInnerLabel?.text = title
         self.titleInnerLabel?.textAlignment = .center
-        self.titleInnerLabel?.font = self.titleLabel!.font
+        // self.titleInnerLabel?.font = self.titleLabel!.font
         self.titleInnerLabel?.adjustsFontSizeToFitWidth = true
         
         self.titleOuterLabel?.addSubview(self.titleInnerLabel!)
@@ -149,21 +152,37 @@ class ShadowButton: UIButton {
 
         self.backgroundColor = UIColor.clear
         self.titleLabel?.removeFromSuperview()
+        self.hasInherited = true
     }
             
     public func setBackgroundColor(_ backgroundColor: UIColor) {
-        self.customBackgroundColor = backgroundColor
-        self.titleOuterLabel?.backgroundColor = backgroundColor
+        if !self.hasInherited {
+            self.internalUpdate = true
+            self.backgroundColor = backgroundColor
+            self.internalUpdate = false
+        } else {
+            self.customBackgroundColor = backgroundColor
+            self.titleOuterLabel?.backgroundColor = backgroundColor
+        }
     }
     
     public override func setTitleColor(_ titleColor: UIColor?, for: UIControl.State) {
-        self.titleInnerLabel?.textColor = titleColor
+        if !self.hasInherited {
+            super.setTitleColor(titleColor, for: state)
+        } else {
+            self.titleInnerLabel?.textColor = titleColor
+        }
     }
     
     public override func setTitle(_ title: String?, for state: UIControl.State) {
-        UIView.performWithoutAnimation {
-            self.titleInnerLabel?.text = title
-            self.titleOuterLabel?.alpha = 1
+        if !self.hasInherited {
+            // Haven't taken control yet
+            super.setTitle(title, for: state)
+        } else {
+            UIView.performWithoutAnimation {
+                self.titleInnerLabel?.text = title
+                self.titleOuterLabel?.alpha = 1
+            }
         }
     }
     

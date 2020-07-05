@@ -33,6 +33,7 @@
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="F0Y-gp-BHe"/>
+                        <outlet property="parentDashboardView" destination="-1" id="02h-SE-5LX"/>
                     </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NHt-cp-ido" userLabel="History Tile" customClass="DataTableTileView" customModule="Whist_2" customModuleProvider="target">
@@ -48,9 +49,11 @@
                         <userDefinedRuntimeAttribute type="number" keyPath="maxRows">
                             <integer key="value" value="5"/>
                         </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="detailDrill" value="NO"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="jdw-D4-0Eb"/>
+                        <outlet property="parentDashboardView" destination="-1" id="cK6-bL-pSE"/>
                     </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jqS-Vg-wOa" userLabel="Statistics Tile" customClass="DataTableTileView" customModule="Whist_2" customModuleProvider="target">
@@ -66,9 +69,11 @@
                             <integer key="value" value="5"/>
                         </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="string" keyPath="title" value="Statistics"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="detailDrill" value="NO"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="H3y-9I-2hv"/>
+                        <outlet property="parentDashboardView" destination="-1" id="hog-oh-Rh5"/>
                     </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kVP-Fk-6a5" userLabel="High Scores Tile" customClass="HighScoreTileView" customModule="Whist_2" customModuleProvider="target">
@@ -87,6 +92,7 @@
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="kbS-Om-3LE"/>
+                        <outlet property="parentDashboardView" destination="-1" id="ejm-Fj-Ro7"/>
                     </connections>
                 </view>
             </subviews>

@@ -17,25 +17,54 @@
                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="dtX-be-KEL">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="dtX-be-KEL">
                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                         <color key="backgroundColor" name="Clear"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="ig3-1u-an5">
+                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                        <color key="backgroundColor" name="Clear"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="50" id="G5P-f4-iOF"/>
+                        </constraints>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="4" minimumInteritemSpacing="0.0" id="mra-dt-wiF">
+                            <size key="itemSize" width="128" height="128"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                    </collectionView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Xi-Yn-aQH" customClass="ThumbnailView" customModule="Whist_2" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="3" width="50" height="50"/>
+                        <color key="backgroundColor" name="Clear"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="9Xi-Yn-aQH" secondAttribute="height" multiplier="1:1" id="fTN-gu-LpS"/>
+                        </constraints>
+                    </view>
                 </subviews>
                 <color key="backgroundColor" name="Clear"/>
                 <constraints>
+                    <constraint firstAttribute="trailing" secondItem="ig3-1u-an5" secondAttribute="trailing" id="A9o-vg-WQS"/>
                     <constraint firstAttribute="bottom" secondItem="dtX-be-KEL" secondAttribute="bottom" id="DIY-6w-hBT"/>
                     <constraint firstItem="dtX-be-KEL" firstAttribute="top" secondItem="QiV-Ne-WC2" secondAttribute="top" id="GUI-Jz-dH5"/>
                     <constraint firstItem="dtX-be-KEL" firstAttribute="leading" secondItem="QiV-Ne-WC2" secondAttribute="leading" id="I5w-Qe-kwU"/>
+                    <constraint firstItem="9Xi-Yn-aQH" firstAttribute="centerY" secondItem="QiV-Ne-WC2" secondAttribute="centerY" constant="3" id="K3y-Yc-Y3a"/>
+                    <constraint firstAttribute="trailing" secondItem="9Xi-Yn-aQH" secondAttribute="trailing" id="N0S-WX-tw1"/>
+                    <constraint firstItem="ig3-1u-an5" firstAttribute="leading" secondItem="QiV-Ne-WC2" secondAttribute="leading" id="RAN-hb-bfp"/>
+                    <constraint firstItem="ig3-1u-an5" firstAttribute="centerY" secondItem="QiV-Ne-WC2" secondAttribute="centerY" id="bcv-Jn-3Fs"/>
+                    <constraint firstItem="9Xi-Yn-aQH" firstAttribute="leading" secondItem="QiV-Ne-WC2" secondAttribute="leading" id="uFP-GD-cRf"/>
                     <constraint firstAttribute="trailing" secondItem="dtX-be-KEL" secondAttribute="trailing" id="wSZ-65-dVO"/>
                 </constraints>
             </collectionViewCellContentView>
             <color key="backgroundColor" name="Clear"/>
             <connections>
+                <outlet property="collectionView" destination="ig3-1u-an5" id="Njy-pi-L84"/>
+                <outlet property="collectionViewHeightConstraint" destination="G5P-f4-iOF" id="QPb-0S-gh2"/>
                 <outlet property="textLabel" destination="dtX-be-KEL" id="DmV-vp-Qxu"/>
+                <outlet property="thumbnailView" destination="9Xi-Yn-aQH" id="pal-up-05s"/>
             </connections>
             <point key="canvasLocation" x="39" y="35"/>
         </collectionViewCell>

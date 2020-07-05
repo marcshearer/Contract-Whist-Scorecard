@@ -249,6 +249,9 @@
                                 <include reference="b5b-aS-PyS"/>
                             </mask>
                         </variation>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="Tva-fJ-Lfw" appends="YES" id="cwf-8B-6or"/>
+                        </connections>
                     </view>
                     <connections>
                         <outlet property="addPlayerButton" destination="d4C-tb-O65" id="IBf-Um-TJC"/>
@@ -263,6 +266,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lBa-uy-Q5J" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="down" id="Tva-fJ-Lfw">
+                    <connections>
+                        <action selector="downSwipeWithRecognizer:" destination="U2q-d6-KUx" id="aml-ey-9Og"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="103" y="123"/>
         </scene>

@@ -22,6 +22,8 @@ public enum Orientation: String, CaseIterable {
 @objc protocol DashboardActionDelegate : class {
     
     func action(view: DashboardDetailType)
+    
+    @objc optional func reloadData()
 
 }
 
@@ -31,28 +33,41 @@ public enum Orientation: String, CaseIterable {
 }
 
 class DashboardViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CustomCollectionViewLayoutDelegate, DashboardActionDelegate {
+ 
+    struct DashboardViewInfo {
+        var title: String
+        var imageName: String
+        var nibNames: [Orientation:String]
+        var views: [Orientation:DashboardView]
+    }
     
     private enum DashboardCollectionViews: Int {
         case carousel = 1
         case scroll = 2
     }
     
-    private let pages = 3
-    private let shieldsPage = 0
-    private let personalPage = 1
-    private let everyonePage = 2
     private var currentPage = -1
     
-    private var dashboardViews: [Int:[Orientation:(name: String, view: DashboardView?)]] = [:]
+    private var dashboardViewInfo: [Int:DashboardViewInfo] = [:]
+    private var dashboardInfo: [(title: String, fileName: String, imageName: String)] = []
     private var currentOrientation: Orientation!
     
-    private var historyViewer: HistoryViewer!
-    private var statisticsViewer: StatisticsViewer!
+    private var backImage: String!
+    private var backText: String!
+    private var bannerColor: UIColor!
+    private var bannerShadowColor: UIColor!
+    private var bannerTextColor: UIColor!
+    private var backgroundColor: UIColor!
+    private var completion: (()->())?
     
     private var firstTime = true
     private var rotated = false
     
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
+    @IBOutlet private var topSectionHeightConstraint: [NSLayoutConstraint]!
+    @IBOutlet private var topSectionProportionalHeightConstraint: [NSLayoutConstraint]!
+    @IBOutlet private var titleEqualHeightConstraint: [NSLayoutConstraint]!
+    @IBOutlet private var titleProportionalHeightConstraint: [NSLayoutConstraint]!
     @IBOutlet private weak var bannerView: UIView!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var carouselCollectionView: UICollectionView!
@@ -75,7 +90,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         if recognizer.state == .ended {
             switch recognizer.direction {
             case .left:
-                if self.currentPage < pages - 1 {
+                if self.currentPage < self.dashboardViewInfo.count - 1 {
                     self.changed(self.carouselCollectionView, itemAtCenter: self.currentPage + 1, forceScroll: true)
                 }
             case .right:
@@ -90,15 +105,21 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Setup form
         self.defaultViewColors()
+        self.finishButton.setImage(UIImage(named: self.backImage), for: .normal)
+        self.finishButton.setTitle(self.backText)
 
+        // Add in dashboards
+        self.addDashboardViews()
+        
         // Configure flow and set initial value
         self.carouselCollectionViewFlowLayout.delegate = self
         
         self.carouselCollectionView.decelerationRate = UIScrollView.DecelerationRate.fast
         
-        self.currentPage = self.personalPage
-        self.addDashboardViews()
+        self.currentPage = Int(self.dashboardViewInfo.count / 2)
     }
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -115,14 +136,10 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         self.carouselCollectionView.contentInset = UIEdgeInsets(top: 0.0, left: width, bottom: 0.0, right: width)
         self.carouselCollectionView.reloadData()
         self.carouselCollectionView.layoutIfNeeded()
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
         if self.firstTime || self.rotated {
             self.carouselCollectionView.layoutIfNeeded()
             self.carouselCollectionView.contentOffset = CGPoint(x: self.carouselCollectionView.bounds.width / 4.0, y: 0.0)
-            let selectedPage = (firstTime ? self.personalPage : self.currentPage)
+            let selectedPage = (firstTime ? Int(self.dashboardViewInfo.count / 2) : self.currentPage)
             self.changed(carouselCollectionView, itemAtCenter: selectedPage, forceScroll: true)
             self.carouselCollectionView.reloadData()
             if self.rotated {
@@ -133,20 +150,23 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             self.rotated = false
         }
     }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.carouselCollectionView.reloadData()
+        // self.carouselCollectionView.reloadData()
     }
     
-    private func reloadData() {
+    internal func reloadData() {
         Utility.mainThread {
-            for (_, orientationViews) in self.dashboardViews {
-                for (orientation, dashboardView) in orientationViews {
+            for (_, orientationViews) in self.dashboardViewInfo {
+                for (orientation, dashboardView) in orientationViews.views {
                     if orientation == self.currentOrientation {
-                        if let view = dashboardView.view {
-                            self.reloadData(for: view)
-                        }
+                        self.reloadData(for: dashboardView)
                     }
                 }
             }
@@ -162,26 +182,6 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             }
         }
     }
-
-    // MARK: - Dashboard Action Delegate =============================================================== -
-    
-    func action(view: DashboardDetailType) {
-        switch view {
-        case .history:
-            self.historyViewer = HistoryViewer(from: self) {
-                self.historyViewer = nil
-                self.reloadData()
-            }
-        case .statistics:
-            self.statisticsViewer = StatisticsViewer(from: self) {
-                self.statisticsViewer = nil
-                self.reloadData()
-            }
-        case .highScores:
-            self.showHighScores()
-        }
-        
-    }
     
     // MARK: - CollectionView Overrides ================================================================ -
     
@@ -189,9 +189,9 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                         numberOfItemsInSection section: Int) -> Int {
         switch DashboardCollectionViews(rawValue: collectionView.tag) {
         case .carousel:
-            return self.pages
+            return self.dashboardViewInfo.count
         case .scroll:
-            return self.pages
+            return self.dashboardViewInfo.count
         default:
             return 0
         }
@@ -225,22 +225,12 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             carouselCell.containerView.roundCorners(cornerRadius: 8.0)
             carouselCell.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
             carouselCell.titleLabel.alpha = (indexPath.row != self.currentPage ? 0.0 : 1.0)
-            carouselCell.containerView.backgroundColor = (indexPath.row == self.currentPage ? Palette.bannerShadow : Palette.background)
+            carouselCell.containerView.backgroundColor = (indexPath.row == self.currentPage ? self.bannerShadowColor : self.backgroundColor)
             carouselCell.backgroundImageView.tintColor = (indexPath.row == self.currentPage ? Palette.textTitle : Palette.disabledText)
             
-            switch indexPath.row {
-            case shieldsPage:
-                carouselCell.titleLabel.text = "Shields"
-                carouselCell.backgroundImageView.image = UIImage(systemName: "shield.fill")
-            case personalPage:
-                carouselCell.titleLabel.text = "Personal"
-                carouselCell.backgroundImageView.image = UIImage(systemName: "person.fill")
-            case everyonePage:
-                carouselCell.titleLabel.text = "Everyone"
-                carouselCell.backgroundImageView.image = UIImage(systemName: "person.3.fill")
-            default:
-                break
-            }
+            let dashboardInfo = dashboardViewInfo[indexPath.item]!
+            carouselCell.titleLabel.text = dashboardInfo.title
+            carouselCell.backgroundImageView.image = UIImage(systemName: dashboardInfo.imageName)
             return carouselCell
             
         case .scroll:
@@ -248,7 +238,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                 self.defaultCellColors(scrollCell)
             
             scrollCell.indicator.image = UIImage(systemName: (indexPath.row == self.currentPage ? "circle.fill" : "circle"))
-            scrollCell.indicator.tintColor = Palette.banner
+            scrollCell.indicator.tintColor = self.bannerColor
 
             return scrollCell
             
@@ -283,7 +273,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                         // Unhighlight the cell leaving the center
                         if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: self.currentPage, section: 0)) as? DashboardCarouselCell {
                             if self.currentPage != itemAtCenter {
-                                cell.containerView.backgroundColor = Palette.background
+                                cell.containerView.backgroundColor = self.backgroundColor
                                 cell.backgroundImageView.tintColor = Palette.disabledText
                                 cell.titleLabel.alpha = 0.0
                             }
@@ -298,7 +288,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                         
                         // Highlight new cell at center
                         if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: self.currentPage, section: 0)) as? DashboardCarouselCell {
-                            cell.containerView.backgroundColor = Palette.bannerShadow
+                            cell.containerView.backgroundColor = self.bannerShadowColor
                             cell.backgroundImageView.tintColor = Palette.textTitle
                             cell.titleLabel.alpha = 1.0
                         }
@@ -317,59 +307,70 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     private func addDashboardViews() {
         
-        for page in 0..<pages {
-            self.dashboardViews[page] = [:]
+        for (page, dashboardInfo) in self.dashboardInfo.enumerated() {
+            var nibNames: [Orientation:String] = [:]
             for orientation in Orientation.allCases {
-                var nibName = ""
-                switch page {
-                case shieldsPage:
-                    nibName = "ShieldsDashboard\(orientation.rawValue)View"
-                case personalPage:
-                    nibName = "PersonalDashboard\(orientation.rawValue)View"
-                case everyonePage:
-                    nibName = "EveryoneDashboard\(orientation.rawValue)View"
-                default:
-                    break
-                }
-                self.dashboardViews[page]![orientation] = (nibName, nil)
+                nibNames[orientation] = "\(dashboardInfo.fileName)\(orientation.rawValue)View"
             }
+            self.dashboardViewInfo[page] = DashboardViewInfo(
+                title: dashboardInfo.title,
+                imageName: dashboardInfo.imageName,
+                nibNames: nibNames,
+                views: [:])
+        }
+        
+        if self.dashboardViewInfo.count == 1 {
+            // No carousel required
+            self.titleLabel.text = self.dashboardViewInfo[0]?.title
+            self.carouselCollectionView.isHidden = true
+            self.scrollCollectionView.isHidden = true
+            self.topSectionProportionalHeightConstraint.forEach{$0.priority = UILayoutPriority(rawValue: 1)}
+            self.topSectionHeightConstraint.forEach{$0.priority = .required}
+            self.titleProportionalHeightConstraint.forEach{$0.priority = UILayoutPriority(rawValue: 1)}
+            self.titleEqualHeightConstraint.forEach{$0.priority = .required}
         }
     }
     
     private func hideOrientationViews(not notOrientation: Orientation) {
-        for (_, orientationViews) in self.dashboardViews {
-            for (orientation, viewInfo) in orientationViews {
+        for (_, viewInfo) in self.dashboardViewInfo {
+            for (orientation, view) in viewInfo.views {
                 if orientation != notOrientation {
-                    if let view = viewInfo.view {
-                        view.alpha = 0.0
-                        view.isHidden = true
-                    }
+                    view.alpha = 0.0
+                    view.isHidden = true
                 }
             }
         }
     }
     
     private func getView(page: Int) -> DashboardView {
-        var view: DashboardView
-        let viewInfo = self.dashboardViews[page]![self.currentOrientation]!
-        if viewInfo.view == nil {
-            view = DashboardView(withNibName: viewInfo.name, frame: self.dashboardContainerView.frame)
-            view.alpha = 0.0
-            view.delegate = self
-            self.dashboardViews[page]![self.currentOrientation]!.view = view
-            self.dashboardContainerView.addSubview(view)
-            Constraint.anchor(view: self.dashboardContainerView, control: view, attributes: .leading, .trailing, .top, .bottom)
-        } else {
-            view = viewInfo.view!
+        var view: DashboardView?
+        if let viewInfo = self.dashboardViewInfo[page] {
+            view = viewInfo.views[self.currentOrientation]
+            if view == nil {
+                if let nibName = viewInfo.nibNames[self.currentOrientation] {
+                    view = DashboardView(withNibName: nibName, frame: self.dashboardContainerView.frame)
+                    view!.alpha = 0.0
+                    view!.delegate = self
+                    view!.parentViewController = self
+                    self.dashboardViewInfo[page]!.views[self.currentOrientation] = view
+                    self.dashboardContainerView.addSubview(view!)
+                    Constraint.anchor(view: self.dashboardContainerView, control: view!, attributes: .leading, .trailing, .top, .bottom)
+                }
+            }
         }
-        return view
+        return view!
+    }
+    
+    // MARK: - Dashboard Action Delegate =============================================================== -
+    
+    func action(view: DashboardDetailType) {
+        // Should already have been actioned in the individual dashboard - this is just to let us
+        // refresh other views
+        
+        self.reloadData()
     }
     
     // MARK: - Functions to present other views ========================================================== -
-    
-    private func showHighScores() {
-        _ = HighScoresViewController.show(from: self, backText: "", backImage: "back")
-    }
     
     private func showSync() {
         SyncViewController.show(from: self, completion: {
@@ -380,7 +381,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     // MARK: - Function to present and dismiss this view ================================================= -
     
-    class public func show(from viewController: ScorecardViewController) {
+    class public func show(from viewController: ScorecardViewController, dashboardNames: [(title: String, fileName: String, imageName: String)], backImage: String = "home", backText: String = "", bannerColor: UIColor = Palette.banner, bannerShadowColor: UIColor = Palette.bannerShadow, bannerTextColor: UIColor = Palette.bannerText, backgroundColor: UIColor = Palette.background, completion: (()->())? = nil) {
         
         let storyboard = UIStoryboard(name: "DashboardViewController", bundle: nil)
         let dashboardViewController: DashboardViewController = storyboard.instantiateViewController(withIdentifier: "DashboardViewController") as! DashboardViewController
@@ -388,12 +389,22 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         dashboardViewController.preferredContentSize = CGSize(width: 400, height: 700)
         dashboardViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
+        dashboardViewController.dashboardInfo = dashboardNames
+        dashboardViewController.backText = backText
+        dashboardViewController.backImage = backImage
+        dashboardViewController.bannerColor = bannerColor
+        dashboardViewController.bannerShadowColor = bannerShadowColor
+        dashboardViewController.bannerTextColor = bannerTextColor
+        dashboardViewController.backgroundColor = backgroundColor
+        dashboardViewController.completion = completion
+        
         viewController.present(dashboardViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
     }
     
     private func dismiss() {
         self.dismiss(animated: true, completion: {
             self.didDismiss()
+            self.completion?()
         })
     }
     
@@ -405,30 +416,30 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
 extension DashboardViewController {
     
     private func defaultViewColors() {
-        self.view.backgroundColor = Palette.background
-        self.bannerPaddingView.backgroundColor = Palette.banner
-        self.bannerView.backgroundColor = Palette.banner
-        self.titleLabel.textColor = Palette.bannerText
+        self.view.backgroundColor = self.backgroundColor
+        self.bannerPaddingView.bannerColor = self.bannerColor
+        self.bannerView.backgroundColor = self.bannerColor
+        self.titleLabel.textColor = self.bannerTextColor
         if ScorecardUI.smallPhoneSize() {
             // Switch to cloud image rather than Sync text on shadowed button
-            self.smallSyncButton.tintColor = Palette.bannerText
+            self.smallSyncButton.tintColor = self.bannerTextColor
             self.smallSyncButton.isHidden = false
             self.syncButton.isHidden = true
         } else {
-            self.syncButton.setTitleColor(Palette.bannerText, for: .normal)
-            self.syncButton.setBackgroundColor(Palette.bannerShadow)
+            self.syncButton.setTitleColor(self.bannerTextColor, for: .normal)
+            self.syncButton.setBackgroundColor(self.bannerShadowColor)
             self.smallSyncButton.isHidden = true
             self.syncButton.isHidden = false
         }
     }
 
     private func defaultCellColors(_ cell: DashboardCarouselCell) {
-        cell.titleLabel.textColor = Palette.bannerText
+        cell.titleLabel.textColor = self.bannerTextColor
         cell.backgroundImageView.tintColor = Palette.textTitle
     }
     
     private func defaultCellColors(_ cell: DashboardScrollCell) {
-        cell.indicator.tintColor = Palette.banner
+        cell.indicator.tintColor = self.bannerColor
     }
 
 }

@@ -59,31 +59,33 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
 
     // MARK: - Constructors ============================================================================== -
     
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.loadPlayerSelectionView()
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.frame = frame
         self.loadPlayerSelectionView()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.loadPlayerSelectionView()
+        self.awakeFromNib()
     }
     
     convenience init(parent: ScorecardViewController, frame: CGRect, interRowSpacing: CGFloat = 10.0) {
         self.init(frame: frame)
         self.parent = parent
         self.interRowSpacing = interRowSpacing
+        self.awakeFromNib()
     }
     
     internal override func awakeFromNib() {
         super.awakeFromNib()
-        self.setSize()
     }
     
     override func layoutIfNeeded() {
         super.layoutIfNeeded()
         self.collectionView.layoutIfNeeded()
+        self.setSize()
     }
     
     public func set(players: [PlayerMO], addButton: Bool = false, updateBeforeSelect: Bool = false, scrollEnabled: Bool = false, collectionViewInsets: UIEdgeInsets? = nil, contentInset: UIEdgeInsets? = nil) {

@@ -23,6 +23,7 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     private var rotated = false
     private var firstTime = true
     private var imageObserver: NSObjectProtocol?
+    private var bubbleView = BubbleView()
     
     private let separatorHeight: CGFloat = 20.0
     private let titleOverlap: CGFloat = 25.0
@@ -431,6 +432,10 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
             } else {
                 self.setThisPlayer(playerUUID: playerDetailList.first!.playerUUID)
             }
+        }
+        let downloaded = playerDetailList.count
+        if downloaded > 0 {
+            bubbleView.show(from: self.view, message: "\(downloaded) player\(downloaded == 1 ? "" : "s")\ndownloaded")
         }
         self.downloadIdentifierTextField.text = ""
         self.enableControls()

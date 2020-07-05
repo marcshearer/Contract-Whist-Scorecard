@@ -54,6 +54,9 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="70" height="30"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                         <state key="normal" image="cloud"/>
+                                                        <connections>
+                                                            <action selector="syncButtonPressed:" destination="D0r-VL-UQ4" eventType="touchUpInside" id="s6o-go-ieu"/>
+                                                        </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="right" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t2q-eO-UsT" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="0.0" width="70" height="30"/>
@@ -215,6 +218,8 @@
                                     <constraint firstItem="FU9-b6-V3N" firstAttribute="height" secondItem="TXF-Mu-K4x" secondAttribute="height" multiplier="3:4" id="4n6-45-e6f"/>
                                     <constraint firstAttribute="bottom" secondItem="skN-et-kCR" secondAttribute="bottom" id="5eO-TN-x7a"/>
                                     <constraint firstItem="FU9-b6-V3N" firstAttribute="leading" secondItem="TXF-Mu-K4x" secondAttribute="leading" id="DDu-uI-5sj"/>
+                                    <constraint firstAttribute="height" priority="1" constant="44" id="HZC-2s-pbh"/>
+                                    <constraint firstItem="FU9-b6-V3N" firstAttribute="height" secondItem="TXF-Mu-K4x" secondAttribute="height" priority="1" id="Ld6-mr-Rps"/>
                                     <constraint firstItem="skN-et-kCR" firstAttribute="centerX" secondItem="TXF-Mu-K4x" secondAttribute="centerX" id="Swi-m2-kAm"/>
                                     <constraint firstAttribute="trailing" secondItem="gyh-A2-DhL" secondAttribute="trailing" id="WfQ-7n-ycV"/>
                                     <constraint firstItem="FU9-b6-V3N" firstAttribute="top" secondItem="TXF-Mu-K4x" secondAttribute="top" id="YkU-Ea-ziB"/>
@@ -280,6 +285,11 @@
                         <outlet property="smallSyncButton" destination="Qgt-9P-1ZL" id="ZUR-2d-JrL"/>
                         <outlet property="syncButton" destination="t2q-eO-UsT" id="sLD-qM-feh"/>
                         <outlet property="titleLabel" destination="xgp-fm-d9m" id="Us6-84-j03"/>
+                        <outletCollection property="topSectionHeightConstraint" destination="HZC-2s-pbh" collectionClass="NSMutableArray" id="nuq-za-gXm"/>
+                        <outletCollection property="topSectionProportionalHeightConstraint" destination="LAV-4g-Fk1" collectionClass="NSMutableArray" id="Ohv-hh-b2T"/>
+                        <outletCollection property="topSectionProportionalHeightConstraint" destination="CKf-Oj-LQS" collectionClass="NSMutableArray" id="YId-17-VjN"/>
+                        <outletCollection property="titleEqualHeightConstraint" destination="Ld6-mr-Rps" collectionClass="NSMutableArray" id="fg5-ib-z6m"/>
+                        <outletCollection property="titleProportionalHeightConstraint" destination="4n6-45-e6f" collectionClass="NSMutableArray" id="vDD-ye-N9M"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="A3H-hQ-kiu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

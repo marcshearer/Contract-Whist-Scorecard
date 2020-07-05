@@ -33,6 +33,7 @@
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="H6h-d6-o0k"/>
+                        <outlet property="parentDashboardView" destination="-1" id="pe4-0p-vQ6"/>
                     </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vcm-lb-pqY" customClass="DataTableTileView" customModule="Whist_2" customModuleProvider="target">
@@ -51,6 +52,7 @@
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="K4e-EG-LuW"/>
+                        <outlet property="parentDashboardView" destination="-1" id="fyh-L0-xCl"/>
                     </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aE4-O4-rLp" customClass="DataTableTileView" customModule="Whist_2" customModuleProvider="target">
@@ -69,6 +71,7 @@
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="nFJ-zl-qkx"/>
+                        <outlet property="parentDashboardView" destination="-1" id="2PQ-BA-SNc"/>
                     </connections>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qK4-5E-vDg" customClass="HighScoreTileView" customModule="Whist_2" customModuleProvider="target">
@@ -86,6 +89,7 @@
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="XGO-PT-6cd"/>
+                        <outlet property="parentDashboardView" destination="-1" id="2rU-nb-iBx"/>
                     </connections>
                 </view>
             </subviews>

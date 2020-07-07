@@ -92,13 +92,13 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" verticalHuggingPriority="1" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="iDT-Xi-tM5" userLabel="Middle Section">
-                                <rect key="frame" x="426" y="44.000000000000014" width="342" height="250.33333333333337"/>
+                                <rect key="frame" x="406" y="44" width="362" height="310"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="x89-xH-iQy" userLabel="Left View">
-                                        <rect key="frame" x="0.0" y="0.0" width="171" height="250.33333333333334"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="181" height="310"/>
                                         <subviews>
                                             <view tag="1" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FyF-vn-V6o" userLabel="Cut for Dealer Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="21.333333333333314" y="75" width="128.33333333333334" height="100.33333333333331"/>
+                                                <rect key="frame" x="19" y="99.333333333333343" width="143" height="111.33333333333334"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="FyF-vn-V6o" secondAttribute="height" multiplier="82:64" id="Bas-9R-8IF"/>
@@ -125,10 +125,11 @@
                                             <constraint firstItem="FyF-vn-V6o" firstAttribute="centerY" secondItem="x89-xH-iQy" secondAttribute="centerY" id="Dz2-mX-WIv"/>
                                             <constraint firstItem="FyF-vn-V6o" firstAttribute="centerX" secondItem="x89-xH-iQy" secondAttribute="centerX" id="PQt-mG-1M0"/>
                                             <constraint firstItem="FyF-vn-V6o" firstAttribute="width" secondItem="x89-xH-iQy" secondAttribute="width" multiplier="0.75" id="W4f-MD-vui"/>
-                                            <constraint firstItem="FyF-vn-V6o" firstAttribute="height" secondItem="x89-xH-iQy" secondAttribute="height" multiplier="0.4" id="wLb-Ur-kOW"/>
+                                            <constraint firstItem="FyF-vn-V6o" firstAttribute="height" secondItem="x89-xH-iQy" secondAttribute="height" multiplier="0.36" id="wLb-Ur-kOW"/>
                                         </constraints>
                                         <variation key="default">
                                             <mask key="constraints">
+                                                <exclude reference="W4f-MD-vui"/>
                                                 <exclude reference="wLb-Ur-kOW"/>
                                             </mask>
                                         </variation>
@@ -137,12 +138,17 @@
                                                 <include reference="wLb-Ur-kOW"/>
                                             </mask>
                                         </variation>
+                                        <variation key="heightClass=regular">
+                                            <mask key="constraints">
+                                                <include reference="W4f-MD-vui"/>
+                                            </mask>
+                                        </variation>
                                     </view>
                                     <view contentMode="scaleToFill" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="Bs3-BT-kuE" userLabel="Right View">
-                                        <rect key="frame" x="171" y="0.0" width="171" height="250.33333333333334"/>
+                                        <rect key="frame" x="181" y="0.0" width="181" height="310"/>
                                         <subviews>
                                             <view tag="2" contentMode="scaleToFill" verticalHuggingPriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="xXV-k4-gfB" userLabel="Next Dealer Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="21.333333333333371" y="75" width="128.33333333333334" height="100.33333333333331"/>
+                                                <rect key="frame" x="19" y="99.333333333333343" width="143" height="111.33333333333334"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="xXV-k4-gfB" secondAttribute="height" multiplier="82:64" id="dJB-et-5Yx"/>
@@ -167,13 +173,14 @@
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstItem="xXV-k4-gfB" firstAttribute="centerY" secondItem="Bs3-BT-kuE" secondAttribute="centerY" id="SKl-cK-UIY"/>
-                                            <constraint firstItem="xXV-k4-gfB" firstAttribute="height" secondItem="Bs3-BT-kuE" secondAttribute="height" multiplier="0.4" id="Uaq-ld-t4P"/>
+                                            <constraint firstItem="xXV-k4-gfB" firstAttribute="height" secondItem="Bs3-BT-kuE" secondAttribute="height" multiplier="0.36" id="Uaq-ld-t4P"/>
                                             <constraint firstItem="xXV-k4-gfB" firstAttribute="width" secondItem="Bs3-BT-kuE" secondAttribute="width" multiplier="0.75" id="Xc0-3D-VIy"/>
                                             <constraint firstItem="xXV-k4-gfB" firstAttribute="centerX" secondItem="Bs3-BT-kuE" secondAttribute="centerX" id="gX3-3Y-0Cd"/>
                                         </constraints>
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="Uaq-ld-t4P"/>
+                                                <exclude reference="Xc0-3D-VIy"/>
                                             </mask>
                                         </variation>
                                         <variation key="heightClass=compact">
@@ -181,9 +188,14 @@
                                                 <include reference="Uaq-ld-t4P"/>
                                             </mask>
                                         </variation>
+                                        <variation key="heightClass=regular">
+                                            <mask key="constraints">
+                                                <include reference="Xc0-3D-VIy"/>
+                                            </mask>
+                                        </variation>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="PUR-r5-ySO">
-                                        <rect key="frame" x="0.0" y="85" width="342" height="80"/>
+                                        <rect key="frame" x="0.0" y="115" width="362" height="80"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="80" id="aF4-bC-pDj"/>
                                         </constraints>
@@ -223,10 +235,10 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d8e-Bu-nij" userLabel="Bottom Section">
-                                <rect key="frame" x="426" y="294.33333333333331" width="342" height="80.666666666666686"/>
+                                <rect key="frame" x="406" y="267" width="362" height="108"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jbr-Nz-gFc" userLabel="Continue Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="85.333333333333329" y="-19.333333333333314" width="171.33333333333337" height="50"/>
+                                        <rect key="frame" x="90.333333333333329" y="8" width="181.33333333333337" height="50"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="7d9-vb-qYm"/>
@@ -247,22 +259,13 @@
                                     <constraint firstAttribute="bottom" secondItem="Jbr-Nz-gFc" secondAttribute="bottom" constant="50" id="xep-Lm-3SI"/>
                                     <constraint firstItem="Jbr-Nz-gFc" firstAttribute="width" secondItem="d8e-Bu-nij" secondAttribute="width" multiplier="0.500444" id="zhh-FN-CVA"/>
                                 </constraints>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="pcs-AF-kKl"/>
-                                    </mask>
-                                </variation>
-                                <variation key="heightClass=regular">
-                                    <mask key="constraints">
-                                        <include reference="pcs-AF-kKl"/>
-                                    </mask>
-                                </variation>
                             </view>
                         </subviews>
                         <color key="backgroundColor" name="Table Top"/>
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="IaK-Ab-3Lb" secondAttribute="trailing" id="1Kj-KT-h9H"/>
+                            <constraint firstAttribute="bottom" secondItem="iDT-Xi-tM5" secondAttribute="bottom" constant="21" id="4ua-wi-6N4"/>
                             <constraint firstItem="2QN-TN-Yp2" firstAttribute="leading" secondItem="iUU-8s-ns4" secondAttribute="leading" id="5eh-QL-LSx"/>
                             <constraint firstAttribute="bottom" secondItem="eVj-U8-RFG" secondAttribute="bottom" constant="10" id="5pT-fL-zsD"/>
                             <constraint firstItem="d8e-Bu-nij" firstAttribute="trailing" secondItem="iDT-Xi-tM5" secondAttribute="trailing" id="C0F-Ak-Sqo"/>
@@ -287,7 +290,7 @@
                             <constraint firstItem="iDT-Xi-tM5" firstAttribute="top" secondItem="IaK-Ab-3Lb" secondAttribute="bottom" id="vOh-uC-3Bq"/>
                             <constraint firstAttribute="bottom" secondItem="d8e-Bu-nij" secondAttribute="bottom" id="w4F-yQ-SEh"/>
                             <constraint firstAttribute="bottom" secondItem="kP9-VZ-fcb" secondAttribute="bottom" id="xDC-jN-1mt"/>
-                            <constraint firstItem="iDT-Xi-tM5" firstAttribute="leading" secondItem="kP9-VZ-fcb" secondAttribute="trailing" constant="20" id="xs9-hc-6ab"/>
+                            <constraint firstItem="iDT-Xi-tM5" firstAttribute="leading" secondItem="kP9-VZ-fcb" secondAttribute="trailing" id="xs9-hc-6ab"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="wSn-mE-2UN"/>
                         <variation key="default">
@@ -296,7 +299,9 @@
                                 <exclude reference="gZf-j7-f3B"/>
                                 <exclude reference="tur-6Y-zoB"/>
                                 <exclude reference="xDC-jN-1mt"/>
+                                <exclude reference="4ua-wi-6N4"/>
                                 <exclude reference="GfV-x9-pWa"/>
+                                <exclude reference="KZ9-xa-u4u"/>
                                 <exclude reference="XcT-zv-E3Z"/>
                                 <exclude reference="vOh-uC-3Bq"/>
                                 <exclude reference="xs9-hc-6ab"/>
@@ -306,6 +311,7 @@
                             <mask key="constraints">
                                 <include reference="gZf-j7-f3B"/>
                                 <include reference="xDC-jN-1mt"/>
+                                <include reference="4ua-wi-6N4"/>
                                 <include reference="vOh-uC-3Bq"/>
                                 <include reference="xs9-hc-6ab"/>
                             </mask>

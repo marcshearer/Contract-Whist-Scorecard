@@ -27,15 +27,15 @@
                     <rect key="frame" x="0.0" y="0.0" width="160" height="160"/>
                     <subviews>
                         <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="right" contentVerticalAlignment="top" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ib2-4R-VY6" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                            <rect key="frame" x="122" y="16" width="30" height="30"/>
+                            <rect key="frame" x="130" y="16" width="22" height="22"/>
                             <color key="backgroundColor" name="Clear"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="30" id="CDZ-UZ-z5w"/>
-                                <constraint firstAttribute="height" constant="30" id="Gon-UM-9NG"/>
+                                <constraint firstAttribute="width" constant="22" id="CDZ-UZ-z5w"/>
+                                <constraint firstAttribute="width" secondItem="ib2-4R-VY6" secondAttribute="height" multiplier="1:1" id="MOa-Db-FJ3"/>
                             </constraints>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="gqZ-O1-DtO" userLabel="Title">
-                            <rect key="frame" x="16" y="16" width="102" height="26.5"/>
+                            <rect key="frame" x="16" y="16" width="110" height="26.5"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="26.5" id="yG3-YG-9oz"/>
                             </constraints>
@@ -44,7 +44,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="vYe-rM-Zn0">
-                            <rect key="frame" x="4" y="46" width="152" height="114"/>
+                            <rect key="frame" x="4" y="38" width="152" height="122"/>
                             <color key="backgroundColor" name="Clear"/>
                             <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                             <connections>

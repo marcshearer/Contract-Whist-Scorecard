@@ -138,9 +138,8 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
          
         self.tileView.backgroundColor = Palette.buttonFace
         self.titleLabel.textColor = Palette.textTitle
-        self.typeButton.tintColor = Dashboard.color(detailView: detailType)
-        self.typeButton.setImage(Dashboard.image(detailView: detailType), for: .normal)
-       
+        Dashboard.formatTypeButton(detailView: detailType, button: self.typeButton)
+
         self.contentView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
         self.tileView.roundCorners(cornerRadius: 8.0)
         
@@ -326,7 +325,7 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Content Collection Cell", for: indexPath) as! DataTableTileContentCollectionViewCell
-            cell.imageView.image = UIImage(named: "high score 1")?.asTemplate()
+            cell.imageView.image = UIImage(named: "cup")?.asTemplate()
             cell.imageView.tintColor = Palette.highScores
             
             return cell

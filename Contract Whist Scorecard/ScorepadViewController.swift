@@ -75,6 +75,7 @@ class ScorepadViewController: ScorecardViewController,
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var bannerContinuationHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bannerContinuation: UIView!
+    @IBOutlet private weak var bannerLogoView: BannerLogoView!
     @IBOutlet private weak var headerViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var footerViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var headerTableView: UITableView!
@@ -465,10 +466,10 @@ class ScorepadViewController: ScorecardViewController,
             headerCell.scorepadCellGradientLayer?.removeFromSuperlayer()
             if Scorecard.game.isScorecardDealer() == playerNumber && !forceClear {
                 if row == playerRow {
-                    headerCell.scorepadCellLabel?.textColor = Palette.gameBannerText
-                    headerCell.scorepadCellGradientLayer = ScorecardUI.gradient(headerCell, color: Palette.gameBanner, gradients: playerGradient)
+                    headerCell.scorepadCellLabel?.textColor = Palette.bannerText
+                    headerCell.scorepadCellGradientLayer = ScorecardUI.gradient(headerCell, color: Palette.banner, gradients: playerGradient)
                 } else if row == imageRow {
-                    headerCell.scorepadCellGradientLayer = ScorecardUI.gradient(headerCell, color: Palette.gameBanner, gradients: imageGradient)
+                    headerCell.scorepadCellGradientLayer = ScorecardUI.gradient(headerCell, color: Palette.banner, gradients: imageGradient)
                 }
             } else {
                 Palette.tableTopStyle(view: headerCell)
@@ -1001,6 +1002,8 @@ extension ScorepadViewController {
 
     private func defaultViewColors() {
 
+        self.bannerLogoView.fillColor = Palette.tableTopShadow
+        self.bannerLogoView.strokeColor = Palette.tableTopTextContrast
         self.bannerContinuation.backgroundColor = Palette.tableTop
         self.bannerPaddingView.bannerColor = Palette.tableTop
         self.footerTableView.backgroundColor = Palette.total

@@ -174,6 +174,8 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     
     internal func present(nextView: ScorecardView, willDismiss: Bool = true, context: [String:Any?]? = nil) {
     
+        Scorecard.shared.gameBanners = (nextView != .none && nextView != .exit)
+        
         if nextView == self.activeView {
             // Already displaying - just refresh
             Utility.debugMessage("appController \(self.uuid)", "Refreshing view \(self.activeView)")
@@ -336,7 +338,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         var locationViewController: LocationViewController?
         
         if let parentViewController = self.fromViewController() {
-            locationViewController = LocationViewController.show(from: parentViewController, appController: self, gameLocation: Scorecard.game.location, useCurrentLocation: true, mustChange: false, bannerColor: Palette.gameBanner)
+            locationViewController = LocationViewController.show(from: parentViewController, appController: self, gameLocation: Scorecard.game.location, useCurrentLocation: true, mustChange: false, bannerColor: Palette.banner)
         }
         return locationViewController
     }
@@ -629,7 +631,7 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     override var prefersHomeIndicatorAutoHidden: Bool {
         return true
     }
-    
+        
     public var className: String {
         let fullName = NSStringFromClass(self.classForCoder)
         var tail = fullName.split(at: ".").last!

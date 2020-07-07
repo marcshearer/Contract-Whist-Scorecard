@@ -15,15 +15,15 @@ class Palette {
     static var background = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.background, traitCollection)})
     static var banner = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.banner, traitCollection)})
+                        { (traitCollection) in return Themes.gameColor(.banner, .gameBanner, traitCollection)})
     static var bannerEmbossed = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.bannerEmbossed, traitCollection)})
+                        { (traitCollection) in return Themes.gameColor(.bannerEmbossed, .gameBannerEmbossed, traitCollection)})
     static var bannerShadow = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.bannerShadow, traitCollection)})
+                        { (traitCollection) in return Themes.gameColor(.bannerShadow, .gameBannerShadow, traitCollection)})
     static var bannerText = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.bannerText, traitCollection)})
+                        { (traitCollection) in return Themes.gameColor(.bannerText, .gameBannerText, traitCollection)})
     static var bannerTextContrast = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.bannerTextContrast, traitCollection)})
+                        { (traitCollection) in return Themes.gameColor(.bannerTextContrast, .gameBannerTextContrast, traitCollection)})
     static var bidButton = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.bidButton, traitCollection)})
     static var bidButtonText = UIColor(dynamicProvider:
@@ -66,12 +66,6 @@ class Palette {
                         { (traitCollection) in return Themes.color(.error, traitCollection)})
     static var errorText = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.errorText, traitCollection)})
-    static var gameBanner = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.gameBanner, traitCollection)})
-    static var gameBannerShadow = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.gameBannerShadow, traitCollection)})
-    static var gameBannerText = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.gameBannerText, traitCollection)})
     static var halo = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.halo, traitCollection)})
     static var haloDealer = UIColor(dynamicProvider:
@@ -114,6 +108,8 @@ class Palette {
                         { (traitCollection) in return Themes.color(.sectionHeadingTextContrast, traitCollection)})
     static var tableTop = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.tableTop, traitCollection)})
+    static var tableTopShadow = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.tableTopShadow, traitCollection)})
     static var tableTopText = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.tableTopText, traitCollection)})
     static var tableTopTextContrast = UIColor(dynamicProvider:

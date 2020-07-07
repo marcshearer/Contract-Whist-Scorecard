@@ -27,7 +27,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="160" height="320"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="1tY-zJ-lnG" userLabel="Title">
-                            <rect key="frame" x="16" y="16" width="102" height="26.5"/>
+                            <rect key="frame" x="16" y="16" width="110" height="26.5"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="26.5" id="ic2-uP-4dF"/>
                             </constraints>
@@ -36,10 +36,10 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="right" contentVerticalAlignment="top" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pIL-hD-u9H" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                            <rect key="frame" x="122" y="16" width="30" height="30"/>
+                            <rect key="frame" x="130" y="16" width="22" height="22"/>
                             <constraints>
-                                <constraint firstAttribute="width" constant="30" id="fVx-HE-56L"/>
-                                <constraint firstAttribute="height" constant="30" id="wEG-xO-WVL"/>
+                                <constraint firstAttribute="width" constant="22" id="fVx-HE-56L"/>
+                                <constraint firstAttribute="width" secondItem="pIL-hD-u9H" secondAttribute="height" multiplier="1:1" id="oXo-ze-wsO"/>
                             </constraints>
                         </button>
                         <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Nsx-Vq-OTa">

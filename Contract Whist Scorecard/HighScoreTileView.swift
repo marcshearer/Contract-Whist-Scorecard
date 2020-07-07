@@ -186,7 +186,7 @@ class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
         switch row.type {
         case .totalScore:
             title = "High Score"
-            cell.valueImageView.image = UIImage(systemName: "rosette")?.asTemplate()
+            cell.valueImageView.image = UIImage(named: "rosette")?.asTemplate()
             cell.valueImageView.tintColor = Palette.highScores
             cell.valueLabel.text = "\(score)"
 
@@ -247,7 +247,7 @@ class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Collection Cell", for: indexPath) as! HighScoreTileCollectionViewCell
-        cell.winImageView.image = UIImage(named: "high score 1")?.asTemplate()
+        cell.winImageView.image = UIImage(named: "cup")?.asTemplate()
         cell.winImageView.tintColor = Palette.highScores
         return cell
     }
@@ -377,8 +377,7 @@ class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
     private func defaultViewColors() {
         self.tileView.backgroundColor = Palette.buttonFace
         self.titleLabel.textColor = Palette.textTitle
-        self.typeButton.tintColor = Dashboard.color(detailView: detailType)
-        self.typeButton.setImage(Dashboard.image(detailView: detailType), for: .normal)
+        Dashboard.formatTypeButton(detailView: detailType, button: self.typeButton)
     }
 }
 

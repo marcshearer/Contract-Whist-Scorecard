@@ -55,6 +55,11 @@ class Scorecard {
     */
     public let numberSuits = 4
 
+    /** Game banners
+     - Use game banner color for banners
+    */
+    public var gameBanners = false
+    
     // Variables for online games
     public var viewPresenting = ScorecardView.none
     public var notificationSimulator: NotificationSimulator!

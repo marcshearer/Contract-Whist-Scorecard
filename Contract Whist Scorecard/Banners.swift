@@ -264,22 +264,3 @@ class NavigationBar: UINavigationBar {
         }
     }
 }
-
-extension UIImage{
-    
-    func resizeImageWith(height: CGFloat) -> UIImage {
-        
-        let verticalRatio = height / size.height
-        let imageWidth = size.width * verticalRatio
-        let screenWidth = UIScreen.main.bounds.width
-        let padWidth = (screenWidth - imageWidth) / 2.0
-        let padImage = UIImage(named: "navigationPad")?.resizableImage(withCapInsets: UIEdgeInsets(), resizingMode: .stretch)
-        let renderer = UIGraphicsImageRenderer(size: CGSize(width: screenWidth, height: height))
-        let newImage = renderer.image { _ in
-            padImage!.draw(in: CGRect(x: 0.0, y: 0.0, width: padWidth, height: height))
-            self.draw(in: CGRect(x: padWidth, y: 0.0, width: imageWidth, height: height))
-            padImage!.draw(in: CGRect(x: padWidth + imageWidth, y: 0.0, width: padWidth, height: height))
-        }
-        return newImage
-    }
-}

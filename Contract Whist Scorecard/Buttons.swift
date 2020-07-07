@@ -186,19 +186,21 @@ class ShadowButton: UIButton {
         }
     }
     
-    func toCircle() {
+    public func toCircle() {
         if let layer = self.titleOuterLabel?.layer {
             self.cornerRadius = layer.bounds.height / 2
             layer.cornerRadius = self.cornerRadius
             layer.masksToBounds = true
+            self.addShadow()
         }
     }
     
-    func toRounded(cornerRadius: CGFloat? = nil) {
+    public func toRounded(cornerRadius: CGFloat? = nil) {
         if let layer = self.titleOuterLabel?.layer {
             self.cornerRadius = cornerRadius ?? self.cornerRadius
             layer.cornerRadius = self.cornerRadius
             self.layer.masksToBounds = true
+            self.addShadow()
         }
     }
     
@@ -207,6 +209,7 @@ class ShadowButton: UIButton {
             self.cornerRadius = 0.0
             layer.cornerRadius = 0.0
             layer.masksToBounds = false
+            self.addShadow()
         }
     }
     

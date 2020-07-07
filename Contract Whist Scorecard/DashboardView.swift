@@ -115,9 +115,8 @@ class DashboardView : UIView, DashboardActionDelegate {
     
     private func showHighScores() {
         DashboardViewController.show(from: self.parentViewController!,
-                                     dashboardNames: [(title: "High Scores",  fileName: "HighScoresDashboard",  imageName: "person.fill")], backImage: "back", bannerColor: Palette.highScores, bannerShadowColor: Palette.highScores, backgroundColor: Palette.highScores) {
+                                     dashboardNames: [(title: "High Scores",  fileName: "HighScoresDashboard",  imageName: "person.fill")], backImage: "back", bannerColor: Palette.banner, bannerShadowColor: Palette.bannerShadow, backgroundColor: Palette.banner) {
             self.delegate?.reloadData?()
         }
     }
-
 }

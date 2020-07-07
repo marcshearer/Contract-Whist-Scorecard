@@ -65,8 +65,8 @@ class TrendTileView: UIView, DashboardTileDelegate {
         self.tileView.backgroundColor = Palette.buttonFace
         self.titleLabel.textColor = Palette.textTitle
         self.typeButton.tintColor = Dashboard.color(detailView: detailType)
-        self.typeButton.setImage(Dashboard.image(detailView: detailType), for: .normal)
-        
+        Dashboard.formatTypeButton(detailView: detailType, button: self.typeButton)
+
         self.titleLabel.text = self.title
         
     }

@@ -26,14 +26,14 @@
                     <rect key="frame" x="0.0" y="0.0" width="160" height="160"/>
                     <subviews>
                         <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="right" contentVerticalAlignment="top" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ks1-vg-NcQ" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                            <rect key="frame" x="122" y="16" width="30" height="30"/>
+                            <rect key="frame" x="130" y="16" width="22" height="22"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="30" id="8lv-mp-b5p"/>
-                                <constraint firstAttribute="width" constant="30" id="tSW-wh-GnE"/>
+                                <constraint firstAttribute="width" secondItem="ks1-vg-NcQ" secondAttribute="height" multiplier="1:1" id="P9u-wT-iOl"/>
+                                <constraint firstAttribute="width" constant="22" id="tSW-wh-GnE"/>
                             </constraints>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="h93-9c-UXz" userLabel="Title">
-                            <rect key="frame" x="16" y="16" width="102" height="23"/>
+                            <rect key="frame" x="16" y="16" width="110" height="23"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>

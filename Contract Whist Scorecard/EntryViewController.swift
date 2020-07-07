@@ -54,8 +54,8 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
 
     @IBOutlet private weak var toolbarHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var bannerLogoView: BannerLogoView!
     @IBOutlet private weak var navigationBar: NavigationBar!
-    @IBOutlet private weak var navigationImageHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
     @IBOutlet private weak var footerView: Footer!
     @IBOutlet private weak var footerPaddingView: InsetPaddingView!
@@ -280,13 +280,11 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         if ScorecardUI.screenHeight < 667.0 || !ScorecardUI.phoneSize() {
             // Smaller than an iPhone 7 portrait or on a tablet
             self.bannerHeightConstraint.constant = 0.0
-            self.navigationImageHeightConstraint.constant = 0.0
             self.footerHeightConstraint.constant = 0.0
             self.toolbarHeightConstraint.constant = 44.0
             instructionSection = !ScorecardUI.landscapePhone()
         } else {
             self.bannerHeightConstraint.constant = 44.0
-            self.navigationImageHeightConstraint.constant = 44.0 + self.view.safeAreaInsets.top
             self.footerHeightConstraint.constant = 88.0
             self.toolbarHeightConstraint.constant = 0.0
             instructionSection = true
@@ -1039,6 +1037,8 @@ extension EntryViewController {
 
     private func defaultViewColors() {
 
+        self.bannerLogoView.fillColor = Palette.tableTopShadow
+        self.bannerLogoView.strokeColor = Palette.tableTopTextContrast
         self.bannerPaddingView.bannerColor = Palette.tableTop
         self.entryView.backgroundColor = Palette.background
         self.errorsButton.forEach { $0.backgroundColor = Palette.error }

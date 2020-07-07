@@ -86,8 +86,7 @@ class CountTileView: UIView, DashboardTileDelegate {
         self.tileView.backgroundColor = Palette.buttonFace
         self.titleLabel.textColor = Palette.textTitle
         self.countLabel.textColor = Dashboard.color(detailView: detailType)
-        self.typeButton.tintColor = Dashboard.color(detailView: detailType)
-        self.typeButton.setImage(Dashboard.image(detailView: detailType), for: .normal)
+        Dashboard.formatTypeButton(detailView: detailType, button: self.typeButton)
         self.captionLabel.textColor = Palette.text
         
         self.titleLabel.text = self.title

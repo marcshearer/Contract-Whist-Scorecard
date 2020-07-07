@@ -801,7 +801,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         self.gamePreviewViewController = nil
         let selectedPlayers = getSelectedPlayers()
         if let parentViewController = self.parentViewController {
-            self.gamePreviewViewController = GamePreviewViewController.show(from: parentViewController, appController: self, selectedPlayers: selectedPlayers, title: "Join a Game", backText: "", delegate: self)
+            self.gamePreviewViewController = GamePreviewViewController.show(from: parentViewController, appController: self, selectedPlayers: selectedPlayers, formTitle: "Join a Game", smallFormTitle: "Join", backText: "", delegate: self)
         }
         return self.gamePreviewViewController
     }

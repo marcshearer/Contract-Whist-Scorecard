@@ -58,6 +58,7 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
     }
     
     override public func stop() {
+        
         Scorecard.shared.stopSharing()
         super.stop()
     }
@@ -411,7 +412,7 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
     
     private func showSelection() -> ScorecardViewController {
         if let viewController = self.fromViewController() {
-            self.selectionViewController = SelectionViewController.show(from: viewController, appController: self, existing: self.selectionViewController, mode: .players, formTitle: "Choose Players", smallFormTitle: "Select", backText: "", backImage: "back",
+            self.selectionViewController = SelectionViewController.show(from: viewController, appController: self, existing: self.selectionViewController, mode: .players, formTitle: "Choose Players", smallFormTitle: "Select", backText: "", backImage: "home",
                                                                         completion:
                 { [weak self] (returnHome, selectedPlayers) in
                     // Returned values coming back from select players. Just store them - should get a didProceed immediately after
@@ -424,7 +425,7 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
     private func showGamePreview(selectedPlayers: [PlayerMO]) -> ScorecardViewController? {
         
         if let viewController = self.fromViewController() {
-            self.gamePreviewViewController = GamePreviewViewController.show(from: viewController, appController: self, selectedPlayers: selectedPlayers, title: "Score a Game", backText: "", readOnly: false, animated: !self.recoveryMode, delegate: self)
+            self.gamePreviewViewController = GamePreviewViewController.show(from: viewController, appController: self, selectedPlayers: selectedPlayers, formTitle: "Score a Game", smallFormTitle: "Score", backText: "", readOnly: false, animated: !self.recoveryMode, delegate: self)
         }
         return self.gamePreviewViewController
     }

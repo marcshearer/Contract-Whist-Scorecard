@@ -25,11 +25,11 @@
                     <rect key="frame" x="0.0" y="0.0" width="160" height="160"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6YX-hp-bhC" customClass="GraphView" customModule="Whist_2" customModuleProvider="target">
-                            <rect key="frame" x="-15" y="46" width="175" height="114"/>
+                            <rect key="frame" x="-15" y="38" width="175" height="122"/>
                             <color key="backgroundColor" name="Clear"/>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Activity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="ZGJ-lr-yz2" userLabel="Title">
-                            <rect key="frame" x="16" y="16" width="102" height="26.5"/>
+                            <rect key="frame" x="16" y="16" width="110" height="26.5"/>
                             <constraints>
                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="26.5" id="2Wt-7Z-Fdn"/>
                                 <constraint firstAttribute="height" constant="26.5" id="KKR-hZ-Pas"/>
@@ -39,12 +39,10 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="right" contentVerticalAlignment="top" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sEg-2u-hzJ" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                            <rect key="frame" x="122" y="16" width="30" height="30"/>
+                            <rect key="frame" x="130" y="16" width="22" height="22"/>
                             <constraints>
-                                <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="KjJ-iM-I0f"/>
-                                <constraint firstAttribute="width" constant="30" id="k1Z-CD-ulU"/>
-                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="qeH-VS-JFn"/>
-                                <constraint firstAttribute="height" constant="30" id="rf4-L0-aja"/>
+                                <constraint firstAttribute="width" constant="22" id="k1Z-CD-ulU"/>
+                                <constraint firstAttribute="width" secondItem="sEg-2u-hzJ" secondAttribute="height" multiplier="1:1" id="kE0-RP-cqh"/>
                             </constraints>
                         </button>
                     </subviews>

@@ -129,25 +129,27 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     }
     
     override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
-        self.currentOrientation = ScorecardUI.landscapePhone() ? .landscape : .portrait
-        self.carouselCollectionView.layoutIfNeeded()
-        let width: CGFloat = self.carouselCollectionView.frame.width / 4
-        self.carouselCollectionView.contentInset = UIEdgeInsets(top: 0.0, left: width, bottom: 0.0, right: width)
-        self.carouselCollectionView.reloadData()
-        self.carouselCollectionView.layoutIfNeeded()
-        if self.firstTime || self.rotated {
+        Utility.mainThread {
+            super.viewWillLayoutSubviews()
+            self.currentOrientation = ScorecardUI.landscapePhone() ? .landscape : .portrait
             self.carouselCollectionView.layoutIfNeeded()
-            self.carouselCollectionView.contentOffset = CGPoint(x: self.carouselCollectionView.bounds.width / 4.0, y: 0.0)
-            let selectedPage = (firstTime ? Int(self.dashboardViewInfo.count / 2) : self.currentPage)
-            self.changed(carouselCollectionView, itemAtCenter: selectedPage, forceScroll: true)
+            let width: CGFloat = self.carouselCollectionView.frame.width / 4
+            self.carouselCollectionView.contentInset = UIEdgeInsets(top: 0.0, left: width, bottom: 0.0, right: width)
             self.carouselCollectionView.reloadData()
-            if self.rotated {
-                self.hideOrientationViews(not: self.currentOrientation)
-                self.reloadData()
+            self.carouselCollectionView.layoutIfNeeded()
+            if self.firstTime || self.rotated {
+                self.carouselCollectionView.layoutIfNeeded()
+                self.carouselCollectionView.contentOffset = CGPoint(x: self.carouselCollectionView.bounds.width / 4.0, y: 0.0)
+                let selectedPage = (self.firstTime ? Int(self.dashboardViewInfo.count / 2) : self.currentPage)
+                self.changed(self.carouselCollectionView, itemAtCenter: selectedPage, forceScroll: true)
+                self.carouselCollectionView.reloadData()
+                if self.rotated {
+                    self.hideOrientationViews(not: self.currentOrientation)
+                    self.reloadData()
+                }
+                self.firstTime = false
+                self.rotated = false
             }
-            self.firstTime = false
-            self.rotated = false
         }
     }
 
@@ -230,7 +232,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             
             let dashboardInfo = dashboardViewInfo[indexPath.item]!
             carouselCell.titleLabel.text = dashboardInfo.title
-            carouselCell.backgroundImageView.image = UIImage(systemName: dashboardInfo.imageName)
+            carouselCell.backgroundImageView.image = UIImage(named: dashboardInfo.imageName)
             return carouselCell
             
         case .scroll:
@@ -467,14 +469,32 @@ class Dashboard {
         }
     }
     
-    public class func image(detailView: DashboardDetailType) -> UIImage {
+    public class func formatTypeButton(detailView: DashboardDetailType, button: RoundedButton) {
+        button.setImage(Dashboard.typeImage(detailView: detailView).asTemplate(), for: .normal)
+        button.backgroundColor = Dashboard.color(detailView: detailView)
+        button.tintColor = Palette.buttonFace
+        button.toCircle()
+    }
+    
+    public class func typeImage(detailView: DashboardDetailType) -> UIImage {
         switch detailView {
         case .history:
-            return UIImage(systemName: "calendar.circle.fill")!
+            return UIImage(named: "history")!
         case .statistics:
-            return UIImage(systemName: "waveform.circle.fill")!
+            return UIImage(named: "stats")!
         case .highScores:
-            return UIImage(systemName: "star.circle.fill")!
+            return UIImage(named: "high score")!
+        }
+    }
+    
+    public class func typeColor(detailView: DashboardDetailType) -> UIColor {
+        switch detailView {
+        case .history:
+            return Palette.history
+        case .statistics:
+            return Palette.stats
+        case .highScores:
+            return Palette.highScores
         }
     }
 }

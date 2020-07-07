@@ -46,6 +46,8 @@ class Themes {
                             .gameBanner                  : (#colorLiteral(red: 0.9281279445, green: 0.4577305913, blue: 0.4537009001, alpha: 1), nil) ,
                             .gameBannerShadow            : (#colorLiteral(red: 0.968627451, green: 0.4980392157, blue: 0.4941176471, alpha: 1), nil) ,
                             .gameBannerText              : (#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), nil) ,
+                            .gameBannerEmbossed          : (#colorLiteral(red: 0.968627451, green: 0.4980392157, blue: 0.4941176471, alpha: 1), nil) ,
+                            .gameBannerTextContrast      : (#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), nil) ,
                             .grid                        : (#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), nil) ,
                             .halo                        : (#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil) ,
                             .haloDealer                  : (#colorLiteral(red: 0.9281869531, green: 0.457547009, blue: 0.449475646, alpha: 1), nil) ,
@@ -86,6 +88,7 @@ class Themes {
                             .suitClubsSpades             : (#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), nil) ,
                             .suitNoTrumps                : (#colorLiteral(red: 0, green: 0.003977875225, blue: 0, alpha: 1), nil) ,
                             .tableTop                    : (#colorLiteral(red: 0.5406154394, green: 0.8017265201, blue: 0.5650425553, alpha: 1), nil) ,
+                            .tableTopShadow              : (#colorLiteral(red: 0.4518489838, green: 0.7030248046, blue: 0.4536508322, alpha: 1), nil) ,
                             .tableTopText                : (#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), nil) ,
                             .tableTopTextContrast        : (#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), nil) ,
                             .total                       : (#colorLiteral(red: 0.3033464551, green: 0.6547588706, blue: 0.6510065198, alpha: 1), nil) ,
@@ -129,8 +132,8 @@ class Themes {
                             .banner                      : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
                             .bannerEmbossed              : (#colorLiteral(red: 0.5529411765, green: 0.1450980392, blue: 0.1254901961, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
                             .bannerShadow                : (#colorLiteral(red: 0.6901960784, green: 0.2431372549, blue: 0.2235294118, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
-                            .gameBannerShadow            : (#colorLiteral(red: 0.6901960784, green: 0.2431372549, blue: 0.2235294118, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
-                            .gameBanner                  : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .gameBannerShadow            : (#colorLiteral(red: 0.2352941176, green: 0.4784313725, blue: 0.5529411765, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .gameBanner                  : (#colorLiteral(red: 0.1968964636, green: 0.4390103817, blue: 0.5146722198, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
                             .inputControl                : (#colorLiteral(red: 0.948936522, green: 0.9490727782, blue: 0.9489069581, alpha: 1), nil) ,
                             .inputControlText            : (#colorLiteral(red: 0.101947777, green: 0.1019691005, blue: 0.1019431874, alpha: 1), nil) ,
                             .inputControlPlaceholder     : (#colorLiteral(red: 0.325458765, green: 0.325510323, blue: 0.3254473805, alpha: 1), nil) ,
@@ -184,6 +187,10 @@ class Themes {
     
     static func color(_ themeColor: ThemeColor, _ traitCollection: UITraitCollection = UITraitCollection.current) -> UIColor {
         return self.currentTheme.getColor(themeColor, traitCollection)
+    }
+    
+    static func gameColor(_ themeColor: ThemeColor, _ gameThemeColor: ThemeColor, _ traitCollection: UITraitCollection = UITraitCollection.current) -> UIColor {
+        return self.currentTheme.getColor((Scorecard.shared.gameBanners ? gameThemeColor : themeColor), traitCollection)
     }
 }
 
@@ -253,6 +260,8 @@ enum ThemeColor: String {
     case gameBanner = "Game Banner"
     case gameBannerShadow = "Game Banner Shadow"
     case gameBannerText = "Game Banner Text"
+    case gameBannerTextContrast = "Game Banner Text Contrast"
+    case gameBannerEmbossed = "Game Banner Embossed"
     case halo = "Halo"
     case haloDealer = "Halo Dealer"
     case hand = "Hand"
@@ -274,6 +283,7 @@ enum ThemeColor: String {
     case sectionHeadingText = "Section Heading Text"
     case sectionHeadingTextContrast = "Section Heading Text Contrast"
     case tableTop = "Table Top"
+    case tableTopShadow = "Table Top Shadow"
     case tableTopText = "Table Top Text"
     case tableTopTextContrast = "Table Top Text Contrast"
     case total = "Total"

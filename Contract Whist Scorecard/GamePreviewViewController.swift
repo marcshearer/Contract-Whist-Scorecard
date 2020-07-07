@@ -37,6 +37,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     private var faceTimeAddress: [String] = []          // FaceTime addresses for the above
     private var readOnly = false
     private var formTitle = "Preview"
+    private var smallFormTitle = "Preview"
     private var backText = ""
     
     // Local class variables
@@ -54,34 +55,33 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     private var faceTimeAvailable = false
     private var initialising = true
     private var cutCardView: [UILabel] = []
+    private var smallScreen = false
     private var firstTime = true
     private var rotated = false
     private var exiting = false
     private var cutting = false
-    private var waitAnimation = true
     private var autoStarting = false
+    private var alreadyDrawing = false
     
     // MARK: - IB Outlets ================================================================ -
     
-    @IBOutlet private weak var navigationBar: NavigationBar!
-    @IBOutlet private weak var navigationBarHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var navigationTitle: UINavigationItem!
+    @IBOutlet private weak var titleView: UIView!
+    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var topSectionView: UIView!
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
-    @IBOutlet private weak var bannerContinuationView: UIView!
     @IBOutlet private weak var bannerContinueButton: UIButton!
-    @IBOutlet private weak var bannerContinuationLabel: UILabel!
-    @IBOutlet private weak var continueButton: AngledButton!
-    @IBOutlet private weak var continueButtonHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var cancelButton: AngledButton!
+    @IBOutlet private weak var messageLabel: UILabel!
+    @IBOutlet private weak var continueButton: ShadowButton!
+    @IBOutlet private weak var cancelButton: ClearButton!
     @IBOutlet public weak var selectedPlayersView: SelectedPlayersView!
-    @IBOutlet private weak var selectedPlayersTopConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var selectedPlayersHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var overrideSettingsButton: AngledButton!
-    @IBOutlet private weak var overrideSettingsBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var overrideSettingsButton: ShadowButton!
+    @IBOutlet private weak var middleSectionView: UIView!
     @IBOutlet private weak var actionButtonView: UIView!
     @IBOutlet private weak var rightViewTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var leftViewLeadingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var cutForDealerButton: ImageButton!
     @IBOutlet private weak var nextDealerButton: ImageButton!
+    @IBOutlet private var actionButtons: [ImageButton]!
 
     // MARK: - IB Actions ============================================================================== -
     
@@ -89,7 +89,6 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         // Link back to selection
         Utility.debugMessage("gamePreview", "Cancel pressed")
         self.willDismiss()
-        self.resetAnimationsBeforeExit()
         self.controllerDelegate?.didCancel()
     }
     
@@ -104,7 +103,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         self.controllerDelegate?.didInvoke(.overrideSettings)
     }
     
-    internal func buttonPressed(_ sender: UIView) {
+   internal func buttonPressed(_ sender: UIView) {
         switch sender.tag {
         case 1:
             // Cut for dealer
@@ -141,12 +140,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         
         // Setup default colors (previously done in StoryBoard)
         self.defaultViewColors()
-
-        self.waitAnimation = !ScorecardUI.landscapePhone() && (self.delegate?.gamePreviewHosting ?? false) && !Scorecard.recovery.recovering
-        
-        // Set title
-        self.navigationTitle.title = self.formTitle
-        
+                
         // Update players
         self.updateSelectedPlayers(selectedPlayers)
         
@@ -167,7 +161,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         self.controllerDelegate?.didLoad()
         
         // Setup buttons
-        self.setupButtons(animate: false)
+        self.setupButtons()
         
         if !self.readOnly {
             self.checkFaceTimeAvailable()
@@ -194,6 +188,12 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
             self.rotated = false
             self.firstTime = false
             
+            self.setupScreenSize()
+            
+            if !self.alreadyDrawing {
+                self.selectedPlayersView.layoutIfNeeded()
+            }
+            
             self.setupScreen(size: self.view.bounds.size)
             
             if firstTime {
@@ -205,21 +205,16 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
             
             if rotated || firstTime {
                 // Update buttons
-                self.updateButtons(animate: false)
+                self.updateButtons()
             }
             
             if self.initialising {
                 self.initialising = false
                 self.controllerDelegate?.didAppear()
             }
-            self.refreshPlayers()
-            self.showCurrentDealer()
-            
-            if self.waitAnimation {
-                Utility.executeAfter(delay: 1.0) {
-                    self.waitAnimation = false
-                    self.updateButtons(animate: true)
-                }
+            if !cutting {
+                self.refreshPlayers()
+                self.showCurrentDealer()
             }
         }
     }
@@ -291,12 +286,13 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     // MARK: - Form Presentation / Handling Routines ================================================================ -
     
     func setupScreen(size: CGSize) {
-        
-        navigationBarHeightConstraint.constant = ScorecardUI.navigationBarHeight
+                
+        self.actionButtons.forEach{(button) in button.setProportions(top: 10, image: 70, imageBottom: 4, title: 20, titleBottom: 0, message: 0, bottom: 4)}
+        self.actionButtonView.addShadow()
         
         let thumbnailSize = SelectionViewController.thumbnailSize(from: self, labelHeight: self.labelHeight)
         self.thumbnailWidth = thumbnailSize.width
-        self.thumbnailHeight = self.thumbnailWidth + 25.0
+        self.thumbnailHeight = thumbnailSize.height
         self.cutCardHeight = self.thumbnailWidth
         self.cutCardWidth = self.cutCardHeight * 2.0 / 3.0
         
@@ -313,52 +309,48 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     }
     
     private func drawRoom() {
+        let wasAlreadyDrawing = self.alreadyDrawing
+        self.alreadyDrawing = true
         
         // Configure selected players view
+        self.selectedPlayersView.roundCorners(cornerRadius: 40.0)
         self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth, allowHaloWidth: self.dealerHaloWidth)
         self.selectedPlayersView.setHaloColor(color: Palette.halo)
         
         // Update layout to get correct size
-        self.view.layoutIfNeeded()
-        
+        if !wasAlreadyDrawing {
+            self.view.layoutIfNeeded()
+        }
+
         // Draw room
-        let selectedFrame = self.selectedPlayersView.drawRoom(thumbnailWidth: thumbnailWidth, thumbnailHeight: thumbnailHeight, directions: (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.up), (ScorecardUI.landscapePhone() ? ArrowDirection.none : ArrowDirection.down))
+        self.selectedPlayersView.drawRoom(thumbnailWidth: self.thumbnailWidth, thumbnailHeight: self.thumbnailHeight)
         
-        // Reset heights
-        selectedPlayersHeightConstraint?.constant = selectedFrame.height
+        self.alreadyDrawing = wasAlreadyDrawing
     }
     
-    private func updateButtons(animate: Bool = true) {
+    private func updateButtons() {
         if self.readOnly {
             self.overrideSettingsButton.isHidden = true
-            self.selectedPlayersTopConstraint.constant = max(40,(UIScreen.main.bounds.height * 0.20) - 40.0)
-            self.rightViewTrailingConstraint.constant = actionButtonView.frame.width * 0.25
-            
-            // Position (hidden) bottom buttons
-            self.overrideSettingsBottomConstraint?.constant = -60.0
-            
+            self.leftViewLeadingConstraint.constant = actionButtonView.frame.width * 0.25
+                        
         } else if !cutting {
             // Hide / show buttons dependent on format
             self.bannerContinueButton.isHidden = !ScorecardUI.landscapePhone() && !ScorecardUI.smallPhoneSize()
             self.continueButton.isHidden = ScorecardUI.landscapePhone() || ScorecardUI.smallPhoneSize()
             self.overrideSettingsButton.isHidden = false
             
-            self.rightViewTrailingConstraint.constant = 0.0
+            self.leftViewLeadingConstraint.constant = 0.0
             
             if (self.delegate?.gamePreviewHosting ?? false) {
                 
-                var topConstraint: CGFloat
-                let canStartGame = self.controllerDelegate?.canProceed ?? true
+                let canStartGame = self.controllerDelegate?.canProceed ?? true || Scorecard.game.isPlayingComputer
                 
                 if canStartGame {
-                    // Ready to start (or suppressing message) - enable dealer buttons and no need for top message
-                    topConstraint = 20.0
-                    self.bannerContinuationLabel.isHidden = true
-                    self.cutForDealerButton.isEnabled = true
-                    self.cutForDealerButton.alpha = 1.0
-                    self.nextDealerButton.isEnabled = true
-                    self.nextDealerButton.alpha = 1.0
-                    self.bannerContinuationLabel.attributedText = NSAttributedString()
+                    // Ready to start (or suppressing message) - enable dealer buttons and no need for message
+                    self.messageLabel.isHidden = true
+                    self.continueButton.isEnabled = true
+                    self.actionButtons.forEach{(button) in button.isHidden = false}
+                    self.messageLabel.attributedText = NSAttributedString()
                     
                     if Config.autoStartHost && !autoStarting {
                         autoStarting = true
@@ -366,67 +358,43 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
                     }
                     
                 } else  {
-                    // Not ready - Hide continue and dealer buttons and slide down space for message at top
+                    // Not ready
                     self.bannerContinueButton.isHidden = true
-                    self.continueButton.isHidden = true
-                    if waitAnimation {
-                        topConstraint = 20.0
-                    } else {
-                        topConstraint = max(40,(UIScreen.main.bounds.height * 0.20) - 40.0)
-                        self.bannerContinuationLabel.isHidden = false
-                        self.cutForDealerButton.isEnabled = false
-                        self.cutForDealerButton.alpha = 0.7
-                        self.nextDealerButton.isEnabled = false
-                        self.nextDealerButton.alpha = 0.7
-                        self.bannerContinuationLabel.attributedText = self.delegate?.gamePreviewWaitMessage
-                    }
-                }
-                
-                // Animate in / out area for message at top
-                if self.selectedPlayersTopConstraint.constant != topConstraint {
-                    Utility.animate(if: animate, duration: 1.0) {
-                        self.selectedPlayersTopConstraint.constant = topConstraint
-                    }
+                    self.continueButton.isEnabled = false
+                    self.messageLabel.isHidden = false
+                    self.actionButtons.forEach{(button) in button.isHidden = true}
+                    self.messageLabel.attributedText = self.delegate?.gamePreviewWaitMessage
                 }
             }
-            // Position bottom buttons
-            self.overrideSettingsBottomConstraint?.constant = (self.continueButton.isHidden ? 20.0 : 80.0)
-            self.continueButtonHeightConstraint.constant = (self.continueButton.isHidden ? 0.0 : 50.0)
         }
+        self.titleLabel.text = (self.smallScreen && !ScorecardUI.landscapePhone() ? smallFormTitle : self.formTitle)
     }
     
-    private func setupButtons(animate: Bool = true) {
+    private func setupScreenSize() {
+        // Check if need to restrict bottom because of screen size
+        self.smallScreen = (ScorecardUI.screenHeight < 800 || ScorecardUI.landscapePhone()) && ScorecardUI.phoneSize()
+    }
+
+    
+    private func setupButtons() {
         if self.readOnly {
             self.bannerContinueButton.isHidden = true
             self.continueButton.isHidden = true
             self.cutForDealerButton.isEnabled = false
-            self.cutForDealerButton.alpha = 0.7
             self.cutForDealerButton.set(title: "")
-            self.nextDealerButton.isHidden = true
+            self.actionButtons.forEach{(button) in button.isHidden = true}
             self.selectedPlayersView.isEnabled = false
         } else {
-            self.cutForDealerButton.isEnabled = true
-            self.cutForDealerButton.alpha = 1.0
-            self.nextDealerButton.isHidden = false
+            let hosting = (self.delegate?.gamePreviewHosting ?? false)
+            self.actionButtons.forEach{(button) in button.isHidden = hosting}
             self.selectedPlayersView.isEnabled = !Scorecard.game.isPlayingComputer
             if (self.delegate?.gamePreviewHosting ?? false) {
                 self.selectedPlayersView.setEnabled(slot: 0, enabled: false)
             }
         }
         self.cancelButton.setTitle(self.backText, for: .normal)
-        self.updateButtons(animate: animate)
-    }
-    
-    private func resetAnimationsBeforeExit() {
-        if Scorecard.shared.commsDelegate?.connectionProximity == .online {
-            self.exiting = true
-            let topConstraint: CGFloat = 20.0
-            Utility.animate(if: self.selectedPlayersTopConstraint.constant != topConstraint, duration: 0.2,
-                            animations: {
-                                            self.showStatus(status: "")
-                                            self.selectedPlayersTopConstraint.constant = topConstraint
-                                        })
-        }
+        self.continueButton.toCircle()
+        self.updateButtons()
     }
     
     public func refreshPlayers() {
@@ -450,7 +418,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     }
     
     public func showStatus(status: String) {
-        self.bannerContinuationLabel?.text = status
+        self.messageLabel?.text = status
     }
     
     func showCurrentDealer(clear: Bool = false) {
@@ -505,8 +473,9 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     public func executeCut(preCutCards: [Card]? = nil) {
         var cutCards: [Card]
         self.cutting = true
-        let statusIsHidden = bannerContinuationLabel.isHidden
-        bannerContinuationLabel.isHidden = true
+        let statusIsHidden = messageLabel.isHidden
+        messageLabel.isHidden = true
+        self.cutForDealerButton.isHidden = false
         
         // Remove current dealer halo
         self.showDealer(playerNumber: Scorecard.game.dealerIs, forceHide: true)
@@ -572,12 +541,11 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         
         if !self.readOnly {
             // Disable actions
-            self.cutForDealerButton.isEnabled = false
-            self.nextDealerButton.isEnabled = false
+            self.actionButtons.forEach{(button) in button.isEnabled = false}
         }
         
         // Hide thumbnails
-        for slot in 0..<self.self.selectedPlayers.count {
+        for slot in 0..<Scorecard.shared.maxPlayers {
             self.selectedPlayersView.setThumbnailAlpha(slot: slot, alpha: 0.0)
         }
         
@@ -600,8 +568,8 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         }
         
         // Show deck
-        self.view.bringSubviewToFront(self.actionButtonView)
-        self.actionButtonView.bringSubviewToFront(self.cutForDealerButton)
+        self.view.bringSubviewToFront(self.middleSectionView)
+        self.middleSectionView.bringSubviewToFront(self.cutForDealerButton)
         if self.readOnly {
             self.cutForDealerButton.alpha = 1.0
         }
@@ -622,8 +590,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
                 animation.addCompletion({ [unowned self] _ in
                     // Fade buttons
                     if !self.readOnly {
-                        self.cutForDealerButton.alpha = 0.7
-                        self.nextDealerButton.alpha = 0.7
+                        self.actionButtons.forEach{(button) in button.alpha = 0.7}
                     }
                     completion()
                 })
@@ -696,6 +663,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         let animation = UIViewPropertyAnimator(duration: stepDuration, curve: .easeIn) {
             for slot in 0..<self.self.selectedPlayers.count {
                 self.cutCardView[slot].alpha = 0.0
+                self.selectedPlayersView.messageAlpha = 0.0
                 self.selectedPlayersView.setAlpha(slot: slot, alpha: 1.0)
                 self.selectedPlayersView.setThumbnailAlpha(slot: slot, alpha: 1.0)
             }
@@ -709,14 +677,14 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     private func animateResume(statusIsHidden: Bool) {
         self.selectedPlayersView.message = NSAttributedString()
         self.showCurrentDealer()
-        self.cutForDealerButton.isEnabled = !self.readOnly
-        self.nextDealerButton.isEnabled = !self.readOnly
+        self.actionButtons.forEach{(button) in button.isEnabled = !self.readOnly}
         if !self.readOnly {
-            self.cutForDealerButton.alpha = 1.0
-            self.nextDealerButton.alpha = 1.0
+            self.actionButtons.forEach{(button) in button.alpha = 1.0}
+        } else {
+            self.cutForDealerButton.isHidden = true
         }
         self.selectedPlayersView.messageAlpha = 1.0
-        self.bannerContinuationLabel.isHidden = statusIsHidden
+        self.messageLabel.isHidden = statusIsHidden
         self.cutting = false
     }
     
@@ -740,7 +708,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     
     // MARK: - Function to present and dismiss this view ==============================================================
     
-    class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, selectedPlayers: [PlayerMO], title: String = "Preview", backText: String = "", readOnly: Bool = true, faceTimeAddress: [String] = [], animated: Bool = true, delegate: GamePreviewDelegate? = nil) -> GamePreviewViewController {
+    class func show(from viewController: ScorecardViewController, appController: ScorecardAppController? = nil, selectedPlayers: [PlayerMO], formTitle: String = "Preview", smallFormTitle: String? = nil, backText: String = "", readOnly: Bool = true, faceTimeAddress: [String] = [], animated: Bool = true, delegate: GamePreviewDelegate? = nil) -> GamePreviewViewController {
         let storyboard = UIStoryboard(name: "GamePreviewViewController", bundle: nil)
         let gamePreviewViewController = storyboard.instantiateViewController(withIdentifier: "GamePreviewViewController") as! GamePreviewViewController
         
@@ -748,7 +716,8 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         gamePreviewViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         gamePreviewViewController.selectedPlayers = selectedPlayers
-        gamePreviewViewController.formTitle = title
+        gamePreviewViewController.formTitle = formTitle
+        gamePreviewViewController.smallFormTitle = smallFormTitle ?? formTitle
         gamePreviewViewController.backText = backText
         gamePreviewViewController.readOnly = readOnly
         gamePreviewViewController.faceTimeAddress = faceTimeAddress
@@ -768,20 +737,20 @@ extension GamePreviewViewController {
 
     private func defaultViewColors() {
 
-        self.bannerContinuationLabel.textColor = Palette.gameBannerText
-        self.bannerContinuationView.backgroundColor = Palette.gameBanner
-        self.bannerPaddingView.bannerColor = Palette.gameBanner
+        self.bannerPaddingView.bannerColor = Palette.banner
+        self.topSectionView.backgroundColor = Palette.banner
+        self.selectedPlayersView.backgroundColor = Palette.tableTop
+        self.messageLabel.textColor = Palette.text
         self.continueButton.setTitleColor(Palette.continueButtonText, for: .normal)
-        self.continueButton.fillColor = Palette.continueButton
-        self.continueButton.strokeColor = Palette.continueButton
-        self.cutForDealerButton.set(titleColor: Palette.tableTopTextContrast)
-        self.navigationBar.textColor = Palette.gameBannerText
-        self.navigationBar.bannerColor = Palette.gameBanner
-        self.nextDealerButton.set(titleColor: Palette.tableTopTextContrast)
-        self.overrideSettingsButton.setTitleColor(Palette.tableTopTextContrast, for: .normal)
-        self.overrideSettingsButton.fillColor = Palette.tableTop
-        self.overrideSettingsButton.strokeColor = Palette.tableTopTextContrast
-        self.view.backgroundColor = Palette.tableTop
+        self.continueButton.setBackgroundColor(Palette.continueButton)
+        self.continueButton.setTitleColor(Palette.continueButtonText, for: .normal)
+        self.actionButtons.forEach{(button) in button.set(faceColor: Palette.buttonFace)}
+        self.actionButtons.forEach{(button) in button.set(titleColor: Palette.buttonFaceText)}
+        self.titleView.backgroundColor = Palette.banner
+        self.titleLabel.textColor = Palette.bannerText
+        self.overrideSettingsButton.setBackgroundColor(Palette.buttonFace)
+        self.overrideSettingsButton.setTitleColor(Palette.buttonFaceText, for: .normal)
+        self.view.backgroundColor = Palette.background
     }
 
 }

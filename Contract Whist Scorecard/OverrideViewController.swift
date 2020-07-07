@@ -71,8 +71,8 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         
         self.skipOptions = (Scorecard.settings.saveHistory ? 0 : 2)
         
-        self.revertButton.setTitleColor(Palette.gameBannerText, for: .normal)
-        self.confirmButton.setTitleColor(Palette.gameBannerText, for: .normal)
+        self.revertButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.confirmButton.setTitleColor(Palette.bannerText, for: .normal)
 
         self.enableButtons()
     }
@@ -299,7 +299,7 @@ extension OverrideViewController {
         self.insetPaddingView.bannerColor = Palette.background
         self.instructionLabel.textColor = Palette.bannerText
         self.instructionView.backgroundColor = Palette.banner
-        self.navigationBar.textColor = Palette.gameBannerText
+        self.navigationBar.textColor = Palette.bannerText
         self.navigationBar.bannerColor = Palette.banner
         self.view.backgroundColor = Palette.background
     }

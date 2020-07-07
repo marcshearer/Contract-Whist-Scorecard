@@ -133,6 +133,7 @@ enum InviteStatus {
     
     override public func stop() {
         super.stop()
+        
         self.setConnectionMode(.unknown)
     }
     
@@ -905,7 +906,7 @@ enum InviteStatus {
     
     private func showSelection() -> ScorecardViewController {
         if let viewController = self.fromViewController() {
-            self.selectionViewController = SelectionViewController.show(from: viewController, appController: self, existing: self.selectionViewController, mode: .invitees, thisPlayer: self.playerData[0].playerUUID, formTitle: "Choose Players", smallFormTitle: "Select", backText: "", backImage: "back",
+            self.selectionViewController = SelectionViewController.show(from: viewController, appController: self, existing: self.selectionViewController, mode: .invitees, thisPlayer: self.playerData[0].playerUUID, formTitle: "Choose Players", smallFormTitle: "Select", backText: "", backImage: "home",
                                                                         completion:
                 { [weak self] (returnHome, selectedPlayers) in
                     // Returned values coming back from select players. Just store them - should get a didProceed immediately after
@@ -918,7 +919,7 @@ enum InviteStatus {
     private func showGamePreview(selectedPlayers: [PlayerMO]) -> ScorecardViewController? {
         
         if let viewController = self.fromViewController() {
-            self.gamePreviewViewController = GamePreviewViewController.show(from: viewController, appController: self, selectedPlayers: selectedPlayers, title: (self.startMode == .loopback ? "Play Computer" : "Host a Game"), backText: "", readOnly: false, faceTimeAddress: self.faceTimeAddress, animated: !self.recoveryMode, delegate: self)
+            self.gamePreviewViewController = GamePreviewViewController.show(from: viewController, appController: self, selectedPlayers: selectedPlayers, formTitle: (self.startMode == .loopback ? "Play Computer" : "Host a Game"), smallFormTitle: (self.startMode == .loopback ? "Play" : "Host"), backText: "", readOnly: false, faceTimeAddress: self.faceTimeAddress, animated: !self.recoveryMode, delegate: self)
         }
         return self.gamePreviewViewController
     }

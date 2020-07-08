@@ -212,7 +212,7 @@ class ImageButton: UIView {
         self.titleHeightConstraint.constant = self.heightProportion.title * scale
         self.titleBottomConstraint.constant = self.heightProportion.titleBottom * scale
         self.messageHeightConstraint.constant = self.heightProportion.message * scale
-        self.bottomConstraint.constant = self.heightProportion.top * scale
+        self.bottomConstraint.constant = self.heightProportion.bottom * scale
         
     }
     

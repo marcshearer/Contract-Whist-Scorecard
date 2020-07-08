@@ -64,6 +64,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     @IBOutlet private weak var topSectionView: UIView!
     @IBOutlet private weak var selectedPlayersView: SelectedPlayersView!
     @IBOutlet private weak var bottomSection: UIView!
+    @IBOutlet private weak var bottomSectionHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var clearAllButton: ShadowButton!
     @IBOutlet private weak var continueButton: ShadowButton!
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
@@ -306,16 +307,18 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
         if self.smallScreen {
             // Banner continuation button used on small or landscape phone
             self.continueButton.isHidden = true
-            bannerContinueButton.isHidden = hidden
-            bannerContinueButton.setTitle("Continue", for: .normal)
+            self.bannerContinueButton.isHidden = hidden
+            self.bannerContinueButton.setTitle("Continue", for: .normal)
+            self.bottomSectionHeightConstraint.constant = 0
         } else {
             // Main continue button used on other devices
             self.continueButton.isHidden = false
-            bannerContinueButton.setTitle("X", for: .normal)
+            self.bannerContinueButton.setTitle("X", for: .normal)
             self.continueButton.isEnabled = !hidden
-            bannerContinueButton.isHidden = true
+            self.bannerContinueButton.isHidden = true
+            self.bottomSectionHeightConstraint.constant = 58 + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0)
         }
-        clearAllButton.isEnabled = (selectedList.count > (self.selectionMode == .invitees ? 1 : 0))
+        clearAllButton.isHidden = true // Left this in case we reinstate (selectedList.count > (self.selectionMode == .invitees ? 1 : 0))
         
         self.titleLabel.text = (self.smallScreen && !ScorecardUI.landscapePhone() ? (smallFormTitle ?? self.formTitle) : self.formTitle)
 

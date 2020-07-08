@@ -53,9 +53,9 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     // MARK: - IB Outlets ============================================================================== -
 
     @IBOutlet private weak var toolbarHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var bannerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bannerLogoView: BannerLogoView!
-    @IBOutlet private weak var navigationBar: NavigationBar!
+    @IBOutlet private weak var titleView: UIView!
+    @IBOutlet private weak var titleViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
     @IBOutlet private weak var footerView: Footer!
     @IBOutlet private weak var footerPaddingView: InsetPaddingView!
@@ -118,9 +118,19 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
 
     override func viewWillLayoutSubviews() {
         self.refreshScreen(firstTime: self.firstTime)
+        
         self.firstTime = false
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        // Have to go through this rigmarole to get the label resized before clipped
+        self.instructionLabel?.setNeedsLayout()
+        self.instructionLabel?.layoutIfNeeded()
+        self.instructionLabel?.roundCorners(cornerRadius: 8.0)
+    }
+
     private func refreshScreen(firstTime: Bool) {
         self.setupScreen()
            
@@ -154,7 +164,7 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
             self.entryTableView.reloadData()
         }
     }
-
+    
     func setupSize(to size: CGSize) {
         self.nameWidth = (size.width - 20.0) - (CGFloat(columns - 1) * self.scoreWidth) - (CGFloat(columns) * 2.0)
         self.buttonSize = (ScorecardUI.landscapePhone() ? min(50.0, (self.view.safeAreaLayoutGuide.layoutFrame.width / 10.0) - 12.0) : 50.0)
@@ -211,7 +221,7 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
 
             entryPlayerTableCell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row)
             if indexPath.row==0 {
-                Palette.tableTopStyle(view: entryPlayerTableCell)
+                Palette.bannerStyle(view: entryPlayerTableCell)
                 entryPlayerTableCell.entryPlayerSeparator.isHidden = true
             } else {
                 Palette.normalStyle(entryPlayerTableCell)
@@ -226,13 +236,8 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
             // Setup default colors (previously done in StoryBoard
             self.defaultCellColors(cell: instructionCell)
 
-            let frame = CGRect(x: 8.0, y: 16.0, width: instructionCell.frame.width - 16.0, height: instructionCell.frame.height - 32.0)
-            instructionCell.hexagonShapeLayer?.removeFromSuperlayer()
-            instructionCell.hexagonShapeLayer = Polygon.hexagonFrame(in: instructionCell, frame: frame, strokeColor: Palette.instruction, fillColor: Palette.instruction, radius: 10.0)
             self.instructionLabel = instructionCell.instructionLabel
-            self.instructionLabel.superview?.bringSubviewToFront(instructionLabel)
             self.issueInstruction()
-            
             cell = instructionCell as UITableViewCell
 
         default:
@@ -279,15 +284,23 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         footerRoundTitle.forEach { $0.attributedText = title }
         if ScorecardUI.screenHeight < 667.0 || !ScorecardUI.phoneSize() {
             // Smaller than an iPhone 7 portrait or on a tablet
-            self.bannerHeightConstraint.constant = 0.0
+            self.titleViewHeightConstraint.constant = 0.0
             self.footerHeightConstraint.constant = 0.0
             self.toolbarHeightConstraint.constant = 44.0
             instructionSection = !ScorecardUI.landscapePhone()
         } else {
-            self.bannerHeightConstraint.constant = 44.0
-            self.footerHeightConstraint.constant = 88.0
-            self.toolbarHeightConstraint.constant = 0.0
+            self.titleViewHeightConstraint.constant = max(80, ScorecardUI.screenHeight * 10 / 78)
+            self.footerHeightConstraint.constant = 0.0
+            self.toolbarHeightConstraint.constant = 44.0
             instructionSection = true
+            // Alpha out & disable the toolbar buttons since will use the nav bar ones
+            // but can't hide them as will hide/unhide depending on context
+            self.finishButton.first?.isEnabled(false)
+            self.finishButton.first?.alpha = 0.0
+            self.undoButton.first?.isEnabled(false)
+            self.undoButton.first?.alpha = 0.0
+            self.summaryButton.first?.isEnabled(false)
+            self.summaryButton.first?.alpha = 0.0
         }
         self.errorsButton.forEach { ScorecardUI.veryRoundCorners($0, radius: $0.frame.width / 2.0) }
     }
@@ -712,7 +725,7 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
                     if !self.instructionSection {
                         self.instructionLabel = instructionLabel
                         entryPlayerCell.entryPlayerWidthConstraint.constant = min(self.nameWidth - 6.0, 64.0)
-                        Palette.tableTopStyle(instructionLabel)
+                        Palette.bannerStyle(instructionLabel)
                         instructionLabel.textAlignment = .center
                         self.issueInstruction()
                     } else {
@@ -727,7 +740,7 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
                 default:
                     playerLabel.text="Score"
                 }
-                Palette.tableTopStyle(playerLabel)
+                Palette.bannerStyle(playerLabel)
                 entryPlayerCell.isUserInteractionEnabled = false
                 
             } else {
@@ -1037,21 +1050,22 @@ extension EntryViewController {
 
     private func defaultViewColors() {
 
-        self.bannerLogoView.fillColor = Palette.tableTopShadow
-        self.bannerLogoView.strokeColor = Palette.tableTopTextContrast
-        self.bannerPaddingView.bannerColor = Palette.tableTop
+        self.bannerLogoView.fillColor = Palette.bannerShadow
+        self.bannerLogoView.strokeColor = Palette.bannerText
+        self.bannerPaddingView.bannerColor = Palette.banner
         self.entryView.backgroundColor = Palette.background
         self.errorsButton.forEach { $0.backgroundColor = Palette.error }
         self.finishButton.first?.backgroundColor = Palette.roomInteriorTextContrast
         self.footerPaddingView.bannerColor = Palette.roomInterior
         self.footerView.footerColor = Palette.roomInterior
-        self.navigationBar.bannerColor = Palette.tableTop
+        self.titleView.backgroundColor = Palette.banner
         self.toolbar.barTintColor = Palette.roomInterior
     }
 
     private func defaultCellColors(cell: EntryInstructionCell) {
         switch cell.reuseIdentifier {
         case "Entry Instruction Cell":
+            cell.instructionLabel.backgroundColor = Palette.buttonFace
             cell.instructionLabel.textColor = Palette.instructionText
         default:
             break

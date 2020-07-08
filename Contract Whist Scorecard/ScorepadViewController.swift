@@ -82,9 +82,10 @@ class ScorepadViewController: ScorecardViewController,
     @IBOutlet private weak var bodyTableView: UITableView!
     @IBOutlet private weak var footerTableView: UITableView!
     @IBOutlet public weak var scorepadView: UIView!
-    @IBOutlet private weak var scoreEntryButton: RoundedButton!
+    @IBOutlet private weak var scoreEntryButton: ShadowButton!
     @IBOutlet private weak var finishButton: UIButton!
-    @IBOutlet private weak var navigationBar: NavigationBar!
+    @IBOutlet private weak var titleView: UIView!
+    @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var tapGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet private var paddingViewLines: [UIView]!
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
@@ -183,7 +184,7 @@ class ScorepadViewController: ScorecardViewController,
     
     override internal func viewDidLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        if lastNavBarHeight != navigationBar.frame.height || lastViewHeight != scorepadView.frame.height {
+        if lastNavBarHeight != titleView.frame.height || lastViewHeight != scorepadView.frame.height {
             setupSize(to: scorepadView.safeAreaLayoutGuide.layoutFrame.size)
             self.headerTableView.layoutIfNeeded()
             self.paddingViewLines.forEach {
@@ -192,7 +193,7 @@ class ScorepadViewController: ScorecardViewController,
             self.headerTableView.reloadData()
             self.bodyTableView.reloadData()
             self.footerTableView.reloadData()
-            lastNavBarHeight = navigationBar.frame.height
+            lastNavBarHeight = titleView.frame.height
             lastViewHeight = scorepadView.frame.height
             self.setupBorders()
         }
@@ -386,7 +387,7 @@ class ScorepadViewController: ScorecardViewController,
         // Note headerHeight does not include the player name row since we haven't
         // worked this out yet
         
-        var floatCellHeight: CGFloat = (size.height - imageRowHeight - navigationBar.frame.height) / CGFloat(Scorecard.game.rounds + 2) // Adding 2 for name row in header and total row
+        var floatCellHeight: CGFloat = (size.height - imageRowHeight - titleView.frame.height) / CGFloat(Scorecard.game.rounds + 2) // Adding 2 for name row in header and total row
         floatCellHeight.round()
         
         cellHeight = CGFloat(Int(floatCellHeight))
@@ -396,7 +397,7 @@ class ScorepadViewController: ScorecardViewController,
             headerHeight += CGFloat(cellHeight)
             bannerContinuationHeight = 0.0
         } else {
-            headerHeight = size.height - (CGFloat(Scorecard.game.rounds+1) * cellHeight) - navigationBar.frame.height
+            headerHeight = size.height - (CGFloat(Scorecard.game.rounds+1) * cellHeight) - titleView.frame.height
             imageRowHeight = min(headerHeight - minCellHeight, 50.0)
             bannerContinuationHeight = headerHeight - imageRowHeight - minCellHeight
         }
@@ -406,7 +407,7 @@ class ScorepadViewController: ScorecardViewController,
         footerViewHeightConstraint.constant = CGFloat(cellHeight) + self.view.safeAreaInsets.bottom
 
         scoresHeight = min(ScorecardUI.screenHeight, CGFloat(Scorecard.game.rounds) * cellHeight, 600)
-        Scorecard.shared.saveScorepadHeights(headerHeight: headerHeight + navigationBar.frame.height + bannerContinuationHeight, bodyHeight: scoresHeight, footerHeight: CGFloat(cellHeight) + self.view.safeAreaInsets.bottom)
+        Scorecard.shared.saveScorepadHeights(headerHeight: headerHeight + titleView.frame.height + bannerContinuationHeight, bodyHeight: scoresHeight, footerHeight: CGFloat(cellHeight) + self.view.safeAreaInsets.bottom)
     }
     
     private func setupBorders() {
@@ -467,12 +468,12 @@ class ScorepadViewController: ScorecardViewController,
             if Scorecard.game.isScorecardDealer() == playerNumber && !forceClear {
                 if row == playerRow {
                     headerCell.scorepadCellLabel?.textColor = Palette.bannerText
-                    headerCell.scorepadCellGradientLayer = ScorecardUI.gradient(headerCell, color: Palette.banner, gradients: playerGradient)
+                    headerCell.scorepadCellGradientLayer = ScorecardUI.gradient(headerCell, color: Palette.total, gradients: playerGradient)
                 } else if row == imageRow {
-                    headerCell.scorepadCellGradientLayer = ScorecardUI.gradient(headerCell, color: Palette.banner, gradients: imageGradient)
+                    headerCell.scorepadCellGradientLayer = ScorecardUI.gradient(headerCell, color: Palette.total, gradients: imageGradient)
                 }
             } else {
-                Palette.tableTopStyle(view: headerCell)
+                Palette.bannerStyle(view: headerCell)
                 
             }
         }
@@ -488,15 +489,15 @@ class ScorepadViewController: ScorecardViewController,
         
         if Scorecard.game.gameComplete() {
             // Game complete - allow return to game summary
-            scoreEntryButton.setTitle("Scores")
+            scoreEntryButton.setTitle("Scores", for: .normal)
             
         } else if scorepadMode == .scoring {
             // Scoring mode - enter score
-            scoreEntryButton.setTitle("Score")
+            scoreEntryButton.setTitle("Score", for: .normal)
             
         } else if scorepadMode == .hosting  || scorepadMode == .joining {
             // Hosting a shared game
-                scoreEntryButton.setTitle("Play")
+            scoreEntryButton.setTitle("Play", for: .normal)
             
         }
         
@@ -733,13 +734,13 @@ class ScorepadViewController: ScorecardViewController,
                 self.defaultCellColors(cell: headerCell)
                 
                 headerCell.scorepadLeftLineGradientLayer?.removeFromSuperlayer()
-                Palette.tableTopStyle(view: headerCell)
+                Palette.bannerStyle(view: headerCell)
                 headerCell.scorepadLeftLineWeight.constant = thickLineWeight
                 headerCell.layoutIfNeeded()
                 
                 if row == playerRow {
                     // Setup label
-                    headerCell.scorepadCellLabel.textColor = Palette.tableTopTextContrast
+                    headerCell.scorepadCellLabel.textColor = Palette.bannerText
                     headerCell.scorepadCellLabel.text = Scorecard.game.player(scorecardPlayerNumber: player).playerMO!.name!
                     if column != 0 {
                         headerCell.scorepadLeftLineGradientLayer = ScorecardUI.gradient(headerCell.scorepadLeftLine, color: Palette.grid, gradients: playerGradient, overrideWidth: thickLineWeight, overrideHeight: self.minCellHeight)
@@ -766,8 +767,8 @@ class ScorepadViewController: ScorecardViewController,
                 self.defaultCellColors(cell: headerCell)
                 
                 headerCell.scorepadLeftLineGradientLayer?.removeFromSuperlayer()
-                Palette.tableTopStyle(view: headerCell)
-                headerCell.scorepadCellLabel?.textColor = Palette.tableTopTextContrast
+                Palette.bannerStyle(view: headerCell)
+                headerCell.scorepadCellLabel?.textColor = Palette.bannerTextContrast
                 
                 // Row titles
                 switch row {
@@ -832,19 +833,12 @@ class ScorepadViewController: ScorecardViewController,
                 footerCell.scorepadCellLabel.font = UIFont.systemFont(ofSize: 26.0)
             }
             if column != 0 {
-                footerCell.scorepadLeftLineGradientLayer = ScorecardUI.gradient(footerCell.scorepadLeftLine, color: Palette.grid, gradients: footerGradient, overrideWidth: thickLineWeight, overrideHeight: CGFloat(cellHeight) + self.view.safeAreaInsets.bottom)
+                footerCell.scorepadLeftLine.backgroundColor = Palette.grid
             }
 
             // Fade out at bottom if there is a safe area inset at the side
             footerCell.scorepadCellGradientLayer?.removeFromSuperlayer()
-            if self.view.safeAreaInsets.left != 0 {
-                footerCell.backgroundColor = Palette.tableTop
-                footerCell.scorepadFooterPadding.backgroundColor = UIColor.clear
-                footerCell.scorepadLeftLine.backgroundColor = Palette.tableTop
-                footerCell.scorepadCellGradientLayer = ScorecardUI.gradient(footerCell, color: Palette.total, gradients: self.footerGradient)
-            } else {
-                footerCell.backgroundColor = Palette.total
-            }
+            footerCell.backgroundColor = Palette.total
             
             footerCell.scorepadTopLineWeight.constant = thinLineWeight
         
@@ -870,7 +864,7 @@ class ScorepadViewController: ScorecardViewController,
             }
             
             if column == 0 {
-                Palette.tableTopStyle(bodyCell.scorepadCellLabel)
+                Palette.bannerStyle(bodyCell.scorepadCellLabel)
                 bodyCell.scorepadCellLabel.attributedText = Scorecard.game.roundTitle(round, rankColor: Palette.emphasisText, font: bodyCell.scorepadCellLabel.font, noTrumpScale: 0.9)
                 bodyCell.scorepadLeftLineWeight.constant = 0
                 bodyCell.scorepadCellLabel.accessibilityIdentifier = ""
@@ -1002,18 +996,20 @@ extension ScorepadViewController {
 
     private func defaultViewColors() {
 
-        self.bannerLogoView.fillColor = Palette.tableTopShadow
-        self.bannerLogoView.strokeColor = Palette.tableTopTextContrast
-        self.bannerContinuation.backgroundColor = Palette.tableTop
-        self.bannerPaddingView.bannerColor = Palette.tableTop
+        self.bannerLogoView.fillColor = Palette.bannerShadow
+        self.bannerLogoView.strokeColor = Palette.bannerText
+        self.bannerContinuation.backgroundColor = Palette.banner
+        self.bannerPaddingView.bannerColor = Palette.banner
         self.footerTableView.backgroundColor = Palette.total
-        self.leftPaddingView.bannerColor = Palette.tableTop
-        self.navigationBar.textColor = Palette.tableTopTextContrast
-        self.navigationBar.bannerColor = Palette.tableTop
-        self.paddingViewLines.forEach { $0.backgroundColor = Palette.tableTop }    // Warning outlet collection - check all members want this
-        self.paddingViewLines.forEach { $0.backgroundColor = Palette.tableTop }    // Warning outlet collection - check all members want this
-        self.rightPaddingView.bannerColor = Palette.tableTop
+        self.leftPaddingView.bannerColor = Palette.banner
+        self.titleLabel.textColor = Palette.bannerTextContrast
+        self.titleView.backgroundColor = Palette.banner
+        self.paddingViewLines.forEach { $0.backgroundColor = Palette.banner }
+        self.paddingViewLines.forEach { $0.backgroundColor = Palette.banner }
+        self.rightPaddingView.bannerColor = Palette.banner
         self.scorepadView.backgroundColor = Palette.background
+        self.scoreEntryButton.setBackgroundColor(Palette.bannerShadow)
+        self.scoreEntryButton.setTitleColor(Palette.bannerText, for: .normal)
     }
 
     private func defaultCellColors(cell: ScorepadCollectionViewCell) {
@@ -1030,10 +1026,10 @@ extension ScorepadViewController {
             cell.scorepadTopLine.backgroundColor = Palette.grid
         case "Header Collection Cell":
             cell.scorepadCellLabel.textColor = Palette.emphasisText
-            cell.scorepadLeftLine.backgroundColor = Palette.tableTop
+            cell.scorepadLeftLine.backgroundColor = Palette.banner
             cell.scorepadTopLine.backgroundColor = Palette.grid
         case "Header Collection Image Cell":
-            cell.scorepadLeftLine.backgroundColor = Palette.tableTop
+            cell.scorepadLeftLine.backgroundColor = Palette.banner
             cell.scorepadTopLine.backgroundColor = Palette.grid
         default:
             break

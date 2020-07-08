@@ -75,43 +75,51 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <navigationBar clipsSubviews="YES" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Skq-xy-HKr" customClass="NavigationBar" customModule="Whist_2" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3XV-9u-tCY" userLabel="Title View">
                                 <rect key="frame" x="0.0" y="44" width="414" height="44"/>
-                                <textAttributes key="titleTextAttributes">
-                                    <color key="textColor" name="Table Top Text Contrast"/>
-                                </textAttributes>
-                                <items>
-                                    <navigationItem id="F6Y-rL-bdK">
-                                        <nil key="title"/>
-                                        <barButtonItem key="leftBarButtonItem" id="51I-1V-L3U">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="bgf-Na-549" userLabel="Finish Button">
-                                                <rect key="frame" x="20" y="0.0" width="62" height="44"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" image="home"/>
-                                                <connections>
-                                                    <action selector="finishGamePressed:" destination="BYZ-38-t0r" eventType="touchUpOutside" id="Qte-Us-usM"/>
-                                                    <action selector="finishGamePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rjT-MV-7o1"/>
-                                                </connections>
-                                            </button>
-                                        </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" width="70" id="hEg-rd-MmQ">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="s5c-DG-O7P" userLabel="Score Entry Button" customClass="RightClearButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="299" y="0.0" width="95" height="44"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" image="forward"/>
-                                                <connections>
-                                                    <action selector="scorePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RPU-Oa-Req"/>
-                                                </connections>
-                                            </button>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
-                                        <color key="value" name="Table Top"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </navigationBar>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dbf-pp-3n1" userLabel="Title Label">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yjt-Cd-68v" userLabel="Finish Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="12" y="6" width="32" height="32"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="32" id="NL4-GV-QNF"/>
+                                            <constraint firstAttribute="width" constant="32" id="jKc-QH-4eC"/>
+                                        </constraints>
+                                        <state key="normal" image="home"/>
+                                        <connections>
+                                            <action selector="finishGamePressed:" destination="BYZ-38-t0r" eventType="touchUpOutside" id="3Oe-bD-dL8"/>
+                                            <action selector="finishGamePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oP0-Al-cSO"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a1K-Ui-O0I" userLabel="Score Entry Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="307" y="6" width="95" height="32"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="32" id="IjK-kd-pt6"/>
+                                            <constraint firstAttribute="width" constant="95" id="t2v-fB-KWf"/>
+                                        </constraints>
+                                        <connections>
+                                            <action selector="scorePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Cf1-J3-hzM"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstItem="yjt-Cd-68v" firstAttribute="leading" secondItem="3XV-9u-tCY" secondAttribute="leading" constant="12" id="3hA-Yw-Gcm"/>
+                                    <constraint firstAttribute="height" constant="44" id="7yT-Ej-j1j"/>
+                                    <constraint firstItem="yjt-Cd-68v" firstAttribute="centerY" secondItem="3XV-9u-tCY" secondAttribute="centerY" id="Bsz-kA-cPP"/>
+                                    <constraint firstItem="dbf-pp-3n1" firstAttribute="top" secondItem="3XV-9u-tCY" secondAttribute="top" id="Fq3-Lb-q1k"/>
+                                    <constraint firstAttribute="bottom" secondItem="dbf-pp-3n1" secondAttribute="bottom" id="eZ8-pL-JIM"/>
+                                    <constraint firstAttribute="trailing" secondItem="dbf-pp-3n1" secondAttribute="trailing" id="fNb-OC-EQQ"/>
+                                    <constraint firstItem="dbf-pp-3n1" firstAttribute="leading" secondItem="3XV-9u-tCY" secondAttribute="leading" id="fjQ-aJ-QfW"/>
+                                    <constraint firstAttribute="trailing" secondItem="a1K-Ui-O0I" secondAttribute="trailing" constant="12" id="ltp-ho-0AO"/>
+                                    <constraint firstItem="a1K-Ui-O0I" firstAttribute="centerY" secondItem="3XV-9u-tCY" secondAttribute="centerY" id="zgX-cY-WXV"/>
+                                </constraints>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b1q-d2-Dpc" userLabel="Banner Logo" customClass="BannerLogoView" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="132.5" y="0.0" width="149" height="88"/>
                                 <color key="backgroundColor" name="Clear"/>
@@ -695,6 +703,7 @@
                         <color key="backgroundColor" name="Background"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="b1q-d2-Dpc" firstAttribute="bottom" secondItem="3XV-9u-tCY" secondAttribute="bottom" id="2jc-Nz-8Hx"/>
                             <constraint firstItem="hre-aD-pgw" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="3Hx-b5-c6f"/>
                             <constraint firstItem="b1q-d2-Dpc" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="5Jo-KI-V9Z"/>
                             <constraint firstItem="Qc8-yN-AYf" firstAttribute="bottom" secondItem="R7D-RJ-hmj" secondAttribute="top" id="Eq1-fJ-tEl"/>
@@ -703,30 +712,29 @@
                             <constraint firstItem="7Jo-C4-vPV" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="H1Q-qc-CM2"/>
                             <constraint firstItem="Qc8-yN-AYf" firstAttribute="trailing" secondItem="R7D-RJ-hmj" secondAttribute="trailing" id="K2x-od-kYy"/>
                             <constraint firstItem="CoM-o8-drH" firstAttribute="leading" secondItem="Qc8-yN-AYf" secondAttribute="leading" id="LAQ-TR-UNl"/>
-                            <constraint firstItem="Skq-xy-HKr" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Ojc-IW-vwW"/>
+                            <constraint firstItem="2V4-Rn-jn9" firstAttribute="leading" secondItem="3XV-9u-tCY" secondAttribute="trailing" id="O1D-mp-s61"/>
                             <constraint firstAttribute="trailing" secondItem="2V4-Rn-jn9" secondAttribute="trailing" id="QsG-AD-V0A"/>
                             <constraint firstAttribute="bottom" secondItem="4mH-Ut-Ta9" secondAttribute="bottom" id="RLa-dJ-cNA"/>
+                            <constraint firstItem="3XV-9u-tCY" firstAttribute="top" secondItem="Qc8-yN-AYf" secondAttribute="top" id="S7M-oq-U0A"/>
                             <constraint firstItem="Qc8-yN-AYf" firstAttribute="leading" secondItem="4mH-Ut-Ta9" secondAttribute="trailing" id="TUN-Wl-aGJ"/>
-                            <constraint firstAttribute="trailing" secondItem="Skq-xy-HKr" secondAttribute="trailing" id="Tfe-KX-GZC"/>
+                            <constraint firstItem="3XV-9u-tCY" firstAttribute="leading" secondItem="4mH-Ut-Ta9" secondAttribute="trailing" id="U4M-vw-0Pn"/>
                             <constraint firstItem="CoM-o8-drH" firstAttribute="top" secondItem="hre-aD-pgw" secondAttribute="bottom" id="U5b-im-9rh"/>
                             <constraint firstItem="2V4-Rn-jn9" firstAttribute="leading" secondItem="Qc8-yN-AYf" secondAttribute="trailing" id="VDa-Rv-cho"/>
                             <constraint firstItem="7Jo-C4-vPV" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="VDg-bj-xlf"/>
-                            <constraint firstItem="Skq-xy-HKr" firstAttribute="top" secondItem="Qc8-yN-AYf" secondAttribute="top" id="XEn-GS-6i4"/>
                             <constraint firstAttribute="trailing" secondItem="hre-aD-pgw" secondAttribute="trailing" id="Ytf-Vq-gl3"/>
                             <constraint firstItem="uWQ-Kt-TjV" firstAttribute="leading" secondItem="Qc8-yN-AYf" secondAttribute="leading" id="Z1z-d4-0wt"/>
                             <constraint firstItem="7Jo-C4-vPV" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Zk7-qb-607"/>
-                            <constraint firstItem="hre-aD-pgw" firstAttribute="top" secondItem="Skq-xy-HKr" secondAttribute="bottom" id="b9u-Xw-2Y9"/>
                             <constraint firstItem="m5j-3V-hPG" firstAttribute="top" secondItem="CoM-o8-drH" secondAttribute="bottom" id="blC-pe-3M1"/>
                             <constraint firstItem="4mH-Ut-Ta9" firstAttribute="top" secondItem="Qc8-yN-AYf" secondAttribute="top" id="bnX-ja-H4R"/>
                             <constraint firstItem="Qc8-yN-AYf" firstAttribute="trailing" secondItem="CoM-o8-drH" secondAttribute="trailing" id="dJj-0f-hw8"/>
                             <constraint firstItem="2V4-Rn-jn9" firstAttribute="top" secondItem="Qc8-yN-AYf" secondAttribute="top" id="fSb-zA-6n7"/>
-                            <constraint firstItem="b1q-d2-Dpc" firstAttribute="bottom" secondItem="Skq-xy-HKr" secondAttribute="bottom" id="fx4-vb-LZF"/>
                             <constraint firstItem="Qc8-yN-AYf" firstAttribute="top" secondItem="7Jo-C4-vPV" secondAttribute="bottom" id="gsL-mt-MEL"/>
                             <constraint firstItem="Qc8-yN-AYf" firstAttribute="leading" secondItem="4mH-Ut-Ta9" secondAttribute="trailing" id="kFo-dH-Ibu"/>
                             <constraint firstItem="4mH-Ut-Ta9" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="lTg-GR-0aC"/>
                             <constraint firstItem="uWQ-Kt-TjV" firstAttribute="top" secondItem="m5j-3V-hPG" secondAttribute="bottom" id="oKi-Sk-mNO"/>
                             <constraint firstItem="Qc8-yN-AYf" firstAttribute="trailing" secondItem="m5j-3V-hPG" secondAttribute="trailing" id="p9y-wJ-ZBM"/>
                             <constraint firstAttribute="bottom" secondItem="uWQ-Kt-TjV" secondAttribute="bottom" id="q7V-na-oyS"/>
+                            <constraint firstItem="3XV-9u-tCY" firstAttribute="bottom" secondItem="hre-aD-pgw" secondAttribute="top" id="qxI-5D-qRY"/>
                             <constraint firstItem="b1q-d2-Dpc" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="rv8-wz-fNZ"/>
                             <constraint firstItem="m5j-3V-hPG" firstAttribute="leading" secondItem="Qc8-yN-AYf" secondAttribute="leading" id="v0n-ja-RWi"/>
                             <constraint firstItem="R7D-RJ-hmj" firstAttribute="leading" secondItem="Qc8-yN-AYf" secondAttribute="leading" id="zeV-Cc-Sf0"/>
@@ -747,17 +755,18 @@
                         <outlet property="bannerLogoView" destination="b1q-d2-Dpc" id="Yid-aF-ceD"/>
                         <outlet property="bannerPaddingView" destination="7Jo-C4-vPV" id="Azz-Ws-vOP"/>
                         <outlet property="bodyTableView" destination="m5j-3V-hPG" id="Wop-NN-xY0"/>
-                        <outlet property="finishButton" destination="bgf-Na-549" id="eao-hf-fCb"/>
+                        <outlet property="finishButton" destination="yjt-Cd-68v" id="yLS-mO-GQ5"/>
                         <outlet property="footerTableView" destination="uWQ-Kt-TjV" id="Mqp-Hf-x3Z"/>
                         <outlet property="footerViewHeightConstraint" destination="ANn-tw-pp4" id="zfj-BL-ozh"/>
                         <outlet property="headerTableView" destination="CoM-o8-drH" id="REW-4H-bzB"/>
                         <outlet property="headerViewHeightConstraint" destination="Nae-oA-mIW" id="gzq-lY-isr"/>
                         <outlet property="leftPaddingView" destination="4mH-Ut-Ta9" id="Cz5-ot-eNZ"/>
-                        <outlet property="navigationBar" destination="Skq-xy-HKr" id="jEp-W5-THd"/>
                         <outlet property="rightPaddingView" destination="2V4-Rn-jn9" id="cFu-5X-uGw"/>
-                        <outlet property="scoreEntryButton" destination="s5c-DG-O7P" id="1TD-Ep-oUA"/>
+                        <outlet property="scoreEntryButton" destination="a1K-Ui-O0I" id="obN-Ar-BQE"/>
                         <outlet property="scorepadView" destination="8bC-Xf-vdC" id="5On-pJ-fOR"/>
                         <outlet property="tapGestureRecognizer" destination="AaK-e0-qgV" id="klw-dw-bMu"/>
+                        <outlet property="titleLabel" destination="dbf-pp-3n1" id="Am6-bQ-NTR"/>
+                        <outlet property="titleView" destination="3XV-9u-tCY" id="XOg-pp-BwZ"/>
                         <outletCollection property="paddingViewLines" destination="gJV-Ai-5A3" collectionClass="NSMutableArray" id="131-b6-hlp"/>
                         <outletCollection property="paddingViewLines" destination="SeV-1g-Tzl" collectionClass="NSMutableArray" id="gnN-Cm-Npx"/>
                     </connections>
@@ -788,7 +797,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="forward" width="22" height="22"/>
         <image name="home" width="22" height="23"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -807,9 +815,6 @@
         </namedColor>
         <namedColor name="Table Top">
             <color red="0.53725490196078429" green="0.80392156862745101" blue="0.56470588235294117" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Table Top Text Contrast">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>

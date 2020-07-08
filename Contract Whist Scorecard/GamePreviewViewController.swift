@@ -75,10 +75,11 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     @IBOutlet private weak var cancelButton: ClearButton!
     @IBOutlet public weak var selectedPlayersView: SelectedPlayersView!
     @IBOutlet private weak var overrideSettingsButton: ShadowButton!
-    @IBOutlet private weak var middleSectionView: UIView!
+    @IBOutlet private weak var lowerMiddleSectionView: UIView!
     @IBOutlet private weak var actionButtonView: UIView!
     @IBOutlet private weak var rightViewTrailingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var leftViewLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var bottomSectionHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var cutForDealerButton: ImageButton!
     @IBOutlet private weak var nextDealerButton: ImageButton!
     @IBOutlet private var actionButtons: [ImageButton]!
@@ -287,7 +288,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     
     func setupScreen(size: CGSize) {
                 
-        self.actionButtons.forEach{(button) in button.setProportions(top: 10, image: 70, imageBottom: 4, title: 20, titleBottom: 0, message: 0, bottom: 4)}
+        self.actionButtons.forEach{(button) in button.setProportions(top: 20, image: 70, imageBottom: 4, title: 20, titleBottom: 0, message: 0, bottom: 20)}
         self.actionButtonView.addShadow()
         
         let thumbnailSize = SelectionViewController.thumbnailSize(from: self, labelHeight: self.labelHeight)
@@ -337,6 +338,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
             // Hide / show buttons dependent on format
             self.bannerContinueButton.isHidden = !ScorecardUI.landscapePhone() && !ScorecardUI.smallPhoneSize()
             self.continueButton.isHidden = ScorecardUI.landscapePhone() || ScorecardUI.smallPhoneSize()
+            self.bottomSectionHeightConstraint.constant = (ScorecardUI.landscapePhone() || ScorecardUI.smallPhoneSize() ? 0.0 : 50 + (self.view.safeAreaInsets.bottom == 0 ? 8.0 : 0.0))
             self.overrideSettingsButton.isHidden = false
             
             self.leftViewLeadingConstraint.constant = 0.0
@@ -568,8 +570,8 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         }
         
         // Show deck
-        self.view.bringSubviewToFront(self.middleSectionView)
-        self.middleSectionView.bringSubviewToFront(self.cutForDealerButton)
+        self.view.bringSubviewToFront(self.lowerMiddleSectionView)
+        self.lowerMiddleSectionView.bringSubviewToFront(self.cutForDealerButton)
         if self.readOnly {
             self.cutForDealerButton.alpha = 1.0
         }

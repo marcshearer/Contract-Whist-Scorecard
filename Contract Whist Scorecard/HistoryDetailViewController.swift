@@ -431,9 +431,9 @@ extension HistoryDetailViewController {
         self.locationText.textColor = Palette.darkHighlightText
         self.navigationBar.textColor = Palette.bannerText
         self.participantTableView.separatorColor = Palette.separator
-        self.updateButton.setTitleColor(Palette.shapeFillText, for: .normal)
-        self.updateButton.fillColor = Palette.shapeStroke
-        self.updateButton.strokeColor = Palette.shapeStroke
+        self.updateButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.updateButton.fillColor = Palette.banner
+        self.updateButton.strokeColor = Palette.banner
         self.view.backgroundColor = Palette.background
     }
 

@@ -292,21 +292,10 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         let left = CGPoint(x: playerFrame.minX, y: playerFrame.midY )
         let right = CGPoint(x: playerFrame.maxX, y: playerFrame.midY)
         
-        func positionSelectedView(_ newX: CGFloat) -> CGPoint {
-            var result: CGPoint
-            
-            if newX < apex.x {
-                result = self.projectPoint(point1: apex, point2: left, newX: newX).cgPoint
-            } else {
-                result = self.projectPoint(point1: apex, point2: right, newX: newX).cgPoint
-            }
-            
-            return result
-            
-        }
         
         let viewSize = CGSize(width: self.width, height: self.height)
-        let middleY: CGFloat = (self.players == 4 ? playerFrame.midY : playerFrame.minY)
+        let middleXOffset: CGFloat = (self.players == 4 ? 0 : 16)
+        let middleY: CGFloat = (self.players == 4 ? playerFrame.midY : playerFrame.minY + middleXOffset)
         var position: [Int]
         switch self.players {
         case 1:
@@ -325,11 +314,11 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
             case 0:
                 playerViews[slot].frame = CGRect(origin: CGPoint(x: apex.x, y: playerFrame.maxY), size: viewSize)
             case 1:
-                playerViews[slot].frame = CGRect(origin: CGPoint(x: left.x, y: middleY), size: viewSize)
+                playerViews[slot].frame = CGRect(origin: CGPoint(x: left.x + middleXOffset, y: middleY), size: viewSize)
             case 2:
                 playerViews[slot].frame = CGRect(origin: apex, size: viewSize)
             case 3:
-                playerViews[slot].frame = CGRect(origin: CGPoint(x:right.x, y: middleY), size: viewSize)
+                playerViews[slot].frame = CGRect(origin: CGPoint(x: right.x - middleXOffset, y: middleY), size: viewSize)
             default:
                 playerViews[slot].isHidden = true
             }

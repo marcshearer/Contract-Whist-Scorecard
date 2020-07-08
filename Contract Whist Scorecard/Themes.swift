@@ -71,19 +71,6 @@ class Themes {
                             .sectionHeadingTextContrast  : (#colorLiteral(red: 1, green: 0.9960784316, blue: 1, alpha: 1), nil) ,
                             .segmentedControls           : (#colorLiteral(red: 0.8991343379, green: 0.7457622886, blue: 0.3696769476, alpha: 1), nil) ,
                             .separator                   : (#colorLiteral(red: 0.493078649, green: 0.4981283545, blue: 0.4939036965, alpha: 1), nil) ,
-                            .shapeAdminStroke            : (#colorLiteral(red: 0.6233272552, green: 0.6237481236, blue: 0.6275730729, alpha: 1), nil) ,
-                            .shapeAdminText              : (#colorLiteral(red: 0.2823249698, green: 0.2823707461, blue: 0.2823149562, alpha: 1), nil) ,
-                            .shapeAdminFill              : (#colorLiteral(red: 0.7736085057, green: 0.7684281468, blue: 0.7684865594, alpha: 1), nil) ,
-                            .shapeFillText               : (#colorLiteral(red: 0.9423670173, green: 0.9368831515, blue: 0.9329733849, alpha: 1), nil) ,
-                            .shapeFill                   : (#colorLiteral(red: 0.4834339023, green: 0.4782161713, blue: 0.4783229828, alpha: 1), nil) ,
-                            .shapeHighlightStrokeText    : (#colorLiteral(red: 0.942510128, green: 0.9367026687, blue: 0.9288505912, alpha: 1), nil) ,
-                            .shapeHighlightStroke        : (#colorLiteral(red: 0.8072894216, green: 0.4530420899, blue: 0.436080873, alpha: 1), nil) ,
-                            .shapeHighlightFillText      : (#colorLiteral(red: 0.9423670173, green: 0.9368831515, blue: 0.9329733849, alpha: 1), nil) ,
-                            .shapeHighlightFill          : (#colorLiteral(red: 0.9231505394, green: 0.4626418352, blue: 0.4536400437, alpha: 1), nil) ,
-                            .shapeStrokeText             : (#colorLiteral(red: 0.9374619126, green: 0.9369455576, blue: 0.9288995266, alpha: 1), nil) ,
-                            .shapeStroke                 : (#colorLiteral(red: 0.440299511, green: 0.4350764751, blue: 0.4351904988, alpha: 1), nil) ,
-                            .shapeTableLeg               : (#colorLiteral(red: 0.568741858, green: 0.8431518674, blue: 0.779614985, alpha: 1), nil) ,
-                            .shapeTableLegShadow         : (#colorLiteral(red: 0.4544042945, green: 0.8055810332, blue: 0.736684382, alpha: 1), nil) ,
                             .suitDiamondsHearts          : (#colorLiteral(red: 0.8621624112, green: 0.1350575387, blue: 0.08568952233, alpha: 1), nil) ,
                             .suitClubsSpades             : (#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), nil) ,
                             .suitNoTrumps                : (#colorLiteral(red: 0, green: 0.003977875225, blue: 0, alpha: 1), nil) ,
@@ -134,6 +121,7 @@ class Themes {
                             .bannerShadow                : (#colorLiteral(red: 0.6901960784, green: 0.2431372549, blue: 0.2235294118, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
                             .gameBannerShadow            : (#colorLiteral(red: 0.2352941176, green: 0.4784313725, blue: 0.5529411765, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
                             .gameBanner                  : (#colorLiteral(red: 0.1968964636, green: 0.4390103817, blue: 0.5146722198, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .gameBannerEmbossed          : (#colorLiteral(red: 0.1176470588, green: 0.3607843137, blue: 0.4352941176, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
                             .inputControl                : (#colorLiteral(red: 0.948936522, green: 0.9490727782, blue: 0.9489069581, alpha: 1), nil) ,
                             .inputControlText            : (#colorLiteral(red: 0.101947777, green: 0.1019691005, blue: 0.1019431874, alpha: 1), nil) ,
                             .inputControlPlaceholder     : (#colorLiteral(red: 0.325458765, green: 0.325510323, blue: 0.3254473805, alpha: 1), nil) ,
@@ -299,19 +287,6 @@ enum ThemeColor: String {
     case textTitle = "Text Title"
     case textError = "Text Error"
     case textMessage = "Text Message"
-    case shapeStrokeText = "Shape Stroke Text"
-    case shapeStroke = "Shape Stroke"
-    case shapeFillText = "Shape Fill Text"
-    case shapeFill = "Shape Fill"
-    case shapeAdminStroke = "Shape Admin Stroke"
-    case shapeAdminText = "Shape Admin Text"
-    case shapeAdminFill = "Shape Admin Fill"
-    case shapeHighlightStrokeText = "Shape Highlight Stroke Text"
-    case shapeHighlightStroke = "Shape Highlight Stroke"
-    case shapeHighlightFillText = "Shape Highlight Fill Text"
-    case shapeHighlightFill = "Shape Highlight Fill"
-    case shapeTableLeg = "Shape Table Leg"
-    case shapeTableLegShadow = "Shape Table Leg Shadow"
     case suitDiamondsHearts = "Suit Diamonds Hearts"
     case suitClubsSpades = "Suit Clubs Spades"
     case suitNoTrumps = "Suit No Trumps"

@@ -33,27 +33,27 @@ class Palette {
     static var boldText = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.boldText, traitCollection)})
     static var buttonFace = UIColor(dynamicProvider:
-    { (traitCollection) in return Themes.color(.buttonFace, traitCollection)})
+                        { (traitCollection) in return Themes.color(.buttonFace, traitCollection)})
     static var buttonFaceText = UIColor(dynamicProvider:
-    { (traitCollection) in return Themes.color(.buttonFaceText, traitCollection)})
+                        { (traitCollection) in return Themes.color(.buttonFaceText, traitCollection)})
     static var confirmButton = UIColor(dynamicProvider:
-    { (traitCollection) in return Themes.color(.confirmButton, traitCollection)})
+                        { (traitCollection) in return Themes.color(.confirmButton, traitCollection)})
     static var confirmButtonText = UIColor(dynamicProvider:
-    { (traitCollection) in return Themes.color(.confirmButtonText, traitCollection)})
+                        { (traitCollection) in return Themes.color(.confirmButtonText, traitCollection)})
     static var otherButton = UIColor(dynamicProvider:
-        { (traitCollection) in return Themes.color(.otherButton, traitCollection)})
+                        { (traitCollection) in return Themes.color(.otherButton, traitCollection)})
     static var otherButtonText = UIColor(dynamicProvider:
-    { (traitCollection) in return Themes.color(.otherButtonText, traitCollection)})
+                        { (traitCollection) in return Themes.color(.otherButtonText, traitCollection)})
     static var continueButton = UIColor(dynamicProvider:
-        { (traitCollection) in return Themes.color(.continueButton, traitCollection)})
+                        { (traitCollection) in return Themes.color(.continueButton, traitCollection)})
     static var continueButtonText = UIColor(dynamicProvider:
-    { (traitCollection) in return Themes.color(.continueButtonText, traitCollection)})
+                        { (traitCollection) in return Themes.color(.continueButtonText, traitCollection)})
     static var darkHighlight = UIColor(dynamicProvider:
-    { (traitCollection) in return Themes.color(.darkHighlight, traitCollection)})
+                        { (traitCollection) in return Themes.color(.darkHighlight, traitCollection)})
     static var darkHighlightText = UIColor(dynamicProvider:
-    { (traitCollection) in return Themes.color(.darkHighlightText, traitCollection)})
+                        { (traitCollection) in return Themes.color(.darkHighlightText, traitCollection)})
     static var darkHighlightTextContrast = UIColor(dynamicProvider:
-    { (traitCollection) in return Themes.color(.darkHighlightTextContrast, traitCollection)})
+                        { (traitCollection) in return Themes.color(.darkHighlightTextContrast, traitCollection)})
     static var disabledText = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.disabledText, traitCollection)})
     static var disabled = UIColor(dynamicProvider:
@@ -140,32 +140,6 @@ class Palette {
                         { (traitCollection) in return Themes.color(.textError, traitCollection)})
     static var textMessage = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.textMessage, traitCollection)})
-    static var shapeStrokeText = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.shapeStrokeText, traitCollection)})
-    static var shapeStroke = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.shapeStroke, traitCollection)})
-    static var shapeFillText = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.shapeFillText, traitCollection)})
-    static var shapeFill = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.shapeFill, traitCollection)})
-    static var shapeAdminStroke = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.shapeAdminStroke, traitCollection)})
-    static var shapeAdminText = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.shapeAdminText, traitCollection)})
-    static var shapeAdminFill = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.shapeAdminFill, traitCollection)})
-    static var shapeHighlightStrokeText = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.shapeHighlightStrokeText, traitCollection)})
-    static var shapeHighlightStroke = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.shapeHighlightStroke, traitCollection)})
-    static var shapeHighlightFillText = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.shapeHighlightFillText, traitCollection)})
-    static var shapeHighlightFill = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.shapeHighlightFill, traitCollection)})
-    static var shapeTableLeg = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.shapeTableLeg, traitCollection)})
-    static var shapeTableLegShadow = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.shapeTableLegShadow, traitCollection)})
     static var suitDiamondsHearts = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.suitDiamondsHearts, traitCollection)})
     static var suitClubsSpades = UIColor(dynamicProvider:
@@ -281,6 +255,10 @@ class Palette {
     
     class func emphasisStyle(view: UIView) {
         view.backgroundColor = Palette.emphasis
+    }
+    
+    class func bannerStyle(view: UIView) {
+        view.backgroundColor = Palette.banner
     }
     
     class func bannerStyle(_ cell: UITableViewCell) {

@@ -29,6 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Cache main context for core data
         CoreData.context = self.persistentContainer.viewContext
 
+        // Load scorecard and set color theme
+        let _ = Scorecard.shared
         Themes.selectTheme(name: Scorecard.settings.colorTheme)
 
         UINavigationBar.appearance().barTintColor = Palette.emphasis

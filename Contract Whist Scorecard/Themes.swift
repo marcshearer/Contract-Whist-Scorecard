@@ -178,7 +178,8 @@ class Themes {
     }
     
     static func gameColor(_ themeColor: ThemeColor, _ gameThemeColor: ThemeColor, _ traitCollection: UITraitCollection = UITraitCollection.current) -> UIColor {
-        return self.currentTheme.getColor((Scorecard.shared.gameBanners ? gameThemeColor : themeColor), traitCollection)
+        let result = self.currentTheme.getColor((Scorecard.shared.gameBanners ? gameThemeColor : themeColor), traitCollection)
+        return result
     }
 }
 

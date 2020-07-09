@@ -352,10 +352,8 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
                 // Reset state and prepare for next round
                 self.nextHand()
                 self.present(nextView: .scorepad)
-            } else if Scorecard.game.roundBiddingComplete(round) && !Scorecard.game.roundMadeStarted(round) {
-                self.present(nextView: .roundSummary)
             } else {
-                self.present(nextView: .scorepad)
+                self.present(nextView: .roundSummary)
             }
         }
     }

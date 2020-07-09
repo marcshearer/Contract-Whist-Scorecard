@@ -24,9 +24,6 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     private var playerTwosCell = [EntryPlayerCell?]()
     private var playerScoreCell = [EntryPlayerCell?]()
     private var scoreCell = [EntryScoreCell?]()
-    private var instructionLabel: UILabel!
-    private var scoreCollection: UICollectionView?
-    private var playerCollection: UICollectionView?
     private var flow: Flow!
     private var undo = Flow()
     
@@ -34,13 +31,16 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     private var bidOnlyMode = false
     private var instructionSection = true
     private var firstTime = true
+    private var rotated = false
+    private var lastViewHeight: CGFloat = 0.0
     private var roundSummaryViewController: RoundSummaryViewController!
+    private var smallScreen = false
     
     // Cell sizes
     private let scoreWidth: CGFloat = 50.0
     private var buttonSize: CGFloat = 0.0
     private var buttonSpacing: CGFloat = 10.0
-    private var nameWidth: CGFloat = 0.0
+    private var rowHeight: CGFloat = 50.0
     
     // Column descriptors
     private let playerColumn = 0
@@ -52,20 +52,23 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
  
     // MARK: - IB Outlets ============================================================================== -
 
-    @IBOutlet private weak var toolbarHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bannerLogoView: BannerLogoView!
     @IBOutlet private weak var titleView: UIView!
     @IBOutlet private weak var titleViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
-    @IBOutlet private weak var footerView: Footer!
     @IBOutlet private weak var footerPaddingView: InsetPaddingView!
     @IBOutlet private weak var toolbar: UIToolbar!
-    @IBOutlet private weak var footerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var entryView: UIView!
-    @IBOutlet private weak var entryTableView: UITableView!
+    @IBOutlet private weak var playerTableView: UITableView!
+    @IBOutlet private weak var playerTableViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var instructionLabel: UILabel!
+    @IBOutlet private weak var instructionContainerView: UIView!
+    @IBOutlet private weak var instructionContainerViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var separatorView: UIView!
+    @IBOutlet private weak var scoreButtonCollectionView: UICollectionView!
     @IBOutlet private var footerRoundTitle: [UILabel]!
     @IBOutlet private var undoButton: [RoundedButton]!
-    @IBOutlet private var finishButton: [RoundedButton]!
+    @IBOutlet private var finishButton: [ShadowButton]!
     @IBOutlet private var errorsButton: [RoundedButton]!
     @IBOutlet private var summaryButton: [RoundedButton]!
     
@@ -103,34 +106,24 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         self.defaultViewColors()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.view.setNeedsLayout()
-        firstTime = true
-    }
-    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         
+        self.rotated = true
         Scorecard.shared.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
 
-    override func viewWillLayoutSubviews() {
-        self.refreshScreen(firstTime: self.firstTime)
-        
-        self.firstTime = false
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        // Have to go through this rigmarole to get the label resized before clipped
-        self.instructionLabel?.setNeedsLayout()
-        self.instructionLabel?.layoutIfNeeded()
-        self.instructionLabel?.roundCorners(cornerRadius: 8.0)
+        self.playerTableView.layoutIfNeeded()
+        self.refreshScreen(firstTime: self.firstTime)
+        
+        self.firstTime = false
+        self.rotated = false
     }
-
+    
     private func refreshScreen(firstTime: Bool) {
         self.setupScreen()
            
@@ -158,43 +151,54 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         // Send state to watch
         Scorecard.shared.watchManager.updateScores()
         
-        self.setupSize(to: entryView.safeAreaLayoutGuide.layoutFrame.size)
+        self.setupSize()
         
-        if firstTime {
-            self.entryTableView.reloadData()
+        if self.lastViewHeight != self.view.frame.height {
+            self.playerTableView.reloadData()
+            self.lastViewHeight = self.view.frame.height
         }
     }
     
-    func setupSize(to size: CGSize) {
-        self.nameWidth = (size.width - 20.0) - (CGFloat(columns - 1) * self.scoreWidth) - (CGFloat(columns) * 2.0)
-        self.buttonSize = (ScorecardUI.landscapePhone() ? min(50.0, (self.view.safeAreaLayoutGuide.layoutFrame.width / 10.0) - 12.0) : 50.0)
-        let buttonsAcross = Int((self.view.safeAreaLayoutGuide.layoutFrame.width - self.buttonSpacing) / (self.buttonSize + self.buttonSpacing))
-        self.buttonSize = ((self.view.safeAreaLayoutGuide.layoutFrame.width - self.buttonSpacing) / CGFloat(buttonsAcross)) - self.buttonSpacing
+    func setupSize() {
+        
+        self.buttonSize = 50.0
+        let buttonsAcross = 5
+        self.buttonSize = ((self.scoreButtonCollectionView.frame.width + self.buttonSpacing) / CGFloat(buttonsAcross)) - self.buttonSpacing
+        
+        let buttonsDown = ((Scorecard.game.roundCards(Scorecard.game.selectedRound) + buttonsAcross) / buttonsAcross)
+        let buttonsHeight = (CGFloat(buttonsDown) * (self.buttonSize + self.buttonSpacing) + CGFloat(buttonSpacing))
+        let tableViewHeight = CGFloat(Scorecard.game.currentPlayers + 1) * self.rowHeight
+        let minTitleViewHeight: CGFloat = (smallScreen ? 0 : 44)
+        
+        var availableHeight = self.view.safeAreaLayoutGuide.layoutFrame.height // Safe area height
+        availableHeight -= tableViewHeight // Subtract out table view
+        availableHeight -= buttonsHeight // Subtract out score buttons
+        availableHeight -= self.toolbar.frame.height // Subtract out toolbar
+        
+        if availableHeight < (90 + minTitleViewHeight) && !ScorecardUI.landscapePhone() {
+            self.instructionContainerViewHeightConstraint.constant = min(50, availableHeight - minTitleViewHeight)
+        }
+        self.instructionContainerView.layoutIfNeeded()
+        self.instructionContainerView.roundCorners(cornerRadius: (ScorecardUI.landscapePhone() ? 0.0 : 12.0))
+        
+        availableHeight -= self.instructionContainerViewHeightConstraint.constant // Subtract out (reduced) instruction
+        if smallScreen {
+            self.titleViewHeightConstraint.constant = 0.0
+        } else {
+            self.titleViewHeightConstraint.constant = min(120, max(minTitleViewHeight, availableHeight))
+        }
     }
     
     // MARK: - TableView Overrides ===================================================================== -
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
-    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return Scorecard.game.currentPlayers + 1
-        case 1:
-            return (self.instructionSection ? 1 : 0)
-        case 2:
-            return 1
-        default:
-            return 1
-        }
+        return Scorecard.game.currentPlayers + 1
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return min(ScorecardUI.screenHeight / 7.0, 50.0)
+            return self.rowHeight
         case 1:
             return 96.0
         case 2:
@@ -208,48 +212,21 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell: UITableViewCell
+        // Score summary
+        let entryPlayerTableCell = tableView.dequeueReusableCell(withIdentifier: "Entry Player Table Cell", for: indexPath) as! EntryPlayerTableCell
         
-        switch indexPath.section {
-
-        case 0:
-            // Score summary
-            let entryPlayerTableCell = tableView.dequeueReusableCell(withIdentifier: "Entry Player Table Cell", for: indexPath) as! EntryPlayerTableCell
-            
-            // Setup default colors (previously done in StoryBoard
-            self.defaultCellColors(cell: entryPlayerTableCell)
-
-            entryPlayerTableCell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row)
-            if indexPath.row==0 {
-                Palette.bannerStyle(view: entryPlayerTableCell)
-                entryPlayerTableCell.entryPlayerSeparator.isHidden = true
-            } else {
-                Palette.normalStyle(entryPlayerTableCell)
-            }
-            self.playerCollection = entryPlayerTableCell.playerCollection
-            cell = entryPlayerTableCell as UITableViewCell
+        // Setup default colors (previously done in StoryBoard
+        self.defaultCellColors(cell: entryPlayerTableCell)
         
-        case 1:
-            // Instructions
-            let instructionCell = tableView.dequeueReusableCell(withIdentifier: "Entry Instruction Cell", for: indexPath) as! EntryInstructionCell
-            
-            // Setup default colors (previously done in StoryBoard
-            self.defaultCellColors(cell: instructionCell)
-
-            self.instructionLabel = instructionCell.instructionLabel
-            self.issueInstruction()
-            cell = instructionCell as UITableViewCell
-
-        default:
-            // Score buttons
-            let scoreCell = tableView.dequeueReusableCell(withIdentifier: "Entry Score Table Cell", for: indexPath) as! EntryScoreTableCell
-            
-            scoreCell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row)
-            self.scoreCollection = scoreCell.scoreCollection
-            cell = scoreCell as UITableViewCell
+        entryPlayerTableCell.setCollectionViewDataSourceDelegate(self, forRow: indexPath.row)
+        if indexPath.row==0 {
+            Palette.bannerStyle(view: entryPlayerTableCell)
+            entryPlayerTableCell.entryPlayerSeparator.isHidden = true
+        } else {
+            Palette.normalStyle(entryPlayerTableCell)
         }
         
-        return cell
+        return entryPlayerTableCell
     }
         
     // MARK: - Form Presentation / Handling Routines =================================================== -
@@ -284,25 +261,24 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         footerRoundTitle.forEach { $0.attributedText = title }
         if ScorecardUI.screenHeight < 667.0 || !ScorecardUI.phoneSize() {
             // Smaller than an iPhone 7 portrait or on a tablet
-            self.titleViewHeightConstraint.constant = 0.0
-            self.footerHeightConstraint.constant = 0.0
-            self.toolbarHeightConstraint.constant = 44.0
-            instructionSection = !ScorecardUI.landscapePhone()
+            self.smallScreen = true
         } else {
-            self.titleViewHeightConstraint.constant = max(80, ScorecardUI.screenHeight * 10 / 78)
-            self.footerHeightConstraint.constant = 0.0
-            self.toolbarHeightConstraint.constant = 44.0
-            instructionSection = true
-            // Alpha out & disable the toolbar buttons since will use the nav bar ones
-            // but can't hide them as will hide/unhide depending on context
-            self.finishButton.first?.isEnabled(false)
-            self.finishButton.first?.alpha = 0.0
-            self.undoButton.first?.isEnabled(false)
-            self.undoButton.first?.alpha = 0.0
-            self.summaryButton.first?.isEnabled(false)
-            self.summaryButton.first?.alpha = 0.0
+            self.smallScreen = false
         }
+        // Alpha out & disable the toolbar buttons on large devices since will use the nav bar ones
+        // but can't hide them as will hide/unhide depending on context
+        self.finishButton.first?.isEnabled = smallScreen
+        self.finishButton.first?.alpha = (smallScreen ? 1.0 : 0.0)
+        self.undoButton.first?.isEnabled(smallScreen)
+        self.undoButton.first?.alpha = (smallScreen ? 1.0 : 0.0)
+        self.summaryButton.first?.isEnabled(smallScreen)
+        self.summaryButton.first?.alpha = (smallScreen ? 1.0 : 0.0)
         self.errorsButton.forEach { ScorecardUI.veryRoundCorners($0, radius: $0.frame.width / 2.0) }
+        
+        self.rowHeight = min(ScorecardUI.screenHeight / 7.0, 50.0)
+        self.instructionContainerViewHeightConstraint.constant = (ScorecardUI.landscapePhone() ? self.rowHeight : 90)
+        self.instructionContainerView.layoutIfNeeded()
+        self.playerTableViewHeightConstraint.constant = CGFloat(Scorecard.game.currentPlayers + 1) * self.rowHeight
     }
     
     func setupColumns() {
@@ -341,8 +317,8 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
             self.issueInstruction()
         }
         
-        if self.scoreCollection != nil {
-            for scoreCell in scoreCollection?.visibleCells as! [EntryScoreCell] {
+        if self.scoreButtonCollectionView != nil {
+            for scoreCell in scoreButtonCollectionView?.visibleCells as! [EntryScoreCell] {
                 self.formatScore(scoreCell)
             }
         }
@@ -664,7 +640,7 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
     
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        if collectionView.tag < 1000000 {
+        if collectionView.tag >= 0 {
         // Player summary
             return self.columns
         } else {
@@ -676,16 +652,21 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         
+        collectionView.setNeedsLayout()
+        collectionView.layoutIfNeeded()
         let totalHeight: CGFloat = collectionView.bounds.size.height
+        let totalWidth: CGFloat = collectionView.bounds.size.width
         var width: CGFloat = 0.0
         var height: CGFloat = 0.0
         
-        if collectionView.tag < 1000000 {
+        let nameWidth = totalWidth - (CGFloat(columns - 1) * self.scoreWidth)
+        
+        if collectionView.tag >= 0 {
             // Player score summary
             let column = indexPath.row
             if column == self.playerColumn {
                 // Name
-                width = self.nameWidth
+                width = nameWidth
             } else {
                 // Values
                 width = self.scoreWidth
@@ -698,6 +679,9 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
             height = self.buttonSize
         }
         
+        if width < 0 {
+            print(width)
+        }
         return CGSize(width: width, height: height)
     }
     
@@ -706,14 +690,12 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if collectionView.tag<1000000 {
+        if collectionView.tag >= 0 {
             // Player summary table
         
             let entryPlayerCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Entry Player Cell", for: indexPath) as! EntryPlayerCell
             
             let playerLabel = entryPlayerCell.entryPlayerLabel!
-            let instructionLabel = entryPlayerCell.entryInstructionLabel!
-            instructionLabel.text = ""
             let column = indexPath.row
             
             if collectionView.tag==0 {
@@ -722,15 +704,6 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
                 case playerColumn:
                     playerLabel.text="Player"
                     playerLabel.textAlignment = .left
-                    if !self.instructionSection {
-                        self.instructionLabel = instructionLabel
-                        entryPlayerCell.entryPlayerWidthConstraint.constant = min(self.nameWidth - 6.0, 64.0)
-                        Palette.bannerStyle(instructionLabel)
-                        instructionLabel.textAlignment = .center
-                        self.issueInstruction()
-                    } else {
-                        entryPlayerCell.entryPlayerWidthConstraint.constant = self.nameWidth - 6.0
-                    }
                 case bidColumn:
                     playerLabel.text="Bid"
                 case madeColumn:
@@ -748,7 +721,6 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
                 let player = collectionView.tag
                 entryPlayerCell.tag = player
                 Palette.normalStyle(playerLabel, setFont: false)
-                entryPlayerCell.entryPlayerWidthConstraint.constant = self.nameWidth - 6.0
                 
                 switch column {
                 case playerColumn:
@@ -816,7 +788,7 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool
     {
         
-        if collectionView.tag < 1000000 {
+        if collectionView.tag >= 0 {
             // Player score summary - should only select if already a value or previous cell already a value
             
             let tappedPlayer = collectionView.tag
@@ -842,7 +814,7 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
     
     func collectionView(_ collectionView: UICollectionView,
                    didSelectItemAt indexPath: IndexPath) {
-        if collectionView.tag < 1000000 {
+        if collectionView.tag >= 0 {
             // User (in re-edit mode) has selected a specific player
             highlightCursor(false)
             var mode = columnMode(indexPath.row)
@@ -854,6 +826,7 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
             self.setForm(true)
         }
     }
+    
     
     // MARK: - Collection View Action Handlers ====================================================== -
     
@@ -891,8 +864,8 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
         setupFlow()
         selection = flow.find(player: 1, mode: Mode.made)
         setForm(false)
-        setupSize(to: CGSize(width: entryView.frame.width - entryView.safeAreaInsets.left - entryView.safeAreaInsets.right, height: entryView.frame.height))
-        entryTableView.reloadData()
+        setupSize()
+        playerTableView.reloadData()
     }
     
     // MARK: - Collection View Utility Routines ===================================================== -
@@ -935,28 +908,6 @@ class EntryPlayerTableCell: UITableViewCell {
 
 class EntryPlayerCell: UICollectionViewCell {
     @IBOutlet weak var entryPlayerLabel: UILabel!
-    @IBOutlet weak var entryInstructionLabel: UILabel!
-    @IBOutlet weak var entryPlayerWidthConstraint: NSLayoutConstraint!
-}
-
-class EntryInstructionCell: UITableViewCell {
-    var hexagonShapeLayer: CAShapeLayer!
-    @IBOutlet weak var instructionLabel: UILabel!
-}
-
-class EntryScoreTableCell: UITableViewCell {
-    
-    @IBOutlet weak var scoreCollection: UICollectionView!
-    
-    func setCollectionViewDataSourceDelegate
-        <D: UICollectionViewDataSource & UICollectionViewDelegate>
-        (_ dataSourceDelegate: D, forRow row: Int) {
-        
-        self.scoreCollection.delegate = dataSourceDelegate
-        self.scoreCollection.dataSource = dataSourceDelegate
-        self.scoreCollection.tag = 1000000 + row
-        self.scoreCollection.reloadData()
-    }
 }
 
 class EntryScoreCell: UICollectionViewCell {
@@ -1055,21 +1006,15 @@ extension EntryViewController {
         self.bannerPaddingView.bannerColor = Palette.banner
         self.entryView.backgroundColor = Palette.background
         self.errorsButton.forEach { $0.backgroundColor = Palette.error }
-        self.finishButton.first?.backgroundColor = Palette.roomInteriorTextContrast
-        self.footerPaddingView.bannerColor = Palette.roomInterior
-        self.footerView.footerColor = Palette.roomInterior
+        self.finishButton.first?.setBackgroundColor(Palette.bannerShadow)
+        self.finishButton.last?.shadowSize = CGSize()
+        self.finishButton.first?.setTitleColor(Palette.bannerText, for: .normal)
+        self.footerPaddingView.bannerColor = Palette.banner
         self.titleView.backgroundColor = Palette.banner
-        self.toolbar.barTintColor = Palette.roomInterior
-    }
-
-    private func defaultCellColors(cell: EntryInstructionCell) {
-        switch cell.reuseIdentifier {
-        case "Entry Instruction Cell":
-            cell.instructionLabel.backgroundColor = Palette.buttonFace
-            cell.instructionLabel.textColor = Palette.instructionText
-        default:
-            break
-        }
+        self.toolbar.barTintColor = Palette.banner
+        self.instructionContainerView.backgroundColor = Palette.banner
+        self.instructionLabel.textColor = Palette.bannerText
+        self.separatorView.backgroundColor = Palette.separator
     }
 
     private func defaultCellColors(cell: EntryPlayerTableCell) {

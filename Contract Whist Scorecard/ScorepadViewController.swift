@@ -933,11 +933,6 @@ class ScorepadViewController: ScorecardViewController,
             rotated = false
         }
     }
-    
-    func collectionView(_ collectionView: UICollectionView, willRotatetoInterfaceOrientation: UIInterfaceOrientation, duration: TimeInterval) {
-        collectionView.collectionViewLayout.invalidateLayout()
-        self.view.setNeedsDisplay()
-    }
 }
     
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -

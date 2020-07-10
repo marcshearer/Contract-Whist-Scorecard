@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aF8-JM-lAM" customClass="GraphView" customModule="Whist_2" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="-15" y="0.0" width="390" height="667"/>
                                 <color key="backgroundColor" name="Background"/>
                             </view>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aph-ga-WxR" userLabel="Finish Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
@@ -41,7 +41,9 @@
                             <constraint firstItem="aF8-JM-lAM" firstAttribute="top" secondItem="usM-T4-d4I" secondAttribute="top" id="KtL-cd-Gpn"/>
                             <constraint firstItem="usM-T4-d4I" firstAttribute="trailing" secondItem="aF8-JM-lAM" secondAttribute="trailing" id="PJK-Fs-9oE"/>
                             <constraint firstItem="aph-ga-WxR" firstAttribute="top" secondItem="usM-T4-d4I" secondAttribute="top" constant="8" id="UKi-ll-8JO"/>
-                            <constraint firstItem="aF8-JM-lAM" firstAttribute="leading" secondItem="usM-T4-d4I" secondAttribute="leading" id="yzx-D0-x9M"/>
+                            <constraint firstItem="aF8-JM-lAM" firstAttribute="leading" secondItem="usM-T4-d4I" secondAttribute="leading" id="yzx-D0-x9M">
+                                <variation key="heightClass=regular" constant="-15"/>
+                            </constraint>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="usM-T4-d4I"/>
                     </view>

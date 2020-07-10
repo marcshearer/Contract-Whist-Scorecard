@@ -10,10 +10,7 @@ import UIKit
 
 class Palette {
     
-    static var alternateBackground = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.alternateBackground, traitCollection)})
-    static var background = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.background, traitCollection)})
+    // Colors that vary in/out of games
     static var banner = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.gameColor(.banner, .gameBanner, traitCollection)})
     static var bannerEmbossed = UIColor(dynamicProvider:
@@ -24,6 +21,14 @@ class Palette {
                         { (traitCollection) in return Themes.gameColor(.bannerText, .gameBannerText, traitCollection)})
     static var bannerTextContrast = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.gameColor(.bannerTextContrast, .gameBannerTextContrast, traitCollection)})
+    static var segmentedControls = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.gameColor(.segmentedControls, .gameSegmentedControls, traitCollection)})
+    
+    // Fixed colors
+    static var alternateBackground = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.alternateBackground, traitCollection)})
+    static var background = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.background, traitCollection)})
     static var bidButton = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.bidButton, traitCollection)})
     static var bidButtonText = UIColor(dynamicProvider:
@@ -158,8 +163,6 @@ class Palette {
                         { (traitCollection) in return Themes.color(.contractUnderLight, traitCollection)})
     static var contractEqual = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.contractEqual, traitCollection)})
-    static var segmentedControls = UIColor(dynamicProvider:
-                        { (traitCollection) in return Themes.color(.segmentedControls, traitCollection)})
     static var history = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.history, traitCollection)})
     static var stats = UIColor(dynamicProvider:

@@ -113,14 +113,6 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KHn-i7-Tqu" userLabel="Footer Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="778" width="375" height="34"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
-                                        <color key="value" name="Room Interior"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </view>
                             <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="jGM-gE-2rv" userLabel="Players Table View">
                                 <rect key="frame" x="0.0" y="124" width="375" height="200"/>
                                 <color key="backgroundColor" name="Clear"/>
@@ -277,7 +269,7 @@
                                 </variation>
                             </view>
                             <collectionView clipsSubviews="YES" tag="-1" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" delaysContentTouches="NO" canCancelContentTouches="NO" bouncesZoom="NO" dataMode="prototypes" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AtG-Oq-mM4" userLabel="Entry Score Collection View">
-                                <rect key="frame" x="10" y="390" width="355" height="346"/>
+                                <rect key="frame" x="10" y="390" width="355" height="344"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="b3O-kO-W9V">
                                     <size key="itemSize" width="50" height="50"/>
@@ -320,14 +312,11 @@
                                 </connections>
                             </collectionView>
                             <toolbar clipsSubviews="YES" clearsContextBeforeDrawing="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y1H-0M-Egj">
-                                <rect key="frame" x="0.0" y="736" width="375" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="OOG-Hv-y1d"/>
-                                </constraints>
+                                <rect key="frame" x="0.0" y="734" width="375" height="78"/>
                                 <items>
                                     <barButtonItem style="plain" id="kfj-Nd-7CF">
                                         <view key="customView" contentMode="scaleToFill" id="od1-py-F4T">
-                                            <rect key="frame" x="16" y="22" width="0.0" height="0.0"/>
+                                            <rect key="frame" x="16" y="39" width="0.0" height="0.0"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5A9-ob-sf7">
@@ -367,7 +356,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="lrb-ys-grN"/>
                                     <barButtonItem style="plain" id="CER-H3-Fj3">
                                         <view key="customView" contentMode="scaleToFill" ambiguous="YES" id="4lv-P9-tyv">
-                                            <rect key="frame" x="187.66666666666666" y="22" width="0.0" height="0.0"/>
+                                            <rect key="frame" x="187.66666666666666" y="39" width="0.0" height="0.0"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
                                                 <label opaque="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Round" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="mYF-x3-kAl">
@@ -393,7 +382,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="zJZ-51-3Rw"/>
                                     <barButtonItem style="plain" id="uPa-2p-7w1" userLabel="Undo Button Item">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="cxI-wh-pjW" userLabel="Undo Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                            <rect key="frame" x="276" y="0.0" width="43" height="44"/>
+                                            <rect key="frame" x="276" y="17" width="43" height="44"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="30" id="XR2-4m-eiq"/>
@@ -406,9 +395,11 @@
                                     </barButtonItem>
                                     <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="8ud-XJ-6aK"/>
                                     <barButtonItem style="plain" id="b5P-5H-sde" userLabel="Summary Button Item">
-                                        <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Sy8-YT-Lhn" userLabel="Summary Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                            <rect key="frame" x="329" y="5" width="30" height="34"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sy8-YT-Lhn" userLabel="Summary Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
+                                            <rect key="frame" x="329" y="22" width="30" height="34"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="30" id="Tnq-od-zJx"/>
+                                            </constraints>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="summary"/>
                                             </userDefinedRuntimeAttributes>
@@ -432,9 +423,9 @@
                             </constraint>
                             <constraint firstItem="otp-xs-7Jm" firstAttribute="leading" secondItem="pS0-jq-6eE" secondAttribute="leading" id="7gF-JI-qcW"/>
                             <constraint firstItem="r5E-a9-sN5" firstAttribute="top" secondItem="8hd-6b-lTp" secondAttribute="bottom" constant="16" id="9GJ-fm-OW1"/>
+                            <constraint firstItem="etq-le-R2n" firstAttribute="bottom" secondItem="Y1H-0M-Egj" secondAttribute="top" constant="44" id="CBz-ye-mJu"/>
                             <constraint firstItem="Weo-LM-Q3A" firstAttribute="bottom" secondItem="otp-xs-7Jm" secondAttribute="bottom" constant="44" id="DI5-tv-1fA"/>
-                            <constraint firstItem="KHn-i7-Tqu" firstAttribute="trailing" secondItem="pS0-jq-6eE" secondAttribute="trailing" id="Emp-gZ-PXT"/>
-                            <constraint firstItem="Y1H-0M-Egj" firstAttribute="bottom" secondItem="etq-le-R2n" secondAttribute="bottom" constant="2" id="FHY-mp-m6p"/>
+                            <constraint firstItem="Y1H-0M-Egj" firstAttribute="bottom" secondItem="pS0-jq-6eE" secondAttribute="bottom" id="FHY-mp-m6p"/>
                             <constraint firstAttribute="trailing" secondItem="Y1H-0M-Egj" secondAttribute="trailing" id="GRK-5X-OIg"/>
                             <constraint firstAttribute="trailing" secondItem="8hd-6b-lTp" secondAttribute="trailing" constant="8" id="HnB-ln-6NQ">
                                 <variation key="heightClass=compact" constant="0.0"/>
@@ -450,18 +441,15 @@
                             <constraint firstItem="AtG-Oq-mM4" firstAttribute="leading" secondItem="etq-le-R2n" secondAttribute="leading" constant="10" id="OVb-Qf-NUK"/>
                             <constraint firstItem="AtG-Oq-mM4" firstAttribute="leading" secondItem="r5E-a9-sN5" secondAttribute="trailing" constant="8" id="Vhh-W5-xfv"/>
                             <constraint firstItem="Y1H-0M-Egj" firstAttribute="leading" secondItem="pS0-jq-6eE" secondAttribute="leading" id="XMS-Hj-0M4"/>
-                            <constraint firstAttribute="bottom" secondItem="KHn-i7-Tqu" secondAttribute="bottom" id="arT-U8-Hm4"/>
                             <constraint firstItem="otp-xs-7Jm" firstAttribute="trailing" secondItem="pS0-jq-6eE" secondAttribute="trailing" id="dcY-gr-ECE"/>
                             <constraint firstItem="jGM-gE-2rv" firstAttribute="top" secondItem="30M-sz-Fdm" secondAttribute="bottom" id="gTM-N0-Kzp"/>
                             <constraint firstItem="Y1H-0M-Egj" firstAttribute="top" secondItem="r5E-a9-sN5" secondAttribute="bottom" constant="16" id="i8v-oK-5bT"/>
                             <constraint firstItem="jGM-gE-2rv" firstAttribute="width" secondItem="etq-le-R2n" secondAttribute="width" multiplier="0.5" id="n8b-50-rFW"/>
-                            <constraint firstItem="KHn-i7-Tqu" firstAttribute="leading" secondItem="pS0-jq-6eE" secondAttribute="leading" id="nyd-Gr-i1r"/>
                             <constraint firstItem="Y1H-0M-Egj" firstAttribute="top" secondItem="AtG-Oq-mM4" secondAttribute="bottom" id="oY1-NM-WQR">
                                 <variation key="heightClass=compact" constant="4"/>
                             </constraint>
                             <constraint firstItem="otp-xs-7Jm" firstAttribute="top" secondItem="pS0-jq-6eE" secondAttribute="top" id="qxz-Gl-hJp"/>
                             <constraint firstItem="30M-sz-Fdm" firstAttribute="top" secondItem="etq-le-R2n" secondAttribute="top" id="v5D-eG-RaU"/>
-                            <constraint firstItem="KHn-i7-Tqu" firstAttribute="top" secondItem="etq-le-R2n" secondAttribute="bottom" id="vAQ-oY-q3b"/>
                             <constraint firstItem="etq-le-R2n" firstAttribute="trailing" secondItem="AtG-Oq-mM4" secondAttribute="trailing" constant="10" id="vRL-LR-hDQ"/>
                             <constraint firstItem="etq-le-R2n" firstAttribute="top" secondItem="otp-xs-7Jm" secondAttribute="bottom" id="xwt-XZ-b09"/>
                             <constraint firstItem="jGM-gE-2rv" firstAttribute="leading" secondItem="pS0-jq-6eE" secondAttribute="leading" id="y0p-uO-hR1"/>
@@ -469,11 +457,9 @@
                         <viewLayoutGuide key="safeArea" id="etq-le-R2n"/>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="DI5-tv-1fA"/>
                                 <exclude reference="2eM-PN-oJy"/>
                                 <exclude reference="n8b-50-rFW"/>
-                                <exclude reference="Lcc-S1-v7S"/>
-                                <exclude reference="i8v-oK-5bT"/>
-                                <exclude reference="DI5-tv-1fA"/>
                                 <exclude reference="3KV-wo-7fc"/>
                                 <exclude reference="7Q1-vq-9rN"/>
                                 <exclude reference="Lb2-js-Ia6"/>
@@ -482,24 +468,26 @@
                                 <exclude reference="MwL-Uc-5Cl"/>
                                 <exclude reference="OVb-Qf-NUK"/>
                                 <exclude reference="Vhh-W5-xfv"/>
+                                <exclude reference="Lcc-S1-v7S"/>
+                                <exclude reference="i8v-oK-5bT"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=compact">
                             <mask key="constraints">
                                 <include reference="n8b-50-rFW"/>
-                                <include reference="Lcc-S1-v7S"/>
-                                <include reference="i8v-oK-5bT"/>
                                 <include reference="3KV-wo-7fc"/>
                                 <include reference="O1j-LI-Iei"/>
                                 <include reference="9GJ-fm-OW1"/>
                                 <include reference="MwL-Uc-5Cl"/>
                                 <include reference="Vhh-W5-xfv"/>
+                                <include reference="Lcc-S1-v7S"/>
+                                <include reference="i8v-oK-5bT"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
                             <mask key="constraints">
-                                <include reference="2eM-PN-oJy"/>
                                 <include reference="DI5-tv-1fA"/>
+                                <include reference="2eM-PN-oJy"/>
                                 <include reference="7Q1-vq-9rN"/>
                                 <include reference="Lb2-js-Ia6"/>
                                 <include reference="OVb-Qf-NUK"/>
@@ -515,7 +503,6 @@
                         <outlet property="bannerLogoView" destination="Weo-LM-Q3A" id="SLv-kX-n2T"/>
                         <outlet property="bannerPaddingView" destination="otp-xs-7Jm" id="msq-OK-HSO"/>
                         <outlet property="entryView" destination="pS0-jq-6eE" id="n4n-SH-4Cj"/>
-                        <outlet property="footerPaddingView" destination="KHn-i7-Tqu" id="7LC-eX-gX2"/>
                         <outlet property="instructionContainerView" destination="8hd-6b-lTp" id="BDV-Uc-cQj"/>
                         <outlet property="instructionContainerViewHeightConstraint" destination="H4R-ZC-h79" id="2rv-nw-nNg"/>
                         <outlet property="instructionLabel" destination="ysS-vO-VnI" id="tmv-sW-duc"/>

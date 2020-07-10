@@ -862,7 +862,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         label.textAlignment = .center
         ScorecardUI.roundCorners(label)
         
-        self.confirmPlayed(title: "Confirm Card", content: label, sourceView: self.handSourceView, confirmText: "Play card", cancelText: "Change card", backgroundColor: Palette.tableTop, confirmHandler: { self.playCard(card: card) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
+        self.confirmPlayed(title: "Confirm Card", content: label, sourceView: self.handSourceView, confirmText: "Play card", cancelText: "Change card", backgroundColor: Palette.tableTop, buttonTextColor: Palette.tableTopText, confirmHandler: { self.playCard(card: card) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
     }
     
     func playCard(card: Card) {
@@ -911,7 +911,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         label.textAlignment = .center
         ScorecardUI.roundCorners(label)
         
-        self.confirmPlayed(title: "Confirm Bid", content: label, sourceView: self.handSourceView, confirmText: "Confirm Bid", cancelText: "Change Bid", backgroundColor: Palette.background, confirmHandler: { self.makeBid(bid) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
+        self.confirmPlayed(title: "Confirm Bid", content: label, sourceView: self.handSourceView, confirmText: "Confirm Bid", cancelText: "Change Bid", backgroundColor: Palette.background, buttonTextColor: Palette.text, confirmHandler: { self.makeBid(bid) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
     }
     
     func makeBid(_ bid: Int) {
@@ -927,7 +927,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         self.stateController()
     }
     
-    private func confirmPlayed(title: String, content: UIView, sourceView: UIView, confirmText: String, cancelText: String, backgroundColor: UIColor, confirmHandler: (()->())? = nil, cancelHandler: (()->())? = nil) {
+    private func confirmPlayed(title: String, content: UIView, sourceView: UIView, confirmText: String, cancelText: String, backgroundColor: UIColor, buttonTextColor: UIColor, confirmHandler: (()->())? = nil, cancelHandler: (()->())? = nil) {
      
         let context: [String : Any?] =
             ["title" : title,
@@ -935,7 +935,12 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
              "sourceView" : sourceView,
              "confirmText" : confirmText,
              "cancelText" : cancelText,
-             "backgroundColor" : backgroundColor ]
+             "backgroundColor" : backgroundColor,
+             "buttonColor": backgroundColor,
+             "buttonTextColor": buttonTextColor,
+             "bannerColor": Palette.roomInterior,
+             "bannerTextColor": Palette.roomInteriorText
+        ]
         
         self.controllerDelegate?.didInvoke(.confirmPlayed, context: context, completion: { (context) in
             if context?["confirm"] as? Bool == true {
@@ -1006,7 +1011,9 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     }
     
     internal func alertUser(reminder: Bool) {
-        self.whisper.show("Buzz", hideAfter: 2.0)
+        if Utility.isSimulator && Scorecard.shared.autoPlayHands == 0 {
+            self.whisper.show("Buzz", hideAfter: 2.0)
+        }
         if reminder {
             self.instructionView.alertFlash(duration: 0.3, repeatCount: 3, backgroundColor: Palette.tableTop)
             self.bannerPaddingView.alertFlash(duration: 0.3, repeatCount: 3, backgroundColor: Palette.tableTop)
@@ -1078,7 +1085,6 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         handViewController!.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         handViewController!.controllerDelegate = appController
-        // TODO Reinstate handViewController!.RobotDelegate = RobotDelegate
         
         Utility.mainThread("playHand", execute: {
             viewController.present(handViewController!, appController: appController, sourceView: sourceView, animated: animated, completion: nil)

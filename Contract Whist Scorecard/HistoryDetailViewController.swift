@@ -35,7 +35,7 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
     @IBOutlet private weak var participantTableViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var navigationBar: NavigationBar!
     @IBOutlet private weak var titleNavigationItem: UINavigationItem!
-    @IBOutlet private weak var updateButton: AngledButton!
+    @IBOutlet private weak var updateButton: ShadowButton!
     @IBOutlet private weak var finishButton: RoundedButton!
     @IBOutlet private weak var actionButton: UIBarButtonItem!
     @IBOutlet private weak var bodyView: UIView!
@@ -76,8 +76,10 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
             mapView.isHidden = true
         } else {
             // Only show update button if network available
-            Scorecard.shared.checkNetworkConnection(button: updateButton, label: nil)
-            // NOTE The updateButton will disappear when there is not network
+            Scorecard.shared.checkNetworkConnection {
+                let available = Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn
+                self.updateButton.isHidden = !available
+            }
         }
         
         let dateString = DateFormatter.localizedString(from: gameDetail.datePlayed, dateStyle: .medium, timeStyle: .none)
@@ -431,9 +433,8 @@ extension HistoryDetailViewController {
         self.locationText.textColor = Palette.darkHighlightText
         self.navigationBar.textColor = Palette.bannerText
         self.participantTableView.separatorColor = Palette.separator
-        self.updateButton.setTitleColor(Palette.bannerText, for: .normal)
-        self.updateButton.fillColor = Palette.banner
-        self.updateButton.strokeColor = Palette.banner
+        self.updateButton.setTitleColor(Palette.buttonFaceText, for: .normal)
+        self.updateButton.setBackgroundColor(Palette.buttonFace)
         self.view.backgroundColor = Palette.background
     }
 

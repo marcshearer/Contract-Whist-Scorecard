@@ -51,7 +51,7 @@ import CoreData
     init(visibleLocally: Bool = false) {
         self.visibleLocally = visibleLocally
         self.localDateCreated = Date()
-        self.playerUUID = Scorecard.deviceName + UUID().uuidString // TODO - remove device name
+        self.playerUUID = UUID().uuidString
     }
     
     public var indexMO: Int? {

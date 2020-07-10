@@ -16,6 +16,10 @@ class ConfirmPlayedViewController : ScorecardViewController, UIPopoverPresentati
     private var confirmText: String?
     private var cancelText: String?
     private var backgroundColor: UIColor?
+    private var bannerColor: UIColor?
+    private var bannerTextColor: UIColor?
+    private var buttonColor: UIColor?
+    private var buttonTextColor: UIColor?
     private var confirmHandler: (()->())?
     private var cancelHandler: (()->())?
     private var blurredBackgroundView: UIView!
@@ -30,12 +34,12 @@ class ConfirmPlayedViewController : ScorecardViewController, UIPopoverPresentati
     @IBOutlet private weak var cancelButton: UIButton!
     
     @IBAction func confirmPressed(_ sender: UIButton) {
-        self.removeBlurredBackgroundView()
+        self.removeBackgroundView()
         self.dismiss(completion: self.confirmHandler)
     }
     
     @IBAction func cancelPressed(_ sender: UIButton) {
-        self.removeBlurredBackgroundView()
+        self.removeBackgroundView()
         self.dismiss(completion: self.cancelHandler)
     }
     
@@ -58,6 +62,12 @@ class ConfirmPlayedViewController : ScorecardViewController, UIPopoverPresentati
         Utility.mainThread {
             // Have to wrap this in main thread for it to work!! Apparently fixed in iOS 13
             self.contentView.backgroundColor = self.backgroundColor ?? Palette.background
+            self.labelTitle.backgroundColor = self.bannerColor ?? Palette.roomInterior
+            self.labelTitle.textColor = self.bannerTextColor ?? Palette.roomInteriorText
+            self.confirmButton.backgroundColor = self.buttonColor ?? Palette.roomInterior
+            self.confirmButton.setTitleColor(self.buttonTextColor, for: .normal)
+            self.cancelButton.backgroundColor = self.buttonColor ?? Palette.roomInterior
+            self.cancelButton.setTitleColor(self.buttonTextColor, for: .normal)
         }
         self.view.setNeedsLayout()
     }
@@ -75,22 +85,22 @@ class ConfirmPlayedViewController : ScorecardViewController, UIPopoverPresentati
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        self.removeBlurredBackgroundView()
+        self.removeBackgroundView()
         ConfirmPlayedViewController.parentViewController.view.layoutIfNeeded()
         ConfirmPlayedViewController.sourceView.layoutIfNeeded()
-        self.overlayBlurredBackgroundView()
+        self.overlayBackgroundViews()
         self.reCenterPopup()
         Constraint.anchor(view: self.contentView, control: content, attributes: .centerX, .centerY)
     }
     
-    func overlayBlurredBackgroundView() {
+    func overlayBackgroundViews() {
         
         self.blurredBackgroundView = UIView(frame: CGRect(origin: CGPoint(), size: ConfirmPlayedViewController.sourceView.frame.size))
         self.blurredBackgroundView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         ConfirmPlayedViewController.sourceView.addSubview(blurredBackgroundView)
     }
     
-    func removeBlurredBackgroundView() {
+    func removeBackgroundView() {
         
         self.blurredBackgroundView?.removeFromSuperview()
     }
@@ -121,7 +131,7 @@ class ConfirmPlayedViewController : ScorecardViewController, UIPopoverPresentati
         return UIModalPresentationStyle.none
     }
     
-    class func show(from parentViewController: ScorecardViewController, appController: ScorecardAppController? = nil, title: String, content: UIView, sourceView: UIView? = nil, confirmText: String? = nil, cancelText: String? = nil, minWidth: CGFloat = 240, minHeight: CGFloat = 200.0, offsets: (portrait: CGFloat?, landscape: CGFloat?) = (0.0, nil), backgroundColor: UIColor? = nil, confirmHandler: (()->())? = nil, cancelHandler: (()->())? = nil) -> ConfirmPlayedViewController {
+    class func show(from parentViewController: ScorecardViewController, appController: ScorecardAppController? = nil, title: String, content: UIView, sourceView: UIView? = nil, confirmText: String? = nil, cancelText: String? = nil, minWidth: CGFloat = 240, minHeight: CGFloat = 200.0, offsets: (portrait: CGFloat?, landscape: CGFloat?) = (0.0, nil), backgroundColor: UIColor? = nil, bannerColor: UIColor? = nil, bannerTextColor: UIColor? = nil, buttonColor: UIColor? = nil, buttonTextColor: UIColor? = nil, confirmHandler: (()->())? = nil, cancelHandler: (()->())? = nil) -> ConfirmPlayedViewController {
         let storyboard = UIStoryboard(name: "ConfirmPlayedViewController", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "ConfirmPlayedViewController") as! ConfirmPlayedViewController
         
@@ -131,6 +141,10 @@ class ConfirmPlayedViewController : ScorecardViewController, UIPopoverPresentati
         viewController.confirmText = confirmText
         viewController.cancelText = cancelText
         viewController.backgroundColor = backgroundColor
+        viewController.bannerColor = bannerColor
+        viewController.bannerTextColor = bannerTextColor
+        viewController.buttonColor = buttonColor
+        viewController.buttonTextColor = buttonTextColor
         viewController.confirmHandler = confirmHandler
         viewController.cancelHandler = cancelHandler
         let sourceView = sourceView ?? parentViewController.view

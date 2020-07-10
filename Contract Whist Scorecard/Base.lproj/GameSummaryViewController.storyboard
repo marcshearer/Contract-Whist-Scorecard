@@ -366,7 +366,6 @@
                         <outlet property="playAgainButton" destination="OFe-jn-Bt6" id="Ulk-Wk-GNW"/>
                         <outlet property="rightSwipeGesture" destination="eQO-xa-QSi" id="W0m-9i-foC"/>
                         <outlet property="scorecardButton" destination="Bhv-M4-Rmr" id="jo9-dX-Ffo"/>
-                        <outlet property="scrollView" destination="2d4-a6-rKy" id="AaI-SW-z83"/>
                         <outlet property="stopPlayingButton" destination="5J7-Q9-k63" id="mKE-JH-6YP"/>
                         <outlet property="syncMessage" destination="9uo-b0-008" id="6JR-EO-y74"/>
                         <outlet property="tapGesture" destination="RaZ-ty-O6E" id="LQ9-1i-eB5"/>
@@ -396,7 +395,7 @@
     </scenes>
     <resources>
         <image name="back" width="22" height="22"/>
-        <image name="crown" width="100" height="51"/>
+        <image name="crown" width="100" height="100"/>
         <image name="play again" width="50" height="64"/>
         <image name="stop playing" width="50" height="64"/>
         <namedColor name="Clear">

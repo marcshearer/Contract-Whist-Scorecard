@@ -87,15 +87,17 @@ class SegmentedControl: UISegmentedControl {
     
     private func set() {
         if #available(iOS 13.0, *) {
-            self.selectedSegmentTintColor = Palette.emphasis
-            let selectedImage = UIImage(color: Palette.emphasis, size: CGSize(width: 1, height: 32))
+            self.selectedSegmentTintColor = Palette.segmentedControls
+            let selectedImage = UIImage(color: Palette.segmentedControls, size: CGSize(width: 1, height: 32))
             self.setBackgroundImage(selectedImage, for: .selected, barMetrics: .default)
-            let unselectedImage = UIImage(color: UIColor.white, size: CGSize(width: 1, height: 32))
+            let unselectedImage = UIImage(color: Palette.buttonFace, size: CGSize(width: 1, height: 32))
             self.setBackgroundImage(unselectedImage, for: .normal, barMetrics: .default)
-            self.backgroundColor = UIColor.white
+            self.backgroundColor = Palette.buttonFace
+            self.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: Palette.bannerText], for: .selected)
+            self.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: Palette.buttonFaceText], for: .normal)
         } else {
-            self.tintColor = Palette.emphasis
-            self.backgroundColor = UIColor.white
+            self.tintColor = Palette.segmentedControls
+            self.backgroundColor = Palette.buttonFace
             self.layer.cornerRadius = 5.0
         }
         self.layer.masksToBounds = true

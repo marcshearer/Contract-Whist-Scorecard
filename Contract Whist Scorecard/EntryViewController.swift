@@ -56,7 +56,6 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     @IBOutlet private weak var titleView: UIView!
     @IBOutlet private weak var titleViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
-    @IBOutlet private weak var footerPaddingView: InsetPaddingView!
     @IBOutlet private weak var toolbar: UIToolbar!
     @IBOutlet private weak var entryView: UIView!
     @IBOutlet private weak var playerTableView: UITableView!
@@ -185,7 +184,7 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         if smallScreen {
             self.titleViewHeightConstraint.constant = 0.0
         } else {
-            self.titleViewHeightConstraint.constant = min(120, max(minTitleViewHeight, availableHeight))
+            self.titleViewHeightConstraint.constant = min(80, max(minTitleViewHeight, availableHeight))
         }
     }
     
@@ -679,9 +678,6 @@ extension EntryViewController: UICollectionViewDelegate, UICollectionViewDataSou
             height = self.buttonSize
         }
         
-        if width < 0 {
-            print(width)
-        }
         return CGSize(width: width, height: height)
     }
     
@@ -1009,7 +1005,6 @@ extension EntryViewController {
         self.finishButton.first?.setBackgroundColor(Palette.bannerShadow)
         self.finishButton.last?.shadowSize = CGSize()
         self.finishButton.first?.setTitleColor(Palette.bannerText, for: .normal)
-        self.footerPaddingView.bannerColor = Palette.banner
         self.titleView.backgroundColor = Palette.banner
         self.toolbar.barTintColor = Palette.banner
         self.instructionContainerView.backgroundColor = Palette.banner

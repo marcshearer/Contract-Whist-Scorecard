@@ -24,7 +24,7 @@ class Themes {
                             .bold                        : (#colorLiteral(red: 0, green: 0.1469757259, blue: 0.6975850463, alpha: 1), nil) ,
                             .boldText                    : (#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), nil) ,
                             .buttonFace                  : (#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), nil) ,
-                            .buttonFaceText              : (#colorLiteral(red: 0.4989748001, green: 0.494086206, blue: 0.4981276989, alpha: 1), nil) ,
+                            .buttonFaceText              : (#colorLiteral(red: 0.1019607843, green: 0.1019607843, blue: 0.1019607843, alpha: 1), nil) ,
                             .cardBack                    : (#colorLiteral(red: 0.001431431621, green: 0.06626898795, blue: 0.3973870575, alpha: 1), nil) ,
                             .cardFace                    : (#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), nil) ,
                             .clear                       : (#colorLiteral(red: 0, green: 0, blue: 0, alpha: 0), nil) ,
@@ -48,6 +48,7 @@ class Themes {
                             .gameBannerText              : (#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), nil) ,
                             .gameBannerEmbossed          : (#colorLiteral(red: 0.968627451, green: 0.4980392157, blue: 0.4941176471, alpha: 1), nil) ,
                             .gameBannerTextContrast      : (#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), nil) ,
+                            .gameSegmentedControls       : (#colorLiteral(red: 0.9281279445, green: 0.4577305913, blue: 0.4537009001, alpha: 1), nil) ,
                             .grid                        : (#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), nil) ,
                             .halo                        : (#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil) ,
                             .haloDealer                  : (#colorLiteral(red: 0.9281869531, green: 0.457547009, blue: 0.449475646, alpha: 1), nil) ,
@@ -119,9 +120,11 @@ class Themes {
                             .banner                      : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
                             .bannerEmbossed              : (#colorLiteral(red: 0.5529411765, green: 0.1450980392, blue: 0.1254901961, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
                             .bannerShadow                : (#colorLiteral(red: 0.6901960784, green: 0.2431372549, blue: 0.2235294118, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .segmentedControls           : (#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
                             .gameBannerShadow            : (#colorLiteral(red: 0.2352941176, green: 0.4784313725, blue: 0.5529411765, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
                             .gameBanner                  : (#colorLiteral(red: 0.1968964636, green: 0.4390103817, blue: 0.5146722198, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
                             .gameBannerEmbossed          : (#colorLiteral(red: 0.1176470588, green: 0.3607843137, blue: 0.4352941176, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
+                            .gameSegmentedControls       : (#colorLiteral(red: 0.1968964636, green: 0.4390103817, blue: 0.5146722198, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1))  ,
                             .inputControl                : (#colorLiteral(red: 0.948936522, green: 0.9490727782, blue: 0.9489069581, alpha: 1), nil) ,
                             .inputControlText            : (#colorLiteral(red: 0.101947777, green: 0.1019691005, blue: 0.1019431874, alpha: 1), nil) ,
                             .inputControlPlaceholder     : (#colorLiteral(red: 0.325458765, green: 0.325510323, blue: 0.3254473805, alpha: 1), nil) ,
@@ -251,6 +254,7 @@ enum ThemeColor: String {
     case gameBannerText = "Game Banner Text"
     case gameBannerTextContrast = "Game Banner Text Contrast"
     case gameBannerEmbossed = "Game Banner Embossed"
+    case gameSegmentedControls = "Game Segmented Controls"
     case halo = "Halo"
     case haloDealer = "Halo Dealer"
     case hand = "Hand"

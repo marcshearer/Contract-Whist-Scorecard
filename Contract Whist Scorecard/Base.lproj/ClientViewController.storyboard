@@ -152,28 +152,28 @@
                                     <mask key="constraints">
                                         <exclude reference="MZt-h6-3zi"/>
                                         <exclude reference="zCm-db-ZhY"/>
+                                        <exclude reference="Bzi-e3-1sg"/>
+                                        <exclude reference="bsM-gr-gao"/>
                                         <exclude reference="BEr-bH-pnR"/>
                                         <exclude reference="Rh6-LH-D6A"/>
                                         <exclude reference="tsE-Rx-6Mv"/>
                                         <exclude reference="wWC-mc-pYp"/>
-                                        <exclude reference="Bzi-e3-1sg"/>
-                                        <exclude reference="bsM-gr-gao"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=compact">
                                     <mask key="constraints">
                                         <include reference="MZt-h6-3zi"/>
+                                        <include reference="Bzi-e3-1sg"/>
                                         <include reference="BEr-bH-pnR"/>
                                         <include reference="Rh6-LH-D6A"/>
-                                        <include reference="Bzi-e3-1sg"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=regular">
                                     <mask key="constraints">
                                         <include reference="zCm-db-ZhY"/>
+                                        <include reference="bsM-gr-gao"/>
                                         <include reference="tsE-Rx-6Mv"/>
                                         <include reference="wWC-mc-pYp"/>
-                                        <include reference="bsM-gr-gao"/>
                                     </mask>
                                 </variation>
                             </view>

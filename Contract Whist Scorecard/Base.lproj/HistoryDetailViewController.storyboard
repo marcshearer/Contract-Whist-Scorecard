@@ -59,11 +59,12 @@
                                                 <color key="textColor" name="Dark Highlight Text"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xcz-H4-UE0" customClass="AngledButton" customModule="Whist_2" customModuleProvider="target">
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xcz-H4-UE0" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                                 <rect key="frame" x="287" y="7" width="80" height="26"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="80" id="4Qd-AT-98q"/>
                                                 </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <state key="normal" title="Update">
                                                     <color key="titleColor" name="Shape Fill Text"/>
                                                 </state>

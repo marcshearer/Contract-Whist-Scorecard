@@ -105,10 +105,10 @@ extension ConfirmCountViewController {
     /** _Note that this code was generated as part of the move to themed colors_ */
 
     private func defaultViewColors() {
-        self.cancelButton.backgroundColor = Palette.roomInterior
-        self.cancelButton.setTitleColor(Palette.roomInteriorText, for: .normal)
-        self.confirmButton.backgroundColor = Palette.roomInterior
-        self.confirmButton.setTitleColor(Palette.roomInteriorText, for: .normal)
+        self.cancelButton.backgroundColor = Palette.background
+        self.cancelButton.setTitleColor(Palette.text, for: .normal)
+        self.confirmButton.backgroundColor = Palette.background
+        self.confirmButton.setTitleColor(Palette.text, for: .normal)
         self.horizontalSeparator.backgroundColor = Palette.separator
         self.labelMessage.textColor = Palette.highlightText
         self.labelTitle.backgroundColor = Palette.roomInterior

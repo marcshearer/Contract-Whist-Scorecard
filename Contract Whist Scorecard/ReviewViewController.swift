@@ -162,8 +162,8 @@ class ReviewViewController: ScorecardViewController, UITableViewDataSource, UITa
     }
     
     private func setupTitle() {
-        self.roundTitleLabel.textColor = UIColor.white
-        self.roundTitleLabel.attributedText = Scorecard.game.roundTitle(round, rankColor: Palette.roomInteriorText)
+        self.roundTitleLabel.textColor = Palette.bannerText
+        self.roundTitleLabel.attributedText = Scorecard.game.roundTitle(round, rankColor: Palette.bannerText)
         let totalRemaining = Scorecard.game.remaining(playerNumber: 0, round: self.round, mode: Mode.bid)
         self.overUnderLabel.text = "\(abs(Int64(totalRemaining))) \(totalRemaining >= 0 ? "under" : "over")"
         self.overUnderLabel.textColor = (totalRemaining == 0 ? Palette.contractEqual : (totalRemaining > 0 ? Palette.contractUnder : Palette.contractOver))
@@ -212,7 +212,7 @@ class ReviewViewController: ScorecardViewController, UITableViewDataSource, UITa
             self.titleHeight = (ScorecardUI.landscapePhone() ? 35.0 : 44.0)
             self.roundTitleLabel.isHidden = false
             self.overUnderLabel.isHidden = false
-            self.titleView.backgroundColor = Palette.roomInterior
+            self.titleView.backgroundColor = Palette.banner
         }
         self.titleViewHeight.constant = self.titleHeight
         let useableHeight = totalHeight - 30.0 - titleHeight
@@ -360,16 +360,16 @@ extension ReviewViewController {
 
     private func defaultViewColors() {
 
-        self.bannerPaddingView.bannerColor = Palette.roomInterior
+        self.bannerPaddingView.bannerColor = Palette.banner
         self.bottomLineView.backgroundColor = Palette.text
         self.dummyLabel.textColor = Palette.darkHighlightText
         self.finishButton.setTitleColor(Palette.darkHighlightText, for: .normal)
         self.leftLineView.backgroundColor = Palette.text
-        self.overUnderLabel.textColor = Palette.roomInteriorText
+        self.overUnderLabel.textColor = Palette.bannerText
         self.rightLineView.backgroundColor = Palette.text
-        self.roundTitleLabel.textColor = Palette.roomInteriorText
+        self.roundTitleLabel.textColor = Palette.bannerText
         self.tableTopView.backgroundColor = Palette.background
-        self.titlePadderView.backgroundColor = Palette.roomInterior
+        self.titlePadderView.backgroundColor = Palette.banner
         self.topLineView.backgroundColor = Palette.text
         self.view.backgroundColor = Palette.background
     }
@@ -377,13 +377,13 @@ extension ReviewViewController {
     private func defaultCellColors(cell: ReviewTableViewCell) {
         switch cell.reuseIdentifier {
         case "Hand Cell 1":
-            cell.label.textColor = Palette.roomInteriorText
+            cell.label.textColor = Palette.text
         case "Hand Cell 2":
-            cell.label.textColor = Palette.roomInteriorText
+            cell.label.textColor = Palette.text
         case "Hand Cell 3":
-            cell.label.textColor = Palette.roomInteriorText
+            cell.label.textColor = Palette.text
         case "Hand Cell 4":
-            cell.label.textColor = Palette.roomInteriorText
+            cell.label.textColor = Palette.text
         default:
             break
         }

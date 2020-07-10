@@ -298,31 +298,31 @@
                         <viewLayoutGuide key="safeArea" id="wSn-mE-2UN"/>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="iqI-U6-AGc"/>
                                 <exclude reference="LKM-wP-jRA"/>
                                 <exclude reference="gZf-j7-f3B"/>
                                 <exclude reference="rDl-W6-qPg"/>
                                 <exclude reference="tur-6Y-zoB"/>
                                 <exclude reference="xDC-jN-1mt"/>
-                                <exclude reference="7bt-jT-hSz"/>
-                                <exclude reference="DNq-Sb-Jb0"/>
-                                <exclude reference="cC9-ZC-2d8"/>
-                                <exclude reference="iqI-U6-AGc"/>
                                 <exclude reference="KZ9-xa-u4u"/>
                                 <exclude reference="XcT-zv-E3Z"/>
                                 <exclude reference="eyy-cg-VrQ"/>
                                 <exclude reference="vOh-uC-3Bq"/>
                                 <exclude reference="xs9-hc-6ab"/>
+                                <exclude reference="7bt-jT-hSz"/>
+                                <exclude reference="DNq-Sb-Jb0"/>
+                                <exclude reference="cC9-ZC-2d8"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=compact">
                             <mask key="constraints">
+                                <include reference="iqI-U6-AGc"/>
                                 <include reference="gZf-j7-f3B"/>
                                 <include reference="xDC-jN-1mt"/>
-                                <include reference="7bt-jT-hSz"/>
-                                <include reference="cC9-ZC-2d8"/>
-                                <include reference="iqI-U6-AGc"/>
                                 <include reference="vOh-uC-3Bq"/>
                                 <include reference="xs9-hc-6ab"/>
+                                <include reference="7bt-jT-hSz"/>
+                                <include reference="cC9-ZC-2d8"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
@@ -330,10 +330,10 @@
                                 <include reference="LKM-wP-jRA"/>
                                 <include reference="rDl-W6-qPg"/>
                                 <include reference="tur-6Y-zoB"/>
-                                <include reference="DNq-Sb-Jb0"/>
                                 <include reference="KZ9-xa-u4u"/>
                                 <include reference="XcT-zv-E3Z"/>
                                 <include reference="eyy-cg-VrQ"/>
+                                <include reference="DNq-Sb-Jb0"/>
                             </mask>
                         </variation>
                         <connections>

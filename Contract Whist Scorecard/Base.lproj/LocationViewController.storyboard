@@ -11,12 +11,12 @@
         <!--Location-->
         <scene sceneID="GHJ-ri-wml">
             <objects>
-                <viewController storyboardIdentifier="LocationViewController" title="Location" useStoryboardIdentifierAsRestorationIdentifier="YES" id="IhQ-um-kHy" userLabel="Location" customClass="LocationViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LocationViewController" title="Location" useStoryboardIdentifierAsRestorationIdentifier="YES" id="IhQ-um-kHy" userLabel="Location" customClass="LocationViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Od0-bd-l1r">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="syy-j8-mMN" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="syy-j8-mMN" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="0.0"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
@@ -24,7 +24,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="smV-Xs-9Xb" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="smV-Xs-9Xb" customClass="NavigationBar" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" name="Banner Text"/>
@@ -32,7 +32,7 @@
                                 <items>
                                     <navigationItem title="Location" id="pNH-3X-XqU">
                                         <barButtonItem key="leftBarButtonItem" id="EEw-7m-r04">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="3Rg-nf-UEe" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="3Rg-nf-UEe" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
                                                 <rect key="frame" x="16" y="0.0" width="100" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" title="Cancel" image="back">
@@ -44,7 +44,7 @@
                                             </button>
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" id="Uie-mR-UhK">
-                                            <button key="customView" hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Zb2-G3-4jd" customClass="RightClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <button key="customView" hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Zb2-G3-4jd" customClass="RightClearButton" customModule="Whist_2" customModuleProvider="target">
                                                 <rect key="frame" x="242" y="0.0" width="117" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="ContinueButton"/>
@@ -94,7 +94,7 @@
                                 </constraints>
                                 <color key="separatorColor" name="Background"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Location Table Cell" id="G6K-I8-6o4" customClass="LocationTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Location Table Cell" id="G6K-I8-6o4" customClass="LocationTableCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="G6K-I8-6o4" id="El6-2N-yPd">
@@ -150,15 +150,15 @@
                                 <rect key="frame" x="169" y="315" width="37" height="37"/>
                                 <color key="color" name="Text"/>
                             </activityIndicatorView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8qh-o6-LGR" customClass="BannerContinuation" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="104" width="375" height="60"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8qh-o6-LGR" customClass="BannerContinuation" customModule="Whist_2" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="104" width="375" height="30"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="psP-Q8-t72"/>
+                                    <constraint firstAttribute="height" constant="30" id="psP-Q8-t72"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="shapeType">
-                                        <integer key="value" value="2"/>
+                                        <integer key="value" value="0"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
                                         <color key="value" name="Table Top"/>

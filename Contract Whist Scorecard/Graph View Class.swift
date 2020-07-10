@@ -124,7 +124,7 @@ class GraphView: UIView {
         let width:CGFloat = self.frame.width
         var leftMargin: CGFloat = 4.0 + (8.0 * CGFloat(leftMaxLen))
         let rightMargin: CGFloat = 20.0 + (8.0 * CGFloat(rightMaxLen))
-        let topBorder:CGFloat = (attributedTitle == nil ? 5 : 70)
+        let topBorder:CGFloat = (attributedTitle == nil ? 5 : 53)
         let bottomBorder:CGFloat = max(8.0, 4.0 + (8.0 * CGFloat(bottomMaxLen)))
         let graphHeight = height - topBorder - bottomBorder
         var maxValue: CGFloat!
@@ -297,7 +297,7 @@ class GraphView: UIView {
         }
         
         if self.attributedTitle != nil {
-            let label = UILabel(frame: CGRect(x: leftMargin + 40, y: 10, width: width - leftMargin - rightMargin - 40, height: topBorder - 30))
+            let label = UILabel(frame: CGRect(x: leftMargin + 50, y: 10, width: width - leftMargin - rightMargin - 50, height: topBorder - 30))
             label.attributedText = self.attributedTitle
             label.textAlignment = .center
             label.adjustsFontSizeToFitWidth = true

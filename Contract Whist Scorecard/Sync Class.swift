@@ -147,9 +147,7 @@ class Sync {
             self.delegate = nil
         }
     }
-    
-    // TODO Engineer something to prevent sync happening while temporary playerUUIDs are in situ unless specially authorised
-    
+        
     public func synchronise(syncMode: SyncMode = .syncAll, specificPlayerUUIDs: [String] = [], specificEmail: String! = nil, timeout: Double! = 30.0, waitFinish: Bool, okToSyncWithTemporaryPlayerUUIDs: Bool = false) -> Bool {
         // Reset state
         errors = 0

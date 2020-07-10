@@ -396,9 +396,13 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
                 let sourceView = context?["sourceView"] as? UIView,
                 let confirmText = context?["confirmText"] as? String,
                 let cancelText = context?["cancelText"] as? String,
-                let backgroundColor = context?["backgroundColor"] as? UIColor {
+                let backgroundColor = context?["backgroundColor"] as? UIColor,
+                let bannerColor = context?["bannerColor"] as? UIColor,
+                let bannerTextColor = context?["bannerTextColor"] as? UIColor,
+                let buttonColor = context?["buttonColor"] as? UIColor,
+                let buttonTextColor = context?["buttonTextColor"] as? UIColor {
                 
-                confirmPlayedViewController = ConfirmPlayedViewController.show(from: parentViewController, appController: self, title: title, content: label, sourceView: sourceView, confirmText: confirmText, cancelText: cancelText, offsets: (0.5, nil), backgroundColor: backgroundColor,
+                confirmPlayedViewController = ConfirmPlayedViewController.show(from: parentViewController, appController: self, title: title, content: label, sourceView: sourceView, confirmText: confirmText, cancelText: cancelText, offsets: (0.5, nil), backgroundColor: backgroundColor, bannerColor: bannerColor, bannerTextColor: bannerTextColor, buttonColor: buttonColor, buttonTextColor: buttonTextColor,
                     confirmHandler: {
                         completion?(["confirm" : true])
                     },

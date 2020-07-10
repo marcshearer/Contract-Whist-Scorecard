@@ -317,7 +317,7 @@ class History {
     static private func getWinStreakParticipants(playerUUID: String) -> (longestStreak: [ParticipantMO], currentStreakLength: Int) {
         var longestStreak: [ParticipantMO] = []
         var currentStreak: [ParticipantMO] = []
-        let participants = History.getParticipantRecordsForPlayer(playerUUID: playerUUID)
+        let participants = History.getParticipantRecordsForPlayer(playerUUID: playerUUID, includeBF: false, includeExcluded: false)
         if participants.count > 0 {
             for participantMO in participants {
                 if participantMO.place == 1 {

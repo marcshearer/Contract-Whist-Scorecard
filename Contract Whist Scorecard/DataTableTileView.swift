@@ -259,8 +259,8 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
                     self.showPlayerDetail(playerUUID: playerUUID)
                 }
             case .highScores:
-                if let participantMO = data.value(forKey: "participantMO") as? ParticipantMO, let playerUUID = data.value(forKey: "playerUUID") as? String {
-                    self.parentDashboardView?.drillHighScore(from: self.parentDashboardView!.parentViewController!, sourceView: self, type: self.highScoreType, occurrence: indexPath.row - (self.headings ? 1 : 0), detailParticipantMO: participantMO, playerUUID: playerUUID)
+                if let playerUUID = data.value(forKey: "playerUUID") as? String {
+                    self.parentDashboardView?.drillHighScore(from: self.parentDashboardView!.parentViewController!, sourceView: self, type: self.highScoreType, occurrence: indexPath.row - (self.headings ? 1 : 0), detailParticipantMO: nil, playerUUID: playerUUID)
                 }
             }
         }

@@ -265,6 +265,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
+        
         self.rotated = true
         Scorecard.shared.reCenterPopup(self)
         self.view.setNeedsLayout()
@@ -272,27 +273,31 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        // Update sizes to layout constraints immediately to aid calculations
-        self.view.layoutIfNeeded()
         
-        self.showThisPlayer()
-        
-        if self.rotated && (self.playerSelectionViewHeightConstraint.constant != 0 ||
-            self.playerSelectionViewWidthConstraint.constant != 0) {
-            // Resize player selection
-            self.showPlayerSelection()
-        }
+        self.ignoringGameBanners {
+            
+            // Update sizes to layout constraints immediately to aid calculations
+            self.view.layoutIfNeeded()
+            
+            self.showThisPlayer()
+            
+            if self.rotated && (self.playerSelectionViewHeightConstraint.constant != 0 ||
+                self.playerSelectionViewWidthConstraint.constant != 0) {
+                // Resize player selection
+                self.showPlayerSelection()
+            }
 
-        if rotated {
-            self.hostCollectionView.reloadData()
+            if rotated {
+                self.hostCollectionView.reloadData()
+            }
+            
+            if self.firstTime || self.rotated {
+                self.rotated = false
+                self.peerReloadData()
+            }
+            
+            self.layoutControls()
         }
-        
-        if self.firstTime || self.rotated {
-            self.rotated = false
-            self.peerReloadData()
-        }
-        
-        self.layoutControls()
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
@@ -627,7 +632,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         case hostCollection:
             let hostCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Host Cell", for: indexPath) as! HostCollectionViewCell
             
-            hostCell.button.setProportions(top: 12, image: 40, imageBottom: 3, title: 10, titleBottom: 1, message: 15, bottom: 5)
+            hostCell.button.setProportions(top: 10, image: 40, imageBottom: 2, title: 10, titleBottom: 1, message: 18, bottom: 10)
             hostCell.button.delegate = self
             hostCell.button.tag = indexPath.row
             self.defaultCellColors(cell: hostCell)
@@ -648,7 +653,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             case robotItem:
                 hostCell.button.set(image: UIImage(systemName: "desktopcomputer"))
                 hostCell.button.set(title: "Computer")
-                hostCell.button.set(message: "Play a game\nagainst the computer")
+                hostCell.button.set(message: "Play a game\nagainst\nthe computer")
             default:
                 break
             }

@@ -139,16 +139,16 @@ class ShadowButton: UIButton {
         self.addSubview(self.titleOuterLabel!)
         Constraint.anchor(view: self, control: self.titleOuterLabel!)
         
-        self.titleInnerLabel = UILabel(frame: self.titleOuterLabel!.frame.inset(by: UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)))
+        self.titleInnerLabel = UILabel(frame: CGRect(origin: CGPoint(x: 5, y: 1),
+                    size: CGSize(width: self.frame.width - 10, height: self.frame.height - 2)))
         self.titleInnerLabel?.backgroundColor = UIColor.clear
         self.titleInnerLabel?.textColor = self.titleOuterLabel?.textColor
         self.titleInnerLabel?.text = title
         self.titleInnerLabel?.textAlignment = .center
-        // self.titleInnerLabel?.font = self.titleLabel!.font
+        self.titleInnerLabel?.font = self.titleLabel!.font
         self.titleInnerLabel?.adjustsFontSizeToFitWidth = true
-        
         self.titleOuterLabel?.addSubview(self.titleInnerLabel!)
-        Constraint.anchor(view: self.titleOuterLabel!, control: self.titleInnerLabel!, constant: 5)
+
 
         self.backgroundColor = UIColor.clear
         self.titleLabel?.removeFromSuperview()

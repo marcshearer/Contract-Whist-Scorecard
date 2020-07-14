@@ -138,7 +138,7 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
             self.getInitialState()
         }
         
-        self.setForm(!firstTime)
+        self.setForm(true)
         
         for _ in 1...Scorecard.game.roundCards(Scorecard.game.selectedRound) + 1 {
             self.scoreCell.append(nil)

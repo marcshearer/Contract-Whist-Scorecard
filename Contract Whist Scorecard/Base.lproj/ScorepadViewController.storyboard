@@ -411,21 +411,53 @@
                                                                                             <constraint firstAttribute="height" constant="3" id="0o7-g1-wJ8"/>
                                                                                         </constraints>
                                                                                     </view>
-                                                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BodyLabel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BXX-PT-3Zr">
+                                                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ueU-30-CVp">
                                                                                         <rect key="frame" x="0.0" y="3" width="47" height="47"/>
-                                                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                                        <nil key="textColor"/>
-                                                                                        <nil key="highlightedColor"/>
-                                                                                    </label>
+                                                                                        <subviews>
+                                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="BodyLabel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BXX-PT-3Zr">
+                                                                                                <rect key="frame" x="0.0" y="0.0" width="47" height="47"/>
+                                                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                                                <nil key="textColor"/>
+                                                                                                <nil key="highlightedColor"/>
+                                                                                            </label>
+                                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8ff-7z-GQs" userLabel="Rank Label">
+                                                                                                <rect key="frame" x="0.0" y="0.0" width="17.5" height="47"/>
+                                                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                                                <nil key="textColor"/>
+                                                                                                <nil key="highlightedColor"/>
+                                                                                            </label>
+                                                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZFZ-RK-LY3" userLabel="Suit Label">
+                                                                                                <rect key="frame" x="18.5" y="0.0" width="24.5" height="47"/>
+                                                                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                                                                <nil key="textColor"/>
+                                                                                                <nil key="highlightedColor"/>
+                                                                                            </label>
+                                                                                        </subviews>
+                                                                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                                                        <constraints>
+                                                                                            <constraint firstAttribute="trailing" secondItem="BXX-PT-3Zr" secondAttribute="trailing" id="6fy-Kf-8NL"/>
+                                                                                            <constraint firstAttribute="bottom" secondItem="ZFZ-RK-LY3" secondAttribute="bottom" id="9wD-ge-se0"/>
+                                                                                            <constraint firstItem="ZFZ-RK-LY3" firstAttribute="leading" secondItem="8ff-7z-GQs" secondAttribute="trailing" constant="1" id="Gr2-q0-Vjp"/>
+                                                                                            <constraint firstItem="ZFZ-RK-LY3" firstAttribute="top" secondItem="ueU-30-CVp" secondAttribute="top" id="IG8-Cd-UJ3"/>
+                                                                                            <constraint firstAttribute="bottom" secondItem="BXX-PT-3Zr" secondAttribute="bottom" id="MOW-KY-XPF"/>
+                                                                                            <constraint firstAttribute="bottom" secondItem="8ff-7z-GQs" secondAttribute="bottom" id="MYW-mH-jDy"/>
+                                                                                            <constraint firstItem="8ff-7z-GQs" firstAttribute="top" secondItem="ueU-30-CVp" secondAttribute="top" id="fCj-T4-RCl"/>
+                                                                                            <constraint firstItem="8ff-7z-GQs" firstAttribute="leading" secondItem="ueU-30-CVp" secondAttribute="leading" id="j9j-JC-RHG"/>
+                                                                                            <constraint firstAttribute="trailing" secondItem="ZFZ-RK-LY3" secondAttribute="trailing" constant="4" id="n5f-UY-zDc"/>
+                                                                                            <constraint firstItem="8ff-7z-GQs" firstAttribute="width" secondItem="ueU-30-CVp" secondAttribute="width" multiplier="1:2" constant="-6" id="tL2-du-6hn"/>
+                                                                                            <constraint firstItem="BXX-PT-3Zr" firstAttribute="leading" secondItem="ueU-30-CVp" secondAttribute="leading" id="tfm-Ah-Dvw"/>
+                                                                                            <constraint firstItem="BXX-PT-3Zr" firstAttribute="top" secondItem="ueU-30-CVp" secondAttribute="top" id="u5E-8m-LtC"/>
+                                                                                        </constraints>
+                                                                                    </view>
                                                                                 </subviews>
                                                                                 <constraints>
-                                                                                    <constraint firstItem="BXX-PT-3Zr" firstAttribute="top" secondItem="37L-NB-jCF" secondAttribute="bottom" id="5lA-32-MRo"/>
+                                                                                    <constraint firstItem="ueU-30-CVp" firstAttribute="leading" secondItem="En7-GC-jDI" secondAttribute="leading" id="OnY-Xv-ggu"/>
                                                                                     <constraint firstItem="37L-NB-jCF" firstAttribute="leading" secondItem="En7-GC-jDI" secondAttribute="leading" id="QAh-4Q-0lh"/>
-                                                                                    <constraint firstItem="BXX-PT-3Zr" firstAttribute="leading" secondItem="En7-GC-jDI" secondAttribute="leading" id="WY6-7d-k1e"/>
-                                                                                    <constraint firstAttribute="bottom" secondItem="BXX-PT-3Zr" secondAttribute="bottom" id="dy7-H8-2OZ"/>
+                                                                                    <constraint firstItem="ueU-30-CVp" firstAttribute="top" secondItem="37L-NB-jCF" secondAttribute="bottom" id="TSW-25-L5N"/>
+                                                                                    <constraint firstAttribute="bottom" secondItem="ueU-30-CVp" secondAttribute="bottom" id="VaR-cg-gPV"/>
                                                                                     <constraint firstItem="37L-NB-jCF" firstAttribute="top" secondItem="En7-GC-jDI" secondAttribute="top" id="jOf-xR-RD0"/>
                                                                                     <constraint firstAttribute="trailing" secondItem="37L-NB-jCF" secondAttribute="trailing" id="ky3-QH-Tet"/>
-                                                                                    <constraint firstAttribute="trailing" secondItem="BXX-PT-3Zr" secondAttribute="trailing" id="uSV-Zv-VUh"/>
+                                                                                    <constraint firstAttribute="trailing" secondItem="ueU-30-CVp" secondAttribute="trailing" id="oPB-QJ-42B"/>
                                                                                 </constraints>
                                                                             </stackView>
                                                                         </subviews>
@@ -452,6 +484,8 @@
                                                                 <outlet property="scorepadCellLabel" destination="BXX-PT-3Zr" id="zww-Sg-9bC"/>
                                                                 <outlet property="scorepadLeftLine" destination="ejQ-iq-y0f" id="ZbY-H2-uAP"/>
                                                                 <outlet property="scorepadLeftLineWeight" destination="Zen-Tv-ScO" id="CJ6-8i-DWX"/>
+                                                                <outlet property="scorepadRankLabel" destination="8ff-7z-GQs" id="boQ-Ij-VJS"/>
+                                                                <outlet property="scorepadSuitLabel" destination="ZFZ-RK-LY3" id="tjI-pa-XjV"/>
                                                                 <outlet property="scorepadTopLine" destination="37L-NB-jCF" id="yIR-mX-gnZ"/>
                                                                 <outlet property="scorepadTopLineWeight" destination="0o7-g1-wJ8" id="dRq-7U-wFN"/>
                                                             </connections>

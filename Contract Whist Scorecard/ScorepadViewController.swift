@@ -865,7 +865,11 @@ class ScorepadViewController: ScorecardViewController,
             
             if column == 0 {
                 Palette.bannerStyle(bodyCell.scorepadCellLabel)
-                bodyCell.scorepadCellLabel.attributedText = Scorecard.game.roundTitle(round, rankColor: Palette.emphasisText, font: bodyCell.scorepadCellLabel.font, noTrumpScale: 0.9)
+
+                bodyCell.scorepadRankLabel.text = "\(round)"
+                let suit = Scorecard.game.roundSuit(round)
+                bodyCell.scorepadSuitLabel.attributedText = suit.toAttributedString(font: bodyCell.scorepadCellLabel.font, noTrumpScale: 0.8)
+                bodyCell.scorepadCellLabel.text = ""
                 bodyCell.scorepadLeftLineWeight.constant = 0
                 bodyCell.scorepadCellLabel.accessibilityIdentifier = ""
             } else {
@@ -881,6 +885,8 @@ class ScorepadViewController: ScorecardViewController,
                     self.updateBodyCell(cell: bodyCell, round: round, playerNumber: player, mode: Mode.made)
                     bodyCell.scorepadCellLabel.accessibilityIdentifier = "player\(player)round\(round)"
                 }
+                bodyCell.scorepadRankLabel?.text = ""
+                bodyCell.scorepadSuitLabel?.text = ""
             }
            
             bodyCell.scorepadTopLineWeight.constant = thinLineWeight
@@ -929,7 +935,7 @@ class ScorepadViewController: ScorecardViewController,
             }
         }
         if self.scorepadMode == .scoring {
-            self.controllerDelegate?.didProceed(context: ["reeditMode" : true])
+            self.controllerDelegate?.didProceed(context: ["reeditMode" : Scorecard.game.roundComplete(Scorecard.game.selectedRound)])
             rotated = false
         }
     }
@@ -1017,6 +1023,7 @@ extension ScorepadViewController {
         case "Body Collection Text Cell":
             cell.scorepadLeftLine.backgroundColor = Palette.grid
             cell.scorepadTopLine.backgroundColor = Palette.grid
+            cell.scorepadRankLabel.textColor = Palette.bannerText
         case "Footer Collection Cell":
             cell.scorepadFooterPadding.backgroundColor = Palette.total
             cell.scorepadLeftLine.backgroundColor = Palette.total

@@ -11,7 +11,7 @@
         <!--Hand-->
         <scene sceneID="WTM-PP-dsN">
             <objects>
-                <viewController storyboardIdentifier="HandViewController" id="3xt-Vb-zbH" userLabel="Hand" customClass="HandViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="HandViewController" id="3xt-Vb-zbH" userLabel="Hand" customClass="HandViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="QxM-M6-dW4">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -82,7 +82,7 @@
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="50" id="Png-p5-HV9"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" type="system" weight="thin" pointSize="28"/>
+                                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="28"/>
                                                 <color key="textColor" name="Hand Text"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -274,7 +274,7 @@
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Bid Collection Cell" id="Ehc-94-c19" customClass="BidCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Bid Collection Cell" id="Ehc-94-c19" customClass="BidCollectionCell" customModule="Whist_2" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -357,7 +357,7 @@
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Played Card Collection Cell" id="gXA-kz-uli" customClass="PlayedCardCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Played Card Collection Cell" id="gXA-kz-uli" customClass="PlayedCardCollectionCell" customModule="Whist_2" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="0.0" width="80" height="150"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -480,7 +480,7 @@
                                         <rect key="frame" x="8" y="8" width="398" height="484"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Suit Table Cell" id="EEI-c7-Gs6" customClass="SuitTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Suit Table Cell" id="EEI-c7-Gs6" customClass="SuitTableCell" customModule="Whist_2" customModuleProvider="target">
                                                 <rect key="frame" x="0.0" y="28" width="398" height="44"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="EEI-c7-Gs6" id="xgO-vx-mkY">
@@ -497,7 +497,7 @@
                                                                 <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                             </collectionViewFlowLayout>
                                                             <cells>
-                                                                <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Card Collection Cell" id="F4P-Gb-w1G" customClass="CardCollectionCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                                                <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Card Collection Cell" id="F4P-Gb-w1G" customClass="CardCollectionCell" customModule="Whist_2" customModuleProvider="target">
                                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">

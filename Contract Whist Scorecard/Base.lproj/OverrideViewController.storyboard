@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina4_0" orientation="portrait" appearance="light"/>
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
@@ -13,59 +13,64 @@
             <objects>
                 <viewController storyboardIdentifier="OverrideViewController" title="Override Settings" useStoryboardIdentifierAsRestorationIdentifier="YES" id="oF9-Yc-WbQ" customClass="OverrideViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hOp-TY-evR">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F6E-8M-LIy" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="0.0"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
                                         <color key="value" name="Banner"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BMC-qc-qAk" customClass="NavigationBar" customModule="Whist_2" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                <textAttributes key="titleTextAttributes">
-                                    <color key="textColor" name="Game Banner Text"/>
-                                </textAttributes>
-                                <items>
-                                    <navigationItem title="Override" id="dVn-7M-hOl">
-                                        <barButtonItem key="leftBarButtonItem" id="tZK-qD-Ccu">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="kCS-dn-rxk">
-                                                <rect key="frame" x="16" y="0.0" width="100" height="44"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="18"/>
-                                                <state key="normal" title="Cancel" image="back"/>
-                                                <connections>
-                                                    <action selector="revertPressed:" destination="oF9-Yc-WbQ" eventType="touchUpInside" id="gZ2-Ze-2yS"/>
-                                                </connections>
-                                            </button>
-                                        </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" id="R3K-Sy-Bna">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="5eL-j1-NvT" customClass="RightClearButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="195" y="0.0" width="109" height="44"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="18"/>
-                                                <state key="normal" title="Confirm" image="forward"/>
-                                                <connections>
-                                                    <action selector="confirmPressed:" destination="oF9-Yc-WbQ" eventType="touchUpInside" id="kHl-8z-AbB"/>
-                                                </connections>
-                                            </button>
-                                        </barButtonItem>
-                                    </navigationItem>
-                                </items>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
-                                        <color key="value" name="Banner"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </navigationBar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cW4-Ly-Y8f">
+                                <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0hh-nd-zGO">
+                                        <rect key="frame" x="12" y="11" width="85" height="22"/>
+                                        <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="18"/>
+                                        <state key="normal" title="Cancel" image="back"/>
+                                        <connections>
+                                            <action selector="revertPressed:" destination="oF9-Yc-WbQ" eventType="touchUpInside" id="pgb-Jk-ZRA"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Override" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K2m-Cz-GZn">
+                                        <rect key="frame" x="99" y="5.5" width="216" height="33.5"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="28"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7K3-zC-iO6" customClass="RightClearButton" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="317" y="11" width="85" height="22"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="85" id="yPb-Ll-XRC"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="18"/>
+                                        <state key="normal" title="Confirm" image="forward"/>
+                                        <connections>
+                                            <action selector="confirmPressed:" destination="oF9-Yc-WbQ" eventType="touchUpInside" id="xaj-w7-AS1"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" name="Clear"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="7K3-zC-iO6" secondAttribute="trailing" constant="12" id="3Sv-OB-Dp2"/>
+                                    <constraint firstItem="K2m-Cz-GZn" firstAttribute="centerY" secondItem="cW4-Ly-Y8f" secondAttribute="centerY" id="EgD-ej-RUY"/>
+                                    <constraint firstItem="0hh-nd-zGO" firstAttribute="centerY" secondItem="cW4-Ly-Y8f" secondAttribute="centerY" id="IER-KW-9VI"/>
+                                    <constraint firstAttribute="height" constant="44" id="JvQ-KC-ePW"/>
+                                    <constraint firstItem="0hh-nd-zGO" firstAttribute="leading" secondItem="cW4-Ly-Y8f" secondAttribute="leading" constant="12" id="ZTm-kX-fkK"/>
+                                    <constraint firstItem="7K3-zC-iO6" firstAttribute="width" secondItem="0hh-nd-zGO" secondAttribute="width" id="b9g-gt-djN"/>
+                                    <constraint firstItem="7K3-zC-iO6" firstAttribute="leading" secondItem="K2m-Cz-GZn" secondAttribute="trailing" constant="2" id="dEf-q8-4ff"/>
+                                    <constraint firstItem="7K3-zC-iO6" firstAttribute="centerY" secondItem="cW4-Ly-Y8f" secondAttribute="centerY" id="tZQ-35-NGT"/>
+                                    <constraint firstItem="K2m-Cz-GZn" firstAttribute="leading" secondItem="0hh-nd-zGO" secondAttribute="trailing" constant="2" id="xnp-9a-ewl"/>
+                                </constraints>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HoR-O2-RaM" userLabel="Instruction View">
-                                <rect key="frame" x="0.0" y="44" width="320" height="120"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="150.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Changes will only last for one session and will be reset back to your choices in Settings automatically" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HiB-TH-SwI">
-                                        <rect key="frame" x="24" y="16" width="272" height="100"/>
+                                        <rect key="frame" x="24" y="37" width="366" height="61"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" name="Banner Text"/>
@@ -74,42 +79,25 @@
                                 </subviews>
                                 <color key="backgroundColor" name="Banner"/>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="HiB-TH-SwI" secondAttribute="bottom" constant="4" id="08I-u9-DBk"/>
                                     <constraint firstItem="HiB-TH-SwI" firstAttribute="leading" secondItem="HoR-O2-RaM" secondAttribute="leading" constant="24" id="6gM-fB-0mz"/>
                                     <constraint firstAttribute="trailing" secondItem="HiB-TH-SwI" secondAttribute="trailing" constant="24" id="R72-5A-UCl"/>
-                                    <constraint firstAttribute="height" constant="120" id="Tx6-g1-qci"/>
-                                    <constraint firstItem="HiB-TH-SwI" firstAttribute="top" secondItem="HoR-O2-RaM" secondAttribute="top" constant="16" id="iX6-eD-xy6"/>
+                                    <constraint firstItem="HiB-TH-SwI" firstAttribute="centerY" secondItem="HoR-O2-RaM" secondAttribute="centerY" constant="-8" id="nfF-1g-IGR"/>
                                 </constraints>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R7X-Kw-3i1" customClass="BannerContinuation" customModule="Whist_2" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="164" width="320" height="60"/>
-                                <color key="backgroundColor" name="Clear"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="jap-Rq-z48"/>
-                                </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="shapeType">
-                                        <integer key="value" value="0"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                        <color key="value" name="Banner Text"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="DkQ-EB-XGS">
-                                <rect key="frame" x="0.0" y="254" width="320" height="314"/>
+                                <rect key="frame" x="0.0" y="238.5" width="414" height="623.5"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <color key="separatorColor" name="Clear"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Save" rowHeight="70" id="CAz-VF-S03" customClass="OverrideTableCell" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="320" height="70"/>
+                                        <rect key="frame" x="0.0" y="28" width="414" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CAz-VF-S03" id="Fwz-xt-iyC">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="70"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="zcV-YA-Wrj" userLabel="Exclude Selection" customClass="SegmentedControl" customModule="Whist_2" customModuleProvider="target">
-                                                    <rect key="frame" x="35" y="34.5" width="250" height="32"/>
+                                                    <rect key="frame" x="82" y="34.5" width="250" height="32"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="250" id="dcU-bX-JC9"/>
                                                     </constraints>
@@ -119,14 +107,14 @@
                                                     </segments>
                                                 </segmentedControl>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Include this game in ..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mui-bc-SeG">
-                                                    <rect key="frame" x="30" y="9.5" width="260" height="21"/>
+                                                    <rect key="frame" x="30" y="4.5" width="354" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" name="Text"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="mui-bc-SeG" firstAttribute="centerY" secondItem="Fwz-xt-iyC" secondAttribute="centerY" constant="-15" id="73h-lp-6YY"/>
+                                                <constraint firstItem="mui-bc-SeG" firstAttribute="centerY" secondItem="Fwz-xt-iyC" secondAttribute="centerY" constant="-20" id="73h-lp-6YY"/>
                                                 <constraint firstAttribute="trailing" secondItem="mui-bc-SeG" secondAttribute="trailing" constant="30" id="7V1-Ud-qOh"/>
                                                 <constraint firstItem="zcV-YA-Wrj" firstAttribute="centerX" secondItem="Fwz-xt-iyC" secondAttribute="centerX" id="Hjl-Jh-Jw3"/>
                                                 <constraint firstItem="zcV-YA-Wrj" firstAttribute="centerY" secondItem="Fwz-xt-iyC" secondAttribute="centerY" constant="15" id="Nq5-rH-Se4"/>
@@ -140,14 +128,14 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Sub Heading" rowHeight="44" id="bKB-gB-NhW" customClass="OverrideTableCell" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="98" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="98" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="bKB-gB-NhW" id="Yae-On-XCH">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pEP-dX-cgh">
-                                                    <rect key="frame" x="45" y="33" width="230" height="0.0"/>
+                                                    <rect key="frame" x="50" y="33" width="314" height="0.0"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" name="Text"/>
                                                     <nil key="highlightedColor"/>
@@ -165,14 +153,14 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cards" rowHeight="76" id="gBa-sa-EJM" customClass="OverrideTableCell" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="142" width="320" height="76"/>
+                                        <rect key="frame" x="0.0" y="142" width="414" height="76"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="gBa-sa-EJM" id="pNU-Yp-XU9">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="76"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="76"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Start:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Ezv-W2-1Of">
-                                                    <rect key="frame" x="45" y="28" width="42.5" height="20.5"/>
+                                                    <rect key="frame" x="50" y="28" width="42.5" height="20.5"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="40" id="2iE-R1-SbL"/>
@@ -182,7 +170,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xXT-Vf-HJQ">
-                                                    <rect key="frame" x="91.5" y="29" width="50" height="18.5"/>
+                                                    <rect key="frame" x="96.5" y="29" width="50" height="18.5"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="50" id="x8U-K3-rSD"/>
@@ -192,7 +180,7 @@
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
                                                 <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="7" minValue="1" maxValue="13" translatesAutoresizingMaskIntoConstraints="NO" id="CTN-sN-e0c">
-                                                    <rect key="frame" x="143.5" y="23" width="133.5" height="31"/>
+                                                    <rect key="frame" x="148.5" y="23" width="217.5" height="31"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <color key="minimumTrackTintColor" name="Segmented Controls"/>
                                                     <color key="thumbTintColor" name="Segmented Controls"/>
@@ -219,14 +207,14 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Bounce" id="uWi-PW-sya" customClass="OverrideTableCell" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="218" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="218" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="uWi-PW-sya" id="7mY-Fq-CKr">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ker-Dk-WHk" customClass="SegmentedControl" customModule="Whist_2" customModuleProvider="target">
-                                                    <rect key="frame" x="29.5" y="6.5" width="261" height="32"/>
+                                                    <rect key="frame" x="76.5" y="6.5" width="261" height="32"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <segments>
                                                         <segment title="Go down to 1 card"/>
@@ -252,7 +240,7 @@
                                 </connections>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wiu-MJ-nOh" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="568" width="320" height="0.0"/>
+                                <rect key="frame" x="0.0" y="862" width="414" height="34"/>
                                 <color key="backgroundColor" name="Background"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
@@ -264,41 +252,38 @@
                         <color key="backgroundColor" name="Background"/>
                         <constraints>
                             <constraint firstItem="DkQ-EB-XGS" firstAttribute="trailing" secondItem="hOp-TY-evR" secondAttribute="trailing" id="0p0-Oo-WrP"/>
-                            <constraint firstItem="BMC-qc-qAk" firstAttribute="top" secondItem="XnD-Df-Iax" secondAttribute="top" id="28N-3j-o7v"/>
+                            <constraint firstItem="DkQ-EB-XGS" firstAttribute="top" secondItem="HoR-O2-RaM" secondAttribute="bottom" id="2BK-wi-2RV"/>
                             <constraint firstAttribute="trailing" secondItem="HoR-O2-RaM" secondAttribute="trailing" id="4dz-q8-TDy"/>
-                            <constraint firstAttribute="trailing" secondItem="BMC-qc-qAk" secondAttribute="trailing" id="AqE-0t-huX"/>
+                            <constraint firstItem="cW4-Ly-Y8f" firstAttribute="top" secondItem="XnD-Df-Iax" secondAttribute="top" id="7Pk-32-r4f"/>
                             <constraint firstItem="F6E-8M-LIy" firstAttribute="leading" secondItem="hOp-TY-evR" secondAttribute="leading" id="CoA-7t-p5s"/>
                             <constraint firstItem="Wiu-MJ-nOh" firstAttribute="top" secondItem="DkQ-EB-XGS" secondAttribute="bottom" id="CxX-pR-Jd7"/>
-                            <constraint firstItem="R7X-Kw-3i1" firstAttribute="top" secondItem="HoR-O2-RaM" secondAttribute="bottom" id="DGj-VD-0EU"/>
                             <constraint firstAttribute="trailing" secondItem="Wiu-MJ-nOh" secondAttribute="trailing" id="EZb-cX-qBd"/>
-                            <constraint firstItem="R7X-Kw-3i1" firstAttribute="leading" secondItem="XnD-Df-Iax" secondAttribute="leading" id="KfC-2Y-nDi"/>
                             <constraint firstAttribute="bottom" secondItem="Wiu-MJ-nOh" secondAttribute="bottom" id="M9k-XU-FgO"/>
                             <constraint firstItem="Wiu-MJ-nOh" firstAttribute="leading" secondItem="hOp-TY-evR" secondAttribute="leading" id="Qpy-jH-uad"/>
                             <constraint firstItem="Wiu-MJ-nOh" firstAttribute="top" secondItem="XnD-Df-Iax" secondAttribute="bottom" id="REA-eP-Gcq"/>
-                            <constraint firstItem="XnD-Df-Iax" firstAttribute="trailing" secondItem="R7X-Kw-3i1" secondAttribute="trailing" id="SuV-9w-MuX"/>
                             <constraint firstItem="DkQ-EB-XGS" firstAttribute="leading" secondItem="hOp-TY-evR" secondAttribute="leading" id="Wng-Rv-4ck"/>
-                            <constraint firstItem="BMC-qc-qAk" firstAttribute="leading" secondItem="hOp-TY-evR" secondAttribute="leading" id="aRd-Ks-X7F"/>
+                            <constraint firstItem="XnD-Df-Iax" firstAttribute="trailing" secondItem="cW4-Ly-Y8f" secondAttribute="trailing" id="Zgv-fg-VSa"/>
+                            <constraint firstItem="cW4-Ly-Y8f" firstAttribute="leading" secondItem="XnD-Df-Iax" secondAttribute="leading" id="d9P-je-nde"/>
                             <constraint firstItem="XnD-Df-Iax" firstAttribute="bottom" secondItem="DkQ-EB-XGS" secondAttribute="bottom" id="e66-9Y-alX"/>
                             <constraint firstItem="F6E-8M-LIy" firstAttribute="top" secondItem="hOp-TY-evR" secondAttribute="top" id="ewV-30-8Z0"/>
                             <constraint firstItem="HoR-O2-RaM" firstAttribute="leading" secondItem="hOp-TY-evR" secondAttribute="leading" id="giP-Aj-Uyh"/>
-                            <constraint firstItem="DkQ-EB-XGS" firstAttribute="top" secondItem="R7X-Kw-3i1" secondAttribute="bottom" constant="30" id="hEq-sB-N6C"/>
                             <constraint firstItem="F6E-8M-LIy" firstAttribute="trailing" secondItem="hOp-TY-evR" secondAttribute="trailing" id="hdf-kd-Ede"/>
-                            <constraint firstItem="HoR-O2-RaM" firstAttribute="top" secondItem="BMC-qc-qAk" secondAttribute="bottom" id="nJq-hK-ZHE"/>
+                            <constraint firstItem="HoR-O2-RaM" firstAttribute="height" secondItem="XnD-Df-Iax" secondAttribute="height" multiplier="7:38" id="rvx-uT-J9C"/>
                             <constraint firstItem="XnD-Df-Iax" firstAttribute="top" secondItem="F6E-8M-LIy" secondAttribute="bottom" id="tty-0g-KBD"/>
+                            <constraint firstItem="HoR-O2-RaM" firstAttribute="top" secondItem="cW4-Ly-Y8f" secondAttribute="bottom" id="wnV-Ck-9oE"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="XnD-Df-Iax"/>
                     </view>
                     <value key="contentSizeForViewInPopover" type="size" width="300" height="400"/>
                     <connections>
-                        <outlet property="bannerContinuation" destination="R7X-Kw-3i1" id="gpW-Qz-bXX"/>
-                        <outlet property="bannerContinuationHeightConstraint" destination="jap-Rq-z48" id="Hkz-OT-EPa"/>
                         <outlet property="bannerPaddingView" destination="F6E-8M-LIy" id="xEO-LW-Zx6"/>
-                        <outlet property="confirmButton" destination="5eL-j1-NvT" id="FLa-TW-APi"/>
+                        <outlet property="confirmButton" destination="7K3-zC-iO6" id="yFk-tB-wDv"/>
                         <outlet property="insetPaddingView" destination="Wiu-MJ-nOh" id="poC-hO-jpA"/>
                         <outlet property="instructionLabel" destination="HiB-TH-SwI" id="Gul-Ua-WU0"/>
                         <outlet property="instructionView" destination="HoR-O2-RaM" id="r5A-Xz-1NM"/>
-                        <outlet property="navigationBar" destination="BMC-qc-qAk" id="zXj-Mc-ilG"/>
-                        <outlet property="revertButton" destination="kCS-dn-rxk" id="RJQ-ms-lIo"/>
+                        <outlet property="revertButton" destination="0hh-nd-zGO" id="gNe-cv-0tQ"/>
+                        <outlet property="titleLabel" destination="K2m-Cz-GZn" id="Xwj-g1-TDB"/>
+                        <outlet property="titleView" destination="cW4-Ly-Y8f" id="MvL-lr-LIb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eZp-rU-3lb" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -320,9 +305,6 @@
         </namedColor>
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Game Banner Text">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Segmented Controls">
             <color red="0.89800000190734863" green="0.74900001287460327" blue="0.37299999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

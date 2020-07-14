@@ -354,8 +354,8 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             self.filterButton = ShadowButton(frame: CGRect(x: 0, y: 0, width: buttonWidth, height: buttonHeight), cornerRadius: 7.0)
             self.filterButton.setBackgroundColor(Palette.bannerShadow)
             self.filterButton.setTitleColor(Palette.bannerText, for: .normal)
-            _ = Constraint.setWidth(control: self.filterButton, width: buttonWidth)
-            _ = Constraint.setHeight(control: self.filterButton, height: buttonHeight)
+            Constraint.setWidth(control: self.filterButton, width: buttonWidth)
+            Constraint.setHeight(control: self.filterButton, height: buttonHeight)
             self.filterButton.setTitle("Filter", for: .normal)
             self.filterInstructionView.addSubview(self.filterButton)
             Constraint.anchor(view: self.filterInstructionView, control: filterButton, attributes: .centerY)
@@ -367,14 +367,14 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             self.filterClearView.isUserInteractionEnabled = false
             self.filterClearView.roundCorners(cornerRadius: clearHeight / 2.0)
             self.filterClearView.backgroundColor = Palette.banner
-            _ = Constraint.setWidth(control: self.filterClearView, width: clearHeight)
-            _ = Constraint.setHeight(control: self.filterClearView, height: clearHeight)
+            Constraint.setWidth(control: self.filterClearView, width: clearHeight)
+            Constraint.setHeight(control: self.filterClearView, height: clearHeight)
             self.filterButton.addSubview(self.filterClearView)
             Constraint.anchor(view: self.filterButton, control: self.filterClearView, attributes: .centerY)
             Constraint.anchor(view: self.filterButton, control: self.filterClearView, constant: 5, attributes: .leading)
             let filterClearImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: clearImageHeight, height: clearImageHeight))
-            _ = Constraint.setWidth(control: filterClearImageView, width: clearImageHeight)
-            _ = Constraint.setHeight(control: filterClearImageView, height: clearImageHeight)
+            Constraint.setWidth(control: filterClearImageView, width: clearImageHeight)
+            Constraint.setHeight(control: filterClearImageView, height: clearImageHeight)
             filterClearImageView.image = UIImage(named: "cross white")?.asTemplate()
             filterClearImageView.contentMode = .scaleAspectFit
             filterClearImageView.tintColor = Palette.bannerText
@@ -385,8 +385,8 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             self.syncButton = ShadowButton(frame: CGRect(x: 0, y: 0, width: buttonWidth, height: buttonHeight), cornerRadius: 7)
             self.syncButton.setBackgroundColor(Palette.bannerShadow)
             self.syncButton.setTitleColor(Palette.bannerText, for: .normal)
-            _ = Constraint.setWidth(control: self.syncButton, width: buttonWidth)
-            _ = Constraint.setHeight(control: self.syncButton, height: buttonHeight)
+            Constraint.setWidth(control: self.syncButton, width: buttonWidth)
+            Constraint.setHeight(control: self.syncButton, height: buttonHeight)
             self.syncButton.setTitle("Sync", for: .normal)
             self.filterInstructionView.addSubview(syncButton)
             Constraint.anchor(view: self.filterInstructionView, control: syncButton, attributes: .centerY)
@@ -395,8 +395,8 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             
             // Create the player thumbnail
             self.filterThumbnail = ThumbnailView(frame: CGRect(x: 0, y: 0, width: thumbnailHeight, height: thumbnailHeight))
-            _ = Constraint.setWidth(control: self.filterThumbnail, width: thumbnailHeight)
-            _ = Constraint.setHeight(control: self.filterThumbnail, height: thumbnailHeight)
+            Constraint.setWidth(control: self.filterThumbnail, width: thumbnailHeight)
+            Constraint.setHeight(control: self.filterThumbnail, height: thumbnailHeight)
             self.filterInstructionView.addSubview(self.filterThumbnail)
             Constraint.anchor(view: self.filterInstructionView, control: self.filterThumbnail, attributes: .centerX, .centerY)
             self.filterThumbnail.setShadow()

@@ -110,7 +110,8 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         
         switch view {
         case .gamePreview:
-            viewController =  self.showGamePreview()
+            let getPlayers = context?["getPlayers"] as? Bool
+            viewController =  self.showGamePreview(getPlayers: getPlayers ?? true)
             
         case .hand:
             viewController = self.playHand()
@@ -748,7 +749,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             if let peer = available[row].peer {
                 if self.connect(peer: peer, faceTimeAddress: faceTimeAddress) {
                     self.lastStatus = ("Connecting to \((peer.playerName ?? peer.deviceName))...")
-                    self.present(nextView: .gamePreview)
+                    self.present(nextView: .gamePreview, context: ["getPlayers" : false])
                 }
             }
             self.reflectState(peer: available[0].peer)
@@ -796,10 +797,13 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     
     // MARK: - Show/ refresh other views ======================================================================== -
 
-    private func showGamePreview() -> ScorecardViewController? {
+    private func showGamePreview(getPlayers: Bool = true) -> ScorecardViewController? {
         // Create new view controller
         self.gamePreviewViewController = nil
-        let selectedPlayers = getSelectedPlayers()
+        var selectedPlayers: [PlayerMO] = []
+        if getPlayers {
+            selectedPlayers = getSelectedPlayers()
+        }
         if let parentViewController = self.parentViewController {
             self.gamePreviewViewController = GamePreviewViewController.show(from: parentViewController, appController: self, selectedPlayers: selectedPlayers, formTitle: "Join a Game", smallFormTitle: "Join", backText: "", delegate: self)
         }
@@ -819,6 +823,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     
     private func getSelectedPlayers() -> [PlayerMO] {
         var selectedPlayers: [PlayerMO] = []
+        // Reload previous players in recovery mode
         for playerNumber in 1...Scorecard.game.currentPlayers {
             if let playerMO = Scorecard.game.player(enteredPlayerNumber: playerNumber).playerMO {
                 selectedPlayers.append(playerMO)
@@ -856,7 +861,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         }
         
         // Create online comms service, take delegates and start listening
-        if (self.matchProximity == nil || self.matchProximity == .online) && self.purpose == .playing {
+        if (self.matchProximity == nil || self.matchProximity == .online) {
             self.onlineClientService = CommsHandler.client(proximity: .online, mode: .invite, serviceID: nil, deviceName: Scorecard.deviceName)
             self.onlineClientService?.stateDelegate = self
             self.onlineClientService?.dataDelegate = self

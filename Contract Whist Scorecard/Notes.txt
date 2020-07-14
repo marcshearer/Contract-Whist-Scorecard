@@ -15,9 +15,6 @@ Run Convert email to UUID
 Run Create readable record IDs
 Run Create links
 
-// Still to write
-Conversion of settings - onlinePlayerUUID -> thisPlayerUUID and onlineGamesEnabled
-
 Changes since last version
 --------------------------
 

@@ -775,7 +775,7 @@ class ScorepadViewController: ScorecardViewController,
                 case imageRow:
                     headerCell.scorepadCellLabel.text=""
                 case playerRow:
-                    headerCell.scorepadCellLabel.text="Player"
+                    headerCell.scorepadCellLabel.text=""
                 default:
                     break
                 }
@@ -966,15 +966,17 @@ class ScorepadCollectionViewCell: UICollectionViewCell {
     var scorepadCellPaddingGradientLayer: CAGradientLayer!
     var scorepadLeftLineGradientLayer: CAGradientLayer!
         
-    @IBOutlet weak var scorepadCellLabel: UILabel!
-    @IBOutlet weak var scorepadFooterPadding: UIView!
-    @IBOutlet weak var scorepadLeftLineWeight: NSLayoutConstraint!
-    @IBOutlet weak var scorepadTopLineWeight: NSLayoutConstraint!
-    @IBOutlet weak var scorepadCellLabelHeight: NSLayoutConstraint!
-    @IBOutlet weak var scorepadImage: UIImageView!
-    @IBOutlet weak var scorepadDisc: UILabel!
-    @IBOutlet weak var scorepadLeftLine: UIView!
-    @IBOutlet weak var scorepadTopLine: UIView!
+    @IBOutlet fileprivate weak var scorepadCellLabel: UILabel!
+    @IBOutlet fileprivate weak var scorepadRankLabel: UILabel!
+    @IBOutlet fileprivate weak var scorepadSuitLabel: UILabel!
+    @IBOutlet fileprivate weak var scorepadFooterPadding: UIView!
+    @IBOutlet fileprivate weak var scorepadLeftLineWeight: NSLayoutConstraint!
+    @IBOutlet fileprivate weak var scorepadTopLineWeight: NSLayoutConstraint!
+    @IBOutlet fileprivate weak var scorepadCellLabelHeight: NSLayoutConstraint!
+    @IBOutlet fileprivate weak var scorepadImage: UIImageView!
+    @IBOutlet fileprivate weak var scorepadDisc: UILabel!
+    @IBOutlet fileprivate weak var scorepadLeftLine: UIView!
+    @IBOutlet fileprivate weak var scorepadTopLine: UIView!
 }
 
 

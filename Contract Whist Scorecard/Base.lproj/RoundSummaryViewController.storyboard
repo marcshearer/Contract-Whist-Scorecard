@@ -11,7 +11,7 @@
         <!--Round Summary-->
         <scene sceneID="m3N-NW-yiU">
             <objects>
-                <viewController storyboardIdentifier="RoundSummaryViewController" title="Round Summary" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FQp-co-xnK" customClass="RoundSummaryViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RoundSummaryViewController" title="Round Summary" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FQp-co-xnK" customClass="RoundSummaryViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="eJU-jx-Ao1">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -74,11 +74,11 @@
                                 <color key="textColor" name="Dark Highlight Text"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aH9-sF-nma" userLabel="Finish Button" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="8" y="44" width="20" height="22"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aH9-sF-nma" userLabel="Finish Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
+                                <rect key="frame" x="12" y="50" width="30" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="22" id="Tqv-Oy-Kqg"/>
-                                    <constraint firstAttribute="width" constant="20" id="VEW-Cu-BFv"/>
+                                    <constraint firstAttribute="height" constant="30" id="Tqv-Oy-Kqg"/>
+                                    <constraint firstAttribute="width" constant="30" id="VEW-Cu-BFv"/>
                                 </constraints>
                                 <state key="normal" image="back">
                                     <color key="titleColor" name="Dark Highlight Text"/>
@@ -111,9 +111,9 @@
                             <constraint firstItem="p0z-M5-FE8" firstAttribute="centerX" secondItem="cld-jQ-HAn" secondAttribute="centerXWithinMargins" id="c1e-S0-mvc"/>
                             <constraint firstItem="UAK-eu-59d" firstAttribute="centerX" secondItem="HcB-aq-CP7" secondAttribute="centerX" id="gB7-FO-AHy"/>
                             <constraint firstItem="cld-jQ-HAn" firstAttribute="centerY" secondItem="HcB-aq-CP7" secondAttribute="centerY" constant="-54" id="hG4-eN-jJV"/>
-                            <constraint firstItem="aH9-sF-nma" firstAttribute="leading" secondItem="HcB-aq-CP7" secondAttribute="leading" constant="8" id="i37-8t-l3r"/>
+                            <constraint firstItem="aH9-sF-nma" firstAttribute="leading" secondItem="HcB-aq-CP7" secondAttribute="leading" constant="12" id="i37-8t-l3r"/>
                             <constraint firstItem="UAK-eu-59d" firstAttribute="leading" secondItem="eJU-jx-Ao1" secondAttribute="leadingMargin" constant="9" id="oj8-dn-lgE"/>
-                            <constraint firstItem="aH9-sF-nma" firstAttribute="top" secondItem="HcB-aq-CP7" secondAttribute="top" id="yca-zg-iZB"/>
+                            <constraint firstItem="aH9-sF-nma" firstAttribute="top" secondItem="HcB-aq-CP7" secondAttribute="top" constant="6" id="yca-zg-iZB"/>
                             <constraint firstItem="3wM-w4-4DI" firstAttribute="centerX" secondItem="HcB-aq-CP7" secondAttribute="centerX" id="zco-iQ-RQt"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="HcB-aq-CP7"/>

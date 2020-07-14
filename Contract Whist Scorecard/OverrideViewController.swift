@@ -33,18 +33,30 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     // MARK: - IB Outlets ============================================================================== -
     @IBOutlet private weak var confirmButton: UIButton!
     @IBOutlet private weak var revertButton: UIButton!
-    @IBOutlet private weak var bannerContinuation: BannerContinuation!
-    @IBOutlet private weak var bannerContinuationHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
     @IBOutlet private weak var insetPaddingView: InsetPaddingView!
     @IBOutlet private weak var instructionView: UIView!
     @IBOutlet private weak var instructionLabel: UILabel!
-    @IBOutlet private weak var navigationBar: NavigationBar!
+    @IBOutlet private weak var titleView: UIView!
+    @IBOutlet private weak var titleLabel: UILabel!
     
     // MARK: - IB Actions ============================================================================== -
     
     @IBAction func confirmPressed(_ sender: UIButton) {
-        self.dismiss()
+        if Scorecard.settings != Scorecard.game.settings && (Scorecard.game.settings.saveStats || Scorecard.game.settings.saveHistory) {
+            // Overriding but still saving stats and history
+            var includedIn = ""
+            if !Scorecard.game.settings.saveHistory {
+                includedIn = "player statistics"
+            } else if !Scorecard.game.settings.saveStats {
+                includedIn = "game history"
+            } else {
+                includedIn = "player statistics and game history"
+            }
+            self.alertDecision("You have changed the settings for the game, but your are still including it in \(includedIn). This might lead to inconsistent data. Are you sure you want to do this?", title: "Warning", okButtonText: "Confirm", okHandler: self.dismiss)
+        } else {
+            self.dismiss()
+        }
     }
     
     @IBAction func revertPressed(_ sender: UIButton) {
@@ -63,12 +75,6 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         
         self.existingOverride = (Scorecard.game.settings != Scorecard.settings)
         
-        if !self.existingOverride {
-            // Default to exclude stats
-            Scorecard.game.settings.saveHistory = false
-            Scorecard.game.settings.saveStats = false
-        }
-        
         self.skipOptions = (Scorecard.settings.saveHistory ? 0 : 2)
         
         self.revertButton.setTitleColor(Palette.bannerText, for: .normal)
@@ -84,13 +90,6 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     
     override func viewWillLayoutSubviews() {
         Scorecard.shared.reCenterPopup(self)
-        if ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone() {
-            self.bannerContinuation.isHidden = true
-            self.bannerContinuationHeightConstraint.constant = 0.0
-        } else {
-            self.bannerContinuation.isHidden = false
-            self.bannerContinuationHeightConstraint.constant = 60.0
-        }
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -114,7 +113,7 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
             case .startCards, .endCards:
                 height = 32.0
             case .bounce:
-                height = 45.0
+                height = 55.0
             }
         }
         return height
@@ -293,14 +292,13 @@ extension OverrideViewController {
 
     private func defaultViewColors() {
 
-        self.bannerContinuation.borderColor = Palette.bannerText
         self.bannerPaddingView.bannerColor = Palette.banner
         self.insetPaddingView.backgroundColor = Palette.background
         self.insetPaddingView.bannerColor = Palette.background
         self.instructionLabel.textColor = Palette.bannerText
         self.instructionView.backgroundColor = Palette.banner
-        self.navigationBar.textColor = Palette.bannerText
-        self.navigationBar.bannerColor = Palette.banner
+        self.titleLabel.textColor = Palette.bannerText
+        self.titleView.backgroundColor = Palette.banner
         self.view.backgroundColor = Palette.background
     }
 

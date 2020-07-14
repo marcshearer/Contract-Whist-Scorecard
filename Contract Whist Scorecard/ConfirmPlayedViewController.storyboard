@@ -19,19 +19,31 @@
                         <rect key="frame" x="0.0" y="0.0" width="240" height="200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Confirm Action" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7a6-UI-jEY">
-                                <rect key="frame" x="0.0" y="0.0" width="240" height="40"/>
-                                <color key="backgroundColor" name="Room Interior"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="beD-3c-ukd"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" weight="thin" pointSize="30"/>
-                                <color key="textColor" name="Room Interior Text"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2B9-kF-KFs">
                                 <rect key="frame" x="0.0" y="40" width="240" height="120"/>
                                 <color key="backgroundColor" name="Clear"/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xwo-nq-f4B" userLabel="TItle View">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="40"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Confirm Action" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7a6-UI-jEY">
+                                        <rect key="frame" x="0.0" y="4" width="240" height="32"/>
+                                        <color key="backgroundColor" name="Clear"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="32" id="beD-3c-ukd"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="28"/>
+                                        <color key="textColor" name="Clear"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" name="Clear"/>
+                                <constraints>
+                                    <constraint firstItem="7a6-UI-jEY" firstAttribute="trailing" secondItem="xwo-nq-f4B" secondAttribute="trailing" id="7gN-iu-rBe"/>
+                                    <constraint firstAttribute="height" constant="40" id="QrW-m2-Bcw"/>
+                                    <constraint firstItem="7a6-UI-jEY" firstAttribute="leading" secondItem="xwo-nq-f4B" secondAttribute="leading" id="chJ-3p-L33"/>
+                                    <constraint firstItem="7a6-UI-jEY" firstAttribute="centerY" secondItem="xwo-nq-f4B" secondAttribute="centerY" id="o4m-Hf-cer"/>
+                                </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QjS-KC-W9a" userLabel="Horizontal Separator">
                                 <rect key="frame" x="0.0" y="160" width="240" height="1"/>
@@ -48,11 +60,11 @@
                                     <constraint firstAttribute="height" constant="39" id="WMX-U4-Uzb"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <state key="normal" title="Cancel">
+                                <state key="normal" title="Confirm">
                                     <color key="titleColor" name="Room Interior Text"/>
                                 </state>
                                 <connections>
-                                    <action selector="cancelPressed:" destination="x2M-PG-c9N" eventType="touchUpInside" id="7L7-jZ-I1D"/>
+                                    <action selector="confirmPressed:" destination="x2M-PG-c9N" eventType="touchUpInside" id="VVV-YB-40a"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EOW-de-qI9" userLabel="Vertical Separator">
@@ -66,11 +78,11 @@
                                 <rect key="frame" x="0.0" y="161" width="119.5" height="39"/>
                                 <color key="backgroundColor" name="Room Interior"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                <state key="normal" title="Confirm">
+                                <state key="normal" title="Cancel">
                                     <color key="titleColor" name="Room Interior Text"/>
                                 </state>
                                 <connections>
-                                    <action selector="confirmPressed:" destination="x2M-PG-c9N" eventType="touchUpInside" id="Xtq-gA-x8e"/>
+                                    <action selector="cancelPressed:" destination="x2M-PG-c9N" eventType="touchUpInside" id="6CR-3T-6fn"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -78,19 +90,19 @@
                         <constraints>
                             <constraint firstItem="SAC-LY-LBW" firstAttribute="top" secondItem="QjS-KC-W9a" secondAttribute="bottom" id="0O3-eb-luq"/>
                             <constraint firstItem="QjS-KC-W9a" firstAttribute="leading" secondItem="XJX-bP-Wnd" secondAttribute="leading" id="2hc-KL-oPp"/>
+                            <constraint firstItem="2B9-kF-KFs" firstAttribute="top" secondItem="xwo-nq-f4B" secondAttribute="bottom" id="3JV-u7-gyW"/>
+                            <constraint firstItem="xwo-nq-f4B" firstAttribute="leading" secondItem="XJX-bP-Wnd" secondAttribute="leading" id="8pj-lZ-Cdt"/>
                             <constraint firstItem="LbQ-qn-Vs4" firstAttribute="leading" secondItem="XJX-bP-Wnd" secondAttribute="leading" id="Dgv-dT-sQE"/>
                             <constraint firstItem="SAC-LY-LBW" firstAttribute="width" secondItem="LbQ-qn-Vs4" secondAttribute="width" id="HSb-e2-0ta"/>
                             <constraint firstItem="SAC-LY-LBW" firstAttribute="bottom" secondItem="XJX-bP-Wnd" secondAttribute="bottom" id="I2n-E3-Waj"/>
                             <constraint firstItem="QjS-KC-W9a" firstAttribute="top" secondItem="2B9-kF-KFs" secondAttribute="bottom" id="JaW-eM-jwX"/>
                             <constraint firstAttribute="trailing" secondItem="2B9-kF-KFs" secondAttribute="trailing" id="QvY-R6-ntL"/>
                             <constraint firstItem="EOW-de-qI9" firstAttribute="bottom" secondItem="XJX-bP-Wnd" secondAttribute="bottom" id="W57-zf-1uu"/>
-                            <constraint firstItem="7a6-UI-jEY" firstAttribute="leading" secondItem="XJX-bP-Wnd" secondAttribute="leading" id="Zh2-dl-YYt"/>
-                            <constraint firstItem="7a6-UI-jEY" firstAttribute="trailing" secondItem="XJX-bP-Wnd" secondAttribute="trailing" id="caz-Ug-9B4"/>
                             <constraint firstItem="SAC-LY-LBW" firstAttribute="height" secondItem="EOW-de-qI9" secondAttribute="height" id="e7c-dk-MBt"/>
-                            <constraint firstItem="2B9-kF-KFs" firstAttribute="top" secondItem="7a6-UI-jEY" secondAttribute="bottom" id="feG-8a-ENi"/>
                             <constraint firstItem="EOW-de-qI9" firstAttribute="leading" secondItem="LbQ-qn-Vs4" secondAttribute="trailing" id="gxx-dc-25f"/>
+                            <constraint firstAttribute="trailing" secondItem="xwo-nq-f4B" secondAttribute="trailing" id="mHg-b4-rap"/>
                             <constraint firstItem="SAC-LY-LBW" firstAttribute="height" secondItem="LbQ-qn-Vs4" secondAttribute="height" id="mqN-96-xij"/>
-                            <constraint firstAttribute="top" secondItem="7a6-UI-jEY" secondAttribute="top" id="obM-aa-Oyd"/>
+                            <constraint firstItem="xwo-nq-f4B" firstAttribute="top" secondItem="XJX-bP-Wnd" secondAttribute="top" id="obL-JB-f7l"/>
                             <constraint firstItem="2B9-kF-KFs" firstAttribute="leading" secondItem="XJX-bP-Wnd" secondAttribute="leading" id="qeF-XR-vWi"/>
                             <constraint firstAttribute="trailing" secondItem="QjS-KC-W9a" secondAttribute="trailing" id="thv-HZ-3nQ"/>
                             <constraint firstAttribute="bottom" secondItem="LbQ-qn-Vs4" secondAttribute="bottom" id="utE-FM-DBD"/>
@@ -101,10 +113,14 @@
                     <value key="contentSizeForViewInPopover" type="size" width="300" height="400"/>
                     <size key="freeformSize" width="240" height="200"/>
                     <connections>
-                        <outlet property="cancelButton" destination="SAC-LY-LBW" id="8tj-1H-92e"/>
-                        <outlet property="confirmButton" destination="LbQ-qn-Vs4" id="Whz-5l-aik"/>
+                        <outlet property="cancelButton" destination="LbQ-qn-Vs4" id="wSJ-RQ-9ip"/>
+                        <outlet property="confirmButton" destination="SAC-LY-LBW" id="CTz-pb-y4V"/>
                         <outlet property="contentView" destination="2B9-kF-KFs" id="MEI-K6-urZ"/>
-                        <outlet property="labelTitle" destination="7a6-UI-jEY" id="yUr-tu-KjU"/>
+                        <outlet property="horizontalSeparatorView" destination="QjS-KC-W9a" id="gKV-Cf-psn"/>
+                        <outlet property="labelTitle" destination="7a6-UI-jEY" id="gPQ-Gc-QdG"/>
+                        <outlet property="labelTitleHeightOffset" destination="o4m-Hf-cer" id="Mkr-zt-kDC"/>
+                        <outlet property="titleView" destination="xwo-nq-f4B" id="Aib-fG-WJ4"/>
+                        <outlet property="verticalSeparatorView" destination="EOW-de-qI9" id="vX5-wy-Kom"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qr7-Zf-NIh" userLabel="First Responder" sceneMemberID="firstResponder"/>

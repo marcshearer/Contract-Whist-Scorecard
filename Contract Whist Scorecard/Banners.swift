@@ -255,7 +255,7 @@ class NavigationBar: UINavigationBar {
             fontSize = min(28.0, CGFloat(Int(UIScreen.main.bounds.width / 12)))
         }
         if let titleText = self.topItem?.title, let titleLabel = self.topItem?.titleView as! UILabel? {
-            titleLabel.font = UIFont.systemFont(ofSize: fontSize, weight: .thin)
+            titleLabel.font = UIFont.systemFont(ofSize: fontSize, weight: .semibold)
             let titleSize = titleText.size(withAttributes: [NSAttributedString.Key.font: titleLabel.font!])
             titleLabel.frame = CGRect(x: 0.0, y: 0.0, width: titleSize.width, height: self.frame.height)
             titleLabel.textAlignment = .center

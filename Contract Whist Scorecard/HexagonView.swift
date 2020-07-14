@@ -88,7 +88,7 @@ public class HexagonView: UIView {
             self.addSubview(self.separatorView)
             Constraint.anchor(view: self, control: self.separatorView, attributes: .left, .right)
             Constraint.anchor(view: self, control: self.separatorView, to: self.bannerColorView, toAttribute: .bottom, attributes: .top)
-            _ = Constraint.setHeight(control: self.separatorView, height: 2.0 * scale)
+            Constraint.setHeight(control: self.separatorView, height: 2.0 * scale)
         }
         
         // Create hexagon
@@ -143,7 +143,7 @@ public class HexagonView: UIView {
             Constraint.anchor(view: self, control: self.button, constant: buttonTopUnits * scale, attributes: .top)
             Constraint.proportionalHeight(view: self, control: self.button, multiplier: buttonHeightUnits / heightUnits)
             Constraint.anchor(view: self, control: self.button, attributes: .centerX)
-            _ = Constraint.setWidth(control: self.button, width: 100.0)
+            Constraint.setWidth(control: self.button, width: 100.0)
         }
     }
     

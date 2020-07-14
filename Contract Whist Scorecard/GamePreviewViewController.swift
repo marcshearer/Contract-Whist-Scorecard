@@ -411,6 +411,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
                     }
                 } else {
                     self.selectedPlayersView.clear(slot: slot)
+                    self.selectedPlayersView.setAlpha(slot: slot, alpha: 0.0)
                 }
             }
             self.selectedPlayersView.positionSelectedPlayers(players: self.selectedPlayers.count)

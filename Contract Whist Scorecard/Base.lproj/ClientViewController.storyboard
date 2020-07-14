@@ -863,9 +863,6 @@
                         <outlet property="playerSelectionView" destination="0OQ-Wp-Xtp" id="aMt-JN-CUF"/>
                         <outlet property="playerSelectionViewHeightConstraint" destination="zrf-Q7-qL5" id="Afs-8m-EPI"/>
                         <outlet property="playerSelectionViewWidthConstraint" destination="9iF-tu-zqC" id="sLh-KZ-Koc"/>
-                        <outlet property="playersButton" destination="aq5-vX-83I" id="mhp-Zh-nzJ"/>
-                        <outlet property="resultsButton" destination="bNw-dF-hBm" id="psh-7o-Ny9"/>
-                        <outlet property="settingsButton" destination="pB1-JM-2cb" id="B7J-EC-Elw"/>
                         <outlet property="tapGestureRecognizer" destination="xiI-Mr-Bry" id="Z62-cF-St0"/>
                         <outlet property="thisPlayerThumbnail" destination="Qjq-rE-5ew" id="7UX-3r-vYb"/>
                         <outlet property="titleLabel" destination="9EB-QT-Tnd" id="Klt-nN-qKR"/>
@@ -873,6 +870,9 @@
                         <outlet property="topSection" destination="baT-Lm-DyX" id="DmB-gG-SPr"/>
                         <outlet property="upperMiddleHeightConstraint" destination="uN4-Sq-JxP" id="WIN-7b-1Vp"/>
                         <outlet property="upperMiddleSection" destination="e3D-oK-CzW" id="WoP-sH-bJy"/>
+                        <outletCollection property="actionButtons" destination="aq5-vX-83I" collectionClass="NSMutableArray" id="sbD-qh-zC3"/>
+                        <outletCollection property="actionButtons" destination="bNw-dF-hBm" collectionClass="NSMutableArray" id="R6G-aJ-Euy"/>
+                        <outletCollection property="actionButtons" destination="pB1-JM-2cb" collectionClass="NSMutableArray" id="2Ak-LE-kT4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UDy-kc-SSJ" userLabel="First Responder" sceneMemberID="firstResponder"/>

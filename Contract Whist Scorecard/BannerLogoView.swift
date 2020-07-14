@@ -44,11 +44,16 @@ class BannerLogoView : UIView {
         let width = self.frame.width
         let lineWidth = (self.lineWidth == 0 ? width / 24 : self.lineWidth)
         let height = self.frame.height - lineWidth
+        
+        let safeAreaInsets = self.safeAreaInsets
+        let pointHeight = (height - (ScorecardUI.portraitPhone() ? min(30, safeAreaInsets.top) : 0.0)) / 2
+        let pointWidth = (pointHeight * (width / 2)) / (height + pointHeight)
+        
         let path = UIBezierPath()
         path.move(to: CGPoint(x: -lineWidth/2, y: -lineWidth/2))
-        path.addLine(to: CGPoint(x: width/3, y: height))
-        path.addLine(to: CGPoint(x: width/2, y: height/2))
-        path.addLine(to: CGPoint(x: 2*width/3, y: height))
+        path.addLine(to: CGPoint(x: (width/2) - pointWidth , y: height))
+        path.addLine(to: CGPoint(x: width/2, y: height - pointHeight))
+        path.addLine(to: CGPoint(x: (width/2) + pointWidth, y: height))
         path.addLine(to: CGPoint(x: width+lineWidth/2, y: -lineWidth/2))
         path.close()
         

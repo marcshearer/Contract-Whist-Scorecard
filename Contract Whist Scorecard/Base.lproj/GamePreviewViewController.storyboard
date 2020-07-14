@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina5_9" orientation="landscape" appearance="light"/>
+    <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
@@ -13,11 +13,11 @@
             <objects>
                 <viewController storyboardIdentifier="GamePreviewViewController" title="Game Preview" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="M5N-Yi-C04" userLabel="Game Preview" customClass="GamePreviewViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="iUU-8s-ns4" userLabel="Game Preview View">
-                        <rect key="frame" x="0.0" y="0.0" width="812" height="375"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2QN-TN-Yp2" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="812" height="0.0"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
                                         <color key="value" name="Game Banner"/>
@@ -25,16 +25,16 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IaK-Ab-3Lb" userLabel="Title View">
-                                <rect key="frame" x="0.0" y="0.0" width="812" height="44"/>
+                                <rect key="frame" x="0.0" y="44" width="375" height="44"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PGF-Da-yZn">
-                                        <rect key="frame" x="44" y="0.0" width="724" height="44"/>
-                                        <fontDescription key="fontDescription" type="system" weight="thin" pointSize="28"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="PGF-Da-yZn">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="28"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Teh-rN-czq" userLabel="Cancel Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="56" y="6" width="32" height="32"/>
+                                        <rect key="frame" x="16" y="6" width="32" height="32"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="32" id="bRJ-Yt-1OA"/>
                                             <constraint firstAttribute="height" constant="32" id="cxM-7k-0Sj"/>
@@ -44,8 +44,8 @@
                                             <action selector="finishGamePressed:" destination="M5N-Yi-C04" eventType="touchUpInside" id="Sac-fm-nRA"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3S2-lc-KEF" userLabel="Banner Continue Button" customClass="RightClearButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="682" y="6" width="74" height="32"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3S2-lc-KEF" userLabel="Banner Continue Button" customClass="RightClearButton" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="285" y="6" width="74" height="32"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="74" id="9H5-ke-4M4"/>
                                             <constraint firstAttribute="height" constant="32" id="lXg-9Z-TpS"/>
@@ -64,20 +64,20 @@
                                     <constraint firstItem="7c5-cq-aKT" firstAttribute="trailing" secondItem="PGF-Da-yZn" secondAttribute="trailing" id="3sO-Ld-0qb"/>
                                     <constraint firstAttribute="height" constant="44" id="5Tk-xo-NAN"/>
                                     <constraint firstItem="PGF-Da-yZn" firstAttribute="top" secondItem="7c5-cq-aKT" secondAttribute="top" id="BiG-tW-TuS"/>
-                                    <constraint firstItem="Teh-rN-czq" firstAttribute="leading" secondItem="7c5-cq-aKT" secondAttribute="leading" constant="12" id="RrI-yt-EM3"/>
+                                    <constraint firstItem="Teh-rN-czq" firstAttribute="leading" secondItem="7c5-cq-aKT" secondAttribute="leading" constant="16" id="RrI-yt-EM3"/>
                                     <constraint firstItem="Teh-rN-czq" firstAttribute="centerY" secondItem="IaK-Ab-3Lb" secondAttribute="centerY" id="U3f-s0-7c7"/>
                                     <constraint firstItem="3S2-lc-KEF" firstAttribute="centerY" secondItem="IaK-Ab-3Lb" secondAttribute="centerY" id="YfJ-lc-Z63"/>
                                     <constraint firstItem="7c5-cq-aKT" firstAttribute="bottom" secondItem="PGF-Da-yZn" secondAttribute="bottom" id="h3t-TL-gfp"/>
                                     <constraint firstItem="PGF-Da-yZn" firstAttribute="leading" secondItem="7c5-cq-aKT" secondAttribute="leading" id="iZI-8E-SOL"/>
-                                    <constraint firstItem="7c5-cq-aKT" firstAttribute="trailing" secondItem="3S2-lc-KEF" secondAttribute="trailing" constant="12" id="zj6-LT-rBH"/>
+                                    <constraint firstItem="7c5-cq-aKT" firstAttribute="trailing" secondItem="3S2-lc-KEF" secondAttribute="trailing" constant="16" id="zj6-LT-rBH"/>
                                 </constraints>
                                 <viewLayoutGuide key="safeArea" id="7c5-cq-aKT"/>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kP9-VZ-fcb" userLabel="Top Section">
-                                <rect key="frame" x="0.0" y="44" width="406" height="331"/>
+                                <rect key="frame" x="0.0" y="88" width="375" height="309"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nKd-io-ud9" customClass="SelectedPlayersView" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="32.333333333333343" y="6.3333333333333428" width="341.33333333333326" height="278.33333333333326"/>
+                                        <rect key="frame" x="30" y="24.666666666666657" width="315" height="259.66666666666674"/>
                                         <color key="backgroundColor" name="Clear"/>
                                     </view>
                                 </subviews>
@@ -92,10 +92,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OvE-wK-XoH" userLabel="Upper Middle Section">
-                                <rect key="frame" x="406" y="308" width="362" height="38"/>
+                                <rect key="frame" x="0.0" y="397" width="375" height="38"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eVj-U8-RFG" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="131" y="8" width="100" height="30"/>
+                                        <rect key="frame" x="137.66666666666666" y="8" width="100" height="30"/>
                                         <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="1ak-br-WkM"/>
@@ -118,13 +118,13 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" verticalHuggingPriority="1" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="iDT-Xi-tM5" userLabel="Lower Middle Section">
-                                <rect key="frame" x="406" y="44" width="362" height="264"/>
+                                <rect key="frame" x="0.0" y="435" width="375" height="293"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="x89-xH-iQy" userLabel="Left View">
-                                        <rect key="frame" x="0.0" y="0.0" width="199" height="264"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="206.33333333333334" height="293"/>
                                         <subviews>
                                             <view tag="1" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FyF-vn-V6o" userLabel="Cut for Dealer Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="20" y="52.333333333333329" width="159.33333333333334" height="159.33333333333337"/>
+                                                <rect key="frame" x="20.666666666666671" y="64" width="165" height="165"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="FyF-vn-V6o" secondAttribute="height" multiplier="82:82" id="Bas-9R-8IF"/>
@@ -165,10 +165,10 @@
                                         </variation>
                                     </view>
                                     <view contentMode="scaleToFill" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="Bs3-BT-kuE" userLabel="Right View">
-                                        <rect key="frame" x="163" y="0.0" width="199" height="264"/>
+                                        <rect key="frame" x="168.66666666666663" y="0.0" width="206.33333333333337" height="293"/>
                                         <subviews>
                                             <view tag="2" contentMode="scaleToFill" verticalHuggingPriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="xXV-k4-gfB" userLabel="Next Dealer Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="19.666666666666629" y="52.333333333333329" width="159.33333333333334" height="159.33333333333337"/>
+                                                <rect key="frame" x="20.666666666666686" y="64" width="165" height="165"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="xXV-k4-gfB" secondAttribute="height" multiplier="82:82" id="dJB-et-5Yx"/>
@@ -209,7 +209,7 @@
                                         </variation>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="PUR-r5-ySO">
-                                        <rect key="frame" x="0.0" y="92" width="362" height="80"/>
+                                        <rect key="frame" x="0.0" y="106.66666666666663" width="375" height="80"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="80" id="aF4-bC-pDj"/>
                                         </constraints>
@@ -234,10 +234,10 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d8e-Bu-nij" userLabel="Bottom Section">
-                                <rect key="frame" x="406" y="304" width="362" height="50"/>
+                                <rect key="frame" x="0.0" y="728" width="375" height="50"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jbr-Nz-gFc" userLabel="Continue Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="72.333333333333329" y="0.0" width="217.33333333333337" height="50"/>
+                                        <rect key="frame" x="75" y="0.0" width="225" height="50"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="7d9-vb-qYm"/>

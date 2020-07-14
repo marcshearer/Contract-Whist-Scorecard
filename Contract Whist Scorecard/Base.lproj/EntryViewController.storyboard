@@ -27,7 +27,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="30M-sz-Fdm" userLabel="Title View">
                                 <rect key="frame" x="0.0" y="44" width="375" height="80"/>
                                 <subviews>
-                                    <button autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pge-ad-xW7" userLabel="Errors Button" customClass="ErrorRoundedButton" customModule="Whist_2" customModuleProvider="target">
+                                    <button autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pge-ad-xW7" userLabel="Errors Button" customClass="ErrorRoundedButton" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="12" y="6" width="30" height="30"/>
                                         <color key="backgroundColor" name="Error"/>
                                         <constraints>
@@ -39,12 +39,11 @@
                                             <action selector="saveScorePressed:" destination="mEi-hH-CUE" eventType="touchUpInside" id="Gh7-tc-ESu"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VGH-oE-ROK" userLabel="Finish Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VGH-oE-ROK" userLabel="Finish Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="12" y="6" width="30" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="30" id="Awa-De-Kxt"/>
                                             <constraint firstAttribute="height" constant="30" id="DpJ-Pm-48d"/>
-                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="Hu1-Mw-bbo"/>
                                         </constraints>
                                         <state key="normal" image="back"/>
                                         <userDefinedRuntimeAttributes>
@@ -56,12 +55,13 @@
                                             <action selector="saveScorePressed:" destination="mEi-hH-CUE" eventType="touchUpInside" id="NnD-sA-4cp"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zzd-PE-N0d" userLabel="Summary Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zzd-PE-N0d" userLabel="Summary Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="333" y="6" width="30" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="30" id="18m-Dg-KFD"/>
                                             <constraint firstAttribute="height" constant="30" id="XQx-LN-z5x"/>
                                         </constraints>
+                                        <state key="normal" image="forward"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="summary"/>
                                         </userDefinedRuntimeAttributes>
@@ -69,22 +69,9 @@
                                             <action selector="summaryClicked:" destination="mEi-hH-CUE" eventType="touchUpInside" id="OMz-Gj-DNS"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W0R-NQ-LPK" userLabel="Undo Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="307" y="6" width="30" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="9g3-Vg-C4c"/>
-                                            <constraint firstAttribute="width" constant="30" id="Brm-3t-EYv"/>
-                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="JoT-cr-2fy"/>
-                                        </constraints>
-                                        <state key="normal" image="undo"/>
-                                        <connections>
-                                            <action selector="undoButtonClicked:" destination="mEi-hH-CUE" eventType="touchUpInside" id="Apn-jk-14z"/>
-                                        </connections>
-                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
-                                    <constraint firstItem="W0R-NQ-LPK" firstAttribute="trailing" secondItem="zzd-PE-N0d" secondAttribute="leading" constant="4" id="1D2-Yv-s0n"/>
                                     <constraint firstItem="VGH-oE-ROK" firstAttribute="top" secondItem="30M-sz-Fdm" secondAttribute="top" constant="6" id="3Z1-ce-qjp"/>
                                     <constraint firstItem="zzd-PE-N0d" firstAttribute="top" secondItem="30M-sz-Fdm" secondAttribute="top" constant="6" id="Eoq-tL-lsC"/>
                                     <constraint firstItem="pge-ad-xW7" firstAttribute="leading" secondItem="30M-sz-Fdm" secondAttribute="leading" constant="12" id="Xzv-lQ-tu2"/>
@@ -92,7 +79,6 @@
                                     <constraint firstItem="VGH-oE-ROK" firstAttribute="leading" secondItem="30M-sz-Fdm" secondAttribute="leading" constant="12" id="dsn-7b-vYw"/>
                                     <constraint firstAttribute="height" constant="80" id="pNI-F5-Mq4"/>
                                     <constraint firstAttribute="trailing" secondItem="zzd-PE-N0d" secondAttribute="trailing" constant="12" id="qHB-F0-0bs"/>
-                                    <constraint firstItem="W0R-NQ-LPK" firstAttribute="top" secondItem="30M-sz-Fdm" secondAttribute="top" constant="6" id="ufV-67-wgR"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Weo-LM-Q3A" customClass="BannerLogoView" customModule="Whist_2" customModuleProvider="target">
@@ -250,12 +236,13 @@
                                 <viewLayoutGuide key="safeArea" id="oiF-5s-tTG"/>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r5E-a9-sN5" userLabel="Separator">
-                                <rect key="frame" x="341.5" y="146" width="0.5" height="171"/>
+                                <rect key="frame" x="370" y="146" width="0.33333333333331439" height="1"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" id="Psj-09-f9S">
                                         <variation key="heightClass=compact" constant="0.29999999999999999"/>
                                     </constraint>
+                                    <constraint firstAttribute="height" priority="1" constant="1" id="jNF-MT-jQA"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
@@ -311,106 +298,88 @@
                                     <outlet property="delegate" destination="mEi-hH-CUE" id="rcF-Xg-jSH"/>
                                 </connections>
                             </collectionView>
-                            <toolbar clipsSubviews="YES" clearsContextBeforeDrawing="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y1H-0M-Egj">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rSw-DA-1Lg" userLabel="Toolbar View">
                                 <rect key="frame" x="0.0" y="734" width="375" height="78"/>
-                                <items>
-                                    <barButtonItem style="plain" id="kfj-Nd-7CF">
-                                        <view key="customView" contentMode="scaleToFill" id="od1-py-F4T">
-                                            <rect key="frame" x="16" y="39" width="0.0" height="0.0"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5A9-ob-sf7">
-                                                    <subviews>
-                                                        <button autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IVB-I0-IfC" userLabel="Errors Button" customClass="ErrorRoundedButton" customModule="Whist_2" customModuleProvider="target">
-                                                            <color key="backgroundColor" name="Error"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="30" id="8n7-22-CIA"/>
-                                                            </constraints>
-                                                            <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
-                                                            <connections>
-                                                                <action selector="saveScorePressed:" destination="mEi-hH-CUE" eventType="touchUpInside" id="5ki-0u-eNT"/>
-                                                            </connections>
-                                                        </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8rw-oz-v5h" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                                            <color key="backgroundColor" name="Room Interior Text Contrast"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="Kuj-6V-wtF"/>
-                                                            </constraints>
-                                                            <state key="normal" title="Done"/>
-                                                            <connections>
-                                                                <action selector="saveScorePressed:" destination="mEi-hH-CUE" eventType="touchUpInside" id="gKc-8X-Agj"/>
-                                                            </connections>
-                                                        </button>
-                                                    </subviews>
-                                                </stackView>
-                                            </subviews>
-                                            <color key="backgroundColor" name="Clear"/>
-                                            <constraints>
-                                                <constraint firstItem="5A9-ob-sf7" firstAttribute="top" secondItem="od1-py-F4T" secondAttribute="top" id="MtE-us-5Oz"/>
-                                                <constraint firstItem="5A9-ob-sf7" firstAttribute="leading" secondItem="od1-py-F4T" secondAttribute="leading" id="cGY-FO-Gpf"/>
-                                                <constraint firstAttribute="bottom" secondItem="5A9-ob-sf7" secondAttribute="bottom" id="q0i-Qz-l7P"/>
-                                                <constraint firstAttribute="trailing" secondItem="5A9-ob-sf7" secondAttribute="trailing" id="w9N-ZI-GHd"/>
-                                            </constraints>
-                                        </view>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="lrb-ys-grN"/>
-                                    <barButtonItem style="plain" id="CER-H3-Fj3">
-                                        <view key="customView" contentMode="scaleToFill" ambiguous="YES" id="4lv-P9-tyv">
-                                            <rect key="frame" x="187.66666666666666" y="39" width="0.0" height="0.0"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <subviews>
-                                                <label opaque="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Round" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="mYF-x3-kAl">
-                                                    <rect key="frame" x="0.0" y="-18" width="111.66666666666667" height="36"/>
-                                                    <color key="backgroundColor" name="Clear"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="Cc4-fh-DqR"/>
-                                                        <constraint firstAttribute="height" constant="36" id="q1c-XC-Uof"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="40"/>
-                                                    <color key="textColor" name="Emphasis Text"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <color key="backgroundColor" name="Clear"/>
-                                            <constraints>
-                                                <constraint firstItem="mYF-x3-kAl" firstAttribute="leading" secondItem="4lv-P9-tyv" secondAttribute="leading" id="72s-mZ-Jc2"/>
-                                                <constraint firstAttribute="trailing" secondItem="mYF-x3-kAl" secondAttribute="trailing" id="pKG-DF-d3D"/>
-                                                <constraint firstItem="mYF-x3-kAl" firstAttribute="centerY" secondItem="4lv-P9-tyv" secondAttribute="centerY" id="u5d-Pu-yYu"/>
-                                            </constraints>
-                                        </view>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="zJZ-51-3Rw"/>
-                                    <barButtonItem style="plain" id="uPa-2p-7w1" userLabel="Undo Button Item">
-                                        <button key="customView" opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="cxI-wh-pjW" userLabel="Undo Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                            <rect key="frame" x="276" y="17" width="43" height="44"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="30" id="XR2-4m-eiq"/>
-                                            </constraints>
-                                            <state key="normal" image="undo"/>
-                                            <connections>
-                                                <action selector="undoButtonClicked:" destination="mEi-hH-CUE" eventType="touchUpInside" id="iyc-ZL-3Yt"/>
-                                            </connections>
-                                        </button>
-                                    </barButtonItem>
-                                    <barButtonItem width="10" style="plain" systemItem="fixedSpace" id="8ud-XJ-6aK"/>
-                                    <barButtonItem style="plain" id="b5P-5H-sde" userLabel="Summary Button Item">
-                                        <button key="customView" opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sy8-YT-Lhn" userLabel="Summary Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                            <rect key="frame" x="329" y="22" width="30" height="34"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="30" id="Tnq-od-zJx"/>
-                                            </constraints>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="summary"/>
-                                            </userDefinedRuntimeAttributes>
-                                            <connections>
-                                                <action selector="summaryClicked:" destination="mEi-hH-CUE" eventType="touchUpInside" id="A8y-aY-Kij"/>
-                                            </connections>
-                                        </button>
-                                    </barButtonItem>
-                                </items>
-                                <color key="barTintColor" name="Room Interior"/>
-                            </toolbar>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8rw-oz-v5h" userLabel="Finish Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="12" y="22" width="60" height="34"/>
+                                        <color key="backgroundColor" name="Clear"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="34" id="6nJ-le-bkD"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="Kuj-6V-wtF"/>
+                                            <constraint firstAttribute="width" constant="60" id="b8Z-ji-xBv"/>
+                                        </constraints>
+                                        <state key="normal" image="back"/>
+                                        <connections>
+                                            <action selector="saveScorePressed:" destination="mEi-hH-CUE" eventType="touchUpInside" id="gKc-8X-Agj"/>
+                                        </connections>
+                                    </button>
+                                    <button autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IVB-I0-IfC" userLabel="Errors Button" customClass="ErrorRoundedButton" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="12" y="24" width="30" height="30"/>
+                                        <color key="backgroundColor" name="Error"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="7dS-LA-RAK"/>
+                                            <constraint firstAttribute="width" constant="30" id="8n7-22-CIA"/>
+                                        </constraints>
+                                        <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
+                                        <connections>
+                                            <action selector="saveScorePressed:" destination="mEi-hH-CUE" eventType="touchUpInside" id="5ki-0u-eNT"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Round" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="mYF-x3-kAl">
+                                        <rect key="frame" x="137.66666666666666" y="17" width="100" height="44"/>
+                                        <color key="backgroundColor" name="Clear"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="3pH-4Y-9co"/>
+                                            <constraint firstAttribute="width" constant="100" id="NnE-KG-BU4"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <color key="textColor" name="Emphasis Text"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fNh-i9-9lH" customClass="ViewGroup" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="283" y="17" width="80" height="44"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yq9-4F-fQq" userLabel="Undo Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
+                                                <rect key="frame" x="20" y="20" width="30" height="44"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" image="undo"/>
+                                                <connections>
+                                                    <action selector="undoButtonClicked:" destination="mEi-hH-CUE" eventType="touchUpInside" id="iOb-gA-sLo"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qsz-Bp-ie1" userLabel="Summary Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
+                                                <rect key="frame" x="54" y="25" width="30" height="34"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" image="forward"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="accessibilityIdentifier" value="summary"/>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <action selector="summaryClicked:" destination="mEi-hH-CUE" eventType="touchUpInside" id="hbE-1M-3As"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" name="Clear"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="M7f-Ri-2ky"/>
+                                            <constraint firstAttribute="width" priority="1" constant="80" id="VHB-Wk-UoV"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="fNh-i9-9lH" secondAttribute="trailing" constant="12" id="1Q9-bl-XMy"/>
+                                    <constraint firstItem="fNh-i9-9lH" firstAttribute="centerY" secondItem="rSw-DA-1Lg" secondAttribute="centerY" id="Axq-xG-6mV"/>
+                                    <constraint firstItem="mYF-x3-kAl" firstAttribute="centerY" secondItem="rSw-DA-1Lg" secondAttribute="centerY" id="Q5p-9V-Irz"/>
+                                    <constraint firstItem="IVB-I0-IfC" firstAttribute="centerY" secondItem="rSw-DA-1Lg" secondAttribute="centerY" id="SWQ-To-i99"/>
+                                    <constraint firstItem="mYF-x3-kAl" firstAttribute="centerX" secondItem="rSw-DA-1Lg" secondAttribute="centerX" id="ZYa-h8-L1U"/>
+                                    <constraint firstItem="8rw-oz-v5h" firstAttribute="centerY" secondItem="rSw-DA-1Lg" secondAttribute="centerY" id="dXF-gk-umW"/>
+                                    <constraint firstItem="8rw-oz-v5h" firstAttribute="leading" secondItem="rSw-DA-1Lg" secondAttribute="leading" constant="12" id="kq0-1N-DwH"/>
+                                    <constraint firstItem="IVB-I0-IfC" firstAttribute="leading" secondItem="MPT-Qn-B2G" secondAttribute="leading" constant="12" id="wKN-lR-fiO"/>
+                                </constraints>
+                                <viewLayoutGuide key="safeArea" id="MPT-Qn-B2G"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" name="Background"/>
                         <gestureRecognizers/>
@@ -423,16 +392,14 @@
                             </constraint>
                             <constraint firstItem="otp-xs-7Jm" firstAttribute="leading" secondItem="pS0-jq-6eE" secondAttribute="leading" id="7gF-JI-qcW"/>
                             <constraint firstItem="r5E-a9-sN5" firstAttribute="top" secondItem="8hd-6b-lTp" secondAttribute="bottom" constant="16" id="9GJ-fm-OW1"/>
-                            <constraint firstItem="etq-le-R2n" firstAttribute="bottom" secondItem="Y1H-0M-Egj" secondAttribute="top" constant="44" id="CBz-ye-mJu"/>
+                            <constraint firstItem="rSw-DA-1Lg" firstAttribute="leading" secondItem="pS0-jq-6eE" secondAttribute="leading" id="BSU-Zm-ua6"/>
+                            <constraint firstItem="8hd-6b-lTp" firstAttribute="leading" secondItem="30M-sz-Fdm" secondAttribute="trailing" id="Ceq-Ku-i7N"/>
                             <constraint firstItem="Weo-LM-Q3A" firstAttribute="bottom" secondItem="otp-xs-7Jm" secondAttribute="bottom" constant="44" id="DI5-tv-1fA"/>
-                            <constraint firstItem="Y1H-0M-Egj" firstAttribute="bottom" secondItem="pS0-jq-6eE" secondAttribute="bottom" id="FHY-mp-m6p"/>
-                            <constraint firstAttribute="trailing" secondItem="Y1H-0M-Egj" secondAttribute="trailing" id="GRK-5X-OIg"/>
                             <constraint firstAttribute="trailing" secondItem="8hd-6b-lTp" secondAttribute="trailing" constant="8" id="HnB-ln-6NQ">
                                 <variation key="heightClass=compact" constant="0.0"/>
                             </constraint>
                             <constraint firstItem="AtG-Oq-mM4" firstAttribute="top" secondItem="8hd-6b-lTp" secondAttribute="bottom" constant="8" id="IPa-G8-khp"/>
                             <constraint firstItem="8hd-6b-lTp" firstAttribute="top" secondItem="jGM-gE-2rv" secondAttribute="bottom" constant="8" id="Lb2-js-Ia6"/>
-                            <constraint firstItem="Y1H-0M-Egj" firstAttribute="top" secondItem="jGM-gE-2rv" secondAttribute="bottom" constant="4" id="Lcc-S1-v7S"/>
                             <constraint firstItem="30M-sz-Fdm" firstAttribute="leading" secondItem="etq-le-R2n" secondAttribute="leading" id="M8i-Xy-wct"/>
                             <constraint firstItem="etq-le-R2n" firstAttribute="trailing" secondItem="30M-sz-Fdm" secondAttribute="trailing" id="MgK-WQ-JRD"/>
                             <constraint firstItem="r5E-a9-sN5" firstAttribute="leading" secondItem="jGM-gE-2rv" secondAttribute="trailing" constant="8" id="MwL-Uc-5Cl"/>
@@ -440,15 +407,15 @@
                             <constraint firstItem="8hd-6b-lTp" firstAttribute="leading" secondItem="jGM-gE-2rv" secondAttribute="trailing" id="O1j-LI-Iei"/>
                             <constraint firstItem="AtG-Oq-mM4" firstAttribute="leading" secondItem="etq-le-R2n" secondAttribute="leading" constant="10" id="OVb-Qf-NUK"/>
                             <constraint firstItem="AtG-Oq-mM4" firstAttribute="leading" secondItem="r5E-a9-sN5" secondAttribute="trailing" constant="8" id="Vhh-W5-xfv"/>
-                            <constraint firstItem="Y1H-0M-Egj" firstAttribute="leading" secondItem="pS0-jq-6eE" secondAttribute="leading" id="XMS-Hj-0M4"/>
+                            <constraint firstAttribute="trailing" secondItem="rSw-DA-1Lg" secondAttribute="trailing" id="ZnI-7q-raA"/>
+                            <constraint firstAttribute="bottom" secondItem="rSw-DA-1Lg" secondAttribute="bottom" id="d0g-Xj-l1a"/>
                             <constraint firstItem="otp-xs-7Jm" firstAttribute="trailing" secondItem="pS0-jq-6eE" secondAttribute="trailing" id="dcY-gr-ECE"/>
+                            <constraint firstItem="rSw-DA-1Lg" firstAttribute="top" secondItem="AtG-Oq-mM4" secondAttribute="bottom" id="dcw-2J-UVK"/>
                             <constraint firstItem="jGM-gE-2rv" firstAttribute="top" secondItem="30M-sz-Fdm" secondAttribute="bottom" id="gTM-N0-Kzp"/>
-                            <constraint firstItem="Y1H-0M-Egj" firstAttribute="top" secondItem="r5E-a9-sN5" secondAttribute="bottom" constant="16" id="i8v-oK-5bT"/>
                             <constraint firstItem="jGM-gE-2rv" firstAttribute="width" secondItem="etq-le-R2n" secondAttribute="width" multiplier="0.5" id="n8b-50-rFW"/>
-                            <constraint firstItem="Y1H-0M-Egj" firstAttribute="top" secondItem="AtG-Oq-mM4" secondAttribute="bottom" id="oY1-NM-WQR">
-                                <variation key="heightClass=compact" constant="4"/>
-                            </constraint>
                             <constraint firstItem="otp-xs-7Jm" firstAttribute="top" secondItem="pS0-jq-6eE" secondAttribute="top" id="qxz-Gl-hJp"/>
+                            <constraint firstItem="etq-le-R2n" firstAttribute="bottom" secondItem="rSw-DA-1Lg" secondAttribute="top" constant="44" id="r5d-1a-obf"/>
+                            <constraint firstItem="rSw-DA-1Lg" firstAttribute="top" secondItem="jGM-gE-2rv" secondAttribute="bottom" id="uIC-n6-z62"/>
                             <constraint firstItem="30M-sz-Fdm" firstAttribute="top" secondItem="etq-le-R2n" secondAttribute="top" id="v5D-eG-RaU"/>
                             <constraint firstItem="etq-le-R2n" firstAttribute="trailing" secondItem="AtG-Oq-mM4" secondAttribute="trailing" constant="10" id="vRL-LR-hDQ"/>
                             <constraint firstItem="etq-le-R2n" firstAttribute="top" secondItem="otp-xs-7Jm" secondAttribute="bottom" id="xwt-XZ-b09"/>
@@ -457,40 +424,42 @@
                         <viewLayoutGuide key="safeArea" id="etq-le-R2n"/>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="DI5-tv-1fA"/>
+                                <exclude reference="MgK-WQ-JRD"/>
                                 <exclude reference="2eM-PN-oJy"/>
                                 <exclude reference="n8b-50-rFW"/>
+                                <exclude reference="uIC-n6-z62"/>
                                 <exclude reference="3KV-wo-7fc"/>
                                 <exclude reference="7Q1-vq-9rN"/>
+                                <exclude reference="Ceq-Ku-i7N"/>
                                 <exclude reference="Lb2-js-Ia6"/>
                                 <exclude reference="O1j-LI-Iei"/>
                                 <exclude reference="9GJ-fm-OW1"/>
                                 <exclude reference="MwL-Uc-5Cl"/>
                                 <exclude reference="OVb-Qf-NUK"/>
                                 <exclude reference="Vhh-W5-xfv"/>
-                                <exclude reference="Lcc-S1-v7S"/>
-                                <exclude reference="i8v-oK-5bT"/>
+                                <exclude reference="DI5-tv-1fA"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=compact">
                             <mask key="constraints">
                                 <include reference="n8b-50-rFW"/>
+                                <include reference="uIC-n6-z62"/>
                                 <include reference="3KV-wo-7fc"/>
+                                <include reference="Ceq-Ku-i7N"/>
                                 <include reference="O1j-LI-Iei"/>
                                 <include reference="9GJ-fm-OW1"/>
                                 <include reference="MwL-Uc-5Cl"/>
                                 <include reference="Vhh-W5-xfv"/>
-                                <include reference="Lcc-S1-v7S"/>
-                                <include reference="i8v-oK-5bT"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
                             <mask key="constraints">
-                                <include reference="DI5-tv-1fA"/>
+                                <include reference="MgK-WQ-JRD"/>
                                 <include reference="2eM-PN-oJy"/>
                                 <include reference="7Q1-vq-9rN"/>
                                 <include reference="Lb2-js-Ia6"/>
                                 <include reference="OVb-Qf-NUK"/>
+                                <include reference="DI5-tv-1fA"/>
                             </mask>
                         </variation>
                         <connections>
@@ -503,6 +472,9 @@
                         <outlet property="bannerLogoView" destination="Weo-LM-Q3A" id="SLv-kX-n2T"/>
                         <outlet property="bannerPaddingView" destination="otp-xs-7Jm" id="msq-OK-HSO"/>
                         <outlet property="entryView" destination="pS0-jq-6eE" id="n4n-SH-4Cj"/>
+                        <outlet property="errorsButton" destination="pge-ad-xW7" id="hDi-pr-EZn"/>
+                        <outlet property="finishButton" destination="VGH-oE-ROK" id="ADc-G3-l2R"/>
+                        <outlet property="footerRoundTitle" destination="mYF-x3-kAl" id="JwJ-QN-46h"/>
                         <outlet property="instructionContainerView" destination="8hd-6b-lTp" id="BDV-Uc-cQj"/>
                         <outlet property="instructionContainerViewHeightConstraint" destination="H4R-ZC-h79" id="2rv-nw-nNg"/>
                         <outlet property="instructionLabel" destination="ysS-vO-VnI" id="tmv-sW-duc"/>
@@ -510,18 +482,17 @@
                         <outlet property="playerTableViewHeightConstraint" destination="KVz-Wl-81w" id="bAj-Or-85p"/>
                         <outlet property="scoreButtonCollectionView" destination="AtG-Oq-mM4" id="4Rk-Uu-Ucf"/>
                         <outlet property="separatorView" destination="r5E-a9-sN5" id="USn-xq-Sky"/>
+                        <outlet property="summaryButton" destination="Qsz-Bp-ie1" id="cb5-p1-NcX"/>
                         <outlet property="titleView" destination="30M-sz-Fdm" id="WbS-Z9-j8g"/>
                         <outlet property="titleViewHeightConstraint" destination="pNI-F5-Mq4" id="5Iu-rw-58I"/>
-                        <outlet property="toolbar" destination="Y1H-0M-Egj" id="enX-Ux-EMO"/>
-                        <outletCollection property="errorsButton" destination="IVB-I0-IfC" collectionClass="NSMutableArray" id="Ll8-WX-4Kj"/>
-                        <outletCollection property="finishButton" destination="8rw-oz-v5h" collectionClass="NSMutableArray" id="tPh-Fy-nx8"/>
-                        <outletCollection property="summaryButton" destination="Sy8-YT-Lhn" collectionClass="NSMutableArray" id="cRH-qe-4ag"/>
-                        <outletCollection property="undoButton" destination="cxI-wh-pjW" collectionClass="NSMutableArray" id="jEU-6y-mDZ"/>
-                        <outletCollection property="footerRoundTitle" destination="mYF-x3-kAl" collectionClass="NSMutableArray" id="kbw-US-JUE"/>
-                        <outletCollection property="errorsButton" destination="pge-ad-xW7" collectionClass="NSMutableArray" id="v1T-Cp-g6m"/>
-                        <outletCollection property="finishButton" destination="VGH-oE-ROK" collectionClass="NSMutableArray" id="oO5-Uu-b1y"/>
-                        <outletCollection property="undoButton" destination="W0R-NQ-LPK" collectionClass="NSMutableArray" id="8hc-sP-Ncp"/>
-                        <outletCollection property="summaryButton" destination="zzd-PE-N0d" collectionClass="NSMutableArray" id="I37-u1-Hba"/>
+                        <outlet property="toolbarButtonViewGroup" destination="fNh-i9-9lH" id="qZz-9y-2Gx"/>
+                        <outlet property="toolbarErrorsButton" destination="IVB-I0-IfC" id="ueq-V1-9kL"/>
+                        <outlet property="toolbarFinishButton" destination="8rw-oz-v5h" id="z6o-ap-TgV"/>
+                        <outlet property="toolbarSummaryButton" destination="Qsz-Bp-ie1" id="NeN-Xq-H1o"/>
+                        <outlet property="toolbarView" destination="rSw-DA-1Lg" id="Djg-re-Jt1"/>
+                        <outlet property="undoButton" destination="Yq9-4F-fQq" id="Dns-Ua-n9a"/>
+                        <outletCollection property="errorsButtons" destination="pge-ad-xW7" collectionClass="NSMutableArray" id="v1T-Cp-g6m"/>
+                        <outletCollection property="errorsButtons" destination="IVB-I0-IfC" collectionClass="NSMutableArray" id="Ll8-WX-4Kj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qoh-28-xeD" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -536,6 +507,7 @@
     </scenes>
     <resources>
         <image name="back" width="22" height="22"/>
+        <image name="forward" width="22" height="22"/>
         <image name="undo" width="21.333333969116211" height="22"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -554,12 +526,6 @@
         </namedColor>
         <namedColor name="Error">
             <color red="0.92199999094009399" green="0.19200000166893005" blue="0.13300000131130219" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Room Interior">
-            <color red="0.29411764705882354" green="0.6588235294117647" blue="0.6470588235294118" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Room Interior Text Contrast">
-            <color red="0.21568627450980393" green="0.47843137254901963" blue="0.46666666666666667" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Separator">
             <color red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -44,7 +44,7 @@
                                             </button>
                                         </barButtonItem>
                                         <barButtonItem key="rightBarButtonItem" id="Uie-mR-UhK">
-                                            <button key="customView" hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Zb2-G3-4jd" customClass="RightClearButton" customModule="Whist_2" customModuleProvider="target">
+                                            <button key="customView" hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Zb2-G3-4jd" customClass="RightClearButton" customModule="Whist_2" customModuleProvider="target">
                                                 <rect key="frame" x="242" y="0.0" width="117" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="ContinueButton"/>

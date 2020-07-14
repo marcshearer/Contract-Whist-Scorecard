@@ -43,7 +43,7 @@ class RobotPlayer: NSObject, RobotDelegate {
     private var loopbackService: LoopbackService
     private var hostPeer: CommsPeer
     private var hand: Hand!
-    private let autoPlayTimeUnit = 1.0
+    private let autoPlayTimeUnit = Config.autoPlayTimeUnit // TODO put back to 1.0 or better have a robotAutoPlayTimeUnit in config
     
    init(playerUUID: String, name: String, deviceName: String, hostPeer: CommsPeer, playerNumber: Int) {
                 

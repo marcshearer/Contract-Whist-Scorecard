@@ -854,15 +854,15 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         
         let cardWidth: CGFloat = 60
         let label = UILabel(frame: CGRect(x: 0.0, y: 0.0, width: cardWidth, height: cardWidth * 3.0/2.0))
-        _ = Constraint.setWidth(control: label, width: cardWidth)
-        _ = Constraint.setHeight(control: label, height: cardWidth * (3.0/2.0))
+        Constraint.setWidth(control: label, width: cardWidth)
+        Constraint.setHeight(control: label, height: cardWidth * (3.0/2.0))
         label.attributedText = card.toAttributedString()
         label.backgroundColor = Palette.cardFace
         label.font = UIFont.systemFont(ofSize: 30)
         label.textAlignment = .center
         ScorecardUI.roundCorners(label)
         
-        self.confirmPlayed(title: "Confirm Card", content: label, sourceView: self.handSourceView, confirmText: "Play card", cancelText: "Change card", backgroundColor: Palette.tableTop, buttonTextColor: Palette.tableTopText, confirmHandler: { self.playCard(card: card) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
+        self.confirmPlayed(title: "Confirm Card", content: label, sourceView: self.handSourceView, confirmText: "Play card", cancelText: "Change card", titleOffset: 8.0, backgroundColor: Palette.tableTop, bannerColor: Palette.tableTop, bannerTextColor: Palette.tableTopTextContrast, buttonColor: Palette.roomInterior, buttonTextColor: Palette.roomInteriorText, confirmHandler: { self.playCard(card: card) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
     }
     
     func playCard(card: Card) {
@@ -903,15 +903,15 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         let timeLeft = Scorecard.shared.cancelReminder()
         
         let label = UILabel()
-        _ = Constraint.setWidth(control: label, width: 50)
-        _ = Constraint.setHeight(control: label, height: 50)
+        Constraint.setWidth(control: label, width: 50)
+        Constraint.setHeight(control: label, height: 50)
         label.text = "\(bid)"
         Palette.bidButtonStyle(label)
         label.font = UIFont.systemFont(ofSize: 30)
         label.textAlignment = .center
         ScorecardUI.roundCorners(label)
         
-        self.confirmPlayed(title: "Confirm Bid", content: label, sourceView: self.handSourceView, confirmText: "Confirm Bid", cancelText: "Change Bid", backgroundColor: Palette.background, buttonTextColor: Palette.text, confirmHandler: { self.makeBid(bid) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
+        self.confirmPlayed(title: "Confirm Bid", content: label, sourceView: self.handSourceView, confirmText: "Confirm Bid", cancelText: "Change Bid", titleOffset: 15.0, backgroundColor: Palette.background, bannerColor: Palette.background, bannerTextColor: Palette.roomInterior, buttonColor: Palette.roomInterior, buttonTextColor: Palette.roomInteriorText, confirmHandler: { self.makeBid(bid) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
     }
     
     func makeBid(_ bid: Int) {
@@ -927,7 +927,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         self.stateController()
     }
     
-    private func confirmPlayed(title: String, content: UIView, sourceView: UIView, confirmText: String, cancelText: String, backgroundColor: UIColor, buttonTextColor: UIColor, confirmHandler: (()->())? = nil, cancelHandler: (()->())? = nil) {
+    private func confirmPlayed(title: String, content: UIView, sourceView: UIView, confirmText: String, cancelText: String, offsets: (CGFloat?, CGFloat?)? = (0.5, nil), titleOffset: CGFloat = 5.0, contentOffset: CGPoint? = nil, backgroundColor: UIColor, bannerColor: UIColor, bannerTextColor: UIColor, buttonColor: UIColor, buttonTextColor: UIColor, confirmHandler: (()->())? = nil, cancelHandler: (()->())? = nil) {
      
         let context: [String : Any?] =
             ["title" : title,
@@ -936,10 +936,13 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
              "confirmText" : confirmText,
              "cancelText" : cancelText,
              "backgroundColor" : backgroundColor,
-             "buttonColor": backgroundColor,
+             "buttonColor": buttonColor,
              "buttonTextColor": buttonTextColor,
-             "bannerColor": Palette.roomInterior,
-             "bannerTextColor": Palette.roomInteriorText
+             "bannerColor": bannerColor,
+             "bannerTextColor": bannerTextColor,
+             "offsets": offsets,
+             "contentOffset": contentOffset,
+             "titleOffset": titleOffset
         ]
         
         self.controllerDelegate?.didInvoke(.confirmPlayed, context: context, completion: { (context) in

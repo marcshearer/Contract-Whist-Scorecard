@@ -218,10 +218,10 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
                     activeViewController.controllerDelegate = nil
                     self.activeViewController = nil
                     Scorecard.shared.viewPresenting = .processing
-                    self.nextView(view: nextView)
+                    self.nextView(view: nextView, context: context)
                 }
             } else {
-                self.nextView(view: nextView)
+                self.nextView(view: nextView, context: context)
             }
         }
     }
@@ -400,9 +400,12 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
                 let bannerColor = context?["bannerColor"] as? UIColor,
                 let bannerTextColor = context?["bannerTextColor"] as? UIColor,
                 let buttonColor = context?["buttonColor"] as? UIColor,
-                let buttonTextColor = context?["buttonTextColor"] as? UIColor {
+                let buttonTextColor = context?["buttonTextColor"] as? UIColor,
+                let offsets = context?["offsets"] as? (CGFloat?, CGFloat?),
+                let titleOffset = context?["titleOffset"] as? CGFloat,
+                let contentOffset = context?["contentOffset"] as? CGPoint? {
                 
-                confirmPlayedViewController = ConfirmPlayedViewController.show(from: parentViewController, appController: self, title: title, content: label, sourceView: sourceView, confirmText: confirmText, cancelText: cancelText, offsets: (0.5, nil), backgroundColor: backgroundColor, bannerColor: bannerColor, bannerTextColor: bannerTextColor, buttonColor: buttonColor, buttonTextColor: buttonTextColor,
+                confirmPlayedViewController = ConfirmPlayedViewController.show(from: parentViewController, appController: self, title: title, content: label, sourceView: sourceView, confirmText: confirmText, cancelText: cancelText, offsets: offsets, titleOffset: titleOffset, contentOffset: contentOffset, backgroundColor: backgroundColor, bannerColor: bannerColor, bannerTextColor: bannerTextColor, buttonColor: buttonColor, buttonTextColor: buttonTextColor,
                     confirmHandler: {
                         completion?(["confirm" : true])
                     },

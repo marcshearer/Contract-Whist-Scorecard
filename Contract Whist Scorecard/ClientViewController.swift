@@ -97,7 +97,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var upperMiddleSection: UIView!
     @IBOutlet private weak var upperMiddleHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var lowerMiddleSection: UIView!
-    @IBOutlet private weak var lowerMiddleHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bottomSection: UIView!
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
     @IBOutlet private weak var leftPaddingView: InsetPaddingView!
@@ -119,9 +118,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var peerCollectionView: UICollectionView!
     @IBOutlet private weak var peerScrollCollectionView: UICollectionView!
     @IBOutlet private weak var peerScrollCollectionViewWidthConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var playersButton: ImageButton!
-    @IBOutlet private weak var resultsButton: ImageButton!
-    @IBOutlet private weak var settingsButton: ImageButton!
     @IBOutlet private weak var bottomSectionBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var bottomSectionTrailingConstraint: NSLayoutConstraint!
     @IBOutlet private weak var playerSelectionView: PlayerSelectionView!
@@ -130,6 +126,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var tapGestureRecognizer: UITapGestureRecognizer!
     @IBOutlet private weak var flowLayout: CustomCollectionViewLayout!
     @IBOutlet private weak var dismissScreenshotImageView: UIImageView!
+    @IBOutlet private var actionButtons: [ImageButton]!
 
     // MARK: - IB Actions ============================================================================== -
         
@@ -667,8 +664,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 
                 peerCell.backgroundColor = Palette.background
                 peerCell.label.textColor = Palette.text
-                peerCell.label.text = "No devices are currently offering\nto host a game for you to join"
-                peerCell.label.font = UIFont.systemFont(ofSize: 20.0, weight: .light)
+                peerCell.label.text = "No devices are currently offering to host a game"
+                peerCell.label.font = UIFont.systemFont(ofSize: 18.0, weight: .light)
                 peerCell.leftScrollButton.isHidden = true
                 peerCell.rightScrollButton.isHidden = true
                 peerCell.cancelButton.isHidden = true
@@ -726,7 +723,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                     serviceText = "Trying to reconnect to \(name)"
                 }
 
-                peerCell.label.font = UIFont.systemFont(ofSize: 20.0, weight: .bold)
+                peerCell.label.font = UIFont.systemFont(ofSize: 18.0, weight: .bold)
                 self.ignoringGameBanners {
                     peerCell.backgroundColor = Palette.banner
                     peerCell.label.textColor = Palette.bannerText
@@ -1252,15 +1249,9 @@ extension ClientViewController {
             self.hostCollectionView.backgroundColor = Palette.buttonFace
             self.peerTitleBar.set(faceColor: Palette.buttonFace)
             self.peerTitleBar.set(textColor: Palette.buttonFaceText)
-            self.playersButton.set(faceColor: Palette.buttonFace)
-            self.playersButton.set(titleColor: Palette.banner)
-            self.playersButton.set(titleFont: UIFont.systemFont(ofSize: 18, weight: .bold))
-            self.resultsButton.set(faceColor: Palette.buttonFace)
-            self.resultsButton.set(titleColor: Palette.banner)
-            self.resultsButton.set(titleFont: UIFont.systemFont(ofSize: 18, weight: .bold))
-            self.settingsButton.set(faceColor: Palette.buttonFace)
-            self.settingsButton.set(titleColor: Palette.banner)
-            self.settingsButton.set(titleFont: UIFont.systemFont(ofSize: 18, weight: .bold))
+            self.actionButtons.forEach{(button) in button.set(faceColor: Palette.buttonFace)}
+            self.actionButtons.forEach{(button) in button.set(titleColor: Palette.banner)}
+            self.actionButtons.forEach{(button) in button.set(titleFont: UIFont.systemFont(ofSize: 18, weight: .bold))}
             self.playerSelectionView.backgroundColor = Palette.background
         }
     }
@@ -1277,9 +1268,7 @@ extension ClientViewController {
             self.bottomSectionBottomConstraint?.constant = (self.view.safeAreaInsets.bottom == 0.0 ? 10.0 : 0.0)
             self.bottomSectionTrailingConstraint?.constant = (self.view.safeAreaInsets.right == 0.0 ? 10.0 : 0.0)
         }
-        self.playersButton.setProportions(top: 30, image: 0, imageBottom: 0, title: 30, titleBottom: 0, message: 0, bottom: 30)
-        self.resultsButton.setProportions(top: 30, image: 0, imageBottom: 0, title: 30, titleBottom: 0, message: 0, bottom: 30)
-        self.settingsButton.setProportions(top: 30, image: 0, imageBottom: 0, title: 30, titleBottom: 0, message: 0, bottom: 30)
+        self.actionButtons.forEach{(button) in button.setProportions(top: 30, image: 0, imageBottom: 0, title: 35, titleBottom: 0, message: 0, bottom: 30)}
     }
 
     private func defaultCellColors(cell: HostCollectionViewCell) {

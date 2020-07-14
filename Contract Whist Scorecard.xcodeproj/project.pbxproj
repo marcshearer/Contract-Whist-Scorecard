@@ -150,6 +150,8 @@
 		B2B180252119611C008D3BAA /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B180242119611C008D3BAA /* ReviewViewController.swift */; };
 		B2B1802821196166008D3BAA /* Contract_Whist_Scorecard.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B2B1802621196166008D3BAA /* Contract_Whist_Scorecard.xcdatamodeld */; };
 		B2B2CE7324A733C00081CBFD /* PlayersViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2B2CE7224A733C00081CBFD /* PlayersViewController.storyboard */; };
+		B2B3501C24BC53590004DCB1 /* ViewGroup.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2B3501B24BC53590004DCB1 /* ViewGroup.xib */; };
+		B2B3501E24BC539B0004DCB1 /* ViewGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B3501D24BC539B0004DCB1 /* ViewGroup.swift */; };
 		B2B3EACD1FC0A8A0005E7989 /* Settings Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B3EACC1FC0A8A0005E7989 /* Settings Tests.swift */; };
 		B2B755051E58A2D900B1313B /* HistoryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B755041E58A2D900B1313B /* HistoryDetailViewController.swift */; };
 		B2B755091E5B363200B1313B /* History Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2B755081E5B363200B1313B /* History Class.swift */; };
@@ -406,6 +408,8 @@
 		B2B180242119611C008D3BAA /* ReviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		B2B1802721196166008D3BAA /* Contract_Whist_Scorecard.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Contract_Whist_Scorecard.xcdatamodel; sourceTree = "<group>"; };
 		B2B2CE7224A733C00081CBFD /* PlayersViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = PlayersViewController.storyboard; sourceTree = "<group>"; };
+		B2B3501B24BC53590004DCB1 /* ViewGroup.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ViewGroup.xib; sourceTree = "<group>"; };
+		B2B3501D24BC539B0004DCB1 /* ViewGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewGroup.swift; sourceTree = "<group>"; };
 		B2B3EACC1FC0A8A0005E7989 /* Settings Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Settings Tests.swift"; sourceTree = "<group>"; };
 		B2B755041E58A2D900B1313B /* HistoryDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryDetailViewController.swift; sourceTree = "<group>"; };
 		B2B755081E5B363200B1313B /* History Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "History Class.swift"; sourceTree = "<group>"; };
@@ -903,6 +907,7 @@
 		B243385622E0A67C002EBD40 /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
+				B2B3501A24BC53110004DCB1 /* Group View */,
 				B24ABA3924B31B6700E3F130 /* Banner Logo */,
 				B283A1AE24AF43420065994B /* Bubble View */,
 				B2CBB81524A9D70000B336CB /* Create Player */,
@@ -1200,6 +1205,15 @@
 				B2B1801C21195FB0008D3BAA /* Robot Bidding.swift */,
 			);
 			name = "Robot player";
+			sourceTree = "<group>";
+		};
+		B2B3501A24BC53110004DCB1 /* Group View */ = {
+			isa = PBXGroup;
+			children = (
+				B2B3501B24BC53590004DCB1 /* ViewGroup.xib */,
+				B2B3501D24BC539B0004DCB1 /* ViewGroup.swift */,
+			);
+			name = "Group View";
 			sourceTree = "<group>";
 		};
 		B2BE868E234C6BB600766CF2 /* Player Selection */ = {
@@ -1532,6 +1546,7 @@
 				B22789081FB83AC4009BABCA /* WalkthroughPageViewController.storyboard in Resources */,
 				CCEA53E31DF3D19F0045292C /* Notes.txt in Resources */,
 				B22789241FB882F7009BABCA /* ClientViewController.storyboard in Resources */,
+				B2B3501C24BC53590004DCB1 /* ViewGroup.xib in Resources */,
 				B20B1262245EFC2B001DD632 /* Contract Whist Comms Protocols.docx in Resources */,
 				B243386022E57BBC002EBD40 /* ImageButton.xib in Resources */,
 				B22789451FB8951A009BABCA /* GraphViewController.storyboard in Resources */,
@@ -1720,6 +1735,7 @@
 				B2B1801D21195FB0008D3BAA /* Robot Bidding.swift in Sources */,
 				B2784DB6248607A5006E49F0 /* Collection View Flow.swift in Sources */,
 				CC9EF4001E003582006E8930 /* PlayerDetailViewController.swift in Sources */,
+				B2B3501E24BC539B0004DCB1 /* ViewGroup.swift in Sources */,
 				B2E7621E1E73E6A6001DAF4F /* GetStartedViewController.swift in Sources */,
 				B22500F11F48425C0042D566 /* Scorecard Comms.swift in Sources */,
 				CC7A49081DF28BEB00703D38 /* Scorecard UI.swift in Sources */,

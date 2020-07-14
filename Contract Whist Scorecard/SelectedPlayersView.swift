@@ -287,14 +287,14 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         
         self.players = players ?? self.players
         
-        let playerFrame = CGRect(origin: CGPoint(), size: self.frame.size).inset(by: UIEdgeInsets(top: 10, left: 10, bottom: self.height + 10, right: self.width + 10))
+        let playerFrame = CGRect(origin: CGPoint(), size: self.frame.size).inset(by: UIEdgeInsets(top: 18, left: 18, bottom: self.height + 10, right: self.width + 18))
         let apex = CGPoint(x: playerFrame.midX, y: playerFrame.minY)
         let left = CGPoint(x: playerFrame.minX, y: playerFrame.midY )
         let right = CGPoint(x: playerFrame.maxX, y: playerFrame.midY)
         
         
         let viewSize = CGSize(width: self.width, height: self.height)
-        let middleXOffset: CGFloat = (self.players == 4 ? 0 : 16)
+        let middleXOffset: CGFloat = (self.players == 4 ? 0 : 8)
         let middleY: CGFloat = (self.players == 4 ? playerFrame.midY : playerFrame.minY + middleXOffset)
         var position: [Int]
         switch self.players {

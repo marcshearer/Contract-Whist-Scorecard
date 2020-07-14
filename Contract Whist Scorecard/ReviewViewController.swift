@@ -41,10 +41,6 @@ class ReviewViewController: ScorecardViewController, UITableViewDataSource, UITa
     @IBOutlet private weak var overUnderLabel: UILabel!
     @IBOutlet private weak var titleView: UIView!
     @IBOutlet private weak var titleViewHeight: NSLayoutConstraint!
-    @IBOutlet private weak var bottomLineView: UIView!
-    @IBOutlet private weak var topLineView: UIView!
-    @IBOutlet private weak var leftLineView: UIView!
-    @IBOutlet private weak var rightLineView: UIView!
     @IBOutlet private weak var titlePadderView: UIView!
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
     
@@ -209,7 +205,7 @@ class ReviewViewController: ScorecardViewController, UITableViewDataSource, UITa
             self.overUnderLabel.isHidden = true
             self.titleView.backgroundColor = UIColor.clear
         } else {
-            self.titleHeight = (ScorecardUI.landscapePhone() ? 35.0 : 44.0)
+            self.titleHeight = (ScorecardUI.landscapePhone() ? 35.0 : (ScorecardUI.smallPhoneSize() ? 60.0 : 80.0))
             self.roundTitleLabel.isHidden = false
             self.overUnderLabel.isHidden = false
             self.titleView.backgroundColor = Palette.banner
@@ -301,6 +297,7 @@ class ReviewViewController: ScorecardViewController, UITableViewDataSource, UITa
             self.tableTopWidthConstraint.constant = innerTableTopSize
             self.tableTopHeightConstraint.constant = innerTableTopSize
         }
+        self.tableTopView.roundCorners(cornerRadius: 10.0)
         
         // Setup top hand
         self.hand1TableView.frame = CGRect(x: frame.minX + (totalWidth - maxMiddleWidth) / 2.0, y: frame.minY + offset + ((useableHeight - tableTopHeight) / 2.0) - height[0], width: width[0], height: height[0])
@@ -361,16 +358,12 @@ extension ReviewViewController {
     private func defaultViewColors() {
 
         self.bannerPaddingView.bannerColor = Palette.banner
-        self.bottomLineView.backgroundColor = Palette.text
         self.dummyLabel.textColor = Palette.darkHighlightText
         self.finishButton.setTitleColor(Palette.darkHighlightText, for: .normal)
-        self.leftLineView.backgroundColor = Palette.text
         self.overUnderLabel.textColor = Palette.bannerText
-        self.rightLineView.backgroundColor = Palette.text
         self.roundTitleLabel.textColor = Palette.bannerText
-        self.tableTopView.backgroundColor = Palette.background
+        self.tableTopView.backgroundColor = Palette.tableTop
         self.titlePadderView.backgroundColor = Palette.banner
-        self.topLineView.backgroundColor = Palette.text
         self.view.backgroundColor = Palette.background
     }
 

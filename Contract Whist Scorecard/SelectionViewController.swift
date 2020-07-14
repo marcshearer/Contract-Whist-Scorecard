@@ -34,7 +34,6 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     private var rowHeight: CGFloat = 0.0
     private let labelHeight: CGFloat = 30.0
     private let interRowSpacing:CGFloat = 10.0
-    private var navigationBarHeight: CGFloat = 0.0
     private var smallScreen = false
     private var haloWidth: CGFloat = 3.0
     private var dealerHaloWidth: CGFloat = 5.0
@@ -420,7 +419,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
     
     private func setupScreenSize() {
         // Check if need to restrict bottom because of screen size
-        self.smallScreen = (ScorecardUI.screenHeight < 800 || ScorecardUI.landscapePhone()) && ScorecardUI.phoneSize()
+        self.smallScreen = (ScorecardUI.smallPhoneSize() || ScorecardUI.landscapePhone())
     }
     
     private func setupForm() {

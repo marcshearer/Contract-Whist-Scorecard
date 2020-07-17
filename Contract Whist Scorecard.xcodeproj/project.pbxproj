@@ -29,9 +29,8 @@
 		B20A66FE1E24002400E75190 /* GameSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20A66FD1E24002300E75190 /* GameSummaryViewController.swift */; };
 		B20B1262245EFC2B001DD632 /* Contract Whist Comms Protocols.docx in Resources */ = {isa = PBXBuildFile; fileRef = B20B1261245EFC2B001DD632 /* Contract Whist Comms Protocols.docx */; };
 		B20CF54424A7BD3B00F27A9C /* PersonalDashboardLandscapeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B20CF54324A7BD3B00F27A9C /* PersonalDashboardLandscapeView.xib */; };
-		B20CF54724A7D74500F27A9C /* ShieldsDashboardLandscapeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B20CF54524A7D74500F27A9C /* ShieldsDashboardLandscapeView.xib */; };
+		B20CF54724A7D74500F27A9C /* AwardsDashboardLandscapeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B20CF54524A7D74500F27A9C /* AwardsDashboardLandscapeView.xib */; };
 		B20CF54824A7D74500F27A9C /* EveryoneDashboardLandscapeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B20CF54624A7D74500F27A9C /* EveryoneDashboardLandscapeView.xib */; };
-		B20DA0401E139C450040221D /* HighScoresViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DA03F1E139C450040221D /* HighScoresViewController.swift */; };
 		B20DA0441E142D1E0040221D /* SelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20DA0431E142D1E0040221D /* SelectionViewController.swift */; };
 		B20DA0521E1FED040040221D /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B20DA0511E1FED040040221D /* CloudKit.framework */; };
 		B211E137224164FB00B48D64 /* SelectPlayersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B211E136224164FB00B48D64 /* SelectPlayersViewController.swift */; };
@@ -62,14 +61,13 @@
 		B227892A1FB885AC009BABCA /* ConfirmCountViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789281FB885AC009BABCA /* ConfirmCountViewController.storyboard */; };
 		B227892D1FB88BDD009BABCA /* HistoryDetailViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B227892B1FB88BDD009BABCA /* HistoryDetailViewController.storyboard */; };
 		B22789331FB88FA5009BABCA /* DataTableViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789311FB88FA5009BABCA /* DataTableViewController.storyboard */; };
-		B22789391FB8924C009BABCA /* HighScoresViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789371FB8924C009BABCA /* HighScoresViewController.storyboard */; };
 		B227893C1FB8932A009BABCA /* SyncViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B227893A1FB8932A009BABCA /* SyncViewController.storyboard */; };
 		B227893F1FB893C9009BABCA /* SettingsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B227893D1FB893C9009BABCA /* SettingsViewController.storyboard */; };
 		B22789421FB894AE009BABCA /* PlayerDetailViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789401FB894AE009BABCA /* PlayerDetailViewController.storyboard */; };
 		B22789451FB8951A009BABCA /* GraphViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B22789431FB8951A009BABCA /* GraphViewController.storyboard */; };
 		B228E3BC24A10274006D91CE /* PersonalDashboardPortraitView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B228E3BB24A10274006D91CE /* PersonalDashboardPortraitView.xib */; };
 		B228E3BE24A10284006D91CE /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B228E3BD24A10284006D91CE /* DashboardView.swift */; };
-		B228E3C024A10ECC006D91CE /* ShieldsDashboardPortraitView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B228E3BF24A10ECC006D91CE /* ShieldsDashboardPortraitView.xib */; };
+		B228E3C024A10ECC006D91CE /* AwardsDashboardPortraitView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B228E3BF24A10ECC006D91CE /* AwardsDashboardPortraitView.xib */; };
 		B228E3C224A10F36006D91CE /* EveryoneDashboardPortraitView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B228E3C124A10F36006D91CE /* EveryoneDashboardPortraitView.xib */; };
 		B22E38DA24A05F8900D61BBA /* CountTileView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B22E38D924A05F8900D61BBA /* CountTileView.xib */; };
 		B22E38DC24A05FA100D61BBA /* CountTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22E38DB24A05FA100D61BBA /* CountTileView.swift */; };
@@ -105,6 +103,8 @@
 		B24ABA3824B040D600E3F130 /* DataTableTileContentCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B24ABA3724B040D600E3F130 /* DataTableTileContentCollectionViewCell.xib */; };
 		B24ABA3B24B31B9500E3F130 /* BannerLogoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B24ABA3A24B31B9500E3F130 /* BannerLogoView.xib */; };
 		B24ABA3D24B31BB900E3F130 /* BannerLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24ABA3C24B31BB900E3F130 /* BannerLogoView.swift */; };
+		B24C5A4424C1783A0069759A /* Date Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24C5A4324C1783A0069759A /* Date Extensions.swift */; };
+		B24C5A4824C1F0650069759A /* AwardGridCollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B24C5A4724C1F0650069759A /* AwardGridCollectionCell.xib */; };
 		B250610020CD7F480030EE8F /* Recovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25060FF20CD7F470030EE8F /* Recovery.swift */; };
 		B2519457230C4284006240DE /* Custom Transitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2519456230C4284006240DE /* Custom Transitions.swift */; };
 		B2594E852251FEB2004398FB /* launch_multiple_simulators.sh in Resources */ = {isa = PBXBuildFile; fileRef = B2594E832251FEB1004398FB /* launch_multiple_simulators.sh */; };
@@ -135,6 +135,9 @@
 		B28DDAA224A327180029FE36 /* HighScoreTileTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B28DDAA124A327180029FE36 /* HighScoreTileTableViewCell.xib */; };
 		B28DDAA424A3274E0029FE36 /* HighScoreTileCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B28DDAA324A3274E0029FE36 /* HighScoreTileCollectionViewCell.xib */; };
 		B28DFC2D1F79618700E991E4 /* Config Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28DFC2C1F79618700E991E4 /* Config Class.swift */; };
+		B28E8C1E24BEBFED0053E237 /* AwardCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28E8C1D24BEBFED0053E237 /* AwardCollectionCell.swift */; };
+		B28E8C2024BEBFFC0053E237 /* AwardListCollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B28E8C1F24BEBFFC0053E237 /* AwardListCollectionCell.xib */; };
+		B28E8C2324C03CC10053E237 /* Awards.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28E8C2224C03CC10053E237 /* Awards.swift */; };
 		B29AD706224F88060087160B /* Whisper Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29AD705224F88060087160B /* Whisper Class.swift */; };
 		B29FFF31223BA302002C01FE /* Banners.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29FFF30223BA302002C01FE /* Banners.swift */; };
 		B2A3D9A1248E2804008556B8 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A3D9A0248E2804008556B8 /* Location.swift */; };
@@ -284,9 +287,8 @@
 		B20A66FD1E24002300E75190 /* GameSummaryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameSummaryViewController.swift; sourceTree = "<group>"; };
 		B20B1261245EFC2B001DD632 /* Contract Whist Comms Protocols.docx */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Contract Whist Comms Protocols.docx"; sourceTree = "<group>"; };
 		B20CF54324A7BD3B00F27A9C /* PersonalDashboardLandscapeView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PersonalDashboardLandscapeView.xib; sourceTree = "<group>"; };
-		B20CF54524A7D74500F27A9C /* ShieldsDashboardLandscapeView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShieldsDashboardLandscapeView.xib; sourceTree = "<group>"; };
+		B20CF54524A7D74500F27A9C /* AwardsDashboardLandscapeView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AwardsDashboardLandscapeView.xib; sourceTree = "<group>"; };
 		B20CF54624A7D74500F27A9C /* EveryoneDashboardLandscapeView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EveryoneDashboardLandscapeView.xib; sourceTree = "<group>"; };
-		B20DA03F1E139C450040221D /* HighScoresViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HighScoresViewController.swift; sourceTree = "<group>"; };
 		B20DA0431E142D1E0040221D /* SelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SelectionViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		B20DA04F1E1FEC5F0040221D /* Contract Whist Scorecard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Contract Whist Scorecard.entitlements"; sourceTree = "<group>"; };
 		B20DA0511E1FED040040221D /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -320,14 +322,13 @@
 		B22789291FB885AC009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ConfirmCountViewController.storyboard; sourceTree = "<group>"; };
 		B227892C1FB88BDD009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/HistoryDetailViewController.storyboard; sourceTree = "<group>"; };
 		B22789321FB88FA5009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/DataTableViewController.storyboard; sourceTree = "<group>"; };
-		B22789381FB8924C009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/HighScoresViewController.storyboard; sourceTree = "<group>"; };
 		B227893B1FB8932A009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SyncViewController.storyboard; sourceTree = "<group>"; };
 		B227893E1FB893C9009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/SettingsViewController.storyboard; sourceTree = "<group>"; };
 		B22789411FB894AE009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/PlayerDetailViewController.storyboard; sourceTree = "<group>"; };
 		B22789441FB8951A009BABCA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/GraphViewController.storyboard; sourceTree = "<group>"; };
 		B228E3BB24A10274006D91CE /* PersonalDashboardPortraitView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PersonalDashboardPortraitView.xib; sourceTree = "<group>"; };
 		B228E3BD24A10284006D91CE /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
-		B228E3BF24A10ECC006D91CE /* ShieldsDashboardPortraitView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShieldsDashboardPortraitView.xib; sourceTree = "<group>"; };
+		B228E3BF24A10ECC006D91CE /* AwardsDashboardPortraitView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AwardsDashboardPortraitView.xib; sourceTree = "<group>"; };
 		B228E3C124A10F36006D91CE /* EveryoneDashboardPortraitView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EveryoneDashboardPortraitView.xib; sourceTree = "<group>"; };
 		B22E38D924A05F8900D61BBA /* CountTileView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CountTileView.xib; sourceTree = "<group>"; };
 		B22E38DB24A05FA100D61BBA /* CountTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountTileView.swift; sourceTree = "<group>"; };
@@ -363,6 +364,8 @@
 		B24ABA3724B040D600E3F130 /* DataTableTileContentCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DataTableTileContentCollectionViewCell.xib; sourceTree = "<group>"; };
 		B24ABA3A24B31B9500E3F130 /* BannerLogoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BannerLogoView.xib; sourceTree = "<group>"; };
 		B24ABA3C24B31BB900E3F130 /* BannerLogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerLogoView.swift; sourceTree = "<group>"; };
+		B24C5A4324C1783A0069759A /* Date Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date Extensions.swift"; sourceTree = "<group>"; };
+		B24C5A4724C1F0650069759A /* AwardGridCollectionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AwardGridCollectionCell.xib; sourceTree = "<group>"; };
 		B25060FF20CD7F470030EE8F /* Recovery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Recovery.swift; sourceTree = "<group>"; };
 		B2519456230C4284006240DE /* Custom Transitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Custom Transitions.swift"; sourceTree = "<group>"; };
 		B2594E832251FEB1004398FB /* launch_multiple_simulators.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = launch_multiple_simulators.sh; sourceTree = "<group>"; };
@@ -395,6 +398,9 @@
 		B28DDAA124A327180029FE36 /* HighScoreTileTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HighScoreTileTableViewCell.xib; sourceTree = "<group>"; };
 		B28DDAA324A3274E0029FE36 /* HighScoreTileCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HighScoreTileCollectionViewCell.xib; sourceTree = "<group>"; };
 		B28DFC2C1F79618700E991E4 /* Config Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Config Class.swift"; sourceTree = "<group>"; };
+		B28E8C1D24BEBFED0053E237 /* AwardCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardCollectionCell.swift; sourceTree = "<group>"; };
+		B28E8C1F24BEBFFC0053E237 /* AwardListCollectionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AwardListCollectionCell.xib; sourceTree = "<group>"; };
+		B28E8C2224C03CC10053E237 /* Awards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Awards.swift; sourceTree = "<group>"; };
 		B29AD705224F88060087160B /* Whisper Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Whisper Class.swift"; sourceTree = "<group>"; };
 		B29FFF30223BA302002C01FE /* Banners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Banners.swift; sourceTree = "<group>"; };
 		B2A3D9A0248E2804008556B8 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
@@ -749,15 +755,6 @@
 			name = Players;
 			sourceTree = "<group>";
 		};
-		B221EEEE210B1B4400F7FBA0 /* High Scores */ = {
-			isa = PBXGroup;
-			children = (
-				B22789371FB8924C009BABCA /* HighScoresViewController.storyboard */,
-				B20DA03F1E139C450040221D /* HighScoresViewController.swift */,
-			);
-			name = "High Scores";
-			sourceTree = "<group>";
-		};
 		B221EEEF210B1BDB00F7FBA0 /* Walkthrough */ = {
 			isa = PBXGroup;
 			children = (
@@ -869,8 +866,8 @@
 			children = (
 				B228E3C124A10F36006D91CE /* EveryoneDashboardPortraitView.xib */,
 				B20CF54624A7D74500F27A9C /* EveryoneDashboardLandscapeView.xib */,
-				B228E3BF24A10ECC006D91CE /* ShieldsDashboardPortraitView.xib */,
-				B20CF54524A7D74500F27A9C /* ShieldsDashboardLandscapeView.xib */,
+				B228E3BF24A10ECC006D91CE /* AwardsDashboardPortraitView.xib */,
+				B20CF54524A7D74500F27A9C /* AwardsDashboardLandscapeView.xib */,
 				B228E3BB24A10274006D91CE /* PersonalDashboardPortraitView.xib */,
 				B20CF54324A7BD3B00F27A9C /* PersonalDashboardLandscapeView.xib */,
 			);
@@ -920,6 +917,7 @@
 				B243386122E57BD1002EBD40 /* Image Button View */,
 				B247A729248359D700591BBA /* Title Bar */,
 				B2430CCA22EABD4800C4FC77 /* Slide Out Button */,
+				B28E8C2124BEC0020053E237 /* Award View */,
 			);
 			name = "Custom Views";
 			sourceTree = "<group>";
@@ -1020,7 +1018,6 @@
 				B221EEEC210B1B1700F7FBA0 /* Statistics & History */,
 				B221EEEB210B1B0F00F7FBA0 /* Player Detail */,
 				B221EEE9210B1AE800F7FBA0 /* History Detail */,
-				B221EEEE210B1B4400F7FBA0 /* High Scores */,
 			);
 			name = "Other Main Views";
 			sourceTree = "<group>";
@@ -1064,6 +1061,7 @@
 				B2519456230C4284006240DE /* Custom Transitions.swift */,
 				B247A72E2483657600591BBA /* Shadow View.swift */,
 				B2784DB5248607A5006E49F0 /* Collection View Flow.swift */,
+				B24C5A4324C1783A0069759A /* Date Extensions.swift */,
 			);
 			name = "Core Class Extensions";
 			sourceTree = "<group>";
@@ -1096,6 +1094,7 @@
 				B2D74251246AE6C200C58802 /* Scorecard Controller.swift */,
 				B26A11A92460803500449FCC /* Game.swift */,
 				49410E4D1DF1A251000BDA6D /* Player Class.swift */,
+				B28E8C2224C03CC10053E237 /* Awards.swift */,
 				B2D70EDE24628BA9009E6D6F /* Scores.swift */,
 				B26A11A72460728300449FCC /* Settings.swift */,
 				B2144C4E2465334200CF56B7 /* Version.swift */,
@@ -1165,6 +1164,16 @@
 				B28DDA9F24A3259E0029FE36 /* HighScoreTileView.swift */,
 			);
 			name = "High Score Tile";
+			sourceTree = "<group>";
+		};
+		B28E8C2124BEC0020053E237 /* Award View */ = {
+			isa = PBXGroup;
+			children = (
+				B28E8C1F24BEBFFC0053E237 /* AwardListCollectionCell.xib */,
+				B24C5A4724C1F0650069759A /* AwardGridCollectionCell.xib */,
+				B28E8C1D24BEBFED0053E237 /* AwardCollectionCell.swift */,
+			);
+			name = "Award View";
 			sourceTree = "<group>";
 		};
 		B2A9096A24A1C64200B35B69 /* Count Tile */ = {
@@ -1541,6 +1550,7 @@
 				B227890D1FB83D49009BABCA /* GamePreviewViewController.storyboard in Resources */,
 				B2B1802121195FFA008D3BAA /* Contract Whist Scorecard.pages in Resources */,
 				B2E556C122C9F86200C49821 /* Colors.xlsx in Resources */,
+				B28E8C2024BEBFFC0053E237 /* AwardListCollectionCell.xib in Resources */,
 				B2DCEFDC246FFBE2007D409B /* View flow host.xlsx in Resources */,
 				B2E065C424AB02B80055C376 /* RelatedPlayersViewController.storyboard in Resources */,
 				B22789081FB83AC4009BABCA /* WalkthroughPageViewController.storyboard in Resources */,
@@ -1553,7 +1563,7 @@
 				B24ABA3824B040D600E3F130 /* DataTableTileContentCollectionViewCell.xib in Resources */,
 				B228E3C224A10F36006D91CE /* EveryoneDashboardPortraitView.xib in Resources */,
 				B2594E862251FEB2004398FB /* MyDevices.sh in Resources */,
-				B228E3C024A10ECC006D91CE /* ShieldsDashboardPortraitView.xib in Resources */,
+				B228E3C024A10ECC006D91CE /* AwardsDashboardPortraitView.xib in Resources */,
 				B2E065CD24AB0EE30055C376 /* RelatedPlayersTableViewCell.xib in Resources */,
 				B228E3BC24A10274006D91CE /* PersonalDashboardPortraitView.xib in Resources */,
 				B2A9096324A1BBDB00B35B69 /* DataTableTileView.xib in Resources */,
@@ -1576,6 +1586,7 @@
 				B227892A1FB885AC009BABCA /* ConfirmCountViewController.storyboard in Resources */,
 				CC4CC1061DEADC32007FB24F /* LaunchScreenViewController.storyboard in Resources */,
 				B28DDAA424A3274E0029FE36 /* HighScoreTileCollectionViewCell.xib in Resources */,
+				B24C5A4824C1F0650069759A /* AwardGridCollectionCell.xib in Resources */,
 				B2361A3722D5B965007D88BB /* ConfirmPlayedViewController.storyboard in Resources */,
 				B28DDA9A24A313D20029FE36 /* TrendTileView.xib in Resources */,
 				B22789071FB83AC4009BABCA /* WalkthroughViewController.storyboard in Resources */,
@@ -1598,10 +1609,9 @@
 				B283A1B024AF438D0065994B /* BubbleView.xib in Resources */,
 				B20CF54424A7BD3B00F27A9C /* PersonalDashboardLandscapeView.xib in Resources */,
 				B227893C1FB8932A009BABCA /* SyncViewController.storyboard in Resources */,
-				B22789391FB8924C009BABCA /* HighScoresViewController.storyboard in Resources */,
 				B2430CC722EABD1D00C4FC77 /* SlideOutButtonView.xib in Resources */,
 				B22789181FB84A75009BABCA /* RoundSummaryViewController.storyboard in Resources */,
-				B20CF54724A7D74500F27A9C /* ShieldsDashboardLandscapeView.xib in Resources */,
+				B20CF54724A7D74500F27A9C /* AwardsDashboardLandscapeView.xib in Resources */,
 				CC4CC0FE1DEADC32007FB24F /* Main.storyboard in Resources */,
 				B2A9096724A1C15700B35B69 /* DataTableTileTableViewCell.xib in Resources */,
 				B22789121FB844CD009BABCA /* ScorepadViewController.storyboard in Resources */,
@@ -1751,6 +1761,7 @@
 				B250610020CD7F480030EE8F /* Recovery.swift in Sources */,
 				B2BBCCAA2327ECD0005678B2 /* HexagonView.swift in Sources */,
 				B2CBB81924A9D81500B336CB /* CreatePlayerView.swift in Sources */,
+				B28E8C1E24BEBFED0053E237 /* AwardCollectionCell.swift in Sources */,
 				B267DF75211F41FC0086D521 /* Admin Menu.swift in Sources */,
 				B2C051041EDF194C009DE37F /* Multipeer Class.swift in Sources */,
 				B243386322E57BE7002EBD40 /* ImageButton.swift in Sources */,
@@ -1785,10 +1796,10 @@
 				B243385B22E0A6D8002EBD40 /* SelectedPlayersView.swift in Sources */,
 				B2D70EDF24628BA9009E6D6F /* Scores.swift in Sources */,
 				B2A9096524A1BBEC00B35B69 /* DataTableTileView.swift in Sources */,
+				B28E8C2324C03CC10053E237 /* Awards.swift in Sources */,
 				B235D2BE1F82288A0019384B /* Notification Simulator.swift in Sources */,
 				B2F70E521EE8BC470092C19F /* Host Controller Class.swift in Sources */,
 				B214FBB11FCB71EB00F4F39B /* Watch Manager.swift in Sources */,
-				B20DA0401E139C450040221D /* HighScoresViewController.swift in Sources */,
 				B23970D124AF50BB00E3C2A9 /* DataTableTileStatsDataSource.swift in Sources */,
 				B2D2AAB01E1FF8A600E211A9 /* SyncViewController.swift in Sources */,
 				B2B7550B1E5DEA6A00B1313B /* Reconcile.swift in Sources */,
@@ -1796,6 +1807,7 @@
 				B2B1801F21195FBC008D3BAA /* Robot Player Class.swift in Sources */,
 				49410E501DF1A712000BDA6D /* Scorecard Class.swift in Sources */,
 				B2B7550D1E619A3F00B1313B /* DataAdmin.swift in Sources */,
+				B24C5A4424C1783A0069759A /* Date Extensions.swift in Sources */,
 				B2A3D9A1248E2804008556B8 /* Location.swift in Sources */,
 				B29FFF31223BA302002C01FE /* Banners.swift in Sources */,
 				B23D9C6F24AE5132002C721B /* BubbleView.swift in Sources */,
@@ -1965,14 +1977,6 @@
 				B22789321FB88FA5009BABCA /* Base */,
 			);
 			name = DataTableViewController.storyboard;
-			sourceTree = "<group>";
-		};
-		B22789371FB8924C009BABCA /* HighScoresViewController.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B22789381FB8924C009BABCA /* Base */,
-			);
-			name = HighScoresViewController.storyboard;
 			sourceTree = "<group>";
 		};
 		B227893A1FB8932A009BABCA /* SyncViewController.storyboard */ = {

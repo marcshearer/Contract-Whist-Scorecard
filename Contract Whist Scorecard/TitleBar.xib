@@ -12,6 +12,7 @@
             <connections>
                 <outlet property="contentView" destination="iN0-l3-epB" id="Yc9-1t-9Qh"/>
                 <outlet property="titleLabel" destination="VHz-ze-cbd" id="bLi-QW-nu5"/>
+                <outlet property="titleLabelHeight" destination="vCB-An-SWr" id="mXf-nG-Q24"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -22,6 +23,9 @@
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VHz-ze-cbd">
                     <rect key="frame" x="0.0" y="0.0" width="300" height="80"/>
                     <color key="backgroundColor" name="Clear"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="80" id="vCB-An-SWr"/>
+                    </constraints>
                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="24"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
@@ -29,7 +33,6 @@
             </subviews>
             <color key="backgroundColor" name="Clear"/>
             <constraints>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="VHz-ze-cbd" secondAttribute="bottom" id="GpW-mV-PRG"/>
                 <constraint firstItem="VHz-ze-cbd" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Izg-G6-MBL"/>
                 <constraint firstAttribute="trailing" secondItem="VHz-ze-cbd" secondAttribute="trailing" id="b0n-1N-ntR"/>
                 <constraint firstItem="VHz-ze-cbd" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="uJJ-Os-DXg"/>

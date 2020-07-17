@@ -373,6 +373,7 @@ enum InviteStatus {
     
     func startGame() {
         self.setupPlayers()
+        Scorecard.shared.saveMaxScores()
         Scorecard.recovery.saveInitialValues()
         self.setHandState()
         _ = self.statusMessage()

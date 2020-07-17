@@ -46,7 +46,6 @@ class ImageButton: UIView {
     @IBOutlet private weak var titleHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var titleBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var messageHeightConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var bottomConstraint: NSLayoutConstraint!
     
     private var shadowView: UIView!
     private var shadowGradientView: UIView!
@@ -197,7 +196,7 @@ class ImageButton: UIView {
         }
     }
     
-    public func setProportions(top: CGFloat = 0.1, image: CGFloat = 0.25, imageBottom: CGFloat = 0.05, title: CGFloat = 0.1, titleBottom: CGFloat = 0.1, message: CGFloat = 0.3, bottom: CGFloat = 0.1) {
+    public func setProportions(top: CGFloat = 0.0, image: CGFloat = 0.0, imageBottom: CGFloat = 0.0, title: CGFloat = 0.0, titleBottom: CGFloat = 0.0, message: CGFloat = 0.0, bottom: CGFloat = 0.0) {
         self.heightProportion = (top: top, image: image, imageBottom: imageBottom, title: title, titleBottom: titleBottom, message: message, bottom: bottom)
         self.setupHeights()
     }
@@ -212,8 +211,6 @@ class ImageButton: UIView {
         self.titleHeightConstraint.constant = self.heightProportion.title * scale
         self.titleBottomConstraint.constant = self.heightProportion.titleBottom * scale
         self.messageHeightConstraint.constant = self.heightProportion.message * scale
-        self.bottomConstraint.constant = self.heightProportion.bottom * scale
-        
     }
     
 }

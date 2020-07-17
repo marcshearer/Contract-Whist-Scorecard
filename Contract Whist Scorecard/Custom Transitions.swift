@@ -12,6 +12,8 @@ enum ScorecardAnimation {
     case fade
     case fromLeft
     case fromRight
+    case fromTop
+    case toTop
 }
 
 class ScorecardAnimator: NSObject, UIViewControllerAnimatedTransitioning {
@@ -77,6 +79,29 @@ class ScorecardAnimator: NSObject, UIViewControllerAnimatedTransitioning {
                     animations: {
                         toView.frame = frame
                         fromView.frame = CGRect(x: -frame.width, y: 0.0, width: frame.width, height: frame.height)
+                },
+                    completion: { _ in
+                        transitionContext.completeTransition(true)
+                })
+            case .fromTop:
+                let frame = fromView.frame
+                toView.frame = CGRect(x: 0.0, y: -frame.height, width: frame.width, height: frame.height)
+                UIView.animate(
+                    withDuration: duration,
+                    animations: {
+                        toView.frame = frame
+                },
+                    completion: { _ in
+                        transitionContext.completeTransition(true)
+                })
+            case .toTop:
+                let frame = fromView.frame
+                toView.frame = frame
+                fromView.superview?.bringSubviewToFront(fromView)
+                UIView.animate(
+                    withDuration: duration,
+                    animations: {
+                        fromView.frame = CGRect(x: 0.0, y: -frame.height, width: frame.width, height: frame.height)
                 },
                     completion: { _ in
                         transitionContext.completeTransition(true)

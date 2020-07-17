@@ -11,23 +11,23 @@
         <!--Sync-->
         <scene sceneID="hlL-aM-BP7">
             <objects>
-                <viewController storyboardIdentifier="SyncViewController" title="Sync" useStoryboardIdentifierAsRestorationIdentifier="YES" id="kEX-6R-oYT" customClass="SyncViewController" customModule="Contract_Whist_Scorecard" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SyncViewController" title="Sync" useStoryboardIdentifierAsRestorationIdentifier="YES" id="kEX-6R-oYT" customClass="SyncViewController" customModule="Whist_2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleAspectFill" id="dRk-3e-k2c">
                         <rect key="frame" x="0.0" y="0.0" width="400" height="523"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vyU-iN-Rma" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vyU-iN-Rma" userLabel="Banner Padding View" customClass="InsetPaddingView" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="400" height="44"/>
                             </view>
-                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pPE-oz-OCx" customClass="NavigationBar" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                            <navigationBar contentMode="scaleToFill" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pPE-oz-OCx" customClass="NavigationBar" customModule="Whist_2" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="44" width="400" height="44"/>
                                 <textAttributes key="titleTextAttributes">
                                     <color key="textColor" name="Banner Text"/>
                                 </textAttributes>
                                 <items>
-                                    <navigationItem title="Sync Players" id="QE3-YK-Vgx">
+                                    <navigationItem id="QE3-YK-Vgx">
                                         <barButtonItem key="leftBarButtonItem" id="UWK-Lf-2VC">
-                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="4KG-BW-XxS" customClass="ClearButton" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                            <button key="customView" hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="4KG-BW-XxS" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
                                                 <rect key="frame" x="20" y="11" width="30" height="22"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <state key="normal" image="back">
@@ -43,39 +43,36 @@
                             </navigationBar>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Pa-06-685" userLabel="Top background">
                                 <rect key="frame" x="0.0" y="88" width="400" height="104.5"/>
-                                <color key="backgroundColor" name="Banner"/>
-                            </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HqI-q0-LEC" customClass="BannerContinuation" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="192.5" width="400" height="60"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Syncing with iCloud" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="Jqx-cE-jev">
+                                        <rect key="frame" x="74.5" y="12.5" width="251.5" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="evO-uZ-16P"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="28"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This may take some time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="gva-iR-Ecd">
+                                        <rect key="frame" x="116.5" y="63.5" width="167" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="15"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="60" id="Iyh-md-C4i"/>
+                                    <constraint firstItem="Jqx-cE-jev" firstAttribute="centerY" secondItem="3Pa-06-685" secondAttribute="centerY" constant="-20" id="AUh-ch-k6x"/>
+                                    <constraint firstItem="Jqx-cE-jev" firstAttribute="centerX" secondItem="3Pa-06-685" secondAttribute="centerX" id="TiM-S2-tj0"/>
+                                    <constraint firstItem="gva-iR-Ecd" firstAttribute="centerX" secondItem="3Pa-06-685" secondAttribute="centerX" id="hPq-fZ-VC9"/>
+                                    <constraint firstItem="gva-iR-Ecd" firstAttribute="centerY" secondItem="3Pa-06-685" secondAttribute="centerY" constant="20" id="pre-4R-0Rf"/>
                                 </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="bannerColor">
-                                        <color key="value" name="Banner"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="shapeType">
-                                        <integer key="value" value="2"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                        <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
                             </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sync" translatesAutoresizingMaskIntoConstraints="NO" id="owS-TZ-KyE" userLabel="Sync Graphic">
-                                <rect key="frame" x="150" y="88.5" width="100" height="100"/>
-                                <color key="backgroundColor" name="Clear"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="owS-TZ-KyE" secondAttribute="height" multiplier="1:1" id="dg1-91-joC"/>
-                                    <constraint firstAttribute="width" constant="100" id="lzY-ff-cce"/>
-                                </constraints>
-                            </imageView>
                             <tableView clipsSubviews="YES" tag="1" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="50" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="nwp-Sg-9Mi">
-                                <rect key="frame" x="0.0" y="284.5" width="400" height="238.5"/>
+                                <rect key="frame" x="0.0" y="192.5" width="400" height="330.5"/>
                                 <color key="backgroundColor" name="Clear"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Sync Stage Table Cell" id="eAw-Zo-yUH" customClass="SyncStageTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Sync Stage Table Cell" id="eAw-Zo-yUH" customClass="SyncStageTableCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="400" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eAw-Zo-yUH" id="Yl0-xX-Lmc">
@@ -83,16 +80,16 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="box" translatesAutoresizingMaskIntoConstraints="NO" id="KO1-2j-7mg">
-                                                    <rect key="frame" x="20" y="10" width="30" height="30"/>
+                                                    <rect key="frame" x="36" y="10" width="30" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="KO1-2j-7mg" secondAttribute="height" multiplier="1:1" id="RB9-G4-BUB"/>
                                                     </constraints>
                                                 </imageView>
-                                                <activityIndicatorView hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="av2-Sd-ITG">
-                                                    <rect key="frame" x="25" y="15" width="20" height="20"/>
+                                                <activityIndicatorView hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="av2-Sd-ITG">
+                                                    <rect key="frame" x="41" y="15" width="20" height="20"/>
                                                 </activityIndicatorView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="XQT-C4-XeR">
-                                                    <rect key="frame" x="60" y="0.0" width="340" height="50"/>
+                                                    <rect key="frame" x="76" y="0.0" width="324" height="50"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                                     <color key="textColor" name="Text"/>
@@ -106,7 +103,7 @@
                                                 <constraint firstItem="XQT-C4-XeR" firstAttribute="leading" secondItem="KO1-2j-7mg" secondAttribute="trailing" constant="10" id="Pxh-Q5-mLY"/>
                                                 <constraint firstItem="XQT-C4-XeR" firstAttribute="top" secondItem="Yl0-xX-Lmc" secondAttribute="top" id="SCI-yw-xeP"/>
                                                 <constraint firstItem="av2-Sd-ITG" firstAttribute="centerY" secondItem="KO1-2j-7mg" secondAttribute="centerY" id="U4b-JW-bVf"/>
-                                                <constraint firstItem="KO1-2j-7mg" firstAttribute="leading" secondItem="Yl0-xX-Lmc" secondAttribute="leading" constant="20" id="X9a-ci-IpC"/>
+                                                <constraint firstItem="KO1-2j-7mg" firstAttribute="leading" secondItem="Yl0-xX-Lmc" secondAttribute="leading" constant="36" id="X9a-ci-IpC"/>
                                                 <constraint firstItem="KO1-2j-7mg" firstAttribute="top" secondItem="Yl0-xX-Lmc" secondAttribute="top" constant="10" id="lba-OM-Xlr"/>
                                                 <constraint firstAttribute="trailing" secondItem="XQT-C4-XeR" secondAttribute="trailing" id="qfC-8D-Q4r"/>
                                             </constraints>
@@ -132,7 +129,7 @@
                                     <constraint firstAttribute="height" id="pye-Qo-nQI"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Sync Message Table Cell" id="yzJ-ug-4qc" customClass="SyncMessageTableCell" customModule="Contract_Whist_Scorecard" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Sync Message Table Cell" id="yzJ-ug-4qc" customClass="SyncMessageTableCell" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="400" height="24"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="yzJ-ug-4qc" id="3A8-LK-MrF">
@@ -170,22 +167,16 @@
                         <color key="backgroundColor" name="Background"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="HqI-q0-LEC" firstAttribute="trailing" secondItem="dRk-3e-k2c" secondAttribute="trailing" id="1Id-jh-DqS"/>
                             <constraint firstItem="Ye1-Hk-Ldd" firstAttribute="bottom" secondItem="Y7G-kk-6TA" secondAttribute="bottom" id="4Nq-40-LA2"/>
-                            <constraint firstItem="HqI-q0-LEC" firstAttribute="top" secondItem="3Pa-06-685" secondAttribute="bottom" id="68z-BK-pzk"/>
                             <constraint firstItem="Y7G-kk-6TA" firstAttribute="leading" secondItem="dRk-3e-k2c" secondAttribute="leading" id="69e-A7-IEa"/>
                             <constraint firstItem="vyU-iN-Rma" firstAttribute="leading" secondItem="dRk-3e-k2c" secondAttribute="leading" id="8wm-ca-rbb"/>
                             <constraint firstItem="nwp-Sg-9Mi" firstAttribute="trailing" secondItem="Ye1-Hk-Ldd" secondAttribute="trailing" id="GOQ-ut-KDc"/>
                             <constraint firstItem="vyU-iN-Rma" firstAttribute="top" secondItem="dRk-3e-k2c" secondAttribute="top" id="Hoa-Af-ttO"/>
                             <constraint firstItem="Y7G-kk-6TA" firstAttribute="top" secondItem="nwp-Sg-9Mi" secondAttribute="bottom" id="J6b-Fw-D9q"/>
-                            <constraint firstItem="owS-TZ-KyE" firstAttribute="centerX" secondItem="dRk-3e-k2c" secondAttribute="centerX" id="KzZ-dX-gQe"/>
-                            <constraint firstItem="HqI-q0-LEC" firstAttribute="leading" secondItem="dRk-3e-k2c" secondAttribute="leading" id="Trm-kt-W66"/>
                             <constraint firstItem="Ye1-Hk-Ldd" firstAttribute="top" secondItem="vyU-iN-Rma" secondAttribute="bottom" id="aNb-WI-aQ2"/>
+                            <constraint firstItem="nwp-Sg-9Mi" firstAttribute="top" secondItem="3Pa-06-685" secondAttribute="bottom" id="bkv-9P-92h"/>
                             <constraint firstItem="3Pa-06-685" firstAttribute="height" secondItem="dRk-3e-k2c" secondAttribute="height" multiplier="0.2" id="kaW-IH-DhU"/>
                             <constraint firstItem="3Pa-06-685" firstAttribute="trailing" secondItem="dRk-3e-k2c" secondAttribute="trailing" id="mlx-yM-U6i"/>
-                            <constraint firstItem="HqI-q0-LEC" firstAttribute="bottom" secondItem="owS-TZ-KyE" secondAttribute="bottom" constant="64" id="pur-8u-T0B">
-                                <variation key="heightClass=compact" constant="16"/>
-                            </constraint>
                             <constraint firstItem="pPE-oz-OCx" firstAttribute="top" secondItem="Ye1-Hk-Ldd" secondAttribute="top" id="ucZ-gK-yTQ"/>
                             <constraint firstItem="3Pa-06-685" firstAttribute="leading" secondItem="dRk-3e-k2c" secondAttribute="leading" id="ufm-TI-J5x"/>
                             <constraint firstAttribute="trailing" secondItem="Y7G-kk-6TA" secondAttribute="trailing" id="xrK-Mw-i0E"/>
@@ -194,20 +185,17 @@
                             <constraint firstItem="pPE-oz-OCx" firstAttribute="leading" secondItem="dRk-3e-k2c" secondAttribute="leading" id="yJd-0d-FDI"/>
                             <constraint firstItem="pPE-oz-OCx" firstAttribute="trailing" secondItem="dRk-3e-k2c" secondAttribute="trailing" id="yTc-Ld-Kp8"/>
                             <constraint firstItem="3Pa-06-685" firstAttribute="top" secondItem="pPE-oz-OCx" secondAttribute="bottom" id="ymb-8x-cce"/>
-                            <constraint firstItem="nwp-Sg-9Mi" firstAttribute="top" secondItem="HqI-q0-LEC" secondAttribute="bottom" constant="32" id="zCY-4s-H41"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Ye1-Hk-Ldd"/>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="400" height="523"/>
                     <connections>
-                        <outlet property="bannerContinuation" destination="HqI-q0-LEC" id="RU1-s2-78o"/>
                         <outlet property="finishButton" destination="4KG-BW-XxS" id="xMw-ZJ-Rg9"/>
-                        <outlet property="navigationBar" destination="pPE-oz-OCx" id="Nxh-Ru-xLK"/>
-                        <outlet property="syncImage" destination="owS-TZ-KyE" id="cqo-1g-J2T"/>
                         <outlet property="syncMessageTableView" destination="Y7G-kk-6TA" id="5ea-gc-n0o"/>
                         <outlet property="syncStageTableView" destination="nwp-Sg-9Mi" id="RPb-VW-eb8"/>
-                        <outlet property="topBackgroundView" destination="3Pa-06-685" id="dqC-QE-oi9"/>
+                        <outletCollection property="labels" destination="Jqx-cE-jev" collectionClass="NSMutableArray" id="iYX-OV-nJL"/>
+                        <outletCollection property="labels" destination="gva-iR-Ecd" collectionClass="NSMutableArray" id="4yz-hh-xeg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n3I-Qc-PVB" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -218,12 +206,8 @@
     <resources>
         <image name="back" width="22" height="22"/>
         <image name="box" width="22" height="22"/>
-        <image name="sync" width="139" height="139"/>
         <namedColor name="Background">
             <color red="0.94117647058823528" green="0.93725490196078431" blue="0.92941176470588238" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="Banner">
-            <color red="0.89800000190734863" green="0.74900001287460327" blue="0.37299999594688416" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="Banner Text">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

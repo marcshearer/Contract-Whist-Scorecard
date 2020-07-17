@@ -22,11 +22,13 @@ class TitleBar: UIView {
     @IBInspectable private var shadowOpacity: CGFloat = 0.2
     @IBInspectable private var shadowGradient = false
     @IBInspectable private var shadowRadius: CGFloat = 0.0
+    @IBInspectable private var labelProportion: CGFloat = 1.0
     
     @IBOutlet weak public var delegate: ButtonDelegate?
     
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var titleLabelHeight: NSLayoutConstraint!
     
     
     override init(frame: CGRect) {
@@ -63,6 +65,11 @@ class TitleBar: UIView {
         self.titleLabel.font = font
     }
     
+    public func set(labelProportion: CGFloat) {
+        self.labelProportion = labelProportion
+        self.titleLabelHeight.constant = labelProportion * self.contentView.frame.height
+    }
+    
     public func set(topRounded: Bool? = nil, bottomRounded: Bool? = nil) {
         self.topRounded = topRounded ?? self.topRounded
         self.bottomRounded =  bottomRounded ?? self.bottomRounded
@@ -90,6 +97,8 @@ class TitleBar: UIView {
     
     override internal func layoutSubviews() {
         super.layoutSubviews()
+        self.sendSubviewToBack(self.contentView)
+        self.titleLabelHeight.constant = labelProportion * self.contentView.frame.height
         self.backgroundColor = UIColor.clear
         self.contentView.backgroundColor = self.faceColor
         self.titleLabel.text = self.title

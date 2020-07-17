@@ -28,6 +28,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     private let playAgainTag = 2
     private let winnersTag = 1
     private let othersTag = 2
+    private let awardsTag = 3
     
     // Local class variables
     private var xref: [(playerNumber: Int, score: Int64, place: Int, ranking: Int, personalBest: Bool)] = []
@@ -43,13 +44,20 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     private var otherWidth: CGFloat = 0.0
     private var otherCellHeight: CGFloat = 0.0
     private var otherCellWidth: CGFloat = 0.0
-    private let winnerNameHeight: CGFloat = 35.0
-    private let crownHeight: CGFloat = 60.0
-    private let otherNameHeight: CGFloat = 30.0
-    private let winnerScoreHeight: CGFloat = 40.0
-    private let otherScoreHeight: CGFloat = 20.0
+    private var winnerCrownHeight: CGFloat = 50.0
+    private var winnerImageHeight: CGFloat = 100.0
+    private var winnerNameHeight: CGFloat = 40.0
+    private var winnerScoreHeight: CGFloat = 30.0
+    private var otherImageHeight: CGFloat = 60.0
+    private var otherNameHeight: CGFloat = 24.0
+    private var otherScoreHeight: CGFloat = 20.0
     private let winnerSpacing: CGFloat = 30.0
     private let otherSpacing: CGFloat = 20.0
+    private let awardSpacing: CGFloat = 10.0
+    private let awardNameHeight: CGFloat = 20.0
+    private let awardMaxList = 100
+    private let awards = Awards()
+    private var awardList: [Award]!
     
     // Completion state
     private var completionMode: GameSummaryReturnMode = .resume
@@ -61,19 +69,26 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     var excludeStats = false
 
     // MARK: - IB Outlets ============================================================================== -
+    @IBOutlet private weak var topArea: UIView!
+    @IBOutlet private weak var middleArea: UIView!
     @IBOutlet private weak var bottomArea: UIView!
     @IBOutlet private weak var actionButtonView: UIView!
-    @IBOutlet private weak var bannerContinuation: BannerContinuation!
+    @IBOutlet private var actionButtonViewHeight: NSLayoutConstraint!
     @IBOutlet private weak var syncMessage: UILabel!
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet private weak var winnerCollectionView: UICollectionView!
     @IBOutlet private weak var winnerCollectionViewWidth: NSLayoutConstraint!
+    @IBOutlet private weak var winnerCollectionViewHeight: NSLayoutConstraint!
     @IBOutlet private weak var otherCollectionView: UICollectionView!
     @IBOutlet private weak var otherCollectionViewWidth: NSLayoutConstraint!
-    @IBOutlet private weak var stopPlayingButton: ImageButton!
+    @IBOutlet private weak var otherCollectionViewHeight: NSLayoutConstraint!
+    @IBOutlet private weak var awardsTitleBar: TitleBar!
+    @IBOutlet private weak var awardsTitleBarHeight: NSLayoutConstraint!
+    @IBOutlet private weak var awardsCollectionView: UICollectionView!
+    @IBOutlet private weak var awardsCollectionViewHeight: NSLayoutConstraint!
     @IBOutlet private weak var playAgainButton: ImageButton!
+    @IBOutlet private var actionButtons: [ImageButton]!
     @IBOutlet private weak var scorecardButton: UIButton!
-    @IBOutlet private weak var leftSwipeGesture: UISwipeGestureRecognizer!
     @IBOutlet private weak var rightSwipeGesture: UISwipeGestureRecognizer!
     @IBOutlet private weak var tapGesture: UITapGestureRecognizer!
     
@@ -85,10 +100,6 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     }
     
     @IBAction func rightSwipe(recognizer:UISwipeGestureRecognizer) {
-        self.playAgainPressed()
-    }
-    
-    @IBAction func lefttSwipe(recognizer:UISwipeGestureRecognizer) {
         self.scorecardPressed(self)
     }
     
@@ -103,15 +114,27 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         // Setup default colors (previously done in StoryBoard)
         self.defaultViewColors()
 
+        // Load awards
+        self.awardList = self.awards.calculate(playerUUID: Scorecard.activeSettings.thisPlayerUUID)
+        
+        // Bind award cells
+        AwardCollectionCell.register(awardsCollectionView, modes: .grid, .list)
+        
+        // Set title bar
+        self.awardsTitleBar.set(bottomRounded: true)
+        self.awardsTitleBar.set(font: UIFont.systemFont(ofSize: 18.0, weight: .semibold))
+
+        // Check exclusions
         self.excludeHistory = !Scorecard.activeSettings.saveHistory
         self.excludeStats = self.excludeHistory || !Scorecard.activeSettings.saveStats
         
+        // Setup buttons / swipes
         if gameSummaryMode != .scoring && gameSummaryMode != .hosting {
-            leftSwipeGesture.isEnabled = false
-            rightSwipeGesture.isEnabled = false
             self.playAgainButton.isEnabled = false
             self.playAgainButton.alpha = 0.3
         }
+        
+        // Setup tap gesture
         if gameSummaryMode != .viewing {
             // Disable tap gesture as individual buttons active
             tapGesture.isEnabled = false
@@ -135,12 +158,19 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     }
     
     override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
         
         if firstTime || rotated {
+            self.topArea.layoutIfNeeded()
+            self.middleArea.layoutIfNeeded()
             self.setupSize()
+            self.winnerCollectionView.reloadData()
+            self.awardsCollectionView.reloadData()
             firstTime = false
             rotated = false
         }
+        
+        self.awardsTitleBar.set(title: (awardList.count == 0 ? "No New Awards" : "New Awards"))
     }
 
    // MARK: - TableView Overrides ================================================================ -
@@ -155,6 +185,8 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
             return self.winners
         case othersTag:
             return Scorecard.game.currentPlayers - winners
+        case awardsTag:
+            return self.awardList.count
         default:
             return 0
         }
@@ -171,6 +203,14 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         case othersTag:
             return CGSize(width: self.otherCellWidth,
                           height: self.otherCellHeight)
+            
+        case awardsTag:
+            let height = collectionView.frame.height
+            if self.awardList.count <= self.awardMaxList {
+                return CGSize(width: collectionView.frame.width, height: height)
+            } else {
+                return CGSize(width: height - awardNameHeight, height: height)
+            }
         default:
             return CGSize()
         }
@@ -182,32 +222,55 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
             return winnerSpacing
         case othersTag:
             return otherSpacing
+        case awardsTag:
+            return awardSpacing
         default:
             return 0
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        var cell: GameSummaryCollectionCell
         
-        let winnersCollection = (collectionView.tag == winnersTag)
-        let width = (winnersCollection ? self.winnerCellWidth : self.otherCellWidth)
-        let nameHeight = (winnersCollection ? self.winnerNameHeight : self.otherNameHeight)
-        let index = indexPath.row + (winnersCollection ? 0 : winners)
-        let playerResults = xref[index]
+        if collectionView.tag != awardsTag {
+            var cell: GameSummaryPlayerCollectionCell
+            
+            let winnersCollection = (collectionView.tag == winnersTag)
+            let width = (winnersCollection ? self.winnerCellWidth : self.otherCellWidth)
+            let crownHeight = (winnersCollection ? self.winnerCrownHeight : 0)
+            let imageHeight = (winnersCollection ? self.winnerImageHeight : self.otherImageHeight)
+            let nameHeight = (winnersCollection ? self.winnerNameHeight : self.otherNameHeight)
+            let scoreHeight = (winnersCollection ? self.winnerScoreHeight : self.otherScoreHeight)
+            let index = indexPath.row + (winnersCollection ? 0 : winners)
+            let playerResults = xref[index]
+            
+            cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Game Summary Cell", for: indexPath) as! GameSummaryPlayerCollectionCell
+            
+            cell.crownHeight?.constant = crownHeight
+            cell.scoreHeight.constant = scoreHeight
+            cell.playerViewHeight.constant = imageHeight + (nameHeight - 5.0)
+            
+            cell.thumbnailView.set(frame: CGRect(origin: CGPoint(), size: CGSize(width: width, height: width + nameHeight - 5.0)))
+            cell.thumbnailView.set(playerMO: Scorecard.game.player(enteredPlayerNumber: playerResults.playerNumber).playerMO!, nameHeight: nameHeight)
+            cell.thumbnailView.set(font: UIFont.systemFont(ofSize: nameHeight * 0.7, weight: .semibold))
+            cell.thumbnailView.set(textColor: Palette.roomInteriorTextContrast)
+            
+            cell.playerScoreButton.setTitle("\(playerResults.score)", for: .normal)
+            cell.thumbnailView.set(font: UIFont.systemFont(ofSize: nameHeight * 0.7, weight: .semibold))
+            
+            cell.playerScoreButton.addTarget(self, action: #selector(GameSummaryViewController.selectPlayer(_:)), for: UIControl.Event.touchUpInside)
+            cell.playerScoreButton.titleLabel?.font = UIFont.systemFont(ofSize: scoreHeight * 1.2, weight: .semibold)
+            cell.playerScoreButton.tag = index
+            
+            return cell
+            
+        } else {
+            var cell: AwardCollectionCell
+            
+            cell = AwardCollectionCell.dequeue(collectionView, for: indexPath, mode: (awardList.count <= self.awardMaxList ? .list : .grid))
+            cell.bind(award: awardList[indexPath.row])
         
-        cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Game Summary Cell", for: indexPath) as! GameSummaryCollectionCell
-        
-        cell.thumbnailView.set(frame: CGRect(origin: CGPoint(), size: CGSize(width: width, height: width + nameHeight - 5.0)))
-        cell.thumbnailView.set(playerMO: Scorecard.game.player(enteredPlayerNumber: playerResults.playerNumber).playerMO!, nameHeight: nameHeight)
-        cell.thumbnailView.set(font: UIFont.systemFont(ofSize: nameHeight * 0.67, weight: .semibold))
-        cell.thumbnailView.set(textColor: Palette.roomInteriorTextContrast)
-        
-        cell.playerScoreButton.setTitle("\(playerResults.score)", for: .normal)
-        cell.playerScoreButton.addTarget(self, action: #selector(GameSummaryViewController.selectPlayer(_:)), for: UIControl.Event.touchUpInside)
-        cell.playerScoreButton.tag = index
-        
-        return cell
+            return cell
+        }
         
     }
     
@@ -296,17 +359,57 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     private func setupSize() {
         
         let totalWidth = self.view.safeAreaLayoutGuide.layoutFrame.width
-        
-        self.winnerCellWidth = min(100.0, (totalWidth - (self.winnerSpacing * (CGFloat(self.winners) + 1))) / CGFloat(self.winners))
-        self.winnerCellHeight = self.winnerCellWidth + (self.winnerNameHeight - 5.0) + winnerScoreHeight + crownHeight
-        self.winnerWidth = (winnerCellWidth * CGFloat(self.winners)) + (winnerSpacing * CGFloat(self.winners - 1))
+        var totalHeight = self.topArea.frame.height - 10.0
+        var idealHeight = self.winnerCrownHeight + self.winnerImageHeight + self.winnerNameHeight - 5.0 + self.winnerScoreHeight
+        if totalHeight < idealHeight {
+            let factor = totalHeight / idealHeight
+            self.winnerCrownHeight *= factor
+            self.winnerNameHeight *= factor
+            self.winnerImageHeight *= factor
+            self.winnerScoreHeight *= factor
+        }
+                
+        self.winnerCellWidth = min(100.0, (totalWidth - (self.winnerSpacing * (CGFloat(self.winners) + 1))) / CGFloat(self.winners), self.winnerImageHeight)
+        self.winnerImageHeight = self.winnerCellWidth
+        self.winnerCellHeight = self.winnerImageHeight + (self.winnerNameHeight - 5.0) + self.winnerScoreHeight + self.winnerCrownHeight
+        self.winnerWidth = (self.winnerCellWidth * CGFloat(self.winners)) + (self.winnerSpacing * CGFloat(self.winners - 1)) + 1
         self.winnerCollectionViewWidth.constant = self.winnerWidth
+        self.winnerCollectionViewHeight.constant = self.winnerCrownHeight + self.winnerImageHeight + self.winnerNameHeight - 5.0 + self.winnerScoreHeight
         
-        self.otherCellWidth = min(60.0, self.winnerCellWidth - 10.0, (totalWidth - (self.otherSpacing * (CGFloat(self.others) + 1))) / CGFloat(self.others))
-        self.otherCellHeight = self.otherCellWidth + self.otherNameHeight + otherScoreHeight
-        self.otherWidth = (otherCellWidth * CGFloat(self.others)) + (otherSpacing * CGFloat(self.others - 1))
+        totalHeight = self.middleArea.frame.height - 10.0
+        idealHeight = self.self.otherImageHeight + (self.otherNameHeight - 5.0) + self.otherScoreHeight
+        if totalHeight < idealHeight {
+            let factor = totalHeight / idealHeight
+            self.otherImageHeight *= factor
+            self.otherNameHeight *= factor
+            self.otherScoreHeight *= factor
+        }
+                
+        self.otherCellWidth = min(100.0, (totalWidth - (self.otherSpacing * (CGFloat(self.others) + 1))) / CGFloat(self.others), self.otherImageHeight)
+        self.otherImageHeight = self.otherCellWidth
+        self.otherCellHeight = self.otherImageHeight + (self.otherNameHeight - 5.0) + self.otherScoreHeight
+        self.otherWidth = (self.otherCellWidth * CGFloat(self.others)) + (self.otherSpacing * CGFloat(self.others - 1)) + 1
         self.otherCollectionViewWidth.constant = self.otherWidth
+        self.otherCollectionViewHeight.constant = self.otherImageHeight + (self.otherNameHeight - 5.0) + self.otherScoreHeight
         
+        self.actionButtons.forEach{(button) in button.roundCorners(cornerRadius: 8.0)}
+        self.actionButtons.forEach{(button) in button.set(titleFont: UIFont.systemFont(ofSize: 18.0, weight: .semibold))}
+        self.actionButtons.first!.layoutIfNeeded()
+        if self.awardList.count == 0 {
+            self.actionButtonViewHeight.constant = self.actionButtons.first!.frame.width
+            self.actionButtons.forEach{(button) in button.setProportions(top: 0.15, image: 0.6, imageBottom: 0.05, title: 0.2, bottom: 0.1)}
+            self.awardsTitleBarHeight.constant = self.actionButtons.first!.frame.width * 0.4
+            self.awardsTitleBar.set(labelProportion: 1.0)
+        } else {
+            self.actionButtonViewHeight.constant = self.actionButtons.first!.frame.width * 0.4
+            self.actionButtons.forEach{(button) in button.setProportions(top: 0.1, title: 0.2, bottom: 0.1)}
+            self.awardsTitleBarHeight.constant = self.actionButtons.first!.frame.width
+            self.awardsTitleBar.set(labelProportion: 0.4)
+            self.awardsCollectionViewHeight.constant = (self.awardsTitleBarHeight.constant * 0.7) - 20
+        }
+        self.actionButtonView.layoutIfNeeded()
+        self.actionButtons.forEach{(button) in button.roundCorners(cornerRadius: 8.0)}
+        self.bottomArea.addShadow()
     }
     
     private func calculateWinner() {
@@ -554,9 +657,12 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
 
 // MARK: - Other UI Classes - e.g. Cells =========================================================== -
 
-class GameSummaryCollectionCell: UICollectionViewCell {
-    @IBOutlet weak var thumbnailView: ThumbnailView!
-    @IBOutlet weak var playerScoreButton: UIButton!
+class GameSummaryPlayerCollectionCell: UICollectionViewCell {
+    @IBOutlet fileprivate weak var thumbnailView: ThumbnailView!
+    @IBOutlet fileprivate weak var playerScoreButton: UIButton!
+    @IBOutlet fileprivate weak var crownHeight: NSLayoutConstraint!
+    @IBOutlet fileprivate weak var playerViewHeight: NSLayoutConstraint!
+    @IBOutlet fileprivate weak var scoreHeight: NSLayoutConstraint!
 }
 
 extension GameSummaryViewController {
@@ -565,18 +671,16 @@ extension GameSummaryViewController {
 
     private func defaultViewColors() {
 
-        self.actionButtonView.backgroundColor = Palette.tableTop
         self.activityIndicator.color = Palette.darkHighlightText
-        self.bannerContinuation.backgroundColor = Palette.tableTop
-        self.bannerContinuation.bannerColor = Palette.roomInterior
-        self.bottomArea.backgroundColor = Palette.tableTop
-        self.playAgainButton.set(titleColor: Palette.tableTopTextContrast)
-        self.stopPlayingButton.set(titleColor: Palette.tableTopTextContrast)
+        self.awardsTitleBar.set(faceColor: Palette.buttonFace)
+        self.awardsTitleBar.set(textColor: Palette.buttonFaceText)
+        self.actionButtons.forEach{(button) in button.set(titleColor: Palette.buttonFaceText)}
+        self.actionButtons.forEach{(button) in button.set(faceColor: Palette.buttonFace)}
         self.syncMessage.textColor = Palette.darkHighlightText
         self.view.backgroundColor = Palette.roomInterior
     }
 
-    private func defaultCellColors(cell: GameSummaryCollectionCell) {
+    private func defaultCellColors(cell: GameSummaryPlayerCollectionCell) {
         switch cell.reuseIdentifier {
         case "Game Summary Cell":
             cell.playerScoreButton.setTitleColor(Palette.roomInteriorText, for: .normal)

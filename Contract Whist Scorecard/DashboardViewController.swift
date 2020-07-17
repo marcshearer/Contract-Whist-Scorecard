@@ -383,7 +383,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     // MARK: - Function to present and dismiss this view ================================================= -
     
-    class public func show(from viewController: ScorecardViewController, dashboardNames: [(title: String, fileName: String, imageName: String)], backImage: String = "home", backText: String = "", bannerColor: UIColor = Palette.banner, bannerShadowColor: UIColor = Palette.bannerShadow, bannerTextColor: UIColor = Palette.bannerText, backgroundColor: UIColor = Palette.background, completion: (()->())? = nil) {
+    @discardableResult class public func show(from viewController: ScorecardViewController, dashboardNames: [(title: String, fileName: String, imageName: String)], backImage: String = "home", backText: String = "", bannerColor: UIColor = Palette.banner, bannerShadowColor: UIColor = Palette.bannerShadow, bannerTextColor: UIColor = Palette.bannerText, backgroundColor: UIColor = Palette.background, completion: (()->())? = nil) -> ScorecardViewController {
         
         let storyboard = UIStoryboard(name: "DashboardViewController", bundle: nil)
         let dashboardViewController: DashboardViewController = storyboard.instantiateViewController(withIdentifier: "DashboardViewController") as! DashboardViewController
@@ -401,6 +401,8 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         dashboardViewController.completion = completion
         
         viewController.present(dashboardViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        
+        return dashboardViewController
     }
     
     private func dismiss() {

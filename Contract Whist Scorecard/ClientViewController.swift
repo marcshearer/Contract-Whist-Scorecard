@@ -229,32 +229,40 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if self.launchScreen {
-            // Cover with launch screen
-            self.showLaunchScreen()
-            self.launchScreen = false
+
+        self.ignoringGameBanners {
+            
+            if self.launchScreen {
+                // Cover with launch screen
+                self.showLaunchScreen()
+                self.launchScreen = false
+            }
         }
     }
     
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.changePlayerAvailable()
-        
-        if firstTime {
-            firstTime = false
+
+        self.ignoringGameBanners {
             
-            // Create a client controller to manage connections
-            self.createClientController()
+            self.changePlayerAvailable()
             
-            self.peerReloadData()
-            
-            // Link to host if recovering a server or scoring if recovering a game
-            if self.recoveryMode {
-                if !Scorecard.recovery.onlineRecovery {
-                    self.scoreGame(recoveryMode: true)
-                } else if Scorecard.recovery.onlineType == .server {
-                    self.hostGame(recoveryMode: true)
+            if firstTime {
+                firstTime = false
+                
+                // Create a client controller to manage connections
+                self.createClientController()
+                
+                self.peerReloadData()
+                
+                // Link to host if recovering a server or scoring if recovering a game
+                if self.recoveryMode {
+                    if !Scorecard.recovery.onlineRecovery {
+                        self.scoreGame(recoveryMode: true)
+                    } else if Scorecard.recovery.onlineType == .server {
+                        self.hostGame(recoveryMode: true)
+                    }
                 }
             }
         }
@@ -324,10 +332,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         GetStartedViewController.show(from: self, completion: {self.restart()})
     }
         
-    private func showHighScores() {
-        _ = HighScoresViewController.show(from: self, backText: "", backImage: "home")
-    }
-    
     private func showSettings() {
         self.thisPlayerBeforeSettings = Scorecard.settings.thisPlayerUUID
         SettingsViewController.show(from: self, backText: "", backImage: "home", completion: self.showSettingsCompletion)
@@ -351,7 +355,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     private func showDashboard() {
         DashboardViewController.show(from: self,
-            dashboardNames: [(title: "Shields",  fileName: "ShieldsDashboard",  imageName: "shield"),
+            dashboardNames: [(title: "Awards",  fileName: "AwardsDashboard",  imageName: "award"),
                              (title: "Personal", fileName: "PersonalDashboard", imageName: "personal"),
                              (title: "Everyone", fileName: "EveryoneDashboard", imageName: "everyone")])
     }

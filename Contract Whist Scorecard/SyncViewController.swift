@@ -27,19 +27,17 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
     private var errors: Int = 0
     private var currentStage: SyncStage = SyncStage(rawValue: 0)!
     private var lastStageFinish = Date(timeIntervalSinceReferenceDate: 0.0)
+    private var stages = 0
     
     // UI Constants
     private let stageTableView = 1
     private let messageTableView = 2
     
     // MARK: - IB Outlets ============================================================================== -
-    @IBOutlet weak var syncStageTableView: UITableView!
-    @IBOutlet weak var syncMessageTableView: UITableView!
-    @IBOutlet weak var navigationBar: NavigationBar!
-    @IBOutlet weak var finishButton: UIButton!
-    @IBOutlet weak var syncImage: UIImageView!
-    @IBOutlet private weak var bannerContinuation: BannerContinuation!
-    @IBOutlet private weak var topBackgroundView: UIView!
+    @IBOutlet private weak var syncStageTableView: UITableView!
+    @IBOutlet private weak var syncMessageTableView: UITableView!
+    @IBOutlet private weak var finishButton: UIButton!
+    @IBOutlet private var labels: [UILabel]!
     
     @IBAction func finishPressed(_ sender: UIButton) {
         returnToCaller()
@@ -52,18 +50,20 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
         
         // Setup default colors (previously done in StoryBoard)
         self.defaultViewColors()
-
-        self.navigationBar.setTitle("Syncing with iCloud")
    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        startAnimations()
         finishButton.isHidden = true
         
-        // Invoke the sync
-        self.sync.delegate = self
-        _ = self.sync.synchronise(waitFinish: true, okToSyncWithTemporaryPlayerUUIDs: true)
+        for stage in SyncStage.allCases {
+            if stage != .started {
+                self.syncStageTableView.beginUpdates()
+                self.stages += 1
+                self.syncStageTableView.insertRows(at: [IndexPath(row: self.stages - 1, section: 0)], with: .none)
+                self.syncStageTableView.endUpdates()
+            }
+        }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -99,7 +99,8 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
                     
                     // Update tick and stop activity indicator
                     if let completeCell = self.syncStageTableView.cellForRow(at: IndexPath(row: stage.rawValue, section: 0)) as? SyncStageTableCell {
-                        completeCell.statusImage.image = UIImage(named: "box tick")
+                        completeCell.statusImage.image = UIImage(named: "box tick")?.asTemplate()
+                        completeCell.statusImage.tintColor = Palette.bannerText
                         completeCell.activityIndicator.stopAnimating()
                     }
                     
@@ -128,7 +129,6 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
     
     internal func syncAlert(_ message: String, completion: @escaping ()->()) {
         Utility.mainThread {
-            self.stopAnimations(false)
             self.stopActivityIndicators()
         }
         self.alertMessage(message, title: "Whist Sync", okHandler: {
@@ -141,7 +141,6 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
             self.errors=errors
             if self.errors > 0 {
                 // Warn user of errors
-                self.stopAnimations(self.errors == 0)
                 let alertController = UIAlertController(title: "Warning", message: "Warning: Errors occurred during synchronisation", preferredStyle: UIAlertController.Style.alert)
                 alertController.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler:  {
                     (action:UIAlertAction!) -> Void in
@@ -151,14 +150,12 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
             } else if self.errors == 0 {
                 // All OK - return but run out any backed up time first and then wait for 2 secs
                 self.reportAfter(delay: 0.0, completion: {
-                    self.stopAnimations(self.errors == 0)
                     Utility.executeAfter(delay: 2.0, completion: {
                         self.returnToCaller()
                     })
                })
             } else {
                 // Error already notified
-                self.stopAnimations(self.errors == 0)
                 self.returnToCaller()
             }
         }
@@ -173,7 +170,7 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableView.tag {
         case stageTableView:
-            return SyncStage.allCases.count - 1 // No row for 'started'
+            return stages
         case messageTableView:
             return messageCount
         default:
@@ -194,8 +191,9 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
             let stage = SyncStage(rawValue: indexPath.row)!
             
             stageCell.label.text = Sync.stageDescription(stage: stage)
-            stageCell.statusImage.image = UIImage(named: ((stageComplete[stage] ?? false) ? "box tick" : "box"))
-            
+            stageCell.statusImage.image = UIImage(named: ((stageComplete[stage] ?? false) ? "box tick" : "box"))?.asTemplate()
+            stageCell.statusImage.tintColor = Palette.bannerText
+
             cell = stageCell
             
         case messageTableView:
@@ -216,6 +214,22 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
         return cell
     }
     
+    internal func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.alpha = 0
+
+        UIView.animate(
+            withDuration: 0.5,
+            delay: 0.15 * Double(indexPath.row),
+            animations: {
+                cell.alpha = 1
+            }, completion: { (_) in
+                if indexPath.row == SyncStage.complete.rawValue {
+                    // Invoke the sync
+                    self.sync.delegate = self
+                    _ = self.sync.synchronise(waitFinish: true, okToSyncWithTemporaryPlayerUUIDs: true)
+                }
+            })
+    }
     
     // MARK: - Utility Routines ======================================================================== -
     
@@ -223,11 +237,7 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
         self.dismiss()
     }
     
-    func startAnimations() {
-        syncImage.layer.add(spinAnimation(), forKey: "Rotate")
-    }
-
-    private func spinAnimation() -> CABasicAnimation {
+    private func xspinAnimation() -> CABasicAnimation {
         let rotationAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
         rotationAnimation.toValue = CGFloat.pi * 2000.0
         rotationAnimation.duration = 2000.0
@@ -236,17 +246,6 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
         return rotationAnimation
     }
     
-    func stopAnimations(_ success: Bool) {
-        self.syncImage.layer.removeAllAnimations()
-        if success {
-            self.syncImage.image = UIImage(named: "big tick")
-            self.navigationBar.setTitle("Sync Complete")
-        } else {
-            self.syncImage.image = UIImage(named: "big cross")
-            self.navigationBar.setTitle("Sync Failed")
-        }
-        self.syncImage.layoutIfNeeded()
-    }
     
     private func reportAfter(delay: TimeInterval, completion: @escaping ()->()) {
         let dateNow = Date()
@@ -298,17 +297,15 @@ extension SyncViewController {
 
     private func defaultViewColors() {
 
-        self.bannerContinuation.bannerColor = Palette.banner
         self.finishButton.setTitleColor(Palette.bannerText, for: .normal)
-        self.navigationBar.textColor = Palette.bannerText
-        self.topBackgroundView.backgroundColor = Palette.banner
-        self.view.backgroundColor = Palette.background
+        self.labels.forEach{(label) in label.textColor = Palette.bannerText}
+        self.view.backgroundColor = Palette.banner
     }
 
     private func defaultCellColors(cell: SyncMessageTableCell) {
         switch cell.reuseIdentifier {
         case "Sync Message Table Cell":
-            cell.label.textColor = Palette.text
+            cell.label.textColor = Palette.bannerText
         default:
             break
         }
@@ -317,7 +314,7 @@ extension SyncViewController {
     private func defaultCellColors(cell: SyncStageTableCell) {
         switch cell.reuseIdentifier {
         case "Sync Stage Table Cell":
-            cell.label.textColor = Palette.text
+            cell.label.textColor = Palette.bannerText
         default:
             break
         }

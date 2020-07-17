@@ -64,10 +64,10 @@ class Scores {
         return self.set(round: round, playerNumber: playerNumber, value: twos, mode: .twos, sequence: sequence)
     }
     
-    public func get(round: Int, playerNumber: Int, sequence: PlayerNumberSequence = .entered) -> (bid: Int?, made: Int?, twos: Int?) {
-        var result: (Int?, Int?, Int?)  = (nil, nil, nil)
+    public func get(round: Int, playerNumber: Int, sequence: PlayerNumberSequence = .entered) -> Score {
+        var result = Score()
         if let playerScore = self.roundScore[round]?.playerScore[Scorecard.game.enteredPlayerNumber(playerNumber: playerNumber, sequence: sequence, round: round)] {
-            result = (bid: playerScore.bid, made: playerScore.made, twos: playerScore.twos)
+            result = Score(bid: playerScore.bid, made: playerScore.made, twos: playerScore.twos)
         }
         return result
     }
@@ -175,7 +175,25 @@ class Scores {
                 completion(round, player)
         }
     }
+}
+
+struct Score {
+    var bid: Int?
+    var made: Int?
+    var twos: Int?
     
+    public func value(forKey key: String) -> Any? {
+        switch key {
+        case "bid":
+            return self.bid
+        case "made":
+            return self.made
+        case "twos":
+            return self.twos
+        default:
+            return nil
+        }
+    }
 }
 
 class RoundScore {

@@ -8,6 +8,30 @@
 
 import UIKit
 
+enum HighScoreType: Int {
+    case totalScore = 1
+    case handsMade = 2
+    case twosMade = 3
+    case winStreak = 4
+    
+    var playerKey: String {
+        switch self {
+        case .totalScore: return "maxScore"
+        case .handsMade: return "maxMade"
+        case .twosMade: return "maxTwos"
+        case .winStreak: return "maxWinStreak"
+        }
+    }
+    var participantKey: String {
+        switch self {
+        case .totalScore: return "totalScore"
+        case .handsMade: return "handsMade"
+        case .twosMade: return "twosMade"
+        case .winStreak: return ""
+        }
+    }
+}
+
 class DashboardView : UIView, DashboardActionDelegate {
     
     private var historyViewer: HistoryViewer!
@@ -115,7 +139,7 @@ class DashboardView : UIView, DashboardActionDelegate {
     
     private func showHighScores() {
         DashboardViewController.show(from: self.parentViewController!,
-                                     dashboardNames: [(title: "High Scores",  fileName: "HighScoresDashboard",  imageName: "person.fill")], backImage: "back", bannerColor: Palette.banner, bannerShadowColor: Palette.bannerShadow, backgroundColor: Palette.banner) {
+                                     dashboardNames: [(title: "High Scores",  fileName: "HighScoresDashboard",  imageName: "person.fill")], backImage: "back", backgroundColor: Palette.banner) {
             self.delegate?.reloadData?()
         }
     }

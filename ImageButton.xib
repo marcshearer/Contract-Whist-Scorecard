@@ -10,7 +10,6 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
             <connections>
                 <outlet property="backgroundImageView" destination="uYm-fV-sa4" id="onN-S6-yeX"/>
-                <outlet property="bottomConstraint" destination="Oyn-qs-heY" id="m6k-qC-RW8"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="wdV-lt-4m6"/>
                 <outlet property="imageBottomConstraint" destination="X4j-kb-l5p" id="g6y-oI-KnI"/>
                 <outlet property="imageHeightConstraint" destination="YGY-Oy-bFj" id="jXl-yo-E2t"/>
@@ -64,7 +63,6 @@
             <constraints>
                 <constraint firstItem="rTA-CY-cfJ" firstAttribute="top" secondItem="hNX-s9-rnV" secondAttribute="bottom" id="79V-tD-Sk0"/>
                 <constraint firstItem="uYm-fV-sa4" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="Axs-DS-7FF"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="rTA-CY-cfJ" secondAttribute="bottom" id="Oyn-qs-heY"/>
                 <constraint firstItem="PMj-F7-s0X" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="VwU-XM-3aS"/>
                 <constraint firstItem="uYm-fV-sa4" firstAttribute="bottom" secondItem="vUN-kp-3ea" secondAttribute="bottom" id="WOu-jX-IA7"/>
                 <constraint firstItem="hNX-s9-rnV" firstAttribute="top" secondItem="PMj-F7-s0X" secondAttribute="bottom" constant="4" id="X4j-kb-l5p"/>

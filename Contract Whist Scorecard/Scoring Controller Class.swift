@@ -265,6 +265,7 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
     
     func startGame() {
         self.setupPlayers()
+        Scorecard.shared.saveMaxScores()
         Scorecard.recovery.saveInitialValues()
         _ = self.statusMessage()
         

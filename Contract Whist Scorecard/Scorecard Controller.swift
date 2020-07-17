@@ -419,11 +419,12 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         return confirmPlayedViewController
     }
     
-    internal func showHighScores() -> HighScoresViewController? {
-        var highScoresViewController: HighScoresViewController?
+    internal func showHighScores() -> ScorecardViewController? {
+        var highScoresViewController: ScorecardViewController?
         
         if let parentViewController = self.fromViewController() {
-            highScoresViewController = HighScoresViewController.show(from: parentViewController, appController: self, backText: "", backImage: "cross white")
+            highScoresViewController = DashboardViewController.show(from: parentViewController,
+                    dashboardNames: [(title: "High Scores",  fileName: "HighScoresDashboard",  imageName: "person.fill")], backImage: "cross white", backgroundColor: Palette.banner)
         }
         return highScoresViewController
     }
@@ -670,7 +671,12 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
             } else {
                 return nil
             }
+        } else if (presented is SyncViewController) {
+            duration = 0.5
+            animation = .fromTop
+            
         }
+        
         if let animation = animation {
             return ScorecardAnimator(duration: duration, animation: animation, presenting: true)
         } else {
@@ -682,6 +688,10 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
        
         if dismissed is LaunchScreenViewController {
             return ScorecardAnimator(duration: 2.0, animation: .fade, presenting: false)
+            
+        } else if dismissed is SyncViewController {
+            return ScorecardAnimator(duration: 0.5, animation: .toTop, presenting: false)
+            
         } else {
             return nil
         }

@@ -35,6 +35,7 @@
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3WW-kE-bAX">
                         <rect key="frame" x="75" y="21" width="50" height="50"/>
+                        <color key="backgroundColor" name="Clear"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="3WW-kE-bAX" secondAttribute="height" multiplier="1:1" id="96h-TU-Aam"/>
                             <constraint firstAttribute="height" constant="50" id="qHc-zM-Xg2"/>

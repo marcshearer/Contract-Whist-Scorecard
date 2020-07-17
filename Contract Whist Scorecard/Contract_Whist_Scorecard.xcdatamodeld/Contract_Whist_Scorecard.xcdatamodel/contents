@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19F101" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Award" representedClassName="AwardMO" syncable="YES" codeGenerationType="class">
+        <attribute name="awardLevel" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="code" optional="YES" attributeType="String"/>
+        <attribute name="dateAwarded" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="gameUUID" optional="YES" attributeType="String"/>
+        <fetchIndex name="compoundIndex">
+            <fetchIndexElement property="code" type="Binary" order="ascending"/>
+            <fetchIndexElement property="awardLevel" type="Binary" order="ascending"/>
+        </fetchIndex>
+    </entity>
     <entity name="Game" representedClassName="GameMO" syncable="YES" codeGenerationType="class">
         <attribute name="datePlayed" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="deviceName" optional="YES" attributeType="String"/>
@@ -90,6 +100,7 @@
         </fetchIndex>
     </entity>
     <elements>
+        <element name="Award" positionX="0" positionY="153" width="128" height="103"/>
         <element name="Game" positionX="0" positionY="0" width="128" height="225"/>
         <element name="Participant" positionX="0" positionY="0" width="128" height="300"/>
         <element name="Player" positionX="0" positionY="0" width="128" height="583"/>

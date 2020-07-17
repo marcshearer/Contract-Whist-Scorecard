@@ -124,10 +124,10 @@
                                         <rect key="frame" x="0.0" y="0.0" width="206.33333333333334" height="293"/>
                                         <subviews>
                                             <view tag="1" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FyF-vn-V6o" userLabel="Cut for Dealer Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="20.666666666666671" y="64" width="165" height="165"/>
+                                                <rect key="frame" x="25.666666666666671" y="69.3333333333333" width="154.66666666666663" height="154.66666666666663"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="FyF-vn-V6o" secondAttribute="height" multiplier="82:82" id="Bas-9R-8IF"/>
+                                                    <constraint firstAttribute="width" secondItem="FyF-vn-V6o" secondAttribute="height" multiplier="1:1" id="Bas-9R-8IF"/>
                                                 </constraints>
                                                 <viewLayoutGuide key="safeArea" id="Epv-wr-w77"/>
                                                 <userDefinedRuntimeAttributes>
@@ -156,6 +156,12 @@
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="W4f-MD-vui"/>
+                                                <exclude reference="eWX-1U-GcS"/>
+                                            </mask>
+                                        </variation>
+                                        <variation key="heightClass=compact">
+                                            <mask key="constraints">
+                                                <include reference="eWX-1U-GcS"/>
                                             </mask>
                                         </variation>
                                         <variation key="heightClass=regular">
@@ -168,10 +174,10 @@
                                         <rect key="frame" x="168.66666666666663" y="0.0" width="206.33333333333337" height="293"/>
                                         <subviews>
                                             <view tag="2" contentMode="scaleToFill" verticalHuggingPriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="xXV-k4-gfB" userLabel="Next Dealer Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="20.666666666666686" y="64" width="165" height="165"/>
+                                                <rect key="frame" x="26" y="69.3333333333333" width="154.66666666666666" height="154.66666666666663"/>
                                                 <color key="backgroundColor" name="Clear"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" secondItem="xXV-k4-gfB" secondAttribute="height" multiplier="82:82" id="dJB-et-5Yx"/>
+                                                    <constraint firstAttribute="width" secondItem="xXV-k4-gfB" secondAttribute="height" multiplier="1:1" id="dJB-et-5Yx"/>
                                                 </constraints>
                                                 <viewLayoutGuide key="safeArea" id="oxI-0X-Fyz"/>
                                                 <userDefinedRuntimeAttributes>
@@ -200,6 +206,12 @@
                                         <variation key="default">
                                             <mask key="constraints">
                                                 <exclude reference="Xc0-3D-VIy"/>
+                                                <exclude reference="qLV-Mq-PgV"/>
+                                            </mask>
+                                        </variation>
+                                        <variation key="heightClass=compact">
+                                            <mask key="constraints">
+                                                <include reference="qLV-Mq-PgV"/>
                                             </mask>
                                         </variation>
                                         <variation key="heightClass=regular">
@@ -304,14 +316,14 @@
                                 <exclude reference="rDl-W6-qPg"/>
                                 <exclude reference="tur-6Y-zoB"/>
                                 <exclude reference="xDC-jN-1mt"/>
+                                <exclude reference="7bt-jT-hSz"/>
+                                <exclude reference="DNq-Sb-Jb0"/>
+                                <exclude reference="cC9-ZC-2d8"/>
                                 <exclude reference="KZ9-xa-u4u"/>
                                 <exclude reference="XcT-zv-E3Z"/>
                                 <exclude reference="eyy-cg-VrQ"/>
                                 <exclude reference="vOh-uC-3Bq"/>
                                 <exclude reference="xs9-hc-6ab"/>
-                                <exclude reference="7bt-jT-hSz"/>
-                                <exclude reference="DNq-Sb-Jb0"/>
-                                <exclude reference="cC9-ZC-2d8"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=compact">
@@ -319,10 +331,10 @@
                                 <include reference="iqI-U6-AGc"/>
                                 <include reference="gZf-j7-f3B"/>
                                 <include reference="xDC-jN-1mt"/>
-                                <include reference="vOh-uC-3Bq"/>
-                                <include reference="xs9-hc-6ab"/>
                                 <include reference="7bt-jT-hSz"/>
                                 <include reference="cC9-ZC-2d8"/>
+                                <include reference="vOh-uC-3Bq"/>
+                                <include reference="xs9-hc-6ab"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
@@ -330,10 +342,10 @@
                                 <include reference="LKM-wP-jRA"/>
                                 <include reference="rDl-W6-qPg"/>
                                 <include reference="tur-6Y-zoB"/>
+                                <include reference="DNq-Sb-Jb0"/>
                                 <include reference="KZ9-xa-u4u"/>
                                 <include reference="XcT-zv-E3Z"/>
                                 <include reference="eyy-cg-VrQ"/>
-                                <include reference="DNq-Sb-Jb0"/>
                             </mask>
                         </variation>
                         <connections>

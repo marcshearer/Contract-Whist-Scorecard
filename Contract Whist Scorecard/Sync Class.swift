@@ -21,6 +21,7 @@ import CloudKit
     case downloadGames = 2
     case uploadGames = 3
     case uploadPlayers = 4
+    case complete = 5
 }
 
 @objc protocol SyncDelegate: class {
@@ -1696,6 +1697,12 @@ class Sync {
         if self.timer != nil {
             self.timer.invalidate()
         }
+        
+        // Complete final section
+        if self.errors == 0 {
+            self.delegate?.syncStageComplete?(.complete)
+        }
+        
         // Disconnect
         Sync.syncInProgress = false
         self.delegate = nil
@@ -1753,11 +1760,13 @@ class Sync {
         case .downloadGames:
             return "Download game history"
         case .uploadGames:
-            return "Upload games on this device"
+            return "Upload games"
         case .downloadPlayers:
             return "Download player details"
         case .uploadPlayers:
             return "Upload player details"
+        case .complete:
+            return "Sync complete"
         }
     }
     
@@ -1770,11 +1779,13 @@ class Sync {
         case .downloadGames:
             return "Downloading game history"
         case .uploadGames:
-            return "Uploading games on this device"
+            return "Uploading games"
         case .downloadPlayers:
             return "Downloading player details"
         case .uploadPlayers:
             return "Uploading player details"
+        case .complete:
+            return "Completing"
         }
     }
     

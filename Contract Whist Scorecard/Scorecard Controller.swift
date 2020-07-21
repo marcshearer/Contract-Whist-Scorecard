@@ -133,7 +133,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         
         if Utility.isDevelopment {
             if (ScorecardAppController.references[type] ?? 0) != 0 {
-                print("Multiple instances of \(type) controllers")
+                Utility.debugMessage("Controller", "Multiple instances of \(type) controllers")
                 parentViewController.alertSound(sound: .alarm)
             }
         }

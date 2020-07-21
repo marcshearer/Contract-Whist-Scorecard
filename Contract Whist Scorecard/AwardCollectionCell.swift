@@ -68,7 +68,6 @@ class AwardCollectionHeader: UICollectionReusableView {
     @IBOutlet private weak var topConstraint: NSLayoutConstraint!
     @IBOutlet private weak var gridButton: ClearButton!
     @IBOutlet private weak var listButton: ClearButton!
-    @IBOutlet private weak var maskingView: UIView!
     @IBOutlet private weak var panelView: UIView!
     @IBOutlet private weak var titleLabel: UILabel!
     
@@ -80,12 +79,11 @@ class AwardCollectionHeader: UICollectionReusableView {
         self.delegate?.changeMode(to: .grid, section: button.tag)
     }
 
-    public func bind(title: String, backgroundColor: UIColor = Palette.buttonFace, panelColor: UIColor = Palette.sectionHeading, textColor: UIColor = Palette.sectionHeadingText, section: Int) {
-        self.topConstraint.constant = (section == 0 ? 0 : 16)
-        self.maskingView.backgroundColor = backgroundColor
+    public func bind(title: String, backgroundColor: UIColor = Palette.buttonFace, panelColor: UIColor = Palette.buttonFace /*sectionHeading*/, textColor: UIColor = Palette.buttonFaceText /*sectionHeadingText*/, section: Int) {
+        self.topConstraint.constant = (section == 0 ? 0 : 0)
         self.panelView.backgroundColor = panelColor
         self.panelView.layoutIfNeeded()
-        self.panelView.roundCorners(cornerRadius: 8)
+        self.panelView.roundCorners(cornerRadius: 8, bottomRounded: false)
         self.titleLabel.textColor = textColor
         self.titleLabel.text = title
         self.gridButton.tintColor = textColor
@@ -95,7 +93,7 @@ class AwardCollectionHeader: UICollectionReusableView {
     }
     
     public static func sizeForHeader(_ collectionView: UICollectionView, section: Int) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: (section == 0 ? 40 : 56))
+        return CGSize(width: collectionView.frame.width, height: (section == 0 ? 56 : 56))
     }
     
     public class func register(_ collectionView: UICollectionView) {

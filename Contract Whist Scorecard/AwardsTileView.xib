@@ -24,7 +24,7 @@
                     <rect key="frame" x="0.0" y="0.0" width="350" height="500"/>
                     <subviews>
                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="Qpv-co-NwV">
-                            <rect key="frame" x="8" y="8" width="334" height="484"/>
+                            <rect key="frame" x="0.0" y="0.0" width="350" height="492"/>
                             <color key="backgroundColor" name="Clear"/>
                             <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="6GY-XL-CUc">
                                 <size key="itemSize" width="128" height="128"/>
@@ -41,9 +41,9 @@
                     <color key="backgroundColor" name="Clear"/>
                     <constraints>
                         <constraint firstAttribute="bottom" secondItem="Qpv-co-NwV" secondAttribute="bottom" constant="8" id="1rh-Vt-q5e"/>
-                        <constraint firstItem="Qpv-co-NwV" firstAttribute="top" secondItem="nmZ-yl-Tk4" secondAttribute="top" constant="8" id="7i2-xU-9uI"/>
-                        <constraint firstItem="Qpv-co-NwV" firstAttribute="leading" secondItem="nmZ-yl-Tk4" secondAttribute="leading" constant="8" id="VkS-cZ-LFg"/>
-                        <constraint firstAttribute="trailing" secondItem="Qpv-co-NwV" secondAttribute="trailing" constant="8" id="xAZ-3a-zRe"/>
+                        <constraint firstItem="Qpv-co-NwV" firstAttribute="top" secondItem="nmZ-yl-Tk4" secondAttribute="top" id="7i2-xU-9uI"/>
+                        <constraint firstItem="Qpv-co-NwV" firstAttribute="leading" secondItem="nmZ-yl-Tk4" secondAttribute="leading" id="VkS-cZ-LFg"/>
+                        <constraint firstAttribute="trailing" secondItem="Qpv-co-NwV" secondAttribute="trailing" id="xAZ-3a-zRe"/>
                     </constraints>
                 </view>
             </subviews>

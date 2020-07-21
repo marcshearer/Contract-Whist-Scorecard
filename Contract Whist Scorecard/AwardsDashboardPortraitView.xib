@@ -18,7 +18,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iKf-Xj-kG5" customClass="AwardsTileView" customModule="Whist_2" customModuleProvider="target">
-                    <rect key="frame" x="16" y="16" width="382" height="668"/>
+                    <rect key="frame" x="16" y="8" width="382" height="692"/>
                     <color key="backgroundColor" name="Clear"/>
                     <userDefinedRuntimeAttributes>
                         <userDefinedRuntimeAttribute type="string" keyPath="viewMode" value="Grid"/>
@@ -34,9 +34,9 @@
             </subviews>
             <color key="backgroundColor" name="Clear"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="iKf-Xj-kG5" secondAttribute="bottom" constant="16" id="O9Z-eP-hNj"/>
+                <constraint firstAttribute="bottom" secondItem="iKf-Xj-kG5" secondAttribute="bottom" id="O9Z-eP-hNj"/>
                 <constraint firstAttribute="trailing" secondItem="iKf-Xj-kG5" secondAttribute="trailing" constant="16" id="WGW-Jo-F96"/>
-                <constraint firstItem="iKf-Xj-kG5" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="16" id="fd6-dV-pBU"/>
+                <constraint firstItem="iKf-Xj-kG5" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="fd6-dV-pBU"/>
                 <constraint firstItem="iKf-Xj-kG5" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="s0a-fg-khl"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

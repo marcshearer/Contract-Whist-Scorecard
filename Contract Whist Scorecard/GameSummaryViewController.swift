@@ -418,7 +418,6 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
             self.awardsTitleBar.layoutIfNeeded()
             self.awardCellSize = AwardCollectionCell.sizeForCell(self.awardsCollectionView, mode: (self.awardList.count <= self.awardMaxList ? .list : .grid), across: 3.5, spacing: self.awardSpacing, labelHeight: self.awardNameHeight)
             self.awardsCollectionViewHeight.constant = (self.awardCellSize.height)
-            print(self.awardCellSize.height, self.awardsCollectionView.frame)
         }
         self.actionButtonView.layoutIfNeeded()
         self.actionButtons.forEach{(button) in button.roundCorners(cornerRadius: 8.0)}

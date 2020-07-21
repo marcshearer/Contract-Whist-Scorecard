@@ -43,16 +43,16 @@
                             <rect key="frame" x="32.5" y="30" width="175" height="175"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ftv-nb-gqZ">
-                                    <rect key="frame" x="16" y="16" width="143" height="143"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="175" height="175"/>
                                 </imageView>
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             <constraints>
-                                <constraint firstItem="Ftv-nb-gqZ" firstAttribute="top" secondItem="Wgy-fH-2XD" secondAttribute="top" constant="16" id="GQf-QP-85i"/>
-                                <constraint firstAttribute="trailing" secondItem="Ftv-nb-gqZ" secondAttribute="trailing" constant="16" id="OTG-G9-zzF"/>
-                                <constraint firstItem="Ftv-nb-gqZ" firstAttribute="leading" secondItem="Wgy-fH-2XD" secondAttribute="leading" constant="16" id="ZF8-Qp-5P1"/>
+                                <constraint firstItem="Ftv-nb-gqZ" firstAttribute="top" secondItem="Wgy-fH-2XD" secondAttribute="top" id="GQf-QP-85i"/>
+                                <constraint firstAttribute="trailing" secondItem="Ftv-nb-gqZ" secondAttribute="trailing" id="OTG-G9-zzF"/>
+                                <constraint firstItem="Ftv-nb-gqZ" firstAttribute="leading" secondItem="Wgy-fH-2XD" secondAttribute="leading" id="ZF8-Qp-5P1"/>
                                 <constraint firstAttribute="width" secondItem="Wgy-fH-2XD" secondAttribute="height" multiplier="1:1" id="n0M-cM-sVh"/>
-                                <constraint firstAttribute="bottom" secondItem="Ftv-nb-gqZ" secondAttribute="bottom" constant="16" id="wSJ-aa-wkY"/>
+                                <constraint firstAttribute="bottom" secondItem="Ftv-nb-gqZ" secondAttribute="bottom" id="wSJ-aa-wkY"/>
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="eBV-lw-ecw" userLabel="Name Label">

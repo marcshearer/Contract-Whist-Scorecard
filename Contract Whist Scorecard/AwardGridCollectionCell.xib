@@ -21,16 +21,16 @@
                         <rect key="frame" x="4" y="0.0" width="52" height="52"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="KOT-uH-kKV">
-                                <rect key="frame" x="8" y="8" width="36" height="36"/>
+                                <rect key="frame" x="0.0" y="0.0" width="52" height="52"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" name="Clear"/>
                         <constraints>
-                            <constraint firstItem="KOT-uH-kKV" firstAttribute="top" secondItem="goW-GR-Q5M" secondAttribute="top" constant="8" id="34b-r5-3xX"/>
+                            <constraint firstItem="KOT-uH-kKV" firstAttribute="top" secondItem="goW-GR-Q5M" secondAttribute="top" id="34b-r5-3xX"/>
                             <constraint firstAttribute="width" secondItem="goW-GR-Q5M" secondAttribute="height" multiplier="1:1" id="8Sz-1m-Kyd"/>
-                            <constraint firstAttribute="bottom" secondItem="KOT-uH-kKV" secondAttribute="bottom" constant="8" id="BMQ-WL-26Z"/>
-                            <constraint firstItem="KOT-uH-kKV" firstAttribute="leading" secondItem="goW-GR-Q5M" secondAttribute="leading" constant="8" id="dsl-I3-aP8"/>
-                            <constraint firstAttribute="trailing" secondItem="KOT-uH-kKV" secondAttribute="trailing" constant="8" id="sAY-t6-FHy"/>
+                            <constraint firstAttribute="bottom" secondItem="KOT-uH-kKV" secondAttribute="bottom" id="BMQ-WL-26Z"/>
+                            <constraint firstItem="KOT-uH-kKV" firstAttribute="leading" secondItem="goW-GR-Q5M" secondAttribute="leading" id="dsl-I3-aP8"/>
+                            <constraint firstAttribute="trailing" secondItem="KOT-uH-kKV" secondAttribute="trailing" id="sAY-t6-FHy"/>
                         </constraints>
                     </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="uNu-mn-kQx">

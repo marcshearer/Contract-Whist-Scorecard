@@ -281,6 +281,9 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
         }
         
         Scorecard.shared.sendScoringState(from: self)
+        
+        // Do a background partial sync
+        Scorecard.shared.syncBeforeGame(allPlayers: true)
     }
     
     private func sendPlayers() {

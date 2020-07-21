@@ -5,7 +5,11 @@
         <attribute name="code" optional="YES" attributeType="String"/>
         <attribute name="dateAwarded" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="gameUUID" optional="YES" attributeType="String"/>
+        <attribute name="playerUUID" optional="YES" attributeType="String"/>
+        <attribute name="syncDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="syncRecordID" optional="YES" attributeType="String"/>
         <fetchIndex name="compoundIndex">
+            <fetchIndexElement property="playerUUID" type="Binary" order="ascending"/>
             <fetchIndexElement property="code" type="Binary" order="ascending"/>
             <fetchIndexElement property="awardLevel" type="Binary" order="ascending"/>
         </fetchIndex>
@@ -100,7 +104,7 @@
         </fetchIndex>
     </entity>
     <elements>
-        <element name="Award" positionX="0" positionY="153" width="128" height="103"/>
+        <element name="Award" positionX="0" positionY="153" width="128" height="148"/>
         <element name="Game" positionX="0" positionY="0" width="128" height="225"/>
         <element name="Participant" positionX="0" positionY="0" width="128" height="300"/>
         <element name="Player" positionX="0" positionY="0" width="128" height="583"/>

@@ -204,7 +204,8 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         settings["bounceNumberCards"] = Scorecard.activeSettings.bounceNumberCards
         settings["trumpSequence"] = Scorecard.activeSettings.trumpSequence
         settings["bonus2"] = Scorecard.activeSettings.bonus2
-        settings["gameUUID"] = Scorecard.game.gameUUID!
+        settings["saveHistory"] = Scorecard.activeSettings.saveHistory
+        settings["saveStats"] = Scorecard.activeSettings.saveStats
         
         return settings
     }

@@ -26,6 +26,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
 
     private var available: [Available] = []
     private let whisper = Whisper()
+    private let sync = Sync()
     private var controllerState: ClientAppState! = .notConnected
    
     private var nearbyClientService: CommsClientServiceDelegate?
@@ -337,6 +338,8 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     Scorecard.activeSettings.bounceNumberCards = data!["bounceNumberCards"] as! Bool
                     Scorecard.activeSettings.trumpSequence = data!["trumpSequence"] as! [String]
                     Scorecard.activeSettings.bonus2 = data!["bonus2"] as! Bool
+                    Scorecard.activeSettings.saveHistory = data!["saveHistory"] as! Bool
+                    Scorecard.activeSettings.saveStats = data!["saveStats"] as! Bool
                     self.thisPlayerNumber = nil
                     
                 case "dealer":
@@ -589,6 +592,9 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             self.whisper.show("Error connecting to device", hideAfter: 3.0)
         }
         
+        // Do a background sync
+        Scorecard.shared.syncBeforeGame()
+        
         return success
     }
     
@@ -680,6 +686,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     
     private func handComplete() {
         if Scorecard.game!.handState.finished && Scorecard.game.gameComplete() {
+            _ = Scorecard.game.save()
             self.present(nextView: .gameSummary)
         } else {
             self.present(nextView: .scorepad)

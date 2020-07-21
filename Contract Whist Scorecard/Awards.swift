@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import CloudKit
 
 fileprivate enum Source {
     case player
@@ -85,22 +86,104 @@ public struct Award {
     let description: String
     let imageName: String
     let backgroundColor: UIColor
-    let gameUUID: String
-    let datePlayed: Date
+    let gameUUID: String?
+    let dateAwarded: Date?
+    
+    fileprivate init(from awardMO: AwardMO, config: [AwardConfig]) {
+        let config = config.first(where: {$0.code == awardMO.code})!
+        self.init(from: config, awardLevel: Int(awardMO.awardLevel), gameUUID: awardMO.gameUUID!, dateAwarded: awardMO.dateAwarded!)
+    }
+    
+    fileprivate init(from config: AwardConfig, awardLevel: Int, gameUUID: String? = nil, dateAwarded: Date? = nil) {
+        self.code = config.code
+        self.awardLevel = awardLevel
+        self.name = Award.substitute(config.name, awardLevel)
+        self.shortName = Award.substitute(config.shortName, awardLevel)
+        self.title = Award.substitute(config.title, awardLevel)
+        self.description = Award.substitute(config.description ?? config.title, awardLevel)
+        self.imageName = Award.substitute(config.imageName, awardLevel)
+        self.backgroundColor = config.backgroundColor
+        self.gameUUID = gameUUID
+        self.dateAwarded = dateAwarded
+    }
+    
+    private static func substitute(_ stringValue: String, _ value: Int) -> String {
+        if stringValue.contains("%d") {
+            return stringValue.replacingOccurrences(of: "%d", with: "\(value)")
+        } else {
+            return stringValue
+        }
+    }
 }
 
 public class Awards {
     
     private var config: [AwardConfig] = []
     private var current: ParticipantMO?
+    private var playerUUID: String?
+    private var achieved: [AwardMO]?
     
     init() {
         self.setupConfig()
     }
     
+    /// Get a players achieved and as yet unachieved awards
+    /// - Parameter playerUUID: Player UUID
+    /// - Returns: a tuple containing an array of achieved awards and an array of awards still to achieve
+    public func get(playerUUID: String) -> (achieved: [Award], toAchieve: [Award]) {
+        let achieved = self.getAchieved(playerUUID: playerUUID)
+        var toAchieve: [Award] = []
+        for config in self.config {
+            for awardLevel in config.awardLevels {
+                if self.achieved(achieved, code: config.code, awardLevel: awardLevel) == nil {
+                    toAchieve.append(Award(from: config, awardLevel: awardLevel))
+                    break
+                }
+            }
+        }
+            
+        return (achieved.map{Award(from: $0, config: self.config)}, toAchieve)
+    }
+    
+    /// Get achieved awards for a player
+    /// - Parameter playerUUID: Player UUID
+    /// - Returns: Array of managed objects for awards
+    public func getAchieved(playerUUID: String) -> [AwardMO] {
+        if playerUUID != self.playerUUID || self.achieved == nil {
+            self.achieved = CoreData.fetch(from: "Award", filter: NSPredicate(format: "playerUUID = %@", playerUUID), sort: ("dateAwarded", .descending)) as? [AwardMO]
+            if self.achieved?.isEmpty ?? true {
+                self.achieved = self.defaultAchieved(playerUUID: playerUUID)
+            }
+            self.playerUUID = playerUUID
+        }
+        return self.achieved!
+    }
+
+    
+    /// Returns an array of award levels still to be achieved for an award code for a given player
+    /// - Parameters:
+    ///   - playerUUID: Player UUID
+    ///   - code: Award code
+    /// - Returns: An array of award levels
+    public func toAchieve(playerUUID: String, code: String) -> [Int] {
+        var result: [Int] = []
+        let achieved = self.getAchieved(playerUUID: playerUUID)
+        if let config = self.config.first(where: {$0.code == code}) {
+            for awardLevel in config.awardLevels {
+                if self.achieved(achieved, code: code, awardLevel: awardLevel) == nil {
+                    result.append(awardLevel)
+                }
+            }
+        }
+        return result
+    }
+    
+    /// Returns an array of awards that have been achieved in the current game and recent history for a player
+    /// - Parameter playerUUID: Player UUID
+    /// - Returns: Array of awards just achieved
     public func calculate(playerUUID: String) -> [Award] {
         var results: [Award] = []
-        let existing: [AwardMO] = []
+        let achieved = self.getAchieved(playerUUID: playerUUID)
         
         if let player = Scorecard.game.player(playerUUID: playerUUID),
            let current = player.participantMO {
@@ -118,18 +201,18 @@ public class Awards {
                 }
                 
                 // Get comparison value
-                if let value = self.getValue(config: config, current: current, player: player, history: history, existing: existing) {
+                if let value = self.getValue(config: config, current: current, player: player, history: history, existing: achieved) {
                 
                     // Check against threshold awardLevels
                     if let awardLevel = self.checkAwardLevels(config: config, value: value) {
                         
-                        if !config.repeatable && existing.firstIndex(where: {$0.code == config.code && $0.awardLevel == awardLevel}) != nil {
+                        if !config.repeatable && achieved.firstIndex(where: {$0.code == config.code && $0.awardLevel == awardLevel}) != nil {
                             // Don't re-award if not repeatable
                             self.debugMessage(config: config, message: "Repeat award for value \(value)")
                             continue
                         }
                         
-                        results.append(self.createAward(config: config, awardLevel: awardLevel, gameUUID: current.gameUUID!, datePlayed: current.datePlayed!))
+                        results.append(Award(from: config, awardLevel: awardLevel, gameUUID: current.gameUUID!, dateAwarded: current.datePlayed!))
                         self.debugMessage(config: config, message: "Awarded for value \(value)")
                     } else {
                         self.debugMessage(config: config, message: "No match for value \(value)")
@@ -142,9 +225,30 @@ public class Awards {
         
         return results
     }
+        
+    /// Create the core data for the list of awards achieved
+    /// - Parameter achieved: List of awards
+    public func save(playerUUID: String, achieved: [Award]) {
+        let existing = self.getAchieved(playerUUID: playerUUID)
+        for award in achieved {
+            if let awardMO = self.achieved(existing, code: award.code, awardLevel: award.awardLevel) {
+                // Already achieved - update
+                _ = CoreData.update {
+                    awardMO.dateAwarded = award.dateAwarded
+                    awardMO.syncDate = nil
+                }
+            } else {
+                self.createAwardMO(playerUUID: playerUUID, code: award.code, awardLevel: award.awardLevel, gameUUID: award.gameUUID!, dateAwarded: award.dateAwarded!)
+            }
+        }
+    }
     
     private func debugMessage(config: AwardConfig, message: String) {
         Utility.debugMessage("Awards", "\(config.name) - \(message)")
+    }
+    
+    private func achieved(_ achieved: [AwardMO], code: String, awardLevel: Int) -> AwardMO? {
+        return achieved.first(where: {$0.code == code && $0.awardLevel == awardLevel})
     }
     
     private func getHistory(current: ParticipantMO) -> [ParticipantMO] {
@@ -176,8 +280,8 @@ public class Awards {
         } else if let key = config.key,
            let source = config.source,
            let playerMO = player.playerMO {
-            // Standard getter
             
+            // Standard getter
             switch source {
             case .current:
                 value = current.value(forKey: key) as? Int
@@ -230,28 +334,47 @@ public class Awards {
             return (value1 > value2)
         }
     }
-    
-    private func createAward(config: AwardConfig, awardLevel: Int, gameUUID: String, datePlayed: Date) -> Award {
-        
-        return Award(code: config.code, awardLevel: awardLevel,
-                     name: self.substitute(config.name, awardLevel),
-                     shortName: self.substitute(config.shortName, awardLevel),
-                     title: self.substitute(config.title, awardLevel),
-                     description: self.substitute(config.description ?? config.title, awardLevel),
-                     imageName: self.substitute(config.imageName, awardLevel),
-                     backgroundColor: config.backgroundColor, gameUUID: gameUUID, datePlayed: datePlayed)
-    }
-    
-    private func substitute(_ stringValue: String, _ value: Int) -> String {
-        if stringValue.contains("%d") {
-            return stringValue.replacingOccurrences(of: "%d", with: "\(value)")
-        } else {
-            return stringValue
+     
+    private func defaultAchieved(playerUUID: String) -> [AwardMO] {
+        // Default in the initial list of achieved awards based on player record
+        var results: [AwardMO] = []
+        if let playerMO = Scorecard.shared.findPlayerByPlayerUUID(playerUUID) {
+            for config in self.config.reversed() {
+                switch config.source {
+                case .player:
+                    if !config.repeatable && config.key != nil {
+                        // Get comparison value
+                        if let value = playerMO.value(forKey: config.key!) as? Int {
+                            for awardLevel in config.awardLevels {
+                                if value >= awardLevel {
+                                    if let awardMO = self.createAwardMO(playerUUID: playerUUID, code: config.code, awardLevel: awardLevel, gameUUID: "", dateAwarded: Date()) {
+                                        results.append(awardMO)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                default:
+                    break
+                }
+            }
         }
+        return results
     }
     
-    private func getExisting() -> [AwardMO] {
-        return CoreData.fetch(from: "Award", sort: ("dateAwarded", .descending)) as! [AwardMO]
+    @discardableResult private func createAwardMO(playerUUID: String, code: String, awardLevel: Int, gameUUID: String, dateAwarded: Date) -> AwardMO? {
+        var awardMO: AwardMO!
+        _ = CoreData.update() {
+            awardMO = CoreData.create(from: "Award") as? AwardMO
+            if awardMO != nil {
+                awardMO.playerUUID = playerUUID
+                awardMO.code = code
+                awardMO.awardLevel = Int64(awardLevel)
+                awardMO.gameUUID = ""
+                awardMO.dateAwarded = Date()
+            }
+        }
+        return awardMO
     }
     
     // MARK: - Custom value routines ==================================================================== -
@@ -370,6 +493,8 @@ public class Awards {
         }
         return result
     }
+    
+    // MARK: - Configuration ============================================================================= -
 
     private func setupConfig() {
         self.config = [
@@ -390,11 +515,11 @@ public class Awards {
                    compare: .equal, source: .player, key: "twosMade",
                    imageName: "award twos made %d",
                    condition: { Scorecard.settings.bonus2 }),
-            AwardConfig(code: "madeGame", name: "Game Made", shortName: "Game Made", title: "%d contracts made in the game",
+            AwardConfig(code: "madeGame", name: "Game Made", shortName: "Game Made", title: "%d contracts made in one game",
                    awardLevels: [10, 11, 12, 13],
                    compare: .greaterOrEqual, source: .current, key: "handsMade",
                    imageName: "award game made %d"),
-            AwardConfig(code: "twosGame", name: "Game Twos", shortName: "Game Twos", title: "%d twos made in the game",
+            AwardConfig(code: "twosGame", name: "Game Twos", shortName: "Game Twos", title: "%d twos made in one game",
                    awardLevels: [3, 4, 5],
                    compare: .greaterOrEqual, source: .current, key: "twosMade",
                    imageName: "award game twos %d",
@@ -462,10 +587,33 @@ public class Awards {
                    compare: .greaterOrEqual, source: .round(.maximum), key: "twos",
                    imageName: "award hand twos %d",
                    condition: { Scorecard.settings.bonus2 }),
-            AwardConfig(code: "awards", name: "Awards", shortName: "Number of Awards Awarded", title: "Awarded %d awards",
+            AwardConfig(code: "awards", name: "Number of Awards", shortName: "Awards", title: "Awarded %d awards",
                    awardLevels: [25, 50], repeatable: false,
-                   compare: .equal, source: .awards, key: "",
+                   compare: .greaterOrEqual, source: .awards, key: "",
                    imageName: "awards %d"),
         ]
     }
+}
+
+extension AwardMO {
+    
+    public func from(cloudObject: CKRecord) {
+        self.playerUUID = Utility.objectString(cloudObject: cloudObject, forKey: "playerUUID")
+        self.code = Utility.objectString(cloudObject: cloudObject, forKey: "code")
+        self.awardLevel = Utility.objectInt(cloudObject: cloudObject, forKey:"awardLevel")
+        self.dateAwarded = Utility.objectDate(cloudObject: cloudObject, forKey: "dateAwarded")
+        self.gameUUID = Utility.objectString(cloudObject: cloudObject, forKey: "gameUUID")
+        self.syncDate = Utility.objectDate(cloudObject: cloudObject, forKey: "syncDate")
+        self.syncRecordID = cloudObject.recordID.recordName
+    }
+    
+    public func to(cloudObject: CKRecord) {
+        cloudObject.setValue(self.playerUUID, forKey: "playerUUID")
+        cloudObject.setValue(self.code, forKey: "code")
+        cloudObject.setValue(self.awardLevel, forKey: "awardLevel")
+        cloudObject.setValue(self.dateAwarded, forKey: "dateAwarded")
+        cloudObject.setValue(self.gameUUID, forKey: "gameUUID")
+        cloudObject.setValue(self.syncDate, forKey: "syncDate")
+    }
+    
 }

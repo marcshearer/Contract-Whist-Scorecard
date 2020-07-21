@@ -66,15 +66,15 @@ class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.loadTitleBarView()
+        self.loadHighScoreTileView()
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.loadTitleBarView()
+        self.loadHighScoreTileView()
     }
             
-    private func loadTitleBarView() {
+    private func loadHighScoreTileView() {
         Bundle.main.loadNibNamed("HighScoreTileView", owner: self, options: nil)
         self.addSubview(contentView)
         contentView.frame = self.bounds

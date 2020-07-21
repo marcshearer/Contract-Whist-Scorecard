@@ -104,8 +104,8 @@ class CountTileView: UIView, DashboardTileDelegate {
             self.countLabel.font = UIFont(name: "Helvetica Neue Bold Italic", size: 80)
         }
                 
-        self.contentView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
         self.tileView.roundCorners(cornerRadius: 8.0)
+        self.contentView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
     }
     
     internal func reloadData() {

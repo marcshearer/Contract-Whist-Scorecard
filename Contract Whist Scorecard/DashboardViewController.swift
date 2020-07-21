@@ -30,6 +30,9 @@ public enum Orientation: String, CaseIterable {
 @objc protocol DashboardTileDelegate : class {
     
     @objc optional func reloadData()
+    
+    @objc optional func willRotate()
+    
 }
 
 class DashboardViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CustomCollectionViewLayoutDelegate, DashboardActionDelegate {
@@ -124,6 +127,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
+        self.willRotate()
         self.rotated = true
         self.view.setNeedsLayout()
     }
@@ -184,6 +188,27 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             }
         }
     }
+    
+    private func willRotate() {
+        for (_, orientationViews) in self.dashboardViewInfo {
+            for (orientation, dashboardView) in orientationViews.views {
+                if orientation == self.currentOrientation {
+                    self.willRotate(for: dashboardView)
+                }
+            }
+        }
+    }
+    
+    private func willRotate(for view: UIView) {
+        if let view = view as? DashboardTileDelegate {
+            view.willRotate?()
+        } else {
+            for view in view.subviews {
+                self.willRotate(for: view)
+            }
+        }
+    }
+    
     
     // MARK: - CollectionView Overrides ================================================================ -
     

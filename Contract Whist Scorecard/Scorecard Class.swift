@@ -45,6 +45,9 @@ class Scorecard {
     /** Settings */
     public static var settings = Settings()
     
+    /** Sync Class */
+    private let sync = Sync()
+    
     /** Maximum number of players currently supported - currently 4
      - Note try to use this variable throughout since only real limitation should be UI
     */
@@ -503,6 +506,23 @@ class Scorecard {
         }
     }
 
+    public func syncBeforeGame(allPlayers: Bool = false) {
+        if !Scorecard.recovery.recoveryAvailable {
+            // If recovery available presumably synced before started the game
+            var specificPlayerUUIDs: [String] = []
+            if allPlayers {
+                for playerNumber in 1...Scorecard.game.currentPlayers {
+                    if let playerMO = Scorecard.game.player(enteredPlayerNumber: playerNumber).playerMO {
+                        specificPlayerUUIDs.append(playerMO.playerUUID!)
+                    }
+                }
+            } else {
+                specificPlayerUUIDs = [Scorecard.activeSettings.thisPlayerUUID]
+            }
+            _ = sync.synchronise(syncMode: .syncBeforeGame, specificPlayerUUIDs: specificPlayerUUIDs, waitFinish: true)
+        }
+    }
+    
     // MARK: - Functions to return useful iCloud information ================================= -
     
     private func setICloudUserIsMe() {

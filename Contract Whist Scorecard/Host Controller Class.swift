@@ -387,6 +387,9 @@ enum InviteStatus {
         } else {
             self.present(nextView: .hand)
         }
+        
+        // Do a background partial sync
+        Scorecard.shared.syncBeforeGame()
     }
      
     // MARK: - Process received data ==================================================== -

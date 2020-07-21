@@ -306,31 +306,43 @@
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tii-a3-9rM" customClass="TitleBar" customModule="Whist_2" customModuleProvider="target">
                                                         <rect key="frame" x="35" y="86" width="344" height="65"/>
                                                         <subviews>
-                                                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="3" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Jce-zU-f1B">
-                                                                <rect key="frame" x="16" y="27" width="312" height="30"/>
+                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Sz-IP-S3d">
+                                                                <rect key="frame" x="0.0" y="19.5" width="344" height="45.5"/>
+                                                                <subviews>
+                                                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="3" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Jce-zU-f1B">
+                                                                        <rect key="frame" x="16" y="8" width="312" height="30"/>
+                                                                        <color key="backgroundColor" name="Clear"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="height" constant="30" id="PhM-4m-5ks"/>
+                                                                        </constraints>
+                                                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="gfc-hj-ued">
+                                                                            <size key="itemSize" width="128" height="128"/>
+                                                                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                                                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                                                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                                                        </collectionViewFlowLayout>
+                                                                        <cells/>
+                                                                        <connections>
+                                                                            <outlet property="dataSource" destination="2Ye-nN-zMs" id="xbj-fm-hMF"/>
+                                                                            <outlet property="delegate" destination="2Ye-nN-zMs" id="kur-xz-flE"/>
+                                                                        </connections>
+                                                                    </collectionView>
+                                                                </subviews>
                                                                 <color key="backgroundColor" name="Clear"/>
                                                                 <constraints>
-                                                                    <constraint firstAttribute="height" constant="30" id="PhM-4m-5ks"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="Jce-zU-f1B" secondAttribute="trailing" constant="16" id="PUa-pc-5FF"/>
+                                                                    <constraint firstItem="Jce-zU-f1B" firstAttribute="centerY" secondItem="8Sz-IP-S3d" secondAttribute="centerY" id="Tzc-ZC-opf"/>
+                                                                    <constraint firstItem="Jce-zU-f1B" firstAttribute="leading" secondItem="8Sz-IP-S3d" secondAttribute="leading" constant="16" id="lUd-Q5-giw"/>
                                                                 </constraints>
-                                                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="gfc-hj-ued">
-                                                                    <size key="itemSize" width="128" height="128"/>
-                                                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                                                </collectionViewFlowLayout>
-                                                                <cells/>
-                                                                <connections>
-                                                                    <outlet property="dataSource" destination="2Ye-nN-zMs" id="xbj-fm-hMF"/>
-                                                                    <outlet property="delegate" destination="2Ye-nN-zMs" id="kur-xz-flE"/>
-                                                                </connections>
-                                                            </collectionView>
+                                                            </view>
                                                         </subviews>
                                                         <color key="backgroundColor" name="Clear"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="trailing" secondItem="Jce-zU-f1B" secondAttribute="trailing" constant="16" id="LPP-nB-g6G"/>
-                                                            <constraint firstItem="Jce-zU-f1B" firstAttribute="leading" secondItem="Tii-a3-9rM" secondAttribute="leading" constant="16" id="Xta-lU-NH3"/>
-                                                            <constraint firstAttribute="bottom" secondItem="Jce-zU-f1B" secondAttribute="bottom" constant="8" id="cc1-6H-ZxF"/>
+                                                            <constraint firstItem="8Sz-IP-S3d" firstAttribute="height" secondItem="Tii-a3-9rM" secondAttribute="height" multiplier="7:10" id="OLP-mi-g3v"/>
+                                                            <constraint firstAttribute="trailing" secondItem="8Sz-IP-S3d" secondAttribute="trailing" id="RYs-WJ-0eL"/>
+                                                            <constraint firstItem="8Sz-IP-S3d" firstAttribute="leading" secondItem="Tii-a3-9rM" secondAttribute="leading" id="dtV-id-Hvd"/>
                                                             <constraint firstAttribute="height" constant="65" id="ecR-AA-Iow"/>
+                                                            <constraint firstAttribute="bottom" secondItem="8Sz-IP-S3d" secondAttribute="bottom" id="xon-n4-dhS"/>
                                                         </constraints>
                                                         <userDefinedRuntimeAttributes>
                                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">

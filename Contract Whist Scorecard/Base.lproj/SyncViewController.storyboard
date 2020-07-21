@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -89,7 +89,7 @@
                                                     <rect key="frame" x="41" y="15" width="20" height="20"/>
                                                 </activityIndicatorView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" translatesAutoresizingMaskIntoConstraints="NO" id="XQT-C4-XeR">
-                                                    <rect key="frame" x="76" y="0.0" width="324" height="50"/>
+                                                    <rect key="frame" x="76" y="0.0" width="304" height="50"/>
                                                     <color key="backgroundColor" name="Clear"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                                     <color key="textColor" name="Text"/>
@@ -105,7 +105,7 @@
                                                 <constraint firstItem="av2-Sd-ITG" firstAttribute="centerY" secondItem="KO1-2j-7mg" secondAttribute="centerY" id="U4b-JW-bVf"/>
                                                 <constraint firstItem="KO1-2j-7mg" firstAttribute="leading" secondItem="Yl0-xX-Lmc" secondAttribute="leading" constant="36" id="X9a-ci-IpC"/>
                                                 <constraint firstItem="KO1-2j-7mg" firstAttribute="top" secondItem="Yl0-xX-Lmc" secondAttribute="top" constant="10" id="lba-OM-Xlr"/>
-                                                <constraint firstAttribute="trailing" secondItem="XQT-C4-XeR" secondAttribute="trailing" id="qfC-8D-Q4r"/>
+                                                <constraint firstAttribute="trailing" secondItem="XQT-C4-XeR" secondAttribute="trailing" constant="20" id="qfC-8D-Q4r"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="Clear"/>

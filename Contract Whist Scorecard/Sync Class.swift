@@ -11,9 +11,6 @@ import UIKit
 import CoreData
 import CloudKit
 
-
-// If you ever decide to make some of the methods in the protocol optional just insert @objc in front of protocol and put ? after optional method calls
-
 @objc public enum SyncStage: Int, CaseIterable {
     case started = -1
     case initialise = 0
@@ -54,6 +51,7 @@ import CloudKit
 
 public enum SyncMode {
     case syncAll
+    case syncBeforeGame
     case syncGetPlayers
     case syncUpdatePlayers
     case syncGetPlayerDetails
@@ -65,9 +63,10 @@ private enum SyncPhase {
     case phaseGetLastSyncDate
     case phaseUpdateLastSyncDate
     case phaseSendUserTerms
+    case phaseGetCurrentGameParticipants    // Records for players in current game (or just this player)
     case phaseGetExistingParticipants
     case phaseGetNewParticipants
-    case phaseGetGameParticipants
+    case phaseGetGameParticipants           // Participants for specific historic games
     case phaseUpdateParticipants
     case phaseGetGames
     case phaseUpdateGames
@@ -77,6 +76,8 @@ private enum SyncPhase {
     case phaseGetLinkedPlayers
     case phaseGetPlayerList
     case phaseSendPlayers
+    case phaseGetAwards
+    case phaseSendAwards
     case phaseRebuildWinStreaks
     case phaseGetSendImages
     case phaseStartedStageComplete
@@ -88,6 +89,7 @@ private enum SyncPhase {
 }
 
 private enum GetParticipantMode {
+    case getCurrentGame
     case getExisting
     case getNew
     case getGame
@@ -176,6 +178,8 @@ class Sync {
                               .phaseReplaceTemporaryPlayerUUIDs,
                               .phaseGetPlayers,
                               .phaseSendPlayers,
+                              .phaseGetAwards,
+                              .phaseSendAwards,
                               .phaseDownloadPlayersStageComplete,
                               .phaseGetExistingParticipants, .phaseUpdateParticipants,
                               .phaseGetNewParticipants,      .phaseUpdateParticipants,
@@ -188,6 +192,14 @@ class Sync {
                               .phaseGetSendImages,
                               .phaseRebuildWinStreaks,
                               .phaseUploadPlayersStageComplete]
+            case .syncBeforeGame:
+                syncPhases = [.phaseGetVersion,
+                              .phaseGetLastSyncDate,
+                              .phaseGetPlayers,
+                              .phaseGetAwards,
+                              .phaseGetCurrentGameParticipants,
+                              .phaseUpdateParticipants,
+                              .phaseRebuildWinStreaks]
             case .syncUpdatePlayers:
                 // Synchronise players in list with cloud
                 syncPhases = [.phaseGetVersion,
@@ -243,7 +255,7 @@ class Sync {
         // or return true and then recall the controller from a completion block
         
         Utility.mainThread {
-        
+            
             var nextPhase = true
             self.observer = nil
             
@@ -251,12 +263,12 @@ class Sync {
                 
                 // Prepare for next phase
                 self.syncPhaseCount += 1
-                
+            
                 // Quit if errors or finished
                 if self.errors != 0 || !Sync.syncInProgress || self.syncPhaseCount >= self.syncPhases.count {
                     break
                 }
-                
+            
                 // Don't allow any phase to take longer than timeout seconds
                 if self.timeout != nil {
                     self.startTimer(self.timeout)
@@ -271,6 +283,8 @@ class Sync {
                     nextPhase = self.updateLastSyncDate()
                 case .phaseSendUserTerms:
                     nextPhase = self.sendUserTerms()
+                case .phaseGetCurrentGameParticipants:
+                    nextPhase = self.getParticipantsFromCloud(.getCurrentGame)
                 case .phaseGetExistingParticipants:
                     nextPhase = self.getParticipantsFromCloud(.getExisting)
                 case .phaseGetNewParticipants:
@@ -303,6 +317,10 @@ class Sync {
                         specificPlayerUUIDs: self.specificPlayerUUIDs,
                         downloadAction: self.addPlayerList,
                         completeAction: self.completeGetPlayers)
+                case .phaseGetAwards:
+                    nextPhase = self.downloadAwardsFromCloud(specificPlayerUUIDs: self.specificPlayerUUIDs)
+                case .phaseSendAwards:
+                    nextPhase = self.sendAwardsToCloud(specificPlayerUUIDs: self.specificPlayerUUIDs)
                 case .phaseRebuildWinStreaks:
                     nextPhase = self.rebuildWinStreaks()
                 case .phaseStartedStageComplete:
@@ -563,6 +581,12 @@ class Sync {
                 predicateList = Scorecard.shared.playerUUIDList(getPlayerMode: .getNew, cutoffDate: self.lastSyncDate, specificPlayerUUIDs: self.specificPlayerUUIDs)
                 let predicate1 = NSPredicate(format: "playerUUID IN %@", argumentArray: [predicateList])
                 predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate1])
+            case .getCurrentGame:
+                // Get particpants based on a list of (probably 1) playerUUID address
+                predicateList = self.specificPlayerUUIDs
+                let predicate1 = NSPredicate(format: "playerUUID IN %@", argumentArray: [predicateList])
+                let predicate2 = NSPredicate(format: "syncDate >= %@", self.lastSyncDate.addingTimeInterval(-(24*60*60)) as NSDate)
+                predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate1, predicate2])
             case .getSpecific:
                 // Get particpants based on a list of (probably 1) playerUUID address
                 predicateList = self.specificPlayerUUIDs
@@ -1533,11 +1557,6 @@ class Sync {
                 self.syncMessage("Error updating local player records")
                 self.errors += 1
             }
-            
-            Utility.mainThread {
-                self.syncMessage("Sync complete")
-            }
-            
             self.syncController()
             
         }
@@ -1653,6 +1672,90 @@ class Sync {
         }
     }
     
+    // MARK: - Functions to update Awards ============================================================== -
+    
+    private func downloadAwardsFromCloud(specificPlayerUUIDs: [String]?) -> Bool {
+        var records: [CKRecord] = []
+        var lastPlayerUUID: String?
+        let awards = Awards()
+        var existing: [AwardMO] = []
+        
+        self.cloudObjectList = []
+
+        let specificPlayerUUIDs = specificPlayerUUIDs ?? Scorecard.shared.playerUUIDList()
+        let predicate1 = NSPredicate(format: "playerUUID IN %@", argumentArray: [specificPlayerUUIDs])
+        let predicate2 = NSPredicate(format: "syncDate >= %@", self.lastSyncDate.addingTimeInterval(-(24*60*60)) as NSDate)
+        let predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicate1, predicate2])
+        
+        Sync.read(recordType: "Awards", predicate: predicate, sortBy: [NSSortDescriptor(key: "playerUUID", ascending: true)],
+        downloadAction: { (record) in
+            records.append(record)
+        },
+        completeAction: { (error) in
+            if error == nil && !records.isEmpty {
+                _ = CoreData.update {
+                    for record in records {
+                        // Try to find local record and update - otherwise create
+                        if let playerUUID = record.value(forKey: "playerUUID") as? String,
+                            let code = record.value(forKey: "code") as? String,
+                            let awardLevel = record.value(forKey: "awardLevel") as? Int {
+                            if playerUUID != lastPlayerUUID {
+                                existing = awards.getAchieved(playerUUID: playerUUID)
+                                lastPlayerUUID = playerUUID
+                            }
+                            var awardMO: AwardMO
+                            if let index = existing.firstIndex(where: {$0.playerUUID == playerUUID && $0.code == code && $0.awardLevel == awardLevel}) {
+                                awardMO = existing[index]
+                                awardMO.from(cloudObject: record)
+                                if existing[index].dateAwarded! > awardMO.dateAwarded! {
+                                    // Re-awarded since locally - keep local and re-sync
+                                    awardMO.dateAwarded = existing[index].dateAwarded
+                                    awardMO.syncDate = nil
+                                }
+                            } else {
+                                awardMO = CoreData.create(from: "Award")
+                                awardMO.from(cloudObject: record)
+                            }
+                        }
+                    }
+                }
+                self.syncMessage("Local award records updated")
+            }
+            self.syncController()
+        })
+        return false
+    }
+    
+    private func sendAwardsToCloud(specificPlayerUUIDs: [String]?) -> Bool {
+        var records: [CKRecord] = []
+        
+        var predicate: [NSPredicate] = []
+        if (specificPlayerUUIDs?.count ?? 0) > 0 {
+            predicate.append(NSPredicate(format: "playerUUID IN %@", argumentArray: [specificPlayerUUIDs!]))
+        }
+        predicate.append(NSPredicate(format: "syncDate = null"))
+        let existing = CoreData.fetch(from: "Award", filter: predicate, sort: []) as! [AwardMO]
+        
+        for awardMO in existing {
+            let recordID = CKRecord.ID(recordName: "Awards-\(awardMO.playerUUID!)+\(awardMO.code!)+\(awardMO.awardLevel)")
+            let record = CKRecord(recordType: "Awards", recordID: recordID)
+            awardMO.to(cloudObject: record)
+            record.setValue(Date(), forKey: "syncDate")
+            records.append(record)
+        }
+        
+        if !records.isEmpty {
+            Sync.update(records: records, overwriteRegardless: true, completion: { (error) in
+                // Ignore errors
+                self.syncMessage("Award records uploaded")
+                self.syncController()
+            })
+            return false
+        } else {
+            return true
+        }
+    }
+    
     // MARK: - Utility Routines ======================================================================== -
 
     private func syncMessage(_ message: String) {
@@ -1709,6 +1812,7 @@ class Sync {
         
         if self.observer != nil {
             NotificationCenter.default.removeObserver(self.observer!)
+            self.observer = nil
         }
         NotificationCenter.default.post(name: .syncCompletion, object: self, userInfo: nil)
     }
@@ -1791,7 +1895,7 @@ class Sync {
     
     // MARK: - Generic read/write =================================================================== -
     
-    public class func update(records: [CKRecord]? = nil, recordIDsToDelete: [CKRecord.ID]? = nil, database: CKDatabase? = nil, recordsRemainder: [CKRecord]? = nil, recordIDsToDeleteRemainder: [CKRecord.ID]? = nil, completion: ((Error?)->())? = nil) {
+    public class func update(records: [CKRecord]? = nil, recordIDsToDelete: [CKRecord.ID]? = nil, database: CKDatabase? = nil, overwriteRegardless: Bool = false, recordsRemainder: [CKRecord]? = nil, recordIDsToDeleteRemainder: [CKRecord.ID]? = nil, completion: ((Error?)->())? = nil) {
         // Copes with limit being exceeed which splits the load in two and tries again
         var lastSplit = 400
         
@@ -1807,6 +1911,9 @@ class Sync {
             
             uploadOperation.isAtomic = true
             uploadOperation.database = database
+            if overwriteRegardless {
+                uploadOperation.savePolicy = .allKeys
+            }
             
             // Assign a completion handler
             uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecord.ID]?, error: Error?) -> Void in

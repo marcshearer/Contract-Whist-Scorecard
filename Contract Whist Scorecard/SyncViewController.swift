@@ -28,6 +28,7 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
     private var currentStage: SyncStage = SyncStage(rawValue: 0)!
     private var lastStageFinish = Date(timeIntervalSinceReferenceDate: 0.0)
     private var stages = 0
+    private var syncStarted = false
     
     // UI Constants
     private let stageTableView = 1
@@ -223,9 +224,10 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
             animations: {
                 cell.alpha = 1
             }, completion: { (_) in
-                if indexPath.row == SyncStage.complete.rawValue {
+                if indexPath.row == SyncStage.complete.rawValue && !self.syncStarted {
                     // Invoke the sync
                     self.sync.delegate = self
+                    self.syncStarted = true
                     _ = self.sync.synchronise(waitFinish: true, okToSyncWithTemporaryPlayerUUIDs: true)
                 }
             })

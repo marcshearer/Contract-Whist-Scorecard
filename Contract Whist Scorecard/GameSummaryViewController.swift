@@ -54,8 +54,9 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     private let winnerSpacing: CGFloat = 30.0
     private let otherSpacing: CGFloat = 20.0
     private let awardSpacing: CGFloat = 10.0
-    private let awardNameHeight: CGFloat = 20.0
-    private let awardMaxList = 100
+    private let awardNameHeight: CGFloat = 10.0
+    private var awardCellSize = CGSize()
+    private let awardMaxList = 1
     private let awards = Awards()
     private var awardList: [Award]!
     
@@ -114,8 +115,9 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         // Setup default colors (previously done in StoryBoard)
         self.defaultViewColors()
 
-        // Load awards
+        // Load (and save) awards
         self.awardList = self.awards.calculate(playerUUID: Scorecard.activeSettings.thisPlayerUUID)
+        self.awards.save(playerUUID: Scorecard.activeSettings.thisPlayerUUID, achieved: self.awardList)
         
         // Bind award cells
         AwardCollectionCell.register(awardsCollectionView, modes: .grid, .list)
@@ -163,6 +165,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         if firstTime || rotated {
             self.topArea.layoutIfNeeded()
             self.middleArea.layoutIfNeeded()
+            self.bottomArea.layoutIfNeeded()
             self.setupSize()
             self.winnerCollectionView.reloadData()
             self.awardsCollectionView.reloadData()
@@ -205,12 +208,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
                           height: self.otherCellHeight)
             
         case awardsTag:
-            let height = collectionView.frame.height
-            if self.awardList.count <= self.awardMaxList {
-                return CGSize(width: collectionView.frame.width, height: height)
-            } else {
-                return CGSize(width: height - awardNameHeight, height: height)
-            }
+            return self.awardCellSize
         default:
             return CGSize()
         }
@@ -276,8 +274,15 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        let index = indexPath.row + (collectionView.tag == winnersTag ? 0 : winners)
-        self.playerSelected(index: index)
+        if collectionView.tag != self.awardsTag {
+            let index = indexPath.row + (collectionView.tag == winnersTag ? 0 : winners)
+            self.playerSelected(index: index)
+        } else {
+            let awardView = AwardDetailView(frame: self.view.frame)
+            let award = self.awardList[indexPath.row]
+            awardView.set(awards: self.awards, playerUUID: Scorecard.settings.thisPlayerUUID, award: award, mode: .none, backgroundColor: Palette.buttonFace, textColor: Palette.buttonFaceText)
+            awardView.show(from: self.view)
+        }
     }
     
     @objc private func selectPlayer(_ sender: UIButton) {
@@ -395,17 +400,25 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         self.actionButtons.forEach{(button) in button.roundCorners(cornerRadius: 8.0)}
         self.actionButtons.forEach{(button) in button.set(titleFont: UIFont.systemFont(ofSize: 18.0, weight: .semibold))}
         self.actionButtons.first!.layoutIfNeeded()
+        
         if self.awardList.count == 0 {
             self.actionButtonViewHeight.constant = self.actionButtons.first!.frame.width
             self.actionButtons.forEach{(button) in button.setProportions(top: 0.15, image: 0.6, imageBottom: 0.05, title: 0.2, bottom: 0.1)}
+            
             self.awardsTitleBarHeight.constant = self.actionButtons.first!.frame.width * 0.4
             self.awardsTitleBar.set(labelProportion: 1.0)
         } else {
             self.actionButtonViewHeight.constant = self.actionButtons.first!.frame.width * 0.4
             self.actionButtons.forEach{(button) in button.setProportions(top: 0.1, title: 0.2, bottom: 0.1)}
+            
             self.awardsTitleBarHeight.constant = self.actionButtons.first!.frame.width
             self.awardsTitleBar.set(labelProportion: 0.4)
-            self.awardsCollectionViewHeight.constant = (self.awardsTitleBarHeight.constant * 0.7) - 20
+            
+            self.awardsCollectionViewHeight.constant = 0.5 * self.awardsTitleBarHeight.constant
+            self.awardsTitleBar.layoutIfNeeded()
+            self.awardCellSize = AwardCollectionCell.sizeForCell(self.awardsCollectionView, mode: (self.awardList.count <= self.awardMaxList ? .list : .grid), across: 3.5, spacing: self.awardSpacing, labelHeight: self.awardNameHeight)
+            self.awardsCollectionViewHeight.constant = (self.awardCellSize.height)
+            print(self.awardCellSize.height, self.awardsCollectionView.frame)
         }
         self.actionButtonView.layoutIfNeeded()
         self.actionButtons.forEach{(button) in button.roundCorners(cornerRadius: 8.0)}

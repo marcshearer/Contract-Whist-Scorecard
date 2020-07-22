@@ -43,21 +43,18 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4nv-GB-4Ms" userLabel="Award Title">
-                        <rect key="frame" x="84" y="32" width="208" height="24"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="24" id="eyW-4J-iwR"/>
-                        </constraints>
+                        <rect key="frame" x="84" y="32" width="208" height="0.0"/>
                         <fontDescription key="fontDescription" type="system" weight="light" pointSize="10"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="bottom" secondItem="4nv-GB-4Ms" secondAttribute="bottom" constant="4" id="6Gv-Hb-1t0"/>
                     <constraint firstAttribute="bottom" secondItem="t6G-lz-WnE" secondAttribute="bottom" id="B8A-QW-jjB"/>
+                    <constraint firstItem="4nv-GB-4Ms" firstAttribute="top" secondItem="ips-XR-wiY" secondAttribute="bottom" constant="2" id="Fke-QS-L8Y"/>
                     <constraint firstItem="t6G-lz-WnE" firstAttribute="leading" secondItem="w0x-lD-JJu" secondAttribute="leading" constant="8" id="G7d-ko-pvn"/>
                     <constraint firstItem="ips-XR-wiY" firstAttribute="leading" secondItem="t6G-lz-WnE" secondAttribute="trailing" constant="16" id="OFM-Og-YBN"/>
-                    <constraint firstItem="4nv-GB-4Ms" firstAttribute="top" secondItem="ips-XR-wiY" secondAttribute="bottom" constant="2" id="Rgf-of-RUZ"/>
+                    <constraint firstAttribute="bottom" secondItem="ips-XR-wiY" secondAttribute="bottom" constant="30" id="Rgf-of-RUZ"/>
                     <constraint firstItem="t6G-lz-WnE" firstAttribute="leading" secondItem="w0x-lD-JJu" secondAttribute="leading" constant="8" id="U8X-wd-wDr"/>
                     <constraint firstItem="ips-XR-wiY" firstAttribute="leading" secondItem="4nv-GB-4Ms" secondAttribute="leading" id="VEm-WK-5mL"/>
                     <constraint firstAttribute="trailing" secondItem="4nv-GB-4Ms" secondAttribute="trailing" constant="8" id="VHg-XW-Wxr"/>
@@ -72,7 +69,7 @@
                 <outlet property="titleLabel" destination="4nv-GB-4Ms" id="kPx-y2-Lef"/>
                 <outlet property="view" destination="t6G-lz-WnE" id="QAd-eM-HID"/>
             </connections>
-            <point key="canvasLocation" x="109" y="100"/>
+            <point key="canvasLocation" x="108.69565217391305" y="99.776785714285708"/>
         </collectionViewCell>
     </objects>
     <resources>

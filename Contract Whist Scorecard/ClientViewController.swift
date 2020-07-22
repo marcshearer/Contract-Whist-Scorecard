@@ -994,7 +994,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             if self.thisPlayer == nil || self.matchDeviceName == nil {
                 // Not got player and device name from recovery - use default
                 var defaultPlayer: String!
-                defaultPlayer = Scorecard.activeSettings.thisPlayerUUID
+                defaultPlayer = Scorecard.settings.thisPlayerUUID
                 if defaultPlayer != nil {
                     let playerMO = Scorecard.shared.findPlayerByPlayerUUID(defaultPlayer)
                     if playerMO != nil {

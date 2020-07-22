@@ -14,11 +14,12 @@ public enum AwardCellMode: String {
 }
 
 class AwardCollectionCell: UICollectionViewCell {
+    
     @IBOutlet private weak var view: UIView!
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var nameLabel: UILabel!
     @IBOutlet private weak var shortNameLabel: UILabel!
-    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var titleLabel: UITextView!
     
     public func bind(award: Award, backgroundColor: UIColor = Palette.buttonFace, textColor: UIColor = Palette.buttonFaceText, alpha: CGFloat = 1.0) {
         self.nameLabel?.textColor = textColor
@@ -28,16 +29,19 @@ class AwardCollectionCell: UICollectionViewCell {
         self.nameLabel?.text = award.name
         self.shortNameLabel?.text = award.shortName
         self.titleLabel?.text = award.title
+        self.titleLabel?.sizeToFit()
         self.view?.layoutIfNeeded()
         self.view?.roundCorners(cornerRadius: 8.0)
     }
     
-    public class func sizeForCell(_ collectionView: UICollectionView, mode: AwardCellMode, across: CGFloat = 5.0, spacing: CGFloat = 10.0, labelHeight: CGFloat = 20.0) -> CGSize {
+    public class func sizeForCell(_ collectionView: UICollectionView, mode: AwardCellMode, across: CGFloat = 5.0, spacing: CGFloat = 10.0, labelHeight: CGFloat = 20.0, sectionInsets: UIEdgeInsets = UIEdgeInsets()) -> CGSize {
         let height = collectionView.frame.height
-        let width = collectionView.frame.width
+        let width = collectionView.frame.width - sectionInsets.left - sectionInsets.right
         let viewSize = min(((width + spacing) / across) - spacing, height - (mode == .list ? 0 : labelHeight))
         if mode == .list {
-            return CGSize(width: width, height: min(height < 120 ? viewSize : 60, height))
+            let numberVertically = Utility.roundQuotient(height, 70.0)
+            let idealHeight: CGFloat = ((height + spacing) / CGFloat(numberVertically)) - spacing
+            return CGSize(width: width, height: min(height < 120 ? viewSize : idealHeight, height))
         } else {
             return CGSize(width: min(viewSize, width), height: viewSize + labelHeight)
         }
@@ -63,6 +67,8 @@ protocol AwardCollectionDelegate : class {
 
 class AwardCollectionHeader: UICollectionReusableView {
     
+    private static let noAwardsHeight: CGFloat = 30.0
+    private static let normalHeight: CGFloat = 56.0
     private weak var delegate: AwardCollectionDelegate?
     
     @IBOutlet private weak var topConstraint: NSLayoutConstraint!
@@ -70,6 +76,8 @@ class AwardCollectionHeader: UICollectionReusableView {
     @IBOutlet private weak var listButton: ClearButton!
     @IBOutlet private weak var panelView: UIView!
     @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var noAwardsLabel: UILabel!
+    @IBOutlet private weak var noAwardsHeightConstraint: NSLayoutConstraint!
     
     @IBAction func listModePressed(_ button: UIButton) {
         self.delegate?.changeMode(to: .list, section: button.tag)
@@ -79,21 +87,26 @@ class AwardCollectionHeader: UICollectionReusableView {
         self.delegate?.changeMode(to: .grid, section: button.tag)
     }
 
-    public func bind(title: String, backgroundColor: UIColor = Palette.buttonFace, panelColor: UIColor = Palette.buttonFace /*sectionHeading*/, textColor: UIColor = Palette.buttonFaceText /*sectionHeadingText*/, section: Int) {
+    public func bind(title: String, backgroundColor: UIColor = Palette.buttonFace, panelColor: UIColor = Palette.buttonFace, textColor: UIColor = Palette.buttonFaceText, highlightColor: UIColor = Palette.banner, section: Int, mode: AwardCellMode, noAwards: Bool = false) {
         self.topConstraint.constant = (section == 0 ? 0 : 0)
         self.panelView.backgroundColor = panelColor
         self.panelView.layoutIfNeeded()
         self.panelView.roundCorners(cornerRadius: 8, bottomRounded: false)
         self.titleLabel.textColor = textColor
         self.titleLabel.text = title
-        self.gridButton.tintColor = textColor
+        self.gridButton.tintColor = (mode == .grid ? highlightColor : textColor)
         self.gridButton.tag = section
-        self.listButton.tintColor = textColor
+        self.listButton.tintColor = (mode == .list ? highlightColor : textColor)
         self.listButton.tag = section
+        if noAwards {
+            self.noAwardsHeightConstraint.constant = AwardCollectionHeader.noAwardsHeight
+            self.noAwardsLabel.text = "No Awards Found"
+            self.noAwardsLabel.textColor = Palette.disabledText
+        }
     }
     
-    public static func sizeForHeader(_ collectionView: UICollectionView, section: Int) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: (section == 0 ? 56 : 56))
+    public static func sizeForHeader(_ collectionView: UICollectionView, section: Int, noAwards: Bool) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: AwardCollectionHeader.normalHeight + (noAwards ? AwardCollectionHeader.noAwardsHeight : 0))
     }
     
     public class func register(_ collectionView: UICollectionView) {

@@ -20,6 +20,7 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
     
     private var spacing: CGFloat = 10.0
     private var nameHeight: CGFloat = 12.0
+    private var sectionInsets = UIEdgeInsets(top: 12, left: 12, bottom: 20, right: 12)
     
     @IBInspectable private var viewMode: String {
         get {
@@ -126,7 +127,7 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return AwardCollectionHeader.sizeForHeader(collectionView, section: section)
+        return AwardCollectionHeader.sizeForHeader(collectionView, section: section, noAwards: (section == achievedSection && self.achieved.isEmpty))
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -135,7 +136,7 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
         switch kind {
         case UICollectionView.elementKindSectionHeader:
             header = AwardCollectionHeader.dequeue(collectionView, for: indexPath, delegate: self)
-            header.bind(title: (indexPath.section == achievedSection ? "Awarded" : "For the Future"), section: indexPath.section)
+            header.bind(title: (indexPath.section == achievedSection ? "Awarded" : "For the Future"), section: indexPath.section, mode: self.mode, noAwards: indexPath.section == achievedSection && self.achieved.isEmpty ? true : false)
         default:
             break
         }
@@ -150,8 +151,12 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
         }
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return self.sectionInsets
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return AwardCollectionCell.sizeForCell(collectionView, mode: self.mode, across: (ScorecardUI.landscapePhone() ? 6 : 3), spacing: self.spacing, labelHeight: self.nameHeight)
+        return AwardCollectionCell.sizeForCell(collectionView, mode: self.mode, across: (ScorecardUI.landscapePhone() ? 6 : 3), spacing: self.spacing, labelHeight: self.nameHeight, sectionInsets: self.sectionInsets)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -184,7 +189,7 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
     // MARK: - Utility Routines ======================================================================== -
     
     private func loadData() {
-        (self.achieved, self.toAchieve) = awards.get(playerUUID: Scorecard.activeSettings.thisPlayerUUID)
+        (self.achieved, self.toAchieve) = awards.get(playerUUID: Scorecard.settings.thisPlayerUUID)
     }
     
     private func defaultViewColors() {

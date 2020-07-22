@@ -21,8 +21,17 @@
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Awards Found" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pN8-7F-lZB">
+                            <rect key="frame" x="0.0" y="48" width="414" height="0.0"/>
+                            <constraints>
+                                <constraint firstAttribute="height" id="Jbb-UY-DDc"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7PS-UA-ua4" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                            <rect key="frame" x="376" y="9" width="30" height="30"/>
+                            <rect key="frame" x="334" y="9" width="30" height="30"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="30" id="9re-fu-xp0"/>
                                 <constraint firstAttribute="height" constant="30" id="JIT-wT-mXy"/>
@@ -33,7 +42,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zlw-s1-L1e" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                            <rect key="frame" x="342" y="9" width="30" height="30"/>
+                            <rect key="frame" x="368" y="9" width="30" height="30"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="30" id="IcU-xt-aOQ"/>
                                 <constraint firstAttribute="width" constant="30" id="L65-kd-1GG"/>
@@ -46,14 +55,17 @@
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                     <constraints>
+                        <constraint firstItem="pN8-7F-lZB" firstAttribute="leading" secondItem="lOb-NV-OjZ" secondAttribute="leading" id="04N-o9-2PG"/>
                         <constraint firstItem="Gc8-LU-Y2q" firstAttribute="leading" secondItem="lOb-NV-OjZ" secondAttribute="leading" constant="16" id="0uy-DK-Ksw"/>
+                        <constraint firstItem="Gc8-LU-Y2q" firstAttribute="bottom" secondItem="pN8-7F-lZB" secondAttribute="top" id="GY4-5m-8fr"/>
                         <constraint firstAttribute="trailing" secondItem="Gc8-LU-Y2q" secondAttribute="trailing" constant="16" id="Puk-PM-CIj"/>
-                        <constraint firstItem="Zlw-s1-L1e" firstAttribute="centerY" secondItem="lOb-NV-OjZ" secondAttribute="centerY" id="PyI-O0-LCd"/>
-                        <constraint firstItem="7PS-UA-ua4" firstAttribute="centerY" secondItem="lOb-NV-OjZ" secondAttribute="centerY" id="QaB-HO-zxj"/>
-                        <constraint firstAttribute="bottom" secondItem="Gc8-LU-Y2q" secondAttribute="bottom" id="Yod-bs-myA"/>
-                        <constraint firstItem="7PS-UA-ua4" firstAttribute="leading" secondItem="Zlw-s1-L1e" secondAttribute="trailing" constant="4" id="prA-Bw-0fJ"/>
-                        <constraint firstAttribute="trailing" secondItem="7PS-UA-ua4" secondAttribute="trailing" constant="8" id="vfN-95-bdM"/>
+                        <constraint firstItem="Zlw-s1-L1e" firstAttribute="centerY" secondItem="Gc8-LU-Y2q" secondAttribute="centerY" id="di7-2w-S9N"/>
+                        <constraint firstAttribute="trailing" secondItem="Zlw-s1-L1e" secondAttribute="trailing" constant="16" id="prA-Bw-0fJ"/>
+                        <constraint firstItem="7PS-UA-ua4" firstAttribute="centerY" secondItem="Gc8-LU-Y2q" secondAttribute="centerY" id="t4p-oX-1dc"/>
+                        <constraint firstItem="Zlw-s1-L1e" firstAttribute="leading" secondItem="7PS-UA-ua4" secondAttribute="trailing" constant="4" id="vfN-95-bdM"/>
                         <constraint firstItem="Gc8-LU-Y2q" firstAttribute="top" secondItem="lOb-NV-OjZ" secondAttribute="top" id="vpp-ec-jvR"/>
+                        <constraint firstAttribute="bottom" secondItem="pN8-7F-lZB" secondAttribute="bottom" id="w7k-IL-oqO"/>
+                        <constraint firstAttribute="trailing" secondItem="pN8-7F-lZB" secondAttribute="trailing" id="x7N-kj-h0M"/>
                     </constraints>
                 </view>
             </subviews>
@@ -66,6 +78,8 @@
             <connections>
                 <outlet property="gridButton" destination="7PS-UA-ua4" id="x03-m3-eko"/>
                 <outlet property="listButton" destination="Zlw-s1-L1e" id="qBP-em-YNW"/>
+                <outlet property="noAwardsHeightConstraint" destination="Jbb-UY-DDc" id="Gvk-Xe-FGH"/>
+                <outlet property="noAwardsLabel" destination="pN8-7F-lZB" id="I9Z-Bx-dDn"/>
                 <outlet property="panelView" destination="lOb-NV-OjZ" id="mNP-su-Jx2"/>
                 <outlet property="titleLabel" destination="Gc8-LU-Y2q" id="25h-Iy-YxK"/>
                 <outlet property="topConstraint" destination="Zrh-91-EWN" id="pn4-9d-Qsg"/>

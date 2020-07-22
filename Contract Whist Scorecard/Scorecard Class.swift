@@ -517,7 +517,7 @@ class Scorecard {
                     }
                 }
             } else {
-                specificPlayerUUIDs = [Scorecard.activeSettings.thisPlayerUUID]
+                specificPlayerUUIDs = [Scorecard.settings.thisPlayerUUID]
             }
             _ = sync.synchronise(syncMode: .syncBeforeGame, specificPlayerUUIDs: specificPlayerUUIDs, waitFinish: true)
         }

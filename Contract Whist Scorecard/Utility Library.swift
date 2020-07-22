@@ -199,7 +199,7 @@ class Utility {
     }
     
     class func roundQuotient(_ numerator: CGFloat, _ denominator: CGFloat) -> Int {
-        var quotient = self.percent(CGFloat(numerator), CGFloat(denominator))
+        var quotient = self.quotient(CGFloat(numerator), CGFloat(denominator))
         quotient.round()
         return Int(quotient)
     }

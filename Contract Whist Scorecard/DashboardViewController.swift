@@ -66,6 +66,8 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     private var firstTime = true
     private var rotated = false
     
+    private var observer: NSObjectProtocol?
+    
     @IBOutlet private weak var bannerPaddingView: InsetPaddingView!
     @IBOutlet private var topSectionHeightConstraint: [NSLayoutConstraint]!
     @IBOutlet private var topSectionProportionalHeightConstraint: [NSLayoutConstraint]!
@@ -113,6 +115,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         self.defaultViewColors()
         self.finishButton.setImage(UIImage(named: self.backImage), for: .normal)
         self.finishButton.setTitle(self.backText)
+        self.networkEnableSyncButton()
 
         // Add in dashboards
         self.addDashboardViews()
@@ -397,6 +400,27 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         self.reloadData()
     }
     
+    // MARK: - Utility Routines ======================================================================== -
+    
+    private func networkEnableSyncButton() {
+        Scorecard.shared.checkNetworkConnection {
+            self.syncButtons(hidden: !(Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn))
+        }
+        self.observer = Scorecard.reachability.startMonitor { (available) in
+            self.syncButtons(hidden: !available)
+        }
+    }
+    
+    private func syncButtons(hidden: Bool) {
+        if ScorecardUI.smallPhoneSize() {
+            self.syncButton.isHidden = true
+            self.smallSyncButton.isHidden = hidden
+        } else {
+            self.smallSyncButton.isHidden = true
+            self.syncButton.isHidden = hidden
+        }
+    }
+
     // MARK: - Functions to present other views ========================================================== -
     
     private func showSync() {
@@ -438,7 +462,10 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     }
     
     override internal func didDismiss() {
-        
+        if self.observer != nil {
+            NotificationCenter.default.removeObserver(self.observer!)
+            self.observer = nil
+        }
     }
 }
 
@@ -452,13 +479,9 @@ extension DashboardViewController {
         if ScorecardUI.smallPhoneSize() {
             // Switch to cloud image rather than Sync text on shadowed button
             self.smallSyncButton.tintColor = self.bannerTextColor
-            self.smallSyncButton.isHidden = false
-            self.syncButton.isHidden = true
         } else {
             self.syncButton.setTitleColor(self.bannerTextColor, for: .normal)
             self.syncButton.setBackgroundColor(self.bannerShadowColor)
-            self.smallSyncButton.isHidden = true
-            self.syncButton.isHidden = false
         }
     }
 

@@ -163,6 +163,10 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
         self.callerCompletion?()
     }
     
+    internal func syncButtons(enabled: Bool) {
+        self.syncButton?.isEnabled = enabled
+    }
+    
     // MARK: - Load data ================================================================= -
     
     func getHistory() {

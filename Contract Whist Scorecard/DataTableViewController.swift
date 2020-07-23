@@ -47,6 +47,8 @@ import CoreData
     
     @objc optional func layoutSubviews()
     
+    @objc optional func syncButtons(enabled: Bool)
+    
 }
 
 class DataTableViewController: ScorecardViewController, UITableViewDataSource, UITableViewDelegate {
@@ -60,6 +62,7 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
     private var lastSortDescending = false
     private let graphView = GraphView()
     private var padColumn = -1
+    private var observer: NSObjectProtocol?
     
     // Cell sizes
     let paddingWidth: CGFloat = 6.0
@@ -113,23 +116,7 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
         self.defaultViewColors()
         
         // Check for network / iCloud login
-        if self.delegate?.allowSync ?? true {
-            Scorecard.shared.checkNetworkConnection{
-                let enabled = (Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn)
-                if ScorecardUI.smallPhoneSize() {
-                    self.syncButton.isHidden = true
-                    self.smallSyncButton.isHidden = false
-                    self.smallSyncButton.isEnabled = enabled
-                } else {
-                    self.smallSyncButton.isHidden = true
-                    self.syncButton.isHidden = false
-                    self.syncButton.isEnabled = enabled
-                }
-            }
-        } else {
-            self.syncButton.isHidden = true
-            self.smallSyncButton.isHidden = true
-        }
+        self.networkEnableSyncButton()
         
         // Format finish button
         finishButton.setImage(UIImage(named: self.delegate?.backImage ?? "home"), for: .normal)
@@ -188,6 +175,31 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
         self.recordList = recordList
         self.bodyView.reloadData()
         completion?()
+    }
+    
+    // MARK: - Utility Routines ======================================================================== -
+    
+    private func networkEnableSyncButton() {
+        Scorecard.shared.checkNetworkConnection{
+            self.syncButtons(enabled: (Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn))
+        }
+        self.observer = Scorecard.reachability.startMonitor { (available) in
+            self.syncButtons(enabled: available)
+        }
+    }
+            
+    private func syncButtons(enabled: Bool) {
+        let allowSync = self.delegate?.allowSync ?? true
+        if ScorecardUI.smallPhoneSize() {
+            self.syncButton.isHidden = true
+            self.smallSyncButton.isHidden = !allowSync
+            self.smallSyncButton.isEnabled = enabled
+        } else {
+            self.smallSyncButton.isHidden = true
+            self.syncButton.isHidden = !allowSync
+            self.syncButton.isEnabled = enabled
+        }
+        self.delegate?.syncButtons?(enabled: enabled)
     }
     
     // MARK: - Method to refresh a specific row in the table view====================================== -
@@ -276,6 +288,10 @@ class DataTableViewController: ScorecardViewController, UITableViewDataSource, U
     }
     
     private func dismiss() {
+        if self.observer != nil {
+            NotificationCenter.default.removeObserver(self.observer!)
+            self.observer = nil
+        }
         self.dismiss(animated: true, completion: self.delegate?.completion)
     }
     

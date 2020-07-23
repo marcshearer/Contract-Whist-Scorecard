@@ -52,8 +52,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private var thisPlayerBeforeSettings: String!
     private var displayingPeer = 0
 
-    // Timers
-    internal var networkTimer: Timer!
+    // Observers
+    private var observer: NSObjectProtocol?
     
     // Startup and reconcile
     internal var reconcile: Reconcile!
@@ -180,6 +180,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         // Setup colours (previously in storyboard)
         self.DefaultScreenColors()
         
+        // Check network
+        self.checkNetwork()
+        
         // Setup game
         Scorecard.game = Game()
                 
@@ -188,9 +191,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         
         // Restart client
         self.restart(createController: false)
-
-        // Start network check timer
-        self.startNetworkTimer()
         
         // Set not connected
         self.appStateChange(to: .notConnected)
@@ -504,9 +504,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.peerCollectionView.contentOffset = CGPoint()
         self.peerReloadData()
 
-        // Check network / iCloud
-        self.checkNetwork()
-
         if createController {
             // Create controller after short delay
             Utility.executeAfter(delay: 0.1) {
@@ -517,17 +514,26 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     @objc private func checkNetwork(_ sender: Any? = nil) {
         // Check network
+        self.observer = Scorecard.reachability.startMonitor { (available) in
+            self.networkChanged(available)
+        }
+        
         Scorecard.shared.checkNetworkConnection() {
-            if (self.isNetworkAvailable != Scorecard.shared.isNetworkAvailable || self.isLoggedIn != Scorecard.shared.isLoggedIn) {
-                self.isNetworkAvailable = Scorecard.shared.isNetworkAvailable
-                self.isLoggedIn = Scorecard.shared.isLoggedIn
-                self.setupHostingOptions()
-                self.hostCollectionView.reloadData()
-                self.peerReloadData()
-            }
+            self.networkChanged(Scorecard.shared.isNetworkAvailable)
         }
     }
     
+    private func networkChanged(_ available: Bool) {
+        Scorecard.shared.isNetworkAvailable = available
+        if (self.isNetworkAvailable != Scorecard.shared.isNetworkAvailable || self.isLoggedIn != Scorecard.shared.isLoggedIn) {
+            self.isNetworkAvailable = available
+            self.isLoggedIn = Scorecard.shared.isLoggedIn
+            self.setupHostingOptions()
+            self.hostCollectionView.reloadData()
+            self.peerReloadData()
+        }
+    }
+     
     // MARK: - Call reconcile and reconcile delegate methods =========================================================== -
     
     private func reconcilePlayers(allPlayers: Bool = false) {
@@ -1035,27 +1041,6 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
 
             self.appState = newState
             self.changePlayerAvailable()
-        }
-    }
-    
-    private func startNetworkTimer(interval: TimeInterval = 10) {
-        self.stopNetworkTimer(report: false)
-        Utility.debugMessage("client", "Starting network timer")
-        self.networkTimer = Timer.scheduledTimer(
-            timeInterval: TimeInterval(20.0),
-            target: self,
-            selector: #selector(ClientViewController.checkNetwork(_:)),
-            userInfo: nil,
-            repeats: true)
-    }
-    
-    private func stopNetworkTimer(report: Bool = true) {
-        if let timer = self.networkTimer {
-            if report {
-                Utility.debugMessage("client", "Stopping network timer")
-            }
-            timer.invalidate()
-            self.networkTimer = nil
         }
     }
     

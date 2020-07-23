@@ -7,64 +7,52 @@
 //
 
 import Foundation
-import SystemConfiguration
+import Network
+import CloudKit
 
 public class Reachability {
     
-    init(uri: String) {
-
-        if let reachability = SCNetworkReachabilityCreateWithName(nil, uri) {
-            
-            var context = SCNetworkReachabilityContext(version: 0, info: nil, retain: nil, release: nil, copyDescription: nil)
-            context.info = UnsafeMutableRawPointer(Unmanaged<Reachability>.passUnretained(self).toOpaque())
-
-            SCNetworkReachabilitySetCallback(reachability, { (_, flags, info) in
-                if let info = info {
-                    let instance = Unmanaged<Reachability>.fromOpaque(UnsafeMutableRawPointer(OpaquePointer(info))!).takeUnretainedValue()
-                    instance.reachabilityChanged(flags)
-                }
-            }, &context)
-            
-            SCNetworkReachabilitySetDispatchQueue(reachability, DispatchQueue.main)
+    let monitor = NWPathMonitor()
+    var connected: Bool!
+    
+    init() {
+        self.monitor.pathUpdateHandler = self.pathUpdateHandler
+        self.monitor.start(queue: DispatchQueue.main)
+    }
+    
+    private func pathUpdateHandler(path: NWPath) {
+        var newConnected: Bool
+        if self.connected != nil && Utility.isSimulator {
+            // Doesn't update status in simulator - just invert it
+            newConnected = !self.connected
+        } else {
+            newConnected = (path.status == .satisfied)
+        }
+        if newConnected != self.connected {
+            self.connected = newConnected
+            Scorecard.shared.isNetworkAvailable = self.connected
+            if self.connected {
+                // Now check icloud asynchronously
+                CKContainer.init(identifier: Config.iCloudIdentifier).accountStatus(completionHandler: { (accountStatus, errorMessage) -> Void in
+                    let newValue = (accountStatus == .available)
+                    if newValue != Scorecard.shared.isLoggedIn {
+                        // Changed - update it and reawaken listeners
+                        Scorecard.shared.isLoggedIn = newValue
+                        NotificationCenter.default.post(name: .connectivityChanged, object: self, userInfo: ["available" : self.connected!])
+                    }
+                })
+            }
+            NotificationCenter.default.post(name: .connectivityChanged, object: self, userInfo: ["available" : Scorecard.shared.isNetworkAvailable])
         }
     }
-    
-    private func reachabilityChanged(_ flags: SCNetworkReachabilityFlags) {
-        // Notify observers
-        NotificationCenter.default.post(name: .connectivityChanged, object: self, userInfo: ["available" : Reachability.isConnectedToNetwork()])
-    }
-    
-    public static func startMonitor(action: @escaping (Bool)->()) -> NSObjectProtocol? {
+        
+    public func startMonitor(action: @escaping (Bool)->()) -> NSObjectProtocol? {
         let observer = NotificationCenter.default.addObserver(forName: .connectivityChanged, object: nil, queue: nil) { (notification) in
             let info = notification.userInfo
             let available = info?["available"] as! Bool?
             action(available ?? false)
         }
         return observer
-    }
-    
-    class func isConnectedToNetwork() -> Bool {
-        
-        var zeroAddress = sockaddr_in(sin_len: 0, sin_family: 0, sin_port: 0, sin_addr: in_addr(s_addr: 0), sin_zero: (0, 0, 0, 0, 0, 0, 0, 0))
-        zeroAddress.sin_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))
-        zeroAddress.sin_family = sa_family_t(AF_INET)
-        
-        let defaultRouteReachability = withUnsafePointer(to: &zeroAddress) {
-            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {
-                SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, $0)
-            }
-        }
-        
-        var flags: SCNetworkReachabilityFlags = SCNetworkReachabilityFlags(rawValue: 0)
-        if SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) == false {
-            return false
-        }
-        
-        let isReachable = (flags.rawValue & UInt32(kSCNetworkFlagsReachable)) != 0
-        let needsConnection = (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
-        
-        return isReachable && !needsConnection
-        
     }
 }
 

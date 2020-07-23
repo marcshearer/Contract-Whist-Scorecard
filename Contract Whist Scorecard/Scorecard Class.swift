@@ -45,6 +45,9 @@ class Scorecard {
     /** Settings */
     public static var settings = Settings()
     
+    /** Network reachability checker*/
+    public static let reachability = Reachability()
+    
     /** Sync Class */
     private let sync = Sync()
     
@@ -357,72 +360,23 @@ class Scorecard {
         }
     }
     
-    public func checkNetworkConnection(button: RoundedButton! = nil, label: UILabel! = nil, labelHeightConstraint: NSLayoutConstraint? = nil, labelHeight: CGFloat = 0.0, disable: Bool = false, action: (()->())? = nil) {
+    public func checkNetworkConnection(action: (()->())? = nil) {
         // First check network
         
-        if Reachability.isConnectedToNetwork()
-        {
+        if Scorecard.reachability.connected ?? false {
             self.isNetworkAvailable = true
             
-            // First look at stored values and act immediately
-            self.reflectNetworkConnection(button: button, label: label, labelHeightConstraint: labelHeightConstraint, labelHeight: labelHeight, disable: disable, action: action)
+            // First act immediately using stored values
+            action?()
             
             // Now check icloud asynchronously
             CKContainer.init(identifier: Config.iCloudIdentifier).accountStatus(completionHandler: { (accountStatus, errorMessage) -> Void in
                 self.isLoggedIn = (accountStatus == .available)
-                self.reflectNetworkConnection(button: button, label: label, disable: disable, action: action)
+                action?()
             })
         } else {
             self.isNetworkAvailable = false
-            self.reflectNetworkConnection(button: button, label: label, labelHeightConstraint: labelHeightConstraint, labelHeight: labelHeight, disable: disable, action: action)
-        }
-    }
-    
-    public func reflectNetworkConnection(button: RoundedButton!, label: UILabel!, labelHeightConstraint: NSLayoutConstraint? = nil, labelHeight: CGFloat = 0.0, disable: Bool = false, action: (()->())?) {
-        var buttonHidden = true
-        var labelText = ""
-        var labelHidden = true
-        
-        if action != nil {
-            Utility.mainThread {
-                action?()
-            }
-        } else if label != nil || button != nil {
-            Utility.mainThread {
-                if !Scorecard.settings.syncEnabled {
-                    buttonHidden = true
-                    labelText = ""
-                    labelHidden = true
-                } else if self.isNetworkAvailable && self.isLoggedIn {
-                    buttonHidden = false
-                    labelText = ""
-                    labelHidden = true
-                } else {
-                    // Note that the button should already be disabled initially
-                    buttonHidden = true
-                    labelHidden = false
-                    if self.isNetworkAvailable {
-                        labelText = "Login to iCloud to enable sync"
-                    } else {
-                        labelText = "Join network to enable sync"
-                    }
-                }
-                
-                if button != nil {
-                    if disable {
-                        button.isEnabled(!buttonHidden)
-                    } else {
-                        button.isHidden = buttonHidden
-                    }
-                }
-                if label != nil {
-                    label.text = labelText
-                    label.isHidden = labelHidden
-                    if labelHeightConstraint != nil {
-                        labelHeightConstraint?.constant = (labelHidden ? 0.0 : labelHeight)
-                    }
-                }
-            }
+            action?()
         }
     }
     

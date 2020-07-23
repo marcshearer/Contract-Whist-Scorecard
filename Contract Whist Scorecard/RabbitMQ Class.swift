@@ -66,7 +66,6 @@ class RabbitMQService: NSObject, CommsServiceDelegate, CommsDataDelegate, CommsS
     internal var rabbitMQQueueList: [String : RabbitMQQueue] = [:]           // [ queueUUID : rabbitMQQueue ]
     private let myDeviceName: String
     internal var recoveryMode = false
-    private static let reachabilty = Reachability(uri: (NSURL(string: RabbitMQConfig.uriDevMode)?.host)!)
     private var observer: NSObjectProtocol?
     internal var queue: RabbitMQQueue!
     
@@ -81,7 +80,7 @@ class RabbitMQService: NSObject, CommsServiceDelegate, CommsDataDelegate, CommsS
     internal func startService(playerUUID: String!, recoveryMode: Bool, matchDeviceName: String! = nil) {
         self._connectionPlayerUUID = playerUUID
         self.recoveryMode = recoveryMode
-        self.observer = Reachability.startMonitor { (reachable) in
+        self.observer = Scorecard.reachability.startMonitor { (reachable) in
             self.forEachPeer { (rabbitMQPeer) in
                 if rabbitMQPeer.state == .recovering && reachable {
                     rabbitMQPeer.stateChange(state: .connected, reason: "Network restored")

@@ -106,9 +106,6 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
         self.setupScreenSize()
         self.setupButtons()
 
-        // Check network
-        Scorecard.shared.checkNetworkConnection(button: nil, label: nil)
-        
         // Set nofification for image download
         observer = setImageDownloadNotification()
         

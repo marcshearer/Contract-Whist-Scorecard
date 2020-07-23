@@ -20,6 +20,9 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t6G-lz-WnE">
                         <rect key="frame" x="8" y="0.0" width="60" height="60"/>
                         <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="owQ-QP-KU9" userLabel="Background Image View">
+                                <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+                            </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="RQR-wb-8jc">
                                 <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
                             </imageView>
@@ -27,9 +30,13 @@
                         <color key="backgroundColor" name="Clear"/>
                         <constraints>
                             <constraint firstItem="RQR-wb-8jc" firstAttribute="leading" secondItem="t6G-lz-WnE" secondAttribute="leading" id="AxL-eR-eTU"/>
+                            <constraint firstItem="owQ-QP-KU9" firstAttribute="leading" secondItem="t6G-lz-WnE" secondAttribute="leading" id="Eds-h8-TGc"/>
                             <constraint firstItem="RQR-wb-8jc" firstAttribute="top" secondItem="t6G-lz-WnE" secondAttribute="top" id="Tpg-0r-5Yl"/>
                             <constraint firstAttribute="width" secondItem="t6G-lz-WnE" secondAttribute="height" multiplier="1:1" id="YmD-Sj-U5s"/>
+                            <constraint firstItem="owQ-QP-KU9" firstAttribute="top" secondItem="t6G-lz-WnE" secondAttribute="top" id="ayC-Ix-SNH"/>
                             <constraint firstAttribute="bottom" secondItem="RQR-wb-8jc" secondAttribute="bottom" id="gig-8q-fYS"/>
+                            <constraint firstAttribute="trailing" secondItem="owQ-QP-KU9" secondAttribute="trailing" id="hTm-bl-rdc"/>
+                            <constraint firstAttribute="bottom" secondItem="owQ-QP-KU9" secondAttribute="bottom" id="taj-Ov-HmB"/>
                             <constraint firstAttribute="trailing" secondItem="RQR-wb-8jc" secondAttribute="trailing" id="uPw-7b-BlG"/>
                         </constraints>
                     </view>
@@ -64,6 +71,7 @@
                 </constraints>
             </collectionViewCellContentView>
             <connections>
+                <outlet property="backgroundImageView" destination="owQ-QP-KU9" id="298-Vw-1hK"/>
                 <outlet property="imageView" destination="RQR-wb-8jc" id="yxe-7k-FFb"/>
                 <outlet property="nameLabel" destination="ips-XR-wiY" id="rJk-dy-Q80"/>
                 <outlet property="titleLabel" destination="4nv-GB-4Ms" id="kPx-y2-Lef"/>

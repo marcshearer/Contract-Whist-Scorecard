@@ -9,9 +9,9 @@
 import UIKit
 
 enum AwardDetailMode {
-    case none
-    case awardDate
-    case awardLevels
+    case awarding
+    case awarded
+    case toBeAwarded
 }
 
 class AwardDetailView: UIView {
@@ -23,6 +23,7 @@ class AwardDetailView: UIView {
     @IBOutlet private weak var shadowView: UIView!
     @IBOutlet private weak var nameLabel: UILabel!
     @IBOutlet private weak var awardView: UIView!
+    @IBOutlet private weak var backgroundImageView: UIImageView!
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var otherLabel: UILabel!
@@ -59,7 +60,10 @@ class AwardDetailView: UIView {
     public func set(awards: Awards, playerUUID: String, award: Award, mode: AwardDetailMode, backgroundColor: UIColor? = nil, textColor: UIColor? = nil) {
         self.nameLabel.text = award.name
         self.titleLabel.text = award.title
-        self.awardView.backgroundColor = award.backgroundColor
+        let alpha: CGFloat = (mode == .toBeAwarded ? 0.5 : 1.0)
+        self.awardView.backgroundColor = award.backgroundColor.withAlphaComponent(alpha)
+        self.backgroundImageView.image = (award.backgroundImageName == nil ? nil : UIImage(named: award.backgroundImageName!))
+        self.backgroundImageView.alpha = alpha
         self.imageView.image = UIImage(named: award.imageName)
         if let backgroundColor = backgroundColor {
             self.shadowView.backgroundColor = backgroundColor
@@ -69,11 +73,11 @@ class AwardDetailView: UIView {
             self.exitButton.tintColor = textColor
         }
         switch mode {
-        case .none:
+        case .awarding:
             self.otherLabel.text = ""
-        case .awardDate:
+        case .awarded:
             self.otherLabel.text = Utility.dateString(award.dateAwarded!, style: .full)
-        case .awardLevels:
+        case .toBeAwarded:
             let levels = awards.toAchieve(playerUUID: playerUUID, code: award.code)
             if levels.count > 1 {
                 var text = "Award levels: \(levels.first!)"

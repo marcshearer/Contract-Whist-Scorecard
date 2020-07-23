@@ -56,9 +56,10 @@ fileprivate struct AwardConfig {
     fileprivate var winLose: WinLose
     fileprivate var imageName: String
     fileprivate var backgroundColor: UIColor
+    fileprivate var backgroundImageName: String?
     fileprivate var condition: (()->Bool)?
     
-    fileprivate init(code: String, name: String, shortName: String, title: String, description: String? = nil, awardLevels: [Int], repeatable: Bool = true, compare: Comparison? = nil, source: Source? = nil, key: String? = nil, custom: (([ParticipantMO])->Int)? = nil, winLose: WinLose = .any, imageName: String, backgroundColor: UIColor = Palette.darkHighlight, condition: (()->Bool)? = nil) {
+    fileprivate init(code: String, name: String, shortName: String, title: String, description: String? = nil, awardLevels: [Int], repeatable: Bool = true, compare: Comparison? = nil, source: Source? = nil, key: String? = nil, custom: (([ParticipantMO])->Int)? = nil, winLose: WinLose = .any, imageName: String, backgroundColor: UIColor = Palette.darkHighlight, backgroundImageName: String? = nil, condition: (()->Bool)? = nil) {
         self.code = code
         self.name = name
         self.shortName = shortName
@@ -73,6 +74,7 @@ fileprivate struct AwardConfig {
         self.winLose = winLose
         self.imageName = imageName
         self.backgroundColor = backgroundColor
+        self.backgroundImageName = backgroundImageName
         self.condition = condition
     }
 }
@@ -86,6 +88,7 @@ public struct Award {
     let description: String
     let imageName: String
     let backgroundColor: UIColor
+    let backgroundImageName: String?
     let gameUUID: String?
     let dateAwarded: Date?
     
@@ -103,6 +106,7 @@ public struct Award {
         self.description = Award.substitute(config.description ?? config.title, awardLevel)
         self.imageName = Award.substitute(config.imageName, awardLevel)
         self.backgroundColor = config.backgroundColor
+        self.backgroundImageName = config.backgroundImageName ?? "awards background"
         self.gameUUID = gameUUID
         self.dateAwarded = dateAwarded
     }

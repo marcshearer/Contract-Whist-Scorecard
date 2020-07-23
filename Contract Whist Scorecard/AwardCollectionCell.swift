@@ -17,6 +17,7 @@ class AwardCollectionCell: UICollectionViewCell {
     
     @IBOutlet private weak var view: UIView!
     @IBOutlet private weak var imageView: UIImageView!
+    @IBOutlet private weak var backgroundImageView: UIImageView!
     @IBOutlet private weak var nameLabel: UILabel!
     @IBOutlet private weak var shortNameLabel: UILabel!
     @IBOutlet private weak var titleLabel: UITextView!
@@ -25,6 +26,8 @@ class AwardCollectionCell: UICollectionViewCell {
         self.nameLabel?.textColor = textColor
         self.titleLabel?.textColor = textColor
         self.view?.backgroundColor = award.backgroundColor.withAlphaComponent(alpha)
+        self.backgroundImageView?.image = (award.backgroundImageName == nil ? nil : UIImage(named: award.backgroundImageName!))
+        self.backgroundImageView.alpha = alpha
         self.imageView?.image = UIImage(named: award.imageName)
         self.nameLabel?.text = award.name
         self.shortNameLabel?.text = award.shortName

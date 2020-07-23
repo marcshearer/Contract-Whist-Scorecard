@@ -280,7 +280,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         } else {
             let awardView = AwardDetailView(frame: self.view.frame)
             let award = self.awardList[indexPath.row]
-            awardView.set(awards: self.awards, playerUUID: Scorecard.settings.thisPlayerUUID, award: award, mode: .none, backgroundColor: Palette.buttonFace, textColor: Palette.buttonFaceText)
+            awardView.set(awards: self.awards, playerUUID: Scorecard.settings.thisPlayerUUID, award: award, mode: .awarding, backgroundColor: Palette.buttonFace, textColor: Palette.buttonFaceText)
             awardView.show(from: self.view)
         }
     }

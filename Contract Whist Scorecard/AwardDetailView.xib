@@ -11,6 +11,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AwardDetailView" customModule="Whist_2" customModuleProvider="target">
             <connections>
                 <outlet property="awardView" destination="Wgy-fH-2XD" id="Mog-Ap-MPn"/>
+                <outlet property="backgroundImageView" destination="82y-p8-ahc" id="kxU-Yd-JIL"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="Y4O-3R-GTq"/>
                 <outlet property="exitButton" destination="7eq-ro-U8C" id="OMg-37-Jdf"/>
                 <outlet property="imageView" destination="Ftv-nb-gqZ" id="8e8-lO-A0I"/>
@@ -42,6 +43,9 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wgy-fH-2XD">
                             <rect key="frame" x="32.5" y="40" width="175" height="175"/>
                             <subviews>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="awards background" translatesAutoresizingMaskIntoConstraints="NO" id="82y-p8-ahc" userLabel="Background Image View">
+                                    <rect key="frame" x="0.0" y="0.0" width="175" height="175"/>
+                                </imageView>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ftv-nb-gqZ">
                                     <rect key="frame" x="0.0" y="0.0" width="175" height="175"/>
                                 </imageView>
@@ -49,8 +53,12 @@
                             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             <constraints>
                                 <constraint firstItem="Ftv-nb-gqZ" firstAttribute="top" secondItem="Wgy-fH-2XD" secondAttribute="top" id="GQf-QP-85i"/>
+                                <constraint firstAttribute="trailing" secondItem="82y-p8-ahc" secondAttribute="trailing" id="O2H-8F-gKv"/>
                                 <constraint firstAttribute="trailing" secondItem="Ftv-nb-gqZ" secondAttribute="trailing" id="OTG-G9-zzF"/>
+                                <constraint firstItem="82y-p8-ahc" firstAttribute="leading" secondItem="Wgy-fH-2XD" secondAttribute="leading" id="TSs-Fu-MFP"/>
+                                <constraint firstAttribute="bottom" secondItem="82y-p8-ahc" secondAttribute="bottom" id="YvF-Ik-hQ9"/>
                                 <constraint firstItem="Ftv-nb-gqZ" firstAttribute="leading" secondItem="Wgy-fH-2XD" secondAttribute="leading" id="ZF8-Qp-5P1"/>
+                                <constraint firstItem="82y-p8-ahc" firstAttribute="top" secondItem="Wgy-fH-2XD" secondAttribute="top" id="dWg-0K-T28"/>
                                 <constraint firstAttribute="width" secondItem="Wgy-fH-2XD" secondAttribute="height" multiplier="1:1" id="n0M-cM-sVh"/>
                                 <constraint firstAttribute="bottom" secondItem="Ftv-nb-gqZ" secondAttribute="bottom" id="wSJ-aa-wkY"/>
                             </constraints>
@@ -113,6 +121,7 @@
         </view>
     </objects>
     <resources>
+        <image name="awards background" width="1333.5" height="1333.5"/>
         <image name="cross grey" width="22" height="22"/>
         <namedColor name="Clear">
             <color red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>

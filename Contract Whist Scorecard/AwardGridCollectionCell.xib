@@ -20,6 +20,9 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="goW-GR-Q5M">
                         <rect key="frame" x="4" y="0.0" width="52" height="52"/>
                         <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vUA-OG-8sC" userLabel="Background Image View">
+                                <rect key="frame" x="0.0" y="0.0" width="52" height="52"/>
+                            </imageView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="KOT-uH-kKV">
                                 <rect key="frame" x="0.0" y="0.0" width="52" height="52"/>
                             </imageView>
@@ -27,9 +30,13 @@
                         <color key="backgroundColor" name="Clear"/>
                         <constraints>
                             <constraint firstItem="KOT-uH-kKV" firstAttribute="top" secondItem="goW-GR-Q5M" secondAttribute="top" id="34b-r5-3xX"/>
+                            <constraint firstItem="vUA-OG-8sC" firstAttribute="leading" secondItem="goW-GR-Q5M" secondAttribute="leading" id="4Ma-Dh-mNq"/>
                             <constraint firstAttribute="width" secondItem="goW-GR-Q5M" secondAttribute="height" multiplier="1:1" id="8Sz-1m-Kyd"/>
                             <constraint firstAttribute="bottom" secondItem="KOT-uH-kKV" secondAttribute="bottom" id="BMQ-WL-26Z"/>
+                            <constraint firstItem="vUA-OG-8sC" firstAttribute="top" secondItem="goW-GR-Q5M" secondAttribute="top" id="N1r-3E-6OU"/>
+                            <constraint firstAttribute="trailing" secondItem="vUA-OG-8sC" secondAttribute="trailing" id="ayy-BD-jNo"/>
                             <constraint firstItem="KOT-uH-kKV" firstAttribute="leading" secondItem="goW-GR-Q5M" secondAttribute="leading" id="dsl-I3-aP8"/>
+                            <constraint firstAttribute="bottom" secondItem="vUA-OG-8sC" secondAttribute="bottom" id="jej-td-hMr"/>
                             <constraint firstAttribute="trailing" secondItem="KOT-uH-kKV" secondAttribute="trailing" id="sAY-t6-FHy"/>
                         </constraints>
                     </view>
@@ -53,6 +60,7 @@
                 </constraints>
             </collectionViewCellContentView>
             <connections>
+                <outlet property="backgroundImageView" destination="vUA-OG-8sC" id="pEd-ZQ-crT"/>
                 <outlet property="imageView" destination="KOT-uH-kKV" id="1sw-Ds-2rO"/>
                 <outlet property="shortNameLabel" destination="uNu-mn-kQx" id="h5l-vH-qlw"/>
                 <outlet property="view" destination="goW-GR-Q5M" id="IhF-gW-XSp"/>

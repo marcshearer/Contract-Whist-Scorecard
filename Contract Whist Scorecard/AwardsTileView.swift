@@ -181,7 +181,7 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
                 award = toAchieve[indexPath.row]
             }
             let awardView = AwardDetailView(frame: parentView.frame)
-            awardView.set(awards: self.awards, playerUUID: Scorecard.settings.thisPlayerUUID, award: award, mode: (indexPath.section == achievedSection ? .awardDate : .awardLevels), backgroundColor: Palette.buttonFace, textColor: Palette.buttonFaceText)
+            awardView.set(awards: self.awards, playerUUID: Scorecard.settings.thisPlayerUUID, award: award, mode: (indexPath.section == achievedSection ? .awarded : .toBeAwarded), backgroundColor: Palette.buttonFace, textColor: Palette.buttonFaceText)
             awardView.show(from: parentView)
         }
     }

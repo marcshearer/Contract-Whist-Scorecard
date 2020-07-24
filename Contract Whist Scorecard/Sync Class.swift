@@ -1693,29 +1693,34 @@ class Sync {
         },
         completeAction: { (error) in
             if error == nil && !records.isEmpty {
-                _ = CoreData.update {
-                    for record in records {
-                        // Try to find local record and update - otherwise create
-                        if let playerUUID = record.value(forKey: "playerUUID") as? String,
-                            let code = record.value(forKey: "code") as? String,
-                            let awardLevel = record.value(forKey: "awardLevel") as? Int {
-                            if playerUUID != lastPlayerUUID {
-                                existing = awards.getAchieved(playerUUID: playerUUID)
-                                lastPlayerUUID = playerUUID
-                            }
-                            var awardMO: AwardMO
-                            if let index = existing.firstIndex(where: {$0.playerUUID == playerUUID && $0.code == code && $0.awardLevel == awardLevel}) {
-                                awardMO = existing[index]
+                for record in records {
+                    // Try to find local record and update - otherwise create
+                    if let playerUUID = record.value(forKey: "playerUUID") as? String,
+                        let code = record.value(forKey: "code") as? String,
+                        let awardLevel = record.value(forKey: "awardLevel") as? Int {
+                        if playerUUID != lastPlayerUUID {
+                            existing = awards.getAchieved(playerUUID: playerUUID)
+                            lastPlayerUUID = playerUUID
+                        }
+                        var awardMO: AwardMO
+                        if let index = existing.firstIndex(where: {$0.playerUUID == playerUUID && $0.code == code && $0.awardLevel == awardLevel}) {
+                            let count = existing[index].count
+                            let syncCount = existing[index].syncCount
+                            awardMO = existing[index]
+                            CoreData.update {
                                 awardMO.from(cloudObject: record)
                                 if existing[index].dateAwarded! > awardMO.dateAwarded! {
                                     // Re-awarded since locally - keep local and re-sync
                                     awardMO.dateAwarded = existing[index].dateAwarded
                                     awardMO.syncDate = nil
                                 }
-                            } else {
-                                awardMO = CoreData.create(from: "Award")
-                                awardMO.from(cloudObject: record)
+                                let difference = max(0, awardMO.count - syncCount)
+                                awardMO.count = count + difference
+                                awardMO.syncCount = awardMO.count
                             }
+                        } else {
+                            awardMO = CoreData.create(from: "Award")
+                            awardMO.from(cloudObject: record)
                         }
                     }
                 }
@@ -1745,7 +1750,7 @@ class Sync {
         }
         
         if !records.isEmpty {
-            Sync.update(records: records, overwriteRegardless: true, completion: { (error) in
+            Sync.update(records: records, overwriteRegardless: true, recordCompletion: sendAwardToCloudRecordCompletion, completion: { (error) in
                 // Ignore errors
                 self.syncMessage("Award records uploaded")
                 self.syncController()
@@ -1753,6 +1758,24 @@ class Sync {
             return false
         } else {
             return true
+        }
+    }
+    
+    private func sendAwardToCloudRecordCompletion(record: CKRecord, error: Error?) {
+        if error != nil {
+            // Reset sync count
+            // Note the count could go wrong if iCloud is updated successfully, but this doesn't execute
+            // This is not deemed a material problem
+            if let playerUUID = record.value(forKey: "playerUUID") as? String,
+               let code = record.value(forKey: "code") as? String,
+               let awardLevel = record.value(forKey: "awardLevel") as? Int,
+               let count = record.value(forKey: "count") as? Int {
+                if let awardMO = Awards.get(playerUUID: playerUUID, code: code, awardLevel: awardLevel) {
+                    CoreData.update {
+                        awardMO.syncCount = Int64(count)
+                    }
+                }
+            }
         }
     }
     
@@ -1895,7 +1918,7 @@ class Sync {
     
     // MARK: - Generic read/write =================================================================== -
     
-    public class func update(records: [CKRecord]? = nil, recordIDsToDelete: [CKRecord.ID]? = nil, database: CKDatabase? = nil, overwriteRegardless: Bool = false, recordsRemainder: [CKRecord]? = nil, recordIDsToDeleteRemainder: [CKRecord.ID]? = nil, completion: ((Error?)->())? = nil) {
+    public class func update(records: [CKRecord]? = nil, recordIDsToDelete: [CKRecord.ID]? = nil, database: CKDatabase? = nil, overwriteRegardless: Bool = false, recordsRemainder: [CKRecord]? = nil, recordIDsToDeleteRemainder: [CKRecord.ID]? = nil, recordCompletion: ((CKRecord, Error?)->())? = nil, completion: ((Error?)->())? = nil) {
         // Copes with limit being exceeed which splits the load in two and tries again
         var lastSplit = 400
         
@@ -1913,6 +1936,10 @@ class Sync {
             uploadOperation.database = database
             if overwriteRegardless {
                 uploadOperation.savePolicy = .allKeys
+            }
+            
+            if recordCompletion != nil {
+                uploadOperation.perRecordCompletionBlock = recordCompletion
             }
             
             // Assign a completion handler

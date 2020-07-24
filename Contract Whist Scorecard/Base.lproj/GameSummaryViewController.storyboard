@@ -309,7 +309,7 @@
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Sz-IP-S3d">
                                                                 <rect key="frame" x="0.0" y="19.5" width="344" height="45.5"/>
                                                                 <subviews>
-                                                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="3" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Jce-zU-f1B">
+                                                                    <collectionView multipleTouchEnabled="YES" tag="3" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Jce-zU-f1B">
                                                                         <rect key="frame" x="16" y="8" width="312" height="30"/>
                                                                         <color key="backgroundColor" name="Clear"/>
                                                                         <constraints>
@@ -481,7 +481,7 @@
     </scenes>
     <resources>
         <image name="back" width="22" height="22"/>
-        <image name="crown" width="100" height="51"/>
+        <image name="crown" width="100" height="100"/>
         <image name="play again" width="50" height="64"/>
         <image name="stop playing" width="50" height="64"/>
         <namedColor name="Clear">

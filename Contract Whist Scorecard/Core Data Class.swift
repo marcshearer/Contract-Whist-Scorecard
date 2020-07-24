@@ -102,7 +102,7 @@ class CoreData {
         return results
     }
     
-    class func update(errorHandler: (() -> ())! = nil, updateLogic: () -> (), calledFrom: String = #function) -> Bool {
+    @discardableResult class func update(errorHandler: (() -> ())! = nil, updateLogic: () -> (), calledFrom: String = #function) -> Bool {
         
         if let context = CoreData.context {
 

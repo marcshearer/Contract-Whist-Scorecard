@@ -91,13 +91,14 @@ public struct Award {
     let backgroundImageName: String?
     let gameUUID: String?
     let dateAwarded: Date?
+    let count: Int
     
     fileprivate init(from awardMO: AwardMO, config: [AwardConfig]) {
         let config = config.first(where: {$0.code == awardMO.code})!
-        self.init(from: config, awardLevel: Int(awardMO.awardLevel), gameUUID: awardMO.gameUUID!, dateAwarded: awardMO.dateAwarded!)
+        self.init(from: config, awardLevel: Int(awardMO.awardLevel), gameUUID: awardMO.gameUUID!, dateAwarded: awardMO.dateAwarded!, count: Int(awardMO.count))
     }
     
-    fileprivate init(from config: AwardConfig, awardLevel: Int, gameUUID: String? = nil, dateAwarded: Date? = nil) {
+    fileprivate init(from config: AwardConfig, awardLevel: Int, gameUUID: String? = nil, dateAwarded: Date? = nil, count: Int = 0) {
         self.code = config.code
         self.awardLevel = awardLevel
         self.name = Award.substitute(config.name, awardLevel)
@@ -109,6 +110,7 @@ public struct Award {
         self.backgroundImageName = config.backgroundImageName ?? "awards background"
         self.gameUUID = gameUUID
         self.dateAwarded = dateAwarded
+        self.count = count
     }
     
     private static func substitute(_ stringValue: String, _ value: Int) -> String {
@@ -162,7 +164,17 @@ public class Awards {
         }
         return self.achieved!
     }
-
+    
+    /// Get a specific achieved award
+    /// - Parameters:
+    ///   - playerUUID: Player UUID
+    ///   - code: Award code
+    ///   - AwardLevel: Award level
+    /// - Returns: Award managed object
+    public static func get(playerUUID: String, code: String, awardLevel: Int) -> AwardMO? {
+        let awards = CoreData.fetch(from: "Award", filter: NSPredicate(format: "playerUUID = %@ and code = %@ and awardLevel = %@", playerUUID, code, awardLevel)) as? [AwardMO]
+        return awards?.first
+    }
     
     /// Returns an array of award levels still to be achieved for an award code for a given player
     /// - Parameters:
@@ -210,13 +222,21 @@ public class Awards {
                     // Check against threshold awardLevels
                     if let awardLevel = self.checkAwardLevels(config: config, value: value) {
                         
-                        if !config.repeatable && achieved.firstIndex(where: {$0.code == config.code && $0.awardLevel == awardLevel}) != nil {
+                        let awardMO = achieved.first(where: {$0.code == config.code && $0.awardLevel == awardLevel})
+                        
+                        if !config.repeatable && awardMO != nil {
                             // Don't re-award if not repeatable
                             self.debugMessage(config: config, message: "Repeat award for value \(value)")
                             continue
                         }
                         
-                        results.append(Award(from: config, awardLevel: awardLevel, gameUUID: current.gameUUID!, dateAwarded: current.datePlayed!))
+                        var increment = 1
+                        if awardMO?.gameUUID == Scorecard.game.gameUUID {
+                            // Already awarded for this game
+                            increment = 0
+                        }
+                        
+                        results.append(Award(from: config, awardLevel: awardLevel, gameUUID: current.gameUUID!, dateAwarded: current.datePlayed!, count: Int(awardMO?.count ?? 0) + increment))
                         self.debugMessage(config: config, message: "Awarded for value \(value)")
                     } else {
                         self.debugMessage(config: config, message: "No match for value \(value)")
@@ -237,8 +257,10 @@ public class Awards {
         for award in achieved {
             if let awardMO = self.achieved(existing, code: award.code, awardLevel: award.awardLevel) {
                 // Already achieved - update
-                _ = CoreData.update {
+                CoreData.update {
+                    awardMO.gameUUID = award.gameUUID
                     awardMO.dateAwarded = award.dateAwarded
+                    awardMO.count = Int64(award.count)
                     awardMO.syncDate = nil
                 }
             } else {
@@ -374,8 +396,9 @@ public class Awards {
                 awardMO.playerUUID = playerUUID
                 awardMO.code = code
                 awardMO.awardLevel = Int64(awardLevel)
-                awardMO.gameUUID = ""
+                awardMO.gameUUID = gameUUID
                 awardMO.dateAwarded = Date()
+                awardMO.count = 1
             }
         }
         return awardMO
@@ -619,6 +642,7 @@ extension AwardMO {
         self.awardLevel = Utility.objectInt(cloudObject: cloudObject, forKey:"awardLevel")
         self.dateAwarded = Utility.objectDate(cloudObject: cloudObject, forKey: "dateAwarded")
         self.gameUUID = Utility.objectString(cloudObject: cloudObject, forKey: "gameUUID")
+        self.count = Utility.objectInt(cloudObject: cloudObject, forKey: "count")
         self.syncDate = Utility.objectDate(cloudObject: cloudObject, forKey: "syncDate")
         self.syncRecordID = cloudObject.recordID.recordName
     }
@@ -629,6 +653,7 @@ extension AwardMO {
         cloudObject.setValue(self.awardLevel, forKey: "awardLevel")
         cloudObject.setValue(self.dateAwarded, forKey: "dateAwarded")
         cloudObject.setValue(self.gameUUID, forKey: "gameUUID")
+        cloudObject.setValue(self.count, forKey: "count")
         cloudObject.setValue(self.syncDate, forKey: "syncDate")
     }
     

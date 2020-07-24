@@ -243,26 +243,27 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
+        
         self.ignoringGameBanners {
             
             self.changePlayerAvailable()
             
-            if firstTime {
-                firstTime = false
+            if self.firstTime {
                 
                 // Create a client controller to manage connections
                 self.createClientController()
                 
                 self.peerReloadData()
-                
-                // Link to host if recovering a server or scoring if recovering a game
-                if self.recoveryMode {
-                    if !Scorecard.recovery.onlineRecovery {
-                        self.scoreGame(recoveryMode: true)
-                    } else if Scorecard.recovery.onlineType == .server {
-                        self.hostGame(recoveryMode: true)
-                    }
+            }
+        }
+        if self.firstTime {
+            firstTime = false
+            // Link to host if recovering a server or scoring if recovering a game
+            if self.recoveryMode {
+                if !Scorecard.recovery.onlineRecovery {
+                    self.scoreGame(recoveryMode: true)
+                } else if Scorecard.recovery.onlineType == .server {
+                    self.hostGame(recoveryMode: true)
                 }
             }
         }

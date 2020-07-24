@@ -15,9 +15,7 @@ public enum AwardCellMode: String {
 
 class AwardCollectionCell: UICollectionViewCell {
     
-    @IBOutlet private weak var view: UIView!
-    @IBOutlet private weak var imageView: UIImageView!
-    @IBOutlet private weak var backgroundImageView: UIImageView!
+    @IBOutlet private weak var awardView: AwardView!
     @IBOutlet private weak var nameLabel: UILabel!
     @IBOutlet private weak var shortNameLabel: UILabel!
     @IBOutlet private weak var titleLabel: UITextView!
@@ -25,16 +23,11 @@ class AwardCollectionCell: UICollectionViewCell {
     public func bind(award: Award, backgroundColor: UIColor = Palette.buttonFace, textColor: UIColor = Palette.buttonFaceText, alpha: CGFloat = 1.0) {
         self.nameLabel?.textColor = textColor
         self.titleLabel?.textColor = textColor
-        self.view?.backgroundColor = award.backgroundColor.withAlphaComponent(alpha)
-        self.backgroundImageView?.image = (award.backgroundImageName == nil ? nil : UIImage(named: award.backgroundImageName!))
-        self.backgroundImageView.alpha = alpha
-        self.imageView?.image = UIImage(named: award.imageName)
+        self.awardView.set(award: award, alpha: alpha)
         self.nameLabel?.text = award.name
         self.shortNameLabel?.text = award.shortName
         self.titleLabel?.text = award.title
         self.titleLabel?.sizeToFit()
-        self.view?.layoutIfNeeded()
-        self.view?.roundCorners(cornerRadius: 8.0)
     }
     
     public class func sizeForCell(_ collectionView: UICollectionView, mode: AwardCellMode, across: CGFloat = 5.0, spacing: CGFloat = 10.0, labelHeight: CGFloat = 20.0, sectionInsets: UIEdgeInsets = UIEdgeInsets()) -> CGSize {

@@ -22,9 +22,7 @@ class AwardDetailView: UIView {
     @IBOutlet private weak var exitButton: UIButton!
     @IBOutlet private weak var shadowView: UIView!
     @IBOutlet private weak var nameLabel: UILabel!
-    @IBOutlet private weak var awardView: UIView!
-    @IBOutlet private weak var backgroundImageView: UIImageView!
-    @IBOutlet private weak var imageView: UIImageView!
+    @IBOutlet private weak var awardView: AwardView!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var otherLabel: UILabel!
     @IBOutlet private var labels: [UILabel]!
@@ -53,7 +51,6 @@ class AwardDetailView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         self.shadowView.roundCorners(cornerRadius: 16.0)
-        self.awardView.roundCorners(cornerRadius: 14.0)
         self.contentView.addShadow(shadowSize: CGSize(width: 8.0, height: 8.0), shadowColor: UIColor.black)
     }
     
@@ -61,10 +58,7 @@ class AwardDetailView: UIView {
         self.nameLabel.text = award.name
         self.titleLabel.text = award.title
         let alpha: CGFloat = (mode == .toBeAwarded ? 0.5 : 1.0)
-        self.awardView.backgroundColor = award.backgroundColor.withAlphaComponent(alpha)
-        self.backgroundImageView.image = (award.backgroundImageName == nil ? nil : UIImage(named: award.backgroundImageName!))
-        self.backgroundImageView.alpha = alpha
-        self.imageView.image = UIImage(named: award.imageName)
+        self.awardView.set(award: award, alpha: alpha)
         if let backgroundColor = backgroundColor {
             self.shadowView.backgroundColor = backgroundColor
         }

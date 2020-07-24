@@ -192,6 +192,8 @@
 		B2E065CB24AB031B0055C376 /* RelatedPlayersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E065CA24AB031B0055C376 /* RelatedPlayersView.swift */; };
 		B2E065CD24AB0EE30055C376 /* RelatedPlayersTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2E065CC24AB0EE30055C376 /* RelatedPlayersTableViewCell.xib */; };
 		B2E556C122C9F86200C49821 /* Colors.xlsx in Resources */ = {isa = PBXBuildFile; fileRef = B2E556C022C9F86100C49821 /* Colors.xlsx */; };
+		B2E57A1C24CAA35900347A89 /* AwardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E57A1B24CAA35900347A89 /* AwardView.swift */; };
+		B2E57A1E24CAA36E00347A89 /* AwardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B2E57A1D24CAA36E00347A89 /* AwardView.xib */; };
 		B2E7621C1E6C98A0001DAF4F /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7621B1E6C98A0001DAF4F /* Notifications.swift */; };
 		B2E7621E1E73E6A6001DAF4F /* GetStartedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7621D1E73E6A6001DAF4F /* GetStartedViewController.swift */; };
 		B2E7E04D1FBACAFA001206F0 /* Miscellaneous Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2E7E04C1FBACAFA001206F0 /* Miscellaneous Tests.swift */; };
@@ -458,6 +460,8 @@
 		B2E065CA24AB031B0055C376 /* RelatedPlayersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelatedPlayersView.swift; sourceTree = "<group>"; };
 		B2E065CC24AB0EE30055C376 /* RelatedPlayersTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RelatedPlayersTableViewCell.xib; sourceTree = "<group>"; };
 		B2E556C022C9F86100C49821 /* Colors.xlsx */ = {isa = PBXFileReference; lastKnownFileType = file; path = Colors.xlsx; sourceTree = "<group>"; };
+		B2E57A1B24CAA35900347A89 /* AwardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardView.swift; sourceTree = "<group>"; };
+		B2E57A1D24CAA36E00347A89 /* AwardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AwardView.xib; sourceTree = "<group>"; };
 		B2E7621B1E6C98A0001DAF4F /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		B2E7621D1E73E6A6001DAF4F /* GetStartedViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GetStartedViewController.swift; sourceTree = "<group>"; };
 		B2E7E04C1FBACAFA001206F0 /* Miscellaneous Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Miscellaneous Tests.swift"; sourceTree = "<group>"; };
@@ -929,7 +933,6 @@
 				B247A729248359D700591BBA /* Title Bar */,
 				B2430CCA22EABD4800C4FC77 /* Slide Out Button */,
 				B28E8C2124BEC0020053E237 /* Award View */,
-				B24C5A4A24C2BB270069759A /* Award Detail */,
 			);
 			name = "Custom Views";
 			sourceTree = "<group>";
@@ -1199,10 +1202,10 @@
 		B28E8C2124BEC0020053E237 /* Award View */ = {
 			isa = PBXGroup;
 			children = (
-				B24B473224C467D300C0B131 /* AwardCollectionHeader.xib */,
-				B28E8C1F24BEBFFC0053E237 /* AwardListCollectionCell.xib */,
-				B24C5A4724C1F0650069759A /* AwardGridCollectionCell.xib */,
-				B28E8C1D24BEBFED0053E237 /* AwardCollectionCell.swift */,
+				B24C5A4A24C2BB270069759A /* Award Detail */,
+				B2E57A1F24CAA52F00347A89 /* Award Cells */,
+				B2E57A1D24CAA36E00347A89 /* AwardView.xib */,
+				B2E57A1B24CAA35900347A89 /* AwardView.swift */,
 			);
 			name = "Award View";
 			sourceTree = "<group>";
@@ -1291,6 +1294,17 @@
 				B2E065CA24AB031B0055C376 /* RelatedPlayersView.swift */,
 			);
 			name = "Related Players View";
+			sourceTree = "<group>";
+		};
+		B2E57A1F24CAA52F00347A89 /* Award Cells */ = {
+			isa = PBXGroup;
+			children = (
+				B24B473224C467D300C0B131 /* AwardCollectionHeader.xib */,
+				B28E8C1F24BEBFFC0053E237 /* AwardListCollectionCell.xib */,
+				B24C5A4724C1F0650069759A /* AwardGridCollectionCell.xib */,
+				B28E8C1D24BEBFED0053E237 /* AwardCollectionCell.swift */,
+			);
+			name = "Award Cells";
 			sourceTree = "<group>";
 		};
 		B2E894D22369EEF40011AD3D /* Confetti View */ = {
@@ -1602,6 +1616,7 @@
 				B22789331FB88FA5009BABCA /* DataTableViewController.storyboard in Resources */,
 				B23970DC24AF77DE00E3C2A9 /* HighScoresDashboardPortraitView.xib in Resources */,
 				B2372E262489351800A6872D /* SampleTheme.xib in Resources */,
+				B2E57A1E24CAA36E00347A89 /* AwardView.xib in Resources */,
 				B25FC7C922D0733C00D2E651 /* SelectPlayersViewController.storyboard in Resources */,
 				B227891B1FB84BA2009BABCA /* GameSummaryViewController.storyboard in Resources */,
 				B227892D1FB88BDD009BABCA /* HistoryDetailViewController.storyboard in Resources */,
@@ -1862,6 +1877,7 @@
 				B2D8104E225AF7B6005A86A5 /* Multipeer logger.swift in Sources */,
 				CC8655861E036432000AF391 /* Player Detail Class.swift in Sources */,
 				B2F70E4E1EE335170092C19F /* Pack Class.swift in Sources */,
+				B2E57A1C24CAA35900347A89 /* AwardView.swift in Sources */,
 				49410E4E1DF1A251000BDA6D /* Player Class.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

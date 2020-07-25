@@ -15,7 +15,8 @@ class AwardView: UIView {
     @IBOutlet private weak var roundedView: UIView!
     @IBOutlet private weak var backgroundImageView: UIImageView!
     @IBOutlet private weak var imageView: UIImageView!
-    @IBOutlet private weak var countBadgeView: UILabel!
+    @IBOutlet private weak var countBadgeLabel: UILabel!
+    @IBOutlet private weak var countBadgeImageView: UIImageView!
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -36,8 +37,8 @@ class AwardView: UIView {
         super.layoutSubviews()
         self.roundedView.layoutIfNeeded()
         self.roundedView.roundCorners(cornerRadius: 8.0)
-        self.countBadgeView.layoutIfNeeded()
-        self.countBadgeView.roundCorners(cornerRadius: self.countBadgeView.frame.height / 2)
+        self.countBadgeLabel.layoutIfNeeded()
+        self.countBadgeLabel.roundCorners(cornerRadius: self.countBadgeLabel.frame.height / 2)
     }
     
     public func set(award: Award, alpha: CGFloat = 1.0, showBadge: Bool = true) {
@@ -45,13 +46,16 @@ class AwardView: UIView {
         self.backgroundImageView?.image = (award.backgroundImageName == nil ? nil : UIImage(named: award.backgroundImageName!))
         self.backgroundImageView?.alpha = alpha
         self.imageView?.image = UIImage(named: award.imageName)
-        if award.count <= 1 || !showBadge{
-            self.countBadgeView.isHidden = true
+        if award.count <= 1 || !showBadge {
+            self.countBadgeLabel.isHidden = true
+            self.countBadgeImageView.isHidden = true
         } else {
-            self.countBadgeView.isHidden = false
-            self.countBadgeView.text = "\(award.count)"
-            self.countBadgeView.backgroundColor = Palette.banner
-            self.countBadgeView.textColor = Palette.bannerText
+            self.countBadgeLabel.isHidden = false
+            self.countBadgeImageView.isHidden = false
+            self.countBadgeLabel.text = "\(award.count)"
+            self.countBadgeLabel.textColor = Palette.bannerText
+            self.countBadgeImageView.image = UIImage(named: "award")?.asTemplate()
+            self.countBadgeImageView.tintColor = Palette.banner
         }
     }
     

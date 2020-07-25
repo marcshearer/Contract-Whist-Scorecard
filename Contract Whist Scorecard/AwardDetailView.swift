@@ -25,8 +25,10 @@ class AwardDetailView: UIView {
     @IBOutlet private weak var awardView: AwardView!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var otherLabel: UILabel!
+    @IBOutlet private weak var countBadgeLabel: UILabel!
+    @IBOutlet private weak var countBadgeImageView: UIImageView!
     @IBOutlet private var labels: [UILabel]!
-    
+ 
     @objc internal func viewTapped(_ touch: UITapGestureRecognizer) {
         // Ignore tap unless it is outside the popup view or inside the exit button
         if !self.shadowView.frame.contains(touch.location(in: self.contentView)) || self.exitButton.frame.contains(touch.location(in: self.shadowView)) {
@@ -58,7 +60,7 @@ class AwardDetailView: UIView {
         self.nameLabel.text = award.name
         self.titleLabel.text = award.title
         let alpha: CGFloat = (mode == .toBeAwarded ? 0.5 : 1.0)
-        self.awardView.set(award: award, alpha: alpha)
+        self.awardView.set(award: award, alpha: alpha, showBadge: false)
         if let backgroundColor = backgroundColor {
             self.shadowView.backgroundColor = backgroundColor
         }
@@ -81,6 +83,19 @@ class AwardDetailView: UIView {
                 self.otherLabel.text = text
             }
         }
+        
+        if award.count <= -1 {
+            self.countBadgeLabel.isHidden = true
+            self.countBadgeImageView.isHidden = true
+        } else {
+            self.countBadgeLabel.isHidden = false
+            self.countBadgeImageView.isHidden = false
+            self.countBadgeLabel.text = "\(award.count)"
+            self.countBadgeLabel.textColor = Palette.bannerText
+            self.countBadgeImageView.image = UIImage(named: "award")?.asTemplate()
+            self.countBadgeImageView.tintColor = Palette.textTitle
+        }
+        
         self.layoutSubviews()
     }
     

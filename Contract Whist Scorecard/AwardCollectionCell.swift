@@ -23,7 +23,7 @@ class AwardCollectionCell: UICollectionViewCell {
     public func bind(award: Award, backgroundColor: UIColor = Palette.buttonFace, textColor: UIColor = Palette.buttonFaceText, alpha: CGFloat = 1.0) {
         self.nameLabel?.textColor = textColor
         self.titleLabel?.textColor = textColor
-        self.awardView.set(award: award, alpha: alpha)
+        self.awardView.set(award: award, alpha: alpha, showBadge: false)
         self.nameLabel?.text = award.name
         self.shortNameLabel?.text = award.shortName
         self.titleLabel?.text = award.title

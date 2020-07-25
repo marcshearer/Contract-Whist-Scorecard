@@ -41,30 +41,55 @@ fileprivate enum WinLose {
     case any
 }
 
-fileprivate struct AwardConfig {
-    var code: String
-    var name: String
-    var shortName: String
-    var title: String
-    var description: String?
-    fileprivate var awardLevels: [Int]
-    fileprivate var repeatable: Bool
-    fileprivate var compare: Comparison?
-    fileprivate var source: Source?
-    fileprivate var key: String?
-    fileprivate var custom: (([ParticipantMO])->Int)?
-    fileprivate var winLose: WinLose
-    fileprivate var imageName: String
-    fileprivate var backgroundColor: UIColor
-    fileprivate var backgroundImageName: String?
-    fileprivate var condition: (()->Bool)?
+fileprivate enum AwardNameItem {
+    case name
+    case shortName
+    case title
+    case description
+}
+
+fileprivate struct AwardNameConfig {
+    private let name: String?
+    private let shortName: String?
+    private let title: String?
+    private let description: String?
     
-    fileprivate init(code: String, name: String, shortName: String, title: String, description: String? = nil, awardLevels: [Int], repeatable: Bool = true, compare: Comparison? = nil, source: Source? = nil, key: String? = nil, custom: (([ParticipantMO])->Int)? = nil, winLose: WinLose = .any, imageName: String, backgroundColor: UIColor = Palette.darkHighlight, backgroundImageName: String? = nil, condition: (()->Bool)? = nil) {
-        self.code = code
+    init(name: String? = nil, shortName: String? = nil, title: String? = nil, description: String? = nil) {
         self.name = name
         self.shortName = shortName
         self.title = title
         self.description = description
+    }
+    
+    fileprivate func value(for item: AwardNameItem) -> String? {
+        switch item {
+            case .name:          return self.name
+            case .shortName:     return self.shortName
+            case .title:         return self.title
+            case .description:   return self.description ?? self.title
+        }
+    }
+}
+
+fileprivate struct AwardConfig {
+    fileprivate let code: String
+    private let nameConfig: AwardNameConfig
+    private let levelNameConfig: [Int: AwardNameConfig]
+    fileprivate let awardLevels: [Int]
+    fileprivate let repeatable: Bool
+    fileprivate let compare: Comparison?
+    fileprivate let source: Source?
+    fileprivate let key: String?
+    fileprivate let custom: (([ParticipantMO])->Int)?
+    fileprivate let winLose: WinLose
+    fileprivate let imageName: String
+    fileprivate let backgroundColor: UIColor
+    fileprivate let backgroundImageName: String?
+    fileprivate let condition: (()->Bool)?
+    
+    fileprivate init(code: String, name: String, shortName: String, title: String, description: String? = nil, awardLevels: [Int], repeatable: Bool = true, compare: Comparison? = nil, source: Source? = nil, key: String? = nil, custom: (([ParticipantMO])->Int)? = nil, winLose: WinLose = .any, imageName: String, backgroundColor: UIColor = Palette.darkHighlight, backgroundImageName: String? = nil, condition: (()->Bool)? = nil, overrides: [Int : AwardNameConfig]? = nil) {
+        self.code = code
+        self.nameConfig = AwardNameConfig(name: name, shortName: shortName, title: title, description: description)
         self.awardLevels = awardLevels
         self.repeatable = repeatable
         self.compare = compare
@@ -76,7 +101,49 @@ fileprivate struct AwardConfig {
         self.backgroundColor = backgroundColor
         self.backgroundImageName = backgroundImageName
         self.condition = condition
+        self.levelNameConfig = overrides ?? [:]
     }
+    
+    private func value(for item: AwardNameItem, level: Int? = nil) -> String {
+        var result = self.nameConfig.value(for: item)!
+        if let level = level {
+            if let levelValue = self.levelNameConfig[level]?.value(for: item) {
+                result = self.substitute(levelValue, level)
+            } else {
+                result = self.substitute(result, level)
+            }
+        }
+        return result
+    }
+    
+    fileprivate func name(level: Int? = nil) -> String {
+        return value(for: .name, level: level)
+    }
+    
+    fileprivate func shortName(level: Int? = nil) -> String {
+        return value(for: .shortName, level: level)
+    }
+    
+    fileprivate func title(level: Int? = nil) -> String {
+        return value(for: .title, level: level)
+    }
+    
+    fileprivate func description(level: Int? = nil) -> String {
+        return value(for: .description, level: level)
+    }
+    
+    fileprivate func imageName(level: Int) -> String {
+        return self.substitute(self.imageName, level)
+    }
+
+    private func substitute(_ stringValue: String, _ level: Int) -> String {
+        if stringValue.contains("%d") {
+            return stringValue.replacingOccurrences(of: "%d", with: "\(level)")
+        } else {
+            return stringValue
+        }
+    }
+    
 }
 
 public struct Award {
@@ -101,24 +168,16 @@ public struct Award {
     fileprivate init(from config: AwardConfig, awardLevel: Int, gameUUID: String? = nil, dateAwarded: Date? = nil, count: Int = 0) {
         self.code = config.code
         self.awardLevel = awardLevel
-        self.name = Award.substitute(config.name, awardLevel)
-        self.shortName = Award.substitute(config.shortName, awardLevel)
-        self.title = Award.substitute(config.title, awardLevel)
-        self.description = Award.substitute(config.description ?? config.title, awardLevel)
-        self.imageName = Award.substitute(config.imageName, awardLevel)
+        self.name = config.name(level: awardLevel)
+        self.shortName = config.shortName(level: awardLevel)
+        self.title = config.title(level: awardLevel)
+        self.description = config.description(level: awardLevel)
+        self.imageName = config.imageName(level: awardLevel)
         self.backgroundColor = config.backgroundColor
         self.backgroundImageName = config.backgroundImageName ?? "awards background"
         self.gameUUID = gameUUID
         self.dateAwarded = dateAwarded
         self.count = count
-    }
-    
-    private static func substitute(_ stringValue: String, _ value: Int) -> String {
-        if stringValue.contains("%d") {
-            return stringValue.replacingOccurrences(of: "%d", with: "\(value)")
-        } else {
-            return stringValue
-        }
     }
 }
 
@@ -270,7 +329,7 @@ public class Awards {
     }
     
     private func debugMessage(config: AwardConfig, message: String) {
-        Utility.debugMessage("Awards", "\(config.name) - \(message)")
+        Utility.debugMessage("Awards", "\(config.name()) - \(message)")
     }
     
     private func achieved(_ achieved: [AwardMO], code: String, awardLevel: Int) -> AwardMO? {
@@ -551,29 +610,17 @@ public class Awards {
                    compare: .greaterOrEqual, source: .player, key: "winStreak",
                    imageName: "award win streak %d"),
             AwardConfig(code: "weekGames", name: "Enthusiast", shortName: "Enthusiast", title: "Play %d games in a week",
-                   awardLevels: [10],
+                   awardLevels: [10, 15, 20],
                    compare: .equal, custom: gamesInWeek,
-                   imageName: "award week games %d"),
-            AwardConfig(code: "weekGames", name: "Fanatic", shortName: "Fanatic", title: "Play %d games in a week",
-                   awardLevels: [15],
-                   compare: .equal, custom: gamesInWeek,
-                   imageName: "award week games %d"),
-            AwardConfig(code: "weekGames", name: "Obsessed", shortName: "Obsessed", title: "Play %d games in a week",
-                   awardLevels: [20],
-                   compare: .equal, custom: gamesInWeek,
-                   imageName: "award week games %d"),
+                   imageName: "award week games %d",
+                   overrides: [15 : AwardNameConfig(name: "Fanatic", shortName: "Fanatic"),
+                               20 : AwardNameConfig(name: "Obsessed", shortName: "Obsessed")]),
             AwardConfig(code: "dayGames", name: "Keen Bean", shortName: "Keen Bean", title: "Play %d games in a day",
-                   awardLevels: [3],
+                   awardLevels: [3, 4, 5],
                    compare: .equal, custom: gamesInDay,
-                   imageName: "award day games %d"),
-            AwardConfig(code: "dayGames", name: "Fore!", shortName: "Fore!", title: "Play %d games in a day",
-                   awardLevels: [4],
-                   compare: .equal, custom: gamesInDay,
-                   imageName: "award day games %d"),
-            AwardConfig(code: "dayGames", name: "Get Your 5 a Day", shortName: "5 a Day", title: "Play %d games in a day",
-                   awardLevels: [5],
-                   compare: .equal, custom: gamesInDay,
-                   imageName: "award day games %d"),
+                   imageName: "award day games %d",
+                   overrides: [4 : AwardNameConfig(name: "Fore!", shortName: "Fore!"),
+                               5 : AwardNameConfig(name: "Get your 5 a Day", shortName: "5 a Day")]),
             AwardConfig(code: "dayStreak", name: "Loyalty Card", shortName: "Loyalty Card", title: "Play %d days in a row",
                    awardLevels: [3, 5, 7],
                    compare: .equal, custom: daysInARow,
@@ -607,19 +654,16 @@ public class Awards {
             AwardConfig(code: "highLoss", name: "Hard Cheese", shortName: "Hard Cheese", title: "Better luck next time. Score more than %d points but still lose the game",
                    awardLevels: [130],
                    compare: .greaterOrEqual, source: .current, key: "totalScore", winLose: .lose,
-                   imageName: "award low win %d"),
+                   imageName: "award high loss %d"),
             AwardConfig(code: "lowWin", name: "Down To The Wire", shortName: "To The Wire", title: "Win the game with %d points or less",
                    awardLevels: [100, 90, 80],
                    compare: .lessOrEqual, source: .current, key: "totalScore", winLose: .win,
                    imageName: "award low win %d"),
             AwardConfig(code: "aboveAverage", name: "Little Miss Consistent", shortName: "Miss Consistent", title: "Score above your average for %d games in a row",
-                   awardLevels: [5],
+                   awardLevels: [5, 10],
                    compare: .equal, custom: aboveAverage,
-                   imageName: "above average %d"),
-            AwardConfig(code: "aboveAverage", name: "Little Miss Shine", shortName: "Miss Shine", title: "Score above your average for %d games in a row",
-                   awardLevels: [10],
-                   compare: .equal, custom: aboveAverage,
-                   imageName: "above average %d"),
+                   imageName: "above average %d",
+                   overrides: [10 : AwardNameConfig(name: "Little Miss Shine", shortName: "Mis Shine")]),
             AwardConfig(code: "belowAverage", name: "Mr Flop", shortName: "Mr Flop", title: "Score below your average for %d games in a row",
                    awardLevels: [5],
                    compare: .equal, custom: belowAverage,

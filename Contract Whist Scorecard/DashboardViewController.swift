@@ -260,7 +260,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             
             let dashboardInfo = dashboardViewInfo[indexPath.item]!
             carouselCell.titleLabel.text = dashboardInfo.title
-            carouselCell.backgroundImageView.image = UIImage(named: dashboardInfo.imageName)
+            carouselCell.backgroundImageView.image = UIImage(named: dashboardInfo.imageName)!.asTemplate()
             return carouselCell
             
         case .scroll:

@@ -181,3 +181,27 @@ class HiddenTextField : UITextField {
         }
     }
 }
+
+extension NSMutableAttributedString {
+    
+    static func + (left: NSMutableAttributedString, right: NSMutableAttributedString) -> NSMutableAttributedString {
+        let result = NSMutableAttributedString()
+        result.append(left)
+        result.append(right)
+        return result
+    }
+    
+    convenience init(_ string: String, color: UIColor? = nil, font: UIFont? = nil) {
+        var attributes: [NSAttributedString.Key : Any] = [:]
+        
+        if let color = color {
+            attributes[NSAttributedString.Key.foregroundColor] = color
+        }
+        if let font = font {
+            attributes[NSAttributedString.Key.font] = font
+        }
+        
+        self.init(string: string, attributes: attributes)
+    }
+}
+

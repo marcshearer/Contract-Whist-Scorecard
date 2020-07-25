@@ -195,19 +195,21 @@ public class Awards {
     /// Get a players achieved and as yet unachieved awards
     /// - Parameter playerUUID: Player UUID
     /// - Returns: a tuple containing an array of achieved awards and an array of awards still to achieve
-    public func get(playerUUID: String) -> (achieved: [Award], toAchieve: [Award]) {
-        let achieved = self.getAchieved(playerUUID: playerUUID)
+    public func get(playerUUID: String) -> (achieved: [Award], toAchieve: [Award], totalAwards: Int) {
+        let playerAchieved = self.getAchieved(playerUUID: playerUUID)
         var toAchieve: [Award] = []
         for config in self.config {
             for awardLevel in config.awardLevels {
-                if self.achieved(achieved, code: config.code, awardLevel: awardLevel) == nil {
+                if self.achieved(playerAchieved, code: config.code, awardLevel: awardLevel) == nil {
                     toAchieve.append(Award(from: config, awardLevel: awardLevel))
                     break
                 }
             }
         }
-            
-        return (achieved.map{Award(from: $0, config: self.config)}, toAchieve)
+        let achieved = playerAchieved.map{Award(from: $0, config: self.config)}
+        let totalAwards = self.config.reduce(0, {$0 + $1.awardLevels.count})
+        
+        return (achieved, toAchieve, totalAwards)
     }
     
     /// Get achieved awards for a player
@@ -584,11 +586,11 @@ public class Awards {
 
     private func setupConfig() {
         self.config = [
-            AwardConfig(code: "gamesPlayed", name: "%d Games", shortName: "%d Games", title: "Play %d games",
+            AwardConfig(code: "gamesPlayed", name: "%d Games", shortName: "%d Games", title: "Play %d games of Whist",
                    awardLevels: [10, 25, 50, 100, 250, 500], repeatable: false,
                    compare: .equal, source: .player, key: "gamesPlayed",
                    imageName: "award games played %d"),
-            AwardConfig(code: "gamesWon", name: "%d Wins", shortName: "%d Wins", title: "Win %d games",
+            AwardConfig(code: "gamesWon", name: "%d Wins", shortName: "%d Wins", title: "Win %d games of Whist",
                    awardLevels: [10, 25, 50, 75, 100, 200], repeatable: false,
                    compare: .equal, source: .player, key: "gamesWon",
                    imageName: "award games won %d"),
@@ -596,7 +598,7 @@ public class Awards {
                    awardLevels: [50, 100, 250, 500, 750, 1000], repeatable: false,
                    compare: .equal, source: .player, key: "handsMade",
                    imageName: "award hands made %d"),
-            AwardConfig(code: "twosMade", name: "%d Twos", shortName: "%d Twos", title: "Make %d twos",
+            AwardConfig(code: "twosMade", name: "%d Twos", shortName: "%d Twos", title: "Win %d tricks with a two",
                    awardLevels: [10, 25, 50, 100, 250, 500], repeatable: false,
                    compare: .equal, source: .player, key: "twosMade",
                    imageName: "award twos made %d",
@@ -605,7 +607,7 @@ public class Awards {
                    awardLevels: [11, 12, 13],
                    compare: .greaterOrEqual, source: .current, key: "handsMade",
                    imageName: "award game made %d"),
-            AwardConfig(code: "winStreak", name: "Don't Stop Me Now", shortName: "Don't Stop Me", title: "I'm having such a good time\nWin %d games in a row",
+            AwardConfig(code: "winStreak", name: "Don't Stop Me Now", shortName: "Don't Stop Me", title: "I'm having such a good time.\nWin %d games in a row",
                    awardLevels: [3, 4, 5],
                    compare: .greaterOrEqual, source: .player, key: "winStreak",
                    imageName: "award win streak %d"),
@@ -621,11 +623,11 @@ public class Awards {
                    imageName: "award day games %d",
                    overrides: [4 : AwardNameConfig(name: "Fore!", shortName: "Fore!"),
                                5 : AwardNameConfig(name: "Get your 5 a Day", shortName: "5 a Day")]),
-            AwardConfig(code: "dayStreak", name: "Loyalty Card", shortName: "Loyalty Card", title: "Play %d days in a row",
+            AwardConfig(code: "dayStreak", name: "Loyalty Card", shortName: "Loyalty Card", title: "Play a game %d days in a row",
                    awardLevels: [3, 5, 7],
                    compare: .equal, custom: daysInARow,
                    imageName: "award day streak %d"),
-            AwardConfig(code: "totalScore", name: "Flying High", shortName: "Flying High", title: "Score more than %d in the game",
+            AwardConfig(code: "totalScore", name: "Flying High", shortName: "Flying High", title: "Score higher than %d in a game",
                    awardLevels: [130, 140, 150],
                    compare: .greaterOrEqual, source: .current, key: "totalScore",
                    imageName: "award total score %d"),
@@ -655,7 +657,7 @@ public class Awards {
                    awardLevels: [130],
                    compare: .greaterOrEqual, source: .current, key: "totalScore", winLose: .lose,
                    imageName: "award high loss %d"),
-            AwardConfig(code: "lowWin", name: "Down To The Wire", shortName: "To The Wire", title: "Win the game with %d points or less",
+            AwardConfig(code: "lowWin", name: "Down To The Wire", shortName: "To The Wire", title: "Win the game while scoring %d points or less",
                    awardLevels: [100, 90, 80],
                    compare: .lessOrEqual, source: .current, key: "totalScore", winLose: .win,
                    imageName: "award low win %d"),

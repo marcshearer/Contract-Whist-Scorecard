@@ -29,13 +29,13 @@
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="m8c-Ih-iQs"/>
                         </constraints>
-                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="13"/>
+                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4nv-GB-4Ms" userLabel="Award Title">
                         <rect key="frame" x="84" y="32" width="208" height="0.0"/>
-                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="10"/>
+                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="11"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>

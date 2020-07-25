@@ -12,6 +12,7 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
             
     private var achieved: [Award] = []
     private var toAchieve: [Award] = []
+    private var awardsTotal: Int = 0
     private var mode: AwardCellMode = .list
     private var awards = Awards()
     private var sections: Int!
@@ -135,8 +136,16 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
         
         switch kind {
         case UICollectionView.elementKindSectionHeader:
+            var title: NSMutableAttributedString
+            if indexPath.section == achievedSection {
+                title = NSMutableAttributedString("Awarded")
+                title = title + NSMutableAttributedString(" \(self.achieved.count)", color: Palette.banner)
+                title = title + NSMutableAttributedString("/\(self.awardsTotal)", color: Palette.banner, font: UIFont.systemFont(ofSize: 12, weight: .light))
+            } else {
+                title = NSMutableAttributedString("For the Future")
+            }
             header = AwardCollectionHeader.dequeue(collectionView, for: indexPath, delegate: self)
-            header.bind(title: (indexPath.section == achievedSection ? "Awarded" : "For the Future"), section: indexPath.section, mode: self.mode, noAwards: indexPath.section == achievedSection && self.achieved.isEmpty ? true : false)
+            header.bind(title: title, section: indexPath.section, mode: self.mode, noAwards: indexPath.section == achievedSection && self.achieved.isEmpty ? true : false)
         default:
             break
         }
@@ -189,7 +198,7 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
     // MARK: - Utility Routines ======================================================================== -
     
     private func loadData() {
-        (self.achieved, self.toAchieve) = awards.get(playerUUID: Scorecard.settings.thisPlayerUUID)
+        (self.achieved, self.toAchieve, self.awardsTotal) = awards.get(playerUUID: Scorecard.settings.thisPlayerUUID)
     }
     
     private func defaultViewColors() {

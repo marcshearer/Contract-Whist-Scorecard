@@ -35,7 +35,7 @@ class AwardCollectionCell: UICollectionViewCell {
         let width = collectionView.frame.width - sectionInsets.left - sectionInsets.right
         let viewSize = min(((width + spacing) / across) - spacing, height - (mode == .list ? 0 : labelHeight))
         if mode == .list {
-            let numberVertically = Utility.roundQuotient(height, 70.0)
+            let numberVertically = Utility.roundQuotient(height, 90.0)
             let idealHeight: CGFloat = ((height + spacing) / CGFloat(numberVertically)) - spacing
             return CGSize(width: width, height: min(height < 120 ? viewSize : idealHeight, height))
         } else {
@@ -83,13 +83,13 @@ class AwardCollectionHeader: UICollectionReusableView {
         self.delegate?.changeMode(to: .grid, section: button.tag)
     }
 
-    public func bind(title: String, backgroundColor: UIColor = Palette.buttonFace, panelColor: UIColor = Palette.buttonFace, textColor: UIColor = Palette.buttonFaceText, highlightColor: UIColor = Palette.banner, section: Int, mode: AwardCellMode, noAwards: Bool = false) {
+    public func bind(title: NSAttributedString, backgroundColor: UIColor = Palette.buttonFace, panelColor: UIColor = Palette.buttonFace, textColor: UIColor = Palette.buttonFaceText, highlightColor: UIColor = Palette.banner, section: Int, mode: AwardCellMode, noAwards: Bool = false) {
         self.topConstraint.constant = (section == 0 ? 0 : 0)
         self.panelView.backgroundColor = panelColor
         self.panelView.layoutIfNeeded()
         self.panelView.roundCorners(cornerRadius: 8, bottomRounded: false)
         self.titleLabel.textColor = textColor
-        self.titleLabel.text = title
+        self.titleLabel.attributedText = title
         self.gridButton.tintColor = (mode == .grid ? highlightColor : textColor)
         self.gridButton.tag = section
         self.listButton.tintColor = (mode == .list ? highlightColor : textColor)

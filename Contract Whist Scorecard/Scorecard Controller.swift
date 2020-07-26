@@ -48,6 +48,8 @@ enum ControllerType {
 
 protocol ScorecardAppControllerDelegate : class {
     
+    var controllerType: ControllerType { get }
+    
     var canProceed: Bool { get }
     var canCancel: Bool { get }
     
@@ -113,7 +115,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
 
     internal var activeViewController: ScorecardViewController?
     internal weak var parentViewController: ScorecardViewController!
-    internal var controllerType: ControllerType
+    internal var _controllerType: ControllerType
     private static var references: [ControllerType:Int] = [:]
     private static var totalReferences = 0
     internal var activeView: ScorecardView = .none
@@ -129,6 +131,8 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     internal weak var scorepadViewController: ScorepadViewController!
     internal weak var roundSummaryViewController: RoundSummaryViewController!
     
+    public var controllerType: ControllerType { self._controllerType }
+    
     init(from parentViewController: ScorecardViewController, type: ControllerType) {
         
         if Utility.isDevelopment {
@@ -139,7 +143,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         }
         
         self.parentViewController = parentViewController
-        self.controllerType = type
+        self._controllerType = type
         self.uuid=UUID().uuidString.right(4)
         ScorecardAppController.references[self.controllerType] = (ScorecardAppController.references[self.controllerType] ?? 0) + 1
         ScorecardAppController.totalReferences += 1

@@ -58,7 +58,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     private var awardCellSize = CGSize()
     private let awardMaxList = 1
     private let awards = Awards()
-    private var awardList: [Award]!
+    private var awardList: [Award] = []
     
     // Completion state
     private var completionMode: GameSummaryReturnMode = .resume
@@ -115,17 +115,9 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         // Setup default colors (previously done in StoryBoard)
         self.defaultViewColors()
 
-        // Load (and save) awards
-        self.awardList = self.awards.calculate(playerUUID: Scorecard.activeSettings.thisPlayerUUID)
-        self.awards.save(playerUUID: Scorecard.activeSettings.thisPlayerUUID, achieved: self.awardList)
+        // Setup awards
+        self.setupAwards()
         
-        // Bind award cells
-        AwardCollectionCell.register(awardsCollectionView, modes: .grid, .list)
-        
-        // Set title bar
-        self.awardsTitleBar.set(bottomRounded: true)
-        self.awardsTitleBar.set(font: UIFont.systemFont(ofSize: 18.0, weight: .semibold))
-
         // Check exclusions
         self.excludeHistory = !Scorecard.activeSettings.saveHistory
         self.excludeStats = self.excludeHistory || !Scorecard.activeSettings.saveStats
@@ -173,7 +165,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
             rotated = false
         }
         
-        self.awardsTitleBar.set(title: (awardList.count == 0 ? "No New Awards" : "New Awards"))
+        self.awardsTitleBar.set(title: (awardList.isEmpty ? "No New Awards" : "New Awards"))
     }
 
    // MARK: - TableView Overrides ================================================================ -
@@ -422,6 +414,32 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         self.actionButtonView.layoutIfNeeded()
         self.actionButtons.forEach{(button) in button.roundCorners(cornerRadius: 8.0)}
         self.bottomArea.addShadow()
+    }
+    
+    private func setupAwards() {
+        // Save awards for 'this' player if hosting / joined
+        // or all players if scoring. Load awards for this player
+        
+        self.awardList = []
+        for playerNumber in 1...Scorecard.game.currentPlayers {
+            let player = Scorecard.game.player(enteredPlayerNumber: playerNumber)
+            let isThisPlayer = (player.playerMO!.playerUUID == Scorecard.activeSettings.thisPlayerUUID)
+            if controllerDelegate?.controllerType == .scoring || ((Scorecard.game.isHosting || Scorecard.game.hasJoined) && isThisPlayer) {
+                let awardList = self.awards.calculate(playerUUID: player.playerMO!.playerUUID!)
+                self.awards.save(playerUUID: player.playerMO!.playerUUID!, achieved: awardList)
+                if isThisPlayer {
+                    self.awardList = awardList
+                }
+            }
+        }
+
+        // Register award cells
+        AwardCollectionCell.register(awardsCollectionView, modes: .grid, .list)
+        
+        // Set title bar
+        self.awardsTitleBar.set(bottomRounded: true)
+        self.awardsTitleBar.set(font: UIFont.systemFont(ofSize: 18.0, weight: .semibold))
+
     }
     
     private func calculateWinner() {

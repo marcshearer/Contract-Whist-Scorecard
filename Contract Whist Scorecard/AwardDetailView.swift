@@ -84,16 +84,16 @@ class AwardDetailView: UIView {
             }
         }
         
-        if award.count <= -1 {
+        if award.count <= 1 {
             self.countBadgeLabel.isHidden = true
             self.countBadgeImageView.isHidden = true
         } else {
             self.countBadgeLabel.isHidden = false
             self.countBadgeImageView.isHidden = false
-            self.countBadgeLabel.text = "\(award.count)"
+            self.countBadgeLabel.text = "\(award.count <= 9 ? "x" : "")\(award.count)"
             self.countBadgeLabel.textColor = Palette.bannerText
             self.countBadgeImageView.image = UIImage(named: "award")?.asTemplate()
-            self.countBadgeImageView.tintColor = Palette.textTitle
+            self.countBadgeImageView.tintColor = Palette.banner
         }
         
         self.layoutSubviews()

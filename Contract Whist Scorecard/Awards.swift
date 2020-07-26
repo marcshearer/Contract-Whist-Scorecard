@@ -278,7 +278,7 @@ public class Awards {
                 }
                 
                 // Get comparison value
-                if let value = self.getValue(config: config, current: current, player: player, history: history, existing: achieved) {
+                if let value = self.getValue(config: config, current: current, player: player, history: history, awarded: achieved.count + results.count) {
                 
                     // Check against threshold awardLevels
                     if let awardLevel = self.checkAwardLevels(config: config, value: value) {
@@ -357,7 +357,7 @@ public class Awards {
         return history
     }
 
-    private func getValue(config: AwardConfig, current: ParticipantMO, player: Player, history: [ParticipantMO], existing: [AwardMO]) -> Int? {
+    private func getValue(config: AwardConfig, current: ParticipantMO, player: Player, history: [ParticipantMO], awarded: Int) -> Int? {
         var value: Int?
         
         if let custom = config.custom {
@@ -389,7 +389,7 @@ public class Awards {
                     value = Scorecard.game.scores.get(round: round, playerNumber: player.playerNumber).value(forKey: key) as? Int
                 }
             case .awards:
-                value = existing.count
+                value = awarded
             }
         }
         return value

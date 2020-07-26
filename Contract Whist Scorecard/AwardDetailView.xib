@@ -72,17 +72,16 @@
                             <state key="normal" image="cross grey"/>
                         </button>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Y3o-sV-ZJG" userLabel="Count Badge Image">
-                            <rect key="frame" x="194" y="10" width="26" height="25"/>
+                            <rect key="frame" x="194" y="15" width="26" height="25"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="Y3o-sV-ZJG" secondAttribute="height" multiplier="1:1" constant="1" id="DKu-aK-rmf"/>
-                                <constraint firstAttribute="width" constant="26" id="FvG-Ny-xxn"/>
+                                <constraint firstAttribute="width" constant="32" id="FvG-Ny-xxn"/>
                                 <constraint firstAttribute="width" secondItem="Y3o-sV-ZJG" secondAttribute="height" multiplier="26:25" id="gV5-K5-dbK"/>
-                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="25" id="gbK-mb-7NO"/>
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.20000000298023224" translatesAutoresizingMaskIntoConstraints="NO" id="hVe-Cf-m7K" userLabel="Count Badge">
-                            <rect key="frame" x="194" y="10" width="26" height="25"/>
-                            <fontDescription key="fontDescription" type="system" weight="light" pointSize="10"/>
+                            <rect key="frame" x="194" y="15" width="26" height="25"/>
+                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="12"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
@@ -104,11 +103,11 @@
                         <constraint firstItem="hVe-Cf-m7K" firstAttribute="trailing" secondItem="Y3o-sV-ZJG" secondAttribute="trailing" id="Odb-mo-xPG"/>
                         <constraint firstItem="Lec-jZ-nt1" firstAttribute="leading" secondItem="onT-bw-PDq" secondAttribute="leading" constant="20" id="UE7-xB-uLv"/>
                         <constraint firstItem="Wgy-fH-2XD" firstAttribute="top" secondItem="onT-bw-PDq" secondAttribute="top" constant="40" id="clD-7I-I1F"/>
-                        <constraint firstItem="Y3o-sV-ZJG" firstAttribute="centerY" secondItem="7eq-ro-U8C" secondAttribute="centerY" id="dwm-xM-OvR"/>
                         <constraint firstItem="Lec-jZ-nt1" firstAttribute="top" secondItem="eBV-lw-ecw" secondAttribute="bottom" constant="10" id="idz-j5-e01"/>
                         <constraint firstItem="Wgy-fH-2XD" firstAttribute="height" secondItem="onT-bw-PDq" secondAttribute="height" multiplier="1:2" id="jbi-AS-fib"/>
                         <constraint firstItem="hVe-Cf-m7K" firstAttribute="leading" secondItem="Y3o-sV-ZJG" secondAttribute="leading" id="pif-C8-lNb"/>
                         <constraint firstAttribute="trailing" secondItem="eBV-lw-ecw" secondAttribute="trailing" constant="40" id="qfw-3S-Go4"/>
+                        <constraint firstItem="Y3o-sV-ZJG" firstAttribute="top" secondItem="7eq-ro-U8C" secondAttribute="top" id="vFM-VL-A0W"/>
                         <constraint firstItem="eBV-lw-ecw" firstAttribute="top" secondItem="Wgy-fH-2XD" secondAttribute="bottom" constant="16" id="zZ3-Ia-bUl"/>
                     </constraints>
                 </view>

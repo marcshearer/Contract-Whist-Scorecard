@@ -114,14 +114,43 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
     
     internal func changeMode(to mode: AwardCellMode, section: Int) {
         if self.mode != mode {
+            
+            // Try to save the first cell currently displayed
+            var current: IndexPath?
+            let visible = self.collectionView.indexPathsForVisibleItems
+            if !visible.isEmpty {
+                let sorted = visible.sorted(by: {$0.section < $1.section || ($0.section == $1.section && $0.item < $1.item)})
+                
+                // Now find the first cell which is not hidden behind the header
+                for item in sorted {
+                    if let layout = self.collectionView.collectionViewLayout.layoutAttributesForItem(at: item) {
+                        let headerHeight = self.collectionView(self.collectionView, layout: self.collectionView.collectionViewLayout, referenceSizeForHeaderInSection: item.section).height
+                        if layout.frame.maxY - self.collectionView.contentOffset.y > headerHeight {
+                            current = item
+                            break
+                        }
+                    }
+                }
+            }
+            
             self.mode = mode
             self.collectionViewFlowLayout.invalidateLayout()
             self.collectionView.reloadData()
-            // self.collectionView.scrollToItem(at: IndexPath(item: 0, section: section), at: .centeredVertically, animated: true)
+            self.collectionView.layoutIfNeeded()
+            
+            if let current = current {
+                // Position at bottom of header
+                if let layout = self.collectionView.collectionViewLayout.layoutAttributesForItem(at: current) {
+                    let headerHeight = self.collectionView(self.collectionView, layout: self.collectionView.collectionViewLayout, referenceSizeForHeaderInSection: current.section).height
+                    self.collectionView.contentOffset = CGPoint(x: 0, y: layout.frame.minY - headerHeight)
+                } else {
+                    self.collectionView.scrollToItem(at: current, at: .top, animated: true)
+                }
+            }
         }
     }
     
-    // MARK: - IB Actions ============================================================================== -
+    // MARK: - Collection View delegates ================================================================== -
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return self.sections
@@ -145,7 +174,7 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
                 title = NSMutableAttributedString("For the Future")
             }
             header = AwardCollectionHeader.dequeue(collectionView, for: indexPath, delegate: self)
-            header.bind(title: title, section: indexPath.section, mode: self.mode, noAwards: indexPath.section == achievedSection && self.achieved.isEmpty ? true : false)
+            header.bind(title: title, section: indexPath.section, mode: self.mode, noAwards: indexPath.section == achievedSection && self.achieved.isEmpty)
         default:
             break
         }
@@ -177,6 +206,7 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
         } else {
             cell.bind(award: toAchieve[indexPath.row], alpha: 0.5)
         }
+        cell.tag = (1000000 * indexPath.section) + indexPath.row
         
         return cell
     }

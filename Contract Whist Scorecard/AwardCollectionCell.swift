@@ -84,7 +84,6 @@ class AwardCollectionHeader: UICollectionReusableView {
     }
 
     public func bind(title: NSAttributedString, backgroundColor: UIColor = Palette.buttonFace, panelColor: UIColor = Palette.buttonFace, textColor: UIColor = Palette.buttonFaceText, highlightColor: UIColor = Palette.banner, section: Int, mode: AwardCellMode, noAwards: Bool = false) {
-        self.topConstraint.constant = (section == 0 ? 0 : 0)
         self.panelView.backgroundColor = panelColor
         self.panelView.layoutIfNeeded()
         self.panelView.roundCorners(cornerRadius: 8, bottomRounded: false)
@@ -98,6 +97,10 @@ class AwardCollectionHeader: UICollectionReusableView {
             self.noAwardsHeightConstraint.constant = AwardCollectionHeader.noAwardsHeight
             self.noAwardsLabel.text = "No Awards Found"
             self.noAwardsLabel.textColor = Palette.disabledText
+            self.noAwardsLabel.isHidden = false
+        } else {
+            self.noAwardsHeightConstraint.constant = 0
+            self.noAwardsLabel.isHidden = true
         }
     }
     

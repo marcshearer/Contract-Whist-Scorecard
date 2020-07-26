@@ -1110,7 +1110,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     private func showPlayerSelection() {
         Utility.animate(view: self.view, duration: 0.5) {
-            let selectionHeight = self.playerSelectionView.getHeightFor(items: Scorecard.shared.playerList.count - 1)
+            let selectionHeight = self.playerSelectionView.getHeightFor(items: Scorecard.shared.playerList.count)
             self.playerSelectionHeight = min(selectionHeight, self.view.frame.height - self.playerSelectionView.frame.minY + self.view.safeAreaInsets.bottom)
             self.playerSelectionView.set(size: CGSize(width: UIScreen.main.bounds.width, height: self.playerSelectionHeight))
             self.playerSelectionViewHeightConstraint.constant = self.playerSelectionHeight

@@ -67,7 +67,6 @@ class AwardCollectionHeader: UICollectionReusableView {
     private static let normalHeight: CGFloat = 56.0
     private weak var delegate: AwardCollectionDelegate?
     
-    @IBOutlet private weak var topConstraint: NSLayoutConstraint!
     @IBOutlet private weak var gridButton: ClearButton!
     @IBOutlet private weak var listButton: ClearButton!
     @IBOutlet private weak var panelView: UIView!

@@ -117,12 +117,19 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
     }
     
     public func getHeightFor(items: Int) -> CGFloat {
+        let frame = self.frame
+        let height = frame.height
+        if height == 0 {
+            self.frame = CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: 500)
+        }
         self.layoutIfNeeded()
         
         let availableWidth = self.collectionWidth + 10.0
         
         let cellsAcross = Int(availableWidth / (self.cellWidth + 10.0))
         let cellsDown = (items + cellsAcross - 1) / cellsAcross
+        
+        self.frame = frame
         
         return (CGFloat(cellsDown) * (self.cellHeight + self.interRowSpacing)) - self.interRowSpacing + (2 * self.collectionInset)
     }

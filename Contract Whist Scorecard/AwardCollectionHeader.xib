@@ -82,7 +82,6 @@
                 <outlet property="noAwardsLabel" destination="pN8-7F-lZB" id="I9Z-Bx-dDn"/>
                 <outlet property="panelView" destination="lOb-NV-OjZ" id="mNP-su-Jx2"/>
                 <outlet property="titleLabel" destination="Gc8-LU-Y2q" id="25h-Iy-YxK"/>
-                <outlet property="topConstraint" destination="Zrh-91-EWN" id="pn4-9d-Qsg"/>
             </connections>
             <point key="canvasLocation" x="36" y="35"/>
         </collectionReusableView>

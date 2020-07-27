@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -12,9 +12,6 @@
                 <outlet property="banner" destination="yBP-3p-q1Z" id="buO-PB-ffX"/>
                 <outlet property="bannerLabel" destination="L5Z-HW-Jea" id="wFQ-Sv-Nlw"/>
                 <outlet property="contentView" destination="iN0-l3-epB" id="KtA-VU-WnD"/>
-                <outlet property="leftButton" destination="YQq-L3-0pk" id="Hf0-EF-3cf"/>
-                <outlet property="rightButton" destination="mFX-Ur-fyL" id="2NC-jJ-0Ae"/>
-                <outlet property="titleBar" destination="Mx2-1s-U66" id="Hep-LQ-JnI"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -23,10 +20,10 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yBP-3p-q1Z" userLabel="Banner">
-                    <rect key="frame" x="0.0" y="0.0" width="56" height="40"/>
+                    <rect key="frame" x="0.0" y="0.0" width="56" height="80"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Whist" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L5Z-HW-Jea" userLabel="Banner Label">
-                            <rect key="frame" x="17" y="19" width="22" height="2"/>
+                            <rect key="frame" x="17" y="37.5" width="22" height="5"/>
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="7"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -39,71 +36,17 @@
                         <constraint firstItem="L5Z-HW-Jea" firstAttribute="centerX" secondItem="yBP-3p-q1Z" secondAttribute="centerX" id="rUS-mY-Cl6"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Mx2-1s-U66" customClass="TitleBar" customModule="Whist_2" customModuleProvider="target">
-                    <rect key="frame" x="2" y="43.5" width="52" height="2.5"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                            <real key="value" value="0.050000000000000003"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
-                            <real key="value" value="0.10000000000000001"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
-                            <real key="value" value="0.10000000000000001"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="string" keyPath="title" value="Theme Sample"/>
-                    </userDefinedRuntimeAttributes>
-                </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YQq-L3-0pk" userLabel="Left Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
-                    <rect key="frame" x="2" y="46" width="26" height="32"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="image" keyPath="image" value="globe" catalog="system"/>
-                        <userDefinedRuntimeAttribute type="string" keyPath="title" value="Online"/>
-                        <userDefinedRuntimeAttribute type="size" keyPath="shadowSize">
-                            <size key="value" width="2" height="2"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mFX-Ur-fyL" userLabel="Right Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
-                    <rect key="frame" x="28" y="46" width="26" height="32"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                    <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="image" keyPath="image" value="dot.radiowaves.left.and.right" catalog="system"/>
-                        <userDefinedRuntimeAttribute type="string" keyPath="title" value="Nearby"/>
-                        <userDefinedRuntimeAttribute type="size" keyPath="shadowSize">
-                            <size key="value" width="2" height="2"/>
-                        </userDefinedRuntimeAttribute>
-                    </userDefinedRuntimeAttributes>
-                </view>
             </subviews>
             <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
             <constraints>
-                <constraint firstItem="YQq-L3-0pk" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="2" id="0UP-Up-A1F"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="YQq-L3-0pk" secondAttribute="bottom" constant="2" id="30b-Dd-0U8"/>
-                <constraint firstAttribute="trailing" secondItem="Mx2-1s-U66" secondAttribute="trailing" constant="2" id="3su-jD-3pb"/>
-                <constraint firstItem="yBP-3p-q1Z" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" multiplier="0.5" id="5lW-c2-7nb"/>
-                <constraint firstItem="mFX-Ur-fyL" firstAttribute="leading" secondItem="YQq-L3-0pk" secondAttribute="trailing" id="Dnv-En-t0l"/>
-                <constraint firstItem="Mx2-1s-U66" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="2" id="HF6-8X-VOl"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="yBP-3p-q1Z" secondAttribute="bottom" id="0Bc-NH-bYb"/>
                 <constraint firstItem="yBP-3p-q1Z" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="QJx-lr-Vcl"/>
-                <constraint firstItem="Mx2-1s-U66" firstAttribute="bottom" secondItem="mFX-Ur-fyL" secondAttribute="top" id="ViY-PF-zUb"/>
-                <constraint firstItem="YQq-L3-0pk" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" multiplier="0.4" id="WxY-V9-ELr"/>
                 <constraint firstItem="yBP-3p-q1Z" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="Yxd-J3-Aay"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="mFX-Ur-fyL" secondAttribute="bottom" constant="2" id="YyY-a9-dK4"/>
                 <constraint firstItem="yBP-3p-q1Z" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="hf1-KG-NwM"/>
-                <constraint firstItem="mFX-Ur-fyL" firstAttribute="width" secondItem="YQq-L3-0pk" secondAttribute="width" id="nK6-af-fFP"/>
-                <constraint firstItem="Mx2-1s-U66" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" multiplier="0.03" id="tBT-el-tin"/>
-                <constraint firstItem="YQq-L3-0pk" firstAttribute="top" secondItem="Mx2-1s-U66" secondAttribute="bottom" id="uBA-So-F7V"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="mFX-Ur-fyL" secondAttribute="trailing" constant="2" id="uuO-OD-bgP"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <point key="canvasLocation" x="284.05797101449275" y="85.044642857142847"/>
         </view>
     </objects>
-    <resources>
-        <image name="dot.radiowaves.left.and.right" catalog="system" width="128" height="89"/>
-        <image name="globe" catalog="system" width="128" height="121"/>
-    </resources>
 </document>

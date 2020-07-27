@@ -31,6 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // Load scorecard and set color theme
         let _ = Scorecard.shared
+        self.window?.overrideUserInterfaceStyle = Scorecard.settings.appearance.userInterfaceStyle
         Themes.selectTheme(name: Scorecard.settings.colorTheme)
 
         UINavigationBar.appearance().barTintColor = Palette.emphasis
@@ -73,7 +74,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             "faceTimeAddress":          "",
             "onlineGamesEnabled":       false,
             "colorTheme":               "Default",
-            "tempOnlinePlayerUUID":          false,
+            "rawAppearance":            ThemeAppearance.device.rawValue,
+            "tempOnlinePlayerUUID":     false,
             "trumpSequence":            ["♣︎", "♦︎", "♥︎" ,"♠︎", "NT"],
             "prefersStatusBarHidden":   true,
             "termsDevice":              "",

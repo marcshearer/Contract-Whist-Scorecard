@@ -65,6 +65,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     private enum ThemeOptions : Int, CaseIterable {
         case colorTheme = 0
+        case appearance = 1
     }
     
     private enum InGameOptions : Int, CaseIterable {
@@ -276,6 +277,8 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                     switch option {
                     case .colorTheme:
                         height = 100.0
+                    case .appearance:
+                        height = 60.0
                     }
                 }
                 
@@ -452,13 +455,20 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                 }
                                 
             case .theme:
-                // No sub-options
                 if let option = ThemeOptions(rawValue: indexPath.row) {
                     switch option {
                     case .colorTheme:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Color Theme") as? SettingsTableCell
                         // Setup default colors (previously done in StoryBoard)
                         self.defaultCellColors(cell: cell)
+                    case .appearance:
+                        cell = tableView.dequeueReusableCell(withIdentifier: "Appearance") as? SettingsTableCell
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        cell.appearanceButtons.forEach{(button) in
+                            button.addTarget(self, action: #selector(SettingsViewController.appearanceButtonClicked(_:)), for: .touchUpInside)
+                        }
+                        self.setAppearanceButtons(cell)
                     }
                 }
                 
@@ -690,6 +700,8 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                             tableViewCell.colorThemeCollectionView.decelerationRate = UIScrollView.DecelerationRate.fast
                         }
                     }
+                default:
+                    break
                 }
             }
             
@@ -934,6 +946,24 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
 
         // Update status bar
         Scorecard.shared.updatePrefersStatusBarHidden(from: self)
+    }
+    
+    @objc internal func appearanceButtonClicked(_ appearanceButton: ClearButton) {
+        Scorecard.settings.appearance = ThemeAppearance(rawValue: appearanceButton.tag)!
+        self.setAppearanceButtons()
+    }
+    
+    private func setAppearanceButtons(_ cell: SettingsTableCell? = nil) {
+        if let cell = cell ?? self.settingsTableView.cellForRow(at: IndexPath(row: ThemeOptions.appearance.rawValue, section: Sections.theme.rawValue)) as? SettingsTableCell {
+            cell.appearanceButtons.forEach{(button) in
+                if button.tag == Scorecard.settings.appearance.rawValue {
+                    button.setImage(UIImage(named: "box tick"), for: .normal)
+                } else {
+                    button.setImage(UIImage(named: "box"), for: .normal)
+                }
+            }
+            self.view.window?.overrideUserInterfaceStyle = Scorecard.settings.appearance.userInterfaceStyle
+        }
     }
     
     // MARK: - CollectionView Overrides ================================================================ -
@@ -1559,6 +1589,9 @@ class SettingsTableCell: UITableViewCell {
     @IBOutlet fileprivate weak var infoValue1: UILabel!
     @IBOutlet fileprivate weak var infoValue2: UILabel!
     @IBOutlet fileprivate weak var infoValue3: UILabel!
+    @IBOutlet fileprivate var appearanceLabels: [UILabel]!
+    @IBOutlet fileprivate var appearanceButtons: [ClearButton]!
+
     @IBOutlet fileprivate weak var flowLayout: CustomCollectionViewLayout!
     
     public func resizeSwitch(_ factor: CGFloat) {
@@ -1704,6 +1737,9 @@ extension SettingsViewController {
             cell.label.textColor = Palette.text
             cell.toggleSwitch.tintColor = Palette.emphasis
             cell.toggleSwitch.onTintColor = Palette.emphasis
+        case "Appearance":
+            cell.appearanceLabels.forEach{(label) in label.textColor = Palette.text}
+            cell.appearanceButtons.forEach{(button) in button.tintColor = Palette.segmentedControls}
         default:
             break
         }

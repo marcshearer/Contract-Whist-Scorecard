@@ -386,3 +386,20 @@ enum ThemeColor: String {
     case otherButton = "Other Button"
     case otherButtonText = "Other Button Text"
 }
+
+enum ThemeAppearance: Int {
+    case light = 1
+    case dark = 2
+    case device = 3
+    
+    public var userInterfaceStyle: UIUserInterfaceStyle {
+        switch self {
+        case .light:
+            return .light
+        case .dark:
+            return .dark
+        default:
+            return .unspecified
+        }
+    }
+}

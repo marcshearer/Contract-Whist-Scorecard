@@ -28,6 +28,15 @@ class Settings : Equatable {
     public var faceTimeAddress = ""
     public var prefersStatusBarHidden = true
     public var colorTheme = Themes.defaultName
+    public var rawAppearance = ThemeAppearance.device.rawValue
+    public var appearance: ThemeAppearance {
+        get {
+            return ThemeAppearance(rawValue: self.rawAppearance)!
+        }
+        set {
+            self.rawAppearance = newValue.rawValue
+        }
+    }
     public var termsDate: Date!
     public var termsUser = ""
     public var termsDevice = ""
@@ -73,6 +82,8 @@ class Settings : Equatable {
             self.prefersStatusBarHidden = value as! Bool
         case "colorTheme":
             self.colorTheme = value as! String
+        case "rawAppearance":
+            self.rawAppearance = value as! Int
         case "thisPlayerUUID":
             self.thisPlayerUUID = value as! String
         case "termsDate":

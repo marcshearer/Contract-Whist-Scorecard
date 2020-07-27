@@ -138,11 +138,6 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="200" id="Nyr-k0-9C6"/>
                                 </constraints>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="collectionInset">
-                                        <real key="value" value="0.0"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <outlet property="delegate" destination="btt-Xo-OBG" id="RNe-Bb-KyL"/>
                                     <outlet property="parent" destination="btt-Xo-OBG" id="tDO-2O-NER"/>
@@ -530,7 +525,7 @@
                                                                 <subviews>
                                                                     <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fk6-em-7i0" customClass="SampleTheme" customModule="Whist_2" customModuleProvider="target">
                                                                         <rect key="frame" x="6.5" y="6.5" width="115" height="115"/>
-                                                                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                                        <color key="backgroundColor" name="Clear"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="width" secondItem="fk6-em-7i0" secondAttribute="height" multiplier="1:1" id="het-Dq-GhB"/>
                                                                         </constraints>
@@ -564,6 +559,7 @@
                                                     </cells>
                                                 </collectionView>
                                             </subviews>
+                                            <color key="backgroundColor" name="Clear"/>
                                             <constraints>
                                                 <constraint firstAttribute="bottom" secondItem="CEi-pL-0oe" secondAttribute="bottom" id="Ki2-98-byO"/>
                                                 <constraint firstAttribute="trailing" secondItem="CEi-pL-0oe" secondAttribute="trailing" constant="20" id="kdm-aW-OO1"/>

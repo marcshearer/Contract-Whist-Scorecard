@@ -195,12 +195,14 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         case winnersTag:
             return CGSize(width: self.winnerCellWidth,
                           height: self.winnerCellHeight)
+            
         case othersTag:
             return CGSize(width: self.otherCellWidth,
                           height: self.otherCellHeight)
             
         case awardsTag:
             return self.awardCellSize
+            
         default:
             return CGSize()
         }
@@ -257,7 +259,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
             var cell: AwardCollectionCell
             
             cell = AwardCollectionCell.dequeue(collectionView, for: indexPath, mode: (awardList.count <= self.awardMaxList ? .list : .grid))
-            cell.bind(award: awardList[indexPath.row])
+            cell.bind(award: awardList[indexPath.row], showBadge: true)
         
             return cell
         }
@@ -406,9 +408,9 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
             self.awardsTitleBarHeight.constant = self.actionButtons.first!.frame.width
             self.awardsTitleBar.set(labelProportion: 0.4)
             
-            self.awardsCollectionViewHeight.constant = 0.5 * self.awardsTitleBarHeight.constant
+            self.awardsCollectionViewHeight.constant = 0.5 * self.awardsTitleBarHeight.constant + (self.awardList.count <= self.awardMaxList ? 0 : self.awardNameHeight)
             self.awardsTitleBar.layoutIfNeeded()
-            self.awardCellSize = AwardCollectionCell.sizeForCell(self.awardsCollectionView, mode: (self.awardList.count <= self.awardMaxList ? .list : .grid), across: 3.5, spacing: self.awardSpacing, labelHeight: self.awardNameHeight)
+            self.awardCellSize = AwardCollectionCell.sizeForCell(self.awardsCollectionView, mode: (self.awardList.count <= self.awardMaxList ? .list : .grid), across: 3.2, spacing: self.awardSpacing, labelHeight: self.awardNameHeight)
             self.awardsCollectionViewHeight.constant = (self.awardCellSize.height)
         }
         self.actionButtonView.layoutIfNeeded()

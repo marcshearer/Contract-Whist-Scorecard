@@ -20,10 +20,10 @@ class AwardCollectionCell: UICollectionViewCell {
     @IBOutlet private weak var shortNameLabel: UILabel!
     @IBOutlet private weak var titleLabel: UITextView!
     
-    public func bind(award: Award, backgroundColor: UIColor = Palette.buttonFace, textColor: UIColor = Palette.buttonFaceText, alpha: CGFloat = 1.0) {
+    public func bind(award: Award, backgroundColor: UIColor = Palette.buttonFace, textColor: UIColor = Palette.buttonFaceText, alpha: CGFloat = 1.0, showBadge: Bool = false) {
         self.nameLabel?.textColor = textColor
         self.titleLabel?.textColor = textColor
-        self.awardView.set(award: award, alpha: alpha, showBadge: false)
+        self.awardView.set(award: award, alpha: alpha, showBadge: showBadge)
         self.nameLabel?.text = award.name
         self.shortNameLabel?.text = award.shortName
         self.titleLabel?.text = award.title

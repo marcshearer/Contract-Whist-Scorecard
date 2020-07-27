@@ -525,13 +525,15 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     }
     
     private func networkChanged(_ available: Bool) {
-        Scorecard.shared.isNetworkAvailable = available
-        if (self.isNetworkAvailable != Scorecard.shared.isNetworkAvailable || self.isLoggedIn != Scorecard.shared.isLoggedIn) {
-            self.isNetworkAvailable = available
-            self.isLoggedIn = Scorecard.shared.isLoggedIn
-            self.setupHostingOptions()
-            self.hostCollectionView.reloadData()
-            self.peerReloadData()
+        Utility.mainThread {
+            Scorecard.shared.isNetworkAvailable = available
+            if (self.isNetworkAvailable != Scorecard.shared.isNetworkAvailable || self.isLoggedIn != Scorecard.shared.isLoggedIn) {
+                self.isNetworkAvailable = available
+                self.isLoggedIn = Scorecard.shared.isLoggedIn
+                self.setupHostingOptions()
+                self.hostCollectionView.reloadData()
+                self.peerReloadData()
+            }
         }
     }
      

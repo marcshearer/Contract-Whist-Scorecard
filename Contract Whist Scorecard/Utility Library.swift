@@ -26,13 +26,7 @@ class Utility {
     // MARK: - Execute closure after delay ===================================================================== -
     
     class func mainThread(_ message: String = "Utility", suppressDebug: Bool = false, qos: DispatchQoS = .userInteractive, execute: @escaping ()->()) {
-        if false && !suppressDebug {
-            Utility.debugMessage(message, "About to execute closure on main thread", mainThread: false)
-        }
         DispatchQueue.main.async(qos: qos, execute: execute)
-        if false && !suppressDebug {
-            Utility.debugMessage(message, "Main thread closure executed", mainThread: false)
-        }
     }
     
     class func executeAfter(_ message: String="Utility", delay: Double, suppressDebug: Bool = false, qos: DispatchQoS = .userInteractive, completion: (()->())?) {

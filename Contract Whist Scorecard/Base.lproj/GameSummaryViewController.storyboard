@@ -306,11 +306,11 @@
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tii-a3-9rM" customClass="TitleBar" customModule="Whist_2" customModuleProvider="target">
                                                         <rect key="frame" x="35" y="86" width="344" height="65"/>
                                                         <subviews>
-                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Sz-IP-S3d">
-                                                                <rect key="frame" x="0.0" y="19.5" width="344" height="45.5"/>
+                                                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Sz-IP-S3d">
+                                                                <rect key="frame" x="16" y="23" width="312" height="42"/>
                                                                 <subviews>
-                                                                    <collectionView multipleTouchEnabled="YES" tag="3" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Jce-zU-f1B">
-                                                                        <rect key="frame" x="16" y="8" width="312" height="30"/>
+                                                                    <collectionView multipleTouchEnabled="YES" tag="3" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Jce-zU-f1B">
+                                                                        <rect key="frame" x="0.0" y="6" width="312" height="30"/>
                                                                         <color key="backgroundColor" name="Clear"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="30" id="PhM-4m-5ks"/>
@@ -330,17 +330,17 @@
                                                                 </subviews>
                                                                 <color key="backgroundColor" name="Clear"/>
                                                                 <constraints>
-                                                                    <constraint firstAttribute="trailing" secondItem="Jce-zU-f1B" secondAttribute="trailing" constant="16" id="PUa-pc-5FF"/>
+                                                                    <constraint firstAttribute="trailing" secondItem="Jce-zU-f1B" secondAttribute="trailing" id="PUa-pc-5FF"/>
                                                                     <constraint firstItem="Jce-zU-f1B" firstAttribute="centerY" secondItem="8Sz-IP-S3d" secondAttribute="centerY" id="Tzc-ZC-opf"/>
-                                                                    <constraint firstItem="Jce-zU-f1B" firstAttribute="leading" secondItem="8Sz-IP-S3d" secondAttribute="leading" constant="16" id="lUd-Q5-giw"/>
+                                                                    <constraint firstItem="Jce-zU-f1B" firstAttribute="leading" secondItem="8Sz-IP-S3d" secondAttribute="leading" id="lUd-Q5-giw"/>
                                                                 </constraints>
                                                             </view>
                                                         </subviews>
                                                         <color key="backgroundColor" name="Clear"/>
                                                         <constraints>
-                                                            <constraint firstItem="8Sz-IP-S3d" firstAttribute="height" secondItem="Tii-a3-9rM" secondAttribute="height" multiplier="7:10" id="OLP-mi-g3v"/>
-                                                            <constraint firstAttribute="trailing" secondItem="8Sz-IP-S3d" secondAttribute="trailing" id="RYs-WJ-0eL"/>
-                                                            <constraint firstItem="8Sz-IP-S3d" firstAttribute="leading" secondItem="Tii-a3-9rM" secondAttribute="leading" id="dtV-id-Hvd"/>
+                                                            <constraint firstItem="8Sz-IP-S3d" firstAttribute="height" secondItem="Tii-a3-9rM" secondAttribute="height" multiplier="13:20" id="OLP-mi-g3v"/>
+                                                            <constraint firstAttribute="trailing" secondItem="8Sz-IP-S3d" secondAttribute="trailing" constant="16" id="RYs-WJ-0eL"/>
+                                                            <constraint firstItem="8Sz-IP-S3d" firstAttribute="leading" secondItem="Tii-a3-9rM" secondAttribute="leading" constant="16" id="dtV-id-Hvd"/>
                                                             <constraint firstAttribute="height" constant="65" id="ecR-AA-Iow"/>
                                                             <constraint firstAttribute="bottom" secondItem="8Sz-IP-S3d" secondAttribute="bottom" id="xon-n4-dhS"/>
                                                         </constraints>
@@ -481,7 +481,7 @@
     </scenes>
     <resources>
         <image name="back" width="22" height="22"/>
-        <image name="crown" width="100" height="100"/>
+        <image name="crown" width="100" height="51"/>
         <image name="play again" width="50" height="64"/>
         <image name="stop playing" width="50" height="64"/>
         <namedColor name="Clear">

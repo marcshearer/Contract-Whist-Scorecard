@@ -132,6 +132,7 @@ class Sync {
     private var thisPlayerUUID: String!
     private var specificEmail: String!
     private var participantPlayerUUIDList: [String] = []
+    private var useMainThread: Bool = true
 
     // Game / participant sync state
     private var nextSyncDate: Date!
@@ -151,7 +152,7 @@ class Sync {
         }
     }
         
-    public func synchronise(syncMode: SyncMode = .syncAll, specificPlayerUUIDs: [String] = [], specificEmail: String! = nil, timeout: Double! = 30.0, waitFinish: Bool, okToSyncWithTemporaryPlayerUUIDs: Bool = false) -> Bool {
+    public func synchronise(syncMode: SyncMode = .syncAll, specificPlayerUUIDs: [String] = [], specificEmail: String! = nil, timeout: Double! = 30.0, waitFinish: Bool, okToSyncWithTemporaryPlayerUUIDs: Bool = false, mainThread: Bool = true) -> Bool {
         // Reset state
         errors = 0
         cloudObjectList = []
@@ -165,6 +166,7 @@ class Sync {
             self.specificEmail = specificEmail
             self.thisPlayerUUID = nil
             self.timeout = timeout
+            self.useMainThread = mainThread
             
             switch syncMode {
             case .syncGetVersion:
@@ -254,7 +256,7 @@ class Sync {
         // Each element should either return true to signify complete (and hence should continue with next phase immediately)
         // or return true and then recall the controller from a completion block
         
-        Utility.mainThread {
+        self.mainThread {
             
             var nextPhase = true
             self.observer = nil
@@ -345,6 +347,16 @@ class Sync {
             if self.errors != 0 || self.syncPhaseCount >= self.syncPhases.count {
                 self.syncCompletion()
             }
+        }
+    }
+    
+    private func mainThread(qos: DispatchQoS = .userInteractive, execute: @escaping ()->()) {
+        if self.useMainThread {
+            Utility.mainThread(qos: qos) {
+                execute()
+            }
+        } else {
+            execute()
         }
     }
     

@@ -362,21 +362,25 @@ class Scorecard {
     
     public func checkNetworkConnection(action: (()->())? = nil) {
         // First check network
-        
-        if Scorecard.reachability.connected ?? false {
-            self.isNetworkAvailable = true
+        Utility.mainThread {
             
-            // First act immediately using stored values
-            action?()
-            
-            // Now check icloud asynchronously
-            CKContainer.init(identifier: Config.iCloudIdentifier).accountStatus(completionHandler: { (accountStatus, errorMessage) -> Void in
-                self.isLoggedIn = (accountStatus == .available)
+            if Scorecard.reachability.connected ?? false {
+                self.isNetworkAvailable = true
+                
+                // First act immediately using stored values
                 action?()
-            })
-        } else {
-            self.isNetworkAvailable = false
-            action?()
+                
+                // Now check icloud asynchronously
+                CKContainer.init(identifier: Config.iCloudIdentifier).accountStatus(completionHandler: { (accountStatus, errorMessage) -> Void in
+                    self.isLoggedIn = (accountStatus == .available)
+                    Utility.mainThread {
+                        action?()
+                    }
+                })
+            } else {
+                self.isNetworkAvailable = false
+                action?()
+            }
         }
     }
     
@@ -473,7 +477,7 @@ class Scorecard {
             } else {
                 specificPlayerUUIDs = [Scorecard.settings.thisPlayerUUID]
             }
-            _ = sync.synchronise(syncMode: .syncBeforeGame, specificPlayerUUIDs: specificPlayerUUIDs, waitFinish: true)
+            _ = sync.synchronise(syncMode: .syncBeforeGame, specificPlayerUUIDs: specificPlayerUUIDs, waitFinish: true, mainThread: false)
         }
     }
     

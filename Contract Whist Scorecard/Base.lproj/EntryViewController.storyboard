@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -425,41 +425,41 @@
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="MgK-WQ-JRD"/>
+                                <exclude reference="DI5-tv-1fA"/>
                                 <exclude reference="2eM-PN-oJy"/>
                                 <exclude reference="n8b-50-rFW"/>
-                                <exclude reference="uIC-n6-z62"/>
                                 <exclude reference="3KV-wo-7fc"/>
                                 <exclude reference="7Q1-vq-9rN"/>
                                 <exclude reference="Ceq-Ku-i7N"/>
                                 <exclude reference="Lb2-js-Ia6"/>
                                 <exclude reference="O1j-LI-Iei"/>
-                                <exclude reference="9GJ-fm-OW1"/>
-                                <exclude reference="MwL-Uc-5Cl"/>
                                 <exclude reference="OVb-Qf-NUK"/>
                                 <exclude reference="Vhh-W5-xfv"/>
-                                <exclude reference="DI5-tv-1fA"/>
+                                <exclude reference="9GJ-fm-OW1"/>
+                                <exclude reference="MwL-Uc-5Cl"/>
+                                <exclude reference="uIC-n6-z62"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=compact">
                             <mask key="constraints">
                                 <include reference="n8b-50-rFW"/>
-                                <include reference="uIC-n6-z62"/>
                                 <include reference="3KV-wo-7fc"/>
                                 <include reference="Ceq-Ku-i7N"/>
                                 <include reference="O1j-LI-Iei"/>
+                                <include reference="Vhh-W5-xfv"/>
                                 <include reference="9GJ-fm-OW1"/>
                                 <include reference="MwL-Uc-5Cl"/>
-                                <include reference="Vhh-W5-xfv"/>
+                                <include reference="uIC-n6-z62"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
                             <mask key="constraints">
                                 <include reference="MgK-WQ-JRD"/>
+                                <include reference="DI5-tv-1fA"/>
                                 <include reference="2eM-PN-oJy"/>
                                 <include reference="7Q1-vq-9rN"/>
                                 <include reference="Lb2-js-Ia6"/>
                                 <include reference="OVb-Qf-NUK"/>
-                                <include reference="DI5-tv-1fA"/>
                             </mask>
                         </variation>
                         <connections>

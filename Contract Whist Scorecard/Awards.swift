@@ -200,7 +200,7 @@ public class Awards {
         var toAchieve: [Award] = []
         for config in self.config {
             for awardLevel in config.awardLevels {
-                if self.achieved(playerAchieved, code: config.code, awardLevel: awardLevel) == nil {
+                if self.hasAchieved(playerAchieved, code: config.code, awardLevel: awardLevel) == nil {
                     toAchieve.append(Award(from: config, awardLevel: awardLevel))
                     break
                 }
@@ -219,7 +219,9 @@ public class Awards {
         if playerUUID != self.playerUUID || self.achieved == nil {
             self.achieved = CoreData.fetch(from: "Award", filter: NSPredicate(format: "playerUUID = %@", playerUUID), sort: ("dateAwarded", .descending)) as? [AwardMO]
             if self.achieved?.isEmpty ?? true {
-                self.achieved = self.defaultAchieved(playerUUID: playerUUID)
+                let achieved = self.defaultAchieved(playerUUID: playerUUID)
+                self.save(playerUUID: playerUUID, achieved: achieved.map{Award(from: $0, config: self.config)})
+                self.achieved = achieved
             }
             self.playerUUID = playerUUID
         }
@@ -247,7 +249,7 @@ public class Awards {
         let achieved = self.getAchieved(playerUUID: playerUUID)
         if let config = self.config.first(where: {$0.code == code}) {
             for awardLevel in config.awardLevels {
-                if self.achieved(achieved, code: code, awardLevel: awardLevel) == nil {
+                if self.hasAchieved(achieved, code: code, awardLevel: awardLevel) == nil {
                     result.append(awardLevel)
                 }
             }
@@ -261,6 +263,7 @@ public class Awards {
     public func calculate(playerUUID: String) -> [Award] {
         var results: [Award] = []
         let achieved = self.getAchieved(playerUUID: playerUUID)
+        var justAwarded = 0
         
         if let player = Scorecard.game.player(playerUUID: playerUUID),
            let current = player.participantMO {
@@ -278,15 +281,15 @@ public class Awards {
                 }
                 
                 // Get comparison value
-                if let value = self.getValue(config: config, current: current, player: player, history: history, awarded: achieved.count + results.count) {
+                if let value = self.getValue(config: config, current: current, player: player, history: history, awarded: achieved.count + justAwarded) {
                 
                     // Check against threshold awardLevels
                     if let awardLevel = self.checkAwardLevels(config: config, value: value) {
                         
                         let awardMO = achieved.first(where: {$0.code == config.code && $0.awardLevel == awardLevel})
                         
-                        if !config.repeatable && awardMO != nil {
-                            // Don't re-award if not repeatable
+                        if !config.repeatable && awardMO != nil && awardMO!.gameUUID != Scorecard.game.gameUUID {
+                            // Don't re-award if not repeatable (unless it was for this game)
                             self.debugMessage(config: config, message: "Repeat award for value \(value)")
                             continue
                         }
@@ -296,6 +299,7 @@ public class Awards {
                             // Already awarded for this game
                             increment = 0
                         }
+                        justAwarded += increment
                         
                         results.append(Award(from: config, awardLevel: awardLevel, gameUUID: current.gameUUID!, dateAwarded: current.datePlayed!, count: Int(awardMO?.count ?? 0) + increment))
                         self.debugMessage(config: config, message: "Awarded for value \(value)")
@@ -316,25 +320,29 @@ public class Awards {
     public func save(playerUUID: String, achieved: [Award]) {
         let existing = self.getAchieved(playerUUID: playerUUID)
         for award in achieved {
-            if let awardMO = self.achieved(existing, code: award.code, awardLevel: award.awardLevel) {
+            var awardMO = self.hasAchieved(existing, code: award.code, awardLevel: award.awardLevel)
+            if awardMO != nil {
                 // Already achieved - update
                 CoreData.update {
-                    awardMO.gameUUID = award.gameUUID
-                    awardMO.dateAwarded = award.dateAwarded
-                    awardMO.count = Int64(award.count)
-                    awardMO.syncDate = nil
+                    awardMO!.gameUUID = award.gameUUID
+                    awardMO!.dateAwarded = award.dateAwarded
+                    awardMO!.count = Int64(award.count)
+                    awardMO!.syncDate = nil
                 }
             } else {
-                self.createAwardMO(playerUUID: playerUUID, code: award.code, awardLevel: award.awardLevel, gameUUID: award.gameUUID!, dateAwarded: award.dateAwarded!)
+                awardMO = self.createAwardMO(playerUUID: playerUUID, code: award.code, awardLevel: award.awardLevel, gameUUID: award.gameUUID!, dateAwarded: award.dateAwarded!)
+            }
+            if self.playerUUID == playerUUID && self.achieved != nil {
+                self.achieved!.append(awardMO!)
             }
         }
     }
     
     private func debugMessage(config: AwardConfig, message: String) {
-        Utility.debugMessage("Awards", "\(config.name()) - \(message)")
+        Utility.debugMessage("Awards", "\(config.name()) - \(message)", mainThread: false)
     }
     
-    private func achieved(_ achieved: [AwardMO], code: String, awardLevel: Int) -> AwardMO? {
+    private func hasAchieved(_ achieved: [AwardMO], code: String, awardLevel: Int) -> AwardMO? {
         return achieved.first(where: {$0.code == code && $0.awardLevel == awardLevel})
     }
     
@@ -434,7 +442,7 @@ public class Awards {
                         if let value = playerMO.value(forKey: config.key!) as? Int {
                             for awardLevel in config.awardLevels {
                                 if value >= awardLevel {
-                                    if let awardMO = self.createAwardMO(playerUUID: playerUUID, code: config.code, awardLevel: awardLevel, gameUUID: "", dateAwarded: Date()) {
+                                    if let awardMO = self.createAwardMO(playerUUID: playerUUID, code: config.code, awardLevel: awardLevel, gameUUID: "", dateAwarded: Date(timeInterval: Double(results.count), since: Date.startOfDay()!)) {
                                         results.append(awardMO)
                                     }
                                 }
@@ -458,7 +466,7 @@ public class Awards {
                 awardMO.code = code
                 awardMO.awardLevel = Int64(awardLevel)
                 awardMO.gameUUID = gameUUID
-                awardMO.dateAwarded = Date()
+                awardMO.dateAwarded = dateAwarded
                 awardMO.count = 1
             }
         }
@@ -602,7 +610,7 @@ public class Awards {
                    awardLevels: [10, 25, 50, 100, 250, 500], repeatable: false,
                    compare: .equal, source: .player, key: "twosMade",
                    imageName: "award twos made %d",
-                   condition: { Scorecard.settings.bonus2 }),
+                   condition: { Scorecard.activeSettings.bonus2 }),
             AwardConfig(code: "madeGame", name: "Contract Killer", shortName: "Contract Killer", title: "Make %d contracts in one game",
                    awardLevels: [11, 12, 13],
                    compare: .greaterOrEqual, source: .current, key: "handsMade",
@@ -644,7 +652,7 @@ public class Awards {
                    awardLevels: [1],
                    compare: .greaterOrEqual, source: .round(.last), key: "twos",
                    imageName: "award two last round",
-                   condition: { Scorecard.settings.bonus2 }),
+                   condition: { Scorecard.activeSettings.bonus2 }),
             AwardConfig(code: "winBehind", name: "Comeback King", shortName: "Comeback King", title: "Win the game after being %d points behind",
                    awardLevels: [30],
                    compare: .greaterOrEqual, custom: maxBehind, winLose: .win,
@@ -674,12 +682,12 @@ public class Awards {
                    awardLevels: [3, 4, 5],
                    compare: .greaterOrEqual, source: .current, key: "twosMade",
                    imageName: "award game twos %d",
-                   condition: { Scorecard.settings.bonus2 }),
+                   condition: { Scorecard.activeSettings.bonus2 }),
             AwardConfig(code: "twosHand", name: "It Takes Two To Tango", shortName: "Two to Tango", title: "Make %d twos in one hand",
                    awardLevels: [2, 3],
                    compare: .greaterOrEqual, source: .round(.maximum), key: "twos",
                    imageName: "award hand twos %d",
-                   condition: { Scorecard.settings.bonus2 }),
+                   condition: { Scorecard.activeSettings.bonus2 }),
             AwardConfig(code: "awards", name: "VIP", shortName: "VIP", title: "This award is for being awarded %d awards",
                    awardLevels: [25, 50], repeatable: false,
                    compare: .greaterOrEqual, source: .awards, key: "",

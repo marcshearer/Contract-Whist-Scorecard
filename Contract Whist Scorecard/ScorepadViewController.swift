@@ -866,7 +866,7 @@ class ScorepadViewController: ScorecardViewController,
             if column == 0 {
                 Palette.bannerStyle(bodyCell.scorepadCellLabel)
 
-                bodyCell.scorepadRankLabel.text = "\(round)"
+                bodyCell.scorepadRankLabel.text = "\(Scorecard.game.roundCards(round))"
                 let suit = Scorecard.game.roundSuit(round)
                 bodyCell.scorepadSuitLabel.attributedText = suit.toAttributedString(font: bodyCell.scorepadCellLabel.font, noTrumpScale: 0.8)
                 bodyCell.scorepadCellLabel.text = ""

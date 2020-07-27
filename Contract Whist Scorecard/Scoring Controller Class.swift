@@ -352,7 +352,7 @@ class ScoringController: ScorecardAppController, ScorecardAppPlayerDelegate, Gam
         } else {
             // Not complete - move to next round and go to scorepad
             let round = Scorecard.game!.selectedRound
-            if Scorecard.game.roundComplete(round) && round != Scorecard.game.rounds {
+            if Scorecard.game.roundComplete(round) && round != Scorecard.game.rounds && round >= Scorecard.game.maxEnteredRound {
                 // Reset state and prepare for next round
                 self.nextHand()
                 self.present(nextView: .scorepad)

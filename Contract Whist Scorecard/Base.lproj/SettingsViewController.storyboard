@@ -529,11 +529,14 @@
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
                                                                     <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fk6-em-7i0" customClass="SampleTheme" customModule="Whist_2" customModuleProvider="target">
-                                                                        <rect key="frame" x="16" y="5" width="96" height="97"/>
+                                                                        <rect key="frame" x="6.5" y="6.5" width="115" height="115"/>
                                                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                                        <constraints>
+                                                                            <constraint firstAttribute="width" secondItem="fk6-em-7i0" secondAttribute="height" multiplier="1:1" id="het-Dq-GhB"/>
+                                                                        </constraints>
                                                                     </view>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="91n-01-3jM">
-                                                                        <rect key="frame" x="0.0" y="107" width="128" height="16"/>
+                                                                        <rect key="frame" x="0.0" y="112" width="128" height="16"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="height" constant="16" id="Sje-3I-dke"/>
                                                                         </constraints>
@@ -544,13 +547,12 @@
                                                                 </subviews>
                                                                 <color key="backgroundColor" name="Clear"/>
                                                                 <constraints>
-                                                                    <constraint firstItem="91n-01-3jM" firstAttribute="top" secondItem="fk6-em-7i0" secondAttribute="bottom" constant="5" id="7bX-8Z-Ouw"/>
+                                                                    <constraint firstItem="fk6-em-7i0" firstAttribute="centerY" secondItem="SaJ-wg-7SZ" secondAttribute="centerY" id="Arj-oF-h0D"/>
                                                                     <constraint firstItem="91n-01-3jM" firstAttribute="leading" secondItem="SaJ-wg-7SZ" secondAttribute="leading" id="Buf-ik-KoG"/>
                                                                     <constraint firstItem="fk6-em-7i0" firstAttribute="centerX" secondItem="SaJ-wg-7SZ" secondAttribute="centerX" id="DBb-f3-fAN"/>
                                                                     <constraint firstAttribute="trailing" secondItem="91n-01-3jM" secondAttribute="trailing" id="NjT-UL-C97"/>
-                                                                    <constraint firstAttribute="bottom" secondItem="91n-01-3jM" secondAttribute="bottom" constant="5" id="WJ8-WP-wzB"/>
-                                                                    <constraint firstItem="fk6-em-7i0" firstAttribute="top" secondItem="SaJ-wg-7SZ" secondAttribute="top" constant="5" id="Yhc-Do-hgE"/>
-                                                                    <constraint firstItem="fk6-em-7i0" firstAttribute="width" secondItem="SaJ-wg-7SZ" secondAttribute="width" multiplier="0.75" id="eVM-WS-bYd"/>
+                                                                    <constraint firstAttribute="bottom" secondItem="91n-01-3jM" secondAttribute="bottom" id="WJ8-WP-wzB"/>
+                                                                    <constraint firstItem="fk6-em-7i0" firstAttribute="width" secondItem="SaJ-wg-7SZ" secondAttribute="width" multiplier="0.9" id="eVM-WS-bYd"/>
                                                                 </constraints>
                                                             </collectionViewCellContentView>
                                                             <color key="backgroundColor" name="Clear"/>
@@ -583,16 +585,16 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dHC-WH-GlX" userLabel="Light View">
-                                                    <rect key="frame" x="0.0" y="0.0" width="125" height="140"/>
+                                                    <rect key="frame" x="82.5" y="0.0" width="70" height="140"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Light" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eCV-88-t2V">
-                                                            <rect key="frame" x="0.0" y="0.0" width="125" height="70"/>
+                                                            <rect key="frame" x="0.0" y="93.5" width="70" height="46.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <button opaque="NO" tag="1" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LRF-Lj-uzb" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                                            <rect key="frame" x="39.5" y="70" width="46" height="30"/>
+                                                            <rect key="frame" x="12" y="63.5" width="46" height="30"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="LRF-Lj-uzb" secondAttribute="height" multiplier="23:15" id="P1x-2q-eDk"/>
                                                                 <constraint firstAttribute="height" constant="30" id="pOd-Oa-NfG"/>
@@ -603,24 +605,24 @@
                                                     <constraints>
                                                         <constraint firstItem="eCV-88-t2V" firstAttribute="bottom" secondItem="dHC-WH-GlX" secondAttribute="bottom" id="D7X-nR-9xu"/>
                                                         <constraint firstAttribute="trailing" secondItem="eCV-88-t2V" secondAttribute="trailing" id="FNJ-CE-hFu"/>
-                                                        <constraint firstItem="eCV-88-t2V" firstAttribute="height" secondItem="dHC-WH-GlX" secondAttribute="height" multiplier="1:3" id="IhJ-KE-fEu"/>
+                                                        <constraint firstItem="eCV-88-t2V" firstAttribute="height" secondItem="dHC-WH-GlX" secondAttribute="height" multiplier="1:4" id="IhJ-KE-fEu"/>
                                                         <constraint firstItem="LRF-Lj-uzb" firstAttribute="bottom" secondItem="eCV-88-t2V" secondAttribute="top" id="jBP-bi-yOC"/>
-                                                        <constraint firstAttribute="width" constant="60" id="lM5-wf-xeD"/>
+                                                        <constraint firstAttribute="width" constant="67" id="lM5-wf-xeD"/>
                                                         <constraint firstItem="LRF-Lj-uzb" firstAttribute="centerX" secondItem="dHC-WH-GlX" secondAttribute="centerX" id="qgg-87-uxy"/>
                                                         <constraint firstItem="eCV-88-t2V" firstAttribute="leading" secondItem="dHC-WH-GlX" secondAttribute="leading" id="xMl-b1-9Vg"/>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r5B-DW-xPX" userLabel="Dark View">
-                                                    <rect key="frame" x="125" y="0.0" width="125" height="140"/>
+                                                    <rect key="frame" x="152.5" y="0.0" width="70" height="140"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Dark" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tmr-1j-FSX">
-                                                            <rect key="frame" x="0.0" y="0.0" width="125" height="70"/>
+                                                            <rect key="frame" x="0.0" y="93.5" width="70" height="46.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <button opaque="NO" tag="2" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bdg-E2-c31" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                                            <rect key="frame" x="39.5" y="70" width="46" height="30"/>
+                                                            <rect key="frame" x="12" y="63.5" width="46" height="30"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="30" id="AOK-v8-Qh9"/>
                                                                 <constraint firstAttribute="width" secondItem="Bdg-E2-c31" secondAttribute="height" multiplier="23:15" id="zD5-Zw-wh5"/>
@@ -634,20 +636,20 @@
                                                         <constraint firstAttribute="trailing" secondItem="Tmr-1j-FSX" secondAttribute="trailing" id="ZE6-Ve-qdq"/>
                                                         <constraint firstItem="Tmr-1j-FSX" firstAttribute="bottom" secondItem="r5B-DW-xPX" secondAttribute="bottom" id="fOB-Pc-Y4P"/>
                                                         <constraint firstItem="Bdg-E2-c31" firstAttribute="centerX" secondItem="r5B-DW-xPX" secondAttribute="centerX" id="mHX-Lt-0kR"/>
-                                                        <constraint firstItem="Tmr-1j-FSX" firstAttribute="height" secondItem="r5B-DW-xPX" secondAttribute="height" multiplier="1:3" id="wdm-Tb-hsw"/>
+                                                        <constraint firstItem="Tmr-1j-FSX" firstAttribute="height" secondItem="r5B-DW-xPX" secondAttribute="height" multiplier="1:4" id="wdm-Tb-hsw"/>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MsY-Rl-vNz" userLabel="Device View">
-                                                    <rect key="frame" x="250" y="0.0" width="125" height="140"/>
+                                                    <rect key="frame" x="222.5" y="0.0" width="70" height="140"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="As Device" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XWz-bx-hRc">
-                                                            <rect key="frame" x="0.0" y="0.0" width="125" height="70"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Device" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XWz-bx-hRc">
+                                                            <rect key="frame" x="0.0" y="93.5" width="70" height="46.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <button opaque="NO" tag="3" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9gb-cl-TEY" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                                            <rect key="frame" x="39.5" y="70" width="46" height="30"/>
+                                                            <rect key="frame" x="12" y="63.5" width="46" height="30"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="9gb-cl-TEY" secondAttribute="height" multiplier="23:15" id="I5l-om-LB5"/>
                                                                 <constraint firstAttribute="height" constant="30" id="hX5-Uz-RtI"/>
@@ -659,7 +661,7 @@
                                                         <constraint firstAttribute="trailing" secondItem="XWz-bx-hRc" secondAttribute="trailing" id="3Wa-DP-Kwe"/>
                                                         <constraint firstItem="XWz-bx-hRc" firstAttribute="leading" secondItem="MsY-Rl-vNz" secondAttribute="leading" id="EFG-sY-uGe"/>
                                                         <constraint firstItem="XWz-bx-hRc" firstAttribute="bottom" secondItem="MsY-Rl-vNz" secondAttribute="bottom" id="Jf7-Yb-e2S"/>
-                                                        <constraint firstItem="XWz-bx-hRc" firstAttribute="height" secondItem="MsY-Rl-vNz" secondAttribute="height" multiplier="1:3" id="ty8-BU-wL8"/>
+                                                        <constraint firstItem="XWz-bx-hRc" firstAttribute="height" secondItem="MsY-Rl-vNz" secondAttribute="height" multiplier="1:4" id="ty8-BU-wL8"/>
                                                         <constraint firstItem="9gb-cl-TEY" firstAttribute="centerX" secondItem="MsY-Rl-vNz" secondAttribute="centerX" id="vim-2O-GQw"/>
                                                         <constraint firstItem="9gb-cl-TEY" firstAttribute="bottom" secondItem="XWz-bx-hRc" secondAttribute="top" id="ydy-Bv-wBP"/>
                                                     </constraints>

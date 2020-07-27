@@ -64,8 +64,8 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     private enum ThemeOptions : Int, CaseIterable {
-        case colorTheme = 0
-        case appearance = 1
+        case colorTheme = 1
+        case appearance = 0
     }
     
     private enum InGameOptions : Int, CaseIterable {
@@ -278,7 +278,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                     case .colorTheme:
                         height = 100.0
                     case .appearance:
-                        height = 60.0
+                        height = 50.0
                     }
                 }
                 
@@ -1022,7 +1022,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             
             let theme = Themes.themes[self.themeNames[indexPath.item]]!
             cell.nameLabel.text = theme.description
-            cell.nameLabel.textColor = theme.color(.gameBanner, .current)
+            cell.nameLabel.textColor = Palette.text  // theme.color(.banner, .current)
             cell.sample.setColors(theme: theme)
             cell.sample.isHidden = false
             
@@ -1725,10 +1725,13 @@ extension SettingsViewController {
             cell.infoValue2.textColor = Palette.text
             cell.infoValue3.textColor = Palette.text
         case "Slider":
-            cell.slider.minimumTrackTintColor = Palette.segmentedControls
+            cell.slider.minimumTrackTintColor = nil
+            cell.slider.thumbTintColor = nil
             cell.slider.thumbTintColor = Palette.segmentedControls
+            cell.slider.minimumTrackTintColor = Palette.segmentedControls
             cell.sliderLabel.textColor = Palette.text
             cell.sliderValue.textColor = Palette.inputControlText
+            cell.slider.tintColorDidChange()
         case "Segmented":
             cell.segmentedControl.draw(cell.segmentedControl.frame)
         case "Sub Heading":
@@ -1739,7 +1742,10 @@ extension SettingsViewController {
             cell.toggleSwitch.onTintColor = Palette.emphasis
         case "Appearance":
             cell.appearanceLabels.forEach{(label) in label.textColor = Palette.text}
-            cell.appearanceButtons.forEach{(button) in button.tintColor = Palette.segmentedControls}
+            cell.appearanceButtons.forEach{(button) in
+                button.tintColor = Palette.segmentedControls
+                button.tintColorDidChange()
+            }
         default:
             break
         }

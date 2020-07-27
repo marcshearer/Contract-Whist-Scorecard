@@ -24,6 +24,11 @@ class SampleTheme: UIView {
         self.loadSampleThemeView()
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.contentView.roundCorners(cornerRadius: 5.0)
+    }
+    
     private func loadSampleThemeView() {
         Bundle.main.loadNibNamed("SampleTheme", owner: self, options: nil)
         self.addSubview(contentView)

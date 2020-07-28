@@ -80,6 +80,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private var isNetworkAvailable: Bool?
     private var isLoggedIn: Bool?
     private var imageObserver: NSObjectProtocol?
+    private var whisper = Whisper()
     
     private var hostingOptions: Int = 0
     private var onlineItem: Int?
@@ -691,6 +692,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 var proximity = ""
                 var connecting = false
                 var purpose = CommsPurpose.playing
+                var reason: String?
                 if self.availablePeers.count == 0 && recoveryMode {
                     name = Scorecard.shared.findPlayerByPlayerUUID(Scorecard.recovery.connectionRemotePlayerUUID ?? "")?.name ?? "Unknown"
                 } else {
@@ -702,11 +704,17 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                     connecting = availableFound.connecting
                     proximity = availableFound.proximity?.rawValue ?? ""
                     purpose = availableFound.purpose
+                    reason = availableFound.reason
                 }
                 var serviceText: String
                 
                 switch state {
                 case .notConnected:
+                    if let reason = reason {
+                        Utility.executeAfter(delay: 1) {
+                            self.whisper.show(reason, hideAfter: 3)
+                        }
+                    }
                     if oldState != .notConnected {
                         serviceText = "\(name) has disconnected"
                     } else if self.recoveryMode {
@@ -1090,7 +1098,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     internal func addPeer(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity, purpose: CommsPurpose, at item: Int) {
         self.peerCollectionView.performBatchUpdates( {
             self.peerScrollCollectionView.performBatchUpdates( {
-                let host = AvailablePeer(deviceName: deviceName, name: name, oldState: oldState, state: state, connecting: connecting, proximity: proximity, purpose: purpose)
+                let host = AvailablePeer(deviceName: deviceName, name: name, oldState: oldState, state: state, connecting: connecting, proximity: proximity, purpose: purpose, reason: nil)
                 self.availablePeers.insert(host, at: item)
                 if self.availablePeers.count > 1 {
                     // Add to collection view
@@ -1137,9 +1145,9 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.peerScrollCollectionView.reloadData()
     }
     
-    internal func reflectPeer(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity, purpose: CommsPurpose) {
+    internal func reflectPeer(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity, purpose: CommsPurpose, reason: String?) {
         if let row = self.availablePeers.firstIndex(where: {$0.deviceName == deviceName && $0.proximity == proximity}) {
-            self.availablePeers[row].set(deviceName: deviceName, name: name, oldState: oldState, state: state, connecting: connecting, proximity: proximity, purpose: purpose)
+            self.availablePeers[row].set(deviceName: deviceName, name: name, oldState: oldState, state: state, connecting: connecting, proximity: proximity, purpose: purpose, reason: reason)
             self.peerCollectionView.reloadItems(at: [IndexPath(row: row, section: 0)])
         }
     }
@@ -1202,12 +1210,13 @@ fileprivate class AvailablePeer {
     fileprivate var connecting: Bool = false
     fileprivate var proximity: CommsConnectionProximity!
     fileprivate var purpose: CommsPurpose!
+    fileprivate var reason: String?
     
-    init(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity, purpose: CommsPurpose) {
-        self.set(deviceName: deviceName, name: name, oldState: oldState, state: state, connecting: connecting, proximity: proximity, purpose: purpose)
+    init(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity, purpose: CommsPurpose, reason: String?) {
+        self.set(deviceName: deviceName, name: name, oldState: oldState, state: state, connecting: connecting, proximity: proximity, purpose: purpose, reason: reason)
     }
         
-    public func set(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity, purpose: CommsPurpose) {
+    public func set(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity, purpose: CommsPurpose, reason: String?) {
         self.deviceName = deviceName
         self.name = name
         self.oldState = oldState
@@ -1215,6 +1224,7 @@ fileprivate class AvailablePeer {
         self.connecting = connecting
         self.proximity = proximity
         self.purpose = purpose
+        self.reason = reason
     }
 }
 

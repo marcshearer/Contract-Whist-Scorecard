@@ -445,22 +445,25 @@ enum InviteStatus {
             // A player returning from the same device - probably a reconnect - just update the details
             self.playerData[index].peer = peer
             self.updateFaceTimeAddress(info: info, playerData: self.playerData[index])
-        } else if self.connectionMode == .online {
+        } else {
             // Should already be in list
-            if let index = self.playerIndexFor(playerUUID: peer.playerUUID) {
-                if self.playerData[index].peer != nil && self.playerData[index].peer.deviceName != peer.deviceName && self.playerData[index].peer.state != .notConnected {
+            let playerIndex = self.playerIndexFor(playerUUID: peer.playerUUID)
+            if playerIndex != nil && self.playerData[playerIndex!].peer != nil && self.playerData[playerIndex!].peer.deviceName != peer.deviceName && self.playerData[playerIndex!].peer.state != .notConnected {
                     // Duplicate - add it temporarily - to disconnect in state change
                     addPlayer(name: name, playerUUID: peer.playerUUID!, playerMO: playerMO, peer: peer, inviteStatus: InviteStatus.none, disconnectReason: "\(name ?? "This player") has already joined from another device")
-                } else {
-                    self.playerData[index].peer = peer
-                    self.updateFaceTimeAddress(info: info, playerData: self.playerData[index])
-                }
             } else {
-                // Not found - shouldn't happen - add it temporarily - to disconnect in state change
-                addPlayer(name: name, playerUUID: peer.playerUUID!, playerMO: playerMO, peer: peer, inviteStatus: InviteStatus.none, disconnectReason: "\(name ?? "This player") has not been invited to a game on this device")
+                if self.connectionMode == .online {
+                    if playerIndex != nil {
+                        self.playerData[playerIndex!].peer = peer
+                        self.updateFaceTimeAddress(info: info, playerData: self.playerData[playerIndex!])
+                    } else {
+                        // Not found - shouldn't happen - add it temporarily - to disconnect in state change
+                        addPlayer(name: name, playerUUID: peer.playerUUID!, playerMO: playerMO, peer: peer, inviteStatus: InviteStatus.none, disconnectReason: "\(name ?? "This player") has not been invited to a game on this device")
+                    }
+                } else {
+                    addPlayer(name: peer.playerName!, playerUUID: peer.playerUUID!, playerMO: playerMO, peer: peer, robot: self.connectionMode == .loopback)
+                }
             }
-        } else {
-            addPlayer(name: peer.playerName!, playerUUID: peer.playerUUID!, playerMO: playerMO, peer: peer, robot: self.connectionMode == .loopback)
         }
         return true
     }
@@ -490,7 +493,13 @@ enum InviteStatus {
         }
         
         // Check not already there
-        if let playerData = self.playerDataFor(playerUUID: playerUUID) {
+        var playerData: PlayerData?
+        if let peer = peer {
+            playerData = self.playerDataFor(peer: peer)
+        } else {
+            playerData = self.playerDataFor(playerUUID: playerUUID)
+        }
+        if let playerData = playerData {
             // Update it
             playerData.name = name
             playerData.playerMO = playerMO
@@ -505,7 +514,7 @@ enum InviteStatus {
             if playerMO == nil {
                 playerMO = self.createLocalPlayer(name: name, playerUUID: playerUUID, peer: peer)
             }
-            playerData.insert(PlayerData(name: name, playerUUID: playerUUID, playerMO: playerMO, peer: peer, unique: self.unique, disconnectReason: disconnectReason, inviteStatus: inviteStatus, host: host, robot: robot), at: self.visiblePlayers)
+            self.playerData.insert(PlayerData(name: name, playerUUID: playerUUID, playerMO: playerMO, peer: peer, unique: self.unique, disconnectReason: disconnectReason, inviteStatus: inviteStatus, host: host, robot: robot), at: self.visiblePlayers)
             self.refreshPlayers()
         }
     }
@@ -515,7 +524,7 @@ enum InviteStatus {
     internal func stateChange(for peer: CommsPeer, reason: String?) {
         Utility.mainThread {
             var playerNumber: Int!
-            if let row = self.playerIndexFor(playerUUID: peer.playerUUID) {
+            if let row = self.playerIndexFor(peer: peer) {
                 let playerData = self.playerData[row]
                 let currentState = playerData.peer?.state ?? .notConnected
                 playerNumber = row + 1
@@ -1180,7 +1189,7 @@ enum InviteStatus {
     
     public var isConnected: Bool {
         get {
-            return (self.host || (self.peer?.state == .connected && !self.refreshRequired))
+            return (self.host || (self.peer?.state == .connected && !self.refreshRequired && self.disconnectReason == nil))
         }
     }
     

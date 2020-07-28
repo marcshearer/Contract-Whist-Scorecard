@@ -14,7 +14,7 @@ protocol ClientControllerDelegate : ScorecardViewController {
     
     func removePeer(at row: Int)
     
-    func reflectPeer(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity, purpose: CommsPurpose)
+    func reflectPeer(deviceName: String, name: String, oldState: CommsConnectionState, state: CommsConnectionState, connecting: Bool, proximity: CommsConnectionProximity, purpose: CommsPurpose, reason: String?)
     
     func stateChange(to state: ClientAppState)
 }
@@ -515,7 +515,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     } else {
                         // Remote has disconnected intentionally - go back to home screen and reset recovery
                         self.controllerStateChange(to: .notConnected, startTimers: false)
-                        Utility.debugMessage("controller \(self.uuid)", "Intentional disconnect - exit")
+                        Utility.debugMessage("controller \(self.uuid)", "Intentional disconnect (\(reason ?? "")) - exit")
                         self.present(nextView: .exit, willDismiss: true)
                     }
                     
@@ -548,7 +548,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                 }
                 
                 // Reflect state in data structure
-                self.reflectState(peer: peer, refreshRequired: refreshRequired)
+                self.reflectState(peer: peer, refreshRequired: refreshRequired, reason: peer.state == .notConnected ? reason : nil)
             }
         }
     }
@@ -613,7 +613,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         self.setCommsDelegate = true
     }
     
-    private func reflectState(peer: CommsPeer, overrideOldState: CommsConnectionState? = nil, refreshRequired: Bool = false) {
+    private func reflectState(peer: CommsPeer, overrideOldState: CommsConnectionState? = nil, refreshRequired: Bool = false, reason: String? = nil) {
         if let availableFound = availableFor(peer: peer) {
             if peer.state != .connecting {
                 availableFound.connecting = false
@@ -623,7 +623,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             if refreshRequired {
                 availableFound.stateRequired = true
             }
-            self.delegate?.reflectPeer(deviceName: peer.deviceName, name: peer.playerName!, oldState: availableFound.oldState, state: peer.state, connecting: availableFound.connecting, proximity: peer.proximity, purpose: peer.purpose)
+            self.delegate?.reflectPeer(deviceName: peer.deviceName, name: peer.playerName!, oldState: availableFound.oldState, state: peer.state, connecting: availableFound.connecting, proximity: peer.proximity, purpose: peer.purpose, reason: reason)
             self.updateStatus(peer: peer)
         }
     }

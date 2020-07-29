@@ -628,8 +628,10 @@ enum InviteStatus {
             message = "Waiting for other players\nto reconnect..."
         } else if self.connectionMode == .online {
             message = "Waiting for invited\nplayers to connect..."
-        } else {
+        } else if self.connectionMode == .nearby {
             message = "Waiting for other\nplayers to connect..."
+        } else {
+            message = "Waiting for\ngame to start..."
         }
         remoteMessage = remoteMessage ?? message
         if remoteMessage != lastMessage {

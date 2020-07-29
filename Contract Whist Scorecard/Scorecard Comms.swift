@@ -734,30 +734,34 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 }
                 first = false
                 result += descriptor
-                if descriptor.right(5).lowercased() == "cards" {
+                if descriptor.right(4).lowercased() == "card" {
                     // Special case - card
                     if let cardNumber = value as? Int {
                         let card = Card(fromNumber: cardNumber)
                         result += "=\(card.toString())"
+                        continue
                     }
-                } else if descriptor.right(5).lowercased() == "cards" {
+                }
+                if descriptor.right(5).lowercased() == "cards" && descriptor.lowercased != "numbercards" {
                     // Special case - cards array
                     if let handCards = value as? [Int] {
                         let hand = Hand(fromNumbers: handCards, sorted: true)
                         result += "=[\(hand.toString())]"
+                        continue
                     }
-                    
-                } else if descriptor == "deal" {
+                }
+                if descriptor == "deal" {
                     if let data = value as? [String: Any] {
                         if let round = data["round"] as? Int {
                             if let dealCards = data["deal"] as? [[Int]] {
                                 let deal = Deal(fromNumbers: dealCards)
                                 result += "(\(round))=" + deal.toString()
+                                continue
                             }
                         }
                     }
-                    
-                } else if let array = value as? [Any] {
+                }
+                if let array = value as? [Any] {
                     // Other array
                     result += "=["
                     for (index, element) in array.enumerated() {

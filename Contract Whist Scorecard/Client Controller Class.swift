@@ -655,7 +655,11 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             case .reconnecting:
                 self.lastStatus = "Reconnecting to \(personDevice)..."
             case .connected:
-                self.lastStatus = "Waiting for other\n players to connect..."
+                if Scorecard.game.hasJoined {
+                    self.lastStatus = "Waiting for other\n players to connect..."
+                } else {
+                    self.lastStatus = "Waiting for the\ngame to start..."
+                }
             default:
                 break
             }

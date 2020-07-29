@@ -24,8 +24,6 @@ Stability fixes
 
 Bugs fix now
 ------------
-Resume game doesn't seem to work during bidding phase - dealer gets out of line
-Don't let you join your own game
 
 Short-term
 ----------

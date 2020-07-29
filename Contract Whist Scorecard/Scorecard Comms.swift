@@ -742,7 +742,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                         continue
                     }
                 }
-                if descriptor.right(5).lowercased() == "cards" && descriptor.lowercased != "numbercards" {
+                if descriptor.right(5).lowercased() == "cards" && descriptor.lowercased() != "numbercards" {
                     // Special case - cards array
                     if let handCards = value as? [Int] {
                         let hand = Hand(fromNumbers: handCards, sorted: true)

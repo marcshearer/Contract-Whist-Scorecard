@@ -156,7 +156,7 @@ extension HandViewController {
     
     func autoBid() {
         if Scorecard.shared.autoPlayHands > 0 && (Scorecard.shared.autoPlayHands > 1 || round <= Scorecard.shared.autoPlayGames) {
-            let handsMade = Scorecard.game.scores.handsMade(round: self.round)
+            let handsMade = Scorecard.game.scores.bidsMade(round: self.round)
             if Scorecard.game.roundPlayerNumber(enteredPlayerNumber: self.enteredPlayerNumber, round: self.round) == handsMade + 1 {
                 let cards = Scorecard.game.roundCards(round)
                 var range = ((Double(cards) / Double(Scorecard.game.currentPlayers)) * 2) + 1
@@ -268,7 +268,7 @@ extension ClientController {
                         let enteredPlayerNumber = handViewController.enteredPlayerNumber,
                         let bidMode = handViewController.bidMode {
                         if bidMode {
-                            let handsMade = Scorecard.game.scores.handsMade(round: Scorecard.game.handState.round)
+                            let handsMade = Scorecard.game.scores.bidsMade(round: Scorecard.game.handState.round)
                             if Scorecard.game.roundPlayerNumber(enteredPlayerNumber: enteredPlayerNumber, round: Scorecard.game.handState.round) == handsMade + 1 {
                                 // Me to bid
                                 handViewController.autoBid()

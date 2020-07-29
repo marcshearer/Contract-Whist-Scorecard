@@ -160,7 +160,7 @@ class Scores {
         self.roundScore = [:]
     }
     
-    public func handsMade(round: Int) -> Int {
+    public func bidsMade(round: Int) -> Int {
         var bids = 0
         if let roundScore = self.roundScore[round] {
             bids = roundScore.playerScore.filter{$0.value.bid != nil}.count

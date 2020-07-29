@@ -99,6 +99,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         case .hand:
             if let handViewController = self.activeViewController as? HandViewController {
                 handViewController.refreshAll()
+                handViewController.stateController()
             }
             
         default:
@@ -441,7 +442,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     _ = Scorecard.shared.processCardPlayed(data: data! as Any as! [String : Any], from: self)
                     
                 case "handState":
-                    // Updated state to re-sync after a disconnect - should already have a scorepad view controller so just fill in state
+                    // Updated state to re-sync after a disconnect
                     if self.purpose == .playing {
                         var lastCards: [Card]!
                         var lastToLead: Int!

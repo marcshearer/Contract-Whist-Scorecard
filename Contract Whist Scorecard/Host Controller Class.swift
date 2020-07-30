@@ -1001,7 +1001,7 @@ enum InviteStatus {
     private func startNearbyConnection() {
         // Create comms service and take hosting delegate
         self.nearbyHostService = CommsHandler.server(proximity: .nearby, mode: .broadcast, serviceID: Scorecard.shared.serviceID(), deviceName: Scorecard.deviceName, purpose: .playing)
-        Scorecard.shared.setCommsDelegate(nearbyHostService, purpose: .playing)
+        Scorecard.shared.setCommsDelegate(nearbyHostService, controller: self, purpose: .playing)
         self.hostService = nearbyHostService
         self.takeDelegates(self)
         if self.playerData.count > 0 {
@@ -1016,7 +1016,7 @@ enum InviteStatus {
     private func startOnlineConnection() {
         // Create comms service and take hosting delegate
         self.onlineHostService = CommsHandler.server(proximity: .online, mode: .invite, serviceID: nil, deviceName: Scorecard.deviceName, purpose: .playing)
-        Scorecard.shared.setCommsDelegate(onlineHostService, purpose: .playing)
+        Scorecard.shared.setCommsDelegate(onlineHostService, controller: self, purpose: .playing)
         self.hostService = onlineHostService
         self.takeDelegates(self)
     }
@@ -1024,7 +1024,7 @@ enum InviteStatus {
     private func startLoopbackConnection() {
         // Create loopback service, take delegate and then start loopback service
         self.loopbackHostService = CommsHandler.server(proximity: .loopback, mode: .loopback, serviceID: nil, deviceName: Scorecard.deviceName, purpose: .playing)
-        Scorecard.shared.setCommsDelegate(self.loopbackHostService, purpose: .playing)
+        Scorecard.shared.setCommsDelegate(self.loopbackHostService, controller: self, purpose: .playing)
         self.hostService = self.loopbackHostService
         self.takeDelegates(self)
         self.loopbackHostService.start(playerUUID: playerData[0].playerUUID, name: playerData[0].name)

@@ -613,7 +613,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             break
         }
         self.purpose = (self.clientService == nil ? nil : purpose)
-        Scorecard.shared.setCommsDelegate(self.clientService, purpose: purpose)
+        Scorecard.shared.setCommsDelegate(self.clientService, controller: self, purpose: purpose)
         self.setCommsDelegate = true
     }
     

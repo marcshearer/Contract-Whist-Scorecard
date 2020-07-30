@@ -120,6 +120,7 @@ class Scorecard {
     public weak var commsDelegate: CommsServiceDelegate? { get { return _commsDelegate } }
     public var commsPurpose: CommsPurpose? { get { return _commsPurpose } }
     public var commsPlayerDelegate: ScorecardAppPlayerDelegate? { get { return _commsPlayerDelegate }}
+    internal var appController: ScorecardAppController?
     internal var lastRefresh: Date?
     internal var lastPeerRefresh: [String : Date] = [:]
 

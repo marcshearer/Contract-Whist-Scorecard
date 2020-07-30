@@ -48,10 +48,11 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         }
     }
     
-    public func setCommsDelegate(_ delegate: CommsServiceDelegate?, purpose: CommsPurpose? = nil, playerDelegate: ScorecardAppPlayerDelegate? = nil) {
+    public func setCommsDelegate(_ delegate: CommsServiceDelegate?, controller: ScorecardAppController? = nil, purpose: CommsPurpose? = nil, playerDelegate: ScorecardAppPlayerDelegate? = nil) {
         self._commsPurpose = purpose
         self._commsDelegate = delegate
         self._commsPlayerDelegate = playerDelegate
+        self.appController = controller
         
         // Subscribe to scores update service to forward to remotes (Note this will only do anything on servers
         if delegate == nil {
@@ -149,22 +150,20 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         if motion == .motionShake {
             
             // Play sound
-            Utility.getActiveViewController()?.alertSound()
+            self.appController?.fromViewController()?.alertSound()
             self.resetConnection()
+            if Scorecard.game.hasJoined {
+                self.appController?.showWhisper("Resetting connection...")
+            }
             
         }
     }
     
     public func resetConnection() {
+        // Clear the current view presenting in case it has frozen
         self.viewPresenting = .none
-        if Scorecard.game.isHosting || Scorecard.game.isSharing {
-            // Refresh state to all devices
-            self.commsDelegate?.reset()
-            
-        } else {
-            // Disconnect (and reconnect)
-            self.commsDelegate?.reset()
-        }
+        // Disconnect (and reconnect)
+        self.commsDelegate?.reset()
     }
     
     public func dealNextHand() {

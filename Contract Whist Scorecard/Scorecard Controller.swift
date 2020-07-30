@@ -520,7 +520,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     }
     
     internal func hideWhisper(_ message: String? = nil, for context: String = "") {
-        self.whisper[context]?.hide(message)
+        self.whisper[context]?.hide(message, afterDelay: 0.5)
     }
     
     internal func fromViewController(fullScreen: Bool = false) -> ScorecardViewController? {

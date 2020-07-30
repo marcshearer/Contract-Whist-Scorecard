@@ -54,7 +54,7 @@ class Whisper {
                     self.label.text = message
                     self.containerView.frame = self.frame
                     if hideAfter != nil {
-                        self.startTimer(hideAfter) { self.hide() }
+                        self.hide(afterDelay: hideAfter)
                     }
                 } else {
                     self.hide()
@@ -87,7 +87,7 @@ class Whisper {
                     self.containerView.frame = self.frame
                     if hideAfter != nil {
                         // Hide if requested
-                        self.startTimer(hideAfter) { self.hide() }
+                        self.hide(afterDelay: hideAfter)
                     }
                 })
             }
@@ -99,21 +99,25 @@ class Whisper {
         self.hiddenFrame = CGRect(x: self.frame.minX, y: self.parentView.frame.maxY + self.height, width: self.frame.width, height: self.frame.height)
     }
     
-    public func hide(_ message: String! = nil) {
+    public func hide(_ message: String! = nil, afterDelay: TimeInterval? = nil) {
         self.stopTimer()
         Utility.debugMessage("whisper", "Hide  - \(self.isShown ? (self.label.text ?? "") : "")")
         
         if self.isShown {
-            if message != nil {
-                self.label.text = message
+            if afterDelay != nil {
+                self.startTimer(afterDelay!) { self.hide(message) }
+            } else {
+                if message != nil {
+                    self.label.text = message
+                }
+                Utility.animate(duration: 0.5, completion: {
+                    self.isShown = false
+                    self.containerView.isHidden = true
+                    
+                }, animations: {
+                    self.containerView.frame = self.hiddenFrame
+                })
             }
-            Utility.animate(duration: 0.5, completion: {
-                self.isShown = false
-                self.containerView.isHidden = true
-
-            }, animations: {
-                self.containerView.frame = self.hiddenFrame
-            })
         }
     }
     

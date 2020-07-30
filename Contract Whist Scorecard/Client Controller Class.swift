@@ -404,7 +404,11 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     
                 case "scores", "allscores":
                     
-                    let maxRound = Scorecard.shared.processScores(descriptor: descriptor, data: data!)
+                    let (maxRound, processedOwnBid) = Scorecard.shared.processScores(descriptor: descriptor, data: data!)
+                    if processedOwnBid {
+                        // Processed own bid so need to refresh local view / state
+                        self.present(nextView: .hand, willDismiss: true)
+                    }
                     if self.purpose == .sharing {
                         stopProcessing = checkSharedScores(maxRound: maxRound)
                     }

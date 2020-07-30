@@ -609,9 +609,10 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     // MARK: - Form Presentation / Handling Routines =================================================== -
     
     public func refreshAll() {
-        handTableView.reloadData()
-        bidCollectionView.reloadData()
-        playedCardCollectionView.reloadData()
+        self.updateMirroredHand()
+        self.handTableView.reloadData()
+        self.bidCollectionView.reloadData()
+        self.playedCardCollectionView.reloadData()
     }
     
     func setButtonFormat() {

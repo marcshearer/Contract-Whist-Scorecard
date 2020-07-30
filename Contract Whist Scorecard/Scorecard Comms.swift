@@ -480,8 +480,10 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         }
     }
     
-    public func processScores(descriptor: String, data: [String : Any?]) -> Int {
+    @discardableResult public func processScores(descriptor: String, data: [String : Any?]) -> (Int, Bool) {
         var maxRound = 0
+        var processedOwnBid = false
+        
         if descriptor == "allscores" {
             Scorecard.game.resetPlayers()
         }
@@ -493,8 +495,10 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                 maxRound = max(maxRound, roundNumber)
                 
                 if roundData["bid"] != nil {
-                    // Ignore if player is on this device - only doing this for bids which are entered locally - scores come down from host
-                    if descriptor == "allscores" || (Scorecard.game.handState == nil || playerNumber != Scorecard.game.handState.enteredPlayerNumber) {
+                    // Update for all scores (and twos) which are always sent from the host
+                    // Ignore bids if player is on this device and we already have this (which is probably a bounce from when a reset arrived while you were bidding, but reset was not processed until after you had sent the bid (which was cleared out locally by the reset))
+                    let alreadyHaveBid = (descriptor != "allscores" && Scorecard.game.scores.get(round: roundNumber, playerNumber: playerNumber).bid != nil)
+                    if descriptor == "allscores" || (Scorecard.game.handState == nil || playerNumber != Scorecard.game.handState.enteredPlayerNumber) || !alreadyHaveBid {
                         var bid: Int!
                         if roundData["bid"] is NSNull {
                             bid = nil
@@ -505,6 +509,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
                         if bid != nil && descriptor == "scores" {
                             Scorecard.shared.bidSubscription.send((roundNumber, playerNumber, bid))
                         }
+                        processedOwnBid = (processedOwnBid || (playerNumber == Scorecard.game.handState?.enteredPlayerNumber && descriptor != "allscores"))
                     }
                 }
                 if roundData["made"] != nil {
@@ -528,7 +533,7 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
             }
             
         }
-        return maxRound
+        return (maxRound, processedOwnBid)
     }
     
     public func processCardPlayed(data: [String : Any], from appController: ScorecardAppController) {
@@ -536,9 +541,12 @@ extension Scorecard : CommsStateDelegate, CommsDataDelegate {
         let trick = data["trick"] as! Int
         let playerNumber = data["player"] as! Int
         let card = Card(fromNumber: data["card"] as! Int)
+        let notPlayed = (Scorecard.game.handState.hand.find(card: card) != nil)
         
-        if Scorecard.game.handState == nil || playerNumber != Scorecard.game.handState.enteredPlayerNumber {
-            // Ignore if from self since should know about it already
+        if Scorecard.game.handState == nil || playerNumber != Scorecard.game.handState.enteredPlayerNumber || notPlayed {
+            // Ignore if from self since should know about it already (unless card is still in hand in which
+            // case this is probably a bounce from when a reset arrived while you were playing a card, but
+            // was not processed until after you had sent the card as played)
             var handViewController: HandViewController?
             if appController.activeView == .hand {
                 handViewController = appController.activeViewController as? HandViewController

@@ -163,7 +163,6 @@ class ConfirmPlayedViewController : ScorecardViewController, UIPopoverPresentati
         ConfirmPlayedViewController.sourceView = sourceView
         ConfirmPlayedViewController.offsets = offsets
         ConfirmPlayedViewController.preferredHeight = max(minHeight, content.frame.height + 100.0)
-        
             
         viewController.modalPresentationStyle = UIModalPresentationStyle.popover
         viewController.popoverPresentationController?.delegate = viewController

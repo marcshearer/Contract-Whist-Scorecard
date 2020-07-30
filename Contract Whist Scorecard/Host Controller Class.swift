@@ -415,7 +415,7 @@ enum InviteStatus {
                         self.sendPlayers()
                         self.checkCanStartGame()
                         self.lastMessage = "" // Clear last message to force resend
-                        playerData.whisper.hide("Connection to \(peer.playerName!) restored")
+                        self.hideWhisper("Connection to \(peer.playerName!) restored", for: playerData.playerUUID)
                     }
                     Scorecard.shared.refreshState(from: self, to: peer)
                     self.refreshPlayers()
@@ -579,7 +579,7 @@ enum InviteStatus {
                 // Update whisper
                 if currentState != peer.state {
                     if (peer.state == .notConnected && peer.autoReconnect) || peer.state == .recovering {
-                        self.playerData[playerNumber - 1].whisper.show("Connection to \(peer.playerName!) lost. Recovering...")
+                        self.showWhisper("Connection to \(peer.playerName!) lost. Recovering...", for: peer.playerUUID!)
                     }
                 }
             }
@@ -1184,7 +1184,6 @@ enum InviteStatus {
     public var inviteStatus: InviteStatus!
     public var faceTimeAddress: String!
     public var oldState: CommsConnectionState!
-    public var whisper = Whisper()
     public var lastRefreshSent: Date?
     public var host: Bool = false
     public var refreshRequired = true

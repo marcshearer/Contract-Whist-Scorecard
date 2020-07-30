@@ -28,7 +28,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     private var mirroredHand: Hand!                 // Mirror of the hand in state - updated to reflect in collection
     private var mirroredTrickCards: [Card]!         // Mirror of the played cards in state - updated to reflect in collection
     private var bidSubscription: AnyCancellable?
-    private let whisper = Whisper()
+    private var whisper = Whisper()
     
     // Component sizes
     private var viewWidth: CGFloat!
@@ -135,7 +135,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Setup default colors (previously done in StoryBoard)
+        // Setup default colors (previously done in StoryBoard) and whisper
         self.defaultViewColors()
 
         // Setup initial state and local references for global state
@@ -1016,7 +1016,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     
     internal func alertUser(reminder: Bool) {
         if Utility.isSimulator && Scorecard.shared.autoPlayHands == 0 {
-            self.whisper.show("Buzz", hideAfter: 2.0)
+            self.whisper.show("Buzz", from: self.view, hideAfter: 2.0)
         }
         if reminder {
             self.instructionView.alertFlash(duration: 0.3, repeatCount: 3, backgroundColor: Palette.tableTop)

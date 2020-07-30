@@ -80,7 +80,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     private var isNetworkAvailable: Bool?
     private var isLoggedIn: Bool?
     private var imageObserver: NSObjectProtocol?
-    private var whisper = Whisper()
+    private var whisper: Whisper!
     
     private var hostingOptions: Int = 0
     private var onlineItem: Int?
@@ -178,9 +178,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         
         self.hideNavigationBar()
 
-        // Setup colours (previously in storyboard)
+        // Setup colours (previously in storyboard) and setup whisper
         self.DefaultScreenColors()
-        
+        self.whisper = Whisper()
+
         // Check network
         self.checkNetwork()
         
@@ -220,7 +221,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         
         // Setup action menu
         self.setupMenuActions()
-        
+                
         // Set flow layout delegate
         if let flowLayout = self.flowLayout {
             flowLayout.delegate = self
@@ -711,9 +712,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
                 switch state {
                 case .notConnected:
                     if let reason = reason {
-                        Utility.executeAfter(delay: 1) {
-                            self.whisper.show(reason, hideAfter: 3)
-                        }
+                        self.whisper.show(reason, from: self.view, hideAfter: 3)
                     }
                     if oldState != .notConnected {
                         serviceText = "\(name) has disconnected"

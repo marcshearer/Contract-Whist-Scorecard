@@ -724,9 +724,6 @@
 			children = (
 				B22789221FB882F7009BABCA /* ClientViewController.storyboard */,
 				B2D2D2DB1ED9975A00CA7B3A /* ClientViewController.swift */,
-				B2CB5C5124669CDA009B44C5 /* Client Controller Class.swift */,
-				B2BFB5BE247AC0D80044F8B6 /* Scoring Controller Class.swift */,
-				B2F70E511EE8BC470092C19F /* Host Controller Class.swift */,
 			);
 			name = Client;
 			sourceTree = "<group>";
@@ -1149,6 +1146,9 @@
 			isa = PBXGroup;
 			children = (
 				B2DA893D1F3CC89C008EE96C /* Comms Handler.swift */,
+				B2CB5C5124669CDA009B44C5 /* Client Controller Class.swift */,
+				B2BFB5BE247AC0D80044F8B6 /* Scoring Controller Class.swift */,
+				B2F70E511EE8BC470092C19F /* Host Controller Class.swift */,
 				B2F7281A1F6D74F9006F0941 /* Invite.swift */,
 				B2767C1D2110061B0029155E /* Loopback Class.swift */,
 				B2C051031EDF194C009DE37F /* Multipeer Class.swift */,
@@ -1359,6 +1359,8 @@
 				CC4CC0F61DEADC32007FB24F /* Products */,
 				CC86557B1E021518000AF391 /* Standard Components */,
 				CC86557A1E021503000AF391 /* View Controllers */,
+				B288FABB1FB802FE00633FD7 /* Contract Whist Classes */,
+				B288FABC1FB8037300633FD7 /* Comms Classes */,
 				CC8655831E0216B6000AF391 /* Data & Utility Classes */,
 			);
 			path = "Contract Whist Scorecard";
@@ -1393,8 +1395,6 @@
 			isa = PBXGroup;
 			children = (
 				B28DFC2C1F79618700E991E4 /* Config Class.swift */,
-				B288FABB1FB802FE00633FD7 /* Contract Whist Classes */,
-				B288FABC1FB8037300633FD7 /* Comms Classes */,
 				B288FAB91FB8027E00633FD7 /* Utility Classes */,
 				B288FABE1FB8041200633FD7 /* Test Classes */,
 				B288FAB81FB8027000633FD7 /* Core Class Extensions */,

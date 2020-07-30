@@ -96,7 +96,9 @@ class Themes {
                             .otherButton                 : (#colorLiteral(red: 0.7018982768, green: 0.7020009756, blue: 0.7018757463, alpha: 1), nil) ,
                             .otherButtonText             : (#colorLiteral(red: 0.994867146, green: 1, blue: 0.9999337792, alpha: 1), nil) ,
                             .confirmButton               : (#colorLiteral(red: 0.3292011023, green: 0.4971863031, blue: 0.2595342696, alpha: 1), nil) ,
-                            .confirmButtonText           : (#colorLiteral(red: 0.994867146, green: 1, blue: 0.9999337792, alpha: 1), nil) ]),
+                            .confirmButtonText           : (#colorLiteral(red: 0.994867146, green: 1, blue: 0.9999337792, alpha: 1), nil) ,
+                            .whisper                     : (#colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1), nil) ,
+                            .whisperText                 : (#colorLiteral(red: 0.1999788582, green: 0.2000134587, blue: 0.1999712586, alpha: 1), nil) ]),
 
             
         "Alternate"         : Theme(description: "Alternate", color: [
@@ -385,6 +387,8 @@ enum ThemeColor: String {
     case confirmButtonText = "Confirm Button Text"
     case otherButton = "Other Button"
     case otherButtonText = "Other Button Text"
+    case whisper = "Whisper"
+    case whisperText = "Whisper Text"
 }
 
 enum ThemeAppearance: Int {

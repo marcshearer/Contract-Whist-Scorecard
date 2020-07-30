@@ -25,7 +25,6 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     public weak var delegate: ClientControllerDelegate?
 
     private var available: [Available] = []
-    private let whisper = Whisper()
     private let sync = Sync()
     private var controllerState: ClientAppState! = .notConnected
    
@@ -65,7 +64,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
         self.matchGameUUID = matchGameUUID
 
         super.init(from: parentViewController, type: .client)
-
+        
         self.createConnections()
         
         super.start()
@@ -516,7 +515,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     if peer.autoReconnect {
                         self.controllerStateChange(to: .reconnecting)
                         Utility.debugMessage("controller \(self.uuid)", "Trying to reconnect")
-                        self.whisper.show("Connection lost. Recovering...")
+                        self.showWhisper("Connection lost. Recovering...")
                     } else {
                         // Remote has disconnected intentionally - go back to home screen and reset recovery
                         self.controllerStateChange(to: .notConnected, startTimers: false)
@@ -531,7 +530,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     // Connected - send a state refresh request and flag as waiting for it
                     Scorecard.shared.sendRefreshRequest()
                     refreshRequired = true
-                    self.whisper.hide("Connection restored")
+                    self.hideWhisper("Connection restored")
                     
                 case .connecting:
                     // Connecting
@@ -541,7 +540,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
                     // Recovering or re-connecting
                     self.controllerStateChange(to: .reconnecting)
                     
-                    self.whisper.show("Connection lost. Trying to reconnect...")
+                    self.showWhisper("Connection lost. Trying to reconnect...")
                 }
                 
                 if peer.state != .notConnected {
@@ -594,7 +593,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
             availableFound.connecting = success
         }
         if !success {
-            self.whisper.show("Error connecting to device", hideAfter: 3.0)
+            self.showWhisper("Error connecting to device", hideAfter: 3.0)
         }
         
         // Do a background sync
@@ -757,7 +756,7 @@ class ClientController: ScorecardAppController, CommsBrowserDelegate, CommsState
     }
      
     internal func error(_ message: String) {
-        self.whisper.show(message, hideAfter: 10.0)
+        self.showWhisper(message, hideAfter: 10.0)
      }
     
     public func connect(row: Int, faceTimeAddress: String) {

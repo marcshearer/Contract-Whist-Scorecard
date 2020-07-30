@@ -123,6 +123,10 @@ class Palette {
                         { (traitCollection) in return Themes.color(.total, traitCollection)})
     static var totalText = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.totalText, traitCollection)})
+    static var whisper = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.whisper, traitCollection)})
+    static var whisperText = UIColor(dynamicProvider:
+                        { (traitCollection) in return Themes.color(.whisperText, traitCollection)})
     static var thumbnailDisc = UIColor(dynamicProvider:
                         { (traitCollection) in return Themes.color(.thumbnailDisc, traitCollection)})
     static var thumbnailDiscText = UIColor(dynamicProvider:

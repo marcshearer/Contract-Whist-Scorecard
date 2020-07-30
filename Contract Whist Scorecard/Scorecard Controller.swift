@@ -126,6 +126,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     internal var uuid: String
     fileprivate var noHideDismissImageView: Bool = false
     fileprivate var invokedViews: [(view: ScorecardView, viewController: ScorecardViewController?, uuid: String)] = []
+    private var whisper: [String : Whisper] = [:]
     
     // Properties for shared methods (client and server)
     internal weak var scorepadViewController: ScorepadViewController!
@@ -243,7 +244,6 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         self.noHideDismissImageView = noHideDismissImageView
     }
 
-    
     private func nextView(view nextView: ScorecardView, context: [String:Any?]? = nil) {
         
         // Wait for any popup or lock to disappear
@@ -451,7 +451,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
         return overrideViewController
     }
     
-    // MARK: - Presenting view conplete ================================================================== -
+    // MARK: - Presenting view complete ================================================================== -
     
     fileprivate func setViewPresentingComplete() {
         // Set a notification for handler complete
@@ -510,7 +510,20 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     
     // MARK: - Utility Routines ======================================================================== -
     
-    internal func fromViewController() -> ScorecardViewController? {
+    internal func showWhisper(_ message: String, hideAfter: TimeInterval? = nil, for context: String = "") {
+        if self.whisper[context] == nil {
+            self.whisper[context] = Whisper()
+        }
+        if let from = self.fromViewController(fullScreen: true) {
+            self.whisper[context]!.show(message, from: from.view, hideAfter: hideAfter)
+        }
+    }
+    
+    internal func hideWhisper(_ message: String? = nil, for context: String = "") {
+        self.whisper[context]?.hide(message)
+    }
+    
+    internal func fromViewController(fullScreen: Bool = false) -> ScorecardViewController? {
         if self.activeViewController == nil {
             // No active views - show from parent
             return self.parentViewController
@@ -518,8 +531,15 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
             // No invoked views - show from active view
             return self.activeViewController
         } else {
-            // Already invoked a view - show on last one
-            return self.invokedViews.last?.viewController
+            // Already invoked a view - show on last one (which meets size requirements)
+            var viewController: ScorecardViewController?
+            for invokedView in self.invokedViews {
+                if !fullScreen || invokedView.viewController?.view.frame.height == UIScreen.main.bounds.height {
+                    viewController = invokedView.viewController
+                    break
+                }
+            }
+            return viewController ?? self.activeViewController
         }
     }
 }

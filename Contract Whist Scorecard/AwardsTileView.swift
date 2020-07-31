@@ -102,11 +102,11 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
     // MARK: - Tile Delegate ================================================================= -
     
     internal func reloadData() {
-        self.loadData()
+        self.loadData(noCache: true)
         self.collectionView.reloadData()
     }
     
-    internal func willRotate() {
+    internal func didRotate() {
         self.collectionViewFlowLayout.invalidateLayout()
     }
     
@@ -227,8 +227,8 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
         
     // MARK: - Utility Routines ======================================================================== -
     
-    private func loadData() {
-        (self.achieved, self.toAchieve, self.awardsTotal) = awards.get(playerUUID: Scorecard.settings.thisPlayerUUID)
+    private func loadData(noCache: Bool = false) {
+        (self.achieved, self.toAchieve, self.awardsTotal) = awards.get(playerUUID: Scorecard.settings.thisPlayerUUID, noCache: noCache)
     }
     
     private func defaultViewColors() {

@@ -388,6 +388,7 @@ class HighScoreTileTableViewCell: UITableViewCell {
     @IBOutlet fileprivate weak var valueImageViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet fileprivate weak var valueLabel: UILabel!
     @IBOutlet fileprivate weak var collectionView: UICollectionView!
+    @IBOutlet fileprivate weak var collectionViewFlowLayout: UICollectionViewFlowLayout!
     @IBOutlet fileprivate weak var collectionViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet fileprivate weak var collectionViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet fileprivate weak var valueLabelHeightConstraint: NSLayoutConstraint!

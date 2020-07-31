@@ -1714,25 +1714,34 @@ class Sync {
                             existing = awards.getAchieved(playerUUID: playerUUID)
                             lastPlayerUUID = playerUUID
                         }
-                        var awardMO: AwardMO
+                        var cloudMO: AwardMO
                         if let index = existing.firstIndex(where: {$0.playerUUID == playerUUID && $0.code == code && $0.awardLevel == awardLevel}) {
-                            let count = existing[index].count
-                            let syncCount = existing[index].syncCount
-                            awardMO = existing[index]
+                            let localCount = existing[index].count
+                            let localSyncCount = existing[index].syncCount
+                            let localDateAwarded = existing[index].dateAwarded!
+                            cloudMO = existing[index]
                             CoreData.update {
-                                awardMO.from(cloudObject: record)
-                                if existing[index].dateAwarded! > awardMO.dateAwarded! {
-                                    // Re-awarded since locally - keep local and re-sync
-                                    awardMO.dateAwarded = existing[index].dateAwarded
-                                    awardMO.syncDate = nil
+                                cloudMO.from(cloudObject: record) // Note this overwrites existing[index] too
+                                if localCount == 0 {
+                                    // If local count is zero this was just a default which it appears already exists - just overwrite it
+                                    cloudMO.syncCount = cloudMO.count
+                                } else {
+                                    let difference = cloudMO.count - localSyncCount
+                                    if difference != 0 || localDateAwarded > cloudMO.dateAwarded! {
+                                        // Re-awarded locally - update for any cloud changes
+                                        cloudMO.syncCount = cloudMO.count
+                                        cloudMO.count = localCount + difference
+                                        cloudMO.dateAwarded = max(cloudMO.dateAwarded!, localDateAwarded)
+                                        cloudMO.syncDate = nil
+                                    }
                                 }
-                                let difference = max(0, awardMO.count - syncCount)
-                                awardMO.count = count + difference
-                                awardMO.syncCount = awardMO.count
                             }
                         } else {
-                            awardMO = CoreData.create(from: "Award")
-                            awardMO.from(cloudObject: record)
+                            cloudMO = CoreData.create(from: "Award")
+                            CoreData.update {
+                                cloudMO.from(cloudObject: record)
+                                cloudMO.syncCount = cloudMO.count
+                            }
                         }
                     }
                 }
@@ -1756,6 +1765,12 @@ class Sync {
         for awardMO in existing {
             let recordID = CKRecord.ID(recordName: "Awards-\(awardMO.playerUUID!)+\(awardMO.code!)+\(awardMO.awardLevel)")
             let record = CKRecord(recordType: "Awards", recordID: recordID)
+            if awardMO.count == 0 {
+                // Any default still around at this point is genuine - set count to 1
+                CoreData.update {
+                    awardMO.count = 1
+                }
+            }
             awardMO.to(cloudObject: record)
             record.setValue(Date(), forKey: "syncDate")
             records.append(record)
@@ -1774,17 +1789,16 @@ class Sync {
     }
     
     private func sendAwardToCloudRecordCompletion(record: CKRecord, error: Error?) {
-        if error != nil {
+        if error == nil {
             // Reset sync count
             // Note the count could go wrong if iCloud is updated successfully, but this doesn't execute
             // This is not deemed a material problem
             if let playerUUID = record.value(forKey: "playerUUID") as? String,
                let code = record.value(forKey: "code") as? String,
-               let awardLevel = record.value(forKey: "awardLevel") as? Int,
-               let count = record.value(forKey: "count") as? Int {
+               let awardLevel = record.value(forKey: "awardLevel") as? Int {
                 if let awardMO = Awards.get(playerUUID: playerUUID, code: code, awardLevel: awardLevel) {
                     CoreData.update {
-                        awardMO.syncCount = Int64(count)
+                        awardMO.syncCount = awardMO.count
                     }
                 }
             }

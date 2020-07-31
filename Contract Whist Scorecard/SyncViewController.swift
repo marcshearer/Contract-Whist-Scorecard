@@ -65,6 +65,13 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
                 self.syncStageTableView.endUpdates()
             }
         }
+        
+        Utility.executeAfter(delay: 1.0) {
+            // Invoke the sync
+            self.sync.delegate = self
+            self.syncStarted = true
+            _ = self.sync.synchronise(waitFinish: true, okToSyncWithTemporaryPlayerUUIDs: true)
+        }
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -223,13 +230,6 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
             delay: 0.15 * Double(indexPath.row),
             animations: {
                 cell.alpha = 1
-            }, completion: { (_) in
-                if indexPath.row == SyncStage.complete.rawValue && !self.syncStarted {
-                    // Invoke the sync
-                    self.sync.delegate = self
-                    self.syncStarted = true
-                    _ = self.sync.synchronise(waitFinish: true, okToSyncWithTemporaryPlayerUUIDs: true)
-                }
             })
     }
     

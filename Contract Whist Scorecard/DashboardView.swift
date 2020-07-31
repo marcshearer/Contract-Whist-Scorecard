@@ -137,9 +137,9 @@ class DashboardView : UIView, DashboardActionDelegate {
     
     // MARK: - Functions to present other views ========================================================== -
     
-    private func showHighScores() {
+    private func showHighScores(allowSync: Bool = true) {
         DashboardViewController.show(from: self.parentViewController!,
-                                     dashboardNames: [(title: "High Scores",  fileName: "HighScoresDashboard",  imageName: "person.fill")], backImage: "back", backgroundColor: Palette.banner) {
+                                     dashboardNames: [(title: "High Scores",  fileName: "HighScoresDashboard",  imageName: nil)], allowSync: allowSync, backImage: "back", backgroundColor: Palette.banner) {
             self.delegate?.reloadData?()
         }
     }

@@ -31,7 +31,7 @@ public enum Orientation: String, CaseIterable {
     
     @objc optional func reloadData()
     
-    @objc optional func willRotate()
+    @objc optional func didRotate()
     
 }
 
@@ -39,7 +39,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
  
     struct DashboardViewInfo {
         var title: String
-        var imageName: String
+        var imageName: String?
         var nibNames: [Orientation:String]
         var views: [Orientation:DashboardView]
     }
@@ -52,7 +52,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     private var currentPage = -1
     
     private var dashboardViewInfo: [Int:DashboardViewInfo] = [:]
-    private var dashboardInfo: [(title: String, fileName: String, imageName: String)] = []
+    private var dashboardInfo: [(title: String, fileName: String, imageName: String?)] = []
     private var currentOrientation: Orientation!
     
     private var backImage: String!
@@ -62,6 +62,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     private var bannerTextColor: UIColor!
     private var backgroundColor: UIColor!
     private var completion: (()->())?
+    private var allowSync = true
     
     private var firstTime = true
     private var rotated = false
@@ -130,7 +131,6 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
 
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        self.willRotate()
         self.rotated = true
         self.view.setNeedsLayout()
     }
@@ -153,6 +153,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                 if self.rotated {
                     self.hideOrientationViews(not: self.currentOrientation)
                     self.reloadData()
+                    self.didRotate()
                 }
                 self.firstTime = false
                 self.rotated = false
@@ -192,22 +193,22 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         }
     }
     
-    private func willRotate() {
+    private func didRotate() {
         for (_, orientationViews) in self.dashboardViewInfo {
             for (orientation, dashboardView) in orientationViews.views {
                 if orientation == self.currentOrientation {
-                    self.willRotate(for: dashboardView)
+                    self.didRotate(for: dashboardView)
                 }
             }
         }
     }
     
-    private func willRotate(for view: UIView) {
+    private func didRotate(for view: UIView) {
         if let view = view as? DashboardTileDelegate {
-            view.willRotate?()
+            view.didRotate?()
         } else {
             for view in view.subviews {
-                self.willRotate(for: view)
+                self.didRotate(for: view)
             }
         }
     }
@@ -260,7 +261,9 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             
             let dashboardInfo = dashboardViewInfo[indexPath.item]!
             carouselCell.titleLabel.text = dashboardInfo.title
-            carouselCell.backgroundImageView.image = UIImage(named: dashboardInfo.imageName)!.asTemplate()
+            if let imageName = dashboardInfo.imageName {
+                carouselCell.backgroundImageView.image = UIImage(named: imageName)!.asTemplate()
+            }
             return carouselCell
             
         case .scroll:
@@ -403,11 +406,15 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     // MARK: - Utility Routines ======================================================================== -
     
     private func networkEnableSyncButton() {
-        Scorecard.shared.checkNetworkConnection {
-            self.syncButtons(hidden: !(Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn))
-        }
-        self.observer = Scorecard.reachability.startMonitor { (available) in
-            self.syncButtons(hidden: !available)
+        if !self.allowSync {
+            self.syncButtons(hidden: true)
+        } else {
+            Scorecard.shared.checkNetworkConnection {
+                self.syncButtons(hidden: !(Scorecard.shared.isNetworkAvailable && Scorecard.shared.isLoggedIn))
+            }
+            self.observer = Scorecard.reachability.startMonitor { (available) in
+                self.syncButtons(hidden: !available)
+            }
         }
     }
     
@@ -432,7 +439,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     // MARK: - Function to present and dismiss this view ================================================= -
     
-    @discardableResult class public func show(from viewController: ScorecardViewController, dashboardNames: [(title: String, fileName: String, imageName: String)], backImage: String = "home", backText: String = "", bannerColor: UIColor = Palette.banner, bannerShadowColor: UIColor = Palette.bannerShadow, bannerTextColor: UIColor = Palette.bannerText, backgroundColor: UIColor = Palette.background, completion: (()->())? = nil) -> ScorecardViewController {
+    @discardableResult class public func show(from viewController: ScorecardViewController, dashboardNames: [(title: String, fileName: String, imageName: String?)], allowSync: Bool = true, backImage: String = "home", backText: String = "", bannerColor: UIColor = Palette.banner, bannerShadowColor: UIColor = Palette.bannerShadow, bannerTextColor: UIColor = Palette.bannerText, backgroundColor: UIColor = Palette.background, completion: (()->())? = nil) -> ScorecardViewController {
         
         let storyboard = UIStoryboard(name: "DashboardViewController", bundle: nil)
         let dashboardViewController: DashboardViewController = storyboard.instantiateViewController(withIdentifier: "DashboardViewController") as! DashboardViewController
@@ -441,6 +448,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         dashboardViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
         
         dashboardViewController.dashboardInfo = dashboardNames
+        dashboardViewController.allowSync = allowSync
         dashboardViewController.backText = backText
         dashboardViewController.backImage = backImage
         dashboardViewController.bannerColor = bannerColor

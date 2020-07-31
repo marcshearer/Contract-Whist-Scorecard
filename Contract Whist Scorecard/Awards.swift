@@ -143,7 +143,6 @@ fileprivate struct AwardConfig {
             return stringValue
         }
     }
-    
 }
 
 public struct Award {
@@ -195,7 +194,10 @@ public class Awards {
     /// Get a players achieved and as yet unachieved awards
     /// - Parameter playerUUID: Player UUID
     /// - Returns: a tuple containing an array of achieved awards and an array of awards still to achieve
-    public func get(playerUUID: String) -> (achieved: [Award], toAchieve: [Award], totalAwards: Int) {
+    public func get(playerUUID: String, noCache: Bool = false) -> (achieved: [Award], toAchieve: [Award], totalAwards: Int) {
+        if noCache {
+            self.playerUUID = nil
+        }
         let playerAchieved = self.getAchieved(playerUUID: playerUUID)
         var toAchieve: [Award] = []
         for config in self.config {
@@ -224,6 +226,7 @@ public class Awards {
                 self.achieved = achieved
             }
             self.playerUUID = playerUUID
+            self.achieved!.forEach({print($0.code!, $0.awardLevel, $0.count, $0.syncCount)})
         }
         return self.achieved!
     }
@@ -235,7 +238,7 @@ public class Awards {
     ///   - AwardLevel: Award level
     /// - Returns: Award managed object
     public static func get(playerUUID: String, code: String, awardLevel: Int) -> AwardMO? {
-        let awards = CoreData.fetch(from: "Award", filter: NSPredicate(format: "playerUUID = %@ and code = %@ and awardLevel = %@", playerUUID, code, awardLevel)) as? [AwardMO]
+        let awards = CoreData.fetch(from: "Award", filter: NSPredicate(format: "playerUUID = %@ and code = %@ and awardLevel = %d", playerUUID, code, awardLevel)) as? [AwardMO]
         return awards?.first
     }
     
@@ -276,7 +279,7 @@ public class Awards {
                 
                 // Check win/ lose
                 if (config.winLose == .win && current.place != 1) || (config.winLose == .lose && current.place == 1) {
-                    self.debugMessage(config: config, message: "Not a \(config.winLose)")
+                    self.debugMessage(config: config, message: "Not a \(config.winLose)", player: player)
                     continue
                 }
                 
@@ -290,7 +293,7 @@ public class Awards {
                         
                         if !config.repeatable && awardMO != nil && awardMO!.gameUUID != Scorecard.game.gameUUID {
                             // Don't re-award if not repeatable (unless it was for this game)
-                            self.debugMessage(config: config, message: "Repeat award for value \(value)")
+                            self.debugMessage(config: config, message: "Repeat award for value \(value)", player: player)
                             continue
                         }
                         
@@ -302,12 +305,12 @@ public class Awards {
                         justAwarded += increment
                         
                         results.append(Award(from: config, awardLevel: awardLevel, gameUUID: current.gameUUID!, dateAwarded: current.datePlayed!, count: Int(awardMO?.count ?? 0) + increment))
-                        self.debugMessage(config: config, message: "Awarded for value \(value)")
+                        self.debugMessage(config: config, message: "Awarded for value \(value)", player: player, count: Int(awardMO?.count ?? 0) + increment)
                     } else {
-                        self.debugMessage(config: config, message: "No match for value \(value)")
+                        self.debugMessage(config: config, message: "No match for value \(value)", player: player)
                     }
                 } else {
-                    self.debugMessage(config: config, message: "No value")
+                    self.debugMessage(config: config, message: "No value", player: player)
                 }
             }
         }
@@ -338,8 +341,15 @@ public class Awards {
         }
     }
     
-    private func debugMessage(config: AwardConfig, message: String) {
-        Utility.debugMessage("Awards", "\(config.name()) - \(message)", mainThread: false)
+    private func debugMessage(config: AwardConfig, message: String, player: Player? = nil, count: Int? = nil) {
+        var message = "\(config.name()) - \(message)"
+        if let player = player {
+            message = message + " (\(player.playerMO!.name!))"
+        }
+        if let count = count {
+            message = message + " x\(count)"
+        }
+        Utility.debugMessage("Awards", message, mainThread: false)
     }
     
     private func hasAchieved(_ achieved: [AwardMO], code: String, awardLevel: Int) -> AwardMO? {
@@ -443,6 +453,8 @@ public class Awards {
                             for awardLevel in config.awardLevels {
                                 if value >= awardLevel {
                                     if let awardMO = self.createAwardMO(playerUUID: playerUUID, code: config.code, awardLevel: awardLevel, gameUUID: "", dateAwarded: Date(timeInterval: Double(results.count), since: Date.startOfDay()!)) {
+                                        // Set count to zero since not a real award
+                                        awardMO.count = 0
                                         results.append(awardMO)
                                     }
                                 }
@@ -457,7 +469,7 @@ public class Awards {
         return results
     }
     
-    @discardableResult private func createAwardMO(playerUUID: String, code: String, awardLevel: Int, gameUUID: String, dateAwarded: Date) -> AwardMO? {
+    @discardableResult private func  createAwardMO(playerUUID: String, code: String, awardLevel: Int, gameUUID: String, dateAwarded: Date) -> AwardMO? {
         var awardMO: AwardMO!
         _ = CoreData.update() {
             awardMO = CoreData.create(from: "Award") as? AwardMO

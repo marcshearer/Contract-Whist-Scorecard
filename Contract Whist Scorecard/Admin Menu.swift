@@ -24,7 +24,7 @@ class AdminMenu {
         }
         
         if availableOptions || Scorecard.adminMode || (Scorecard.shared.commsDelegate != nil && Scorecard.shared.commsDelegate?.connectionMode != .loopback) {
-            // There are som options to display
+            // There are some options to display
             
             let actionSheet = ActionSheet("Admin Options")
             
@@ -41,12 +41,15 @@ class AdminMenu {
                 actionSheet.add("Reset connection", handler: {
                     Scorecard.shared.resetConnection()
                 })
-                actionSheet.add("Test connection", handler: {
-                    Scorecard.shared.sendTestConnection()
-                })
-                actionSheet.add("Show connections", handler: {
-                    Scorecard.shared.commsDelegate?.connectionInfo(message: message)
-                })
+                
+                if (Scorecard.adminMode || Scorecard.shared.iCloudUserIsMe || Utility.isDevelopment) {
+                    actionSheet.add("Test connection", handler: {
+                        Scorecard.shared.sendTestConnection()
+                    })
+                    actionSheet.add("Show connections", handler: {
+                        Scorecard.shared.commsDelegate?.connectionInfo(message: message)
+                    })
+                }
             }
             
             if Scorecard.adminMode {

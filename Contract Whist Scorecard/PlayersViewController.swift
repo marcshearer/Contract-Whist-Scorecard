@@ -149,6 +149,8 @@ class PlayersViewController: ScorecardViewController, UICollectionViewDelegate, 
         cell.set(thumbnailInset: self.thumbnailInset)
         if self.removing {
             cell.thumbnail.startWiggle()
+        } else {
+            cell.thumbnail.stopWiggle()
         }
         cell.addShadow()
         

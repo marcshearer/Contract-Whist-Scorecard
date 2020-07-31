@@ -111,6 +111,9 @@ enum InviteStatus {
             
             // Start game
             self.initCompletion()
+            if Scorecard.recovery.onlineMode == .invite {
+                self.sendInvites()
+            }
             self.gameInProgress = true
             self.startGame()
             

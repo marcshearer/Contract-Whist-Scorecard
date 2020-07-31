@@ -153,7 +153,7 @@ class ActionSheet : NSObject, UIPopoverPresentationControllerDelegate {
     public var alertController: UIAlertController
     private var dark: Bool
     
-    init(_ title: String! = nil, message: String! = nil, dark: Bool = false, view: UIView! = nil, direction: UIPopoverArrowDirection! = nil, x: CGFloat! = nil, y: CGFloat! = nil) {
+    init(_ title: String! = nil, message: String! = nil, dark: Bool = true, view: UIView! = nil, direction: UIPopoverArrowDirection! = nil, x: CGFloat! = nil, y: CGFloat! = nil) {
         var view: UIView! = view
         if view == nil {
             view = Utility.getActiveViewController()!.view
@@ -167,18 +167,20 @@ class ActionSheet : NSObject, UIPopoverPresentationControllerDelegate {
             titleBackgroundColor = Palette.darkHighlight
             titleTextColor = Palette.darkHighlightText
         } else {
-            titleBackgroundColor = Palette.emphasis
-            titleTextColor = Palette.emphasisText
+            titleBackgroundColor = Palette.banner
+            titleTextColor = Palette.bannerText
         }
         
         self.alertController = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
         if let title = title {
             // Set attributed title
-            let attributes = [NSAttributedString.Key.foregroundColor : titleTextColor,
-                              NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 22.0)]
-            let titleString = NSMutableAttributedString(string: title, attributes: attributes)
+            let attributes: [ NSAttributedString.Key : Any] =
+                [NSAttributedString.Key.foregroundColor : titleTextColor,
+                 NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 22.0)]
+            let titleString = NSAttributedString(string: title, attributes: attributes)
 
             alertController.setValue(titleString, forKey: "attributedTitle")
+
         }
         if let message = message {
             // Set attributed message

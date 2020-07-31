@@ -11,10 +11,10 @@ import UIKit
 import CloudKit
 
 enum InvitePhase {
-    case phaseDelete
-    case phaseCreate
+    case phaseFindRecordsToDelete
+    case phaseSetupRecordsToCreate
     case phaseUpdateCloud
-    case phaseCheck
+    case phaseCheckInvitations
     case phaseCompletion
 }
 
@@ -56,8 +56,8 @@ class Invite {
         self.inviteUUID = inviteUUID
         self.expiryDate = Date(timeInterval: 600, since: Date())
         self.invited = []
-        self.invitePhases = [.phaseDelete,
-                             .phaseCreate,
+        self.invitePhases = [.phaseFindRecordsToDelete,
+                             .phaseSetupRecordsToCreate,
                              .phaseUpdateCloud,
                              .phaseCompletion]
         
@@ -78,7 +78,7 @@ class Invite {
         
         self.hostPlayerUUID = hostPlayerUUID
         self.invited = []
-        self.invitePhases = [.phaseDelete,
+        self.invitePhases = [.phaseFindRecordsToDelete,
                              .phaseUpdateCloud,
                              .phaseCompletion]
         self.controller()
@@ -96,7 +96,7 @@ class Invite {
         self.invitePlayerUUIDs = [invitePlayerUUID]
         self.checkExpiry = checkExpiry
         self.invited = []
-        self.invitePhases = [.phaseCheck,
+        self.invitePhases = [.phaseCheckInvitations,
                              .phaseCompletion]
         self.controller()
     }
@@ -108,17 +108,17 @@ class Invite {
         if invitePhase < self.invitePhases.count {
             // Next phase
             switch invitePhases[invitePhase] {
-            case .phaseDelete:
-                self.deleteInviteRecords(hostPlayerUUID: self.hostPlayerUUID)
-            case .phaseCreate:
-                self.createInviteRecords(hostPlayerUUID: self.hostPlayerUUID,
+            case .phaseFindRecordsToDelete:
+                self.FindInviteRecordsToDelete(hostPlayerUUID: self.hostPlayerUUID)
+            case .phaseSetupRecordsToCreate:
+                self.SetupInviteRecordsToCreate(hostPlayerUUID: self.hostPlayerUUID,
                                          hostName: self.hostName,
                                          expiryDate: self.expiryDate,
                                          inviteUUID: self.inviteUUID,
                                          invitePlayerUUIDs: self.invitePlayerUUIDs)
             case .phaseUpdateCloud:
                 self.sendUpdatedRecords(createRecords: self.createRecords, deleteRecordIDs: self.deleteRecordIDs, deleteUUIDs: self.deleteUUIDs)
-            case .phaseCheck:
+            case .phaseCheckInvitations:
                 self.checkInviteRecords(invitePlayerUUIDs: self.invitePlayerUUIDs, checkExpiry: self.checkExpiry)
             case .phaseCompletion:
                 self.completion(true, nil, self.invited)
@@ -126,7 +126,7 @@ class Invite {
         }
     }
     
-    func deleteInviteRecords(hostPlayerUUID: String) {
+    func FindInviteRecordsToDelete(hostPlayerUUID: String) {
         // Get any existing invite records and queue
         var queryOperation: CKQueryOperation
         var predicate: NSPredicate!
@@ -167,7 +167,7 @@ class Invite {
         publicDatabase.add(queryOperation)
     }
     
-    func createInviteRecords(hostPlayerUUID: String, hostName: String, expiryDate: Date, inviteUUID: String, invitePlayerUUIDs: [String]) {
+    func SetupInviteRecordsToCreate(hostPlayerUUID: String, hostName: String, expiryDate: Date, inviteUUID: String, invitePlayerUUIDs: [String]) {
         
         createRecords = []
         
@@ -184,6 +184,11 @@ class Invite {
             
             // Append to records to send
             self.createRecords.append(inviteRecord)
+            
+            // Remove from deletion list if necessary
+            if let index = self.deleteRecordIDs.firstIndex(where: {$0.recordName == recordID.recordName}) {
+                self.deleteRecordIDs.remove(at: index)
+            }
         }
         
         // Link back to controller for next phase
@@ -200,6 +205,7 @@ class Invite {
         uploadOperation.isAtomic = false
         uploadOperation.queuePriority = .veryHigh
         uploadOperation.database = publicDatabase
+        uploadOperation.savePolicy = .allKeys
         
         // Assign a completion handler
         uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecord.ID]?, error: Error?) -> Void in

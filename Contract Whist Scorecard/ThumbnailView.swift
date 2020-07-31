@@ -181,6 +181,7 @@ public class ThumbnailView: UIView {
     }
     
     public func startWiggle(addDeleteButton: Bool = true) {
+        self.layer.removeAllAnimations()
         let animation  = CAKeyframeAnimation(keyPath:"transform")
         animation.values  = [NSValue(caTransform3D: CATransform3DMakeRotation(0.05, 0.0, 0.0, 1.0)),
                              NSValue(caTransform3D: CATransform3DMakeRotation(-0.05 , 0, 0, 1))]
@@ -189,11 +190,13 @@ public class ThumbnailView: UIView {
         animation.repeatCount = Float.infinity
         self.layer.add(animation, forKey: "transform")
         if addDeleteButton {
-            self.deleteView = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 20.0, height: 20.0))
-            let deleteImageView = UIImageView(frame: CGRect(x: 5.0, y: 5.0, width: 10.0, height: 10.0))
-            deleteImageView.image = UIImage(named: "cross red")
-            deleteView.backgroundColor = Palette.background
-            deleteView.addSubview(deleteImageView)
+            if self.deleteView == nil {
+                self.deleteView = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 20.0, height: 20.0))
+                let deleteImageView = UIImageView(frame: CGRect(x: 5.0, y: 5.0, width: 10.0, height: 10.0))
+                deleteImageView.image = UIImage(named: "cross red")
+                self.deleteView.backgroundColor = Palette.background
+                deleteView.addSubview(deleteImageView)
+            }
             ScorecardUI.veryRoundCorners(deleteView, radius: 10.0)
             self.addSubview(deleteView)
         }
@@ -202,6 +205,5 @@ public class ThumbnailView: UIView {
     public func stopWiggle() {
         self.layer.removeAllAnimations()
         self.deleteView?.removeFromSuperview()
-        self.deleteView = nil
     }
 }

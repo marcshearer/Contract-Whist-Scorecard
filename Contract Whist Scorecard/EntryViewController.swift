@@ -154,7 +154,7 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
         Scorecard.shared.watchManager.updateScores()
         
         self.setupSize()
-        
+
         if self.lastViewHeight != self.view.frame.height || self.firstTime {
             self.playerTableView.reloadData()
             self.lastViewHeight = self.view.frame.height

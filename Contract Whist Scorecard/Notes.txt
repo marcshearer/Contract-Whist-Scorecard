@@ -27,22 +27,17 @@ Bugs fix now
 
 Short-term
 ----------
-Should re-send invitation from host
-Make admin rotate options less available
 Add tests for temporary settings
 Add tests for history / location to check they're not saved if play a game
 Auto-sync when download players in Get Started
 Update Walkthrough - esp online game
-Resume scoring doesn't auto start in preview
-
+
 TODO
 ----
 TODO Need to switch off MallocStackLogging variables in Edit Scheme
 Looks like it is still in recovery mode even when play game and override warning
-Problem if reset when in confirm window
 Add confetti to game summary
 Implement Facetime calls
-Initial connection difficult
 
 Jack
 ----

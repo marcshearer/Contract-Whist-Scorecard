@@ -80,9 +80,9 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        checkICloud()
+        self.checkICloud()
         
-        // Note flow continues in checkICloud
+        // Note flow continues in continueStartup
     }
     
     private func checkICloud() {

@@ -137,7 +137,7 @@ extension HandViewController {
     internal func testRotationOptions() -> [(String, ()->(), Bool)]? {
         
         if (Scorecard.adminMode || Scorecard.shared.iCloudUserIsMe) && Utility.isDevelopment {
-            return [("Auto-play",          self.startAutoPlay,   Scorecard.game.isHosting)]
+            return [("Auto-play", self.startAutoPlay, Scorecard.game.isHosting)]
         } else {
             return nil
         }

@@ -152,9 +152,7 @@ class RabbitMQService: NSObject, CommsServiceDelegate, CommsDataDelegate, CommsS
     }
     
     internal func reset(reason: String? = nil) {
-        // Note - overridden in client service - just disconnect and wait for client to reconnect
-        self.debugMessage("Resetting")
-        self.disconnect(reason: reason ?? "Reset", reconnect: true)
+        fatalError("Should be overridden")
     }
     
     internal func connectionInfo(message: String) {
@@ -254,7 +252,9 @@ class RabbitMQServerService : RabbitMQService, CommsHostServiceDelegate, CommsCo
     private var invite: Invite!
     private var invitePlayerUUID: String! = nil
     public var serverInviteUUID: String!
- 
+    private var serverPlayerName: String?
+    private var serverInvite: [String]?
+
     // Delegates
     public weak var connectionDelegate: CommsConnectionDelegate!
     public weak var handlerStateDelegate: CommsServiceStateDelegate!
@@ -277,6 +277,8 @@ class RabbitMQServerService : RabbitMQService, CommsHostServiceDelegate, CommsCo
         
         super.startService(playerUUID: playerUUID, recoveryMode: recoveryMode)
         
+        self.serverPlayerName = name
+        self.serverInvite = invite
         self.serverInviteUUID = queueUUID
         if self.serverInviteUUID == nil {
             // New connection
@@ -344,6 +346,17 @@ class RabbitMQServerService : RabbitMQService, CommsHostServiceDelegate, CommsCo
             completion?()
         }
     }
+    
+    override internal func reset(reason: String? = nil) {
+        // Note - overridden in client and server services - just disconnect and wait for client to reconnect
+        self.debugMessage("Resetting")
+        
+        // Re-send invitations (to update expiry time stamp)
+        self.sendInvitation(playerUUID: self.connectionPlayerUUID, name: self.serverPlayerName, invite: self.serverInvite)
+        
+        self.disconnect(reason: reason ?? "Reset", reconnect: true)
+    }
+
     
     // MARK: - Comms Connection handlers ===================================================================== -
     
@@ -1205,7 +1218,7 @@ fileprivate class RabbitMQPeer: NSObject, CommsDataDelegate, CommsConnectionDele
                         reason = content["reason"]
                         self.reason = reason
                         self.state = .notConnected
-                        self._autoReconnect = false
+                        self._autoReconnect = (reason == "Reset")
                         
                     case "data":
                         let content = data["content"] as! [String : Any?]

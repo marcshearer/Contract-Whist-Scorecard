@@ -28,7 +28,10 @@ extension HandViewController {
     
     @IBAction internal func rotationGesture(recognizer:UIRotationGestureRecognizer) {
         
-        var rotationOptions = [("Show debug info",    self.showDebugInfo,   true)]
+        var rotationOptions: [(String, ()->(), Bool)] = []
+        if (Scorecard.adminMode || Scorecard.shared.iCloudUserIsMe || Utility.isDevelopment) {
+            rotationOptions = rotationOptions + [("Show debug info", self.showDebugInfo, true)]
+        }
         if let testRotationOptions = self.testRotationOptions() {
             rotationOptions = rotationOptions + testRotationOptions
         }

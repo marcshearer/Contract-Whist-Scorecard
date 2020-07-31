@@ -359,7 +359,9 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                 self.defaultCellColors(cell: cell)
                 
                 header = SettingsHeaderFooterView(cell)
-                cell.collapseButton.setImage(UIImage(named: (dataInfoExpanded ? "arrow down" : "arrow right")), for: .normal)
+                cell.collapseButton.setImage(UIImage(named: (dataInfoExpanded ? "arrow down" : "arrow right"))?.asTemplate(), for: .normal)
+                cell.collapseButton.tintColor = Palette.emphasis
+                
                 cell.label.text = "Data"
                 cell.collapseButton.addTarget(self, action: #selector(SettingsViewController.dataInfoClicked(_:)), for: .touchUpInside)
                 
@@ -726,23 +728,27 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     internal func scrollViewDidScroll(_ tableView: UIScrollView) {
-        if tableView.contentOffset.y > 10.0 && !self.availableSpaceHeightConstraint.isActive {
-            Utility.animate(view: self.view, duration: 0.3) {
-                if ScorecardUI.landscapePhone() {
-                    self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = false
-                } else {
-                    self.topSectionProportionalHeightConstraint.isActive = false
+        // Configure collapsible header
+        if tableView == self.settingsTableView {
+            if tableView.contentOffset.y > 10.0 && !self.availableSpaceHeightConstraint.isActive {
+                Utility.animate(view: self.view, duration: 0.3) {
+                    if ScorecardUI.landscapePhone() {
+                        self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = false
+                    } else {
+                        self.topSectionProportionalHeightConstraint.isActive = false
+                    }
+                    self.availableSpaceHeightConstraint.isActive = true
+                    self.availableSpaceHeightConstraint.constant = 0.0
                 }
-                self.availableSpaceHeightConstraint.isActive = true
-                self.availableSpaceHeightConstraint.constant = 0.0
-            }
-        } else if tableView.contentOffset.y < 10.0 && self.availableSpaceHeightConstraint.isActive {
-            Utility.animate(view: self.view, duration: 0.3) {
-                self.availableSpaceHeightConstraint.isActive = false
-                if ScorecardUI.landscapePhone() {
-                    self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = true
-                } else {
-                    self.topSectionProportionalHeightConstraint.isActive = true
+            } else if tableView.contentOffset.y < 10.0 && self.availableSpaceHeightConstraint.isActive {
+                Utility.animate(view: self.view, duration: 0.3) {
+                    print(tableView.contentOffset.y)
+                    self.availableSpaceHeightConstraint.isActive = false
+                    if ScorecardUI.landscapePhone() {
+                        self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = true
+                    } else {
+                        self.topSectionProportionalHeightConstraint.isActive = true
+                    }
                 }
             }
         }
@@ -951,6 +957,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     @objc internal func appearanceButtonClicked(_ appearanceButton: ClearButton) {
         Scorecard.settings.appearance = ThemeAppearance(rawValue: appearanceButton.tag)!
         self.setAppearanceButtons()
+        self.view.window?.overrideUserInterfaceStyle = Scorecard.settings.appearance.userInterfaceStyle
     }
     
     private func setAppearanceButtons(_ cell: SettingsTableCell? = nil) {
@@ -962,7 +969,6 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                     button.setImage(UIImage(named: "box"), for: .normal)
                 }
             }
-            self.view.window?.overrideUserInterfaceStyle = Scorecard.settings.appearance.userInterfaceStyle
         }
     }
     
@@ -1351,7 +1357,6 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         self.view.layoutIfNeeded()
         self.settingsTableView.reloadData()
     }
-
     
     // MARK: - Utility Routines ======================================================================== -
     
@@ -1576,7 +1581,7 @@ class SettingsTableCell: UITableViewCell {
     @IBOutlet fileprivate weak var labelLeadingConstraint: NSLayoutConstraint!
     @IBOutlet fileprivate weak var subHeadingLabel: UILabel!
     @IBOutlet fileprivate weak var editLabel: UILabel!
-    @IBOutlet fileprivate weak var editButton: AngledButton!
+    @IBOutlet fileprivate weak var editButton: ShadowButton!
     @IBOutlet fileprivate weak var segmentedControl: UISegmentedControl!
     @IBOutlet fileprivate weak var slider: UISlider!
     @IBOutlet fileprivate weak var sliderLabel: UILabel!
@@ -1611,7 +1616,6 @@ class SettingsTableCell: UITableViewCell {
         self.setEnabled(textField: self.textField, enabled: enabled)
         self.trumpSequenceCollectionView?.isUserInteractionEnabled = enabled
         self.trumpSequenceCollectionView?.alpha = (enabled ? 1.0 : 0.5)
-        self.editButton?.isEnabled = enabled
         self.colorThemeCollectionView?.isUserInteractionEnabled = enabled
         self.colorThemeCollectionView?.alpha = (enabled ? 1.0 : 0.5)
     }
@@ -1697,9 +1701,8 @@ extension SettingsViewController {
         }
         switch cell.reuseIdentifier {
         case "Edit Button":
-            cell.editButton.setTitleColor(Palette.textEmphasised, for: .normal)
-            cell.editButton.fillColor = Palette.background
-            cell.editButton.strokeColor = Palette.emphasis
+            cell.editButton.setTitleColor(Palette.emphasisText, for: .normal)
+            cell.editButton.setBackgroundColor(Palette.emphasis)
             cell.editLabel.textColor = Palette.text
         case "Header Collapse":
             cell.collapseButton.tintColor = Palette.emphasis

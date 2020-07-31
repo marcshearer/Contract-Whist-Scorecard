@@ -428,7 +428,7 @@
                                                     <color key="textColor" name="Text"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A1f-6Q-Ha6" userLabel="Edit Button" customClass="AngledButton" customModule="Whist_2" customModuleProvider="target">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A1f-6Q-Ha6" userLabel="Edit Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                                     <rect key="frame" x="304" y="66" width="50" height="20"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="50" id="1xX-wC-i5Y"/>
@@ -524,7 +524,7 @@
                                                                 <autoresizingMask key="autoresizingMask"/>
                                                                 <subviews>
                                                                     <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fk6-em-7i0" customClass="SampleTheme" customModule="Whist_2" customModuleProvider="target">
-                                                                        <rect key="frame" x="6.5" y="6.5" width="115" height="115"/>
+                                                                        <rect key="frame" x="13" y="13" width="102" height="102"/>
                                                                         <color key="backgroundColor" name="Clear"/>
                                                                         <constraints>
                                                                             <constraint firstAttribute="width" secondItem="fk6-em-7i0" secondAttribute="height" multiplier="1:1" id="het-Dq-GhB"/>
@@ -542,12 +542,12 @@
                                                                 </subviews>
                                                                 <color key="backgroundColor" name="Clear"/>
                                                                 <constraints>
-                                                                    <constraint firstItem="fk6-em-7i0" firstAttribute="centerY" secondItem="SaJ-wg-7SZ" secondAttribute="centerY" id="Arj-oF-h0D"/>
+                                                                    <constraint firstItem="fk6-em-7i0" firstAttribute="centerY" secondItem="SaJ-wg-7SZ" secondAttribute="centerY" constant="-4" id="Arj-oF-h0D"/>
                                                                     <constraint firstItem="91n-01-3jM" firstAttribute="leading" secondItem="SaJ-wg-7SZ" secondAttribute="leading" id="Buf-ik-KoG"/>
                                                                     <constraint firstItem="fk6-em-7i0" firstAttribute="centerX" secondItem="SaJ-wg-7SZ" secondAttribute="centerX" id="DBb-f3-fAN"/>
                                                                     <constraint firstAttribute="trailing" secondItem="91n-01-3jM" secondAttribute="trailing" id="NjT-UL-C97"/>
                                                                     <constraint firstAttribute="bottom" secondItem="91n-01-3jM" secondAttribute="bottom" id="WJ8-WP-wzB"/>
-                                                                    <constraint firstItem="fk6-em-7i0" firstAttribute="width" secondItem="SaJ-wg-7SZ" secondAttribute="width" multiplier="0.9" id="eVM-WS-bYd"/>
+                                                                    <constraint firstItem="fk6-em-7i0" firstAttribute="height" secondItem="SaJ-wg-7SZ" secondAttribute="height" multiplier="0.7" constant="-16" id="aKd-xT-aoX"/>
                                                                 </constraints>
                                                             </collectionViewCellContentView>
                                                             <color key="backgroundColor" name="Clear"/>

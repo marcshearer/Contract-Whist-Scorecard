@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -30,8 +30,8 @@
                                 <constraint firstAttribute="width" secondItem="u5A-WV-xYe" secondAttribute="height" multiplier="1:1" id="KoY-P2-Ak9"/>
                             </constraints>
                         </imageView>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="XfY-hR-40w">
-                            <rect key="frame" x="10" y="94" width="130" height="49.5"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="XfY-hR-40w">
+                            <rect key="frame" x="0.0" y="94" width="150" height="49.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -39,10 +39,10 @@
                     </subviews>
                     <color key="backgroundColor" name="Clear"/>
                     <constraints>
-                        <constraint firstItem="XfY-hR-40w" firstAttribute="leading" secondItem="pcX-39-lA2" secondAttribute="leading" constant="10" id="1i2-a4-LN0"/>
+                        <constraint firstItem="XfY-hR-40w" firstAttribute="centerX" secondItem="pcX-39-lA2" secondAttribute="centerX" id="8tV-Tb-xS5"/>
                         <constraint firstItem="u5A-WV-xYe" firstAttribute="centerX" secondItem="pcX-39-lA2" secondAttribute="centerX" id="FzM-5j-fzd"/>
                         <constraint firstItem="u5A-WV-xYe" firstAttribute="top" secondItem="pcX-39-lA2" secondAttribute="top" constant="25" id="SyO-h3-Tgt"/>
-                        <constraint firstAttribute="trailing" secondItem="XfY-hR-40w" secondAttribute="trailing" constant="10" id="UCO-g4-OZK"/>
+                        <constraint firstItem="XfY-hR-40w" firstAttribute="width" secondItem="pcX-39-lA2" secondAttribute="width" id="UeC-D3-QG8"/>
                         <constraint firstItem="XfY-hR-40w" firstAttribute="top" secondItem="u5A-WV-xYe" secondAttribute="bottom" id="brM-MF-tyw"/>
                         <constraint firstItem="XfY-hR-40w" firstAttribute="height" secondItem="pcX-39-lA2" secondAttribute="height" multiplier="0.3" constant="4.5" id="fhX-cU-yke"/>
                         <constraint firstItem="u5A-WV-xYe" firstAttribute="height" secondItem="pcX-39-lA2" secondAttribute="height" multiplier="0.4" constant="9" id="goe-v6-Mgt"/>

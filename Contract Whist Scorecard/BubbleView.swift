@@ -42,7 +42,16 @@ class BubbleView: UIView {
         view.addSubview(self)
         view.bringSubviewToFront(self)
         
-        self.frame = CGRect(x: view.frame.midX - (size / 2), y: max(50, view.frame.midY - size), width: size, height: size)
+        var y: CGFloat
+        if ScorecardUI.landscapePhone() {
+            y = view.frame.midY - (size / 2)
+        } else {
+            y = max(50, view.frame.midY - size)
+        }
+        
+        self.frame = CGRect(x: view.frame.midX - (size / 2), y: y, width: size, height: size)
+        self.label.setNeedsLayout()
+        self.contentView.layoutIfNeeded()
         self.alpha = 1
         self.label?.text = message
         self.isHidden = false

@@ -143,6 +143,10 @@ class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
         self.tableView.reloadData()
     }
     
+    internal func didRotate() {
+        self.layoutSubviews()
+    }
+    
     // MARK: - Table view delegates ========================================================== -
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -242,7 +246,7 @@ class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let row = collectionView.tag
         let score = rowInfo[row].score ?? 0
-        return CGSize(width: collectionView.frame.width / CGFloat(score), height: collectionView.frame.height)
+        return CGSize(width: (collectionView.frame.width / CGFloat(score)) - 0.01, height: collectionView.frame.height)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

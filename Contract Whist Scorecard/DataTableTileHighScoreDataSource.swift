@@ -28,7 +28,7 @@ class DataTableTileHighScoreDataSource : DataTableTileViewDataSource {
                            DataTableField("",             "",                 sequence: 3,     width: 5,     type: .string)]
             if self.type == .winStreak {
                 result.append(
-                           DataTableField("value",        "",                 sequence: 8,     width: 120.0,  type: .collection))
+                           DataTableField("value",        "",                 sequence: 6,     width: 120.0,  type: .collection))
             }
             
             return result

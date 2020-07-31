@@ -139,6 +139,9 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         Utility.mainThread {
             super.viewWillLayoutSubviews()
             self.currentOrientation = ScorecardUI.landscapePhone() ? .landscape : .portrait
+            if self.rotated {
+                self.hideOrientationViews(not: self.currentOrientation)
+            }
             self.carouselCollectionView.layoutIfNeeded()
             let width: CGFloat = self.carouselCollectionView.frame.width / 4
             self.carouselCollectionView.contentInset = UIEdgeInsets(top: 0.0, left: width, bottom: 0.0, right: width)
@@ -151,9 +154,8 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                 self.changed(self.carouselCollectionView, itemAtCenter: selectedPage, forceScroll: true)
                 self.carouselCollectionView.reloadData()
                 if self.rotated {
-                    self.hideOrientationViews(not: self.currentOrientation)
-                    self.reloadData()
                     self.didRotate()
+                    self.reloadData()
                 }
                 self.firstTime = false
                 self.rotated = false
@@ -365,11 +367,13 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     }
     
     private func hideOrientationViews(not notOrientation: Orientation) {
-        for (_, viewInfo) in self.dashboardViewInfo {
+        for (page, viewInfo) in self.dashboardViewInfo {
             for (orientation, view) in viewInfo.views {
                 if orientation != notOrientation {
                     view.alpha = 0.0
                     view.isHidden = true
+                    view.removeFromSuperview()
+                    self.dashboardViewInfo[page]!.views[orientation] = nil
                 }
             }
         }

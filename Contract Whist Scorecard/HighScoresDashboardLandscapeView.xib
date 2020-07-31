@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="landscape" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16097"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16097.2"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -21,12 +21,7 @@
                     <rect key="frame" x="16" y="8" width="124" height="398"/>
                     <color key="backgroundColor" name="Clear"/>
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="number" keyPath="countValue">
-                            <integer key="value" value="1"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="NO"/>
                         <userDefinedRuntimeAttribute type="string" keyPath="title" value="High Score"/>
-                        <userDefinedRuntimeAttribute type="string" keyPath="caption" value="Games this week"/>
                         <userDefinedRuntimeAttribute type="number" keyPath="detail">
                             <integer key="value" value="3"/>
                         </userDefinedRuntimeAttribute>
@@ -37,11 +32,12 @@
                         <userDefinedRuntimeAttribute type="number" keyPath="titleRows">
                             <integer key="value" value="1"/>
                         </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="showTypeButton" value="NO"/>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="detailDrill" value="YES"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="handsMade" value="NO"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="winStreak" value="NO"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="twosMade" value="NO"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="NO"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="showTypeButton" value="NO"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="detailDrill" value="NO"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="H6h-d6-o0k"/>
@@ -52,12 +48,7 @@
                     <rect key="frame" x="156" y="8" width="124" height="398"/>
                     <color key="backgroundColor" name="Clear"/>
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="NO"/>
                         <userDefinedRuntimeAttribute type="string" keyPath="title" value="Bids Made"/>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="headings" value="NO"/>
-                        <userDefinedRuntimeAttribute type="number" keyPath="maxRows">
-                            <integer key="value" value="5"/>
-                        </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="number" keyPath="detail">
                             <integer key="value" value="3"/>
                         </userDefinedRuntimeAttribute>
@@ -68,11 +59,12 @@
                         <userDefinedRuntimeAttribute type="number" keyPath="titleRows">
                             <integer key="value" value="1"/>
                         </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="showTypeButton" value="NO"/>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="detailDrill" value="YES"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="detailDrill" value="NO"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="totalScore" value="NO"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="winStreak" value="NO"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="twosMade" value="NO"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="NO"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="showTypeButton" value="NO"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="K4e-EG-LuW"/>
@@ -83,14 +75,9 @@
                     <rect key="frame" x="296" y="8" width="124" height="398"/>
                     <color key="backgroundColor" name="Clear"/>
                     <userDefinedRuntimeAttributes>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="NO"/>
                         <userDefinedRuntimeAttribute type="string" keyPath="title" value="Twos Made"/>
                         <userDefinedRuntimeAttribute type="number" keyPath="detail">
                             <integer key="value" value="3"/>
-                        </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="headings" value="NO"/>
-                        <userDefinedRuntimeAttribute type="number" keyPath="maxRows">
-                            <integer key="value" value="4"/>
                         </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="twosMade" value="YES"/>
                         <userDefinedRuntimeAttribute type="number" keyPath="count">
@@ -99,11 +86,12 @@
                         <userDefinedRuntimeAttribute type="number" keyPath="titleRows">
                             <integer key="value" value="1"/>
                         </userDefinedRuntimeAttribute>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="showTypeButton" value="NO"/>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="detailDrill" value="YES"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="totalScore" value="NO"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="handsMade" value="NO"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="winStreak" value="NO"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="NO"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="showTypeButton" value="NO"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="detailDrill" value="NO"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="nFJ-zl-qkx"/>
@@ -118,7 +106,6 @@
                             <integer key="value" value="3"/>
                         </userDefinedRuntimeAttribute>
                         <userDefinedRuntimeAttribute type="string" keyPath="title" value="Longest Win Streak"/>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="NO"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="totalScore" value="NO"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="handsMade" value="NO"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="winStreak" value="YES"/>
@@ -129,8 +116,9 @@
                         <userDefinedRuntimeAttribute type="number" keyPath="titleRows">
                             <integer key="value" value="1"/>
                         </userDefinedRuntimeAttribute>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="personal" value="NO"/>
                         <userDefinedRuntimeAttribute type="boolean" keyPath="showTypeButton" value="NO"/>
-                        <userDefinedRuntimeAttribute type="boolean" keyPath="detailDrill" value="YES"/>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="detailDrill" value="NO"/>
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <outlet property="dashboardDelegate" destination="-1" id="XGO-PT-6cd"/>

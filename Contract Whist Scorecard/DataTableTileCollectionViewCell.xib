@@ -62,6 +62,7 @@
             <color key="backgroundColor" name="Clear"/>
             <connections>
                 <outlet property="collectionView" destination="ig3-1u-an5" id="Njy-pi-L84"/>
+                <outlet property="collectionViewFlowLayout" destination="mra-dt-wiF" id="J1p-wA-6YG"/>
                 <outlet property="collectionViewHeightConstraint" destination="G5P-f4-iOF" id="QPb-0S-gh2"/>
                 <outlet property="textLabel" destination="dtX-be-KEL" id="DmV-vp-Qxu"/>
                 <outlet property="thumbnailView" destination="9Xi-Yn-aQH" id="pal-up-05s"/>

@@ -186,6 +186,8 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
         }
     }
     
+    // MARK: - Dashboard Tile View Delegates ========================================================== -
+     
     internal func reloadData() {
         self.setNeedsLayout()
         self.layoutIfNeeded()
@@ -193,6 +195,8 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
         self.calculateRows()
         self.tableView.reloadData()
     }
+      
+    // MARK: - Utility Routines ======================================================================== -
     
     private func getData() {
         self.records = self.dataSource?.getData?(personal: self.personal, count: self.maxRows)
@@ -314,6 +318,7 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
                     }
                     cell.thumbnailView.set(data: data, diameter: cell.frame.width - 4)
                 case .collection:
+                    cell.layoutIfNeeded()
                     cell.setCollectionViewDataSourceDelegate(self, nib: self.contentCollectionViewNib, forValue: record.value(forKey: column.field) as! Int)
                 default:
                     cell.textLabel.text = DataTableFormatter.getValue(record: record, column: column)
@@ -355,6 +360,7 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
 
 class DataTableTileTableViewCell: UITableViewCell {
     @IBOutlet fileprivate weak var collectionView: UICollectionView!
+    @IBOutlet fileprivate weak var collectionViewFlowLayout: UICollectionViewFlowLayout!
     
     func setCollectionViewDataSourceDelegate
          <D: UICollectionViewDataSource & UICollectionViewDelegate>
@@ -373,6 +379,7 @@ class DataTableTileCollectionViewCell: UICollectionViewCell {
     @IBOutlet fileprivate weak var thumbnailView: ThumbnailView!
     @IBOutlet fileprivate weak var collectionView: UICollectionView!
     @IBOutlet fileprivate weak var collectionViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet fileprivate weak var collectionViewFlowLayout: UICollectionViewFlowLayout!
     
     func setCollectionViewDataSourceDelegate
         <D: UICollectionViewDataSource & UICollectionViewDelegate>
@@ -385,7 +392,14 @@ class DataTableTileCollectionViewCell: UICollectionViewCell {
         let size: CGFloat = self.frame.width / CGFloat(cellsPerRow)
         collectionViewHeightConstraint.constant = (value > cellsPerRow ? (size * 2) + 4 : size)
         collectionView.tag = 1000000 + value
+        collectionView.isHidden = false
         collectionView.reloadData()
+    }
+    
+    override func prepareForReuse() {
+        collectionView.delegate = nil
+        collectionView.dataSource = nil
+        collectionView.isHidden = true
     }
 }
 

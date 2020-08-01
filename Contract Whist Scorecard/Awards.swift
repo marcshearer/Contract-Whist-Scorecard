@@ -226,7 +226,6 @@ public class Awards {
                 self.achieved = achieved
             }
             self.playerUUID = playerUUID
-            self.achieved!.forEach({print($0.code!, $0.awardLevel, $0.count, $0.syncCount)})
         }
         return self.achieved!
     }

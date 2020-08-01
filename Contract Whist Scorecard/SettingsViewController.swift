@@ -742,7 +742,6 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                 }
             } else if tableView.contentOffset.y < 10.0 && self.availableSpaceHeightConstraint.isActive {
                 Utility.animate(view: self.view, duration: 0.3) {
-                    print(tableView.contentOffset.y)
                     self.availableSpaceHeightConstraint.isActive = false
                     if ScorecardUI.landscapePhone() {
                         self.topSectionLandscapePhoneProportionalHeightConstraint.isActive = true

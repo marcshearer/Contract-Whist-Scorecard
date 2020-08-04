@@ -1433,7 +1433,7 @@ class Sync {
             // Search for specific playerUUID
             for playerUUID in specificPlayerUUIDs {
                 let found = Scorecard.shared.playerList.firstIndex(where: { $0.playerUUID!.lowercased() as String == playerUUID.lowercased() })
-                if found != nil {
+                if found != nil && playerUUID.left(7).lowercased() != "_player" {
                     self.queueMissingPlayer(playerMO: Scorecard.shared.playerList[found!])
                 }
             }

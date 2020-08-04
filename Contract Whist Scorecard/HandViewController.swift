@@ -317,7 +317,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
 
             var toLead: Int!
             var cards: [Card]!
-            if lastHand {
+            if lastHand || self.mirroredTrickCards.count == Scorecard.game.currentPlayers {
                 toLead = Scorecard.game.handState.lastToLead ?? Scorecard.game.handState.toLead
                 cards = Scorecard.game.handState.lastCards ?? Scorecard.game.handState.lastCards
             } else {

@@ -324,7 +324,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         }
 
         // Draw room
-        self.selectedPlayersView.drawRoom(thumbnailWidth: self.thumbnailWidth, thumbnailHeight: self.thumbnailHeight)
+        self.selectedPlayersView.drawRoom(thumbnailWidth: self.thumbnailWidth, thumbnailHeight: self.thumbnailHeight, players: self.selectedPlayers.count)
         
         self.alreadyDrawing = wasAlreadyDrawing
     }
@@ -579,15 +579,13 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         
         // Animate cards
         slot = 1
-        for sequence in 0..<self.self.selectedPlayers.count {
+        for sequence in 0..<self.selectedPlayers.count {
             
             let animation = UIViewPropertyAnimator(duration: stepDuration, curve: .easeIn) {
                 // Move card to player
                 let cardView = self.cutCardView[slot]
                 let origin = self.selectedPlayersView.origin(slot: slot, in: self.view)
-                cardView.frame = CGRect(origin: CGPoint(x: origin.x + ((self.thumbnailWidth - cardView.frame.width) / 2.0),
-                                                        y: origin.y),
-                                        size: cardView.frame.size)
+                cardView.frame = CGRect(origin: CGPoint(x: origin.x + ((self.thumbnailWidth - cardView.frame.width) / 2.0), y: origin.y), size: cardView.frame.size)
             }
             if slot == 0 {
                 animation.addCompletion({ [unowned self] _ in

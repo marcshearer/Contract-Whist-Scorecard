@@ -322,8 +322,8 @@
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="Amc-BQ-QmY"/>
                                         <exclude reference="jls-Jk-B0c"/>
+                                        <exclude reference="Amc-BQ-QmY"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=compact">

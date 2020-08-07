@@ -184,7 +184,7 @@ class ImageButton: UIView {
         self.backgroundColor = UIColor.clear
         self.contentView.backgroundColor = self.faceColor
         self.setupHeights()
-        
+
         // Round corners
         if self.cornerRadius != 0.0 {
             self.contentView.roundCorners(cornerRadius: self.cornerRadius)

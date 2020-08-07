@@ -151,19 +151,17 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         self.view.setNeedsLayout()
     }
     
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
-        if firstTime || rotated {
-            self.topArea.layoutIfNeeded()
-            self.middleArea.layoutIfNeeded()
-            self.bottomArea.layoutIfNeeded()
-            self.setupSize()
-            self.winnerCollectionView.reloadData()
-            self.awardsCollectionView.reloadData()
-            firstTime = false
-            rotated = false
-        }
+        self.topArea.layoutIfNeeded()
+        self.middleArea.layoutIfNeeded()
+        self.bottomArea.layoutIfNeeded()
+        self.setupSize()
+        self.winnerCollectionView.reloadData()
+        self.awardsCollectionView.reloadData()
+        firstTime = false
+        rotated = false
         
         self.awardsTitleBar.set(title: (awardList.isEmpty ? "No New Awards" : "New Awards"))
     }
@@ -241,7 +239,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
             cell.scoreHeight.constant = scoreHeight
             cell.playerViewHeight.constant = imageHeight + (nameHeight - 5.0)
             
-            cell.thumbnailView.set(frame: CGRect(origin: CGPoint(), size: CGSize(width: width, height: width + nameHeight - 5.0)))
+            cell.thumbnailView.set(frame: CGRect(x: 0.0, y: crownHeight, width: width, height: width + nameHeight - 5.0))
             cell.thumbnailView.set(playerMO: Scorecard.game.player(enteredPlayerNumber: playerResults.playerNumber).playerMO!, nameHeight: nameHeight)
             cell.thumbnailView.set(font: UIFont.systemFont(ofSize: nameHeight * 0.7, weight: .semibold))
             cell.thumbnailView.set(textColor: Palette.roomInteriorTextContrast)
@@ -357,7 +355,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
 
     private func setupSize() {
         
-        let totalWidth = self.view.safeAreaLayoutGuide.layoutFrame.width
+        let totalWidth = self.topArea.frame.width
         var totalHeight = self.topArea.frame.height - 10.0
         var idealHeight = self.winnerCrownHeight + self.winnerImageHeight + self.winnerNameHeight - 5.0 + self.winnerScoreHeight
         if totalHeight < idealHeight {
@@ -391,21 +389,22 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         self.otherCollectionViewWidth.constant = self.otherWidth
         self.otherCollectionViewHeight.constant = self.otherImageHeight + (self.otherNameHeight - 5.0) + self.otherScoreHeight
         
-        self.actionButtons.forEach{(button) in button.roundCorners(cornerRadius: 8.0)}
         self.actionButtons.forEach{(button) in button.set(titleFont: UIFont.systemFont(ofSize: 18.0, weight: .semibold))}
         self.actionButtons.first!.layoutIfNeeded()
         
+        let size = self.bottomArea.frame.height / 2
         if self.awardList.count == 0 {
-            self.actionButtonViewHeight.constant = self.actionButtons.first!.frame.width
+                        
+            self.actionButtonViewHeight.constant = size
             self.actionButtons.forEach{(button) in button.setProportions(top: 0.15, image: 0.6, imageBottom: 0.05, title: 0.2, bottom: 0.1)}
             
-            self.awardsTitleBarHeight.constant = self.actionButtons.first!.frame.width * 0.4
+            self.awardsTitleBarHeight.constant = size * 0.4
             self.awardsTitleBar.set(labelProportion: 1.0)
         } else {
-            self.actionButtonViewHeight.constant = self.actionButtons.first!.frame.width * 0.4
+            self.actionButtonViewHeight.constant = size * 0.4
             self.actionButtons.forEach{(button) in button.setProportions(top: 0.1, title: 0.2, bottom: 0.1)}
             
-            self.awardsTitleBarHeight.constant = self.actionButtons.first!.frame.width
+            self.awardsTitleBarHeight.constant = size
             self.awardsTitleBar.set(labelProportion: 0.4)
             
             self.awardsCollectionViewHeight.constant = 0.5 * self.awardsTitleBarHeight.constant + (self.awardList.count <= self.awardMaxList ? 0 : self.awardNameHeight)
@@ -413,8 +412,8 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
             self.awardCellSize = AwardCollectionCell.sizeForCell(self.awardsCollectionView, mode: (self.awardList.count <= self.awardMaxList ? .list : .grid), across: 3.2, spacing: self.awardSpacing, labelHeight: self.awardNameHeight)
             self.awardsCollectionViewHeight.constant = (self.awardCellSize.height)
         }
+        
         self.actionButtonView.layoutIfNeeded()
-        self.actionButtons.forEach{(button) in button.roundCorners(cornerRadius: 8.0)}
         self.bottomArea.addShadow()
     }
     
@@ -715,7 +714,6 @@ extension GameSummaryViewController {
     private func defaultCellColors(cell: GameSummaryPlayerCollectionCell) {
         switch cell.reuseIdentifier {
         case "Game Summary Cell":
-            cell.playerScoreButton.setTitleColor(Palette.roomInteriorText, for: .normal)
             cell.playerScoreButton.setTitleColor(Palette.roomInteriorText, for: .normal)
         default:
             break

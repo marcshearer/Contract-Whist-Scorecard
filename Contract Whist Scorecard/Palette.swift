@@ -11,94 +11,94 @@ import UIKit
 class Palette {
     
     // Background colors that vary in/out of games
-    static var banner = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.banner, game: .gameBanner) })
-    static var segmentedControls = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.segmentedControls, game: .gameSegmentedControls) })
-    static var bannerShadow = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.bannerShadow, game: .gameBannerShadow) })
+    @PaletteBackground(.banner, game: .gameBanner) static var banner
+    @PaletteBackground(.segmentedControls, game: .gameSegmentedControls) static var segmentedControls
+    @PaletteBackground(.bannerShadow, game: .gameBannerShadow) static var bannerShadow
     
     // Other background colors
-    static var alternateBackground = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.alternateBackground) })
-    static var background = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.background) })
-    static var bidButton = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.bidButton) })
-    static var bold = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.bold) })
-    static var buttonFace = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.buttonFace) })
-    static var confirmButton = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.confirmButton) })
-    static var otherButton = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.otherButton) })
-    static var continueButton = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.continueButton) })
-    static var darkHighlight = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.darkHighlight) })
-    static var disabled = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.disabled) })
-    static var emphasis = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.emphasis) })
-    static var error = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.error) })
-    static var halo = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.halo) })
-    static var haloDealer = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.haloDealer) })
-    static var hand = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.hand) })
-    static var highlight = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.highlight) })
-    static var inputControl = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.inputControl) })
-    static var instruction = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.instruction) })
-    static var madeContract = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.madeContract) })
-    static var roomInterior = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.roomInterior) })
-    static var sectionHeading = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.sectionHeading) })
-    static var tableTop = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.tableTop) })
-    static var tableTopShadow = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.tableTopShadow) })
-    static var total = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.total) })
-    static var whisper = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.whisper) })
-    static var thumbnailDisc = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.thumbnailDisc) })
-    static var thumbnailPlaceholder = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.thumbnailPlaceholder) })
-    static var thumbnailPlaceholderText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.thumbnailPlaceholder) })
-    static var separator = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.separator) })
-    static var grid = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.grid) })
-    static var cardBack = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.cardBack) })
-    static var cardFace = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(.cardFace) })
+    @PaletteBackground(.alternateBackground) static var alternateBackground
+    @PaletteBackground(.background) static var background
+    @PaletteBackground(.bidButton) static var bidButton
+    @PaletteBackground(.bold) static var bold
+    @PaletteBackground(.buttonFace) static var buttonFace
+    @PaletteBackground(.confirmButton) static var confirmButton
+    @PaletteBackground(.otherButton) static var otherButton
+    @PaletteBackground(.continueButton) static var continueButton
+    @PaletteBackground(.darkHighlight) static var darkHighlight
+    @PaletteBackground(.disabled) static var disabled
+    @PaletteBackground(.emphasis) static var emphasis
+    @PaletteBackground(.error) static var error
+    @PaletteBackground(.halo) static var halo
+    @PaletteBackground(.haloDealer) static var haloDealer
+    @PaletteBackground(.hand) static var hand
+    @PaletteBackground(.highlight) static var highlight
+    @PaletteBackground(.inputControl) static var inputControl
+    @PaletteBackground(.instruction) static var instruction
+    @PaletteBackground(.madeContract) static var madeContract
+    @PaletteBackground(.roomInterior) static var roomInterior
+    @PaletteBackground(.sectionHeading) static var sectionHeading
+    @PaletteBackground(.tableTop) static var tableTop
+    @PaletteBackground(.tableTopShadow) static var tableTopShadow
+    @PaletteBackground(.total) static var total
+    @PaletteBackground(.whisper) static var whisper
+    @PaletteBackground(.thumbnailDisc) static var thumbnailDisc
+    @PaletteBackground(.thumbnailPlaceholder) static var thumbnailPlaceholder
+    @PaletteBackground(.separator) static var separator
+    @PaletteBackground(.grid) static var grid
+    @PaletteBackground(.cardBack) static var cardBack
+    @PaletteBackground(.cardFace) static var cardFace
 
     // Text colors that vary in/out of games
-    static var bannerText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.banner, game: .gameBanner) })
-    static var bannerEmbossed = UIColor(dynamicProvider: { (_) in Themes.currentTheme.themeText(.banner, game: .gameBanner) })
-    static var bannerTextContrast = UIColor(dynamicProvider: { (_) in Themes.currentTheme.contrastText(.banner, game: .gameBanner) })
+    @PaletteText(.banner, game: .gameBanner) static var bannerText
+    @PaletteText(.banner, game: .gameBanner, .theme) static var bannerEmbossed
+    @PaletteText(.banner, game: .gameBanner, .contrast) static var bannerTextContrast
     
     // Other text colors
-    static var bidButtonText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.bidButton) })
-    static var boldText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.bold) })
-    static var buttonFaceText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.buttonFace) })
-    static var buttonFaceThemeText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.themeText(.buttonFace) })
-    static var confirmButtonText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.confirmButton) })
-    static var otherButtonText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.otherButton) })
-    static var continueButtonText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.continueButton) })
-    static var darkHighlightText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.darkHighlight) })
-    static var darkHighlightTextContrast = UIColor(dynamicProvider: { (_) in Themes.currentTheme.contrastText(.darkHighlight) })
-    static var disabledText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.disabled) })
-    static var emphasisText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.emphasis) })
-    static var errorText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.error) })
-    static var handText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.hand) })
-    static var handTextContrast = UIColor(dynamicProvider: { (_) in Themes.currentTheme.contrastText(.hand) })
-    static var highlightText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.highlight) })
-    static var inputControlText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.inputControl) })
-    static var inputControlPlaceholder = UIColor(dynamicProvider: { (_) in Themes.currentTheme.faintText(.inputControl) })
-    static var instructionText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.instruction) })
-    static var madeContractText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.madeContract) })
-    static var roomInteriorText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.roomInterior) })
-    static var roomInteriorTextContrast = UIColor(dynamicProvider: { (_) in Themes.currentTheme.contrastText(.roomInterior) })
-    static var sectionHeadingText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.sectionHeading) })
-    static var sectionHeadingTextContrast = UIColor(dynamicProvider: { (_) in Themes.currentTheme.contrastText(.sectionHeading) })
-    static var tableTopText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.tableTop) })
-    static var tableTopTextContrast = UIColor(dynamicProvider: { (_) in Themes.currentTheme.contrastText(.tableTop) })
-    static var totalText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.total) })
-    static var whisperText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.whisper) })
-    static var thumbnailDiscText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.thumbnailDisc) })
-    static var text = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(.background) })
-    static var textTitle = UIColor(dynamicProvider: { (_) in Themes.currentTheme.strongText(.background) })
-    static var textEmphasised = UIColor(dynamicProvider: { (_) in Themes.currentTheme.strongText(.background) })
+    @PaletteText(.bidButton) static var bidButtonText
+    @PaletteText(.bold) static var boldText
+    @PaletteText(.buttonFace) static var buttonFaceText
+    @PaletteText(.buttonFace, .theme) static var buttonFaceThemeText
+    @PaletteText(.confirmButton) static var confirmButtonText
+    @PaletteText(.otherButton) static var otherButtonText
+    @PaletteText(.continueButton) static var continueButtonText
+    @PaletteText(.darkHighlight) static var darkHighlightText
+    @PaletteText(.darkHighlight, .contrast) static var darkHighlightTextContrast
+    @PaletteText(.disabled) static var disabledText
+    @PaletteText(.emphasis) static var emphasisText
+    @PaletteText(.error) static var errorText
+    @PaletteText(.hand) static var handText
+    @PaletteText(.hand, .contrast) static var handTextContrast
+    @PaletteText(.highlight) static var highlightText
+    @PaletteText(.inputControl) static var inputControlText
+    @PaletteText(.inputControl, .faint) static var inputControlPlaceholder
+    @PaletteText(.instruction) static var instructionText
+    @PaletteText(.madeContract) static var madeContractText
+    @PaletteText(.roomInterior) static var roomInteriorText
+    @PaletteText(.roomInterior, .contrast) static var roomInteriorTextContrast
+    @PaletteText(.sectionHeading) static var sectionHeadingText
+    @PaletteText(.sectionHeading, .contrast) static var sectionHeadingTextContrast
+    @PaletteText(.tableTop) static var tableTopText
+    @PaletteText(.tableTop, .contrast) static var tableTopTextContrast
+    @PaletteText(.total) static var totalText
+    @PaletteText(.whisper) static var whisperText
+    @PaletteText(.thumbnailDisc) static var thumbnailDiscText
+    @PaletteText(.thumbnailPlaceholder) static var thumbnailPlaceholderText
+    @PaletteText(.background) static var text
+    @PaletteText(.background, .strong) static var textTitle
+    @PaletteText(.background, .strong) static var textEmphasised
  
     // Specific colors
-    static var suitDiamondsHearts = UIColor(dynamicProvider: { (_) in Themes.currentTheme.specific(.suitDiamondsHearts) })
-    static var suitClubsSpades = UIColor(dynamicProvider: { (_) in Themes.currentTheme.specific(.suitClubsSpades) })
-    static var suitNoTrumps = UIColor(dynamicProvider: { (_) in Themes.currentTheme.specific(.suitNoTrumps) })
-    static var contractOver = UIColor(dynamicProvider: { (_) in Themes.currentTheme.specific(.contractOver) })
-    static var contractUnder = UIColor(dynamicProvider: { (_) in Themes.currentTheme.specific(.contractUnder) })
-    static var contractUnderLight = UIColor(dynamicProvider: { (_) in Themes.currentTheme.specific(.contractUnderLight) })
-    static var contractEqual = UIColor(dynamicProvider: { (_) in Themes.currentTheme.specific(.contractEqual) })
-    static var history = UIColor(dynamicProvider: { (_) in Themes.currentTheme.specific(.history) })
-    static var stats = UIColor(dynamicProvider: { (_) in Themes.currentTheme.specific(.stats) })
-    static var highScores = UIColor(dynamicProvider: { (_) in Themes.currentTheme.specific(.highScores) })
-    static var errorCondition = UIColor(dynamicProvider: { (_) in Themes.currentTheme.specific(.error) })
+    @PaletteSpecific(.suitDiamondsHearts) static var suitDiamondsHearts
+    @PaletteSpecific(.suitClubsSpades) static var suitClubsSpades
+    @PaletteSpecific(.suitNoTrumps) static var suitNoTrumps
+    @PaletteSpecific(.contractOver) static var contractOver
+    @PaletteSpecific(.contractUnder) static var contractUnder
+    @PaletteSpecific(.contractUnderLight) static var contractUnderLight
+    @PaletteSpecific(.contractEqual) static var contractEqual
+    @PaletteSpecific(.history) static var history
+    @PaletteSpecific(.stats) static var stats
+    @PaletteSpecific(.highScores) static var highScores
+    @PaletteSpecific(.error) static var errorCondition
     
     class func colorDetail(color: UIColor) -> (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
         var red: CGFloat = 0
@@ -307,5 +307,48 @@ class Palette {
         if setFont {
             label.font = UIFont.boldSystemFont(ofSize: 20.0)
         }
+    }
+}
+
+fileprivate enum textType {
+    case normal
+    case contrast
+    case strong
+    case faint
+    case theme
+}
+
+@propertyWrapper fileprivate final class PaletteBackground {
+    var wrappedValue: UIColor
+    
+    fileprivate init(_ colorName: ThemeBackgroundColorName, game gameColorName: ThemeBackgroundColorName? = nil) {
+        wrappedValue = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(colorName, game: gameColorName)})
+    }
+}
+
+@propertyWrapper fileprivate final class PaletteText {
+    var wrappedValue: UIColor
+    
+    fileprivate init(_ colorName: ThemeBackgroundColorName, game gameColorName: ThemeBackgroundColorName? = nil, _ type: textType = .normal) {
+        switch type {
+        case .normal:
+            wrappedValue = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(colorName, game: gameColorName)})
+        case .contrast:
+            wrappedValue = UIColor(dynamicProvider: { (_) in Themes.currentTheme.contrastText(colorName, game: gameColorName)})
+        case .strong:
+            wrappedValue = UIColor(dynamicProvider: { (_) in Themes.currentTheme.strongText(colorName, game: gameColorName)})
+        case .faint:
+            wrappedValue = UIColor(dynamicProvider: { (_) in Themes.currentTheme.faintText(colorName, game: gameColorName)})
+        case .theme:
+            wrappedValue = UIColor(dynamicProvider: { (_) in Themes.currentTheme.themeText(colorName, game: gameColorName)})
+        }
+    }
+}
+
+@propertyWrapper fileprivate final class PaletteSpecific {
+    var wrappedValue: UIColor
+    
+    fileprivate init(_ colorName: ThemeSpecificColorName) {
+        wrappedValue = UIColor(dynamicProvider: { (_) in Themes.currentTheme.specific(colorName)})
     }
 }

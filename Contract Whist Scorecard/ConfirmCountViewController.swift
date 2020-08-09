@@ -48,7 +48,7 @@ class ConfirmCountViewController : UIViewController, UIPopoverPresentationContro
         self.labelTitle.text = self.formTitle
         self.labelMessage.text = self.message
         self.textFieldCount.text = "\(value)"
-        self.textFieldCount.layer.borderColor = Palette.highlightText.cgColor
+        self.textFieldCount.layer.borderColor = Palette.text.cgColor
         self.textFieldCount.layer.borderWidth = 1.0
         self.stepperCount.value = Double(value)
         if self.minimumValue != nil {
@@ -110,10 +110,10 @@ extension ConfirmCountViewController {
         self.confirmButton.backgroundColor = Palette.background
         self.confirmButton.setTitleColor(Palette.text, for: .normal)
         self.horizontalSeparator.backgroundColor = Palette.separator
-        self.labelMessage.textColor = Palette.highlightText
+        self.labelMessage.textColor = Palette.text
         self.labelTitle.backgroundColor = Palette.roomInterior
         self.labelTitle.textColor = Palette.roomInteriorText
-        self.stepperCount.tintColor = Palette.highlightText
+        self.stepperCount.tintColor = Palette.text
         self.textFieldCount.backgroundColor = Palette.alternateBackground
         self.textFieldCount.textColor = Palette.text
         self.verticalSeparator.backgroundColor = Palette.separator

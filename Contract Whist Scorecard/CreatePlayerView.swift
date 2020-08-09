@@ -204,7 +204,7 @@ class CreatePlayerView : UIView, UITextFieldDelegate, PlayerViewImagePickerDeleg
     
     private func setupDefaultColors() {
         
-        self.duplicateLabel.forEach{$0.textColor = Palette.textError}
+        self.duplicateLabel.forEach{$0.textColor = Palette.errorCondition}
         self.titleLabel.forEach{$0.textColor = Palette.buttonFaceText}
         
         self.createPlayerImagePickerPlayerView.set(backgroundColor: Palette.thumbnailDisc)

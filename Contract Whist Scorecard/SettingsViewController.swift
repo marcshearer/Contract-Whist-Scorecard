@@ -32,7 +32,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     private var notificationsRefused = false
     private var location = Location()
     private var useLocation: Bool?
-    private var themeNames: [String] = Array(Themes.themes.keys)
+    private var themeNames: [ThemeName] = ThemeName.allCases
     private var currentThemeIndex = 0
     private var themesDisplayed: CGFloat = 5.0 // Must be odd
     private var themesCount: Int = 0
@@ -1025,8 +1025,8 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             var cell: ColorThemeCollectionCell
             cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Color Theme Cell", for: indexPath) as! ColorThemeCollectionCell
             
-            let theme = Themes.themes[self.themeNames[indexPath.item]]!
-            cell.nameLabel.text = theme.description
+            let theme = Theme(themeName: themeNames[indexPath.item])
+            cell.nameLabel.text = themeNames[indexPath.item].description
             cell.nameLabel.textColor = Palette.text  // theme.color(.banner, .current)
             cell.sample.setColors(theme: theme)
             cell.sample.isHidden = false
@@ -1327,7 +1327,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     private func setupThemes() {
                 
         // Sort themes
-        self.themeNames.sort(by: {$0 < $1})
+        self.themeNames.sort(by: {$0.description < $1.description})
         
         // Move current value to middle
         self.themesCount = self.themeNames.count
@@ -1349,7 +1349,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     private func selectColorTheme(item: Int) {
         Scorecard.settings.colorTheme = self.themeNames[item]
-        Themes.selectTheme(name: self.themeNames[item])
+        Themes.selectTheme(self.themeNames[item])
         self.defaultViewColors()
         self.view.setNeedsDisplay()
         self.view.setNeedsLayout()

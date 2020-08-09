@@ -338,7 +338,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
                 cell.playerBidLabel.text = "Bid \(bid!)"
             }
             cell.playerMadeLabel.text = playerMadeText(playerNumber)
-            cell.playerMadeLabel.textColor = Palette.tableTopText
+            cell.playerMadeLabel.textColor = Palette.tableTopTextContrast
             
             // Format card
             cell.playedCardWidthConstraint.constant = tabletopCardWidth
@@ -484,7 +484,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
                 // Hand complete - update tricks made on screen
                 let playerMadeLabel = self.playedCardCell(Scorecard.game.handState.winner! - 1)?.playerMadeLabel
                 playerMadeLabel?.text = playerMadeText(Scorecard.game.handState.toPlay!)
-                playerMadeLabel?.textColor = Palette.tableTopTextContrast
+                playerMadeLabel?.textColor = Palette.tableTopText
                 
                 // Disable lookback
                 lastHandButton.isHidden = true
@@ -863,7 +863,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         label.textAlignment = .center
         ScorecardUI.roundCorners(label)
         
-        self.confirmPlayed(title: "Confirm Card", content: label, sourceView: self.handSourceView, confirmText: "Play card", cancelText: "Change card", titleOffset: 8.0, backgroundColor: Palette.tableTop, bannerColor: Palette.tableTop, bannerTextColor: Palette.tableTopTextContrast, buttonColor: Palette.roomInterior, buttonTextColor: Palette.roomInteriorText, confirmHandler: { self.playCard(card: card) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
+        self.confirmPlayed(title: "Confirm Card", content: label, sourceView: self.handSourceView, confirmText: "Play card", cancelText: "Change card", titleOffset: 8.0, backgroundColor: Palette.tableTop, bannerColor: Palette.tableTop, bannerTextColor: Palette.tableTopText, buttonColor: Palette.roomInterior, buttonTextColor: Palette.roomInteriorText, confirmHandler: { self.playCard(card: card) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
     }
     
     func playCard(card: Card) {
@@ -1041,7 +1041,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     
     func setInstructionsHighlight(to highlight: Bool) {
         let nonHighlightBackgroundColor = (highlight ? Palette.hand : Palette.tableTop)
-        let nonHighlightTextColor = (highlight ? Palette.handText : Palette.tableTopTextContrast)
+        let nonHighlightTextColor = (highlight ? Palette.handText : Palette.tableTopText)
         self.instructionView.backgroundColor = nonHighlightBackgroundColor
         self.instructionLabel.textColor = nonHighlightTextColor
         self.bannerPaddingView.backgroundColor = nonHighlightBackgroundColor
@@ -1261,9 +1261,9 @@ extension HandViewController {
         switch cell.reuseIdentifier {
         case "Played Card Collection Cell":
             cell.cardView.backgroundColor = Palette.cardFace
-            cell.playerBidLabel.textColor = Palette.tableTopText
-            cell.playerMadeLabel.textColor = Palette.tableTopText
-            cell.playerNameLabel.textColor = Palette.tableTopText
+            cell.playerBidLabel.textColor = Palette.tableTopTextContrast
+            cell.playerMadeLabel.textColor = Palette.tableTopTextContrast
+            cell.playerNameLabel.textColor = Palette.tableTopTextContrast
         default:
             break
         }

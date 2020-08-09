@@ -589,7 +589,7 @@ extension LocationViewController {
         switch cell.reuseIdentifier {
         case "Location Table Cell":
             cell.locationBottomLabel.textColor = Palette.background
-            cell.locationTopLabel.textColor = Palette.tableTopTextContrast
+            cell.locationTopLabel.textColor = Palette.tableTopText
         default:
             break
         }

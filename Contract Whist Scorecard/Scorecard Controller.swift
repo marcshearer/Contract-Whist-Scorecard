@@ -179,7 +179,7 @@ class ScorecardAppController : CommsDataDelegate, ScorecardAppControllerDelegate
     
     internal func present(nextView: ScorecardView, willDismiss: Bool = true, context: [String:Any?]? = nil) {
     
-        Scorecard.shared.gameBanners = (nextView != .none && nextView != .exit)
+        Scorecard.shared.useGameColor = (nextView != .none && nextView != .exit)
         
         if nextView == self.activeView {
             // Already displaying - just refresh

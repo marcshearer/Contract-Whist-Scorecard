@@ -941,10 +941,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     // MARK: - Utility Routines ======================================================================== -
 
     private func ignoringGameBanners(actions: ()->()) {
-        let gameBanners = Scorecard.shared.gameBanners
-        Scorecard.shared.gameBanners = false
+        let gameBanners = Scorecard.shared.useGameColor
+        Scorecard.shared.useGameColor = false
         actions()
-        Scorecard.shared.gameBanners = gameBanners
+        Scorecard.shared.useGameColor = gameBanners
     }
     
     private func createClientController() {
@@ -1251,7 +1251,7 @@ extension ClientViewController {
             self.peerTitleBar.set(faceColor: Palette.buttonFace)
             self.peerTitleBar.set(textColor: Palette.buttonFaceText)
             self.actionButtons.forEach{(button) in button.set(faceColor: Palette.buttonFace)}
-            self.actionButtons.forEach{(button) in button.set(titleColor: Palette.banner)}
+            self.actionButtons.forEach{(button) in button.set(titleColor: Palette.buttonFaceThemeText)}
             self.actionButtons.forEach{(button) in button.set(titleFont: UIFont.systemFont(ofSize: 18, weight: .bold))}
             self.playerSelectionView.backgroundColor = Palette.background
         }
@@ -1277,7 +1277,7 @@ extension ClientViewController {
             cell.button.set(faceColor: Palette.buttonFace)
             cell.button.set(titleColor: Palette.buttonFaceText)
             cell.button.set(messageColor: Palette.buttonFaceText)
-            cell.button.set(imageTintColor: Palette.banner)
+            cell.button.set(imageTintColor: Palette.buttonFaceThemeText)
         }
     }
     

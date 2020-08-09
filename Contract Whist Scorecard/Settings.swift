@@ -27,8 +27,16 @@ class Settings : Equatable {
     public var onlineGamesEnabled: Bool = false
     public var faceTimeAddress = ""
     public var prefersStatusBarHidden = true
-    public var colorTheme = Themes.defaultName
-    public var rawAppearance = ThemeAppearance.device.rawValue
+    public var rawColorTheme = ThemeName.standard.rawValue
+    public var colorTheme: ThemeName {
+        get {
+            return ThemeName(rawValue: self.rawColorTheme)!
+        }
+        set {
+            self.rawColorTheme = newValue.rawValue
+        }
+    }
+    private var rawAppearance = ThemeAppearance.device.rawValue
     public var appearance: ThemeAppearance {
         get {
             return ThemeAppearance(rawValue: self.rawAppearance)!
@@ -80,8 +88,8 @@ class Settings : Equatable {
             self.onlineGamesEnabled = value as! Bool
         case "prefersStatusBarHidden":
             self.prefersStatusBarHidden = value as! Bool
-        case "colorTheme":
-            self.colorTheme = value as! String
+        case "rawColorTheme":
+            self.rawColorTheme = value as! String
         case "rawAppearance":
             self.rawAppearance = value as! Int
         case "thisPlayerUUID":

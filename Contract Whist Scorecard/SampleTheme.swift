@@ -35,15 +35,14 @@ class SampleTheme: UIView {
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.layoutSubviews()
-        self.setColors()
     }
     
     public func setColors(theme: Theme? = nil) {
         
         let theme = theme ?? Themes.currentTheme!
         
-        self.banner?.backgroundColor = theme.color(.banner, .current)
-        self.bannerLabel?.textColor = theme.color(.bannerText, .current)
-        self.contentView?.backgroundColor = theme.color(.background, .current)
+        self.banner?.backgroundColor = theme.background(.banner)
+        self.bannerLabel?.textColor = theme.text(.banner)
+        self.contentView?.backgroundColor = theme.background(.background)
     }
 }

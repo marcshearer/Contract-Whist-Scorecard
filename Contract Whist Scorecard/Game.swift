@@ -202,7 +202,7 @@ class Game {
     */
     public func reset() {
         self._settings = Scorecard.settings.copy()
-        Themes.selectTheme(name: self.settings.colorTheme)
+        Themes.selectTheme(self.settings.colorTheme)
         self.settings.saveStats = self.settings.saveHistory
         self.loadGameDefaults()
         self.resetValues()

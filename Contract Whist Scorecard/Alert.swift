@@ -235,7 +235,7 @@ class ActionSheet : NSObject, UIPopoverPresentationControllerDelegate {
         if self.dark && style == .cancel {
             action.setValue(UIColor.black, forKey: "titleTextColor")
         } else {
-            action.setValue(Palette.highlightText, forKey: "titleTextColor")
+            action.setValue(Palette.text, forKey: "titleTextColor")
         }
     }
     

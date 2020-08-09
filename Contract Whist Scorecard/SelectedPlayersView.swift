@@ -239,7 +239,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
             
             let playerView = PlayerView(type: .selected, parentView: self.contentView, width: self.width, height: self.height, tag: index, haloWidth: self.haloWidth, allowHaloWidth: self.allowHaloWidth)
             playerView.delegate = self
-            playerView.set(textColor: Palette.tableTopText)
+            playerView.set(textColor: Palette.tableTopTextContrast)
             self.clear(playerView: playerView, slot: index)
             self.playerViews.append(playerView)
         }

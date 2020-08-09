@@ -817,7 +817,7 @@ extension PlayerDetailViewController {
             cell.separator.backgroundColor = Palette.separator
         case "Header":
             cell.headerLabel.textColor = Palette.textEmphasised
-            cell.duplicateLabel.textColor = Palette.textError
+            cell.duplicateLabel.textColor = Palette.errorCondition
         case "Record":
             cell.recordDateLabel.textColor = Palette.text
             cell.recordDescLabel.textColor = Palette.text

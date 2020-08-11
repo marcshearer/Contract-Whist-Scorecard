@@ -427,7 +427,7 @@ extension HistoryDetailViewController {
 
     private func defaultViewColors() {
 
-        self.excludeStatsLabel.tintColor = Palette.bold
+        self.excludeStatsLabel.textColor = Palette.bannerTextContrast
         self.finishButton.setTitleColor(Palette.bannerText, for: .normal)
         self.locationBackground.backgroundColor = Palette.darkHighlight
         self.locationText.textColor = Palette.darkHighlightText

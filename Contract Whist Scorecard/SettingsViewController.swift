@@ -964,9 +964,12 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             cell.appearanceButtons.forEach{(button) in
                 if button.tag == Scorecard.settings.appearance.rawValue {
                     button.setImage(UIImage(named: "box tick"), for: .normal)
+                    button.tintColor = Palette.segmentedControls
                 } else {
                     button.setImage(UIImage(named: "box"), for: .normal)
+                    button.tintColor = Palette.text
                 }
+                button.tintColorDidChange()
             }
         }
     }
@@ -1744,10 +1747,6 @@ extension SettingsViewController {
             cell.toggleSwitch.onTintColor = Palette.emphasis
         case "Appearance":
             cell.appearanceLabels.forEach{(label) in label.textColor = Palette.text}
-            cell.appearanceButtons.forEach{(button) in
-                button.tintColor = Palette.segmentedControls
-                button.tintColorDidChange()
-            }
         default:
             break
         }

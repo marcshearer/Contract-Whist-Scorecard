@@ -48,6 +48,14 @@ enum ThemeName: String, CaseIterable {
     }
 }
 
+enum ThemeTextType {
+    case normal
+    case contrast
+    case strong
+    case faint
+    case theme
+}
+
 enum ThemeBackgroundColorName {
     case alternateBackground
     case background
@@ -87,6 +95,10 @@ enum ThemeBackgroundColorName {
     case confirmButton
     case otherButton
     case whisper
+    case carouselSelected
+    case carouselUnselected
+    case darkBackground
+    case syncButton
 }
 
 enum ThemeTextColorName {
@@ -247,19 +259,19 @@ class Theme {
             if let anyTextColor = from.textColor[anyTextColorName] {
                 let darkTextColor = from.textColor[darkTextColorName]
                 if all || self.textColor[name] == nil {
-                    self.textColor[name] = self.traitColor(anyTextColor.normal, darkTextColor?.normal)
+                    self.textColor[name] = self.color(any: anyTextColor, dark: darkTextColor, .normal)
                 }
                 if all || self.contrastTextColor[name] == nil {
-                    self.contrastTextColor[name] = self.traitColor(anyTextColor.contrast ?? anyTextColor.normal, darkTextColor?.contrast ?? darkTextColor?.normal)
+                    self.contrastTextColor[name] = self.color(any: anyTextColor, dark: darkTextColor, .contrast)
                 }
                 if all || self.strongTextColor[name] == nil {
-                    self.strongTextColor[name] = self.traitColor(anyTextColor.strong ?? anyTextColor.normal, darkTextColor?.strong ?? darkTextColor?.normal)
+                    self.strongTextColor[name] = self.color(any: anyTextColor, dark: darkTextColor, .strong)
                 }
                 if all || self.faintTextColor[name] == nil {
-                    self.faintTextColor[name] = self.traitColor(anyTextColor.faint ?? anyTextColor.normal, darkTextColor?.faint ?? darkTextColor?.normal)
+                    self.faintTextColor[name] = self.color(any: anyTextColor, dark: darkTextColor, .faint)
                 }
                 if all || self.themeTextColor[name] == nil {
-                    self.themeTextColor[name] = self.traitColor(anyTextColor.theme ?? anyTextColor.normal, darkTextColor?.theme ?? darkTextColor?.normal)
+                    self.themeTextColor[name] = self.color(any: anyTextColor, dark: darkTextColor, .theme)
                 }
             }
         }
@@ -267,6 +279,16 @@ class Theme {
             if all || self.specificColor[name] == nil {
                 self.specificColor[name] = themeSpecificColor.uiColor
             }
+        }
+    }
+    
+    private func color(any anyTextColor: ThemeTextColor, dark darkTextColor: ThemeTextColor?, _ textType: ThemeTextType) -> UIColor {
+        if let darkTraitColor = darkTextColor?.color(textType) {
+            return darkTraitColor.uiColor
+        } else if let anyTraitColor = anyTextColor.color(textType) {
+            return anyTraitColor.uiColor
+        } else {
+            return self.traitColor(anyTextColor.normal!.anyColor, darkTextColor?.normal?.darkColor)
         }
     }
 
@@ -294,8 +316,8 @@ class Theme {
 }
 
 class ThemeTraitColor {
-    private let anyColor: UIColor
-    private let darkColor: UIColor?
+    fileprivate let anyColor: UIColor
+    fileprivate let darkColor: UIColor?
     
     init(_ anyColor: UIColor, _ darkColor: UIColor? = nil) {
         self.anyColor = anyColor
@@ -326,18 +348,41 @@ class ThemeColor {
 }
 
 class ThemeTextColor {
-    fileprivate let normal: UIColor
-    fileprivate let contrast: UIColor?
-    fileprivate let strong: UIColor?
-    fileprivate let faint: UIColor?
-    fileprivate let theme: UIColor?
+    fileprivate var normal: ThemeTraitColor?
+    fileprivate var contrast: ThemeTraitColor?
+    fileprivate var strong: ThemeTraitColor?
+    fileprivate var faint: ThemeTraitColor?
+    fileprivate var theme: ThemeTraitColor?
 
-    init(_ normal: UIColor, contrast: UIColor? = nil, strong: UIColor? = nil, faint: UIColor? = nil, theme: UIColor? = nil) {
-        self.normal = normal
-        self.contrast = contrast
-        self.strong = strong
-        self.faint = faint
-        self.theme = theme
+    init(normal normalAny: UIColor, _ normalDark: UIColor? = nil, contrast contrastAny: UIColor? = nil, _ contrastDark: UIColor? = nil, strong strongAny: UIColor? = nil, _ strongDark: UIColor? = nil, faint faintAny: UIColor? = nil, _ faintDark: UIColor? = nil, theme themeAny: UIColor? = nil, _ themeDark: UIColor? = nil) {
+        self.normal = self.traitColor(normalAny, normalDark)!
+        self.contrast = self.traitColor(contrastAny, contrastDark)
+        self.strong = self.traitColor(strongAny, strongDark)
+        self.faint = self.traitColor(faintAny, faintDark)
+        self.theme = self.traitColor(themeAny, themeDark)
+    }
+    
+    fileprivate func color(_ textType: ThemeTextType) -> ThemeTraitColor? {
+        switch textType {
+        case .normal:
+            return self.normal
+        case .contrast:
+            return self.contrast
+        case .strong:
+            return self.strong
+        case .faint:
+            return self.faint
+        case .theme:
+            return self.theme
+        }
+    }
+    
+    private func traitColor(_ anyColor: UIColor?, _ darkColor: UIColor? = nil) -> ThemeTraitColor? {
+        if let anyColor = anyColor {
+            return ThemeTraitColor(anyColor, darkColor)
+        } else {
+            return nil
+        }
     }
 }
 
@@ -366,12 +411,13 @@ class Themes {
             background: [
                 .alternateBackground         : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil, .lightBackground) , //w
                 .background                  : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil, .lightBackground) , //w
+                .darkBackground              : ThemeColor(#colorLiteral(red: 0.9098039216, green: 0.9098039216, blue: 0.9098039216, alpha: 1), nil, .lightBackground) , //w
                 .banner                      : ThemeColor(#colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1), nil, .midBackground)   , //1     Banner
                 .bannerShadow                : ThemeColor(#colorLiteral(red: 0.7294117647, green: 0.2392156863, blue: 0.2156862745, alpha: 1), nil, .midBackground)   ,
+                .carouselSelected            : ThemeColor(#colorLiteral(red: 0.7294117647, green: 0.2392156863, blue: 0.2156862745, alpha: 1), nil, .midBackground)   ,
+                .carouselUnselected          : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil, .lightBackground)   ,
                 .bidButton                   : ThemeColor(#colorLiteral(red: 0.7164452672, green: 0.7218510509, blue: 0.7215295434, alpha: 1), nil, .midBackground) ,
-                .bold                        : ThemeColor(#colorLiteral(red: 0, green: 0.1469757259, blue: 0.6975850463, alpha: 1), nil, .darkBackground)  ,
                 .buttonFace                  : ThemeColor(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), nil, .lightBackground) , //w
-                .cardBack                    : ThemeColor(#colorLiteral(red: 0.001431431621, green: 0.06626898795, blue: 0.3973870575, alpha: 1), nil, .darkBackground)  ,
                 .cardFace                    : ThemeColor(#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), nil, .lightBackground) , //w
                 .clear                       : ThemeColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 0), nil, .lightBackground) ,
                 .continueButton              : ThemeColor(#colorLiteral(red: 0.5215686275, green: 0.6980392157, blue: 0.7058823529, alpha: 1), nil, .midBackground)   , //4
@@ -401,12 +447,13 @@ class Themes {
                 .thumbnailPlaceholder        : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil, .lightBackground) , //w
                 .otherButton                 : ThemeColor(#colorLiteral(red: 0.7018982768, green: 0.7020009756, blue: 0.7018757463, alpha: 1), nil, .midBackground)   ,
                 .confirmButton               : ThemeColor(#colorLiteral(red: 0.3292011023, green: 0.4971863031, blue: 0.2595342696, alpha: 1), nil, .midBackground)   ,
-                .whisper                     : ThemeColor(#colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1), nil, .lightBackground) ],
+                .whisper                     : ThemeColor(#colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1), nil, .lightBackground) ,
+                .syncButton                  : ThemeColor(#colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1), nil, .midBackground)],
             text: [
-                .lightBackground             : ThemeTextColor(#colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), faint: #colorLiteral(red: 0.6235294118, green: 0.6235294118, blue: 0.6235294118, alpha: 1), theme: #colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1)) ,
-                .midBackground               : ThemeTextColor(#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.5058823529, green: 0.1647058824, blue: 0.1490196078, alpha: 1)) ,
-                .midGameBackground           : ThemeTextColor(#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.6470588235, green: 0.7960784314, blue: 0.8039215686, alpha: 1)) ,
-                .darkBackground              : ThemeTextColor(#colorLiteral(red: 0.9411764706, green: 0.9411764706, blue: 0.9411764706, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), theme: #colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1))],
+                .lightBackground             : ThemeTextColor(normal: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), faint: #colorLiteral(red: 0.6235294118, green: 0.6235294118, blue: 0.6235294118, alpha: 1), theme: #colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1)) ,
+                .midBackground               : ThemeTextColor(normal: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.5058823529, green: 0.1647058824, blue: 0.1490196078, alpha: 1), #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1)) ,
+                .midGameBackground           : ThemeTextColor(normal: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.6470588235, green: 0.7960784314, blue: 0.8039215686, alpha: 1))  ,
+                .darkBackground              : ThemeTextColor(normal: #colorLiteral(red: 0.9411764706, green: 0.9411764706, blue: 0.9411764706, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), theme: #colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1))] ,
             specific: [
                 .contractOver                : ThemeTraitColor(#colorLiteral(red: 0.8621624112, green: 0.1350575387, blue: 0.08568952233, alpha: 1)) ,
                 .contractUnder               : ThemeTraitColor(#colorLiteral(red: 0.7120214701, green: 0.9846614003, blue: 0.5001918077, alpha: 1)) ,
@@ -432,10 +479,10 @@ class Themes {
                 .hand                        : ThemeColor(#colorLiteral(red: 0.4549019608, green: 0.5764705882, blue: 0.5921568627, alpha: 1), #colorLiteral(red: 0.1694289744, green: 0.1694289744, blue: 0.1694289744, alpha: 1),  .midBackground)   ,
                 .tableTop                    : ThemeColor(#colorLiteral(red: 0.8235294118, green: 0.7803921569, blue: 0.7333333333, alpha: 1), #colorLiteral(red: 0.2255345461, green: 0.4820669776, blue: 0.2524022623, alpha: 1),  .midBackground)   ],
             text: [
-                .lightBackground             : ThemeTextColor(#colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), faint: #colorLiteral(red: 0.6235294118, green: 0.6235294118, blue: 0.6235294118, alpha: 1), theme: #colorLiteral(red: 0.4549019608, green: 0.5764705882, blue: 0.5921568627, alpha: 1)) ,
-                .midBackground               : ThemeTextColor(#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.4078431373, green: 0.5176470588, blue: 0.5294117647, alpha: 1)) ,
-                .midGameBackground           : ThemeTextColor(#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.4078431373, green: 0.5176470588, blue: 0.5294117647, alpha: 1)) ,
-                .darkBackground              : ThemeTextColor(#colorLiteral(red: 0.9411764706, green: 0.9411764706, blue: 0.9411764706, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), theme: #colorLiteral(red: 0.4549019608, green: 0.5764705882, blue: 0.5921568627, alpha: 1)) ]
+                .lightBackground             : ThemeTextColor(normal: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), faint: #colorLiteral(red: 0.6235294118, green: 0.6235294118, blue: 0.6235294118, alpha: 1), theme: #colorLiteral(red: 0.4549019608, green: 0.5764705882, blue: 0.5921568627, alpha: 1)) ,
+                .midBackground               : ThemeTextColor(normal: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.4078431373, green: 0.5176470588, blue: 0.5294117647, alpha: 1)) ,
+                .midGameBackground           : ThemeTextColor(normal: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.4078431373, green: 0.5176470588, blue: 0.5294117647, alpha: 1)) ,
+                .darkBackground              : ThemeTextColor(normal: #colorLiteral(red: 0.9411764706, green: 0.9411764706, blue: 0.9411764706, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), theme: #colorLiteral(red: 0.4549019608, green: 0.5764705882, blue: 0.5921568627, alpha: 1)) ]
             ),
         .red: ThemeConfig(
             background: [
@@ -449,10 +496,10 @@ class Themes {
                 .inputControl                : ThemeColor(#colorLiteral(red: 0.948936522, green: 0.9490727782, blue: 0.9489069581, alpha: 1), nil, .lightBackground) ,
                 .sectionHeading              : ThemeColor(#colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1), nil, .midBackground)   ],
             text: [
-                .lightBackground             : ThemeTextColor(#colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), faint: #colorLiteral(red: 0.325458765, green: 0.325510323, blue: 0.3254473805, alpha: 1), theme: #colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1)) ,
-                .midBackground               : ThemeTextColor(#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.5529411765, green: 0.1450980392, blue: 0.1254901961, alpha: 1)) ,
-                .midGameBackground           : ThemeTextColor(#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.1176470588, green: 0.3607843137, blue: 0.4352941176, alpha: 1)) ,
-                .darkBackground              : ThemeTextColor(#colorLiteral(red: 0.9411764706, green: 0.9411764706, blue: 0.9411764706, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), theme: #colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1)) ]
+                .lightBackground             : ThemeTextColor(normal: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), faint: #colorLiteral(red: 0.325458765, green: 0.325510323, blue: 0.3254473805, alpha: 1), theme: #colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1)) ,
+                .midBackground               : ThemeTextColor(normal: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.5529411765, green: 0.1450980392, blue: 0.1254901961, alpha: 1)) ,
+                .midGameBackground           : ThemeTextColor(normal: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.1176470588, green: 0.3607843137, blue: 0.4352941176, alpha: 1)) ,
+                .darkBackground              : ThemeTextColor(normal: #colorLiteral(red: 0.9411764706, green: 0.9411764706, blue: 0.9411764706, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), theme: #colorLiteral(red: 0.6699781418, green: 0.2215877175, blue: 0.2024611831, alpha: 1)) ]
         ),
         .blue: ThemeConfig(
             background: [
@@ -493,10 +540,10 @@ class Themes {
                 .otherButton                 : ThemeColor(#colorLiteral(red: 0.7018982768, green: 0.7020009756, blue: 0.7018757463, alpha: 1), nil, .midBackground)   ,
                 .confirmButton               : ThemeColor(#colorLiteral(red: 0.3292011023, green: 0.4971863031, blue: 0.2595342696, alpha: 1), nil, .midBackground)   ],
             text: [
-                .lightBackground             : ThemeTextColor(#colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), faint: #colorLiteral(red: 0.8961163759, green: 0.7460593581, blue: 0.3743121624, alpha: 1), theme: #colorLiteral(red: 0.8961163759, green: 0.7460593581, blue: 0.3743121624, alpha: 1)) ,
-                .midBackground               : ThemeTextColor(#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.8196078431, green: 0.6666666667, blue: 0.2941176471, alpha: 1)) ,
-                .midGameBackground           : ThemeTextColor(#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.968627451, green: 0.4980392157, blue: 0.4941176471, alpha: 1)) ,
-                .darkBackground              : ThemeTextColor(#colorLiteral(red: 0.9411764706, green: 0.9411764706, blue: 0.9411764706, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), theme: #colorLiteral(red: 0.8961163759, green: 0.7460593581, blue: 0.3743121624, alpha: 1)) ]
+                .lightBackground             : ThemeTextColor(normal: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), faint: #colorLiteral(red: 0.8961163759, green: 0.7460593581, blue: 0.3743121624, alpha: 1), theme: #colorLiteral(red: 0.8961163759, green: 0.7460593581, blue: 0.3743121624, alpha: 1)) ,
+                .midBackground               : ThemeTextColor(normal: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.8196078431, green: 0.6666666667, blue: 0.2941176471, alpha: 1)) ,
+                .midGameBackground           : ThemeTextColor(normal: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.968627451, green: 0.4980392157, blue: 0.4941176471, alpha: 1)) ,
+                .darkBackground              : ThemeTextColor(normal: #colorLiteral(red: 0.9411764706, green: 0.9411764706, blue: 0.9411764706, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), theme: #colorLiteral(red: 0.8961163759, green: 0.7460593581, blue: 0.3743121624, alpha: 1)) ]
         ),
         .green: ThemeConfig(
             background:  [
@@ -506,10 +553,10 @@ class Themes {
                 .gameBanner                 : ThemeColor(#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1),  .midBackground) ,
                 .sectionHeading             : ThemeColor(#colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1), nil, .midBackground) ],
             text: [
-                .lightBackground             : ThemeTextColor(#colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), faint: #colorLiteral(red: 0.6235294118, green: 0.6235294118, blue: 0.6235294118, alpha: 1), theme: #colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1)) ,
-                .midBackground               : ThemeTextColor(#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.5058823529, green: 0.1647058824, blue: 0.1490196078, alpha: 1)) ,
-                .midGameBackground           : ThemeTextColor(#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1)) ,
-                .darkBackground              : ThemeTextColor(#colorLiteral(red: 0.9411764706, green: 0.9411764706, blue: 0.9411764706, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), theme: #colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1))]
+                .lightBackground             : ThemeTextColor(normal: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), faint: #colorLiteral(red: 0.6235294118, green: 0.6235294118, blue: 0.6235294118, alpha: 1), theme: #colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1)) ,
+                .midBackground               : ThemeTextColor(normal: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.5058823529, green: 0.1647058824, blue: 0.1490196078, alpha: 1)) ,
+                .midGameBackground           : ThemeTextColor(normal: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1)) ,
+                .darkBackground              : ThemeTextColor(normal: #colorLiteral(red: 0.9411764706, green: 0.9411764706, blue: 0.9411764706, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), theme: #colorLiteral(red: 0.3921568627, green: 0.6509803922, blue: 0.6431372549, alpha: 1))]
         )
     ]
     

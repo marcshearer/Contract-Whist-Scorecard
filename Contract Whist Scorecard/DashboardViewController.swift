@@ -254,12 +254,12 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         switch DashboardCollectionViews(rawValue: collectionView.tag) {
         case .carousel:
             let carouselCell = collectionView.dequeueReusableCell(withReuseIdentifier: "Carousel Cell", for: indexPath) as! DashboardCarouselCell
-            self.defaultCellColors(carouselCell)
             carouselCell.containerView.roundCorners(cornerRadius: 8.0)
             carouselCell.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
             carouselCell.titleLabel.alpha = (indexPath.row != self.currentPage ? 0.0 : 1.0)
-            carouselCell.containerView.backgroundColor = (indexPath.row == self.currentPage ? self.bannerShadowColor : self.backgroundColor)
-            carouselCell.backgroundImageView.tintColor = (indexPath.row == self.currentPage ? Palette.textTitle : Palette.disabledText)
+            carouselCell.containerView.backgroundColor = (indexPath.row == self.currentPage ? Palette.carouselSelected : Palette.carouselUnselected)
+            carouselCell.backgroundImageView.tintColor = (indexPath.row == self.currentPage ? Palette.carouselSelectedTextContrast : Palette.carouselUnselectedTextContrast)
+            carouselCell.titleLabel.textColor = (indexPath.row == self.currentPage ? Palette.carouselSelectedText : Palette.carouselUnselectedText)
             
             let dashboardInfo = dashboardViewInfo[indexPath.item]!
             carouselCell.titleLabel.text = dashboardInfo.title
@@ -308,8 +308,9 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                         // Unhighlight the cell leaving the center
                         if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: self.currentPage, section: 0)) as? DashboardCarouselCell {
                             if self.currentPage != itemAtCenter {
-                                cell.containerView.backgroundColor = self.backgroundColor
-                                cell.backgroundImageView.tintColor = Palette.disabledText
+                                cell.containerView.backgroundColor = Palette.carouselUnselected
+                                cell.backgroundImageView.tintColor = Palette.carouselUnselectedTextContrast
+                                cell.titleLabel.textColor = Palette.carouselUnselectedText
                                 cell.titleLabel.alpha = 0.0
                             }
                         }
@@ -323,8 +324,9 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                         
                         // Highlight new cell at center
                         if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: self.currentPage, section: 0)) as? DashboardCarouselCell {
-                            cell.containerView.backgroundColor = self.bannerShadowColor
-                            cell.backgroundImageView.tintColor = Palette.textTitle
+                            cell.containerView.backgroundColor = Palette.carouselSelected
+                            cell.backgroundImageView.tintColor = Palette.carouselSelectedTextContrast
+                            cell.titleLabel.textColor = Palette.carouselSelectedText
                             cell.titleLabel.alpha = 1.0
                         }
                         self.scrollCollectionView.reloadData()
@@ -490,18 +492,13 @@ extension DashboardViewController {
         self.titleLabel.textColor = self.bannerTextColor
         if ScorecardUI.smallPhoneSize() {
             // Switch to cloud image rather than Sync text on shadowed button
-            self.smallSyncButton.tintColor = self.bannerTextColor
+            self.smallSyncButton.tintColor = Palette.syncButtonText
         } else {
-            self.syncButton.setTitleColor(self.bannerTextColor, for: .normal)
-            self.syncButton.setBackgroundColor(self.bannerShadowColor)
+            self.syncButton.setTitleColor(Palette.syncButtonText, for: .normal)
+            self.syncButton.setBackgroundColor(Palette.syncButton)
         }
     }
 
-    private func defaultCellColors(_ cell: DashboardCarouselCell) {
-        cell.titleLabel.textColor = self.bannerTextColor
-        cell.backgroundImageView.tintColor = Palette.textTitle
-    }
-    
     private func defaultCellColors(_ cell: DashboardScrollCell) {
         cell.indicator.tintColor = self.bannerColor
     }

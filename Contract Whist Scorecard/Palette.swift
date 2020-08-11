@@ -45,8 +45,11 @@ class Palette {
     @PaletteBackground(.thumbnailPlaceholder) static var thumbnailPlaceholder
     @PaletteBackground(.separator) static var separator
     @PaletteBackground(.grid) static var grid
-    @PaletteBackground(.cardBack) static var cardBack
     @PaletteBackground(.cardFace) static var cardFace
+    @PaletteBackground(.carouselSelected) static var carouselSelected
+    @PaletteBackground(.carouselUnselected) static var carouselUnselected
+    @PaletteBackground(.darkBackground) static var darkBackground
+    @PaletteBackground(.syncButton) static var syncButton
 
     // Text colors that vary in/out of games
     @PaletteText(.banner, game: .gameBanner) static var bannerText
@@ -55,7 +58,6 @@ class Palette {
     
     // Other text colors
     @PaletteText(.bidButton) static var bidButtonText
-    @PaletteText(.bold) static var boldText
     @PaletteText(.buttonFace) static var buttonFaceText
     @PaletteText(.buttonFace, .theme) static var buttonFaceThemeText
     @PaletteText(.confirmButton) static var confirmButtonText
@@ -81,12 +83,17 @@ class Palette {
     @PaletteText(.tableTop, .contrast) static var tableTopTextContrast
     @PaletteText(.total) static var totalText
     @PaletteText(.whisper) static var whisperText
+    @PaletteText(.syncButton) static var syncButtonText
     @PaletteText(.thumbnailDisc) static var thumbnailDiscText
     @PaletteText(.thumbnailPlaceholder) static var thumbnailPlaceholderText
     @PaletteText(.background) static var text
     @PaletteText(.background, .strong) static var textTitle
     @PaletteText(.background, .strong) static var textEmphasised
- 
+    @PaletteText(.carouselSelected) static var carouselSelectedText
+    @PaletteText(.carouselSelected, .contrast) static var carouselSelectedTextContrast
+    @PaletteText(.carouselUnselected) static var carouselUnselectedText
+    @PaletteText(.carouselUnselected, .contrast) static var carouselUnselectedTextContrast
+
     // Specific colors
     @PaletteSpecific(.suitDiamondsHearts) static var suitDiamondsHearts
     @PaletteSpecific(.suitClubsSpades) static var suitClubsSpades
@@ -310,14 +317,6 @@ class Palette {
     }
 }
 
-fileprivate enum textType {
-    case normal
-    case contrast
-    case strong
-    case faint
-    case theme
-}
-
 @propertyWrapper fileprivate final class PaletteBackground {
     var wrappedValue: UIColor
     
@@ -329,7 +328,7 @@ fileprivate enum textType {
 @propertyWrapper fileprivate final class PaletteText {
     var wrappedValue: UIColor
     
-    fileprivate init(_ colorName: ThemeBackgroundColorName, game gameColorName: ThemeBackgroundColorName? = nil, _ type: textType = .normal) {
+    fileprivate init(_ colorName: ThemeBackgroundColorName, game gameColorName: ThemeBackgroundColorName? = nil, _ type: ThemeTextType = .normal) {
         switch type {
         case .normal:
             wrappedValue = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(colorName, game: gameColorName)})

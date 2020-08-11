@@ -1233,7 +1233,7 @@ extension ClientViewController {
 
     private func DefaultScreenColors() {
         self.ignoringGameBanners {
-            self.view.backgroundColor = Palette.background
+            self.view.backgroundColor = Palette.darkBackground
             self.topSection.backgroundColor = Palette.banner
             self.bannerPaddingView.bannerColor = Palette.banner
             self.leftPaddingView.bannerColor = Palette.banner
@@ -1253,7 +1253,7 @@ extension ClientViewController {
             self.actionButtons.forEach{(button) in button.set(faceColor: Palette.buttonFace)}
             self.actionButtons.forEach{(button) in button.set(titleColor: Palette.buttonFaceThemeText)}
             self.actionButtons.forEach{(button) in button.set(titleFont: UIFont.systemFont(ofSize: 18, weight: .bold))}
-            self.playerSelectionView.backgroundColor = Palette.background
+            self.playerSelectionView.backgroundColor = Palette.darkBackground
         }
     }
     

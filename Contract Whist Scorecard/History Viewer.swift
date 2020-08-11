@@ -356,8 +356,8 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
 
             // Create the filter button
             self.filterButton = ShadowButton(frame: CGRect(x: 0, y: 0, width: buttonWidth, height: buttonHeight), cornerRadius: 7.0)
-            self.filterButton.setBackgroundColor(Palette.bannerShadow)
-            self.filterButton.setTitleColor(Palette.bannerText, for: .normal)
+            self.filterButton.setBackgroundColor(Palette.syncButton)
+            self.filterButton.setTitleColor(Palette.syncButtonText, for: .normal)
             Constraint.setWidth(control: self.filterButton, width: buttonWidth)
             Constraint.setHeight(control: self.filterButton, height: buttonHeight)
             self.filterButton.setTitle("Filter", for: .normal)
@@ -387,8 +387,8 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
 
             // Create the sync button
             self.syncButton = ShadowButton(frame: CGRect(x: 0, y: 0, width: buttonWidth, height: buttonHeight), cornerRadius: 7)
-            self.syncButton.setBackgroundColor(Palette.bannerShadow)
-            self.syncButton.setTitleColor(Palette.bannerText, for: .normal)
+            self.syncButton.setBackgroundColor(Palette.syncButton)
+            self.syncButton.setTitleColor(Palette.syncButtonText, for: .normal)
             Constraint.setWidth(control: self.syncButton, width: buttonWidth)
             Constraint.setHeight(control: self.syncButton, height: buttonHeight)
             self.syncButton.setTitle("Sync", for: .normal)

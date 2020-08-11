@@ -664,10 +664,10 @@ extension DataTableViewController {
         self.titleBarView.backgroundColor = Palette.banner
         self.titleLabel.textColor = Palette.bannerText
         self.rightPaddingView.backgroundColor = Palette.banner
-        self.syncButton.setBackgroundColor(Palette.bannerShadow)
-        self.syncButton.setTitleColor(Palette.bannerText, for: .normal)
-        self.smallSyncButton.tintColor = Palette.bannerText
-        self.customButton.tintColor = Palette.bannerText
+        self.syncButton.setBackgroundColor(Palette.syncButton)
+        self.syncButton.setTitleColor(Palette.syncButtonText, for: .normal)
+        self.smallSyncButton.tintColor = Palette.syncButtonText
+        self.customButton.tintColor = Palette.syncButtonText
         self.view.backgroundColor = Palette.background
     }
 

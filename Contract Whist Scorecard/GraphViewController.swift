@@ -72,8 +72,8 @@ class GraphViewController: ScorecardViewController, GraphDetailDelegate {
         
         // Initialise the view
         graphView.reset()
-        graphView.backgroundColor = Palette.background
-        graphView.setColors(axis: Palette.text, gradient: [Palette.background, Palette.emphasis])
+        graphView.backgroundColor = Palette.normal.background
+        graphView.setColors(axis: Palette.normal.text, gradient: [Palette.normal.background, Palette.emphasis.background])
         graphView.setXAxis(hidden: true, fractionMin: 1.0)
         
         if participantList.count == 0 {
@@ -102,27 +102,27 @@ class GraphViewController: ScorecardViewController, GraphDetailDelegate {
             
             // Add maximum score line
             if maximum >= average + 10 {
-                graphView.addDataset(values: [maximum, maximum], weight: 2.0, color: Palette.text.withAlphaComponent(0.4))
-                graphView.addYaxisLabel(text: "\(Int(maximum))", value: maximum, position: .right, color: Palette.text)
+                graphView.addDataset(values: [maximum, maximum], weight: 2.0, color: Palette.normal.text.withAlphaComponent(0.4))
+                graphView.addYaxisLabel(text: "\(Int(maximum))", value: maximum, position: .right, color: Palette.normal.text)
                 if !portraitPhoneSize {
-                    graphView.addYaxisLabel(text: "Highest", value: maximum, position: .left, color: Palette.text)
+                    graphView.addYaxisLabel(text: "Highest", value: maximum, position: .left, color: Palette.normal.text)
                 }
             }
             
             // Add minimum score line
             if minimum <= average - 6 {
-                graphView.addDataset(values: [minimum, minimum], weight: 2.0, color: Palette.text.withAlphaComponent(0.4))
-                graphView.addYaxisLabel(text: "\(Int(minimum))", value: minimum, position: .right, color: Palette.text)
+                graphView.addDataset(values: [minimum, minimum], weight: 2.0, color: Palette.normal.text.withAlphaComponent(0.4))
+                graphView.addYaxisLabel(text: "\(Int(minimum))", value: minimum, position: .right, color: Palette.normal.text)
                 if !portraitPhoneSize {
-                    graphView.addYaxisLabel(text: "Lowest", value: minimum, position: .left, color: Palette.text)
+                    graphView.addYaxisLabel(text: "Lowest", value: minimum, position: .left, color: Palette.normal.text)
                 }
             }
             
             // Add average score line
-            graphView.addDataset(values: [average, average], weight: 3.0, color: Palette.emphasis.withAlphaComponent(0.4))
-            graphView.addYaxisLabel(text: "\(Int(average))", value: average, position: .right, color: Palette.textEmphasised)
+            graphView.addDataset(values: [average, average], weight: 3.0, color: Palette.emphasis.background.withAlphaComponent(0.4))
+            graphView.addYaxisLabel(text: "\(Int(average))", value: average, position: .right, color: Palette.normal.strongText)
             if !portraitPhoneSize {
-                graphView.addYaxisLabel(text: "Average", value: average, position: .left, color: Palette.textEmphasised)
+                graphView.addYaxisLabel(text: "Average", value: average, position: .left, color: Palette.normal.strongText)
             }
             
             // Add 100 line
@@ -134,13 +134,13 @@ class GraphViewController: ScorecardViewController, GraphDetailDelegate {
             }
             
             // Add main dataset - score per game
-            graphView.addDataset(values: values, weight: 3.0, color: Palette.emphasis, gradient: false, pointSize: 12.0, tag: 1, drillRef: drillRef)
+            graphView.addDataset(values: values, weight: 3.0, color: Palette.emphasis.background, gradient: false, pointSize: 12.0, tag: 1, drillRef: drillRef)
             graphView.detailDelegate = self
             
             // Set title
             let attributedTitle = NSMutableAttributedString()
             var attributes: [NSAttributedString.Key : Any] = [:]
-            attributes[NSAttributedString.Key.foregroundColor] = Palette.textEmphasised
+            attributes[NSAttributedString.Key.foregroundColor] = Palette.normal.strongText
             attributes[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 28.0, weight: .light)
             attributedTitle.append(NSAttributedString(string: "Game Score History for ", attributes: attributes))
             attributes[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 28.0, weight: .bold)
@@ -165,8 +165,8 @@ extension GraphViewController {
 
     private func defaultViewColors() {
 
-        self.graphView.backgroundColor = Palette.background
-        self.view.backgroundColor = Palette.background
+        self.graphView.backgroundColor = Palette.normal.background
+        self.view.backgroundColor = Palette.normal.background
     }
 
 }

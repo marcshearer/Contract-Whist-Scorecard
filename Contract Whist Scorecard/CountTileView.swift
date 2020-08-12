@@ -83,11 +83,11 @@ class CountTileView: UIView, DashboardTileDelegate {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        self.tileView.backgroundColor = Palette.buttonFace
-        self.titleLabel.textColor = Palette.textTitle
+        self.tileView.backgroundColor = Palette.buttonFace.background
+        self.titleLabel.textColor = Palette.normal.strongText
         self.countLabel.textColor = Dashboard.color(detailView: detailType)
         Dashboard.formatTypeButton(detailView: detailType, button: self.typeButton)
-        self.captionLabel.textColor = Palette.text
+        self.captionLabel.textColor = Palette.normal.text
         
         self.titleLabel.text = self.title
         self.getValue()

@@ -87,17 +87,17 @@ class SegmentedControl: UISegmentedControl {
     
     private func set() {
         if #available(iOS 13.0, *) {
-            self.selectedSegmentTintColor = Palette.segmentedControls
-            let selectedImage = UIImage(color: Palette.segmentedControls, size: CGSize(width: 1, height: 32))
+            self.selectedSegmentTintColor = Palette.segmentedControls.background
+            let selectedImage = UIImage(color: Palette.segmentedControls.background, size: CGSize(width: 1, height: 32))
             self.setBackgroundImage(selectedImage, for: .selected, barMetrics: .default)
-            let unselectedImage = UIImage(color: Palette.buttonFace, size: CGSize(width: 1, height: 32))
+            let unselectedImage = UIImage(color: Palette.buttonFace.background, size: CGSize(width: 1, height: 32))
             self.setBackgroundImage(unselectedImage, for: .normal, barMetrics: .default)
-            self.backgroundColor = Palette.buttonFace
-            self.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: Palette.bannerText], for: .selected)
-            self.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: Palette.buttonFaceText], for: .normal)
+            self.backgroundColor = Palette.buttonFace.background
+            self.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: Palette.banner.text], for: .selected)
+            self.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: Palette.buttonFace.text], for: .normal)
         } else {
-            self.tintColor = Palette.segmentedControls
-            self.backgroundColor = Palette.buttonFace
+            self.tintColor = Palette.segmentedControls.background
+            self.backgroundColor = Palette.buttonFace.background
             self.layer.cornerRadius = 5.0
         }
         self.layer.masksToBounds = true
@@ -160,13 +160,13 @@ class TextField : UITextField {
     
     private func setupTextField() {
         self.setupPlaceholder()
-        self.backgroundColor = Palette.inputControl
-        self.textColor = Palette.inputControlText
+        self.backgroundColor = Palette.inputControl.background
+        self.textColor = Palette.inputControl.text
     }
     
     private func setupPlaceholder() {
         if let placeholder = self.placeholder {
-            self.attributedPlaceholder = NSAttributedString(string: placeholder, attributes:[NSAttributedString.Key.foregroundColor: Palette.inputControlPlaceholder])
+            self.attributedPlaceholder = NSAttributedString(string: placeholder, attributes:[NSAttributedString.Key.foregroundColor: Palette.inputControl.faintText])
         }
     }
 }
@@ -177,7 +177,7 @@ class HiddenTextField : UITextField {
     
     override var isEnabled: Bool {
         didSet {
-            self.backgroundColor = (self.isEnabled ? Palette.inputControl : Palette.background)
+            self.backgroundColor = (self.isEnabled ? Palette.inputControl.background : Palette.normal.background)
         }
     }
 }

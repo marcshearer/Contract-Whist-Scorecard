@@ -161,7 +161,7 @@ class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
         let cell = tableView.dequeueReusableCell(withIdentifier: "Table Cell", for: indexPath) as! HighScoreTileTableViewCell
         
         let row = rowInfo[indexPath.row]
-        cell.captionAboveLabel.textColor = Palette.textTitle
+        cell.captionAboveLabel.textColor = Palette.normal.strongText
         cell.valueLabel.textColor = Palette.highScores
         cell.valueLabel.isHidden = (row.type == .winStreak)
         cell.valueImageView.isHidden = (row.type == .winStreak)
@@ -379,8 +379,8 @@ class HighScoreTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
     // MARK: - Utility Routines ======================================================================== -
     
     private func defaultViewColors() {
-        self.tileView.backgroundColor = Palette.buttonFace
-        self.titleLabel.textColor = Palette.textTitle
+        self.tileView.backgroundColor = Palette.buttonFace.background
+        self.titleLabel.textColor = Palette.normal.strongText
         Dashboard.formatTypeButton(detailView: detailType, button: self.typeButton)
     }
 }

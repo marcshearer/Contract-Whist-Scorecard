@@ -354,9 +354,9 @@ extension DataTableViewController: UICollectionViewDelegate, UICollectionViewDat
             cell.tag = indexPath.row
 
             Palette.sectionHeadingStyle(cell.textLabel)
-            cell.topSpacingView.backgroundColor = Palette.sectionHeading
+            cell.topSpacingView.backgroundColor = Palette.sectionHeading.background
             cell.topSpacingHeightConstraint.constant = self.delegate?.headerTopSpacingHeight ?? 0.0
-            cell.headerUpArrowView.backgroundColor = Palette.sectionHeading
+            cell.headerUpArrowView.backgroundColor = Palette.sectionHeading.background
             cell.textLabel.text = column.title
             cell.textLabel.textAlignment = .center
             
@@ -583,8 +583,8 @@ class DataTableCell: UITableViewCell {
     
     public func setupArrows() {
         self.resetArrows()
-        self.headerUpArrowShape = self.centralArrow(container: self.headerUpArrowView, up: true, color: Palette.background)
-        self.headerDownArrowShape = self.centralArrow(container: self.headerDownArrowView, up: false, color: Palette.sectionHeading)
+        self.headerUpArrowShape = self.centralArrow(container: self.headerUpArrowView, up: true, color: Palette.normal.background)
+        self.headerDownArrowShape = self.centralArrow(container: self.headerDownArrowView, up: false, color: Palette.sectionHeading.background)
     }
     
     private func centralArrow(container: UIView, up: Bool, color: UIColor) -> UIView {
@@ -658,23 +658,23 @@ extension DataTableViewController {
 
     private func defaultViewColors() {
 
-        self.customHeaderView.backgroundColor = Palette.banner
-        self.finishButton.setTitleColor(Palette.bannerText, for: .normal)
-        self.leftPaddingView.backgroundColor = Palette.banner
-        self.titleBarView.backgroundColor = Palette.banner
-        self.titleLabel.textColor = Palette.bannerText
-        self.rightPaddingView.backgroundColor = Palette.banner
-        self.syncButton.setBackgroundColor(Palette.syncButton)
-        self.syncButton.setTitleColor(Palette.syncButtonText, for: .normal)
-        self.smallSyncButton.tintColor = Palette.syncButtonText
-        self.customButton.tintColor = Palette.syncButtonText
-        self.view.backgroundColor = Palette.background
+        self.customHeaderView.backgroundColor = Palette.banner.background
+        self.finishButton.setTitleColor(Palette.banner.text, for: .normal)
+        self.leftPaddingView.backgroundColor = Palette.banner.background
+        self.titleBarView.backgroundColor = Palette.banner.background
+        self.titleLabel.textColor = Palette.banner.text
+        self.rightPaddingView.backgroundColor = Palette.banner.background
+        self.syncButton.setBackgroundColor(Palette.alwaysTheme.background)
+        self.syncButton.setTitleColor(Palette.alwaysTheme.text, for: .normal)
+        self.smallSyncButton.tintColor = Palette.alwaysTheme.text
+        self.customButton.tintColor = Palette.alwaysTheme.text
+        self.view.backgroundColor = Palette.normal.background
     }
 
     private func defaultCellColors(cell: DataTableCell) {
         switch cell.reuseIdentifier {
         case "Data Table Body Cell":
-            cell.separator.backgroundColor = Palette.separator
+            cell.separator.backgroundColor = Palette.separator.background
         default:
             break
         }
@@ -683,16 +683,16 @@ extension DataTableViewController {
     private func defaultCellColors(cell: DataTableCollectionCell) {
         switch cell.reuseIdentifier {
         case "Data Table Body Button Cell":
-            cell.backgroundColor = Palette.background
-            cell.bodyButton.setTitleColor(Palette.text, for: .normal)
+            cell.backgroundColor = Palette.normal.background
+            cell.bodyButton.setTitleColor(Palette.normal.text, for: .normal)
         case "Data Table Body Normal Cell":
-            cell.textLabel.textColor = Palette.text
-            cell.backgroundColor = Palette.background
+            cell.textLabel.textColor = Palette.normal.text
+            cell.backgroundColor = Palette.normal.background
         case "Data Table Body Thumbnail Cell":
-            cell.bodyThumbnailDisc.textColor = Palette.text
-            cell.backgroundColor = Palette.background
+            cell.bodyThumbnailDisc.textColor = Palette.normal.text
+            cell.backgroundColor = Palette.normal.background
         case "Data Table Header Cell":
-            cell.textLabel.textColor = Palette.bannerText
+            cell.textLabel.textColor = Palette.banner.text
             cell.backgroundColor = UIColor.clear
         default:
             break

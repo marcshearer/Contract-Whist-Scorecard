@@ -178,7 +178,7 @@ class ImageButton: UIView {
         self.set(image: self.image)
         self.set(backgroundImage: self.backgroundImage)
         self.backgroundImageView.alpha = self.backgroundImageOpacity
-        self.backgroundImageView.tintColor = UIColor.black
+        self.backgroundImageView.tintColor = Palette.watermark.background
         self.messageLabel.text = self.message
         self.messageLabel.textColor = self.messageColor
         self.backgroundColor = UIColor.clear

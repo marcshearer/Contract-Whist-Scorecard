@@ -444,47 +444,47 @@ class GetStartedViewController: ScorecardViewController, ButtonDelegate, PlayerS
     // MARK: - View defaults ============================================================================ -
     
     private func setupDefaultColors() {
-        self.view.backgroundColor = Palette.background
+        self.view.backgroundColor = Palette.normal.background
         
-        self.bannerPaddingView.bannerColor = Palette.banner
-        self.topSection.backgroundColor = Palette.banner
-        self.titleLabel.textColor = Palette.bannerEmbossed
-        self.getStartedLabel.textColor = Palette.bannerText
+        self.bannerPaddingView.bannerColor = Palette.banner.background
+        self.topSection.backgroundColor = Palette.banner.background
+        self.titleLabel.textColor = Palette.banner.themeText
+        self.getStartedLabel.textColor = Palette.banner.text
         
-        self.infoButton.backgroundColor = Palette.bannerShadow
-        self.infoButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.infoButton.backgroundColor = Palette.bannerShadow.background
+        self.infoButton.setTitleColor(Palette.banner.text, for: .normal)
         
-        self.thisPlayerThumbnailView.set(textColor: Palette.bannerText)
+        self.thisPlayerThumbnailView.set(textColor: Palette.banner.text)
         self.thisPlayerThumbnailView.set(font: UIFont.systemFont(ofSize: 15, weight: .bold))
-        self.thisPlayerChangeButton.backgroundColor = Palette.bannerShadow
-        self.thisPlayerChangeButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.thisPlayerChangeButton.backgroundColor = Palette.bannerShadow.background
+        self.thisPlayerChangeButton.setTitleColor(Palette.banner.text, for: .normal)
         
-        self.playerSelectionView.backgroundColor = Palette.buttonFace
+        self.playerSelectionView.backgroundColor = Palette.buttonFace.background
         
-        self.downloadPlayersTitleBar.set(faceColor: Palette.buttonFace)
-        self.downloadPlayersTitleBar.set(textColor: Palette.buttonFaceText)
+        self.downloadPlayersTitleBar.set(faceColor: Palette.buttonFace.background)
+        self.downloadPlayersTitleBar.set(textColor: Palette.buttonFace.text)
         
-        self.createPlayerTitleBar.set(faceColor: Palette.buttonFace)
-        self.createPlayerTitleBar.set(textColor: Palette.buttonFaceText)
+        self.createPlayerTitleBar.set(faceColor: Palette.buttonFace.background)
+        self.createPlayerTitleBar.set(textColor: Palette.buttonFace.text)
         
-        self.downloadPlayersView.backgroundColor = Palette.buttonFace
-        self.createPlayerView.backgroundColor = Palette.buttonFace
-        self.createPlayerSettingsView.backgroundColor = Palette.buttonFace
+        self.downloadPlayersView.backgroundColor = Palette.buttonFace.background
+        self.createPlayerView.backgroundColor = Palette.buttonFace.background
+        self.createPlayerSettingsView.backgroundColor = Palette.buttonFace.background
         
-        self.downloadButton.setBackgroundColor(Palette.banner)
-        self.downloadButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.downloadButton.setBackgroundColor(Palette.banner.background)
+        self.downloadButton.setTitleColor(Palette.banner.text, for: .normal)
         
-        self.createPlayerSettingsTitleLabel.textColor = Palette.text
+        self.createPlayerSettingsTitleLabel.textColor = Palette.normal.text
                 
-        self.settingsOnLineGamesEnabledSwitch.forEach{(control) in control.tintColor = Palette.emphasis}
-        self.settingsOnLineGamesEnabledSwitch.forEach{(control) in control.onTintColor = Palette.emphasis}
-        self.settingsSaveLocationSwitch.forEach{(control) in control.tintColor = Palette.emphasis}
-        self.settingsSaveLocationSwitch.forEach{(control) in control.onTintColor = Palette.emphasis}
+        self.settingsOnLineGamesEnabledSwitch.forEach{(control) in control.tintColor = Palette.emphasis.background}
+        self.settingsOnLineGamesEnabledSwitch.forEach{(control) in control.onTintColor = Palette.emphasis.background}
+        self.settingsSaveLocationSwitch.forEach{(control) in control.tintColor = Palette.emphasis.background}
+        self.settingsSaveLocationSwitch.forEach{(control) in control.onTintColor = Palette.emphasis.background}
         
-        self.formLabel.forEach{(label) in label.textColor = Palette.text}
+        self.formLabel.forEach{(label) in label.textColor = Palette.normal.text}
         
-        self.actionButton.forEach{(button) in button.setBackgroundColor(Palette.banner)}
-        self.actionButton.forEach{(button) in button.setTitleColor(Palette.bannerText, for: .normal)}
+        self.actionButton.forEach{(button) in button.setBackgroundColor(Palette.banner.background)}
+        self.actionButton.forEach{(button) in button.setTitleColor(Palette.banner.text, for: .normal)}
                 
     }
     

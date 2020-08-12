@@ -239,7 +239,7 @@ class RelatedPlayersView : UIView, UITableViewDelegate, UITableViewDataSource, S
             
             cell.playerTick.isHidden = true
             cell.playerDetail.isHidden = true
-            cell.playerName.textColor = Palette.text.withAlphaComponent(0.5)
+            cell.playerName.textColor = Palette.normal.text.withAlphaComponent(0.5)
             cell.playerSeparatorView.isHidden = true
             
         } else {
@@ -260,7 +260,7 @@ class RelatedPlayersView : UIView, UITableViewDelegate, UITableViewDataSource, S
             cell.playerDetail.addTarget(self, action: #selector(RelatedPlayersView.playerDetail(_:)), for: UIControl.Event.touchUpInside)
             cell.playerDetail.tag = indexPath.row
             cell.playerDetail.isHidden = false
-            cell.playerName.textColor = Palette.text
+            cell.playerName.textColor = Palette.normal.text
             cell.playerSeparatorView.isHidden = false
             cell.selectionStyle = .none
         }
@@ -308,7 +308,7 @@ class RelatedPlayersView : UIView, UITableViewDelegate, UITableViewDataSource, S
             imageName = "off"
         }
         cell.playerTick.image = UIImage(named: imageName)?.asTemplate()
-        cell.playerTick.tintColor = (set ? Palette.confirmButton : Palette.otherButton)
+        cell.playerTick.tintColor = (set ? Palette.confirmButton.background : Palette.otherButton.background)
         cell.playerTick.isHidden = false
     }
     
@@ -371,22 +371,22 @@ class RelatedPlayersView : UIView, UITableViewDelegate, UITableViewDataSource, S
     }
     
     private func defaultViewColors() {
-        self.cancelButton.setBackgroundColor(Palette.otherButton)
-        self.cancelButton.setTitleColor(Palette.otherButtonText, for: .normal)
-        self.changeAllButton.setBackgroundColor(Palette.otherButton)
-        self.changeAllButton.setTitleColor(Palette.otherButtonText, for: .normal)
-        self.confirmButton.setBackgroundColor(Palette.confirmButton)
-        self.confirmButton.setTitleColor(Palette.confirmButtonText, for: .normal)
+        self.cancelButton.setBackgroundColor(Palette.otherButton.background)
+        self.cancelButton.setTitleColor(Palette.otherButton.text, for: .normal)
+        self.changeAllButton.setBackgroundColor(Palette.otherButton.background)
+        self.changeAllButton.setTitleColor(Palette.otherButton.text, for: .normal)
+        self.confirmButton.setBackgroundColor(Palette.confirmButton.background)
+        self.confirmButton.setTitleColor(Palette.confirmButton.text, for: .normal)
     }
     
     private func defaultCellColors(cell: RelatedPlayersTableViewCell) {
         switch cell.reuseIdentifier {
         case "Player Cell":
-            cell.playerDescription.textColor = Palette.text
-            cell.playerName.textColor = Palette.textTitle
-            cell.playerSeparatorView.backgroundColor = Palette.separator
-            cell.playerDetail.backgroundColor = Palette.otherButton
-            cell.playerDetail.setTitleColor(Palette.otherButtonText, for: .normal)
+            cell.playerDescription.textColor = Palette.normal.text
+            cell.playerName.textColor = Palette.normal.strongText
+            cell.playerSeparatorView.backgroundColor = Palette.separator.background
+            cell.playerDetail.backgroundColor = Palette.otherButton.background
+            cell.playerDetail.setTitleColor(Palette.otherButton.text, for: .normal)
             cell.playerDetail.toCircle()
         default:
             break

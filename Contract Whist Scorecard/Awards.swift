@@ -87,7 +87,7 @@ fileprivate struct AwardConfig {
     fileprivate let backgroundImageName: String?
     fileprivate let condition: (()->Bool)?
     
-    fileprivate init(code: String, name: String, shortName: String, title: String, description: String? = nil, awardLevels: [Int], repeatable: Bool = true, compare: Comparison? = nil, source: Source? = nil, key: String? = nil, custom: (([ParticipantMO])->Int)? = nil, winLose: WinLose = .any, imageName: String, backgroundColor: UIColor = Palette.darkHighlight, backgroundImageName: String? = nil, condition: (()->Bool)? = nil, overrides: [Int : AwardNameConfig]? = nil) {
+    fileprivate init(code: String, name: String, shortName: String, title: String, description: String? = nil, awardLevels: [Int], repeatable: Bool = true, compare: Comparison? = nil, source: Source? = nil, key: String? = nil, custom: (([ParticipantMO])->Int)? = nil, winLose: WinLose = .any, imageName: String, backgroundColor: UIColor = Palette.darkHighlight.background, backgroundImageName: String? = nil, condition: (()->Bool)? = nil, overrides: [Int : AwardNameConfig]? = nil) {
         self.code = code
         self.nameConfig = AwardNameConfig(name: name, shortName: shortName, title: title, description: description)
         self.awardLevels = awardLevels

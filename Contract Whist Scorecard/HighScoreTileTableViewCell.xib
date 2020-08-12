@@ -68,6 +68,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
+                <color key="backgroundColor" name="Clear"/>
                 <constraints>
                     <constraint firstItem="Bkf-5P-UtK" firstAttribute="centerX" secondItem="VOa-Pl-KwN" secondAttribute="centerX" id="6Xn-ci-6EV"/>
                     <constraint firstItem="Ia7-4D-Rc9" firstAttribute="top" secondItem="k3V-hG-ixR" secondAttribute="bottom" id="BnF-td-OSa"/>
@@ -83,6 +84,7 @@
                     <constraint firstItem="JMj-dD-Ieg" firstAttribute="leading" secondItem="VOa-Pl-KwN" secondAttribute="leading" id="yca-SL-qHa"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" name="Clear"/>
             <connections>
                 <outlet property="captionAboveLabel" destination="k3V-hG-ixR" id="v4p-0P-Sbg"/>
                 <outlet property="captionAboveLabelHeightConstraint" destination="hSW-Zo-qIu" id="B2p-8L-Pf4"/>

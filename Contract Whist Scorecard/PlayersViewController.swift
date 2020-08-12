@@ -373,20 +373,20 @@ class PlayerCell: UICollectionViewCell {
 extension PlayersViewController {
 
     private func defaultViewColors() {
-        self.view.backgroundColor = Palette.background
-        self.bannerPaddingView.backgroundColor = Palette.banner
-        self.topSection.backgroundColor = Palette.banner
-        self.titleLabel.textColor = Palette.bannerText
-        self.addPlayerButton.setBackgroundColor(Palette.bannerShadow)
-        self.addPlayerButton.setTitleColor(Palette.bannerText, for: .normal)
-        self.removePlayerButton.setBackgroundColor(Palette.bannerShadow)
-        self.removePlayerButton.setTitleColor(Palette.bannerText, for: .normal)
-        self.removePlayerCancelButton.setBackgroundColor(Palette.bannerShadow)
-        self.removePlayerCancelButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.view.backgroundColor = Palette.normal.background
+        self.bannerPaddingView.backgroundColor = Palette.banner.background
+        self.topSection.backgroundColor = Palette.banner.background
+        self.titleLabel.textColor = Palette.banner.text
+        self.addPlayerButton.setBackgroundColor(Palette.bannerShadow.background)
+        self.addPlayerButton.setTitleColor(Palette.banner.text, for: .normal)
+        self.removePlayerButton.setBackgroundColor(Palette.bannerShadow.background)
+        self.removePlayerButton.setTitleColor(Palette.banner.text, for: .normal)
+        self.removePlayerCancelButton.setBackgroundColor(Palette.bannerShadow.background)
+        self.removePlayerCancelButton.setTitleColor(Palette.banner.text, for: .normal)
     }
     
     private func defaultCellColors(cell: PlayerCell) {
-        cell.tile.backgroundColor = Palette.buttonFace
-        cell.thumbnail.set(textColor: Palette.buttonFaceText)
+        cell.tile.backgroundColor = Palette.buttonFace.background
+        cell.thumbnail.set(textColor: Palette.buttonFace.text)
     }
 }

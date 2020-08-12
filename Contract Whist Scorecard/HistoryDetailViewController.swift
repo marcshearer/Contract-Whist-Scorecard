@@ -160,7 +160,7 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
             Palette.normalStyle(cell.otherValue)
             if Scorecard.shared.findPlayerByPlayerUUID(gameDetail.participant[playerNumber-1].participantMO.playerUUID!) == nil {
                 // Player not on device - grey them out
-                let grayedOut = Palette.text.withAlphaComponent(0.3)
+                let grayedOut = Palette.normal.text.withAlphaComponent(0.3)
                 cell.name.textColor = UIColor.lightGray
                 cell.totalScore.textColor = grayedOut
                 cell.handsMade.textColor = grayedOut
@@ -372,7 +372,7 @@ class HistoryDetailViewController: ScorecardViewController, UITableViewDataSourc
     
     private func showLocation() {
         
-        _ = LocationViewController.show(from: self, gameLocation: self.gameDetail.gameLocation, useCurrentLocation: false, mustChange: true, bannerColor: Palette.banner, completion: { (location) in
+        _ = LocationViewController.show(from: self, gameLocation: self.gameDetail.gameLocation, useCurrentLocation: false, mustChange: true, bannerColor: Palette.banner.background, completion: { (location) in
             if let location = location {
                 // Copy location back
                 self.gameDetail.gameLocation = location
@@ -427,24 +427,24 @@ extension HistoryDetailViewController {
 
     private func defaultViewColors() {
 
-        self.excludeStatsLabel.textColor = Palette.bannerTextContrast
-        self.finishButton.setTitleColor(Palette.bannerText, for: .normal)
-        self.locationBackground.backgroundColor = Palette.darkHighlight
-        self.locationText.textColor = Palette.darkHighlightText
-        self.navigationBar.textColor = Palette.bannerText
-        self.participantTableView.separatorColor = Palette.separator
-        self.updateButton.setTitleColor(Palette.buttonFaceText, for: .normal)
-        self.updateButton.setBackgroundColor(Palette.buttonFace)
-        self.view.backgroundColor = Palette.background
+        self.excludeStatsLabel.textColor = Palette.banner.contrastText
+        self.finishButton.setTitleColor(Palette.banner.text, for: .normal)
+        self.locationBackground.backgroundColor = Palette.darkHighlight.background
+        self.locationText.textColor = Palette.darkHighlight.text
+        self.navigationBar.textColor = Palette.banner.text
+        self.participantTableView.separatorColor = Palette.separator.background
+        self.updateButton.setTitleColor(Palette.buttonFace.text, for: .normal)
+        self.updateButton.setBackgroundColor(Palette.buttonFace.background)
+        self.view.backgroundColor = Palette.normal.background
     }
 
     private func defaultCellColors(cell: HistoryDetailTableCell) {
         switch cell.reuseIdentifier {
         case "History Detail Cell":
-            cell.handsMade.textColor = Palette.text
-            cell.name.textColor = Palette.text
-            cell.otherValue.textColor = Palette.text
-            cell.totalScore.textColor = Palette.text
+            cell.handsMade.textColor = Palette.normal.text
+            cell.name.textColor = Palette.normal.text
+            cell.otherValue.textColor = Palette.normal.text
+            cell.totalScore.textColor = Palette.normal.text
         default:
             break
         }

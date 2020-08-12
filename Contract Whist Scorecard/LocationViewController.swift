@@ -86,7 +86,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
         
         // Setup search text field
         self.searchTextField = searchBar.value(forKey: "searchField") as? UITextField
-        self.searchTextField.textColor = Palette.text
+        self.searchTextField.textColor = Palette.normal.text
         
         if self.newLocation.description != nil && self.newLocation.locationSet && self.newLocation.description != "" && self.newLocation.description != "Online" {
             // Save last location
@@ -353,7 +353,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
     private func getCurrentLocation() -> Bool {
         var result = false
         
-        searchTextField?.attributedPlaceholder = NSAttributedString(string: "Please wait - getting location", attributes: [NSAttributedString.Key.foregroundColor: Palette.text.withAlphaComponent(0.7)])
+        searchTextField?.attributedPlaceholder = NSAttributedString(string: "Please wait - getting location", attributes: [NSAttributedString.Key.foregroundColor: Palette.normal.text.withAlphaComponent(0.7)])
         let authorizationStatus = CLLocationManager.authorizationStatus()
         if authorizationStatus == .restricted || authorizationStatus == .denied {
             // Not allowed to use location - go straight to input
@@ -460,7 +460,7 @@ class LocationViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     private func resetPlaceholder() {
-        searchTextField.attributedPlaceholder = NSAttributedString(string: "Enter description of current location", attributes: [NSAttributedString.Key.foregroundColor: Palette.text.withAlphaComponent(0.5)])
+        searchTextField.attributedPlaceholder = NSAttributedString(string: "Enter description of current location", attributes: [NSAttributedString.Key.foregroundColor: Palette.normal.text.withAlphaComponent(0.5)])
         self.searchBar.isUserInteractionEnabled = true
         self.activityIndicator.stopAnimating()
     }
@@ -571,25 +571,25 @@ extension LocationViewController {
 
     private func defaultViewColors() {
 
-        self.activityIndicator.color = Palette.text
-        self.bannerContinuationView.bannerColor = Palette.tableTop
-        self.bannerContinuationView.borderColor = Palette.tableTop
-        self.bannerPaddingView.bannerColor = Palette.tableTop
-        self.cancelButton.setTitleColor(Palette.bannerText, for: .normal)
-        self.continueButton.setTitleColor(Palette.bannerText, for: .normal)
-        self.locationTableView.backgroundColor = Palette.tableTop
-        self.locationTableView.separatorColor = Palette.background
-        self.navigationBar.textColor = Palette.bannerText
-        self.navigationBar.bannerColor = Palette.tableTop
-        self.searchBarBackgroundView.backgroundColor = Palette.tableTop
-        self.view.backgroundColor = Palette.background
+        self.activityIndicator.color = Palette.normal.text
+        self.bannerContinuationView.bannerColor = Palette.tableTop.background
+        self.bannerContinuationView.borderColor = Palette.tableTop.background
+        self.bannerPaddingView.bannerColor = Palette.tableTop.background
+        self.cancelButton.setTitleColor(Palette.banner.text, for: .normal)
+        self.continueButton.setTitleColor(Palette.banner.text, for: .normal)
+        self.locationTableView.backgroundColor = Palette.tableTop.background
+        self.locationTableView.separatorColor = Palette.normal.background
+        self.navigationBar.textColor = Palette.banner.text
+        self.navigationBar.bannerColor = Palette.tableTop.background
+        self.searchBarBackgroundView.backgroundColor = Palette.tableTop.background
+        self.view.backgroundColor = Palette.normal.background
     }
 
     private func defaultCellColors(cell: LocationTableCell) {
         switch cell.reuseIdentifier {
         case "Location Table Cell":
-            cell.locationBottomLabel.textColor = Palette.background
-            cell.locationTopLabel.textColor = Palette.tableTopText
+            cell.locationBottomLabel.textColor = Palette.normal.background
+            cell.locationTopLabel.textColor = Palette.tableTop.text
         default:
             break
         }

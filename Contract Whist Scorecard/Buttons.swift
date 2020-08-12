@@ -12,12 +12,12 @@ class RoundedButton: UIButton {
     
     private var cornerRadius: CGFloat = 5.0
     
-    var normalTextColor = Palette.darkHighlightText
-    var normalBackgroundColor = Palette.darkHighlight
+    var normalTextColor = Palette.darkHighlight.text
+    var normalBackgroundColor = Palette.darkHighlight.background
     var normalTextAlpha: CGFloat = 1.0
     var normalBackgroundAlpha: CGFloat = 1.0
-    var disabledTextColor = Palette.highlightText
-    var disabledBackgroundColor = Palette.highlight
+    var disabledTextColor = Palette.highlight.text
+    var disabledBackgroundColor = Palette.highlight.background
     var disabledBackgroundAlpha: CGFloat = 0.3
     var disabledTextAlpha: CGFloat = 1.0
     
@@ -238,7 +238,7 @@ class LightRoundedButton: RoundedButton {
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.normalTextColor = UIColor.black
-        self.normalBackgroundColor = Palette.highlight
+        self.normalBackgroundColor = Palette.highlight.background
         self.normalTextAlpha = 1.0
         self.normalBackgroundAlpha = 1.0
         self.disabledTextColor = self.normalTextColor
@@ -253,12 +253,12 @@ class DarkRoundedButton: RoundedButton {
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.normalTextColor = Palette.darkHighlightText
-        self.normalBackgroundColor = Palette.darkHighlight
+        self.normalTextColor = Palette.darkHighlight.text
+        self.normalBackgroundColor = Palette.darkHighlight.background
         self.normalTextAlpha = 1.0
         self.normalBackgroundAlpha = 1.0
-        self.disabledTextColor = Palette.darkHighlight
-        self.disabledBackgroundColor = Palette.darkHighlight
+        self.disabledTextColor = Palette.darkHighlight.background
+        self.disabledBackgroundColor = Palette.darkHighlight.background
         self.disabledTextAlpha = 0.9
         self.disabledBackgroundAlpha = 0.5
         super.isEnabled(true)
@@ -269,12 +269,12 @@ class BidButton: RoundedButton {
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.normalTextColor = Palette.bidButtonText
-        self.normalBackgroundColor = Palette.bidButton
+        self.normalTextColor = Palette.bidButton.text
+        self.normalBackgroundColor = Palette.bidButton.background
         self.normalTextAlpha = 1.0
         self.normalBackgroundAlpha = 1.0
-        self.disabledTextColor = Palette.bidButtonText
-        self.disabledBackgroundColor = Palette.bidButton
+        self.disabledTextColor = Palette.bidButton.text
+        self.disabledBackgroundColor = Palette.bidButton.background
         self.disabledTextAlpha = 0.9
         self.disabledBackgroundAlpha = 0.5
         super.isEnabled(true)
@@ -285,12 +285,12 @@ class EmphasisRoundedButton: RoundedButton {
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.normalTextColor = Palette.emphasisText
-        self.normalBackgroundColor = Palette.emphasis
+        self.normalTextColor = Palette.emphasis.text
+        self.normalBackgroundColor = Palette.emphasis.background
         self.normalTextAlpha = 1.0
         self.normalBackgroundAlpha = 1.0
-        self.disabledTextColor = Palette.emphasisText
-        self.disabledBackgroundColor = Palette.emphasis
+        self.disabledTextColor = Palette.emphasis.text
+        self.disabledBackgroundColor = Palette.emphasis.background
         self.disabledTextAlpha = 0.9
         self.disabledBackgroundAlpha = 0.5
         super.isEnabled(true)
@@ -313,7 +313,7 @@ class TotalRoundedButton: RoundedButton {
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.normalTextColor = UIColor.white
-        self.normalBackgroundColor = Palette.total
+        self.normalBackgroundColor = Palette.total.background
         self.normalTextAlpha = 1.0
         self.normalBackgroundAlpha = 1.0
         self.disabledTextColor = self.normalTextColor
@@ -329,7 +329,7 @@ class ErrorRoundedButton: RoundedButton {
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.normalTextColor = UIColor.white
-        self.normalBackgroundColor = Palette.error
+        self.normalBackgroundColor = Palette.error.background
         self.normalTextAlpha = 1.0
         self.normalBackgroundAlpha = 1.0
         self.disabledTextColor = self.normalTextColor

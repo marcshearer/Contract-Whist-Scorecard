@@ -108,7 +108,7 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
                     // Update tick and stop activity indicator
                     if let completeCell = self.syncStageTableView.cellForRow(at: IndexPath(row: stage.rawValue, section: 0)) as? SyncStageTableCell {
                         completeCell.statusImage.image = UIImage(named: "box tick")?.asTemplate()
-                        completeCell.statusImage.tintColor = Palette.bannerText
+                        completeCell.statusImage.tintColor = Palette.banner.text
                         completeCell.activityIndicator.stopAnimating()
                     }
                     
@@ -200,7 +200,7 @@ class SyncViewController: ScorecardViewController, UITableViewDelegate, UITableV
             
             stageCell.label.text = Sync.stageDescription(stage: stage)
             stageCell.statusImage.image = UIImage(named: ((stageComplete[stage] ?? false) ? "box tick" : "box"))?.asTemplate()
-            stageCell.statusImage.tintColor = Palette.bannerText
+            stageCell.statusImage.tintColor = Palette.banner.text
 
             cell = stageCell
             
@@ -299,15 +299,15 @@ extension SyncViewController {
 
     private func defaultViewColors() {
 
-        self.finishButton.setTitleColor(Palette.bannerText, for: .normal)
-        self.labels.forEach{(label) in label.textColor = Palette.bannerText}
-        self.view.backgroundColor = Palette.banner
+        self.finishButton.setTitleColor(Palette.banner.text, for: .normal)
+        self.labels.forEach{(label) in label.textColor = Palette.banner.text}
+        self.view.backgroundColor = Palette.banner.background
     }
 
     private func defaultCellColors(cell: SyncMessageTableCell) {
         switch cell.reuseIdentifier {
         case "Sync Message Table Cell":
-            cell.label.textColor = Palette.bannerText
+            cell.label.textColor = Palette.banner.text
         default:
             break
         }
@@ -316,7 +316,7 @@ extension SyncViewController {
     private func defaultCellColors(cell: SyncStageTableCell) {
         switch cell.reuseIdentifier {
         case "Sync Stage Table Cell":
-            cell.label.textColor = Palette.bannerText
+            cell.label.textColor = Palette.banner.text
         default:
             break
         }

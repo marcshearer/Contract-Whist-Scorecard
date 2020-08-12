@@ -112,11 +112,16 @@ public class ThumbnailView: UIView {
         self.set(data: playerMO.thumbnail, name: playerMO.name, nameHeight: nameHeight ?? 30.0, diameter: diameter)
     }
     
-    public func set(imageName: String?) {
+    public func set(imageName: String?, tintColor: UIColor? = nil) {
         self.set(frame: frame)
         if let imageName = imageName {
             self.additionalImage.isHidden = false
-            self.additionalImage.image = UIImage(named: imageName)
+            if let tintColor = tintColor {
+                self.additionalImage.image = UIImage(named: imageName)?.asTemplate()
+                self.additionalImage.tintColor = tintColor
+            } else {
+                self.additionalImage.image = UIImage(named: imageName)
+            }
         } else {
             self.additionalImage.isHidden = true
         }
@@ -194,7 +199,7 @@ public class ThumbnailView: UIView {
                 self.deleteView = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 20.0, height: 20.0))
                 let deleteImageView = UIImageView(frame: CGRect(x: 5.0, y: 5.0, width: 10.0, height: 10.0))
                 deleteImageView.image = UIImage(named: "cross red")
-                self.deleteView.backgroundColor = Palette.background
+                self.deleteView.backgroundColor = Palette.normal.background
                 deleteView.addSubview(deleteImageView)
             }
             ScorecardUI.veryRoundCorners(deleteView, radius: 10.0)

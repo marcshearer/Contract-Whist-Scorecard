@@ -159,7 +159,6 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     
     public func set(textColor: UIColor) {
         self.thumbnailView.set(textColor: textColor)
-        self.thumbnailView.additionalImage.tintColor = textColor
     }
     
     public func set(font: UIFont) {
@@ -170,8 +169,8 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         self.thumbnailView.set(backgroundColor: backgroundColor)
     }
     
-    public func set(imageName: String?) {
-        self.thumbnailView.set(imageName: imageName)
+    public func set(imageName: String?, tintColor: UIColor? = nil) {
+        self.thumbnailView.set(imageName: imageName, tintColor: tintColor)
     }
     
     @objc private func tapSelector(_ sender: Any?) {

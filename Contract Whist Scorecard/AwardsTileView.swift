@@ -18,6 +18,7 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
     private var sections: Int!
     private var achievedSection: Int!
     private var toAchieveSection: Int!
+    private var awardDetailView: AwardDetailView!
     
     private var spacing: CGFloat = 10.0
     private var nameHeight: CGFloat = 12.0
@@ -110,6 +111,11 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
         self.collectionViewFlowLayout.invalidateLayout()
     }
     
+    internal func willDisappear() {
+        self.awardDetailView?.hide()
+        self.awardDetailView = nil
+    }
+    
     // MARK: - Award collection delegate ================================================================== -
     
     internal func changeMode(to mode: AwardCellMode, section: Int) {
@@ -168,8 +174,8 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
             var title: NSMutableAttributedString
             if indexPath.section == achievedSection {
                 title = NSMutableAttributedString("Awarded")
-                title = title + NSMutableAttributedString(" \(self.achieved.count)", color: Palette.banner)
-                title = title + NSMutableAttributedString("/\(self.awardsTotal)", color: Palette.banner, font: UIFont.systemFont(ofSize: 12, weight: .light))
+                title = title + NSMutableAttributedString(" \(self.achieved.count)", color: Palette.buttonFace.themeText)
+                title = title + NSMutableAttributedString("/\(self.awardsTotal)", color: Palette.buttonFace.themeText, font: UIFont.systemFont(ofSize: 12, weight: .light))
             } else {
                 title = NSMutableAttributedString("For the Future")
             }
@@ -219,9 +225,9 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
             } else {
                 award = toAchieve[indexPath.row]
             }
-            let awardView = AwardDetailView(frame: parentView.frame)
-            awardView.set(awards: self.awards, playerUUID: Scorecard.settings.thisPlayerUUID, award: award, mode: (indexPath.section == achievedSection ? .awarded : .toBeAwarded), backgroundColor: Palette.buttonFace, textColor: Palette.buttonFaceText)
-            awardView.show(from: parentView)
+            self.awardDetailView = AwardDetailView(frame: parentView.frame)
+            awardDetailView.set(awards: self.awards, playerUUID: Scorecard.settings.thisPlayerUUID, award: award, mode: (indexPath.section == achievedSection ? .awarded : .toBeAwarded), backgroundColor: Palette.buttonFace.background, textColor: Palette.buttonFace.text)
+            awardDetailView.show(from: parentView)
         }
     }
         
@@ -232,6 +238,6 @@ class AwardsTileView: UIView, DashboardTileDelegate, AwardCollectionDelegate, UI
     }
     
     private func defaultViewColors() {
-        self.tileView.backgroundColor = Palette.buttonFace
+        self.tileView.backgroundColor = Palette.buttonFace.background
     }
 }

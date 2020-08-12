@@ -91,9 +91,9 @@ class AwardDetailView: UIView {
             self.countBadgeLabel.isHidden = false
             self.countBadgeImageView.isHidden = false
             self.countBadgeLabel.text = "\(award.count <= 9 ? "x" : "")\(award.count)"
-            self.countBadgeLabel.textColor = Palette.bannerText
+            self.countBadgeLabel.textColor = Palette.banner.text
             self.countBadgeImageView.image = UIImage(named: "award")?.asTemplate()
-            self.countBadgeImageView.tintColor = Palette.banner
+            self.countBadgeImageView.tintColor = Palette.banner.background
         }
         
         self.layoutSubviews()
@@ -121,10 +121,10 @@ class AwardDetailView: UIView {
         self.contentView.frame = self.bounds
         self.contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
-        self.shadowView.backgroundColor = Palette.buttonFace
-        self.labels.forEach{(label) in label.textColor = Palette.buttonFaceText}
+        self.shadowView.backgroundColor = Palette.buttonFace.background
+        self.labels.forEach{(label) in label.textColor = Palette.buttonFace.text}
         self.exitButton.setImage(UIImage(named: "cross white")?.asTemplate(), for: .normal)
-        self.exitButton.tintColor = Palette.buttonFaceText
+        self.exitButton.tintColor = Palette.buttonFace.text
     
         self.tapGesture = UITapGestureRecognizer(target: self, action: #selector(AwardDetailView.viewTapped(_:)))
         self.addGestureRecognizer(self.tapGesture)

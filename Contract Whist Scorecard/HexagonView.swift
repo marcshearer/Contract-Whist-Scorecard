@@ -14,10 +14,10 @@ public class HexagonView: UIView {
     @IBInspectable var detailText: String = ""
     @IBInspectable var buttonText: String = ""
     @IBInspectable var separator: Bool = false
-    @IBInspectable var bannerColor: UIColor = Palette.banner
-    @IBInspectable var fillColor: UIColor = Palette.background
-    @IBInspectable var strokeColor: UIColor = Palette.bannerText
-    @IBInspectable var textColor: UIColor = Palette.text
+    @IBInspectable var bannerColor: UIColor = Palette.banner.background
+    @IBInspectable var fillColor: UIColor = Palette.normal.background
+    @IBInspectable var strokeColor: UIColor = Palette.banner.text
+    @IBInspectable var textColor: UIColor = Palette.normal.text
     
     private var bannerColorView: UIView!
     private var separatorView: UIView!
@@ -38,7 +38,7 @@ public class HexagonView: UIView {
         super.init(coder: aDecoder)
     }
     
-    init(frame: CGRect, titleText: String, detailText: String, buttonText: String = "", buttonIsHidden: Bool = false, separator: Bool = false, bannerColor: UIColor = Palette.banner, fillColor: UIColor = Palette.background, strokeColor: UIColor = Palette.bannerText, textColor: UIColor = Palette.text, buttonAction: (()->())? = nil) {
+    init(frame: CGRect, titleText: String, detailText: String, buttonText: String = "", buttonIsHidden: Bool = false, separator: Bool = false, bannerColor: UIColor = Palette.banner.background, fillColor: UIColor = Palette.normal.background, strokeColor: UIColor = Palette.banner.text, textColor: UIColor = Palette.normal.text, buttonAction: (()->())? = nil) {
         super.init(frame: frame)
         
         // Save properties

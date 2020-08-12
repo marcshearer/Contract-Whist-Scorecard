@@ -1,5 +1,5 @@
 //
-//  Palette.swift
+//  Palette.swift.background
 //  Contract Whist Scorecard
 //
 //  Created by Marc Shearer on 04/07/2019.
@@ -11,101 +11,60 @@ import UIKit
 class Palette {
     
     // Background colors that vary in/out of games
-    @PaletteBackground(.banner, game: .gameBanner) static var banner
-    @PaletteBackground(.segmentedControls, game: .gameSegmentedControls) static var segmentedControls
-    @PaletteBackground(.bannerShadow, game: .gameBannerShadow) static var bannerShadow
+    @BackgroundColor(.banner, game: .gameBanner) static var banner
+    @BackgroundColor(.segmentedControls, game: .gameSegmentedControls) static var segmentedControls
+    @BackgroundColor(.bannerShadow, game: .gameBannerShadow) static var bannerShadow
     
     // Other background colors
-    @PaletteBackground(.alternateBackground) static var alternateBackground
-    @PaletteBackground(.background) static var background
-    @PaletteBackground(.bidButton) static var bidButton
-    @PaletteBackground(.bold) static var bold
-    @PaletteBackground(.buttonFace) static var buttonFace
-    @PaletteBackground(.confirmButton) static var confirmButton
-    @PaletteBackground(.otherButton) static var otherButton
-    @PaletteBackground(.continueButton) static var continueButton
-    @PaletteBackground(.darkHighlight) static var darkHighlight
-    @PaletteBackground(.disabled) static var disabled
-    @PaletteBackground(.emphasis) static var emphasis
-    @PaletteBackground(.error) static var error
-    @PaletteBackground(.halo) static var halo
-    @PaletteBackground(.haloDealer) static var haloDealer
-    @PaletteBackground(.hand) static var hand
-    @PaletteBackground(.highlight) static var highlight
-    @PaletteBackground(.inputControl) static var inputControl
-    @PaletteBackground(.instruction) static var instruction
-    @PaletteBackground(.madeContract) static var madeContract
-    @PaletteBackground(.roomInterior) static var roomInterior
-    @PaletteBackground(.sectionHeading) static var sectionHeading
-    @PaletteBackground(.tableTop) static var tableTop
-    @PaletteBackground(.tableTopShadow) static var tableTopShadow
-    @PaletteBackground(.total) static var total
-    @PaletteBackground(.whisper) static var whisper
-    @PaletteBackground(.thumbnailDisc) static var thumbnailDisc
-    @PaletteBackground(.thumbnailPlaceholder) static var thumbnailPlaceholder
-    @PaletteBackground(.separator) static var separator
-    @PaletteBackground(.grid) static var grid
-    @PaletteBackground(.cardFace) static var cardFace
-    @PaletteBackground(.carouselSelected) static var carouselSelected
-    @PaletteBackground(.carouselUnselected) static var carouselUnselected
-    @PaletteBackground(.darkBackground) static var darkBackground
-    @PaletteBackground(.syncButton) static var syncButton
-
-    // Text colors that vary in/out of games
-    @PaletteText(.banner, game: .gameBanner) static var bannerText
-    @PaletteText(.banner, game: .gameBanner, .theme) static var bannerEmbossed
-    @PaletteText(.banner, game: .gameBanner, .contrast) static var bannerTextContrast
-    
-    // Other text colors
-    @PaletteText(.bidButton) static var bidButtonText
-    @PaletteText(.buttonFace) static var buttonFaceText
-    @PaletteText(.buttonFace, .theme) static var buttonFaceThemeText
-    @PaletteText(.confirmButton) static var confirmButtonText
-    @PaletteText(.otherButton) static var otherButtonText
-    @PaletteText(.continueButton) static var continueButtonText
-    @PaletteText(.darkHighlight) static var darkHighlightText
-    @PaletteText(.darkHighlight, .contrast) static var darkHighlightTextContrast
-    @PaletteText(.disabled) static var disabledText
-    @PaletteText(.emphasis) static var emphasisText
-    @PaletteText(.error) static var errorText
-    @PaletteText(.hand) static var handText
-    @PaletteText(.hand, .contrast) static var handTextContrast
-    @PaletteText(.highlight) static var highlightText
-    @PaletteText(.inputControl) static var inputControlText
-    @PaletteText(.inputControl, .faint) static var inputControlPlaceholder
-    @PaletteText(.instruction) static var instructionText
-    @PaletteText(.madeContract) static var madeContractText
-    @PaletteText(.roomInterior) static var roomInteriorText
-    @PaletteText(.roomInterior, .contrast) static var roomInteriorTextContrast
-    @PaletteText(.sectionHeading) static var sectionHeadingText
-    @PaletteText(.sectionHeading, .contrast) static var sectionHeadingTextContrast
-    @PaletteText(.tableTop) static var tableTopText
-    @PaletteText(.tableTop, .contrast) static var tableTopTextContrast
-    @PaletteText(.total) static var totalText
-    @PaletteText(.whisper) static var whisperText
-    @PaletteText(.syncButton) static var syncButtonText
-    @PaletteText(.thumbnailDisc) static var thumbnailDiscText
-    @PaletteText(.thumbnailPlaceholder) static var thumbnailPlaceholderText
-    @PaletteText(.background) static var text
-    @PaletteText(.background, .strong) static var textTitle
-    @PaletteText(.background, .strong) static var textEmphasised
-    @PaletteText(.carouselSelected) static var carouselSelectedText
-    @PaletteText(.carouselSelected, .contrast) static var carouselSelectedTextContrast
-    @PaletteText(.carouselUnselected) static var carouselUnselectedText
-    @PaletteText(.carouselUnselected, .contrast) static var carouselUnselectedTextContrast
+    @BackgroundColor(.alternateBackground) static var alternateBackground
+    @BackgroundColor(.background) static var normal
+    @BackgroundColor(.darkBackground) static var darkBackground
+    @BackgroundColor(.midBackground) static var midBackground
+    @BackgroundColor(.bidButton) static var bidButton
+    @BackgroundColor(.bold) static var bold
+    @BackgroundColor(.buttonFace) static var buttonFace
+    @BackgroundColor(.confirmButton) static var confirmButton
+    @BackgroundColor(.otherButton) static var otherButton
+    @BackgroundColor(.continueButton) static var continueButton
+    @BackgroundColor(.darkHighlight) static var darkHighlight
+    @BackgroundColor(.disabled) static var disabled
+    @BackgroundColor(.emphasis) static var emphasis
+    @BackgroundColor(.error) static var error
+    @BackgroundColor(.halo) static var halo
+    @BackgroundColor(.haloDealer) static var haloDealer
+    @BackgroundColor(.hand) static var hand
+    @BackgroundColor(.highlight) static var highlight
+    @BackgroundColor(.inputControl) static var inputControl
+    @BackgroundColor(.instruction) static var instruction
+    @BackgroundColor(.madeContract) static var madeContract
+    @BackgroundColor(.roomInterior) static var roomInterior
+    @BackgroundColor(.sectionHeading) static var sectionHeading
+    @BackgroundColor(.tableTop) static var tableTop
+    @BackgroundColor(.tableTopShadow) static var tableTopShadow
+    @BackgroundColor(.total) static var total
+    @BackgroundColor(.whisper) static var whisper
+    @BackgroundColor(.thumbnailDisc) static var thumbnailDisc
+    @BackgroundColor(.thumbnailPlaceholder) static var thumbnailPlaceholder
+    @BackgroundColor(.separator) static var separator
+    @BackgroundColor(.grid) static var grid
+    @BackgroundColor(.cardFace) static var cardFace
+    @BackgroundColor(.carouselSelected) static var carouselSelected
+    @BackgroundColor(.carouselUnselected) static var carouselUnselected
+    @BackgroundColor(.alwaysTheme) static var alwaysTheme
+    @BackgroundColor(.watermark) static var watermark
 
     // Specific colors
-    @PaletteSpecific(.suitDiamondsHearts) static var suitDiamondsHearts
-    @PaletteSpecific(.suitClubsSpades) static var suitClubsSpades
-    @PaletteSpecific(.suitNoTrumps) static var suitNoTrumps
-    @PaletteSpecific(.contractOver) static var contractOver
-    @PaletteSpecific(.contractUnder) static var contractUnder
-    @PaletteSpecific(.contractUnderLight) static var contractUnderLight
-    @PaletteSpecific(.contractEqual) static var contractEqual
-    @PaletteSpecific(.history) static var history
-    @PaletteSpecific(.stats) static var stats
-    @PaletteSpecific(.highScores) static var highScores
-    @PaletteSpecific(.error) static var errorCondition
+    @SpecificColor(.suitDiamondsHearts) static var suitDiamondsHearts
+    @SpecificColor(.suitClubsSpades) static var suitClubsSpades
+    @SpecificColor(.suitNoTrumps) static var suitNoTrumps
+    @SpecificColor(.contractOver) static var contractOver
+    @SpecificColor(.contractUnder) static var contractUnder
+    @SpecificColor(.contractUnderLight) static var contractUnderLight
+    @SpecificColor(.contractEqual) static var contractEqual
+    @SpecificColor(.history) static var history
+    @SpecificColor(.stats) static var stats
+    @SpecificColor(.highScores) static var highScores
+    @SpecificColor(.error) static var errorCondition
     
     class func colorDetail(color: UIColor) -> (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) {
         var red: CGFloat = 0
@@ -119,160 +78,160 @@ class Palette {
     }
     
     class func sectionHeadingStyle(_ cell: UITableViewCell) {
-        cell.backgroundColor = Palette.sectionHeading
-        cell.textLabel?.textColor = Palette.sectionHeadingText
+        cell.backgroundColor = Palette.sectionHeading.background
+        cell.textLabel?.textColor = Palette.sectionHeading.text
     }
     
     class func sectionHeadingStyle(_ label: UILabel, setFont: Bool = true) {
-        label.backgroundColor = Palette.sectionHeading
-        label.textColor = Palette.sectionHeadingText
+        label.backgroundColor = Palette.sectionHeading.background
+        label.textColor = Palette.sectionHeading.text
         if setFont {
             label.font = UIFont.systemFont(ofSize: 17.0, weight: .thin)
         }
     }
     
     class func sectionHeadingStyle(_ cell: UICollectionViewCell) {
-        cell.backgroundColor = Palette.sectionHeading
+        cell.backgroundColor = Palette.sectionHeading.background
     }
     
     class func sectionHeadingStyle(view: UIView) {
-        view.backgroundColor = Palette.sectionHeading
+        view.backgroundColor = Palette.sectionHeading.background
     }
     
     class func highlightStyle(_ label: UILabel, setFont: Bool = true) {
-        label.backgroundColor = Palette.highlight
-        label.textColor = Palette.highlightText
+        label.backgroundColor = Palette.highlight.background
+        label.textColor = Palette.highlight.text
         if setFont {
             label.font = UIFont.systemFont(ofSize: 15.0)
         }
     }
     
     class func highlightStyle(view: UIView) {
-        view.backgroundColor = Palette.highlight
+        view.backgroundColor = Palette.highlight.background
     }
     
     class func highlightStyle(view: UITableViewHeaderFooterView) {
-        view.contentView.backgroundColor = Palette.highlight
-        view.detailTextLabel?.textColor = Palette.highlightText
+        view.contentView.backgroundColor = Palette.highlight.background
+        view.detailTextLabel?.textColor = Palette.highlight.text
     }
     
     class func highlightStyle(_ button: UIButton) {
-        button.backgroundColor = Palette.highlight
-        button.setTitleColor(Palette.highlightText, for: .normal)
+        button.backgroundColor = Palette.highlight.background
+        button.setTitleColor(Palette.highlight.text, for: .normal)
     }
     
     class func darkHighlightStyle(_ label: UILabel, lightText: Bool = true) {
-        label.backgroundColor = Palette.darkHighlight
-        label.textColor = Palette.darkHighlightText
+        label.backgroundColor = Palette.darkHighlight.background
+        label.textColor = Palette.darkHighlight.text
     }
     
     class func darkHighlightStyle(_ button: UIButton) {
-        button.backgroundColor = Palette.darkHighlight
-        button.setTitleColor(Palette.darkHighlightText, for: .normal)
+        button.backgroundColor = Palette.darkHighlight.background
+        button.setTitleColor(Palette.darkHighlight.text, for: .normal)
     }
     
     class func darkHighlightStyle(view: UIView) {
-        view.backgroundColor = Palette.darkHighlight
+        view.backgroundColor = Palette.darkHighlight.background
     }
     
     class func emphasisStyle(_ label: UILabel) {
-        label.backgroundColor = Palette.emphasis
-        label.textColor = Palette.emphasisText
+        label.backgroundColor = Palette.emphasis.background
+        label.textColor = Palette.emphasis.text
     }
     
     class func emphasisStyle(_ textView: UITextView) {
-        textView.backgroundColor = Palette.emphasis
-        textView.textColor = Palette.emphasisText
+        textView.backgroundColor = Palette.emphasis.background
+        textView.textColor = Palette.emphasis.text
     }
     
     class func emphasisStyle(_ button: UIButton, bigFont: Bool = false) {
-        button.backgroundColor = Palette.emphasis
-        button.setTitleColor(Palette.emphasisText, for: .normal)
+        button.backgroundColor = Palette.emphasis.background
+        button.setTitleColor(Palette.emphasis.text, for: .normal)
         if bigFont {
             button.titleLabel!.font = UIFont.boldSystemFont(ofSize: 24)
         }
     }
     
     class func emphasisStyle(view: UIView) {
-        view.backgroundColor = Palette.emphasis
+        view.backgroundColor = Palette.emphasis.background
     }
     
     class func bannerStyle(view: UIView) {
-        view.backgroundColor = Palette.banner
+        view.backgroundColor = Palette.banner.background
     }
     
     class func bannerStyle(_ cell: UITableViewCell) {
-        cell.backgroundColor = Palette.banner
-        cell.textLabel?.textColor = Palette.bannerText
+        cell.backgroundColor = Palette.banner.background
+        cell.textLabel?.textColor = Palette.banner.text
     }
     
     class func bannerStyle(_ label: UILabel) {
-        label.backgroundColor = Palette.banner
-        label.textColor = Palette.bannerText
+        label.backgroundColor = Palette.banner.background
+        label.textColor = Palette.banner.text
     }
     
     class func tableTopStyle(view: UIView) {
-        view.backgroundColor = Palette.tableTop
+        view.backgroundColor = Palette.tableTop.background
     }
     
     class func tableTopStyle(_ label: UILabel) {
-        label.backgroundColor = Palette.tableTop
-        label.textColor = Palette.tableTopText
+        label.backgroundColor = Palette.tableTop.background
+        label.textColor = Palette.tableTop.text
     }
     
     class func instructionStyle(_ label: UILabel) {
-        label.backgroundColor = Palette.instruction
-        label.textColor = Palette.instructionText
+        label.backgroundColor = Palette.instruction.background
+        label.textColor = Palette.instruction.text
     }
     
     class func bidButtonStyle(_ label: UILabel) {
-        label.backgroundColor = Palette.bidButton
-        label.textColor = Palette.bidButtonText
+        label.backgroundColor = Palette.bidButton.background
+        label.textColor = Palette.bidButton.text
     }
     
     class func totalStyle(_ label: UILabel) {
-        label.backgroundColor = Palette.total
-        label.textColor = Palette.totalText
+        label.backgroundColor = Palette.total.background
+        label.textColor = Palette.total.text
     }
     
     class func totalStyle(_ button: UIButton, bigFont: Bool = false) {
-        button.backgroundColor = Palette.total
-        button.setTitleColor(Palette.totalText, for: .normal)
+        button.backgroundColor = Palette.total.background
+        button.setTitleColor(Palette.total.text, for: .normal)
         if bigFont {
             button.titleLabel!.font = UIFont.boldSystemFont(ofSize: 24)
         }
     }
     
     class func totalStyle(view: UIView) {
-        view.backgroundColor = Palette.total
+        view.backgroundColor = Palette.total.background
     }
     
     class func errorStyle(_ label: UILabel, errorCondtion: Bool = true) {
         if errorCondtion {
             label.textColor = Palette.errorCondition
         } else {
-            label.textColor = Palette.text
+            label.textColor = Palette.normal.text
         }
     }
     
     class func inverseErrorStyle(_ label: UILabel, errorCondtion: Bool = true) {
         if errorCondtion {
-            label.backgroundColor = Palette.error
-            label.textColor = Palette.errorText
+            label.backgroundColor = Palette.error.background
+            label.textColor = Palette.error.text
         } else {
             label.backgroundColor = UIColor.clear
-            label.textColor = Palette.text
+            label.textColor = Palette.normal.text
         }
     }
     
     class func inverseErrorStyle(_ button: UIButton) {
-        button.backgroundColor = Palette.error
-        button.setTitleColor(Palette.errorText, for: .normal)
+        button.backgroundColor = Palette.error.background
+        button.setTitleColor(Palette.error.text, for: .normal)
     }
     
     class func normalStyle(_ label: UILabel, setFont: Bool = true) {
         label.backgroundColor = UIColor.clear
-        label.textColor = Palette.text
+        label.textColor = Palette.normal.text
         if setFont {
             label.font = UIFont.systemFont(ofSize: 15.0, weight: .thin)
         }
@@ -284,8 +243,8 @@ class Palette {
     }
     
     class func alternateStyle(_ label: UILabel, setFont: Bool = true) {
-        label.backgroundColor = Palette.alternateBackground
-        label.textColor = Palette.text
+        label.backgroundColor = Palette.alternateBackground.background
+        label.textColor = Palette.normal.text
         if setFont {
             label.font = UIFont.systemFont(ofSize: 15.0, weight: .thin)
         }
@@ -293,61 +252,60 @@ class Palette {
     }
     
     class func madeContractStyle(_ label: UILabel, setFont: Bool = true) {
-        label.backgroundColor=Palette.madeContract
-        label.textColor = Palette.madeContractText
+        label.backgroundColor=Palette.madeContract.background
+        label.textColor = Palette.madeContract.text
         if setFont {
             label.font = UIFont.boldSystemFont(ofSize: 17.0)
         }
     }
     
     class func thumbnailDiscStyle(_ label: UILabel, setFont: Bool = true) {
-        label.backgroundColor=Palette.thumbnailDisc
-        label.textColor = Palette.thumbnailDiscText
+        label.backgroundColor=Palette.thumbnailDisc.background
+        label.textColor = Palette.thumbnailDisc.text
         if setFont {
             label.font = UIFont.boldSystemFont(ofSize: 20.0)
         }
     }
     
     class func thumbnailPlaceholderStyle(_ label: UILabel, setFont: Bool = true) {
-        label.backgroundColor=Palette.thumbnailPlaceholder
-        label.textColor = Palette.thumbnailPlaceholderText
+        label.backgroundColor=Palette.thumbnailPlaceholder.background
+        label.textColor = Palette.thumbnailPlaceholder.text
         if setFont {
             label.font = UIFont.boldSystemFont(ofSize: 20.0)
         }
     }
 }
 
-@propertyWrapper fileprivate final class PaletteBackground {
-    var wrappedValue: UIColor
+@propertyWrapper fileprivate final class BackgroundColor {
+    var wrappedValue: PaletteColor
     
     fileprivate init(_ colorName: ThemeBackgroundColorName, game gameColorName: ThemeBackgroundColorName? = nil) {
-        wrappedValue = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(colorName, game: gameColorName)})
+        wrappedValue = PaletteColor(colorName, game: gameColorName)
     }
 }
 
-@propertyWrapper fileprivate final class PaletteText {
-    var wrappedValue: UIColor
-    
-    fileprivate init(_ colorName: ThemeBackgroundColorName, game gameColorName: ThemeBackgroundColorName? = nil, _ type: ThemeTextType = .normal) {
-        switch type {
-        case .normal:
-            wrappedValue = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(colorName, game: gameColorName)})
-        case .contrast:
-            wrappedValue = UIColor(dynamicProvider: { (_) in Themes.currentTheme.contrastText(colorName, game: gameColorName)})
-        case .strong:
-            wrappedValue = UIColor(dynamicProvider: { (_) in Themes.currentTheme.strongText(colorName, game: gameColorName)})
-        case .faint:
-            wrappedValue = UIColor(dynamicProvider: { (_) in Themes.currentTheme.faintText(colorName, game: gameColorName)})
-        case .theme:
-            wrappedValue = UIColor(dynamicProvider: { (_) in Themes.currentTheme.themeText(colorName, game: gameColorName)})
-        }
-    }
-}
-
-@propertyWrapper fileprivate final class PaletteSpecific {
+@propertyWrapper fileprivate final class SpecificColor {
     var wrappedValue: UIColor
     
     fileprivate init(_ colorName: ThemeSpecificColorName) {
         wrappedValue = UIColor(dynamicProvider: { (_) in Themes.currentTheme.specific(colorName)})
+    }
+}
+
+class PaletteColor {
+    let background: UIColor
+    let text: UIColor
+    let contrastText: UIColor
+    let strongText: UIColor
+    let faintText: UIColor
+    let themeText: UIColor
+    
+    init(_ colorName: ThemeBackgroundColorName, game gameColorName: ThemeBackgroundColorName? = nil) {
+        self.background = UIColor(dynamicProvider: { (_) in Themes.currentTheme.background(colorName, game: gameColorName)})
+        self.text = UIColor(dynamicProvider: { (_) in Themes.currentTheme.text(colorName, game: gameColorName)})
+        self.contrastText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.contrastText(colorName, game: gameColorName)})
+        self.strongText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.strongText(colorName, game: gameColorName)})
+        self.faintText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.faintText(colorName, game: gameColorName)})
+        self.themeText = UIColor(dynamicProvider: { (_) in Themes.currentTheme.themeText(colorName, game: gameColorName)})
     }
 }

@@ -33,6 +33,8 @@ public enum Orientation: String, CaseIterable {
     
     @objc optional func didRotate()
     
+    @objc optional func willDisappear()
+    
 }
 
 class DashboardViewController: ScorecardViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, CustomCollectionViewLayoutDelegate, DashboardActionDelegate {
@@ -57,10 +59,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     private var backImage: String!
     private var backText: String!
-    private var bannerColor: UIColor!
-    private var bannerShadowColor: UIColor!
-    private var bannerTextColor: UIColor!
-    private var backgroundColor: UIColor!
+    private var backgroundColor: PaletteColor!
     private var completion: (()->())?
     private var allowSync = true
     
@@ -132,6 +131,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         self.rotated = true
+        Scorecard.shared.reCenterPopup(self)
         self.view.setNeedsLayout()
     }
     
@@ -154,8 +154,8 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                 self.changed(self.carouselCollectionView, itemAtCenter: selectedPage, forceScroll: true)
                 self.carouselCollectionView.reloadData()
                 if self.rotated {
-                    self.didRotate()
                     self.reloadData()
+                    self.didRotate()
                 }
                 self.firstTime = false
                 self.rotated = false
@@ -196,10 +196,12 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     }
     
     private func didRotate() {
-        for (_, orientationViews) in self.dashboardViewInfo {
-            for (orientation, dashboardView) in orientationViews.views {
-                if orientation == self.currentOrientation {
-                    self.didRotate(for: dashboardView)
+        Utility.mainThread {
+            for (_, orientationViews) in self.dashboardViewInfo {
+                for (orientation, dashboardView) in orientationViews.views {
+                    if orientation == self.currentOrientation {
+                        self.didRotate(for: dashboardView)
+                    }
                 }
             }
         }
@@ -257,9 +259,9 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             carouselCell.containerView.roundCorners(cornerRadius: 8.0)
             carouselCell.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
             carouselCell.titleLabel.alpha = (indexPath.row != self.currentPage ? 0.0 : 1.0)
-            carouselCell.containerView.backgroundColor = (indexPath.row == self.currentPage ? Palette.carouselSelected : Palette.carouselUnselected)
-            carouselCell.backgroundImageView.tintColor = (indexPath.row == self.currentPage ? Palette.carouselSelectedTextContrast : Palette.carouselUnselectedTextFaint)
-            carouselCell.titleLabel.textColor = (indexPath.row == self.currentPage ? Palette.carouselSelectedText : Palette.carouselUnselectedText)
+            carouselCell.containerView.backgroundColor = (indexPath.row == self.currentPage ? Palette.carouselSelected.background : Palette.carouselUnselected.background)
+            carouselCell.backgroundImageView.tintColor = (indexPath.row == self.currentPage ? Palette.carouselSelected.contrastText : Palette.carouselUnselected.faintText)
+            carouselCell.titleLabel.textColor = (indexPath.row == self.currentPage ? Palette.carouselSelected.text : Palette.carouselUnselected.text)
             
             let dashboardInfo = dashboardViewInfo[indexPath.item]!
             carouselCell.titleLabel.text = dashboardInfo.title
@@ -273,7 +275,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                 self.defaultCellColors(scrollCell)
             
             scrollCell.indicator.image = UIImage(systemName: (indexPath.row == self.currentPage ? "circle.fill" : "circle"))
-            scrollCell.indicator.tintColor = self.bannerColor
+            scrollCell.indicator.tintColor = Palette.normal.themeText
 
             return scrollCell
             
@@ -308,9 +310,9 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                         // Unhighlight the cell leaving the center
                         if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: self.currentPage, section: 0)) as? DashboardCarouselCell {
                             if self.currentPage != itemAtCenter {
-                                cell.containerView.backgroundColor = Palette.carouselUnselected
-                                cell.backgroundImageView.tintColor = Palette.carouselUnselectedTextFaint
-                                cell.titleLabel.textColor = Palette.carouselUnselectedText
+                                cell.containerView.backgroundColor = Palette.carouselUnselected.background
+                                cell.backgroundImageView.tintColor = Palette.carouselUnselected.faintText
+                                cell.titleLabel.textColor = Palette.carouselUnselected.text
                                 cell.titleLabel.alpha = 0.0
                             }
                         }
@@ -324,9 +326,9 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                         
                         // Highlight new cell at center
                         if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: self.currentPage, section: 0)) as? DashboardCarouselCell {
-                            cell.containerView.backgroundColor = Palette.carouselSelected
-                            cell.backgroundImageView.tintColor = Palette.carouselSelectedTextContrast
-                            cell.titleLabel.textColor = Palette.carouselSelectedText
+                            cell.containerView.backgroundColor = Palette.carouselSelected.background
+                            cell.backgroundImageView.tintColor = Palette.carouselSelected.contrastText
+                            cell.titleLabel.textColor = Palette.carouselSelected.text
                             cell.titleLabel.alpha = 1.0
                         }
                         self.scrollCollectionView.reloadData()
@@ -374,12 +376,24 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                 if orientation != notOrientation {
                     view.alpha = 0.0
                     view.isHidden = true
+                    self.willDisappear(for: view)
                     view.removeFromSuperview()
                     self.dashboardViewInfo[page]!.views[orientation] = nil
                 }
             }
         }
     }
+    
+    private func willDisappear(for view: UIView) {
+        if let view = view as? DashboardTileDelegate {
+            view.willDisappear?()
+        } else {
+            for view in view.subviews {
+                self.willDisappear(for: view)
+            }
+        }
+    }
+    
     
     private func getView(page: Int) -> DashboardView {
         var view: DashboardView?
@@ -445,7 +459,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
     
     // MARK: - Function to present and dismiss this view ================================================= -
     
-    @discardableResult class public func show(from viewController: ScorecardViewController, dashboardNames: [(title: String, fileName: String, imageName: String?)], allowSync: Bool = true, backImage: String = "home", backText: String = "", bannerColor: UIColor = Palette.banner, bannerShadowColor: UIColor = Palette.bannerShadow, bannerTextColor: UIColor = Palette.bannerText, backgroundColor: UIColor = Palette.background, completion: (()->())? = nil) -> ScorecardViewController {
+    @discardableResult class public func show(from viewController: ScorecardViewController, dashboardNames: [(title: String, fileName: String, imageName: String?)], allowSync: Bool = true, backImage: String = "home", backText: String = "", backgroundColor: PaletteColor = Palette.darkBackground, completion: (()->())? = nil) -> ScorecardViewController {
         
         let storyboard = UIStoryboard(name: "DashboardViewController", bundle: nil)
         let dashboardViewController: DashboardViewController = storyboard.instantiateViewController(withIdentifier: "DashboardViewController") as! DashboardViewController
@@ -457,9 +471,6 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         dashboardViewController.allowSync = allowSync
         dashboardViewController.backText = backText
         dashboardViewController.backImage = backImage
-        dashboardViewController.bannerColor = bannerColor
-        dashboardViewController.bannerShadowColor = bannerShadowColor
-        dashboardViewController.bannerTextColor = bannerTextColor
         dashboardViewController.backgroundColor = backgroundColor
         dashboardViewController.completion = completion
         
@@ -486,21 +497,21 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
 extension DashboardViewController {
     
     private func defaultViewColors() {
-        self.view.backgroundColor = self.backgroundColor
-        self.bannerPaddingView.bannerColor = self.bannerColor
-        self.bannerView.backgroundColor = self.bannerColor
-        self.titleLabel.textColor = self.bannerTextColor
+        self.view.backgroundColor = self.backgroundColor.background
+        self.bannerPaddingView.bannerColor = Palette.banner.background
+        self.bannerView.backgroundColor = Palette.banner.background
+        self.titleLabel.textColor = Palette.banner.text
         if ScorecardUI.smallPhoneSize() {
             // Switch to cloud image rather than Sync text on shadowed button
-            self.smallSyncButton.tintColor = Palette.syncButtonText
+            self.smallSyncButton.tintColor = Palette.alwaysTheme.text
         } else {
-            self.syncButton.setTitleColor(Palette.syncButtonText, for: .normal)
-            self.syncButton.setBackgroundColor(Palette.syncButton)
+            self.syncButton.setTitleColor(Palette.alwaysTheme.text, for: .normal)
+            self.syncButton.setBackgroundColor(Palette.alwaysTheme.background)
         }
     }
 
     private func defaultCellColors(_ cell: DashboardScrollCell) {
-        cell.indicator.tintColor = self.bannerColor
+        cell.indicator.tintColor = Palette.normal.themeText
     }
 
 }
@@ -531,7 +542,7 @@ class Dashboard {
     public class func formatTypeButton(detailView: DashboardDetailType, button: RoundedButton) {
         button.setImage(Dashboard.typeImage(detailView: detailView).asTemplate(), for: .normal)
         button.backgroundColor = Dashboard.color(detailView: detailView)
-        button.tintColor = Palette.buttonFace
+        button.tintColor = Palette.buttonFace.background
         button.toCircle()
     }
     
@@ -543,17 +554,6 @@ class Dashboard {
             return UIImage(named: "stats")!
         case .highScores:
             return UIImage(named: "high score")!
-        }
-    }
-    
-    public class func typeColor(detailView: DashboardDetailType) -> UIColor {
-        switch detailView {
-        case .history:
-            return Palette.history
-        case .statistics:
-            return Palette.stats
-        case .highScores:
-            return Palette.highScores
         }
     }
 }

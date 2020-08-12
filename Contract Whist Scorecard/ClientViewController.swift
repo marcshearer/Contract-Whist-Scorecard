@@ -677,8 +677,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
              
              if self.availablePeers.count == 0 && !self.recoveryMode {
                 
-                peerCell.backgroundColor = Palette.background
-                peerCell.label.textColor = Palette.text
+                peerCell.backgroundColor = Palette.midBackground.background
+                peerCell.label.textColor = Palette.midBackground.text
                 peerCell.label.text = "No devices are currently offering to host a game"
                 peerCell.label.font = UIFont.systemFont(ofSize: 18.0, weight: .light)
                 peerCell.leftScrollButton.isHidden = true
@@ -745,8 +745,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
 
                 peerCell.label.font = UIFont.systemFont(ofSize: 18.0, weight: .bold)
                 self.ignoringGameBanners {
-                    peerCell.backgroundColor = Palette.banner
-                    peerCell.label.textColor = Palette.bannerText
+                    peerCell.backgroundColor = Palette.alwaysTheme.background
+                    peerCell.label.textColor = Palette.alwaysTheme.text
                 }
                 peerCell.label.text = serviceText
                 
@@ -770,7 +770,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             
             peerScrollCell.indicator.image = UIImage(systemName: (indexPath.row == self.displayingPeer ? "circle.fill" : "circle"))
             self.ignoringGameBanners {
-                peerScrollCell.indicator.tintColor = Palette.bannerText
+                peerScrollCell.indicator.tintColor = Palette.banner.text
             }
             cell = peerScrollCell
             
@@ -1233,27 +1233,27 @@ extension ClientViewController {
 
     private func DefaultScreenColors() {
         self.ignoringGameBanners {
-            self.view.backgroundColor = Palette.darkBackground
-            self.topSection.backgroundColor = Palette.banner
-            self.bannerPaddingView.bannerColor = Palette.banner
-            self.leftPaddingView.bannerColor = Palette.banner
-            self.hostTitleBar.set(faceColor: Palette.buttonFace)
-            self.hostTitleBar.set(textColor: Palette.buttonFaceText)
-            self.adminMenuButton.tintColor = Palette.bannerEmbossed
-            self.titleLabel.textColor = Palette.bannerEmbossed
+            self.view.backgroundColor = Palette.darkBackground.background
+            self.topSection.backgroundColor = Palette.banner.background
+            self.bannerPaddingView.bannerColor = Palette.banner.background
+            self.leftPaddingView.bannerColor = Palette.banner.background
+            self.hostTitleBar.set(faceColor: Palette.buttonFace.background)
+            self.hostTitleBar.set(textColor: Palette.buttonFace.text)
+            self.adminMenuButton.tintColor = Palette.banner.themeText
+            self.titleLabel.textColor = Palette.banner.themeText
             self.titleLabel.setNeedsDisplay() // Doesn't seem to change color otherwise!
-            self.thisPlayerThumbnail.set(textColor: Palette.bannerText)
+            self.thisPlayerThumbnail.set(textColor: Palette.banner.text)
             self.thisPlayerThumbnail.set(font: UIFont.systemFont(ofSize: 15, weight: .bold))
-            self.infoButton.backgroundColor = Palette.bannerShadow
-            self.infoButton.setTitleColor(Palette.bannerText, for: .normal)
-            self.infoButton.setTitleColor(Palette.bannerText, for: .disabled)
-            self.hostCollectionView.backgroundColor = Palette.buttonFace
-            self.peerTitleBar.set(faceColor: Palette.buttonFace)
-            self.peerTitleBar.set(textColor: Palette.buttonFaceText)
-            self.actionButtons.forEach{(button) in button.set(faceColor: Palette.buttonFace)}
-            self.actionButtons.forEach{(button) in button.set(titleColor: Palette.buttonFaceThemeText)}
+            self.infoButton.backgroundColor = Palette.bannerShadow.background
+            self.infoButton.setTitleColor(Palette.banner.text, for: .normal)
+            self.infoButton.setTitleColor(Palette.banner.text, for: .disabled)
+            self.hostCollectionView.backgroundColor = Palette.buttonFace.background
+            self.peerTitleBar.set(faceColor: Palette.buttonFace.background)
+            self.peerTitleBar.set(textColor: Palette.buttonFace.text)
+            self.actionButtons.forEach{(button) in button.set(faceColor: Palette.buttonFace.background)}
+            self.actionButtons.forEach{(button) in button.set(titleColor: Palette.buttonFace.themeText)}
             self.actionButtons.forEach{(button) in button.set(titleFont: UIFont.systemFont(ofSize: 18, weight: .bold))}
-            self.playerSelectionView.backgroundColor = Palette.darkBackground
+            self.playerSelectionView.backgroundColor = Palette.darkBackground.background
         }
     }
     
@@ -1274,18 +1274,18 @@ extension ClientViewController {
 
     private func defaultCellColors(cell: HostCollectionViewCell) {
         self.ignoringGameBanners {
-            cell.button.set(faceColor: Palette.buttonFace)
-            cell.button.set(titleColor: Palette.buttonFaceText)
-            cell.button.set(messageColor: Palette.buttonFaceText)
-            cell.button.set(imageTintColor: Palette.buttonFaceThemeText)
+            cell.button.set(faceColor: Palette.buttonFace.background)
+            cell.button.set(titleColor: Palette.buttonFace.text)
+            cell.button.set(messageColor: Palette.buttonFace.text)
+            cell.button.set(imageTintColor: Palette.buttonFace.themeText)
         }
     }
     
     private func defaultCellColors(cell: PeerCollectionViewCell) {
         self.ignoringGameBanners {
-            cell.leftScrollButton.imageView?.tintColor = Palette.bannerText
-            cell.rightScrollButton.imageView?.tintColor = Palette.bannerText
-            cell.cancelButton.imageView?.tintColor = Palette.bannerText
+            cell.leftScrollButton.imageView?.tintColor = Palette.banner.text
+            cell.rightScrollButton.imageView?.tintColor = Palette.banner.text
+            cell.cancelButton.imageView?.tintColor = Palette.banner.text
         }
     }
 }

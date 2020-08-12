@@ -127,12 +127,12 @@ extension RoundSummaryViewController {
 
     private func defaultViewColors() {
 
-        self.finishButton.setTitleColor(Palette.totalText, for: .normal)
-        self.player1Bid.textColor = Palette.totalText
-        self.player2Bid.textColor = Palette.totalText
-        self.player3Bid.textColor = Palette.totalText
-        self.player4Bid.textColor = Palette.totalText
-        self.roundSummaryView.backgroundColor = Palette.total
+        self.finishButton.setTitleColor(Palette.total.text, for: .normal)
+        self.player1Bid.textColor = Palette.total.text
+        self.player2Bid.textColor = Palette.total.text
+        self.player3Bid.textColor = Palette.total.text
+        self.player4Bid.textColor = Palette.total.text
+        self.roundSummaryView.backgroundColor = Palette.total.background
     }
 
 }

@@ -63,6 +63,7 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
     @IBOutlet private weak var createPlayerContainerTopConstraint: NSLayoutConstraint!
     @IBOutlet private weak var createPlayerContainerHeightConstraint: NSLayoutConstraint!
     @IBOutlet private weak var downloadIdentifierTextField: UITextField!
+    @IBOutlet private weak var downloadIdentifierView: UIView!
     @IBOutlet private weak var downloadDownloadButton: ShadowButton!
     @IBOutlet private weak var downloadSeparatorView: UIView!
     @IBOutlet private weak var downloadSeparatorLabel: UILabel!
@@ -323,26 +324,26 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
     // MARK: - View defaults ============================================================================ -
     
     private func setupDefaultColors() {
-        self.view.backgroundColor = Palette.banner
+        self.view.backgroundColor = Palette.banner.background
         
-        self.titleLabel.textColor = Palette.bannerText
+        self.titleLabel.textColor = Palette.banner.text
         
-        self.downloadPlayersTitleBar.set(faceColor: Palette.buttonFace)
-        self.downloadPlayersTitleBar.set(textColor: Palette.buttonFaceText)
+        self.downloadPlayersTitleBar.set(faceColor: Palette.buttonFace.background)
+        self.downloadPlayersTitleBar.set(textColor: Palette.buttonFace.text)
         
-        self.createPlayerTitleBar.set(faceColor: Palette.buttonFace)
-        self.createPlayerTitleBar.set(textColor: Palette.buttonFaceText)
+        self.createPlayerTitleBar.set(faceColor: Palette.buttonFace.background)
+        self.createPlayerTitleBar.set(textColor: Palette.buttonFace.text)
         
-        self.downloadPlayersView.backgroundColor = Palette.buttonFace
+        self.downloadPlayersView.backgroundColor = Palette.buttonFace.background
                 
-        self.downloadDownloadButton.setBackgroundColor(Palette.confirmButton)
-        self.downloadDownloadButton.setTitleColor(Palette.confirmButtonText, for: .normal)
+        self.downloadDownloadButton.setBackgroundColor(Palette.confirmButton.background)
+        self.downloadDownloadButton.setTitleColor(Palette.confirmButton.text, for: .normal)
         
-        self.downloadSeparatorView.backgroundColor = Palette.separator
-        self.downloadSeparatorLabel.backgroundColor = Palette.buttonFace
-        self.downloadSeparatorLabel.textColor = Palette.buttonFaceText
+        self.downloadSeparatorView.backgroundColor = Palette.separator.background
+        self.downloadSeparatorLabel.backgroundColor = Palette.buttonFace.background
+        self.downloadSeparatorLabel.textColor = Palette.buttonFace.text
                         
-        self.formLabels.forEach { $0.textColor = Palette.text }
+        self.formLabels.forEach { $0.textColor = Palette.normal.text }
     }
     
     private func setupSizes() {
@@ -378,6 +379,8 @@ class SelectPlayersViewController: ScorecardViewController, SyncDelegate, Button
         self.createPlayerTitleBar.set(topRounded: true, bottomRounded: true)
 
         self.addTargets(self.downloadIdentifierTextField)
+        self.downloadIdentifierView.roundCorners(cornerRadius: 5.0)
+        self.downloadIdentifierView.backgroundColor = Palette.inputControl.background
     }
         
     // MARK: - Function to show and dismiss this view  ============================================================================== -

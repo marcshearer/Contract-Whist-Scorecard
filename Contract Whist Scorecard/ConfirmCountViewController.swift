@@ -48,7 +48,7 @@ class ConfirmCountViewController : UIViewController, UIPopoverPresentationContro
         self.labelTitle.text = self.formTitle
         self.labelMessage.text = self.message
         self.textFieldCount.text = "\(value)"
-        self.textFieldCount.layer.borderColor = Palette.text.cgColor
+        self.textFieldCount.layer.borderColor = Palette.normal.text.cgColor
         self.textFieldCount.layer.borderWidth = 1.0
         self.stepperCount.value = Double(value)
         if self.minimumValue != nil {
@@ -105,19 +105,19 @@ extension ConfirmCountViewController {
     /** _Note that this code was generated as part of the move to themed colors_ */
 
     private func defaultViewColors() {
-        self.cancelButton.backgroundColor = Palette.background
-        self.cancelButton.setTitleColor(Palette.text, for: .normal)
-        self.confirmButton.backgroundColor = Palette.background
-        self.confirmButton.setTitleColor(Palette.text, for: .normal)
-        self.horizontalSeparator.backgroundColor = Palette.separator
-        self.labelMessage.textColor = Palette.text
-        self.labelTitle.backgroundColor = Palette.roomInterior
-        self.labelTitle.textColor = Palette.roomInteriorText
-        self.stepperCount.tintColor = Palette.text
-        self.textFieldCount.backgroundColor = Palette.alternateBackground
-        self.textFieldCount.textColor = Palette.text
-        self.verticalSeparator.backgroundColor = Palette.separator
-        self.view.backgroundColor = Palette.background
+        self.cancelButton.backgroundColor = Palette.normal.background
+        self.cancelButton.setTitleColor(Palette.normal.text, for: .normal)
+        self.confirmButton.backgroundColor = Palette.normal.background
+        self.confirmButton.setTitleColor(Palette.normal.text, for: .normal)
+        self.horizontalSeparator.backgroundColor = Palette.separator.background
+        self.labelMessage.textColor = Palette.normal.text
+        self.labelTitle.backgroundColor = Palette.roomInterior.background
+        self.labelTitle.textColor = Palette.roomInterior.text
+        self.stepperCount.tintColor = Palette.normal.text
+        self.textFieldCount.backgroundColor = Palette.alternateBackground.background
+        self.textFieldCount.textColor = Palette.normal.text
+        self.verticalSeparator.backgroundColor = Palette.separator.background
+        self.view.backgroundColor = Palette.normal.background
     }
 }
 

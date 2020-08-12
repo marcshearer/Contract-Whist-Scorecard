@@ -360,7 +360,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                 
                 header = SettingsHeaderFooterView(cell)
                 cell.collapseButton.setImage(UIImage(named: (dataInfoExpanded ? "arrow down" : "arrow right"))?.asTemplate(), for: .normal)
-                cell.collapseButton.tintColor = Palette.emphasis
+                cell.collapseButton.tintColor = Palette.emphasis.background
                 
                 cell.label.text = "Data"
                 cell.collapseButton.addTarget(self, action: #selector(SettingsViewController.dataInfoClicked(_:)), for: .touchUpInside)
@@ -373,7 +373,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     internal func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = UIView()
-        view.backgroundColor = Palette.background
+        view.backgroundColor = Palette.normal.background
         return view
     }
     
@@ -838,7 +838,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     @objc internal func facetimeAddressBeginEdit(_ facetimeAddressTextField: UITextField) {
-        facetimeAddressTextField.layer.borderColor = Palette.text.cgColor
+        facetimeAddressTextField.layer.borderColor = Palette.normal.text.cgColor
     }
     
     @objc internal func facetimeAddressEndEdit(_ facetimeAddressTextField: UITextField) {
@@ -853,7 +853,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             self.refreshFaceTimeAddress()
         }
         self.resignFirstResponder()
-        facetimeAddressTextField.layer.borderColor = Palette.emphasis.cgColor
+        facetimeAddressTextField.layer.borderColor = Palette.emphasis.background.cgColor
     }
      
     @objc internal func receiveNotificationsChanged(_ receiveNotificationsSwitch: UISwitch) {
@@ -964,10 +964,10 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             cell.appearanceButtons.forEach{(button) in
                 if button.tag == Scorecard.settings.appearance.rawValue {
                     button.setImage(UIImage(named: "box tick"), for: .normal)
-                    button.tintColor = Palette.segmentedControls
+                    button.tintColor = Palette.segmentedControls.background
                 } else {
                     button.setImage(UIImage(named: "box"), for: .normal)
-                    button.tintColor = Palette.text
+                    button.tintColor = Palette.normal.text
                 }
                 button.tintColorDidChange()
             }
@@ -1030,7 +1030,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             
             let theme = Theme(themeName: themeNames[indexPath.item])
             cell.nameLabel.text = themeNames[indexPath.item].description
-            cell.nameLabel.textColor = Palette.text  // theme.color(.banner, .current)
+            cell.nameLabel.textColor = Palette.normal.text  // theme.color(.banner, .current)
             cell.sample.setColors(theme: theme)
             cell.sample.isHidden = false
             
@@ -1142,8 +1142,11 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
 
         self.thisPlayerChangeButton.setTitle("Change")
         
-        self.playerSelectionViewHeightConstraint.constant = 0.0
         self.thisPlayerHeight = self.thisPlayerContainerView.frame.height
+        
+        self.playerSelectionViewHeightConstraint.constant = 0.0
+        self.playerSelectionView.set(addButtonColor: Palette.alwaysTheme.background)
+
     }
     
     private func showPlayerSelection() {
@@ -1686,67 +1689,67 @@ extension SettingsViewController {
 
     private func defaultViewColors() {
 
-        self.bannerPaddingView.backgroundColor = Palette.banner
-        self.topSectionView.backgroundColor = Palette.banner
-        self.navigationBar.textColor = Palette.bannerText
-        self.view.backgroundColor = Palette.background
-        self.settingsTableView.backgroundColor = Palette.background
-        self.thisPlayerChangeButton.backgroundColor = Palette.bannerShadow
-        self.thisPlayerChangeButton.setTitleColor(Palette.bannerText, for: .normal)
-        self.thisPlayerThumbnailView.set(textColor: Palette.bannerText)
-        self.thisPlayerThumbnailView.backgroundColor = Palette.banner
+        self.bannerPaddingView.backgroundColor = Palette.banner.background
+        self.topSectionView.backgroundColor = Palette.banner.background
+        self.navigationBar.textColor = Palette.banner.text
+        self.view.backgroundColor = Palette.normal.background
+        self.settingsTableView.backgroundColor = Palette.normal.background
+        self.thisPlayerChangeButton.backgroundColor = Palette.bannerShadow.background
+        self.thisPlayerChangeButton.setTitleColor(Palette.banner.text, for: .normal)
+        self.thisPlayerThumbnailView.set(textColor: Palette.banner.text)
+        self.thisPlayerThumbnailView.backgroundColor = Palette.banner.background
     }
 
     private func defaultCellColors(cell: SettingsTableCell) {
         if cell.reuseIdentifier != "This Player" {
-            cell.backgroundColor = Palette.background
+            cell.backgroundColor = Palette.normal.background
         }
         switch cell.reuseIdentifier {
         case "Edit Button":
-            cell.editButton.setTitleColor(Palette.emphasisText, for: .normal)
-            cell.editButton.setBackgroundColor(Palette.emphasis)
-            cell.editLabel.textColor = Palette.text
+            cell.editButton.setTitleColor(Palette.emphasis.text, for: .normal)
+            cell.editButton.setBackgroundColor(Palette.emphasis.background)
+            cell.editLabel.textColor = Palette.normal.text
         case "Header Collapse":
-            cell.collapseButton.tintColor = Palette.emphasis
-            cell.collapseButton.setTitleColor(Palette.textEmphasised, for: .normal)
-            cell.label.textColor = Palette.textEmphasised
-            cell.separator.backgroundColor = Palette.disabled
+            cell.collapseButton.tintColor = Palette.emphasis.background
+            cell.collapseButton.setTitleColor(Palette.normal.strongText, for: .normal)
+            cell.label.textColor = Palette.normal.strongText
+            cell.separator.backgroundColor = Palette.disabled.background
         case "Header Switch":
-            cell.label.textColor = Palette.textEmphasised
-            cell.separator.backgroundColor = Palette.disabled
-            cell.toggleSwitch.tintColor = Palette.emphasis
-            cell.toggleSwitch.onTintColor = Palette.emphasis
+            cell.label.textColor = Palette.normal.strongText
+            cell.separator.backgroundColor = Palette.disabled.background
+            cell.toggleSwitch.tintColor = Palette.emphasis.background
+            cell.toggleSwitch.onTintColor = Palette.emphasis.background
         case "Info Single":
-            cell.infoLabel.textColor = Palette.text
-            cell.infoValue1.textColor = Palette.text
+            cell.infoLabel.textColor = Palette.normal.text
+            cell.infoValue1.textColor = Palette.normal.text
         case "Info Three":
-            cell.infoLabel.textColor = Palette.text
-            cell.infoValue1.textColor = Palette.text
-            cell.infoValue2.textColor = Palette.text
-            cell.infoValue3.textColor = Palette.text
+            cell.infoLabel.textColor = Palette.normal.text
+            cell.infoValue1.textColor = Palette.normal.text
+            cell.infoValue2.textColor = Palette.normal.text
+            cell.infoValue3.textColor = Palette.normal.text
         case "Info Three Heading":
-            cell.infoLabel.textColor = Palette.text
-            cell.infoValue1.textColor = Palette.text
-            cell.infoValue2.textColor = Palette.text
-            cell.infoValue3.textColor = Palette.text
+            cell.infoLabel.textColor = Palette.normal.text
+            cell.infoValue1.textColor = Palette.normal.text
+            cell.infoValue2.textColor = Palette.normal.text
+            cell.infoValue3.textColor = Palette.normal.text
         case "Slider":
             cell.slider.minimumTrackTintColor = nil
             cell.slider.thumbTintColor = nil
-            cell.slider.thumbTintColor = Palette.segmentedControls
-            cell.slider.minimumTrackTintColor = Palette.segmentedControls
-            cell.sliderLabel.textColor = Palette.text
-            cell.sliderValue.textColor = Palette.inputControlText
+            cell.slider.thumbTintColor = Palette.segmentedControls.background
+            cell.slider.minimumTrackTintColor = Palette.segmentedControls.background
+            cell.sliderLabel.textColor = Palette.normal.text
+            cell.sliderValue.textColor = Palette.inputControl.text
             cell.slider.tintColorDidChange()
         case "Segmented":
             cell.segmentedControl.draw(cell.segmentedControl.frame)
         case "Sub Heading":
-            cell.subHeadingLabel.textColor = Palette.text
+            cell.subHeadingLabel.textColor = Palette.normal.text
         case "Switch":
-            cell.label.textColor = Palette.text
-            cell.toggleSwitch.tintColor = Palette.emphasis
-            cell.toggleSwitch.onTintColor = Palette.emphasis
+            cell.label.textColor = Palette.normal.text
+            cell.toggleSwitch.tintColor = Palette.emphasis.background
+            cell.toggleSwitch.onTintColor = Palette.emphasis.background
         case "Appearance":
-            cell.appearanceLabels.forEach{(label) in label.textColor = Palette.text}
+            cell.appearanceLabels.forEach{(label) in label.textColor = Palette.normal.text}
         default:
             break
         }
@@ -1755,9 +1758,9 @@ extension SettingsViewController {
     private func defaultCellColors(cell: UICollectionViewCell) {
         switch cell.reuseIdentifier {
         case "Header Collapse":
-            cell.backgroundColor = Palette.background
+            cell.backgroundColor = Palette.normal.background
         case "Header Switch":
-            cell.backgroundColor = Palette.background
+            cell.backgroundColor = Palette.normal.background
         default:
             break
         }

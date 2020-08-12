@@ -136,8 +136,8 @@ class DataTableTileView: UIView, DashboardTileDelegate, UITableViewDataSource, U
         
         self.titleLabel.text = self.title
          
-        self.tileView.backgroundColor = Palette.buttonFace
-        self.titleLabel.textColor = Palette.textTitle
+        self.tileView.backgroundColor = Palette.buttonFace.background
+        self.titleLabel.textColor = Palette.normal.strongText
         Dashboard.formatTypeButton(detailView: detailType, button: self.typeButton)
 
         self.contentView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))

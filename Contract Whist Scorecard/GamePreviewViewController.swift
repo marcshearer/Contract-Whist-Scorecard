@@ -316,7 +316,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         // Configure selected players view
         self.selectedPlayersView.roundCorners(cornerRadius: 40.0)
         self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth, allowHaloWidth: self.dealerHaloWidth)
-        self.selectedPlayersView.setHaloColor(color: Palette.halo)
+        self.selectedPlayersView.setHaloColor(color: Palette.halo.background)
         
         // Update layout to get correct size
         if !wasAlreadyDrawing {
@@ -437,10 +437,10 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
         
         if self.selectedPlayersView != nil {
             if forceHide {
-                self.selectedPlayersView.setHaloColor(slot: playerNumber - 1, color: Palette.halo)
+                self.selectedPlayersView.setHaloColor(slot: playerNumber - 1, color: Palette.halo.background)
                 self.selectedPlayersView.setHaloWidth(slot: playerNumber - 1, haloWidth: haloWidth, allowHaloWidth: dealerHaloWidth)
             } else {
-                self.selectedPlayersView.setHaloColor(slot: playerNumber - 1, color: Palette.haloDealer)
+                self.selectedPlayersView.setHaloColor(slot: playerNumber - 1, color: Palette.haloDealer.background)
                 self.selectedPlayersView.setHaloWidth(slot: playerNumber - 1, haloWidth: dealerHaloWidth)
             }
         }
@@ -692,7 +692,7 @@ class GamePreviewViewController: ScorecardViewController, ButtonDelegate, Select
     private func createCutCards() {
         for _ in 0..<Scorecard.shared.maxPlayers {
             let cardView = UILabel(frame: CGRect(origin: CGPoint(), size: CGSize(width: cutCardWidth, height: cutCardHeight)))
-            cardView.backgroundColor = Palette.cardFace
+            cardView.backgroundColor = Palette.cardFace.background
             ScorecardUI.roundCorners(cardView)
             cardView.textAlignment = .center
             cardView.font = UIFont.systemFont(ofSize: 22.0)
@@ -738,20 +738,20 @@ extension GamePreviewViewController {
 
     private func defaultViewColors() {
 
-        self.bannerPaddingView.bannerColor = Palette.banner
-        self.topSectionView.backgroundColor = Palette.banner
-        self.selectedPlayersView.backgroundColor = Palette.tableTop
-        self.messageLabel.textColor = Palette.text
-        self.continueButton.setTitleColor(Palette.continueButtonText, for: .normal)
-        self.continueButton.setBackgroundColor(Palette.continueButton)
-        self.continueButton.setTitleColor(Palette.continueButtonText, for: .normal)
-        self.actionButtons.forEach{(button) in button.set(faceColor: Palette.buttonFace)}
-        self.actionButtons.forEach{(button) in button.set(titleColor: Palette.buttonFaceText)}
-        self.titleView.backgroundColor = Palette.banner
-        self.titleLabel.textColor = Palette.bannerText
-        self.overrideSettingsButton.setBackgroundColor(Palette.buttonFace)
-        self.overrideSettingsButton.setTitleColor(Palette.buttonFaceText, for: .normal)
-        self.view.backgroundColor = Palette.background
+        self.bannerPaddingView.bannerColor = Palette.banner.background
+        self.topSectionView.backgroundColor = Palette.banner.background
+        self.selectedPlayersView.backgroundColor = Palette.tableTop.background
+        self.messageLabel.textColor = Palette.normal.text
+        self.continueButton.setTitleColor(Palette.continueButton.text, for: .normal)
+        self.continueButton.setBackgroundColor(Palette.continueButton.background)
+        self.continueButton.setTitleColor(Palette.continueButton.text, for: .normal)
+        self.actionButtons.forEach{(button) in button.set(faceColor: Palette.buttonFace.background)}
+        self.actionButtons.forEach{(button) in button.set(titleColor: Palette.buttonFace.text)}
+        self.titleView.backgroundColor = Palette.banner.background
+        self.titleLabel.textColor = Palette.banner.text
+        self.overrideSettingsButton.setBackgroundColor(Palette.buttonFace.background)
+        self.overrideSettingsButton.setTitleColor(Palette.buttonFace.text, for: .normal)
+        self.view.backgroundColor = Palette.normal.background
     }
 
 }

@@ -43,8 +43,8 @@ class GraphView: UIView {
     private var yAxisLabels: [Label] = []
     private var yAxisLimit: Int!
     private var attributedTitle: NSAttributedString!
-    private var axisColor = Palette.darkHighlightText
-    private var gradientColors = [Palette.darkHighlightText.cgColor, Palette.darkHighlight.cgColor] as CFArray
+    private var axisColor = Palette.darkHighlight.text
+    private var gradientColors = [Palette.darkHighlight.text.cgColor, Palette.darkHighlight.background.cgColor] as CFArray
     private var leftMaxLen: Int = 0
     private var rightMaxLen: Int = 0
     private var bottomMaxLen: Int = 0
@@ -91,7 +91,7 @@ class GraphView: UIView {
     
     public func add(title: String, color: UIColor = UIColor.white) {
         var attributes: [NSAttributedString.Key : Any] = [:]
-        attributes[NSAttributedString.Key.foregroundColor] = Palette.text.withAlphaComponent(0.5).cgColor
+        attributes[NSAttributedString.Key.foregroundColor] = Palette.normal.text.withAlphaComponent(0.5).cgColor
         attributes[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 28.0, weight: .light)
         self.attributedTitle = NSAttributedString(string: title, attributes: attributes)
     }

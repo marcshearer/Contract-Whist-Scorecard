@@ -217,7 +217,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         self.bringSubviewToFront(messageLabel)
         self.messageLabel.numberOfLines = 0
         self.messageLabel.textAlignment = .center
-        self.messageLabel.textColor = Palette.bannerText
+        self.messageLabel.textColor = Palette.banner.text
         
         // Setup tap gesture
         self.tapGesture = UITapGestureRecognizer(target: self, action: #selector(SelectedPlayersView.tapSelector(_:)))
@@ -239,7 +239,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
             
             let playerView = PlayerView(type: .selected, parentView: self.contentView, width: self.width, height: self.height, tag: index, haloWidth: self.haloWidth, allowHaloWidth: self.allowHaloWidth)
             playerView.delegate = self
-            playerView.set(textColor: Palette.tableTopTextContrast)
+            playerView.set(textColor: Palette.tableTop.contrastText)
             self.clear(playerView: playerView, slot: index)
             self.playerViews.append(playerView)
         }
@@ -269,7 +269,7 @@ class SelectedPlayersView: UIView, PlayerViewDelegate, UIDropInteractionDelegate
         self.layoutIfNeeded()
         
         // Set background
-        self.backgroundColor = Palette.tableTop
+        self.backgroundColor = Palette.tableTop.background
         
         // Position player views
         self.positionSelectedPlayers()

@@ -27,8 +27,8 @@ class Whisper {
         self.containerView.isHidden = true
         self.containerView.backgroundColor = UIColor.clear
         self.containerView.addSubview(self.label)
-        self.label.backgroundColor = backgroundColor ?? Palette.whisper
-        self.label.textColor = textColor ?? Palette.whisperText
+        self.label.backgroundColor = backgroundColor ?? Palette.whisper.background
+        self.label.textColor = textColor ?? Palette.whisper.text
         self.label.adjustsFontSizeToFitWidth = true
         self.label.numberOfLines = 0
         self.label.font = UIFont.systemFont(ofSize: 16)

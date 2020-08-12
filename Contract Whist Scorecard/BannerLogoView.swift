@@ -12,8 +12,8 @@ class BannerLogoView : UIView {
     
     @IBOutlet private weak var contentView: UIView!
     
-    @IBInspectable public var strokeColor: UIColor = Palette.bannerText
-    @IBInspectable public var fillColor: UIColor = Palette.banner
+    @IBInspectable public var strokeColor: UIColor = Palette.banner.text
+    @IBInspectable public var fillColor: UIColor = Palette.banner.background
     @IBInspectable public var lineWidth: CGFloat = 0.0
     
     required init?(coder: NSCoder) {

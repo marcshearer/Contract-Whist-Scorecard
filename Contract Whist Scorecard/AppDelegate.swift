@@ -34,10 +34,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.overrideUserInterfaceStyle = Scorecard.settings.appearance.userInterfaceStyle
         Themes.selectTheme(Scorecard.settings.colorTheme)
 
-        UINavigationBar.appearance().barTintColor = Palette.emphasis
+        UINavigationBar.appearance().barTintColor = Palette.emphasis.background
         UINavigationBar.appearance().tintColor = UIColor.white
         UINavigationBar.appearance().isOpaque = true
-        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = Palette.background
+        UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).backgroundColor = Palette.normal.background
         
         // Check if launched from notification
         if let options = launchOptions {

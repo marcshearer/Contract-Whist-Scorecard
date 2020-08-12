@@ -82,13 +82,13 @@ class BubbleView: UIView {
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
-        self.bubbleView?.backgroundColor = Palette.banner
+        self.bubbleView?.backgroundColor = Palette.banner.background
         
         self.imageView?.image = UIImage(named: "big tick")?.asTemplate()
-        self.imageView?.tintColor = Palette.bannerText
+        self.imageView?.tintColor = Palette.banner.text
         
         self.label?.backgroundColor = UIColor.clear
-        self.label?.textColor = Palette.bannerText
+        self.label?.textColor = Palette.banner.text
         
         self.contentView.addShadow(shadowOpacity: 0.5)
     }

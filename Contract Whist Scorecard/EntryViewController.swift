@@ -259,7 +259,7 @@ class EntryViewController: ScorecardViewController, UITableViewDataSource, UITab
     }
     
     func setupScreen() {
-        let title = Scorecard.game.roundTitle(Scorecard.game.selectedRound, rankColor: Palette.totalText)
+        let title = Scorecard.game.roundTitle(Scorecard.game.selectedRound, rankColor: Palette.total.text)
         footerRoundTitle.attributedText = title
         if ScorecardUI.screenHeight < 667.0 || !ScorecardUI.phoneSize() {
             // Smaller than an iPhone 7 portrait or on a tablet
@@ -994,22 +994,22 @@ extension EntryViewController {
 
     private func defaultViewColors() {
 
-        self.bannerLogoView.fillColor = Palette.bannerShadow
-        self.bannerLogoView.strokeColor = Palette.bannerText
-        self.bannerPaddingView.bannerColor = Palette.banner
-        self.entryView.backgroundColor = Palette.background
-        self.errorsButtons.forEach { $0.backgroundColor = Palette.error }
-        self.titleView.backgroundColor = Palette.banner
-        self.toolbarView.backgroundColor = Palette.total
-        self.instructionContainerView.backgroundColor = Palette.banner
-        self.instructionLabel.textColor = Palette.bannerText
-        self.separatorView.backgroundColor = Palette.separator
+        self.bannerLogoView.fillColor = Palette.bannerShadow.background
+        self.bannerLogoView.strokeColor = Palette.banner.text
+        self.bannerPaddingView.bannerColor = Palette.banner.background
+        self.entryView.backgroundColor = Palette.normal.background
+        self.errorsButtons.forEach { $0.backgroundColor = Palette.error.background }
+        self.titleView.backgroundColor = Palette.banner.background
+        self.toolbarView.backgroundColor = Palette.total.background
+        self.instructionContainerView.backgroundColor = Palette.banner.background
+        self.instructionLabel.textColor = Palette.banner.text
+        self.separatorView.backgroundColor = Palette.separator.background
     }
 
     private func defaultCellColors(cell: EntryPlayerTableCell) {
         switch cell.reuseIdentifier {
         case "Entry Player Table Cell":
-            cell.entryPlayerSeparator.backgroundColor = Palette.separator
+            cell.entryPlayerSeparator.backgroundColor = Palette.separator.background
         default:
             break
         }
@@ -1018,8 +1018,8 @@ extension EntryViewController {
     private func defaultCellColors(cell: EntryScoreCell) {
         switch cell.reuseIdentifier {
         case "Entry Score Cell":
-            cell.scoreButton.backgroundColor = Palette.bidButton
-            cell.scoreButton.setTitleColor(Palette.bidButtonText, for: .normal)
+            cell.scoreButton.backgroundColor = Palette.bidButton.background
+            cell.scoreButton.setTitleColor(Palette.bidButton.text, for: .normal)
         default:
             break
         }

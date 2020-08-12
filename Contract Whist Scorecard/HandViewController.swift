@@ -338,7 +338,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
                 cell.playerBidLabel.text = "Bid \(bid!)"
             }
             cell.playerMadeLabel.text = playerMadeText(playerNumber)
-            cell.playerMadeLabel.textColor = Palette.tableTopTextContrast
+            cell.playerMadeLabel.textColor = Palette.tableTop.contrastText
             
             // Format card
             cell.playedCardWidthConstraint.constant = tabletopCardWidth
@@ -484,7 +484,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
                 // Hand complete - update tricks made on screen
                 let playerMadeLabel = self.playedCardCell(Scorecard.game.handState.winner! - 1)?.playerMadeLabel
                 playerMadeLabel?.text = playerMadeText(Scorecard.game.handState.toPlay!)
-                playerMadeLabel?.textColor = Palette.tableTopText
+                playerMadeLabel?.textColor = Palette.tableTop.text
                 
                 // Disable lookback
                 lastHandButton.isHidden = true
@@ -688,8 +688,8 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         if bidMode {
             tabletopView.isHidden = true
             bidView.isHidden = false
-            leftFooterPaddingView.backgroundColor = Palette.background
-            leftPaddingView.backgroundColor = Palette.background
+            leftFooterPaddingView.backgroundColor = Palette.normal.background
+            leftPaddingView.backgroundColor = Palette.normal.background
             
             setupBidSize()
             setupHandSize()
@@ -702,8 +702,8 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         } else {
             bidView.isHidden = true
             tabletopView.isHidden = false
-            leftFooterPaddingView.backgroundColor = Palette.tableTop
-            leftPaddingView.backgroundColor = Palette.tableTop
+            leftFooterPaddingView.backgroundColor = Palette.tableTop.background
+            leftPaddingView.backgroundColor = Palette.tableTop.background
             
             setupTabletopSize()
             setupHandSize()
@@ -736,9 +736,9 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     
     func bidEnable(_ bidCell: BidCollectionCell, _ enable: Bool) {
         if enable {
-            bidCell.bidButton.backgroundColor = Palette.bidButton
+            bidCell.bidButton.backgroundColor = Palette.bidButton.background
         } else {
-            bidCell.bidButton.backgroundColor = Palette.bidButton.withAlphaComponent(0.25)
+            bidCell.bidButton.backgroundColor = Palette.bidButton.background.withAlphaComponent(0.25)
         }
     }
     
@@ -858,12 +858,12 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         Constraint.setWidth(control: label, width: cardWidth)
         Constraint.setHeight(control: label, height: cardWidth * (3.0/2.0))
         label.attributedText = card.toAttributedString()
-        label.backgroundColor = Palette.cardFace
+        label.backgroundColor = Palette.cardFace.background
         label.font = UIFont.systemFont(ofSize: 30)
         label.textAlignment = .center
         ScorecardUI.roundCorners(label)
         
-        self.confirmPlayed(title: "Confirm Card", content: label, sourceView: self.handSourceView, confirmText: "Play card", cancelText: "Change card", titleOffset: 8.0, backgroundColor: Palette.tableTop, bannerColor: Palette.tableTop, bannerTextColor: Palette.tableTopText, buttonColor: Palette.roomInterior, buttonTextColor: Palette.roomInteriorText, confirmHandler: { self.playCard(card: card) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
+        self.confirmPlayed(title: "Confirm Card", content: label, sourceView: self.handSourceView, confirmText: "Play card", cancelText: "Change card", titleOffset: 8.0, backgroundColor: Palette.tableTop.background, bannerColor: Palette.tableTop.background, bannerTextColor: Palette.tableTop.text, buttonColor: Palette.roomInterior.background, buttonTextColor: Palette.roomInterior.text, confirmHandler: { self.playCard(card: card) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
     }
     
     func playCard(card: Card) {
@@ -912,7 +912,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
         label.textAlignment = .center
         ScorecardUI.roundCorners(label)
         
-        self.confirmPlayed(title: "Confirm Bid", content: label, sourceView: self.handSourceView, confirmText: "Confirm Bid", cancelText: "Change Bid", titleOffset: 15.0, backgroundColor: Palette.background, bannerColor: Palette.background, bannerTextColor: Palette.roomInterior, buttonColor: Palette.roomInterior, buttonTextColor: Palette.roomInteriorText, confirmHandler: { self.makeBid(bid) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
+        self.confirmPlayed(title: "Confirm Bid", content: label, sourceView: self.handSourceView, confirmText: "Confirm Bid", cancelText: "Change Bid", titleOffset: 15.0, backgroundColor: Palette.normal.background, bannerColor: Palette.normal.background, bannerTextColor: Palette.roomInterior.background, buttonColor: Palette.roomInterior.background, buttonTextColor: Palette.roomInterior.text, confirmHandler: { self.makeBid(bid) }, cancelHandler: { Scorecard.shared.restartReminder(remindAfter: timeLeft) })
     }
     
     func makeBid(_ bid: Int) {
@@ -1019,8 +1019,8 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
             self.whisper.show("Buzz", from: self.view, hideAfter: 2.0)
         }
         if reminder {
-            self.instructionView.alertFlash(duration: 0.3, repeatCount: 3, backgroundColor: Palette.tableTop)
-            self.bannerPaddingView.alertFlash(duration: 0.3, repeatCount: 3, backgroundColor: Palette.tableTop)
+            self.instructionView.alertFlash(duration: 0.3, repeatCount: 3, backgroundColor: Palette.tableTop.background)
+            self.bannerPaddingView.alertFlash(duration: 0.3, repeatCount: 3, backgroundColor: Palette.tableTop.background)
         }
     }
     
@@ -1040,8 +1040,8 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     }
     
     func setInstructionsHighlight(to highlight: Bool) {
-        let nonHighlightBackgroundColor = (highlight ? Palette.hand : Palette.tableTop)
-        let nonHighlightTextColor = (highlight ? Palette.handText : Palette.tableTopText)
+        let nonHighlightBackgroundColor = (highlight ? Palette.hand.background : Palette.tableTop.background)
+        let nonHighlightTextColor = (highlight ? Palette.hand.text : Palette.tableTop.text)
         self.instructionView.backgroundColor = nonHighlightBackgroundColor
         self.instructionLabel.textColor = nonHighlightTextColor
         self.bannerPaddingView.backgroundColor = nonHighlightBackgroundColor
@@ -1221,28 +1221,28 @@ extension HandViewController {
 
     private func defaultViewColors() {
 
-        self.bidSeparator.backgroundColor = Palette.separator
-        self.bidTitleSeparator.backgroundColor = Palette.separator
-        self.bidView.backgroundColor = Palette.background
-        self.footerPaddingView.backgroundColor = Palette.hand
-        self.handView.backgroundColor = Palette.hand
-        self.instructionLabel.textColor = Palette.handText
-        self.leftFooterPaddingView.backgroundColor = Palette.hand
-        self.leftPaddingView.backgroundColor = Palette.hand
-        self.roundSummaryButton.setTitleColor(Palette.darkHighlightText, for: .normal)
-        self.separator.backgroundColor = Palette.hand
-        self.statusPlayer1BidLabel.textColor = Palette.text
-        self.statusPlayer2BidLabel.textColor = Palette.text
-        self.statusPlayer3BidLabel.textColor = Palette.text
-        self.statusPlayer4BidLabel.textColor = Palette.text
-        self.tabletopView.backgroundColor = Palette.tableTop
-        self.view.backgroundColor = Palette.hand
+        self.bidSeparator.backgroundColor = Palette.separator.background
+        self.bidTitleSeparator.backgroundColor = Palette.separator.background
+        self.bidView.backgroundColor = Palette.normal.background
+        self.footerPaddingView.backgroundColor = Palette.hand.background
+        self.handView.backgroundColor = Palette.hand.background
+        self.instructionLabel.textColor = Palette.hand.text
+        self.leftFooterPaddingView.backgroundColor = Palette.hand.background
+        self.leftPaddingView.backgroundColor = Palette.hand.background
+        self.roundSummaryButton.setTitleColor(Palette.darkHighlight.text, for: .normal)
+        self.separator.backgroundColor = Palette.hand.background
+        self.statusPlayer1BidLabel.textColor = Palette.normal.text
+        self.statusPlayer2BidLabel.textColor = Palette.normal.text
+        self.statusPlayer3BidLabel.textColor = Palette.normal.text
+        self.statusPlayer4BidLabel.textColor = Palette.normal.text
+        self.tabletopView.backgroundColor = Palette.tableTop.background
+        self.view.backgroundColor = Palette.hand.background
     }
 
     private func defaultCellColors(cell: BidCollectionCell) {
         switch cell.reuseIdentifier {
         case "Bid Collection Cell":
-            cell.bidButton.textColor = Palette.bidButtonText
+            cell.bidButton.textColor = Palette.bidButton.text
         default:
             break
         }
@@ -1251,7 +1251,7 @@ extension HandViewController {
     private func defaultCellColors(cell: CardCollectionCell) {
         switch cell.reuseIdentifier {
         case "Card Collection Cell":
-            cell.cardView.backgroundColor = Palette.cardFace
+            cell.cardView.backgroundColor = Palette.cardFace.background
         default:
             break
         }
@@ -1260,10 +1260,10 @@ extension HandViewController {
     private func defaultCellColors(cell: PlayedCardCollectionCell) {
         switch cell.reuseIdentifier {
         case "Played Card Collection Cell":
-            cell.cardView.backgroundColor = Palette.cardFace
-            cell.playerBidLabel.textColor = Palette.tableTopTextContrast
-            cell.playerMadeLabel.textColor = Palette.tableTopTextContrast
-            cell.playerNameLabel.textColor = Palette.tableTopTextContrast
+            cell.cardView.backgroundColor = Palette.cardFace.background
+            cell.playerBidLabel.textColor = Palette.tableTop.contrastText
+            cell.playerMadeLabel.textColor = Palette.tableTop.contrastText
+            cell.playerNameLabel.textColor = Palette.tableTop.contrastText
         default:
             break
         }

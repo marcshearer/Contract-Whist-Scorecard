@@ -62,8 +62,8 @@ class TrendTileView: UIView, DashboardTileDelegate {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        self.tileView.backgroundColor = Palette.buttonFace
-        self.titleLabel.textColor = Palette.textTitle
+        self.tileView.backgroundColor = Palette.buttonFace.background
+        self.titleLabel.textColor = Palette.normal.strongText
         self.typeButton.tintColor = Dashboard.color(detailView: detailType)
         Dashboard.formatTypeButton(detailView: detailType, button: self.typeButton)
 
@@ -114,10 +114,10 @@ class TrendTileView: UIView, DashboardTileDelegate {
             graphView.addDataset(values: [average, average], weight: 0.5, color: Palette.stats)
             
             // Add 100 line
-            graphView.addDataset(values: [100, 100], weight: 0.5, color: Palette.text)
+            graphView.addDataset(values: [100, 100], weight: 0.5, color: Palette.normal.text)
             
             // Add main dataset - score per game
-            graphView.addDataset(values: values, weight: 2.0, color: Palette.stats, pointFillColor: Palette.buttonFace, gradient: false, pointSize: 8.0, tag: 1)
+            graphView.addDataset(values: values, weight: 2.0, color: Palette.stats, pointFillColor: Palette.buttonFace.background, gradient: false, pointSize: 8.0, tag: 1)
         }
     }
 }

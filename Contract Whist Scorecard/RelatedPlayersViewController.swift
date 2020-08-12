@@ -52,10 +52,10 @@ class RelatedPlayersViewController : ScorecardViewController, RelatedPlayersDele
     // MARK: - Default view colors ============================================================== -
     
     private func defaultViewColors() {
-        self.view.backgroundColor = Palette.banner
-        self.titleLabel.textColor = Palette.bannerEmbossed
-        self.captionLabel.textColor = Palette.bannerText
-        self.relatedPlayersContainerView.backgroundColor = Palette.buttonFace
+        self.view.backgroundColor = Palette.banner.background
+        self.titleLabel.textColor = Palette.banner.themeText
+        self.captionLabel.textColor = Palette.banner.text
+        self.relatedPlayersContainerView.backgroundColor = Palette.buttonFace.background
     }
     
     // MARK: - Function to show this view ======================================================= -

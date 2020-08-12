@@ -242,7 +242,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
             cell.thumbnailView.set(frame: CGRect(x: 0.0, y: crownHeight, width: width, height: width + nameHeight - 5.0))
             cell.thumbnailView.set(playerMO: Scorecard.game.player(enteredPlayerNumber: playerResults.playerNumber).playerMO!, nameHeight: nameHeight)
             cell.thumbnailView.set(font: UIFont.systemFont(ofSize: nameHeight * 0.7, weight: .semibold))
-            cell.thumbnailView.set(textColor: Palette.roomInteriorTextContrast)
+            cell.thumbnailView.set(textColor: Palette.roomInterior.contrastText)
             
             cell.playerScoreButton.setTitle("\(playerResults.score)", for: .normal)
             cell.thumbnailView.set(font: UIFont.systemFont(ofSize: nameHeight * 0.7, weight: .semibold))
@@ -272,7 +272,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
         } else {
             let awardView = AwardDetailView(frame: self.view.frame)
             let award = self.awardList[indexPath.row]
-            awardView.set(awards: self.awards, playerUUID: Scorecard.settings.thisPlayerUUID, award: award, mode: .awarding, backgroundColor: Palette.buttonFace, textColor: Palette.buttonFaceText)
+            awardView.set(awards: self.awards, playerUUID: Scorecard.settings.thisPlayerUUID, award: award, mode: .awarding, backgroundColor: Palette.buttonFace.background, textColor: Palette.buttonFace.text)
             awardView.show(from: self.view)
         }
     }
@@ -702,19 +702,19 @@ extension GameSummaryViewController {
 
     private func defaultViewColors() {
 
-        self.activityIndicator.color = Palette.darkHighlightText
-        self.awardsTitleBar.set(faceColor: Palette.buttonFace)
-        self.awardsTitleBar.set(textColor: Palette.buttonFaceText)
-        self.actionButtons.forEach{(button) in button.set(titleColor: Palette.buttonFaceText)}
-        self.actionButtons.forEach{(button) in button.set(faceColor: Palette.buttonFace)}
-        self.syncMessage.textColor = Palette.darkHighlightText
-        self.view.backgroundColor = Palette.roomInterior
+        self.activityIndicator.color = Palette.darkHighlight.text
+        self.awardsTitleBar.set(faceColor: Palette.buttonFace.background)
+        self.awardsTitleBar.set(textColor: Palette.buttonFace.text)
+        self.actionButtons.forEach{(button) in button.set(titleColor: Palette.buttonFace.text)}
+        self.actionButtons.forEach{(button) in button.set(faceColor: Palette.buttonFace.background)}
+        self.syncMessage.textColor = Palette.darkHighlight.text
+        self.view.backgroundColor = Palette.roomInterior.background
     }
 
     private func defaultCellColors(cell: GameSummaryPlayerCollectionCell) {
         switch cell.reuseIdentifier {
         case "Game Summary Cell":
-            cell.playerScoreButton.setTitleColor(Palette.roomInteriorText, for: .normal)
+            cell.playerScoreButton.setTitleColor(Palette.roomInterior.text, for: .normal)
         default:
             break
         }

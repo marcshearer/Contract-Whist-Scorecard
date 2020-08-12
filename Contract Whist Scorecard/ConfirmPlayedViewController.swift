@@ -67,15 +67,15 @@ class ConfirmPlayedViewController : ScorecardViewController, UIPopoverPresentati
         super.viewWillAppear(animated)
         Utility.mainThread {
             // Have to wrap this in main thread for it to work!! Apparently fixed in iOS 13
-            self.contentView.backgroundColor = self.backgroundColor ?? Palette.background
-            self.titleView.backgroundColor = self.bannerColor ?? Palette.roomInterior
-            self.labelTitle.textColor = self.bannerTextColor ?? Palette.roomInteriorText
-            self.confirmButton.backgroundColor = self.buttonColor ?? Palette.roomInterior
-            self.confirmButton.setTitleColor(self.buttonTextColor ?? Palette.roomInteriorText, for: .normal)
-            self.cancelButton.backgroundColor = self.buttonColor ?? Palette.roomInterior
-            self.cancelButton.setTitleColor(self.buttonTextColor ?? Palette.roomInteriorText, for: .normal)
-            self.horizontalSeparatorView.backgroundColor = self.backgroundColor ?? Palette.background
-            self.verticalSeparatorView.backgroundColor = self.backgroundColor ?? Palette.background
+            self.contentView.backgroundColor = self.backgroundColor ?? Palette.normal.background
+            self.titleView.backgroundColor = self.bannerColor ?? Palette.roomInterior.background
+            self.labelTitle.textColor = self.bannerTextColor ?? Palette.roomInterior.text
+            self.confirmButton.backgroundColor = self.buttonColor ?? Palette.roomInterior.background
+            self.confirmButton.setTitleColor(self.buttonTextColor ?? Palette.roomInterior.text, for: .normal)
+            self.cancelButton.backgroundColor = self.buttonColor ?? Palette.roomInterior.background
+            self.cancelButton.setTitleColor(self.buttonTextColor ?? Palette.roomInterior.text, for: .normal)
+            self.horizontalSeparatorView.backgroundColor = self.backgroundColor ?? Palette.normal.background
+            self.verticalSeparatorView.backgroundColor = self.backgroundColor ?? Palette.normal.background
         }
         self.view.setNeedsLayout()
     }

@@ -325,7 +325,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
     private func createFilterInstructionView() {
         let small = ScorecardUI.smallPhoneSize()
         self.filterInstructionView = UIView()
-        self.filterInstructionView.backgroundColor = Palette.banner
+        self.filterInstructionView.backgroundColor = Palette.banner.background
         self.customView!.addSubview(self.filterInstructionView)
         self.customView!.superview?.bringSubviewToFront(self.customView!)
         Constraint.anchor(view: customView!, control: self.filterInstructionView, attributes: .top, .leading, .trailing)
@@ -333,7 +333,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
         if small {
             // Create instruction label
             self.filterInstructionLabel = UILabel()
-            self.filterInstructionLabel.textColor = Palette.bannerText
+            self.filterInstructionLabel.textColor = Palette.banner.text
             self.filterInstructionLabel.font = UIFont.systemFont(ofSize: 24.0, weight: .light)
             self.filterInstructionView.addSubview(self.filterInstructionLabel)
             Constraint.anchor(view: self.filterInstructionView, control: self.filterInstructionLabel, attributes: .centerX, .centerY)
@@ -356,8 +356,8 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
 
             // Create the filter button
             self.filterButton = ShadowButton(frame: CGRect(x: 0, y: 0, width: buttonWidth, height: buttonHeight), cornerRadius: 7.0)
-            self.filterButton.setBackgroundColor(Palette.syncButton)
-            self.filterButton.setTitleColor(Palette.syncButtonText, for: .normal)
+            self.filterButton.setBackgroundColor(Palette.alwaysTheme.background)
+            self.filterButton.setTitleColor(Palette.alwaysTheme.text, for: .normal)
             Constraint.setWidth(control: self.filterButton, width: buttonWidth)
             Constraint.setHeight(control: self.filterButton, height: buttonHeight)
             self.filterButton.setTitle("Filter", for: .normal)
@@ -370,7 +370,7 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             self.filterClearView = UIView(frame: CGRect(x: 0, y: 0, width: clearHeight, height: clearHeight))
             self.filterClearView.isUserInteractionEnabled = false
             self.filterClearView.roundCorners(cornerRadius: clearHeight / 2.0)
-            self.filterClearView.backgroundColor = Palette.banner
+            self.filterClearView.backgroundColor = Palette.banner.background
             Constraint.setWidth(control: self.filterClearView, width: clearHeight)
             Constraint.setHeight(control: self.filterClearView, height: clearHeight)
             self.filterButton.addSubview(self.filterClearView)
@@ -381,14 +381,14 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
             Constraint.setHeight(control: filterClearImageView, height: clearImageHeight)
             filterClearImageView.image = UIImage(named: "cross white")?.asTemplate()
             filterClearImageView.contentMode = .scaleAspectFit
-            filterClearImageView.tintColor = Palette.bannerText
+            filterClearImageView.tintColor = Palette.banner.text
             self.filterClearView.addSubview(filterClearImageView)
             Constraint.anchor(view: self.filterClearView, control: filterClearImageView, attributes: .centerX, .centerY)
 
             // Create the sync button
             self.syncButton = ShadowButton(frame: CGRect(x: 0, y: 0, width: buttonWidth, height: buttonHeight), cornerRadius: 7)
-            self.syncButton.setBackgroundColor(Palette.syncButton)
-            self.syncButton.setTitleColor(Palette.syncButtonText, for: .normal)
+            self.syncButton.setBackgroundColor(Palette.alwaysTheme.background)
+            self.syncButton.setTitleColor(Palette.alwaysTheme.text, for: .normal)
             Constraint.setWidth(control: self.syncButton, width: buttonWidth)
             Constraint.setHeight(control: self.syncButton, height: buttonHeight)
             self.syncButton.setTitle("Sync", for: .normal)
@@ -410,8 +410,8 @@ class HistoryViewer : NSObject, DataTableViewerDelegate, PlayerSelectionViewDele
     private func createFilterSelectionView() {
         self.filterSelectionView = PlayerSelectionView(parent: self.dataTableViewController, frame: CGRect(x: 0.0, y: 0.0, width: self.customView.frame.width, height: self.dataTableViewController.view.frame.height - self.customView.frame.minY), interRowSpacing: 10.0)
         self.filterSelectionView.delegate = self
-        self.filterSelectionView.backgroundColor = Palette.banner
-        self.filterSelectionView.set(textColor: Palette.bannerText)
+        self.filterSelectionView.backgroundColor = Palette.banner.background
+        self.filterSelectionView.set(textColor: Palette.banner.text)
         
         self.setFilterSelectionViewRequiredHeight()
         

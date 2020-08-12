@@ -26,7 +26,7 @@ class InsetPaddingView: InsetPaddingViewNoColor {
     }
     
     required init(coder aDecoder: NSCoder) {
-        self.bannerColor = Palette.banner
+        self.bannerColor = Palette.banner.background
         super.init(coder: aDecoder)
     }
 
@@ -62,8 +62,8 @@ class BannerContinuation: UIView {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        self.bannerColor = Palette.banner
-        self.borderColor = Palette.banner
+        self.bannerColor = Palette.banner.background
+        self.borderColor = Palette.banner.background
         self.shape = .upArrow
         super.init(coder: aDecoder)
     }
@@ -151,8 +151,8 @@ class Footer: UIView {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        self.footerColor = Palette.banner
-        self.borderColor = Palette.bannerText
+        self.footerColor = Palette.banner.background
+        self.borderColor = Palette.banner.text
         self.shape = .upArrow
         super.init(coder: aDecoder)
     }
@@ -210,8 +210,8 @@ class NavigationBar: UINavigationBar {
     @IBInspectable var textColor: UIColor
     
     required init?(coder: NSCoder) {
-        self.bannerColor = Palette.banner
-        self.textColor = Palette.bannerText
+        self.bannerColor = Palette.banner.background
+        self.textColor = Palette.banner.text
         super.init(coder: coder)
         self.setBackgroundImage(UIImage(), for: .default)
         self.shadowImage = UIImage()

@@ -160,15 +160,15 @@ class ActionSheet : NSObject, UIPopoverPresentationControllerDelegate {
         }
         self.dark = dark
 
-        let optionBackgroundColor = Palette.background
+        let optionBackgroundColor = Palette.normal.background
         var titleBackgroundColor: UIColor
         var titleTextColor: UIColor
         if dark {
-            titleBackgroundColor = Palette.darkHighlight
-            titleTextColor = Palette.darkHighlightText
+            titleBackgroundColor = Palette.darkHighlight.background
+            titleTextColor = Palette.darkHighlight.text
         } else {
-            titleBackgroundColor = Palette.banner
-            titleTextColor = Palette.bannerText
+            titleBackgroundColor = Palette.banner.background
+            titleTextColor = Palette.banner.text
         }
         
         self.alertController = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
@@ -235,7 +235,7 @@ class ActionSheet : NSObject, UIPopoverPresentationControllerDelegate {
         if self.dark && style == .cancel {
             action.setValue(UIColor.black, forKey: "titleTextColor")
         } else {
-            action.setValue(Palette.text, forKey: "titleTextColor")
+            action.setValue(Palette.normal.text, forKey: "titleTextColor")
         }
     }
     

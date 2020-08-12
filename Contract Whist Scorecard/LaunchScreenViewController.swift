@@ -189,18 +189,18 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     }
     
     private func setupControls() {
-        self.view.backgroundColor = Palette.banner
-        self.whistTitle.textColor = Palette.bannerEmbossed
-        self.message.textColor = Palette.bannerText
-        self.termsTitle.textColor = Palette.bannerText
-        self.termsText.backgroundColor = Palette.background
-        self.termsText.textColor = Palette.text
+        self.view.backgroundColor = Palette.banner.background
+        self.whistTitle.textColor = Palette.banner.themeText
+        self.message.textColor = Palette.banner.text
+        self.termsTitle.textColor = Palette.banner.text
+        self.termsText.backgroundColor = Palette.normal.background
+        self.termsText.textColor = Palette.normal.text
         self.termsText.roundCorners(cornerRadius: 8.0)
-        self.termsDecline.backgroundColor = Palette.buttonFace
-        self.termsDecline.setTitleColor(Palette.buttonFaceText, for: .normal)
+        self.termsDecline.backgroundColor = Palette.buttonFace.background
+        self.termsDecline.setTitleColor(Palette.buttonFace.text, for: .normal)
         self.termsDecline.toCircle()
-        self.termsAccept.backgroundColor = Palette.darkHighlight
-        self.termsAccept.setTitleColor(Palette.darkHighlightText, for: .normal)
+        self.termsAccept.backgroundColor = Palette.darkHighlight.background
+        self.termsAccept.setTitleColor(Palette.darkHighlight.text, for: .normal)
         self.termsAccept.toCircle()
     }
     

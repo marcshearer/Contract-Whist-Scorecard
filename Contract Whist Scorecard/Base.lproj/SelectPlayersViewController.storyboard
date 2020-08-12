@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -122,18 +122,32 @@
                                                                                 <nil key="textColor"/>
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
-                                                                            <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter identifier" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="h2T-Xr-Sk7" customClass="TextField" customModule="Whist_2" customModuleProvider="target">
-                                                                                <rect key="frame" x="30" y="26" width="222" height="34"/>
+                                                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fkE-As-Xe8">
+                                                                                <rect key="frame" x="30" y="23" width="222" height="34"/>
+                                                                                <subviews>
+                                                                                    <textField opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter identifier" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="h2T-Xr-Sk7" customClass="TextField" customModule="Whist_2" customModuleProvider="target">
+                                                                                        <rect key="frame" x="8" y="0.0" width="206" height="34"/>
+                                                                                        <color key="backgroundColor" name="Clear"/>
+                                                                                        <constraints>
+                                                                                            <constraint firstAttribute="height" constant="34" id="FTi-r4-DT6"/>
+                                                                                        </constraints>
+                                                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                                        <textInputTraits key="textInputTraits"/>
+                                                                                    </textField>
+                                                                                </subviews>
+                                                                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                                                 <constraints>
-                                                                                    <constraint firstAttribute="height" constant="34" id="FTi-r4-DT6"/>
+                                                                                    <constraint firstItem="h2T-Xr-Sk7" firstAttribute="top" secondItem="fkE-As-Xe8" secondAttribute="top" id="Bxp-h0-pWb"/>
+                                                                                    <constraint firstAttribute="trailing" secondItem="h2T-Xr-Sk7" secondAttribute="trailing" constant="8" id="Jr6-RA-l6j"/>
+                                                                                    <constraint firstAttribute="bottom" secondItem="h2T-Xr-Sk7" secondAttribute="bottom" id="dIE-zR-JZ9"/>
+                                                                                    <constraint firstAttribute="height" constant="34" id="mdk-gl-tJJ"/>
+                                                                                    <constraint firstItem="h2T-Xr-Sk7" firstAttribute="leading" secondItem="fkE-As-Xe8" secondAttribute="leading" constant="8" id="wSz-PG-ctR"/>
                                                                                 </constraints>
-                                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                                <textInputTraits key="textInputTraits"/>
-                                                                            </textField>
+                                                                            </view>
                                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="le8-8z-48n" userLabel="Download Players From Cloud" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                                                                <rect key="frame" x="264" y="23" width="80" height="40"/>
+                                                                                <rect key="frame" x="264" y="23" width="80" height="34"/>
                                                                                 <constraints>
-                                                                                    <constraint firstAttribute="height" constant="40" id="8KU-ML-psG"/>
+                                                                                    <constraint firstAttribute="height" constant="34" id="8KU-ML-psG"/>
                                                                                     <constraint firstAttribute="width" constant="80" id="Mvm-yJ-uws"/>
                                                                                 </constraints>
                                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -143,7 +157,7 @@
                                                                                 </connections>
                                                                             </button>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6AV-8E-YdY" userLabel="Separator">
-                                                                                <rect key="frame" x="20" y="67" width="334" height="16"/>
+                                                                                <rect key="frame" x="20" y="61" width="334" height="16"/>
                                                                                 <subviews>
                                                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tBK-On-lKv" userLabel="Separator Line">
                                                                                         <rect key="frame" x="0.0" y="8" width="334" height="0.5"/>
@@ -175,7 +189,7 @@
                                                                                 </constraints>
                                                                             </view>
                                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="FDz-w3-g1q">
-                                                                                <rect key="frame" x="20" y="87" width="334" height="31.5"/>
+                                                                                <rect key="frame" x="20" y="81" width="334" height="31.5"/>
                                                                                 <string key="text">who have already played
 players on this device</string>
                                                                                 <fontDescription key="fontDescription" type="italicSystem" pointSize="13"/>
@@ -183,7 +197,7 @@ players on this device</string>
                                                                                 <nil key="highlightedColor"/>
                                                                             </label>
                                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7wS-YP-qSg" customClass="RelatedPlayersView" customModule="Whist_2" customModuleProvider="target">
-                                                                                <rect key="frame" x="20" y="122.5" width="334" height="169.5"/>
+                                                                                <rect key="frame" x="20" y="116.5" width="334" height="175.5"/>
                                                                                 <color key="backgroundColor" name="Clear"/>
                                                                                 <userDefinedRuntimeAttributes>
                                                                                     <userDefinedRuntimeAttribute type="boolean" keyPath="showCancel" value="NO"/>
@@ -196,17 +210,17 @@ players on this device</string>
                                                                         </subviews>
                                                                         <color key="backgroundColor" name="Clear"/>
                                                                         <constraints>
+                                                                            <constraint firstItem="fkE-As-Xe8" firstAttribute="leading" secondItem="hxv-qR-621" secondAttribute="leading" constant="30" id="2Ko-5d-ckX"/>
                                                                             <constraint firstAttribute="trailing" secondItem="1aO-IP-taI" secondAttribute="trailing" constant="30" id="3Ni-cT-Tdb"/>
-                                                                            <constraint firstItem="le8-8z-48n" firstAttribute="leading" secondItem="h2T-Xr-Sk7" secondAttribute="trailing" constant="12" id="3qY-Nx-Sgn"/>
                                                                             <constraint firstItem="1aO-IP-taI" firstAttribute="leading" secondItem="hxv-qR-621" secondAttribute="leading" constant="30" id="47M-qk-6zZ"/>
-                                                                            <constraint firstItem="h2T-Xr-Sk7" firstAttribute="leading" secondItem="hxv-qR-621" secondAttribute="leading" constant="30" id="85b-4H-JfY"/>
+                                                                            <constraint firstItem="fkE-As-Xe8" firstAttribute="centerY" secondItem="le8-8z-48n" secondAttribute="centerY" id="6gn-3e-lOs"/>
                                                                             <constraint firstItem="FDz-w3-g1q" firstAttribute="leading" secondItem="hxv-qR-621" secondAttribute="leading" constant="20" id="ArG-5n-sry"/>
                                                                             <constraint firstItem="1aO-IP-taI" firstAttribute="top" secondItem="hxv-qR-621" secondAttribute="top" id="C6f-xX-0WT"/>
                                                                             <constraint firstItem="7wS-YP-qSg" firstAttribute="top" secondItem="FDz-w3-g1q" secondAttribute="bottom" constant="4" id="DWA-HI-Swe"/>
                                                                             <constraint firstAttribute="trailing" secondItem="FDz-w3-g1q" secondAttribute="trailing" constant="20" id="EYD-3E-Fqp"/>
                                                                             <constraint firstAttribute="trailing" secondItem="6AV-8E-YdY" secondAttribute="trailing" constant="20" id="KVg-bc-YIv"/>
                                                                             <constraint firstItem="FDz-w3-g1q" firstAttribute="top" secondItem="6AV-8E-YdY" secondAttribute="bottom" constant="4" id="P5t-4a-p3H"/>
-                                                                            <constraint firstItem="le8-8z-48n" firstAttribute="centerY" secondItem="h2T-Xr-Sk7" secondAttribute="centerY" id="PW0-cN-pG0"/>
+                                                                            <constraint firstItem="le8-8z-48n" firstAttribute="leading" secondItem="fkE-As-Xe8" secondAttribute="trailing" constant="12" id="Pof-FC-1Kp"/>
                                                                             <constraint firstItem="6AV-8E-YdY" firstAttribute="leading" secondItem="hxv-qR-621" secondAttribute="leading" constant="20" id="REs-8G-41v"/>
                                                                             <constraint firstItem="le8-8z-48n" firstAttribute="top" secondItem="1aO-IP-taI" secondAttribute="bottom" constant="2" id="Ua4-5K-EgA"/>
                                                                             <constraint firstItem="7wS-YP-qSg" firstAttribute="leading" secondItem="hxv-qR-621" secondAttribute="leading" constant="20" id="WoZ-yo-QT8"/>
@@ -359,6 +373,7 @@ players on this device</string>
                         <outlet property="createPlayerView" destination="3A7-MH-gLr" id="Nxu-HV-AXq"/>
                         <outlet property="downloadDownloadButton" destination="le8-8z-48n" id="4gO-bb-WHV"/>
                         <outlet property="downloadIdentifierTextField" destination="h2T-Xr-Sk7" id="d6c-q0-DIN"/>
+                        <outlet property="downloadIdentifierView" destination="fkE-As-Xe8" id="xWp-AS-0ts"/>
                         <outlet property="downloadPlayersContainerHeightConstraint" destination="YUh-qU-jGQ" id="PQo-vt-Khr"/>
                         <outlet property="downloadPlayersContainerTopConstraint" destination="bji-xh-xoP" id="c9G-qc-QwT"/>
                         <outlet property="downloadPlayersContainerView" destination="D6b-P4-tOh" id="AGM-fE-H5y"/>

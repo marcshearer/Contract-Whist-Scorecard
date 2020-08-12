@@ -231,8 +231,8 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
                 cell.playerView.delegate = self
             }
             cell.playerView.set(name: "", initials: "", alpha: 1.0)
-            cell.playerView.set(imageName: "big plus green")
             cell.playerView.set(backgroundColor: UIColor.clear)
+            cell.playerView.set(imageName: "big plus white", tintColor: Palette.continueButton.background)
             
         } else {
             // Create player thumbnail
@@ -250,7 +250,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
         }
         
         cell.playerView.frame = CGRect(x: 5.0, y: 0.0, width: self.thumbnailWidth - 10, height: self.thumbnailHeight - 10)
-        cell.playerView.set(textColor: Palette.text)
+        cell.playerView.set(textColor: Palette.normal.text)
 
         return cell
     }
@@ -348,7 +348,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
         // Configure selected players view
         self.selectedPlayersView.roundCorners(cornerRadius: 40.0)
         self.selectedPlayersView.setHaloWidth(haloWidth: self.haloWidth, allowHaloWidth: dealerHaloWidth)
-        self.selectedPlayersView.setHaloColor(color: Palette.halo)
+        self.selectedPlayersView.setHaloColor(color: Palette.halo.background)
         self.selectedPlayersView.setTapDelegate(self)
         
         // Update layout to get correct size
@@ -508,7 +508,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
                     let selectedPoint = selectedPlayersView.origin(slot: selectedSlot, in: self.view)
                     self.animationView.frame = CGRect(origin: selectedPoint, size: CGSize(width: self.thumbnailWidth, height: self.thumbnailHeight))
                     self.animationView.set(playerMO: selectedPlayerMO)
-                    self.animationView.set(textColor: Palette.darkHighlightText)
+                    self.animationView.set(textColor: Palette.darkHighlight.text)
                     self.animationView.alpha = 1.0
                     
                     // Add new cell to unselected view
@@ -527,7 +527,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
                         if let destinationCell = self.unselectedCollectionView.cellForItem(at: IndexPath(item: unselectedPlayerIndex + (self.addPlayerThumbnail ? 1 : 0), section: 0)) as? SelectionCell {
                             let unselectedPoint = destinationCell.playerView.thumbnailView.convert(CGPoint(x: 0, y: 0), to: self.view)
                             self.animationView.frame = CGRect(origin: unselectedPoint, size: CGSize(width: self.thumbnailWidth, height: self.thumbnailHeight))
-                            self.animationView.set(textColor: Palette.text)
+                            self.animationView.set(textColor: Palette.normal.text)
                         }
                     }
                     animation.addCompletion( {_ in
@@ -581,7 +581,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
                         // Draw a new thumbnail over top of existing - add in views which are uninstalled in IB to avoid warnings of no constraints
                         self.animationView.frame = CGRect(origin: unselectedPoint, size: CGSize(width: unselectedCell.frame.width, height: unselectedCell.frame.height))
                         self.animationView.set(playerMO: selectedPlayerMO)
-                        self.animationView.set(textColor: Palette.darkHighlightText)
+                        self.animationView.set(textColor: Palette.darkHighlight.text)
                         self.animationView.alpha = 1.0
                         
                         // Clear the source cell (and set it to a blank player to avoid spurious refreshes before we remove it)
@@ -595,7 +595,7 @@ class SelectionViewController: ScorecardViewController, UICollectionViewDelegate
                             // Now move it to the selected area
                             let selectedPoint = self.selectedPlayersView.origin(slot: slot, in: self.view)
                             self.animationView.frame = CGRect(origin: selectedPoint, size: CGSize(width: self.thumbnailWidth, height: self.thumbnailHeight))
-                            self.animationView.set(textColor: Palette.darkHighlightText)
+                            self.animationView.set(textColor: Palette.darkHighlight.text)
                             self.selectedPlayersView.clear(slot: slot, keepInUse: true)
                         }
                         animation.addCompletion( {_ in
@@ -856,15 +856,15 @@ extension SelectionViewController {
 
     private func defaultViewColors() {
 
-        self.bannerPaddingView.bannerColor = Palette.banner
-        self.topSectionView.backgroundColor = Palette.banner
-        self.bottomSection.backgroundColor = Palette.background
-        self.clearAllButton.setBackgroundColor(Palette.buttonFace)
-        self.clearAllButton.setTitleColor(Palette.buttonFaceText, for: .normal)
-        self.continueButton.setBackgroundColor(Palette.continueButton)
-        self.continueButton.setTitleColor(Palette.continueButtonText, for: .normal)
-        self.titleView.backgroundColor = Palette.banner
-        self.titleLabel.textColor = Palette.bannerText
-        self.view.backgroundColor = Palette.background
+        self.bannerPaddingView.bannerColor = Palette.banner.background
+        self.topSectionView.backgroundColor = Palette.banner.background
+        self.bottomSection.backgroundColor = Palette.normal.background
+        self.clearAllButton.setBackgroundColor(Palette.buttonFace.background)
+        self.clearAllButton.setTitleColor(Palette.buttonFace.text, for: .normal)
+        self.continueButton.setBackgroundColor(Palette.continueButton.background)
+        self.continueButton.setTitleColor(Palette.continueButton.text, for: .normal)
+        self.titleView.backgroundColor = Palette.banner.background
+        self.titleLabel.textColor = Palette.banner.text
+        self.view.backgroundColor = Palette.normal.background
     }
 }

@@ -77,8 +77,8 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
         
         self.skipOptions = (Scorecard.settings.saveHistory ? 0 : 2)
         
-        self.revertButton.setTitleColor(Palette.bannerText, for: .normal)
-        self.confirmButton.setTitleColor(Palette.bannerText, for: .normal)
+        self.revertButton.setTitleColor(Palette.banner.text, for: .normal)
+        self.confirmButton.setTitleColor(Palette.banner.text, for: .normal)
 
         self.enableButtons()
     }
@@ -263,7 +263,7 @@ class OverrideViewController : ScorecardViewController, UITableViewDelegate, UIT
     private func includeText(from: String) -> NSMutableAttributedString {
         let attributedString = NSMutableAttributedString()
         var attributes: [NSAttributedString.Key : Any] = [:]
-        attributes[NSAttributedString.Key.foregroundColor] = Palette.text
+        attributes[NSAttributedString.Key.foregroundColor] = Palette.normal.text
         attributes[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 17.0, weight: .light)
         attributedString.append(NSAttributedString(string: "Include this game in ", attributes: attributes))
         attributes[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 17.0, weight: .bold)
@@ -292,29 +292,29 @@ extension OverrideViewController {
 
     private func defaultViewColors() {
 
-        self.bannerPaddingView.bannerColor = Palette.banner
-        self.insetPaddingView.backgroundColor = Palette.background
-        self.insetPaddingView.bannerColor = Palette.background
-        self.instructionLabel.textColor = Palette.bannerText
-        self.instructionView.backgroundColor = Palette.banner
-        self.titleLabel.textColor = Palette.bannerText
-        self.titleView.backgroundColor = Palette.banner
-        self.view.backgroundColor = Palette.background
+        self.bannerPaddingView.bannerColor = Palette.banner.background
+        self.insetPaddingView.backgroundColor = Palette.normal.background
+        self.insetPaddingView.bannerColor = Palette.normal.background
+        self.instructionLabel.textColor = Palette.banner.text
+        self.instructionView.backgroundColor = Palette.banner.background
+        self.titleLabel.textColor = Palette.banner.text
+        self.titleView.backgroundColor = Palette.banner.background
+        self.view.backgroundColor = Palette.normal.background
     }
 
     private func defaultCellColors(cell: OverrideTableCell) {
         switch cell.reuseIdentifier {
         case "Bounce":
-            cell.bounceSelection.tintColor = Palette.segmentedControls
+            cell.bounceSelection.tintColor = Palette.segmentedControls.background
         case "Cards":
-            cell.cardsLabel.textColor = Palette.text
-            cell.cardsSlider.minimumTrackTintColor = Palette.segmentedControls
-            cell.cardsSlider.thumbTintColor = Palette.segmentedControls
-            cell.cardsValue.textColor = Palette.text
+            cell.cardsLabel.textColor = Palette.normal.text
+            cell.cardsSlider.minimumTrackTintColor = Palette.segmentedControls.background
+            cell.cardsSlider.thumbTintColor = Palette.segmentedControls.background
+            cell.cardsValue.textColor = Palette.normal.text
         case "Save":
-            cell.saveLabel.textColor = Palette.text
+            cell.saveLabel.textColor = Palette.normal.text
         case "Sub Heading":
-            cell.subHeadingLabel.textColor = Palette.text
+            cell.subHeadingLabel.textColor = Palette.normal.text
         default:
             break
         }

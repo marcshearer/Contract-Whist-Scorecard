@@ -227,7 +227,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
     
     internal func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let view = UIView()
-        view.backgroundColor = Palette.background
+        view.backgroundColor = Palette.normal.background
         return view
     }
     
@@ -304,8 +304,8 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
                 self.defaultCellColors(cell: cell)
                 
                 cell.actionButton.setTitle("Remove Player", for: .normal)
-                cell.actionButton.setBackgroundColor(Palette.error)
-                cell.actionButton.setTitleColor(Palette.errorText, for: .normal)
+                cell.actionButton.setBackgroundColor(Palette.error.background)
+                cell.actionButton.setTitleColor(Palette.error.text, for: .normal)
                 cell.actionButton.tag = self.deleteButtonTag
                 cell.actionButton.addTarget(self, action: #selector(PlayerDetailViewController.actionButtonPressed(_:)), for: .touchUpInside)
                 cell.separator.isHidden = true
@@ -797,42 +797,42 @@ extension PlayerDetailViewController {
 
     private func defaultViewColors() {
 
-        self.view.backgroundColor = Palette.background
-        self.finishButton.setTitleColor(Palette.bannerText, for: .normal)
-        self.titleView.backgroundColor = Palette.banner
-        self.titleLabel.textColor = Palette.bannerText
-        self.tableView.backgroundColor = Palette.background
+        self.view.backgroundColor = Palette.normal.background
+        self.finishButton.setTitleColor(Palette.banner.text, for: .normal)
+        self.titleView.backgroundColor = Palette.banner.background
+        self.titleLabel.textColor = Palette.banner.text
+        self.tableView.backgroundColor = Palette.normal.background
     }
 
     private func defaultCellColors(cell: PlayerDetailCell) {
-        cell.backgroundColor = Palette.background
+        cell.backgroundColor = Palette.normal.background
         switch cell.reuseIdentifier {
         case "Action Button":
-            cell.actionButton.setTitleColor(Palette.buttonFaceText, for: .normal)
-            cell.actionButton.setBackgroundColor(Palette.buttonFace)
-            cell.cancelButton.setTitleColor(Palette.buttonFaceText, for: .normal)
-            cell.cancelButton.setBackgroundColor(Palette.buttonFace)
-            cell.confirmButton.setTitleColor(Palette.errorText, for: .normal)
-            cell.confirmButton.setBackgroundColor(Palette.error)
-            cell.separator.backgroundColor = Palette.separator
+            cell.actionButton.setTitleColor(Palette.buttonFace.text, for: .normal)
+            cell.actionButton.setBackgroundColor(Palette.buttonFace.background)
+            cell.cancelButton.setTitleColor(Palette.buttonFace.text, for: .normal)
+            cell.cancelButton.setBackgroundColor(Palette.buttonFace.background)
+            cell.confirmButton.setTitleColor(Palette.error.text, for: .normal)
+            cell.confirmButton.setBackgroundColor(Palette.error.background)
+            cell.separator.backgroundColor = Palette.separator.background
         case "Header":
-            cell.headerLabel.textColor = Palette.textEmphasised
+            cell.headerLabel.textColor = Palette.normal.strongText
             cell.duplicateLabel.textColor = Palette.errorCondition
         case "Record":
-            cell.recordDateLabel.textColor = Palette.text
-            cell.recordDescLabel.textColor = Palette.text
-            cell.recordValueLabel.textColor = Palette.text
+            cell.recordDateLabel.textColor = Palette.normal.text
+            cell.recordDescLabel.textColor = Palette.normal.text
+            cell.recordValueLabel.textColor = Palette.normal.text
         case "Single":
-            cell.singleLabel.textColor = Palette.text
+            cell.singleLabel.textColor = Palette.normal.text
         case "Stat":
-            cell.statDescLabel1.textColor = Palette.text
-            cell.statDescLabel2.textColor = Palette.text
-            cell.statValueLabel1.textColor = Palette.text
-            cell.statValueLabel2.textColor = Palette.text
+            cell.statDescLabel1.textColor = Palette.normal.text
+            cell.statDescLabel2.textColor = Palette.normal.text
+            cell.statValueLabel1.textColor = Palette.normal.text
+            cell.statValueLabel2.textColor = Palette.normal.text
         case "Thumbnail":
-            cell.playerView.set(backgroundColor: Palette.thumbnailDisc)
-            cell.playerView.set(textColor: Palette.thumbnailDiscText)
-            cell.thumbnailMessageLabel.textColor = Palette.text
+            cell.playerView.set(backgroundColor: Palette.thumbnailDisc.background)
+            cell.playerView.set(textColor: Palette.thumbnailDisc.text)
+            cell.thumbnailMessageLabel.textColor = Palette.normal.text
         default:
             break
         }
@@ -841,7 +841,7 @@ extension PlayerDetailViewController {
     private func defaultCellColors(cell: UICollectionViewCell) {
         switch cell.reuseIdentifier {
         case "Header":
-            cell.backgroundColor = Palette.background
+            cell.backgroundColor = Palette.normal.background
         default:
             break
         }

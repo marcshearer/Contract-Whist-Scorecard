@@ -70,9 +70,9 @@ class SlideOutButtonView: UIView {
         contentView.frame = self.bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
-        self.buttonFillColor = Palette.darkHighlight
-        self.buttonStrokeColor = Palette.darkHighlightText
-        self.buttonTextColor = Palette.darkHighlightText
+        self.buttonFillColor = Palette.darkHighlight.background
+        self.buttonStrokeColor = Palette.darkHighlight.text
+        self.buttonTextColor = Palette.darkHighlight.text
         self.viewBackgroundColor = UIColor.clear
     }
     

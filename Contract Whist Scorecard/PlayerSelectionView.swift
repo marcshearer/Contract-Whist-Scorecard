@@ -32,6 +32,7 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
     private var collectionInset: CGFloat = 10.0
     private var lastSize: CGSize!
     private var textColor: UIColor!
+    private var addButtonColor: UIColor = Palette.continueButton.background
     private var addButton = false
     private var updateBeforeSelect = false
     private var offset = 0
@@ -110,6 +111,11 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
         self.collectionView.reloadData()
     }
     
+    public func set(addButtonColor: UIColor) {
+        self.addButtonColor = addButtonColor
+        self.collectionView.reloadData()
+    }
+    
     public func set(size: CGSize? = nil) {
         UIView.performWithoutAnimation {
             self.setSize(size: size)
@@ -144,7 +150,7 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
         collectionView.delegate = self
         collectionView.dataSource = self
         
-        self.textColor = Palette.text
+        self.textColor = Palette.normal.text
     }
     
     private func setSize(size: CGSize? = nil) {
@@ -194,7 +200,7 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
         }
         if playerNumber == 0 {
             cell.thumbnailView.set(name: "", alpha: 1.0)
-            cell.thumbnailView.set(imageName: "big plus green")
+            cell.thumbnailView.set(imageName: "big plus white", tintColor: self.addButtonColor)
             cell.thumbnailView.set(backgroundColor: UIColor.clear)
         } else {
             cell.thumbnailView.set(imageName: nil)

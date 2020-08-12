@@ -39,7 +39,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qNV-ic-DSF" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="12" y="7" width="30" height="30"/>
+                                                <rect key="frame" x="20" y="7" width="30" height="30"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="30" id="cgo-M3-cGm"/>
                                                     <constraint firstAttribute="width" constant="30" id="eoo-LX-lXs"/>
@@ -54,7 +54,7 @@
                                         <constraints>
                                             <constraint firstItem="c4U-wl-OyD" firstAttribute="top" secondItem="PDh-wl-4sL" secondAttribute="top" id="2JS-Sc-Slu"/>
                                             <constraint firstAttribute="height" constant="44" id="4bY-IQ-pfx"/>
-                                            <constraint firstItem="qNV-ic-DSF" firstAttribute="leading" secondItem="9L6-QS-Wnw" secondAttribute="leading" constant="12" id="5Dd-0a-oeh"/>
+                                            <constraint firstItem="qNV-ic-DSF" firstAttribute="leading" secondItem="9L6-QS-Wnw" secondAttribute="leading" constant="20" id="5Dd-0a-oeh"/>
                                             <constraint firstItem="c4U-wl-OyD" firstAttribute="leading" secondItem="PDh-wl-4sL" secondAttribute="leading" id="6ZV-Te-7Kt"/>
                                             <constraint firstItem="qNV-ic-DSF" firstAttribute="centerY" secondItem="c4U-wl-OyD" secondAttribute="centerY" id="eZN-PN-ijN"/>
                                             <constraint firstAttribute="trailing" secondItem="c4U-wl-OyD" secondAttribute="trailing" id="nnV-Oe-XlX"/>

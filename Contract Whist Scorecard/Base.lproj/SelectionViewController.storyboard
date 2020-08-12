@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -34,7 +34,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OIn-hU-vgE" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="16" y="6" width="32" height="32"/>
+                                        <rect key="frame" x="20" y="6" width="32" height="32"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="32" id="coc-Un-tRG"/>
                                             <constraint firstAttribute="width" constant="32" id="dVi-yM-hce"/>
@@ -45,7 +45,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" layoutMarginsFollowReadableWidth="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="97k-9B-iJ8" customClass="RightClearButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="264" y="6" width="95" height="32"/>
+                                        <rect key="frame" x="260" y="6" width="95" height="32"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="95" id="O0a-G8-FL0"/>
                                             <constraint firstAttribute="height" constant="32" id="Rqo-Ye-Ito"/>
@@ -60,11 +60,11 @@
                                 <constraints>
                                     <constraint firstItem="r6L-HQ-r51" firstAttribute="trailing" secondItem="C49-wj-KC0" secondAttribute="trailing" id="3cB-nq-fip"/>
                                     <constraint firstItem="OIn-hU-vgE" firstAttribute="centerY" secondItem="I6P-n6-4nd" secondAttribute="centerY" id="4Wl-ug-5vN"/>
-                                    <constraint firstItem="r6L-HQ-r51" firstAttribute="trailing" secondItem="97k-9B-iJ8" secondAttribute="trailing" constant="16" id="HMy-qf-N1Y"/>
+                                    <constraint firstItem="r6L-HQ-r51" firstAttribute="trailing" secondItem="97k-9B-iJ8" secondAttribute="trailing" constant="20" id="HMy-qf-N1Y"/>
                                     <constraint firstAttribute="height" constant="44" id="RTN-bW-2YY"/>
                                     <constraint firstItem="C49-wj-KC0" firstAttribute="leading" secondItem="r6L-HQ-r51" secondAttribute="leading" id="jmJ-d1-0Dq"/>
                                     <constraint firstAttribute="bottom" secondItem="C49-wj-KC0" secondAttribute="bottom" id="jsd-ud-Zdy"/>
-                                    <constraint firstItem="OIn-hU-vgE" firstAttribute="leading" secondItem="r6L-HQ-r51" secondAttribute="leading" constant="16" id="nXd-L5-aGM"/>
+                                    <constraint firstItem="OIn-hU-vgE" firstAttribute="leading" secondItem="r6L-HQ-r51" secondAttribute="leading" constant="20" id="nXd-L5-aGM"/>
                                     <constraint firstItem="C49-wj-KC0" firstAttribute="top" secondItem="I6P-n6-4nd" secondAttribute="top" id="tja-K4-kcC"/>
                                     <constraint firstItem="97k-9B-iJ8" firstAttribute="centerY" secondItem="I6P-n6-4nd" secondAttribute="centerY" id="zY2-qa-A4Q"/>
                                 </constraints>

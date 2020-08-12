@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -32,7 +32,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bz4-29-ZE2" userLabel="Finish Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="12" y="29" width="20" height="22"/>
+                                        <rect key="frame" x="20" y="29" width="20" height="22"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="22" id="Oj2-PZ-fM1"/>
                                             <constraint firstAttribute="width" constant="20" id="qRg-cY-5nf"/>
@@ -68,7 +68,7 @@
                                     <constraint firstAttribute="bottom" secondItem="fRi-Eh-euY" secondAttribute="bottom" id="J2b-JU-dKN"/>
                                     <constraint firstItem="bz4-29-ZE2" firstAttribute="centerY" secondItem="wym-eE-JCq" secondAttribute="centerY" id="JcI-W5-B9n"/>
                                     <constraint firstAttribute="height" constant="80" id="MeZ-zx-Vfz"/>
-                                    <constraint firstItem="bz4-29-ZE2" firstAttribute="leading" secondItem="wym-eE-JCq" secondAttribute="leading" constant="12" id="Y3E-mM-KId"/>
+                                    <constraint firstItem="bz4-29-ZE2" firstAttribute="leading" secondItem="wym-eE-JCq" secondAttribute="leading" constant="20" id="Y3E-mM-KId"/>
                                     <constraint firstItem="fRi-Eh-euY" firstAttribute="top" secondItem="wym-eE-JCq" secondAttribute="top" id="fqi-ph-sfj"/>
                                     <constraint firstItem="Mzm-ri-OLh" firstAttribute="top" secondItem="wym-eE-JCq" secondAttribute="top" id="hJq-4X-zwp"/>
                                     <constraint firstAttribute="trailing" secondItem="fRi-Eh-euY" secondAttribute="trailing" constant="8" id="yk5-Dc-jGE"/>

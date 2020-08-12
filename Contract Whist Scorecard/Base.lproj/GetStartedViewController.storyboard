@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -45,7 +45,7 @@
                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="184.5"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YVn-Xz-nqH" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                                        <rect key="frame" x="12" y="12" width="30" height="30"/>
+                                                        <rect key="frame" x="20" y="12" width="30" height="30"/>
                                                         <color key="backgroundColor" name="Clear"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="30" id="FZE-77-m3H"/>
@@ -152,7 +152,7 @@
                                                     <constraint firstItem="O4T-4n-CdX" firstAttribute="top" secondItem="47t-7m-HJb" secondAttribute="bottom" id="0nR-1e-7rD"/>
                                                     <constraint firstAttribute="bottom" secondItem="O4T-4n-CdX" secondAttribute="bottom" constant="47.5" id="1lt-lt-Gvr"/>
                                                     <constraint firstItem="47t-7m-HJb" firstAttribute="top" secondItem="66g-bK-cfb" secondAttribute="top" id="58a-8h-8qk"/>
-                                                    <constraint firstItem="YVn-Xz-nqH" firstAttribute="leading" secondItem="66g-bK-cfb" secondAttribute="leading" constant="12" id="9d3-7g-AaP"/>
+                                                    <constraint firstItem="YVn-Xz-nqH" firstAttribute="leading" secondItem="66g-bK-cfb" secondAttribute="leading" constant="20" id="9d3-7g-AaP"/>
                                                     <constraint firstItem="47t-7m-HJb" firstAttribute="leading" secondItem="66g-bK-cfb" secondAttribute="leading" id="H2E-sw-Lhc"/>
                                                     <constraint firstItem="H6T-vo-ms1" firstAttribute="leading" secondItem="66g-bK-cfb" secondAttribute="leading" constant="26" id="NGa-Tu-qbL"/>
                                                     <constraint firstAttribute="trailing" secondItem="O4T-4n-CdX" secondAttribute="trailing" constant="50" id="fSg-c8-ui3"/>

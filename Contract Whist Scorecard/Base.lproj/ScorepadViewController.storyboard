@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -85,7 +85,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yjt-Cd-68v" userLabel="Finish Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="12" y="6" width="32" height="32"/>
+                                        <rect key="frame" x="20" y="6" width="32" height="32"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="32" id="NL4-GV-QNF"/>
                                             <constraint firstAttribute="width" constant="32" id="jKc-QH-4eC"/>
@@ -97,7 +97,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a1K-Ui-O0I" userLabel="Score Entry Button" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="307" y="6" width="95" height="32"/>
+                                        <rect key="frame" x="299" y="6" width="95" height="32"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="32" id="IjK-kd-pt6"/>
                                             <constraint firstAttribute="width" constant="95" id="t2v-fB-KWf"/>
@@ -109,14 +109,14 @@
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
-                                    <constraint firstItem="yjt-Cd-68v" firstAttribute="leading" secondItem="3XV-9u-tCY" secondAttribute="leading" constant="12" id="3hA-Yw-Gcm"/>
+                                    <constraint firstItem="yjt-Cd-68v" firstAttribute="leading" secondItem="3XV-9u-tCY" secondAttribute="leading" constant="20" id="3hA-Yw-Gcm"/>
                                     <constraint firstAttribute="height" constant="44" id="7yT-Ej-j1j"/>
                                     <constraint firstItem="yjt-Cd-68v" firstAttribute="centerY" secondItem="3XV-9u-tCY" secondAttribute="centerY" id="Bsz-kA-cPP"/>
                                     <constraint firstItem="dbf-pp-3n1" firstAttribute="top" secondItem="3XV-9u-tCY" secondAttribute="top" id="Fq3-Lb-q1k"/>
                                     <constraint firstAttribute="bottom" secondItem="dbf-pp-3n1" secondAttribute="bottom" id="eZ8-pL-JIM"/>
                                     <constraint firstAttribute="trailing" secondItem="dbf-pp-3n1" secondAttribute="trailing" id="fNb-OC-EQQ"/>
                                     <constraint firstItem="dbf-pp-3n1" firstAttribute="leading" secondItem="3XV-9u-tCY" secondAttribute="leading" id="fjQ-aJ-QfW"/>
-                                    <constraint firstAttribute="trailing" secondItem="a1K-Ui-O0I" secondAttribute="trailing" constant="12" id="ltp-ho-0AO"/>
+                                    <constraint firstAttribute="trailing" secondItem="a1K-Ui-O0I" secondAttribute="trailing" constant="20" id="ltp-ho-0AO"/>
                                     <constraint firstItem="a1K-Ui-O0I" firstAttribute="centerY" secondItem="3XV-9u-tCY" secondAttribute="centerY" id="zgX-cY-WXV"/>
                                 </constraints>
                             </view>

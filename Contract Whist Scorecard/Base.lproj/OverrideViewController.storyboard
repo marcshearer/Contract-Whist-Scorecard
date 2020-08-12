@@ -28,7 +28,7 @@
                                 <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0hh-nd-zGO">
-                                        <rect key="frame" x="12" y="11" width="85" height="22"/>
+                                        <rect key="frame" x="20" y="11" width="85" height="22"/>
                                         <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="18"/>
                                         <state key="normal" title="Cancel" image="back"/>
                                         <connections>
@@ -36,13 +36,13 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Override" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K2m-Cz-GZn">
-                                        <rect key="frame" x="99" y="5.5" width="216" height="33.5"/>
+                                        <rect key="frame" x="107" y="5.5" width="200" height="33.5"/>
                                         <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="28"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7K3-zC-iO6" customClass="RightClearButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="317" y="11" width="85" height="22"/>
+                                        <rect key="frame" x="309" y="11" width="85" height="22"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="85" id="yPb-Ll-XRC"/>
                                         </constraints>
@@ -55,11 +55,11 @@
                                 </subviews>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
-                                    <constraint firstItem="21N-bE-NGn" firstAttribute="trailing" secondItem="7K3-zC-iO6" secondAttribute="trailing" constant="12" id="3Sv-OB-Dp2"/>
+                                    <constraint firstItem="21N-bE-NGn" firstAttribute="trailing" secondItem="7K3-zC-iO6" secondAttribute="trailing" constant="20" id="3Sv-OB-Dp2"/>
                                     <constraint firstItem="K2m-Cz-GZn" firstAttribute="centerY" secondItem="cW4-Ly-Y8f" secondAttribute="centerY" id="EgD-ej-RUY"/>
                                     <constraint firstItem="0hh-nd-zGO" firstAttribute="centerY" secondItem="cW4-Ly-Y8f" secondAttribute="centerY" id="IER-KW-9VI"/>
                                     <constraint firstAttribute="height" constant="44" id="JvQ-KC-ePW"/>
-                                    <constraint firstItem="0hh-nd-zGO" firstAttribute="leading" secondItem="21N-bE-NGn" secondAttribute="leading" constant="12" id="ZTm-kX-fkK"/>
+                                    <constraint firstItem="0hh-nd-zGO" firstAttribute="leading" secondItem="21N-bE-NGn" secondAttribute="leading" constant="20" id="ZTm-kX-fkK"/>
                                     <constraint firstItem="7K3-zC-iO6" firstAttribute="width" secondItem="0hh-nd-zGO" secondAttribute="width" id="b9g-gt-djN"/>
                                     <constraint firstItem="7K3-zC-iO6" firstAttribute="leading" secondItem="K2m-Cz-GZn" secondAttribute="trailing" constant="2" id="dEf-q8-4ff"/>
                                     <constraint firstItem="7K3-zC-iO6" firstAttribute="centerY" secondItem="cW4-Ly-Y8f" secondAttribute="centerY" id="tZQ-35-NGT"/>

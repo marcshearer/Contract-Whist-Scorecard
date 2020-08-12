@@ -40,7 +40,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VGH-oE-ROK" userLabel="Finish Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="12" y="6" width="30" height="30"/>
+                                        <rect key="frame" x="20" y="6" width="30" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="30" id="Awa-De-Kxt"/>
                                             <constraint firstAttribute="height" constant="30" id="DpJ-Pm-48d"/>
@@ -56,7 +56,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zzd-PE-N0d" userLabel="Summary Button" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="333" y="6" width="30" height="30"/>
+                                        <rect key="frame" x="325" y="6" width="30" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="30" id="18m-Dg-KFD"/>
                                             <constraint firstAttribute="height" constant="30" id="XQx-LN-z5x"/>
@@ -76,9 +76,9 @@
                                     <constraint firstItem="zzd-PE-N0d" firstAttribute="top" secondItem="30M-sz-Fdm" secondAttribute="top" constant="6" id="Eoq-tL-lsC"/>
                                     <constraint firstItem="pge-ad-xW7" firstAttribute="leading" secondItem="30M-sz-Fdm" secondAttribute="leading" constant="12" id="Xzv-lQ-tu2"/>
                                     <constraint firstItem="pge-ad-xW7" firstAttribute="top" secondItem="30M-sz-Fdm" secondAttribute="top" constant="6" id="ctL-iT-nzK"/>
-                                    <constraint firstItem="VGH-oE-ROK" firstAttribute="leading" secondItem="30M-sz-Fdm" secondAttribute="leading" constant="12" id="dsn-7b-vYw"/>
+                                    <constraint firstItem="VGH-oE-ROK" firstAttribute="leading" secondItem="30M-sz-Fdm" secondAttribute="leading" constant="20" id="dsn-7b-vYw"/>
                                     <constraint firstAttribute="height" constant="80" id="pNI-F5-Mq4"/>
-                                    <constraint firstAttribute="trailing" secondItem="zzd-PE-N0d" secondAttribute="trailing" constant="12" id="qHB-F0-0bs"/>
+                                    <constraint firstAttribute="trailing" secondItem="zzd-PE-N0d" secondAttribute="trailing" constant="20" id="qHB-F0-0bs"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Weo-LM-Q3A" customClass="BannerLogoView" customModule="Whist_2" customModuleProvider="target">

@@ -386,7 +386,7 @@
                                 <viewLayoutGuide key="safeArea" id="B1K-Vb-Qz6"/>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="9uo-b0-008">
-                                <rect key="frame" x="32" y="52" width="350" height="21"/>
+                                <rect key="frame" x="40" y="52" width="334" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="xbe-TO-Br1"/>
                                 </constraints>
@@ -395,7 +395,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bhv-M4-Rmr" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                <rect key="frame" x="8" y="52" width="120" height="22"/>
+                                <rect key="frame" x="20" y="52" width="120" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="K7S-UN-Gbj"/>
                                     <constraint firstAttribute="height" constant="22" id="t5W-pI-1zq"/>
@@ -409,18 +409,18 @@
                         <color key="backgroundColor" name="Room Interior"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="QwS-ao-9CA" firstAttribute="trailing" secondItem="9uo-b0-008" secondAttribute="trailing" constant="32" id="0bP-5S-Rj9"/>
+                            <constraint firstItem="QwS-ao-9CA" firstAttribute="trailing" secondItem="9uo-b0-008" secondAttribute="trailing" constant="40" id="0bP-5S-Rj9"/>
                             <constraint firstItem="4Xn-Vn-q9j" firstAttribute="leading" secondItem="QwS-ao-9CA" secondAttribute="leading" id="2o6-r9-LNp"/>
                             <constraint firstItem="SkU-nQ-PwD" firstAttribute="width" secondItem="QwS-ao-9CA" secondAttribute="width" multiplier="1:2" id="5ZJ-XI-gRL"/>
                             <constraint firstItem="QwS-ao-9CA" firstAttribute="trailing" secondItem="SkU-nQ-PwD" secondAttribute="trailing" id="800-MR-Xx9"/>
                             <constraint firstItem="SkU-nQ-PwD" firstAttribute="leading" secondItem="QwS-ao-9CA" secondAttribute="leading" id="AGu-g9-dSr"/>
                             <constraint firstItem="SkU-nQ-PwD" firstAttribute="bottom" secondItem="4Xn-Vn-q9j" secondAttribute="top" id="AKd-fb-weg"/>
-                            <constraint firstItem="9uo-b0-008" firstAttribute="leading" secondItem="QwS-ao-9CA" secondAttribute="leading" constant="32" id="Dsi-t2-kFq"/>
+                            <constraint firstItem="9uo-b0-008" firstAttribute="leading" secondItem="QwS-ao-9CA" secondAttribute="leading" constant="40" id="Dsi-t2-kFq"/>
                             <constraint firstItem="4Xn-Vn-q9j" firstAttribute="leading" secondItem="SkU-nQ-PwD" secondAttribute="trailing" id="Msv-lX-5j7"/>
                             <constraint firstItem="Bhv-M4-Rmr" firstAttribute="top" secondItem="QwS-ao-9CA" secondAttribute="top" constant="8" id="QnB-pI-Ala"/>
                             <constraint firstItem="4Xn-Vn-q9j" firstAttribute="centerY" secondItem="dDC-WM-Jrb" secondAttribute="centerY" id="bE9-da-aSe"/>
                             <constraint firstItem="SkU-nQ-PwD" firstAttribute="top" secondItem="9uo-b0-008" secondAttribute="bottom" id="cp8-2N-nCJ"/>
-                            <constraint firstItem="Bhv-M4-Rmr" firstAttribute="leading" secondItem="QwS-ao-9CA" secondAttribute="leading" constant="8" id="gTp-lQ-qaW"/>
+                            <constraint firstItem="Bhv-M4-Rmr" firstAttribute="leading" secondItem="QwS-ao-9CA" secondAttribute="leading" constant="20" id="gTp-lQ-qaW"/>
                             <constraint firstItem="QwS-ao-9CA" firstAttribute="trailing" secondItem="4Xn-Vn-q9j" secondAttribute="trailing" id="kUf-nN-4Vn"/>
                             <constraint firstItem="QwS-ao-9CA" firstAttribute="bottom" secondItem="SkU-nQ-PwD" secondAttribute="bottom" id="mBy-TJ-c0C"/>
                             <constraint firstItem="9uo-b0-008" firstAttribute="top" secondItem="QwS-ao-9CA" secondAttribute="top" constant="8" id="mSG-xF-7MW"/>
@@ -429,10 +429,10 @@
                         <viewLayoutGuide key="safeArea" id="QwS-ao-9CA"/>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="5ZJ-XI-gRL"/>
-                                <exclude reference="AKd-fb-weg"/>
                                 <exclude reference="800-MR-Xx9"/>
                                 <exclude reference="mBy-TJ-c0C"/>
+                                <exclude reference="5ZJ-XI-gRL"/>
+                                <exclude reference="AKd-fb-weg"/>
                                 <exclude reference="2o6-r9-LNp"/>
                                 <exclude reference="Msv-lX-5j7"/>
                                 <exclude reference="bE9-da-aSe"/>
@@ -441,16 +441,16 @@
                         </variation>
                         <variation key="heightClass=compact">
                             <mask key="constraints">
-                                <include reference="5ZJ-XI-gRL"/>
                                 <include reference="mBy-TJ-c0C"/>
+                                <include reference="5ZJ-XI-gRL"/>
                                 <include reference="Msv-lX-5j7"/>
                                 <include reference="bE9-da-aSe"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
                             <mask key="constraints">
-                                <include reference="AKd-fb-weg"/>
                                 <include reference="800-MR-Xx9"/>
+                                <include reference="AKd-fb-weg"/>
                                 <include reference="2o6-r9-LNp"/>
                                 <include reference="ofV-W1-aQ4"/>
                             </mask>
@@ -502,7 +502,7 @@
     </scenes>
     <resources>
         <image name="back" width="22" height="22"/>
-        <image name="crown" width="100" height="100"/>
+        <image name="crown" width="100" height="51"/>
         <image name="play again" width="50" height="64"/>
         <image name="stop playing" width="50" height="64"/>
         <namedColor name="Clear">

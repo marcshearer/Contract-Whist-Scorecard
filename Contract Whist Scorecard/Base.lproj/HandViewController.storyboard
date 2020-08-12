@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -49,7 +49,7 @@
                                         </constraints>
                                     </view>
                                     <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bna-lC-tI3" userLabel="Finish Button">
-                                        <rect key="frame" x="8" y="14" width="30" height="22"/>
+                                        <rect key="frame" x="20" y="14" width="30" height="22"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="30" id="F3K-eZ-qcb"/>
@@ -61,7 +61,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uVs-MB-Gvj" userLabel="Last hand Button">
-                                        <rect key="frame" x="54" y="12.666666666666664" width="30" height="25"/>
+                                        <rect key="frame" x="66" y="12.666666666666664" width="30" height="25"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="uVs-MB-Gvj" secondAttribute="height" multiplier="6:5" id="DQ6-q5-hag"/>
@@ -75,10 +75,10 @@
                                         </connections>
                                     </button>
                                     <view contentMode="scaleToFill" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="ODI-ky-5XF" userLabel="Title View">
-                                        <rect key="frame" x="84" y="0.0" width="246" height="50"/>
+                                        <rect key="frame" x="96" y="0.0" width="234" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="iPX-ci-OpQ">
-                                                <rect key="frame" x="8" y="0.0" width="230" height="50"/>
+                                                <rect key="frame" x="8" y="0.0" width="218" height="50"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="50" id="Png-p5-HV9"/>
                                                 </constraints>
@@ -136,7 +136,7 @@
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="syD-tC-iDZ" secondAttribute="bottom" id="2zp-sg-J3T"/>
                                     <constraint firstItem="UQz-yS-oME" firstAttribute="leading" secondItem="ODI-ky-5XF" secondAttribute="trailing" constant="2" id="6NO-9H-cba"/>
-                                    <constraint firstItem="Bna-lC-tI3" firstAttribute="leading" secondItem="JWt-yG-kCb" secondAttribute="trailing" constant="8" id="8Xu-yK-Tz5"/>
+                                    <constraint firstItem="Bna-lC-tI3" firstAttribute="leading" secondItem="JWt-yG-kCb" secondAttribute="trailing" constant="20" id="8Xu-yK-Tz5"/>
                                     <constraint firstItem="syD-tC-iDZ" firstAttribute="leading" secondItem="FKB-Yh-KbS" secondAttribute="trailing" constant="2" id="Gnc-cY-9ZN"/>
                                     <constraint firstItem="FKB-Yh-KbS" firstAttribute="centerY" secondItem="qNK-3C-kZ9" secondAttribute="centerY" id="Hwx-uJ-Heb"/>
                                     <constraint firstItem="uVs-MB-Gvj" firstAttribute="leading" secondItem="Bna-lC-tI3" secondAttribute="trailing" constant="16" id="KFj-hU-WX4"/>

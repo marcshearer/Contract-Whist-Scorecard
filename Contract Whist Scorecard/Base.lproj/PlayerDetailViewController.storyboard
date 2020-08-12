@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -32,7 +32,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2WO-9f-fdL" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="16" y="11" width="30" height="22"/>
+                                        <rect key="frame" x="20" y="11" width="30" height="22"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="30" id="YSw-tK-AOF"/>
                                         </constraints>
@@ -47,7 +47,7 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
                                     <constraint firstItem="2WO-9f-fdL" firstAttribute="centerY" secondItem="5Yo-7G-yK7" secondAttribute="centerY" id="Asl-nT-U9q"/>
-                                    <constraint firstItem="2WO-9f-fdL" firstAttribute="leading" secondItem="gK9-hU-jIb" secondAttribute="leading" constant="16" id="WG8-Xm-7vr"/>
+                                    <constraint firstItem="2WO-9f-fdL" firstAttribute="leading" secondItem="gK9-hU-jIb" secondAttribute="leading" constant="20" id="WG8-Xm-7vr"/>
                                     <constraint firstItem="5Yo-7G-yK7" firstAttribute="top" secondItem="EjK-X6-73n" secondAttribute="top" id="aNw-uw-HxK"/>
                                     <constraint firstAttribute="trailing" secondItem="5Yo-7G-yK7" secondAttribute="trailing" id="cwN-a5-fL6"/>
                                     <constraint firstItem="5Yo-7G-yK7" firstAttribute="leading" secondItem="EjK-X6-73n" secondAttribute="leading" id="k0T-n7-uGv"/>

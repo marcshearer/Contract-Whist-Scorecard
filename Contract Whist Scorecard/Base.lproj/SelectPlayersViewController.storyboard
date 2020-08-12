@@ -37,7 +37,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                                                         <subviews>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xHT-BQ-uxU" customClass="ClearButton" customModule="Whist_2" customModuleProvider="target">
-                                                                <rect key="frame" x="12" y="7" width="30" height="30"/>
+                                                                <rect key="frame" x="20" y="7" width="30" height="30"/>
                                                                 <color key="backgroundColor" name="Clear"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="30" id="Gqq-UL-Zf2"/>
@@ -63,7 +63,7 @@
                                                             <constraint firstItem="h9a-ZT-LM3" firstAttribute="top" secondItem="qjb-NZ-6CI" secondAttribute="top" id="9UL-cp-BNY"/>
                                                             <constraint firstAttribute="height" constant="44" id="UyJ-iP-4PL"/>
                                                             <constraint firstItem="h9a-ZT-LM3" firstAttribute="centerX" secondItem="qjb-NZ-6CI" secondAttribute="centerX" id="lYu-L6-eD7"/>
-                                                            <constraint firstItem="xHT-BQ-uxU" firstAttribute="leading" secondItem="qjb-NZ-6CI" secondAttribute="leading" constant="12" id="nQF-wR-vaV"/>
+                                                            <constraint firstItem="xHT-BQ-uxU" firstAttribute="leading" secondItem="qjb-NZ-6CI" secondAttribute="leading" constant="20" id="nQF-wR-vaV"/>
                                                             <constraint firstItem="xHT-BQ-uxU" firstAttribute="centerY" secondItem="qjb-NZ-6CI" secondAttribute="centerY" id="pei-ub-P8N"/>
                                                             <constraint firstAttribute="bottom" secondItem="h9a-ZT-LM3" secondAttribute="bottom" id="qEG-0o-XGt"/>
                                                         </constraints>

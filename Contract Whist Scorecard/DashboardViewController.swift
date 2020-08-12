@@ -258,7 +258,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
             carouselCell.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0))
             carouselCell.titleLabel.alpha = (indexPath.row != self.currentPage ? 0.0 : 1.0)
             carouselCell.containerView.backgroundColor = (indexPath.row == self.currentPage ? Palette.carouselSelected : Palette.carouselUnselected)
-            carouselCell.backgroundImageView.tintColor = (indexPath.row == self.currentPage ? Palette.carouselSelectedTextContrast : Palette.carouselUnselectedTextContrast)
+            carouselCell.backgroundImageView.tintColor = (indexPath.row == self.currentPage ? Palette.carouselSelectedTextContrast : Palette.carouselUnselectedTextFaint)
             carouselCell.titleLabel.textColor = (indexPath.row == self.currentPage ? Palette.carouselSelectedText : Palette.carouselUnselectedText)
             
             let dashboardInfo = dashboardViewInfo[indexPath.item]!
@@ -309,7 +309,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
                         if let cell = self.carouselCollectionView.cellForItem(at: IndexPath(item: self.currentPage, section: 0)) as? DashboardCarouselCell {
                             if self.currentPage != itemAtCenter {
                                 cell.containerView.backgroundColor = Palette.carouselUnselected
-                                cell.backgroundImageView.tintColor = Palette.carouselUnselectedTextContrast
+                                cell.backgroundImageView.tintColor = Palette.carouselUnselectedTextFaint
                                 cell.titleLabel.textColor = Palette.carouselUnselectedText
                                 cell.titleLabel.alpha = 0.0
                             }

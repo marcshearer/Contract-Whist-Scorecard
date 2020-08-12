@@ -308,7 +308,7 @@ class RelatedPlayersView : UIView, UITableViewDelegate, UITableViewDataSource, S
             imageName = "off"
         }
         cell.playerTick.image = UIImage(named: imageName)?.asTemplate()
-        cell.playerTick.tintColor = (set ? Palette.confirmButton.background : Palette.otherButton.background)
+        cell.playerTick.tintColor = (set ? Palette.confirmButton.background : Palette.normal.text)
         cell.playerTick.isHidden = false
     }
     
@@ -385,9 +385,7 @@ class RelatedPlayersView : UIView, UITableViewDelegate, UITableViewDataSource, S
             cell.playerDescription.textColor = Palette.normal.text
             cell.playerName.textColor = Palette.normal.strongText
             cell.playerSeparatorView.backgroundColor = Palette.separator.background
-            cell.playerDetail.backgroundColor = Palette.otherButton.background
-            cell.playerDetail.setTitleColor(Palette.otherButton.text, for: .normal)
-            cell.playerDetail.toCircle()
+            cell.playerDetail.tintColor = Palette.otherButton.background
         default:
             break
         }

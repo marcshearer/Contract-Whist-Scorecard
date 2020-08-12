@@ -367,15 +367,15 @@ class Themes {
         .standard : ThemeConfig(
             background: [
                 .alternateBackground         : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil, .lightBackground) , //w
-                .background                  : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil, .lightBackground) , //w
-                .midBackground               : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil, .lightBackground) , //      Home screen background
-                .darkBackground              : ThemeColor(#colorLiteral(red: 0.9098039216, green: 0.9098039216, blue: 0.9098039216, alpha: 1), nil, .lightBackground) , //      Home screen No devices... tile background
-                .banner                      : ThemeColor(#colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1), nil, .midBackground)   , //1     Banner
-                .bannerShadow                : ThemeColor(#colorLiteral(red: 0.7294117647, green: 0.2392156863, blue: 0.2156862745, alpha: 1), nil, .midBackground)   ,
+                .background                  : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), #colorLiteral(red: 0.2605174184, green: 0.2605243921, blue: 0.260520637, alpha: 1), .lightBackground) , //w
+                .midBackground               : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), #colorLiteral(red: 0.2605174184, green: 0.2605243921, blue: 0.260520637, alpha: 1), .lightBackground) , //      Home screen No devices... tile background
+                .darkBackground              : ThemeColor(#colorLiteral(red: 0.9098039216, green: 0.9098039216, blue: 0.9098039216, alpha: 1), #colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 1), .lightBackground) , //      Home screen & Results background
+                .banner                      : ThemeColor(#colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1), #colorLiteral(red: 0.1298420429, green: 0.1298461258, blue: 0.1298439503, alpha: 1), .midBackground)   , //1     Banner
+                .bannerShadow                : ThemeColor(#colorLiteral(red: 0.7294117647, green: 0.2392156863, blue: 0.2156862745, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), .midBackground)   ,
                 .carouselSelected            : ThemeColor(#colorLiteral(red: 0.7294117647, green: 0.2392156863, blue: 0.2156862745, alpha: 1), nil, .midBackground)   ,
                 .carouselUnselected          : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), nil, .lightBackground)   ,
                 .bidButton                   : ThemeColor(#colorLiteral(red: 0.7164452672, green: 0.7218510509, blue: 0.7215295434, alpha: 1), nil, .midBackground) ,
-                .buttonFace                  : ThemeColor(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), nil, .lightBackground) , //w
+                .buttonFace                  : ThemeColor(#colorLiteral(red: 1, green: 1, blue: 1, alpha: 1), #colorLiteral(red: 0.2605174184, green: 0.2605243921, blue: 0.260520637, alpha: 1), .lightBackground) , //w
                 .cardFace                    : ThemeColor(#colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), nil, .lightBackground) , //w
                 .clear                       : ThemeColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 0), nil, .lightBackground) ,
                 .continueButton              : ThemeColor(#colorLiteral(red: 0.5215686275, green: 0.6980392157, blue: 0.7058823529, alpha: 1), nil, .midBackground)   , //4
@@ -407,7 +407,7 @@ class Themes {
                 .confirmButton               : ThemeColor(#colorLiteral(red: 0.3292011023, green: 0.4971863031, blue: 0.2595342696, alpha: 1), nil, .midBackground)   ,
                 .whisper                     : ThemeColor(#colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1), nil, .lightBackground) ,
                 .alwaysTheme                 : ThemeColor(#colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1), nil, .midBackground)   ,
-                .watermark                   : ThemeColor(#colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1), nil, .lightBackground) ], // (alpha is super-imposed)
+                .watermark                   : ThemeColor(#colorLiteral(red: 0.9724639058, green: 0.9726034999, blue: 0.9724336267, alpha: 1), #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), .lightBackground) ], // (alpha is super-imposed)
             text: [
                 .lightBackground             : ThemeTextColor(normal: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), contrast: #colorLiteral(red: 0.337254902, green: 0.4509803922, blue: 0.4549019608, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), faint: #colorLiteral(red: 0.6235294118, green: 0.6235294118, blue: 0.6235294118, alpha: 1), theme: #colorLiteral(red: 0.6745098039, green: 0.2196078431, blue: 0.2, alpha: 1)) ,
                 .midBackground               : ThemeTextColor(normal: #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1), contrast: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), strong: #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1), theme: #colorLiteral(red: 0.5058823529, green: 0.1647058824, blue: 0.1490196078, alpha: 1), #colorLiteral(red: 0.999904573, green: 1, blue: 0.9998808503, alpha: 1)) ,

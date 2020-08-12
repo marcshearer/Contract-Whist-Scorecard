@@ -322,8 +322,8 @@
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="jls-Jk-B0c"/>
                                         <exclude reference="Amc-BQ-QmY"/>
+                                        <exclude reference="jls-Jk-B0c"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=compact">
@@ -545,9 +545,6 @@
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                 <real key="value" value="8"/>
                                             </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="backgroundImageOpacity">
-                                                <real key="value" value="0.040000000000000001"/>
-                                            </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="image" keyPath="backgroundImage" value="results background"/>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
@@ -572,9 +569,6 @@
                                                 <real key="value" value="8"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="image" keyPath="backgroundImage" value="settings background"/>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="backgroundImageOpacity">
-                                                <real key="value" value="0.040000000000000001"/>
-                                            </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <outlet property="delegate" destination="aZe-pG-rMs" id="SS3-hS-aIk"/>
@@ -596,9 +590,6 @@
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
                                                 <real key="value" value="8"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="backgroundImageOpacity">
-                                                <real key="value" value="0.040000000000000001"/>
                                             </userDefinedRuntimeAttribute>
                                             <userDefinedRuntimeAttribute type="image" keyPath="backgroundImage" value="players background"/>
                                         </userDefinedRuntimeAttributes>

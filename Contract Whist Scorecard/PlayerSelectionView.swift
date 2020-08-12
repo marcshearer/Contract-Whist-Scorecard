@@ -32,7 +32,7 @@ class PlayerSelectionView: UIView, PlayerViewDelegate, UIGestureRecognizerDelega
     private var collectionInset: CGFloat = 10.0
     private var lastSize: CGSize!
     private var textColor: UIColor!
-    private var addButtonColor: UIColor = Palette.continueButton.background
+    private var addButtonColor: UIColor = Palette.normal.themeText
     private var addButton = false
     private var updateBeforeSelect = false
     private var offset = 0

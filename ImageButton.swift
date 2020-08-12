@@ -28,7 +28,6 @@ class ImageButton: UIView {
     @IBInspectable private var messageColor: UIColor?
     
     @IBInspectable private var backgroundImage: UIImage!
-    @IBInspectable private var backgroundImageOpacity: CGFloat = 0.0
     @IBInspectable private var backgroundImageTintColor: UIColor?
     @IBInspectable private var templateImages = true
 
@@ -145,11 +144,6 @@ class ImageButton: UIView {
         self.backgroundImageView.image = backgroundImage
     }
     
-    public func set(backgroundImageOpacity: CGFloat) {
-        self.backgroundImageOpacity = backgroundImageOpacity
-        self.backgroundImageView.alpha = backgroundImageOpacity
-    }
-    
     public func set(backgroundImageTintColor: UIColor) {
         self.backgroundImageTintColor = backgroundImageTintColor
         self.backgroundImageView.tintColor = backgroundImageTintColor
@@ -177,7 +171,6 @@ class ImageButton: UIView {
         self.titleLabel.textColor = self.titleColor
         self.set(image: self.image)
         self.set(backgroundImage: self.backgroundImage)
-        self.backgroundImageView.alpha = self.backgroundImageOpacity
         self.backgroundImageView.tintColor = Palette.watermark.background
         self.messageLabel.text = self.message
         self.messageLabel.textColor = self.messageColor

@@ -338,7 +338,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
                 cell.playerBidLabel.text = "Bid \(bid!)"
             }
             cell.playerMadeLabel.text = playerMadeText(playerNumber)
-            cell.playerMadeLabel.textColor = Palette.tableTop.contrastText
+            cell.playerMadeLabel.textColor = (cards.count == Scorecard.game.currentPlayers && Scorecard.game.handState.winner == indexPath.row + 1 ? Palette.tableTop.text : Palette.tableTop.contrastText)
             
             // Format card
             cell.playedCardWidthConstraint.constant = tabletopCardWidth
@@ -1052,6 +1052,7 @@ class HandViewController: ScorecardViewController, UITableViewDataSource, UITabl
     // MARK: - Helper routines to access cells and contents ================================================================= -
     
     private func playedCardCell(_ currentCard: Int) -> PlayedCardCollectionCell? {
+        self.playedCardCollectionView.layoutIfNeeded()
         return playedCardCollectionView.cellForItem(at: IndexPath(item: currentCard, section: 0)) as? PlayedCardCollectionCell
     }
     

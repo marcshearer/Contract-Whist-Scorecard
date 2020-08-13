@@ -102,6 +102,9 @@ class Settings : Equatable {
             self.termsUser = value as! String
         case "saveStats":
             self.saveStats = value as! Bool
+        case "colorTheme", "appearance":
+            // Old values no longer used
+            break
         default:
             fatalError("Error setting settings value")
         }

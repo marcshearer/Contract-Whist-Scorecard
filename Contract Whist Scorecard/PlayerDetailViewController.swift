@@ -658,7 +658,7 @@ class PlayerDetailViewController: ScorecardViewController, UITableViewDataSource
     }
     
     func setupImagePickerPlayerView(cell: PlayerDetailCell) {
-        cell.playerView = PlayerView(type: .imagePicker, parentViewController: self, parentView: cell.imagePlayerView, width: cell.imagePlayerView.frame.width - 10, height: cell.imagePlayerView.frame.height - 10)
+        cell.playerView = PlayerView(type: .imagePicker, parentViewController: self, parentView: cell.imagePlayerView, width: cell.imagePlayerView.frame.width - 10, height: cell.imagePlayerView.frame.height - 10, cameraTintColor: Palette.thumbnailDisc.text)
         cell.playerView.imagePickerDelegate = self
     }
     

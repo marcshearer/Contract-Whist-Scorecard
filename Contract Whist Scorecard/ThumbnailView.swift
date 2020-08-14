@@ -112,15 +112,16 @@ public class ThumbnailView: UIView {
         self.set(data: playerMO.thumbnail, name: playerMO.name, nameHeight: nameHeight ?? 30.0, diameter: diameter)
     }
     
-    public func set(imageName: String?, tintColor: UIColor? = nil) {
+    public func set(imageName: String?, tintColor: UIColor? = nil, systemImage: Bool = false) {
         self.set(frame: frame)
         if let imageName = imageName {
             self.additionalImage.isHidden = false
+            let image = (systemImage ? UIImage(systemName: imageName) :UIImage(named: imageName))
             if let tintColor = tintColor {
-                self.additionalImage.image = UIImage(named: imageName)?.asTemplate()
+                self.additionalImage.image = image?.asTemplate()
                 self.additionalImage.tintColor = tintColor
             } else {
-                self.additionalImage.image = UIImage(named: imageName)
+                self.additionalImage.image = image
             }
         } else {
             self.additionalImage.isHidden = true

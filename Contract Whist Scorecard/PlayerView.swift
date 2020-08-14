@@ -47,7 +47,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
     public var haloWidth: CGFloat = 0.0
     public var allowHaloWidth: CGFloat = 0.0
     
-    init(type: PlayerViewType, parentViewController: UIViewController? = nil, parentView: UIView! = nil, width: CGFloat, height: CGFloat, tag: Int = 0, haloWidth: CGFloat = 0.0, allowHaloWidth: CGFloat = 0.0, tapGestureDelegate: UIGestureRecognizerDelegate? = nil) {
+    init(type: PlayerViewType, parentViewController: UIViewController? = nil, parentView: UIView! = nil, width: CGFloat, height: CGFloat, tag: Int = 0, haloWidth: CGFloat = 0.0, allowHaloWidth: CGFloat = 0.0, tapGestureDelegate: UIGestureRecognizerDelegate? = nil, cameraTintColor: UIColor? = nil) {
         
         // Save properties
         self.parentViewController = parentViewController
@@ -82,7 +82,7 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         }
         
         // Set up image picker
-        self.updateCameraImage()
+        self.updateCameraImage(tintColor: cameraTintColor)
     }
     
     public var alpha: CGFloat {
@@ -206,13 +206,13 @@ public class PlayerView : NSObject, UIDropInteractionDelegate, UIDragInteraction
         }
     }
     
-    private func updateCameraImage() {
+    private func updateCameraImage(tintColor: UIColor? = nil) {
         if self.type == .imagePicker {
             if self.thumbnailView.discImage.image != nil {
                 self.thumbnailView.additionalImage.isHidden = true
             } else {
-                 self.thumbnailView.additionalImage.isHidden = false
-                self.thumbnailView.additionalImage.image = UIImage(systemName: "camera")
+                self.thumbnailView.additionalImage.isHidden = false
+                self.thumbnailView.set(imageName: "camera", tintColor: tintColor, systemImage: true)
             }
         }
     }

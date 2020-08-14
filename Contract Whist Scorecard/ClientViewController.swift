@@ -107,8 +107,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var adminMenuButton: ClearButton!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var thisPlayerThumbnail: ThumbnailView!
-    @IBOutlet private weak var infoButtonContainer: UIView!
-    @IBOutlet private weak var infoButton: RoundedButton!
+    @IBOutlet private weak var infoButton: ShadowButton!
     @IBOutlet private weak var hostTitleBar: TitleBar!
     @IBOutlet private weak var hostCollectionContainerView: UIView!
     @IBOutlet private weak var hostCollectionContentView: UIView!
@@ -128,6 +127,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     @IBOutlet private weak var flowLayout: CustomCollectionViewLayout!
     @IBOutlet private weak var dismissScreenshotImageView: UIImageView!
     @IBOutlet private var actionButtons: [ImageButton]!
+    @IBOutlet private weak var settingsBadgeButton: ShadowButton!
 
     // MARK: - IB Actions ============================================================================== -
         
@@ -145,6 +145,10 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     
     @IBAction func infoButtonPressed(_ sender: UIButton) {
         self.showWalkthrough()
+    }
+    
+    @IBAction func settingsBadgePressed(_ sender: UIButton) {
+        self.showSettings()
     }
     
     @IBAction func rotationGesture(recognizer:UIRotationGestureRecognizer) {
@@ -1244,22 +1248,22 @@ extension ClientViewController {
             self.titleLabel.setNeedsDisplay() // Doesn't seem to change color otherwise!
             self.thisPlayerThumbnail.set(textColor: Palette.banner.text)
             self.thisPlayerThumbnail.set(font: UIFont.systemFont(ofSize: 15, weight: .bold))
-            self.infoButton.backgroundColor = Palette.bannerShadow.background
-            self.infoButton.setTitleColor(Palette.banner.text, for: .normal)
-            self.infoButton.setTitleColor(Palette.banner.text, for: .disabled)
+            self.infoButton.setBackgroundColor(Palette.bannerShadow.background)
+            self.infoButton.setTitleColor(Palette.bannerShadow.text, for: .normal)
             self.hostCollectionView.backgroundColor = Palette.buttonFace.background
             self.peerTitleBar.set(faceColor: Palette.buttonFace.background)
             self.peerTitleBar.set(textColor: Palette.buttonFace.text)
             self.actionButtons.forEach{(button) in button.set(faceColor: Palette.buttonFace.background)}
             self.actionButtons.forEach{(button) in button.set(titleColor: Palette.buttonFace.themeText)}
             self.actionButtons.forEach{(button) in button.set(titleFont: UIFont.systemFont(ofSize: 18, weight: .bold))}
+            self.settingsBadgeButton.setBackgroundColor(Palette.alwaysTheme.background)
+            self.settingsBadgeButton.setTitleColor(Palette.alwaysTheme.text, for: .normal)
             self.playerSelectionView.backgroundColor = Palette.darkBackground.background
         }
     }
     
     private func layoutControls() {
         self.infoButton.toCircle()
-        self.infoButtonContainer.addShadow(shadowSize: CGSize(width: 2.0, height: 2.0), shadowOpacity: 0.2, shadowRadius: 1.0)
         self.hostCollectionContentView.roundCorners(cornerRadius: 8.0, topRounded: false, bottomRounded: true)
         self.hostCollectionContainerView.addShadow(shadowSize: CGSize(width: 4.0, height: 4.0), shadowOpacity: 0.1, shadowRadius: 2.0)
         self.peerCollectionContentView.roundCorners(cornerRadius: 8.0, topRounded: false, bottomRounded: true)

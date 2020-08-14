@@ -104,37 +104,32 @@
                                         <rect key="frame" x="0.0" y="199" width="414" height="27"/>
                                         <color key="backgroundColor" name="Clear"/>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7O6-U7-alt">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rhg-YK-v6u" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="20" y="161" width="28" height="28"/>
-                                        <subviews>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rhg-YK-v6u" customClass="RoundedButton" customModule="Whist_2" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="28" height="28"/>
-                                                <state key="normal" title="i"/>
-                                                <connections>
-                                                    <action selector="infoButtonPressed:" destination="aZe-pG-rMs" eventType="touchUpInside" id="olC-Sp-VjC"/>
-                                                </connections>
-                                            </button>
-                                        </subviews>
-                                        <color key="backgroundColor" name="Clear"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" secondItem="7O6-U7-alt" secondAttribute="height" multiplier="1:1" id="0nS-VE-UOY"/>
-                                            <constraint firstItem="rhg-YK-v6u" firstAttribute="top" secondItem="7O6-U7-alt" secondAttribute="top" id="P01-vr-LIo"/>
-                                            <constraint firstAttribute="trailing" secondItem="rhg-YK-v6u" secondAttribute="trailing" id="b1o-Ps-GJu"/>
-                                            <constraint firstAttribute="bottom" secondItem="rhg-YK-v6u" secondAttribute="bottom" id="heS-5w-Lt9"/>
-                                            <constraint firstItem="rhg-YK-v6u" firstAttribute="leading" secondItem="7O6-U7-alt" secondAttribute="leading" id="tfQ-bo-Pfc"/>
-                                            <constraint firstAttribute="width" constant="28" id="uLy-nd-W5y"/>
+                                            <constraint firstAttribute="width" constant="28" id="M3g-Di-BnU"/>
+                                            <constraint firstAttribute="width" secondItem="rhg-YK-v6u" secondAttribute="height" multiplier="1:1" id="QQQ-Gk-Tmr"/>
                                         </constraints>
-                                    </view>
+                                        <state key="normal" title="i"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="14"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="infoButtonPressed:" destination="aZe-pG-rMs" eventType="touchUpInside" id="olC-Sp-VjC"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
+                                    <constraint firstItem="rhg-YK-v6u" firstAttribute="leading" secondItem="baT-Lm-DyX" secondAttribute="leading" constant="20" id="6U5-Zj-hn0"/>
+                                    <constraint firstItem="rhg-YK-v6u" firstAttribute="bottom" secondItem="XTv-6o-LLq" secondAttribute="bottom" constant="-10" id="9kK-nZ-tJc"/>
                                     <constraint firstItem="XTv-6o-LLq" firstAttribute="leading" secondItem="baT-Lm-DyX" secondAttribute="leading" id="9tT-fP-i6K"/>
-                                    <constraint firstAttribute="bottom" secondItem="7O6-U7-alt" secondAttribute="bottom" constant="10" id="BEr-bH-pnR"/>
                                     <constraint firstItem="x7j-7w-yJj" firstAttribute="height" secondItem="baT-Lm-DyX" secondAttribute="height" multiplier="0.33" id="Bzi-e3-1sg"/>
                                     <constraint firstAttribute="bottom" secondItem="x7j-7w-yJj" secondAttribute="bottom" id="Grw-b1-DeL"/>
                                     <constraint firstItem="XTv-6o-LLq" firstAttribute="height" secondItem="baT-Lm-DyX" secondAttribute="height" multiplier="0.4" id="MZt-h6-3zi"/>
                                     <constraint firstItem="x7j-7w-yJj" firstAttribute="leading" secondItem="baT-Lm-DyX" secondAttribute="leading" id="Pdl-Kb-AA4"/>
-                                    <constraint firstItem="7O6-U7-alt" firstAttribute="centerX" secondItem="baT-Lm-DyX" secondAttribute="centerX" id="Rh6-LH-D6A"/>
                                     <constraint firstItem="yhA-Gb-reU" firstAttribute="leading" secondItem="baT-Lm-DyX" secondAttribute="leading" id="UAe-m7-Uht"/>
                                     <constraint firstItem="yhA-Gb-reU" firstAttribute="top" secondItem="baT-Lm-DyX" secondAttribute="top" id="Zm4-Qy-E7z"/>
                                     <constraint firstAttribute="trailing" secondItem="XTv-6o-LLq" secondAttribute="trailing" id="a7q-9L-hle"/>
@@ -143,19 +138,13 @@
                                     <constraint firstItem="XTv-6o-LLq" firstAttribute="top" secondItem="yhA-Gb-reU" secondAttribute="bottom" id="hPt-TH-Lkk"/>
                                     <constraint firstAttribute="trailing" secondItem="x7j-7w-yJj" secondAttribute="trailing" id="jmq-QI-Us8"/>
                                     <constraint firstItem="jVd-cr-1qi" firstAttribute="top" secondItem="baT-Lm-DyX" secondAttribute="top" constant="10" id="qfE-XP-bMn"/>
-                                    <constraint firstItem="7O6-U7-alt" firstAttribute="bottom" secondItem="XTv-6o-LLq" secondAttribute="bottom" constant="-10" id="tsE-Rx-6Mv"/>
                                     <constraint firstItem="XTv-6o-LLq" firstAttribute="bottom" secondItem="x7j-7w-yJj" secondAttribute="top" id="u1j-SS-ZBA"/>
-                                    <constraint firstItem="7O6-U7-alt" firstAttribute="leading" secondItem="baT-Lm-DyX" secondAttribute="leading" constant="20" id="wWC-mc-pYp"/>
                                     <constraint firstItem="XTv-6o-LLq" firstAttribute="height" secondItem="baT-Lm-DyX" secondAttribute="height" multiplier="0.55" id="zCm-db-ZhY"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="MZt-h6-3zi"/>
                                         <exclude reference="zCm-db-ZhY"/>
-                                        <exclude reference="BEr-bH-pnR"/>
-                                        <exclude reference="Rh6-LH-D6A"/>
-                                        <exclude reference="tsE-Rx-6Mv"/>
-                                        <exclude reference="wWC-mc-pYp"/>
                                         <exclude reference="Bzi-e3-1sg"/>
                                         <exclude reference="bsM-gr-gao"/>
                                     </mask>
@@ -163,16 +152,12 @@
                                 <variation key="heightClass=compact">
                                     <mask key="constraints">
                                         <include reference="MZt-h6-3zi"/>
-                                        <include reference="BEr-bH-pnR"/>
-                                        <include reference="Rh6-LH-D6A"/>
                                         <include reference="Bzi-e3-1sg"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=regular">
                                     <mask key="constraints">
                                         <include reference="zCm-db-ZhY"/>
-                                        <include reference="tsE-Rx-6Mv"/>
-                                        <include reference="wWC-mc-pYp"/>
                                         <include reference="bsM-gr-gao"/>
                                     </mask>
                                 </variation>
@@ -322,8 +307,8 @@
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
-                                        <exclude reference="Amc-BQ-QmY"/>
                                         <exclude reference="jls-Jk-B0c"/>
+                                        <exclude reference="Amc-BQ-QmY"/>
                                     </mask>
                                 </variation>
                                 <variation key="heightClass=compact">
@@ -528,53 +513,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7pG-RR-uCS" userLabel="Bottom Section">
                                 <rect key="frame" x="0.0" y="711.5" width="414" height="150.5"/>
                                 <subviews>
-                                    <view tag="-2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bNw-dF-hBm" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="148.5" y="10" width="117" height="140.5"/>
-                                        <color key="backgroundColor" name="Clear"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="title" value="Results"/>
-                                            <userDefinedRuntimeAttribute type="size" keyPath="shadowSize">
-                                                <size key="value" width="4" height="4"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
-                                                <real key="value" value="0.10000000000000001"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
-                                                <integer key="value" value="2"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="8"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="image" keyPath="backgroundImage" value="results background"/>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <outlet property="delegate" destination="aZe-pG-rMs" id="7W2-7s-S0X"/>
-                                        </connections>
-                                    </view>
-                                    <view tag="-3" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pB1-JM-2cb" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
-                                        <rect key="frame" x="277.5" y="10" width="116.5" height="140.5"/>
-                                        <color key="backgroundColor" name="Clear"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="string" keyPath="title" value="Settings"/>
-                                            <userDefinedRuntimeAttribute type="size" keyPath="shadowSize">
-                                                <size key="value" width="4" height="4"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
-                                                <real key="value" value="0.10000000000000001"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
-                                                <integer key="value" value="2"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="8"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="image" keyPath="backgroundImage" value="settings background"/>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <outlet property="delegate" destination="aZe-pG-rMs" id="SS3-hS-aIk"/>
-                                        </connections>
-                                    </view>
-                                    <view tag="-1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aq5-vX-83I" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
+                                    <view tag="-1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aq5-vX-83I" userLabel="Profiles Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
                                         <rect key="frame" x="20" y="10" width="116.5" height="140.5"/>
                                         <color key="backgroundColor" name="Clear"/>
                                         <userDefinedRuntimeAttributes>
@@ -597,6 +536,70 @@
                                             <outlet property="delegate" destination="aZe-pG-rMs" id="JLL-n9-8Y2"/>
                                         </connections>
                                     </view>
+                                    <view tag="-2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bNw-dF-hBm" userLabel="Results Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="148.5" y="10" width="117" height="140.5"/>
+                                        <color key="backgroundColor" name="Clear"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="title" value="Results"/>
+                                            <userDefinedRuntimeAttribute type="size" keyPath="shadowSize">
+                                                <size key="value" width="4" height="4"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
+                                                <real key="value" value="0.10000000000000001"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                                <integer key="value" value="2"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="image" keyPath="backgroundImage" value="results background"/>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <outlet property="delegate" destination="aZe-pG-rMs" id="7W2-7s-S0X"/>
+                                        </connections>
+                                    </view>
+                                    <view tag="-3" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pB1-JM-2cb" userLabel="Settings Button" customClass="ImageButton" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="277.5" y="10" width="116.5" height="140.5"/>
+                                        <color key="backgroundColor" name="Clear"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="title" value="Settings"/>
+                                            <userDefinedRuntimeAttribute type="size" keyPath="shadowSize">
+                                                <size key="value" width="4" height="4"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowOpacity">
+                                                <real key="value" value="0.10000000000000001"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="shadowRadius">
+                                                <integer key="value" value="2"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="image" keyPath="backgroundImage" value="settings background"/>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <outlet property="delegate" destination="aZe-pG-rMs" id="SS3-hS-aIk"/>
+                                        </connections>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KF8-nE-69M" userLabel="Settings Badge" customClass="ShadowButton" customModule="Whist_2" customModuleProvider="target">
+                                        <rect key="frame" x="379" y="5" width="20" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="20" id="70S-62-QpK"/>
+                                            <constraint firstAttribute="height" constant="20" id="wii-Nd-NPC"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                        <state key="normal" title="1"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="10"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="infoButtonPressed:" destination="aZe-pG-rMs" eventType="touchUpInside" id="3xy-Uz-GSr"/>
+                                            <action selector="settingsBadgePressed:" destination="aZe-pG-rMs" eventType="touchUpInside" id="AkF-fI-jq9"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" name="Clear"/>
                                 <constraints>
@@ -609,11 +612,13 @@
                                     <constraint firstItem="aq5-vX-83I" firstAttribute="top" secondItem="7pG-RR-uCS" secondAttribute="top" constant="10" id="GTT-jy-fhh"/>
                                     <constraint firstItem="aq5-vX-83I" firstAttribute="top" secondItem="7pG-RR-uCS" secondAttribute="top" constant="10" id="RI3-hK-HtT"/>
                                     <constraint firstAttribute="bottom" secondItem="bNw-dF-hBm" secondAttribute="bottom" id="Thl-Yp-1YA"/>
+                                    <constraint firstItem="KF8-nE-69M" firstAttribute="centerX" secondItem="pB1-JM-2cb" secondAttribute="trailing" constant="-5" id="ZFb-H7-wou"/>
                                     <constraint firstAttribute="bottom" secondItem="pB1-JM-2cb" secondAttribute="bottom" id="ZgO-ba-mVY"/>
                                     <constraint firstAttribute="trailing" secondItem="pB1-JM-2cb" secondAttribute="trailing" constant="20" id="ekU-H3-aqF"/>
                                     <constraint firstItem="aq5-vX-83I" firstAttribute="leading" secondItem="7pG-RR-uCS" secondAttribute="leading" constant="20" id="g4D-Uz-YDS"/>
                                     <constraint firstItem="aq5-vX-83I" firstAttribute="leading" secondItem="7pG-RR-uCS" secondAttribute="leading" id="gzu-6R-j7F"/>
                                     <constraint firstItem="pB1-JM-2cb" firstAttribute="top" secondItem="7pG-RR-uCS" secondAttribute="top" constant="10" id="is8-qL-zbj"/>
+                                    <constraint firstItem="KF8-nE-69M" firstAttribute="centerY" secondItem="pB1-JM-2cb" secondAttribute="top" constant="5" id="lAy-cp-Huz"/>
                                     <constraint firstItem="bNw-dF-hBm" firstAttribute="top" secondItem="aq5-vX-83I" secondAttribute="bottom" constant="10" id="n6F-5k-V5m"/>
                                     <constraint firstItem="aq5-vX-83I" firstAttribute="height" secondItem="7pG-RR-uCS" secondAttribute="height" multiplier="1:3" constant="-13" id="nMK-HP-oZq"/>
                                     <constraint firstAttribute="bottom" secondItem="aq5-vX-83I" secondAttribute="bottom" id="npL-IB-VXw"/>
@@ -839,7 +844,6 @@
                         <outlet property="hostCollectionView" destination="QLu-uS-rp7" id="eqx-cO-cVj"/>
                         <outlet property="hostTitleBar" destination="w0v-BL-Raf" id="auz-Z2-gRp"/>
                         <outlet property="infoButton" destination="rhg-YK-v6u" id="owX-Yp-RAK"/>
-                        <outlet property="infoButtonContainer" destination="7O6-U7-alt" id="fsb-i0-7FA"/>
                         <outlet property="leftPaddingView" destination="YSU-nf-o4R" id="gVP-3i-AMf"/>
                         <outlet property="lowerMiddleSection" destination="X53-w8-J5S" id="vgG-j7-G1C"/>
                         <outlet property="peerCollectionContainerView" destination="3t1-6y-FZY" id="Fvn-sv-9aS"/>
@@ -851,6 +855,7 @@
                         <outlet property="playerSelectionView" destination="0OQ-Wp-Xtp" id="aMt-JN-CUF"/>
                         <outlet property="playerSelectionViewHeightConstraint" destination="zrf-Q7-qL5" id="Afs-8m-EPI"/>
                         <outlet property="playerSelectionViewWidthConstraint" destination="9iF-tu-zqC" id="sLh-KZ-Koc"/>
+                        <outlet property="settingsBadgeButton" destination="KF8-nE-69M" id="GLL-WA-9mr"/>
                         <outlet property="tapGestureRecognizer" destination="xiI-Mr-Bry" id="Z62-cF-St0"/>
                         <outlet property="thisPlayerThumbnail" destination="Qjq-rE-5ew" id="7UX-3r-vYb"/>
                         <outlet property="titleLabel" destination="9EB-QT-Tnd" id="Klt-nN-qKR"/>

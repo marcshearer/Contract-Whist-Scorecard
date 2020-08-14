@@ -36,8 +36,9 @@ TODO
 ----
 TODO Need to switch off MallocStackLogging variables in Edit Scheme
 Looks like it is still in recovery mode even when play game and override warning
-Add confetti to game summary
 Implement Facetime calls
+
+Change launch screen to a view rather than a view controller
 
 Jack
 ----

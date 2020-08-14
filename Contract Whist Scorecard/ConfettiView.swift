@@ -11,12 +11,14 @@ import UIKit
 class ConfettiView: UIView {
     
     private let dimension = 4
-    private var velocities = [50, 100, 150, 75]
+    private var velocities = [180, 200, 150, 250]
     private var imagesNames = ["spade", "heart", "diamond", "club"]
-    private var colors: [UIColor] = [.black, .red, .red, .black]
+    private var colors: [UIColor] = [Palette.suitClubsSpades,
+                                     Palette.suitDiamondsHearts,
+                                     Palette.suitDiamondsHearts,
+                                     Palette.suitClubsSpades]
     
     private let confettiViewEmitterLayer = CAEmitterLayer()
-    private let confettiViewEmitterCell = CAEmitterCell()
     
     // MARK: - Initializers
     override public init(frame frameRect: CGRect) {
@@ -31,29 +33,41 @@ class ConfettiView: UIView {
     
     private func commonInit() {
         
-        setupBaseLayer()
-        setupConfettiEmitterLayer()
+        self.setupBaseLayer()
+        self.setupConfettiEmitterLayer()
         
-        confettiViewEmitterLayer.emitterCells = generateConfettiEmitterCells()
+    }
+    
+    public func start() {
+        self.confettiViewEmitterLayer.beginTime = CACurrentMediaTime()
+        self.confettiViewEmitterLayer.emitterCells = generateConfettiEmitterCells()
         self.layer.addSublayer(confettiViewEmitterLayer)
+    }
+    
+    public func stop(immediate: Bool = false) {
+        if immediate {
+            self.confettiViewEmitterLayer.emitterCells = []
+        } else {
+            self.confettiViewEmitterLayer.birthRate = 0
+        }
     }
     
     // MARK: - Setup Layers
     private func setupBaseLayer() {
-        self.layer.backgroundColor = UIColor.white.cgColor
+        self.layer.backgroundColor = UIColor.clear.cgColor
     }
     
     private func setupConfettiEmitterLayer() {
-        confettiViewEmitterLayer.emitterSize = CGSize(width: bounds.width, height: 2)
-        confettiViewEmitterLayer.emitterShape = .line
-        confettiViewEmitterLayer.emitterPosition = CGPoint(x: bounds.width / 2, y: -2.0)
-        confettiViewEmitterLayer.renderMode = .additive
+        self.confettiViewEmitterLayer.emitterSize = CGSize(width: bounds.width, height: 2)
+        self.confettiViewEmitterLayer.emitterShape = .line
+        self.confettiViewEmitterLayer.emitterPosition = CGPoint(x: bounds.width / 2, y: -2.0)
+        self.confettiViewEmitterLayer.renderMode = .additive
     }
     
     // MARK: - Generator
     private func generateConfettiEmitterCells() -> [CAEmitterCell] {
         var cells = [CAEmitterCell]()
-        
+                
         for index in 0..<10 {
             let cell = CAEmitterCell()
             cell.color = nextColor(i: index)

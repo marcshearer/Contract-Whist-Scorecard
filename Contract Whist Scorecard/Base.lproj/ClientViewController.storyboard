@@ -596,7 +596,6 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="infoButtonPressed:" destination="aZe-pG-rMs" eventType="touchUpInside" id="3xy-Uz-GSr"/>
                                             <action selector="settingsBadgePressed:" destination="aZe-pG-rMs" eventType="touchUpInside" id="AkF-fI-jq9"/>
                                         </connections>
                                     </button>

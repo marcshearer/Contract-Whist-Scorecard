@@ -59,6 +59,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     private let awardMaxList = 1
     private let awards = Awards()
     private var awardList: [Award] = []
+    private var startConfetti = true
     
     // Completion state
     private var completionMode: GameSummaryReturnMode = .resume
@@ -70,6 +71,8 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     var excludeStats = false
 
     // MARK: - IB Outlets ============================================================================== -
+    
+    @IBOutlet private weak var confettiView: ConfettiView!
     @IBOutlet private weak var topArea: UIView!
     @IBOutlet private weak var middleArea: UIView!
     @IBOutlet private weak var bottomArea: UIView!
@@ -97,6 +100,7 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     
     @IBAction func scorecardPressed(_ sender: Any) {
         // Unwind to scorepad with current game intact
+        self.confettiView.stop(immediate: true)
         self.controllerDelegate?.didCancel()
     }
     
@@ -105,7 +109,13 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     }
     
     @IBAction func tapGestureReceived(recognizer:UITapGestureRecognizer) {
-        self.scorecardPressed(self)
+        if gameSummaryMode == .viewing {
+            self.scorecardPressed(self)
+        } else {
+            // Stop confetti if it is falling and disable this tap gesture
+            self.confettiView.stop()
+            self.tapGesture.isEnabled = false
+        }
     }
     
     // MARK: - View Overrides ========================================================================== -
@@ -128,12 +138,6 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
             self.playAgainButton.alpha = 0.3
         }
         
-        // Setup tap gesture
-        if gameSummaryMode != .viewing {
-            // Disable tap gesture as individual buttons active
-            tapGesture.isEnabled = false
-        }
-        
         // Work out who's won
         calculateWinner()
     }
@@ -141,6 +145,13 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
+        if startConfetti {
+            self.confettiView.start()
+            Utility.executeAfter(delay: 5) {
+                self.confettiView.stop()
+                self.tapGesture.isEnabled = false
+            }
+        }
         self.autoNewGame()
     }
     
@@ -282,6 +293,8 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
     }
         
     private func playerSelected(index: Int) {
+        self.confettiView.stop(immediate: true)
+
         let playerResults = xref[index]
         
         if playerResults.personalBest {
@@ -556,6 +569,11 @@ class GameSummaryViewController: ScorecardViewController, UICollectionViewDelega
             // Save notification message
             self.saveGameNotification(newHighScore: newHighScore, winnerPlayerUUID: winnerPlayerUUID, winner: winnerNames, winningScore: Int(xref[0].score))
             Scorecard.game.gameCompleteNotificationSent = true
+            
+            // Start confetti if this player has won and setting is enabled
+            if Scorecard.activeSettings.confettiWin && winnerPlayerUUID == Scorecard.activeSettings.thisPlayerUUID {
+                self.startConfetti = true
+            }
         }
     }
     

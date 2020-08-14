@@ -405,6 +405,10 @@
                                     <action selector="scorecardPressed:" destination="2Ye-nN-zMs" eventType="touchUpInside" id="v1a-5q-Fhc"/>
                                 </connections>
                             </button>
+                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2Ej-Ac-6hy" userLabel="Confetti View" customClass="ConfettiView" customModule="Whist_2" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <color key="backgroundColor" name="Clear"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" name="Room Interior"/>
                         <gestureRecognizers/>
@@ -416,6 +420,9 @@
                             <constraint firstItem="SkU-nQ-PwD" firstAttribute="leading" secondItem="QwS-ao-9CA" secondAttribute="leading" id="AGu-g9-dSr"/>
                             <constraint firstItem="SkU-nQ-PwD" firstAttribute="bottom" secondItem="4Xn-Vn-q9j" secondAttribute="top" id="AKd-fb-weg"/>
                             <constraint firstItem="9uo-b0-008" firstAttribute="leading" secondItem="QwS-ao-9CA" secondAttribute="leading" constant="40" id="Dsi-t2-kFq"/>
+                            <constraint firstItem="2Ej-Ac-6hy" firstAttribute="leading" secondItem="dDC-WM-Jrb" secondAttribute="leading" id="EpD-u3-Lim"/>
+                            <constraint firstAttribute="bottom" secondItem="2Ej-Ac-6hy" secondAttribute="bottom" id="F8j-v2-oWR"/>
+                            <constraint firstAttribute="trailing" secondItem="2Ej-Ac-6hy" secondAttribute="trailing" id="JpZ-gm-QFg"/>
                             <constraint firstItem="4Xn-Vn-q9j" firstAttribute="leading" secondItem="SkU-nQ-PwD" secondAttribute="trailing" id="Msv-lX-5j7"/>
                             <constraint firstItem="Bhv-M4-Rmr" firstAttribute="top" secondItem="QwS-ao-9CA" secondAttribute="top" constant="8" id="QnB-pI-Ala"/>
                             <constraint firstItem="4Xn-Vn-q9j" firstAttribute="centerY" secondItem="dDC-WM-Jrb" secondAttribute="centerY" id="bE9-da-aSe"/>
@@ -425,6 +432,7 @@
                             <constraint firstItem="QwS-ao-9CA" firstAttribute="bottom" secondItem="SkU-nQ-PwD" secondAttribute="bottom" id="mBy-TJ-c0C"/>
                             <constraint firstItem="9uo-b0-008" firstAttribute="top" secondItem="QwS-ao-9CA" secondAttribute="top" constant="8" id="mSG-xF-7MW"/>
                             <constraint firstAttribute="bottom" secondItem="4Xn-Vn-q9j" secondAttribute="bottom" id="ofV-W1-aQ4"/>
+                            <constraint firstItem="2Ej-Ac-6hy" firstAttribute="top" secondItem="dDC-WM-Jrb" secondAttribute="top" id="pNM-74-vo2"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="QwS-ao-9CA"/>
                         <variation key="default">
@@ -457,6 +465,7 @@
                         </variation>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="eQO-xa-QSi" appends="YES" id="40n-7b-r6y"/>
+                            <outletCollection property="gestureRecognizers" destination="RaZ-ty-O6E" appends="YES" id="Ntt-7G-OqQ"/>
                         </connections>
                     </view>
                     <connections>
@@ -468,6 +477,7 @@
                         <outlet property="awardsTitleBar" destination="Tii-a3-9rM" id="hQe-62-s4j"/>
                         <outlet property="awardsTitleBarHeight" destination="ecR-AA-Iow" id="O6b-Aw-fWg"/>
                         <outlet property="bottomArea" destination="4Xn-Vn-q9j" id="RMR-FT-8TY"/>
+                        <outlet property="confettiView" destination="2Ej-Ac-6hy" id="1RM-2i-E3S"/>
                         <outlet property="middleArea" destination="kar-Qx-XWq" id="lxW-hL-6wJ"/>
                         <outlet property="otherCollectionView" destination="2h7-Jf-CHY" id="Rn9-W1-Hib"/>
                         <outlet property="otherCollectionViewHeight" destination="UCw-7L-t8U" id="YLX-fr-7N6"/>

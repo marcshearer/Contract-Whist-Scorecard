@@ -510,6 +510,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
         self.displayingPeer = 0
         self.peerCollectionView.contentOffset = CGPoint()
         self.peerReloadData()
+        self.updateSettingsBadge()
 
         if createController {
             // Create controller after short delay
@@ -1061,6 +1062,16 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     internal func changePlayerAvailable() {
         let available = (self.appState == .notConnected && !self.recoveryMode)
         self.tapGestureRecognizer.isEnabled = available
+    }
+    
+    internal func updateSettingsBadge() {
+        let count = Scorecard.settings.notifyCount()
+        if count == 0 {
+            self.settingsBadgeButton.isHidden = true
+        } else {
+            self.settingsBadgeButton.isHidden = false
+            self.settingsBadgeButton.setTitle("\(count)", for: .normal)
+        }
     }
     
     public func refreshStatus() {

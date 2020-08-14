@@ -69,17 +69,18 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     }
     
     private enum InGameOptions : Int, CaseIterable {
-        case cardsInHandSubheading = 0
-        case cardsInHandStart = 1
-        case cardsInHandEnd = 2
-        case cardsInHandBounce = 3
-        case spacer1 = 4
-        case bonus2Subheading = 5
-        case bonus2 = 6
-        case spacer2 = 7
-        case includeNoTrump = 8
-        case trumpSequenceEdit = 9
-        case trumpSequenceSuits = 10
+        case confettiWin = 0
+        case cardsInHandSubheading = 1
+        case cardsInHandStart = 2
+        case cardsInHandEnd = 3
+        case cardsInHandBounce = 4
+        case spacer1 = 5
+        case bonus2Subheading = 6
+        case bonus2 = 7
+        case spacer2 = 8
+        case includeNoTrump = 9
+        case trumpSequenceEdit = 10
+        case trumpSequenceSuits = 11
     }
         
     private enum GeneralInfoOptions : Int, CaseIterable {
@@ -192,6 +193,7 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        self.showSettingsNotifications()
     }
     
     // MARK: - TableView Overrides ===================================================================== -
@@ -261,6 +263,8 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
             case .inGame:
                 if let option = InGameOptions(rawValue: indexPath.row) {
                     switch option {
+                    case .confettiWin:
+                        height = (Scorecard.settings.confettiWinSettingState != .notAvailable ? self.rowHeight : 0)
                     case .trumpSequenceSuits:
                         height = 60.0
                     case .spacer1, .spacer2:
@@ -548,6 +552,18 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                         self.defaultCellColors(cell: cell)
                         
                         cell.setEnabled(enabled: false)
+                        
+                    case .confettiWin:
+                        cell = tableView.dequeueReusableCell(withIdentifier: "Switch") as? SettingsTableCell
+                        
+                        // Setup default colors (previously done in StoryBoard)
+                        self.defaultCellColors(cell: cell)
+                        
+                        cell.resizeSwitch(0.75)
+                        cell.label.text = "Confetti Storm if Win"
+                        cell.labelLeadingConstraint.constant = 20.0
+                        cell.toggleSwitch.addTarget(self, action: #selector(SettingsViewController.confettiWinChanged(_:)), for: .valueChanged)
+                        cell.toggleSwitch.isOn = Scorecard.settings.confettiWin
                         
                     case .spacer1, .spacer2:
                         cell = tableView.dequeueReusableCell(withIdentifier: "Spacer") as? SettingsTableCell
@@ -972,6 +988,10 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
                 button.tintColorDidChange()
             }
         }
+    }
+    
+    @objc internal func confettiWinChanged(_ confettiWinSwitch: UISwitch) {
+        Scorecard.settings.confettiWin = confettiWinSwitch.isOn
     }
     
     // MARK: - CollectionView Overrides ================================================================ -
@@ -1516,6 +1536,31 @@ class SettingsViewController: ScorecardViewController, UITableViewDataSource, UI
         }
     }
     
+    private func showSettingsNotifications() {
+        if Scorecard.settings.onlineGamesEnabledSettingState == .availableNotify {
+            self.alertMessage("You have not enabled online games yet on this device. This setting allows you to play Whist electronically with users of other devices.", okHandler: {
+                Scorecard.settings.onlineGamesEnabledSettingState = . available
+                self.showSettingsNotifications()
+            })
+        } else if Scorecard.settings.confettiWinSettingState == .availableNotify {
+            self.alertMessage("You have now achieved the loyalty card award. This has enabled a new setting to allow you to have a confetti storm on your device every time you win a game!", okHandler: {
+                Scorecard.settings.confettiWinSettingState = .available
+                let indexPath = IndexPath(row: InGameOptions.confettiWin.rawValue, section: Sections.inGame.rawValue)
+                let cell = self.settingsTableView.cellForRow(at: indexPath) as! SettingsTableCell
+                self.settingsTableView.scrollToRow(at: indexPath, at: .top, animated: true)
+                self.settingsTableView.layoutIfNeeded()
+                UIView.animate(withDuration: 1.0, animations: {
+                       cell.label.font = UIFont.systemFont(ofSize: 20.0, weight: .regular)
+                    }, completion: { (_) in
+                       UIView.animate(withDuration: 1.0, animations: {
+                          cell.label.font = UIFont.systemFont(ofSize: 17.0, weight: .regular)
+                          self.showSettingsNotifications()
+                       })
+                })
+            })
+        }
+    }
+    
     // MARK: - Online game methods ========================================================== -
     
     private func setOnlinePlayerUUID(playerUUID: String!) {
@@ -1642,6 +1687,9 @@ class SettingsTableCell: UITableViewCell {
         self.editButton?.removeTarget(nil, action: nil, for: .allEvents)
         self.segmentedControl?.removeTarget(nil, action: nil, for: .allEvents)
         self.slider?.removeTarget(nil, action: nil, for: .allEvents)
+        self.slider?.minimumValue = 1
+        self.slider?.maximumValue = 13
+        self.slider?.setValue(1, animated: false)
         self.textField?.removeTarget(nil, action: nil, for: .allEvents)
     }
 }

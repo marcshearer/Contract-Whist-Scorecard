@@ -9,6 +9,12 @@
 import Foundation
 import CloudKit
 
+enum SettingState: Int {
+    case notAvailable = 0
+    case availableNotify = 1
+    case available = 2
+}
+
 class Settings : Equatable {
     
     /** Note that if you add a property you also need to add it to the setValue(forKey:) method */
@@ -29,26 +35,31 @@ class Settings : Equatable {
     public var prefersStatusBarHidden = true
     public var rawColorTheme = ThemeName.standard.rawValue
     public var colorTheme: ThemeName {
-        get {
-            return ThemeName(rawValue: self.rawColorTheme)!
-        }
-        set {
-            self.rawColorTheme = newValue.rawValue
-        }
+        get { ThemeName(rawValue: self.rawColorTheme)! }
+        set { self.rawColorTheme = newValue.rawValue }
     }
     private var rawAppearance = ThemeAppearance.device.rawValue
     public var appearance: ThemeAppearance {
-        get {
-            return ThemeAppearance(rawValue: self.rawAppearance)!
-        }
-        set {
-            self.rawAppearance = newValue.rawValue
-        }
+        get { ThemeAppearance(rawValue: self.rawAppearance)! }
+        set { self.rawAppearance = newValue.rawValue }
     }
     public var termsDate: Date!
     public var termsUser = ""
     public var termsDevice = ""
-        
+    public var confettiWin = false
+
+    // Settings states
+    public var rawOnlineGamesEnabledSettingState = SettingState.availableNotify.rawValue
+    public var onlineGamesEnabledSettingState: SettingState {
+        get { SettingState(rawValue: self.rawOnlineGamesEnabledSettingState)!}
+        set { self.rawOnlineGamesEnabledSettingState = newValue.rawValue}
+    }
+    public var rawConfettiWinSettingState = SettingState.notAvailable.rawValue
+    public var confettiWinSettingState: SettingState {
+        get { SettingState(rawValue: self.rawConfettiWinSettingState)!}
+        set { self.rawConfettiWinSettingState = newValue.rawValue}
+    }
+
     public var saveStats: Bool = true           // Only used in a game (not saved) - initially set to same as saveHistory but can be overridden
     
     private func saved(_ label: String) -> Bool {
@@ -102,6 +113,20 @@ class Settings : Equatable {
             self.termsUser = value as! String
         case "saveStats":
             self.saveStats = value as! Bool
+        case "confettiWin":
+            self.confettiWin = value as! Bool
+        case "rawOnlineGamesEnabledSettingState":
+            if self.onlineGamesEnabled {
+                self.onlineGamesEnabledSettingState = .available
+            } else {
+                self.rawOnlineGamesEnabledSettingState = value as! Int
+            }
+        case "rawConfettiWinSettingState":
+            if self.confettiWin {
+                self.confettiWinSettingState = .available
+            } else {
+                self.rawConfettiWinSettingState = value as! Int
+            }
         case "colorTheme", "appearance":
             // Old values no longer used
             break
@@ -162,6 +187,25 @@ class Settings : Equatable {
             }
         }
         return same
+    }
+    
+    /// Return number of state settings set to 'notify'
+    /// - Returns: Number of state settings set to 'notify'
+    public func notifyCount() -> Int {
+        var count = 0
+        let mirror = Mirror(reflecting: self)
+        for child in mirror.children {
+            if let label = child.label {
+                if label.left(3) == "raw" && label.right(12) == "SettingState" {
+                    if let value = child.value as? Int {
+                        if value == SettingState.availableNotify.rawValue {
+                            count += 1
+                        }
+                    }
+                }
+            }
+        }
+        return count
     }
     
     public func load() {

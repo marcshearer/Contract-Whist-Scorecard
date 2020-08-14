@@ -464,9 +464,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         let storyboard = UIStoryboard(name: "DashboardViewController", bundle: nil)
         let dashboardViewController: DashboardViewController = storyboard.instantiateViewController(withIdentifier: "DashboardViewController") as! DashboardViewController
         
-        dashboardViewController.preferredContentSize = CGSize(width: 400, height: 700)
-        dashboardViewController.modalPresentationStyle = (ScorecardUI.phoneSize() ? .fullScreen : .automatic)
-        
+        dashboardViewController.modalPresentationStyle = .fullScreen
         dashboardViewController.dashboardInfo = dashboardNames
         dashboardViewController.allowSync = allowSync
         dashboardViewController.backText = backText
@@ -474,7 +472,7 @@ class DashboardViewController: ScorecardViewController, UICollectionViewDelegate
         dashboardViewController.backgroundColor = backgroundColor
         dashboardViewController.completion = completion
         
-        viewController.present(dashboardViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: true, completion: nil)
+        viewController.present(dashboardViewController, animated: true, completion: nil)
         
         return dashboardViewController
     }

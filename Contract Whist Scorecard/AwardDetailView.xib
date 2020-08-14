@@ -34,7 +34,7 @@
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Wgy-fH-2XD" customClass="AwardView" customModule="Whist_2" customModuleProvider="target">
                             <rect key="frame" x="32.5" y="40" width="175" height="175"/>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            <color key="backgroundColor" name="Clear"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="Wgy-fH-2XD" secondAttribute="height" multiplier="1:1" id="n0M-cM-sVh"/>
                             </constraints>

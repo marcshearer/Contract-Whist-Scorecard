@@ -333,10 +333,29 @@ public class Awards {
                 }
             } else {
                 awardMO = self.createAwardMO(playerUUID: playerUUID, code: award.code, awardLevel: award.awardLevel, gameUUID: award.gameUUID!, dateAwarded: award.dateAwarded!)
+                self.saveSpecials(award: award)
             }
             if self.playerUUID == playerUUID && self.achieved != nil {
                 self.achieved!.append(awardMO!)
             }
+        }
+    }
+    
+    private func saveSpecials(award: Award) {
+        switch award.code {
+        case "dayStreak":
+            switch award.awardLevel {
+            case 7:
+                // 7 days in a row loyalty card - award confetti setting
+                if Scorecard.settings.confettiWinSettingState == .notAvailable {
+                    Scorecard.settings.confettiWinSettingState = .availableNotify
+                    Scorecard.settings.save()
+                }
+            default:
+                break
+            }
+        default:
+            break
         }
     }
     

@@ -552,7 +552,8 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     fileprivate weak var appController: ScorecardAppController?
     private var scorecardView: ScorecardView?
     private var invokedUUID: String?
-    
+    internal var launchScreenView: LaunchScreenView?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -710,16 +711,36 @@ class ScorecardViewController : UIViewController, UIAdaptivePresentationControll
     
     internal func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
        
-        if dismissed is LaunchScreenViewController {
-            return ScorecardAnimator(duration: 2.0, animation: .fade, presenting: false)
-            
-        } else if dismissed is SyncViewController {
+        if dismissed is SyncViewController {
             return ScorecardAnimator(duration: 0.5, animation: .toTop, presenting: false)
             
         } else {
             return nil
         }
         
+    }
+    
+    // MARK: - Launch screen ============================================================================ -
+    
+    internal func showLaunchScreenView(completion: (()->())? = nil) {
+        if self.launchScreenView == nil {
+            self.launchScreenView = LaunchScreenView(frame: UIScreen.main.bounds)
+            self.launchScreenView!.parentViewController = self
+            self.view.addSubview(self.launchScreenView!)
+            Constraint.anchor(view: self.view, control: self.launchScreenView!)
+        }
+        self.launchScreenView!.completion = completion
+        self.view.alpha = 1
+        self.view.bringSubviewToFront(launchScreenView!)
+    }
+    
+    internal func hideLaunchScreen(completion: (()->())? = nil) {
+        Utility.animate(duration: 1.0, completion: {
+            completion?()
+            self.launchScreenView?.removeFromSuperview()
+        }, animations: {
+            self.launchScreenView?.alpha = 0
+        })
     }
     
     // MARK: - Dismiss view under cover of a screen shot ================================================ -

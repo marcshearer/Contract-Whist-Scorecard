@@ -8,14 +8,13 @@
 
 import UIKit
 
-class LaunchScreenViewController: ScorecardViewController, SyncDelegate, ReconcileDelegate {
+class LaunchScreenView: UIView, SyncDelegate, ReconcileDelegate {
 
-   
     // Sync
     internal let sync = Sync()
     private var syncGetPlayers = false
     private var syncGetVersion = false
-    private weak var callingViewController: ScorecardViewController!
+    public weak var parentViewController: ScorecardViewController!
     private var syncPlayerList: [String]?
     private var newDevice = false
     private var termsUser: String?
@@ -23,10 +22,11 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     // Reconcile
     internal var reconcile: Reconcile!
     
-    private var completion: (()->())?
+    public var completion: (()->())?
 
     // MARK: - IB Outlets ============================================================================== -
     
+    @IBOutlet private weak var contentView: UIView!
     @IBOutlet private weak var message: UILabel!
     @IBOutlet private weak var whistTitle: UILabel!
     @IBOutlet private weak var whistImage: UIImageView!
@@ -60,14 +60,41 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     }
     
     // MARK: - View Overrides ========================================================================== -
- 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        self.loadLaunchScreenView()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.loadLaunchScreenView()
+    }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.layoutSubviews()
+    }
+    
+    private func loadLaunchScreenView() {
+        Bundle.main.loadNibNamed("LaunchScreenView", owner: self, options: nil)
+        self.addSubview(contentView)
+        contentView.frame = self.bounds
+        contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    }
+    
+    override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+
+        if self.superview != nil {
+            self.checkICloud()
+        }
+        
+        // Note flow continues in continueStartup
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
         
         self.setupControls()
         
@@ -75,14 +102,6 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
 
         self.enableControls()
         
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        self.checkICloud()
-        
-        // Note flow continues in continueStartup
     }
     
     private func checkICloud() {
@@ -179,7 +198,7 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
             if showMessage {
                 self.message.text = "Loading..."
             }
-            self.callingViewController.dismissWithScreenshot(viewController: self, completion: self.completion)
+            self.parentViewController.hideLaunchScreen(completion: self.completion)
         }
     }
 
@@ -189,10 +208,11 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     }
     
     private func setupControls() {
-        self.view.backgroundColor = Palette.banner.background
+        self.contentView.backgroundColor = Palette.banner.background
         self.whistTitle.textColor = Palette.banner.themeText
         self.message.textColor = Palette.banner.text
         self.termsTitle.textColor = Palette.banner.text
+        self.termsText.layoutIfNeeded()
         self.termsText.backgroundColor = Palette.normal.background
         self.termsText.textColor = Palette.normal.text
         self.termsText.roundCorners(cornerRadius: 8.0)
@@ -264,7 +284,7 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     }
     
     internal func syncAlert(_ message: String, completion: @escaping ()->()) {
-        self.alertMessage(message, title: "Contract Whist Scorecard", okHandler: {
+        self.parentViewController.alertMessage(message, title: "Contract Whist Scorecard", okHandler: {
             if Scorecard.version.blockAccess {
                 exit(0)
             } else {
@@ -321,7 +341,7 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
         Notifications.checkNotifications(
             refused: { (requested) in
                 if !requested {
-                    self.alertMessage("You have previously refused permission for this app to send you notifications. \nThis will mean that you will not receive game invitation or completion notifications.\nTo change this, please authorise notifications in the Whist section of the main Settings App")
+                    self.parentViewController.alertMessage("You have previously refused permission for this app to send you notifications. \nThis will mean that you will not receive game invitation or completion notifications.\nTo change this, please authorise notifications in the Whist section of the main Settings App")
                 }
                 Scorecard.settings.receiveNotifications = false
                 completion()
@@ -335,23 +355,8 @@ class LaunchScreenViewController: ScorecardViewController, SyncDelegate, Reconci
     // MARK: - Show get started ============================================================================= -
     
     private func showGetStarted() {
-        GetStartedViewController.show(from: self) {
+        GetStartedViewController.show(from: self.parentViewController) {
             self.dismiss()
         }
-    }
-
-    // MARK: - Routine to display this view ================================================================= -
-    
-    class public func show(from viewController: ScorecardViewController, completion: (()->())? = nil) {
-        
-        let storyboard = UIStoryboard(name: "LaunchScreenViewController", bundle: nil)
-        let launchScreenViewController: LaunchScreenViewController = storyboard.instantiateViewController(withIdentifier: "LaunchScreenViewController") as! LaunchScreenViewController
-        
-        launchScreenViewController.preferredContentSize = CGSize(width: 400, height: 700)
-        launchScreenViewController.modalPresentationStyle = .fullScreen
-        launchScreenViewController.completion = completion
-        launchScreenViewController.callingViewController = viewController
-        
-        viewController.present(launchScreenViewController, sourceView: viewController.popoverPresentationController?.sourceView ?? viewController.view, animated: false)
     }
 }

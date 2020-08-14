@@ -9,10 +9,11 @@
 import Foundation
 import CloudKit
 
+/// Setting state threeway - values are 2+ to avoid confusion in mirror with Bool
 enum SettingState: Int {
-    case notAvailable = 0
-    case availableNotify = 1
-    case available = 2
+    case notAvailable = 2
+    case availableNotify = 3
+    case available = 4
 }
 
 class Settings : Equatable {

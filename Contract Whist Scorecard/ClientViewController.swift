@@ -240,8 +240,8 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             
             if self.launchScreen {
                 // Cover with launch screen
-                self.showLaunchScreen()
                 self.launchScreen = false
+                self.showLaunchScreen()
             }
         }
     }
@@ -300,6 +300,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
             }
 
             if rotated {
+                self.launchScreenView?.layoutSubviews()
                 self.hostCollectionView.reloadData()
             }
             
@@ -323,7 +324,7 @@ class ClientViewController: ScorecardViewController, UICollectionViewDelegate, U
     // MARK: - Show other views ======================================================================= -
     
     private func showLaunchScreen() {
-        LaunchScreenViewController.show(from: self) {
+        self.showLaunchScreenView() {
             self.clientController?.set(noHideDismissImageView: true) // Suppress hiding of screenview since will do it later ourselves
             if !self.recoveryMode {
                 self.showSettingsCompletion()

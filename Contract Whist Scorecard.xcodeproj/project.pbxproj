@@ -13,7 +13,7 @@
 		49410E4E1DF1A251000BDA6D /* Player Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49410E4D1DF1A251000BDA6D /* Player Class.swift */; };
 		49410E501DF1A712000BDA6D /* Scorecard Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49410E4F1DF1A712000BDA6D /* Scorecard Class.swift */; };
 		49AFA50D1E0C42A100DCB1F4 /* RoundSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49AFA50C1E0C42A100DCB1F4 /* RoundSummaryViewController.swift */; };
-		B2021D7E247FEA1900A82EBB /* LaunchScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2021D7D247FEA1900A82EBB /* LaunchScreenViewController.swift */; };
+		B2021D7E247FEA1900A82EBB /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2021D7D247FEA1900A82EBB /* LaunchScreenView.swift */; };
 		B2021D80247FFE2000A82EBB /* Themes.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2021D7F247FFE2000A82EBB /* Themes.swift */; };
 		B202551F22B13A560074310A /* Constraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = B202551E22B13A560074310A /* Constraint.swift */; };
 		B202552122BCCE220074310A /* ScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B202552022BCCE220074310A /* ScrollView.swift */; };
@@ -143,6 +143,7 @@
 		B28E8C1E24BEBFED0053E237 /* AwardCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28E8C1D24BEBFED0053E237 /* AwardCollectionCell.swift */; };
 		B28E8C2024BEBFFC0053E237 /* AwardListCollectionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B28E8C1F24BEBFFC0053E237 /* AwardListCollectionCell.xib */; };
 		B28E8C2324C03CC10053E237 /* Awards.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28E8C2224C03CC10053E237 /* Awards.swift */; };
+		B298496924E6DF4400FADC06 /* LaunchScreenView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B298496824E6DF4400FADC06 /* LaunchScreenView.xib */; };
 		B29AD706224F88060087160B /* Whisper Class.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29AD705224F88060087160B /* Whisper Class.swift */; };
 		B29FFF31223BA302002C01FE /* Banners.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29FFF30223BA302002C01FE /* Banners.swift */; };
 		B2A3D9A1248E2804008556B8 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2A3D9A0248E2804008556B8 /* Location.swift */; };
@@ -278,7 +279,7 @@
 		49410E4F1DF1A712000BDA6D /* Scorecard Class.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "Scorecard Class.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		49AFA50C1E0C42A100DCB1F4 /* RoundSummaryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundSummaryViewController.swift; sourceTree = "<group>"; };
 		728F0C12F548197273CE5846 /* Pods_Contract_Whist_Scorecard.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Contract_Whist_Scorecard.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		B2021D7D247FEA1900A82EBB /* LaunchScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewController.swift; sourceTree = "<group>"; };
+		B2021D7D247FEA1900A82EBB /* LaunchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenView.swift; sourceTree = "<group>"; };
 		B2021D7F247FFE2000A82EBB /* Themes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Themes.swift; sourceTree = "<group>"; };
 		B202551E22B13A560074310A /* Constraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constraint.swift; sourceTree = "<group>"; };
 		B202552022BCCE220074310A /* ScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollView.swift; sourceTree = "<group>"; };
@@ -413,6 +414,7 @@
 		B28E8C1D24BEBFED0053E237 /* AwardCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AwardCollectionCell.swift; sourceTree = "<group>"; };
 		B28E8C1F24BEBFFC0053E237 /* AwardListCollectionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AwardListCollectionCell.xib; sourceTree = "<group>"; };
 		B28E8C2224C03CC10053E237 /* Awards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Awards.swift; sourceTree = "<group>"; };
+		B298496824E6DF4400FADC06 /* LaunchScreenView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LaunchScreenView.xib; sourceTree = "<group>"; };
 		B29AD705224F88060087160B /* Whisper Class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Whisper Class.swift"; sourceTree = "<group>"; };
 		B29FFF30223BA302002C01FE /* Banners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Banners.swift; sourceTree = "<group>"; };
 		B2A3D9A0248E2804008556B8 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
@@ -532,8 +534,9 @@
 		B2021D7C247FE9D900A82EBB /* Launch Screen */ = {
 			isa = PBXGroup;
 			children = (
+				B298496824E6DF4400FADC06 /* LaunchScreenView.xib */,
 				CC4CC1041DEADC32007FB24F /* LaunchScreenViewController.storyboard */,
-				B2021D7D247FEA1900A82EBB /* LaunchScreenViewController.swift */,
+				B2021D7D247FEA1900A82EBB /* LaunchScreenView.swift */,
 			);
 			name = "Launch Screen";
 			sourceTree = "<group>";
@@ -1655,6 +1658,7 @@
 				B22789421FB894AE009BABCA /* PlayerDetailViewController.storyboard in Resources */,
 				B28DDA9E24A325500029FE36 /* HighScoreTileView.xib in Resources */,
 				B283A1B024AF438D0065994B /* BubbleView.xib in Resources */,
+				B298496924E6DF4400FADC06 /* LaunchScreenView.xib in Resources */,
 				B20CF54424A7BD3B00F27A9C /* PersonalDashboardLandscapeView.xib in Resources */,
 				B227893C1FB8932A009BABCA /* SyncViewController.storyboard in Resources */,
 				B2430CC722EABD1D00C4FC77 /* SlideOutButtonView.xib in Resources */,
@@ -1807,7 +1811,7 @@
 				B202552122BCCE220074310A /* ScrollView.swift in Sources */,
 				CC4CC0FB1DEADC32007FB24F /* ScorepadViewController.swift in Sources */,
 				B2B180142114AD92008D3BAA /* (null) in Sources */,
-				B2021D7E247FEA1900A82EBB /* LaunchScreenViewController.swift in Sources */,
+				B2021D7E247FEA1900A82EBB /* LaunchScreenView.swift in Sources */,
 				49075FFC1E0E578E008E06FA /* PlayersViewController.swift in Sources */,
 				B250610020CD7F480030EE8F /* Recovery.swift in Sources */,
 				B2BBCCAA2327ECD0005678B2 /* HexagonView.swift in Sources */,
